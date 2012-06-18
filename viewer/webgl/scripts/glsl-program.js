@@ -28,7 +28,7 @@
 //FIXME: Delete program if LINK failed
 //NOTE: those 2 are typically garbage collected and then the gl resource is supposed to be released, but it shouldn't harm to release them as soon as possible without waiting for gc.
 
-define( function() {
+define(["gl-matrix"], function() {
 
 	var GLSLProgram = Object.create(Object, {
     

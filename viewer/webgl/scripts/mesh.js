@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["base", "resource-description", "primitive", "utilities"], 
+define(["base", "resource-description", "primitive", "utilities", "gl-matrix"], 
 	function(Base, ResourceDescription, Primitive, Utilities) {
 
 	var Mesh = Object.create(Base, {

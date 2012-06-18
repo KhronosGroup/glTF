@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["base","utilities"], function(Base, Utilities) {
+define(["base","utilities", "gl-matrix"], function(Base, Utilities) {
 
 	var Node = Object.create(Base, {
 
