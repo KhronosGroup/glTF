@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -37,9 +37,9 @@ define(["base"], function(Base) {
         	set: function(value) { 
             	this._matrix = value; 
         	}
-    	},
+		},
     
- 	   init: {
+ 	   	init: {
     	    value: function() {
         		this.__Base_init();
         		this._matrix = mat4.identity();
