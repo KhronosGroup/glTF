@@ -24,65 +24,30 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["base", "node", "gl-matrix"], function(Base, Node) {
+define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
 
-	var Scene = Object.create(Base, {
+	var Camera = Object.create(Base, {
 
-    	_rootNode: { value : null, writable: true },
+    	_matrix: { value: null, writable: true },
     
-    	rootNode: {
-        	get: function() {
-            	return this._rootNode;
-        	},
-        	set: function(value) {
-            	this._rootNode = value;
-        	}
-    	},
-
-    	_id: { value: null, writable: true },
-    
-	    id: {
-    	    get: function() { 
-        	    return this._id; 
+    	matrix: {
+        	get: function() { 
+            	return this._matrix; 
         	},
         	set: function(value) { 
-            	this._id = value; 
+            	this._matrix = value; 
         	}
-    	},
+		},
     
-    	init: {
-        	value: function() {
+ 	   	init: {
+    	    value: function() {
         		this.__Base_init();
-            	this.rootNode = Object.create(Node);
-            	this.rootNode.init();
-        	}
-    	},
-
-    	read: {
-        	enumerable: true,
-        	value: function(entryID, sceneDescription, delegate, reader, userInfo) {
-            	var self = this;
-            	this.id = entryID;
-            	this.name = sceneDescription.name;
-            
-       	     	if (!sceneDescription.node) {
-                	// FIXME: todo
-            	} else {
-                
-                	var entryDelegate = {};
-                	entryDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    	self.rootNode = entry;
-                    	if (delegate) {
-                        	delegate.readCompleted("scene", self, userInfo);
-                    	}
-                	}
-
-                	reader._readEntry(sceneDescription.node, entryDelegate, userInfo);
-            	}
+        		this._matrix = mat4.identity();
         	}
     	}
+
 	});
 	
-		return Scene;
+		return Camera;
 	}
 );

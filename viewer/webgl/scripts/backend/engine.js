@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["renderer","pass", "command-queue"], function(Renderer, Pass, CommandQueue) {
+define(["backend/renderer","backend/pass", "backend/command-queue"], function(Renderer, Pass, CommandQueue) {
 
 	var Engine = Object.create(Object, {
 

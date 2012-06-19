@@ -24,30 +24,65 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["base", "gl-matrix"], function(Base) {
+define(["backend/base", "backend/node", "dependencies/gl-matrix"], function(Base, Node) {
 
-	var Camera = Object.create(Base, {
+	var Scene = Object.create(Base, {
 
-    	_matrix: { value: null, writable: true },
+    	_rootNode: { value : null, writable: true },
     
-    	matrix: {
-        	get: function() { 
-            	return this._matrix; 
+    	rootNode: {
+        	get: function() {
+            	return this._rootNode;
+        	},
+        	set: function(value) {
+            	this._rootNode = value;
+        	}
+    	},
+
+    	_id: { value: null, writable: true },
+    
+	    id: {
+    	    get: function() { 
+        	    return this._id; 
         	},
         	set: function(value) { 
-            	this._matrix = value; 
+            	this._id = value; 
         	}
-		},
+    	},
     
- 	   	init: {
-    	    value: function() {
+    	init: {
+        	value: function() {
         		this.__Base_init();
-        		this._matrix = mat4.identity();
+            	this.rootNode = Object.create(Node);
+            	this.rootNode.init();
+        	}
+    	},
+
+    	read: {
+        	enumerable: true,
+        	value: function(entryID, sceneDescription, delegate, reader, userInfo) {
+            	var self = this;
+            	this.id = entryID;
+            	this.name = sceneDescription.name;
+            
+       	     	if (!sceneDescription.node) {
+                	// FIXME: todo
+            	} else {
+                
+                	var entryDelegate = {};
+                	entryDelegate.readCompleted = function(entryType, entry, userInfo) {
+                    	self.rootNode = entry;
+                    	if (delegate) {
+                        	delegate.readCompleted("scene", self, userInfo);
+                    	}
+                	}
+
+                	reader._readEntry(sceneDescription.node, entryDelegate, userInfo);
+            	}
         	}
     	}
-
 	});
 	
-		return Camera;
+		return Scene;
 	}
 );

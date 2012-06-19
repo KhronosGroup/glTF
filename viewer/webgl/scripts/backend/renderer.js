@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["glsl-program", "resource-manager", "gl-matrix"], function(GLSLProgram, ResourceManager) {
+define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-matrix"], function(GLSLProgram, ResourceManager) {
 
 	var Renderer = Object.create(Object, {
 
@@ -285,11 +285,11 @@ define(["glsl-program", "resource-manager", "gl-matrix"], function(GLSLProgram, 
                 	}
             	}
             
+            	
+            
 	            if (program.getLocationForSymbol("color")) {
     	            var color = primitive.material.color;
-
         	        var step = primitive.step * primitive.step;
-                
             	    var oneMinusPrimitiveStep = 1 - (1 * step);
                 	var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])), 
                     	            ((oneMinusPrimitiveStep) + (step * color[1])),
