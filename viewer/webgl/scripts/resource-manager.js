@@ -87,7 +87,8 @@ define(function() {
         	value: function(delegate, range) {
 
             	var self = this;
-            	var description = this._resourceBeingProcessed.resourceDescription.description;
+            	var resource = this._resourceBeingProcessed;
+            	var description = resource.resourceDescription.description;
             
 	            if (!description.type) {
     	            delegate.handleError(ResourceManager.INVALID_TYPE, null);
@@ -112,7 +113,7 @@ define(function() {
                 	xhr.onload = function(e) {
                     	if ((this.status == 200) || (this.status == 206)) {
                         	self._resource = this.response; 
-                        	delegate.resourceAvailable(self._resource);
+                        	delegate.resourceAvailable(resource, self._resource);
                     	} else {
                         	delegate.handleError(ResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                     	}
@@ -131,22 +132,43 @@ define(function() {
         
         	FIXME: make sure to check with resource id / url before putting it again in the queue again
     	*/
-    	_processResource: {
-        	value: function(resourceToBeProcessed) {
+    	getWebGLResource: {
+				value: function(id, resourceDescription, range, delegate, ctx) {
 
-            	var delegate = resourceToBeProcessed["delegate"];
-            	var description = resourceToBeProcessed["resourceDescription"];
-            	var range = resourceToBeProcessed["range"];
-            	var ctx = resourceToBeProcessed["ctx"];
-            	var id = resourceToBeProcessed["id"];
+            	var resource = this._getResource(id);
+            	if (resource) {
+                	delegate.resourceAvailable(resource, ctx);
+                	return resource;
+            	}								
+				var resourceToBeProcessed = null;
+	    		if (this._resourceBeingProcessed) {
+                		resourceToBeProcessed = {"resourceDescription" : resourceDescription , 
+                    	                            "delegate" : delegate,
+                        	                        "ctx" : ctx,
+                            	                    "range" : range,
+                                	                "id" : id  };
+	    		
+					if( !resourceToBeProcessed.queued ) {
+		            	resourceToBeProcessed.queued = true;
+		            	
+		            	
+		         		this._resourcesToBeProcessed.push(resourceToBeProcessed);
+		         	}
+		    		return null;
+		    	}            
+            	resourceToBeProcessed = {"resourceDescription" : resourceDescription , 
+                    	                 "delegate" : delegate,
+                        	            "ctx" : ctx,
+                	                    "range" : range,
+                       	                "id" : id  };
+            
             
             	if (delegate) {
                 	var self = this;
                 	var processResourceDelegate = {};
                 
-	                processResourceDelegate.resourceAvailable = function(resource) {
-    	                var resourceDescription = resourceToBeProcessed.resourceDescription;
-                    
+	                processResourceDelegate.resourceAvailable = function(resourceInProcess, resource) {
+    	                var resourceDescription = resourceInProcess.resourceDescription;
         	            // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
             	        // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                 	    //, but as of now, this flexibily does not seem necessary.
@@ -154,40 +176,27 @@ define(function() {
                     	convertedResource = delegate.convert(resource, ctx);
                     	self._storeResource(id, convertedResource);
                     	delegate.resourceAvailable(convertedResource, ctx);
-                    	this._resourceBeingProcessed = null;
-
+                    	self._resourceBeingProcessed = null;
                     	//process next element
                     	if (self._resourcesToBeProcessed.length > 0) {
                         	var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
-                        	self._processResource(nextResourceToBeProcessed);
+                        	self.getWebGLResource(	nextResourceToBeProcessed.id, 
+                        							nextResourceToBeProcessed.resourceDescription, 
+                        							nextResourceToBeProcessed.range, 
+                        							nextResourceToBeProcessed.delegate, 
+                        							nextResourceToBeProcessed.ctx);
                     	}
                 	}
                 
                 	processResourceDelegate.handleError = function(errorCode, info) {
                     	delegate.handleError(errorCode, info);
                 	}
-            
-	                if (!description) {
-    	                delegate.handleError(ResourceManager.MISSING_DESCRIPTION);
-        	        }
-                
-            	    var resource = self._getResource(id);
-                	if (resource) {
-//                    this._resourceBeingProcessed = resourceToBeProcessed;
-                    	delegate.resourceAvailable(resource, ctx);
-
-	                    this._resourceBeingProcessed = null;
-                    
-    	                if (self._resourcesToBeProcessed.length > 0) {
-        	                var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
-            	            self._processResource(nextResourceToBeProcessed);
-                	    }
-                    
-	                } else {
-    	                this._resourceBeingProcessed = resourceToBeProcessed;
-        	            this._loadResource(processResourceDelegate, range);
-            	    }
+                            		
+    	        	this._resourceBeingProcessed = resourceToBeProcessed;
+        	        this._loadResource(processResourceDelegate, range);                	
             	}
+				
+				return null;
         	}
     	},
 
@@ -196,7 +205,8 @@ define(function() {
         	    this._resources = {};
         	}
     	},
-
+		
+		/*
     	getWebGLResource: {
         	value: function(id, resourceDescription, range, delegate, ctx) {
 
@@ -205,21 +215,12 @@ define(function() {
                 	delegate.resourceAvailable(resource, ctx);
                 	return resource;
             	} else {
-                	var resourceToBeProcessed = {   "resourceDescription" : resourceDescription , 
-                    	                            "delegate" : delegate,
-                        	                        "ctx" : ctx,
-                            	                    "range" : range,
-                                	                "id" : id  };
 
-	                if (this._resourceBeingProcessed) {
-    	                this._resourcesToBeProcessed.push(resourceToBeProcessed);
-        	        } else {
-            	        this._processResource(resourceToBeProcessed);
-                	}       
+            		this._processResource(resourceToBeProcessed);
 	            }
     	        return null;                 
         	}
-   	 	}
+   	 	}*/
 	});
 	
 		return ResourceManager;
