@@ -191,7 +191,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         	value: function(matA, matB) {            
             	if (matA === matB)
                 	return true;
-            	return mat4.compare(matA,matB);
+            	return mat4.equal(matA,matB);
         	}
     	},
 
@@ -200,7 +200,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         
         	    if (matA === matB)
             	    return true;
-            	return mat3.compare(matA,matB);
+            	return mat3.equal(matA,matB);
 	        }
     	},
     
