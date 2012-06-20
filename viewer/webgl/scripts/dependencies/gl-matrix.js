@@ -2,7 +2,7 @@
  * @fileoverview gl-matrix - High performance matrix and vector operations for WebGL
  * @author Brandon Jones
  * @author Colin MacKenzie IV
- * @version 1.3.6
+ * @version 1.3.7
  */
 
 /*
@@ -175,8 +175,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    vec3.compare = function (a, b) {
-        return (
+    vec3.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON
@@ -772,8 +772,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    mat3.compare = function (a, b) {
-        return (
+    mat3.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON &&
@@ -1010,8 +1010,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    mat4.compare = function (a, b) {
-        return (
+    mat4.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON &&
@@ -2009,8 +2009,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    quat4.compare = function (a, b) {
-        return (
+    quat4.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON &&
@@ -2754,8 +2754,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    vec2.compare = function (a, b) {
-        return (
+    vec2.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON
         );
@@ -2992,8 +2992,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    mat2.compare = function (a, b) {
-        return (
+    mat2.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON &&
@@ -3340,8 +3340,8 @@
      *
      * @returns {Boolean} True if a is equivalent to b
      */
-    vec4.compare = function (a, b) {
-        return (
+    vec4.equal = function (a, b) {
+        return a === b || (
             Math.abs(a[0] - b[0]) < FLOAT_EPSILON &&
             Math.abs(a[1] - b[1]) < FLOAT_EPSILON &&
             Math.abs(a[2] - b[2]) < FLOAT_EPSILON &&
