@@ -56,18 +56,16 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
             
             	if (!this._debugProgram) {
                 	this._debugProgram = Object.create(GLSLProgram);
-                
+                    
 	                var vertexShader = "precision highp float;" +
     	                                "attribute vec3 vert;"  +
         	                            "attribute vec3 normal; " +
             	                        "varying vec3 v_normal; " +
                 	                    "uniform mat4 u_mvMatrix; " +
-                    	                //"uniform mat3 u_normalMatrix; " +
+                    	                "uniform mat3 u_normalMatrix; " +
                         	            "uniform mat4 u_projMatrix; " +
                             	        "void main(void) { " +
-                                	   	//"v_normal = normalize(u_normalMatrix * normal); " + 
-                                    	"v_normal = normalize(mat3(u_mvMatrix) * normal); " + 
-                                   		//"v_normal = vec3(1.);" +
+                                	   	"v_normal = normalize(u_normalMatrix * normal); " + 
                                     	"gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
                 
                 	var fragmentShader = "precision highp float;" +
@@ -77,35 +75,10 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 	" vec3 normal = normalize(v_normal); " +
                 	" float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);" +
                 	" gl_FragColor = vec4(color.xyz * lambert, 1.); }";
-
-                	var vertexShader1 = "precision highp float;" +
-                    	                "attribute vec3 vert;"  +
-                        	            "attribute vec3 normal; " +
-                            	        "varying vec3 v_normal; " +
-                                	    "uniform mat4 u_mvMatrix; " +
-                                    	"uniform mat3 u_normalMatrix; " +
-                                    	"uniform mat4 u_projMatrix; " +
-                                    	"void main(void) { " +
-                                    	"v_normal = normalize(u_normalMatrix * normal); " + 
-                                    	"gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
-                
-	                var fragmentShader1 = "precision highp float;" +
-    	            " uniform vec3 color;" +
-        	        " varying vec3 v_normal;" +
-            	    " void main(void) { " +
-                	" vec3 normal = normalize(v_normal); " +
-               	 	" float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);" +
-                	" gl_FragColor = vec4(color.xyz * lambert, 1.); }";
                 
                 	this._debugProgram.initWithShaders( { "x-shader/x-vertex" : vertexShader , "x-shader/x-fragment" : fragmentShader } );
                 	if (!this._debugProgram.build(this.webGLContext)) {
-                    	console.log(this._debugProgram.errorLogs);
-                   		this._debugProgram = Object.create(GLSLProgram);
-                    	this._debugProgram.initWithShaders( { "x-shader/x-vertex" : vertexShader1 , "x-shader/x-fragment" : fragmentShader1 } );
-                    	if (!this._debugProgram.build(this.webGLContext)) {
-                        	console.log(this._debugProgram.errorLogs);
-                    	}
-                     
+                    	console.log(this._debugProgram.errorLogs);                     
                 	} 
             	}
                         
