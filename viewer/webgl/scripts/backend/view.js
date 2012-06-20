@@ -175,7 +175,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
 
 		                this.engine.render();
 
-    		            //webGLContext.flush();
+    		            webGLContext.flush();
                 
         		        var error = webGLContext.getError();
             		    if (error != webGLContext.NO_ERROR) {
