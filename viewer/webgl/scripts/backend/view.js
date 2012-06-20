@@ -171,7 +171,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
             		    webGLContext.enable(webGLContext.CULL_FACE);
 
                 		//webGLContext.clearColor(0.2, 0, 0, 1);
-                        webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
+                       // webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
 
 		                this.engine.render();
 
