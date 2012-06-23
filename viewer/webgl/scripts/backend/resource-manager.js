@@ -34,7 +34,7 @@ define(function() {
     	INVALID_TYPE: { value: "INVALID_TYPE" },
     	XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
     	NOT_FOUND: { value: "NOT_FOUND" },
-		MAX_CONCURRENT_SHR: { value: 5 },
+		MAX_CONCURRENT_XHR: { value: 6 },
     	// misc constants
     	ARRAY_BUFFER: { value: "ArrayBuffer" },
 
@@ -146,7 +146,7 @@ define(function() {
                             	        	"range" : range,
                                 	        "id" : id  };
             	
-	    		if (this._resourcesBeingProcessedCount > ResourceManager.MAX_CONCURRENT_SHR) {
+	    		if (this._resourcesBeingProcessedCount > ResourceManager.MAX_CONCURRENT_XHR) {
 				 	if (!fromQueue) {
 					 	this._resourcesToBeProcessed.push(resourceToBeProcessed);
 					}

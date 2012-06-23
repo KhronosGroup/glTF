@@ -195,7 +195,9 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
             	this.name = nodeDescription.name;
             
             	if (nodeDescription.matrix) {
-                	this.transform = mat4.transpose(mat4.create(nodeDescription.matrix));
+                	this.transform = mat4.create(nodeDescription.matrix);
+           	 	} else {
+           	 		this.transform = mat4.identity();
            	 	}
 
             	// load mesh info (but not the binaries yet)
