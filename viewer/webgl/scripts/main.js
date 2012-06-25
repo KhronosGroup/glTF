@@ -32,7 +32,7 @@ require( ["backend/utilities", "backend/node", "backend/camera", "backend/view",
     				// camera
 				    var camera = Object.create(Camera);
 				    camera.init();
-				    camera.matrix = mat4.perspective(45, 1., 1, 1000.0);    
+				    camera.matrix = mat4.perspective(45, 1., 0.1, 2.0);    
     
 			    	// node
     				var cameraNode = Object.create(Node);
@@ -151,16 +151,24 @@ require( ["backend/utilities", "backend/node", "backend/camera", "backend/view",
        				node.transform = mat4.identity();
         			var sceneBBox = view.sceneBBox;
         
-			        var sceneSize = [   (sceneBBox[1][0] - sceneBBox[0][0]), 
-        				                (sceneBBox[1][1] - sceneBBox[0][1]), 
-                        			    (sceneBBox[1][2] - sceneBBox[0][2])];
+        	
+			        var sceneSize = [   (sceneBBox[1][0] - sceneBBox[0][0]) , 
+        				                (sceneBBox[1][1] - sceneBBox[0][1]) , 
+                        			    (sceneBBox[1][2] - sceneBBox[0][2]) ];
+
+					//size to fit
+        			var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
+        			scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
+        			
+        			scaleFactor = 1.0 / scaleFactor;
         
-			        var translation = mat4.translate(mat4.identity(), [ 
-            							((-sceneSize[0] / 2) - sceneBBox[0][0]) , 
-							            ((-sceneSize[1] / 2) - sceneBBox[0][1]) , 
-							            ((-sceneSize[2] / 2) - sceneBBox[0][2]) ]);
+        			var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
+			        var translation = mat4.translate(scaleMatrix, [ 
+            							((-sceneSize[0] / 2) - sceneBBox[0][0] ) , 
+							            ((-sceneSize[1] / 2) - sceneBBox[0][1] ) , 
+							            ((-sceneSize[2] / 2) - sceneBBox[0][2] ) ]);
         
-			        var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 260 ]);
+			        var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.5 ]);
         
 			        var rotationa = mat4.rotate(mat4.identity(), -1.6, [1.0, 0.0, 0.0]);
         			var rotationb = mat4.rotate(mat4.identity(), 0.2, [0.0, 0.0, 1.0]);
