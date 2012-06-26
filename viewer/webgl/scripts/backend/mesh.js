@@ -179,9 +179,11 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
     	                	var indices = primitiveDescription.indices;
         	            	indices.id = entryID + "_indices"+"_"+i;
                     
-            	   	     	var buffer = Object.create(ResourceDescription);
-                	    	buffer.init(indices.buffer, reader.getEntryFromRootDescription(indices.buffer));
-                    		indices.buffer = buffer;
+                    		if (typeof indices.buffer === "string") {
+	            	   	     	var buffer = Object.create(ResourceDescription);
+    	            	    	buffer.init(indices.buffer, reader.getEntryFromRootDescription(indices.buffer));
+        	            		indices.buffer = buffer;
+                    		}
                    	 		primitive.indices = indices;
                     	}
                 	}
