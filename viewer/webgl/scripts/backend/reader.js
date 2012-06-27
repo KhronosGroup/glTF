@@ -124,6 +124,11 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
       
     	getEntryFromRootDescription: {
         	value: function (entryID) {
+        		if (typeof entryID != "string") {
+	        		console.log(typeof entryID);
+        			debugger;
+        		}
+        		//console.log(entryID);
             	var entryDescription = this.rootDescription[entryID];
             	if (!entryDescription) {
                 	var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers"];
@@ -142,7 +147,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             
 	    _readEntry: {
     	    enumerable: false,
-        	value: function(entryID, delegate, userInfo) {
+        	value: function(entryID, delegate, userInfo) {            	
             	var entryManager = this.entryManager;
             	var entryDescription = this.getEntryFromRootDescription(entryID);
             	if (entryDescription) {
