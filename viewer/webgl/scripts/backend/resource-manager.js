@@ -104,7 +104,7 @@ define(function() {
   	              xhr.open('GET', description.path, true);
     	            xhr.responseType = 'arraybuffer';
         	        if (range) {
-            	        var header = "bytes=" + range[0] + "-" + range[1];
+            	        var header = "bytes=" + range[0] + "-" + (range[1] - 1);
                	     	xhr.setRequestHeader("Range", header);
                 	}
                		//if this is not specified, 1 "big blob" scenes fails to load.
