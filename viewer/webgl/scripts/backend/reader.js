@@ -142,32 +142,36 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             
 	    _readEntry: {
     	    enumerable: false,
-        	value: function(entryID, delegate, userInfo) {
+        	value: function(entryID, delegate, userInfo) {            	
             	var entryManager = this.entryManager;
             	var entryDescription = this.getEntryFromRootDescription(entryID);
             	if (entryDescription) {
                 	var entryDelegate = {};
+					                	
                 	entryDelegate.readCompleted = function(entryType, entry, userInfo) {
                     	entryManager.storeEntry(entry);
                     	delegate.readCompleted(entryType, entry, userInfo);
                 	}
-            
+					var entry = null;
                 	var type = entryDescription.type;
                 	if (entryManager.containsEntry(entryID)) {
-                    	delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);
-                    
+                    	debugger;
+                    	delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);                    
                 	} else if (type === this.MESH) {
-                    	var mesh = Object.create(Mesh);
-                    	mesh.read(entryID, entryDescription, entryDelegate, this, userInfo);
+                    	entry = Object.create(Mesh);
+                    	//entry.init();
                 	} else if (type === this.SCENE) {
-                    	var scene = Object.create(Scene);
-                    	scene.init();
-                    	scene.read(entryID, entryDescription, entryDelegate, this, userInfo);
+                    	entry = Object.create(Scene);
+                    	entry.init();
                 	} else if (type === this.NODE) {                
-                    	var node = Object.create(Node);
-                    	node.init();
-                    	node.read(entryID, entryDescription, entryDelegate, this, userInfo);
+                    	entry = Object.create(Node);
+                    	entry.init();
                 	}
+                
+                	if (entry) {
+                		entry.id = entryID;
+	                    entry.read(entryID, entryDescription, entryDelegate, this, userInfo);
+					}
                 
 	            } else {
     	            delegate.handleError(this.NOT_FOUND);
