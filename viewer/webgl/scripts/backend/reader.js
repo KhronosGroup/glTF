@@ -151,12 +151,12 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 	entryDelegate.readCompleted = function(entryType, entry, userInfo) {
                     	entryManager.storeEntry(entry);
                     	delegate.readCompleted(entryType, entry, userInfo);
-                	}
+                	} 
 					var entry = null;
                 	var type = entryDescription.type;
                 	if (entryManager.containsEntry(entryID)) {
-                    	debugger;
                     	delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);                    
+						return;
                 	} else if (type === this.MESH) {
                     	entry = Object.create(Mesh);
                     	//entry.init();
@@ -167,7 +167,6 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     	entry = Object.create(Node);
                     	entry.init();
                 	}
-                
                 	if (entry) {
                 		entry.id = entryID;
 	                    entry.read(entryID, entryDescription, entryDelegate, this, userInfo);

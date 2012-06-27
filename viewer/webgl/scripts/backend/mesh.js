@@ -176,13 +176,18 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
                     	}, this);
                     
 	                    	//set indices
-    	                	var indices = primitiveDescription.indices;
-        	            	indices.id = entryID + "_indices"+"_"+i;
-                    
-	            	   	 	var buffer = Object.create(ResourceDescription);
-    	            		buffer.init(indices.buffer, reader.getEntryFromRootDescription(indices.buffer));
-        	        		indices.buffer = buffer;
-                   	 		primitive.indices = indices;
+    	                	var indicesID = entryID + "_indices"+"_"+i;
+    	                	var indices = reader.entryManager.getEntry(indicesID);
+							if (!indices) {
+					        	indices = primitiveDescription.indices;
+					        	indices.id = indicesID;
+		            	   	 	var buffer = Object.create(ResourceDescription);
+    		            		buffer.init(indices.buffer, reader.getEntryFromRootDescription(indices.buffer));
+        		        		indices.buffer = buffer;
+                              	reader.entryManager.storeEntry(indices);
+                   	 		}
+                	   	 	primitive.indices = indices;
+                   	 		
                     	}
                 	}
                                 
