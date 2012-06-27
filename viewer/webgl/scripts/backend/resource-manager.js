@@ -34,7 +34,7 @@ define(function() {
     	INVALID_TYPE: { value: "INVALID_TYPE" },
     	XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
     	NOT_FOUND: { value: "NOT_FOUND" },
-		MAX_CONCURRENT_XHR: { value: 6 },
+		MAX_CONCURRENT_XHR: { value: 32 },
     	// misc constants
     	ARRAY_BUFFER: { value: "ArrayBuffer" },
 
