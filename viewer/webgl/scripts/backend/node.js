@@ -237,9 +237,9 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
             
             	if (childrenCount > 0) {
                 	reader._readEntry(nodeDescription.children[childIndex], entryNodeDelegate, userInfo);
-            	} else if (delegate) {
+            	}  else if (delegate) {
                 	delegate.readCompleted("node", this, userInfo);
-            	}       
+            	}      
         	}
     	}    
 	});
