@@ -31,51 +31,6 @@
 		8DD76F6A0486A84900D96B5E /* dae2json.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* dae2json.1 */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		6F9F5087153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = COLLADASaxFrameworkLoader;
-		};
-		6F9F5089153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D0AE89210323FC000764973;
-			remoteInfo = COLLADABaseUtils;
-		};
-		6F9F508B153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D0AE8E210323FEA00764973;
-			remoteInfo = COLLADAFramework;
-		};
-		6F9F508D153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D0AE84010323F4100764973;
-			remoteInfo = GeneratedSaxParser;
-		};
-		6F9F508F153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D0AEA3A1032405D00764973;
-			remoteInfo = UTF;
-		};
-		6F9F5091153E2DD7009C7B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D0AEA141032402D00764973;
-			remoteInfo = pcre;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		8DD76F690486A84900D96B5E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -115,7 +70,6 @@
 		6F3A10BF1570B35500E1A31D /* JSONIndices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONIndices.h; path = JSONExport/JSONIndices.h; sourceTree = "<group>"; };
 		6F65BB6D152269F000C04888 /* DAE2JSONWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DAE2JSONWriter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6F65BB6E152269F000C04888 /* DAE2JSONWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DAE2JSONWriter.cpp; sourceTree = "<group>"; };
-		6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = COLLADASaxFrameworkLoader.xcodeproj; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/COLLADASaxFrameworkLoader.xcodeproj"; sourceTree = "<group>"; };
 		6F9F5093153E3871009C7B3B /* libCOLLADASaxFrameworkLoader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCOLLADASaxFrameworkLoader.a; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug/libCOLLADASaxFrameworkLoader.a"; sourceTree = "<group>"; };
 		6F9F5095153E3AF2009C7B3B /* libGeneratedSaxParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGeneratedSaxParser.a; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug/libGeneratedSaxParser.a"; sourceTree = "<group>"; };
 		6F9F5096153E3AF2009C7B3B /* libpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpcre.a; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug/libpcre.a"; sourceTree = "<group>"; };
@@ -218,7 +172,6 @@
 		6F9F507D153E2DA2009C7B3B /* projects */ = {
 			isa = PBXGroup;
 			children = (
-				6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */,
 				6F9F5099153E3AFD009C7B3B /* libCOLLADABaseUtils.a */,
 				6F9F509A153E3AFD009C7B3B /* libCOLLADAFramework.a */,
 				6F9F5093153E3871009C7B3B /* libCOLLADASaxFrameworkLoader.a */,
@@ -226,19 +179,6 @@
 				6F9F5096153E3AF2009C7B3B /* libpcre.a */,
 			);
 			name = projects;
-			sourceTree = "<group>";
-		};
-		6F9F507F153E2DD6009C7B3B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6F9F5088153E2DD7009C7B3B /* libCOLLADASaxFrameworkLoader.a */,
-				6F9F508A153E2DD7009C7B3B /* libCOLLADABaseUtils.a */,
-				6F9F508C153E2DD7009C7B3B /* libCOLLADAFramework.a */,
-				6F9F508E153E2DD7009C7B3B /* libGeneratedSaxParser.a */,
-				6F9F5090153E2DD7009C7B3B /* UTF.o */,
-				6F9F5092153E2DD7009C7B3B /* libpcre.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		C6859E8C029090F304C91782 /* Documentation */ = {
@@ -287,63 +227,12 @@
 			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* dae2json */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 6F9F507F153E2DD6009C7B3B /* Products */;
-					ProjectRef = 6F9F507E153E2DD6009C7B3B /* COLLADASaxFrameworkLoader.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8DD76F620486A84900D96B5E /* dae2json */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		6F9F5088153E2DD7009C7B3B /* libCOLLADASaxFrameworkLoader.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCOLLADASaxFrameworkLoader.a;
-			remoteRef = 6F9F5087153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6F9F508A153E2DD7009C7B3B /* libCOLLADABaseUtils.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCOLLADABaseUtils.a;
-			remoteRef = 6F9F5089153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6F9F508C153E2DD7009C7B3B /* libCOLLADAFramework.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCOLLADAFramework.a;
-			remoteRef = 6F9F508B153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6F9F508E153E2DD7009C7B3B /* libGeneratedSaxParser.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGeneratedSaxParser.a;
-			remoteRef = 6F9F508D153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6F9F5090153E2DD7009C7B3B /* UTF.o */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.objfile";
-			path = UTF.o;
-			remoteRef = 6F9F508F153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6F9F5092153E2DD7009C7B3B /* libpcre.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libpcre.a;
-			remoteRef = 6F9F5091153E2DD7009C7B3B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DD76F640486A84900D96B5E /* Sources */ = {
@@ -383,10 +272,16 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					$PROJECT_DIR/../dependencies/rapidjson/include/rapidjson,
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADAFramework/include",
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADABaseUtils/include",
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/include",
+				);
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug\"",
+					"\"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug\"",
 				);
 				PRODUCT_NAME = dae2json;
 			};
@@ -401,10 +296,16 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_MODEL_TUNING = G5;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					$PROJECT_DIR/../dependencies/rapidjson/include/rapidjson,
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADAFramework/include",
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADABaseUtils/include",
+					"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/include",
+				);
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug\"",
+					"\"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/build/Release\"",
 				);
 				PRODUCT_NAME = dae2json;
 			};
