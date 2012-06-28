@@ -68,7 +68,7 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], COLLADA2JSONA
     assert(converterArgs);
         
     if (argc < 2) {
-		fprintf(stderr, "%s: not enough arguments\n", argv[0]);
+		fprintf(stderr, "%s: missing arguments\n", argv[0]);
 		usage(argv[0]);
 		exit(1);
         return false;

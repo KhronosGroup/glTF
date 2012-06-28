@@ -24,11 +24,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "dependencies/gl-matrix"],
+define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "dependencies/gl-matrix"],
     function(Utilities, Node, Camera, View, GLSLProgram, Reader) {
-        var Test = Object.create(Object, {
+        var Viewer = Object.create(Object, {
             run: {
-                value: function() {
+                value: function(scenePath) {
                     // camera
                     var camera = Object.create(Camera);
                     camera.init();
@@ -189,15 +189,12 @@ require( ["backend/utilities", "backend/node", "backend/camera", "backend/view",
                 glView.delegate = viewDelegate;
     
                 var reader = Object.create(Reader);
-                //reader.initWithPath("seymour_plane_triangles.json");
-                reader.initWithPath("output.json");
-    
-               // reader.readEntries(["planeShape-lib","propShape-lib"], readerDelegate, null);    
+                
+                reader.initWithPath(scenePath);
                 reader.readEntries(["defaultScene"], readerDelegate, null);    
             }
         }
     });  
-        
-        Test.run();
+        return Viewer;
     }
 );
