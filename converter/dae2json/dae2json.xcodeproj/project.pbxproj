@@ -274,14 +274,14 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../dependencies/rapidjson/include/rapidjson,
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADAFramework/include",
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADABaseUtils/include",
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/include",
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADAFramework/include,
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADABaseUtils/include,
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include,
 				);
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug\"",
+					"\"$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/build/Debug\"",
 				);
 				PRODUCT_NAME = dae2json;
 			};
@@ -298,14 +298,14 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					$PROJECT_DIR/../dependencies/rapidjson/include/rapidjson,
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADAFramework/include",
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADABaseUtils/include",
-					"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/include",
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADAFramework/include,
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADABaseUtils/include,
+					$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include,
 				);
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$PROJECT_DIR/../../../opencollada-read-only/COLLADASaxFrameworkLoader/build/Release\"",
+					"\"$PROJECT_DIR/../dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/build/Release\"",
 				);
 				PRODUCT_NAME = dae2json;
 			};
