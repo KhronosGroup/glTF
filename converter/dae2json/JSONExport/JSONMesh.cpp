@@ -51,9 +51,12 @@ namespace JSONExport
         //consistency check, ensure 
         if (this->_primitives.size() > 0) {
             if (this->_primitives[0]->allIndices().size() != primitive->allIndices().size()) {
-                printf("size: %d %d\n", (int)this->_primitives[0]->allIndices().size(), (int)primitive->allIndices().size());
-                // FIXME: report error
-                return false;
+                static int warned = 0;
+                if (!warned) {
+                    printf("WARNING: ignoring a mesh which as a number of sources per primitives that differs\n");
+                    warned = true;
+                    return false;
+                }
             }
         }
         
