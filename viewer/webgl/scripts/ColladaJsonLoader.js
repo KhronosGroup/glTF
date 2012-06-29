@@ -7,105 +7,6 @@
 define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "backend/resource-manager", "dependencies/gl-matrix"],
     function(Utilities, Node, Camera, View, GLSLProgram, Reader, ResourceManager) {
 
-    // Custom Geometry class
-
-    var ColladaJsonGeometry = function(gl) {
-        THREE.BufferGeometry.call( this );
-
-        var self = this;
-        this.totalAttributes = 0;
-        this.loadedAttributes = 0;
-        this.finished = false;
-
-        this.onload = null;
-
-        this.offsets = [];
-        //{ start: start, count: i - start, index: minPrev }
-
-        this.indicesDelegate = {
-            handleError: function(errorCode, info) {
-                // FIXME: report error
-                console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
-            },
-
-            //should be called only once
-            convert: function (resource, ctx) {
-                var previousBuffer = gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING);
-
-                var glResource =  gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glResource);
-            
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, resource, gl.STATIC_DRAW);
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, previousBuffer);
-
-                glResource.itemSize = 1;
-                glResource.numItems = resource.length / 2;
-
-                return glResource;
-            },
-    
-            resourceAvailable: function (glResource, ctx) {
-                self.vertexIndexBuffer = glResource;
-                self.offsets.push({ start: 0, count: glResource.numItems, index: 0 });
-                self.checkFinished();
-            }
-        };
-    
-        this.vertexAttributeBufferDelegate = {
-            handleError: function(errorCode, info) {
-                // FIXME: report error
-                console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
-            },
-
-            //should be called only once
-            convert: function (resource, ctx) {
-                var previousBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
-
-                var glResource =  gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
-                gl.bufferData(gl.ARRAY_BUFFER, resource, gl.STATIC_DRAW);
-
-                gl.bindBuffer(gl.ARRAY_BUFFER, previousBuffer);
-                return glResource;
-            },
-    
-            resourceAvailable: function (glResource, ctx) {
-                var accessor = ctx.accessor;
-                glResource.itemSize = accessor.elementsPerValue;
-                glResource.numItems = accessor.count;
-
-                if(ctx.semantic == "VERTEX") {
-                    self.vertexPositionBuffer = glResource;
-
-                    var dimensions = vec3.subtract(accessor.max, accessor.min, vec3.create());
-                    self.boundingSphere = { radius: vec3.length(dimensions) * 0.5 };
-
-                    self.boundingBox = {
-                        min: new THREE.Vector3(accessor.min[0], accessor.min[1], accessor.min[2]),
-                        max: new THREE.Vector3(accessor.max[0], accessor.max[1], accessor.max[2])
-                    };
-
-                } else if(ctx.semantic == "NORMAL") {
-                    self.vertexNormalBuffer = glResource;
-                }
-                self.loadedAttributes++;
-                self.checkFinished();
-            }
-        };
-
-        this.checkFinished = function() {
-            if(this.vertexIndexBuffer && this.loadedAttributes === this.totalAttributes) {
-                this.finished = true;
-                if(this.onload) {
-                    this.onload();
-                }
-            }
-        };
-    };
-
-    ColladaJsonGeometry.prototype = new THREE.BufferGeometry();
-    ColladaJsonGeometry.prototype.constructor = ColladaJsonGeometry;
-
     var ColladaJsonClassicGeometry = function(gl) {
         THREE.Geometry.call( this );
 
@@ -186,7 +87,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     if(normals) {
                         faceNormals = [normals[a], normals[b], normals[c]];
                     }
-                    self.faces.push( new THREE.Face3( a, b, c, faceNormals, null, null ) );
+                    this.faces.push( new THREE.Face3( a, b, c, faceNormals, null, null ) );
                 }
 
                 // Allow Three.js to calculate some values for us
@@ -273,29 +174,41 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
         scene.rootNode.apply( function(node, parentObj) {
             var obj = new THREE.Object3D();
+            obj.up = new THREE.Vector3( 0, 0, 1 );
 
+            var nodeMatrix;
             var t = node.transform;
             if(t) {
                 // Normal
-                /*obj.applyMatrix(new THREE.Matrix4(
+                /*nodeMatrix = new THREE.Matrix4(
                     t[0],  t[1],  t[2],  t[3],
                     t[4],  t[5],  t[6],  t[7],
                     t[8],  t[9],  t[10], t[11],
                     t[12], t[13], t[14], t[15]
-                ));*/
+                );*/
                 
                 // Transposed
-                obj.applyMatrix(new THREE.Matrix4(
+                nodeMatrix = new THREE.Matrix4(
                     t[0],  t[4],  t[8],  t[12],
                     t[1],  t[5],  t[9],  t[13],
                     t[2],  t[6],  t[10], t[14],
                     t[3],  t[7],  t[11], t[15]
-                ));
-            }
+                );
 
-            // DEBUG: Add some simple indicators of where the node trasnforms are
-            /*var markerMesh = new THREE.Mesh(new THREE.SphereGeometry( 1 ), defaultMaterial);
-            obj.add(markerMesh);*/
+                //obj.matrix = nodeMatrix;
+                //obj.updateWorldMatrix();
+                //obj.applyMatrix(nodeMatrix);
+
+                // Ugh...
+                obj.name = node.id || "";
+                obj.useQuaternion = true;
+                obj.matrix = nodeMatrix;
+                var props = nodeMatrix.decompose();
+
+                obj.position = props[ 0 ];
+                obj.quaternion = props[ 1 ];
+                obj.scale = props[ 2 ];
+            }
 
             parentObj.add(obj);
 
@@ -312,7 +225,6 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                             var geometry = new ColladaJsonClassicGeometry(self.context);
                             geometry.onload = function() {
                                 var mesh = new THREE.Mesh(geometry, material);
-                                //mesh.frustumCulled = false;
                                 obj.add(mesh);
                                 loadedMeshes++;
                                 if(loadedMeshes === totalMeshes) {
