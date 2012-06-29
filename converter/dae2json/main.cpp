@@ -24,6 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+//find . -name '*.dae' -exec dae2json {} \;
+
 #include <iostream>
 
 #include "DAE2JSONWriter.h"
@@ -109,9 +111,10 @@ int main (int argc, char * const argv[]) {
             FileStream s(stdout);
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
-        
+            printf("converting:%s ...\n",converterArgs.inputFile.c_str());
             DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs.inputFile, &jsonWriter);        
             writer->write();
+            printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT
             fclose(fd);
             delete writer;
