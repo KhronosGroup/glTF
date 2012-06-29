@@ -30,6 +30,8 @@
 
 // DESIGN: justification generation shader. geometry may need regeneration if lambert
 // DESIGN: difference between COLLADA and JSON format. In JSON format it is possible to make an interleaved array not only made by float.
+// reminder; to run recursively against all dae files...
+// find . -name '*.dae' -exec dae2json {} \;
 
 #define WRITE_SINGLE_BLOB 1
 
