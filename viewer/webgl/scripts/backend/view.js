@@ -127,7 +127,6 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                     function(callback) { 
                         window.setTimeout( callback, 1000 / 60, new Date()); };
                 } )();
-        
                 // first thing, get gl context
                 this.canvas = document.getElementById(canvasId);
                 var webGLContext = this.canvas.getContext("experimental-webgl", { antialias: true}) ||this.canvas.getContext("webgl", { antialias: true});
@@ -135,9 +134,12 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 var options = null;
                 this.engine = Object.create(Engine);
                 this.engine.init(webGLContext, options);
-                        
+                
+                //test
+                //this.canvas.style["-webkit-transform"] = "translate(1000px,100px)";
+
                 var self = this;
-                requestAnimationFrame(function() {self.draw.call(self)});
+                requestAnimationFrame(function() {self.draw.call(self)}, this.canvas);
             }
         }, 
     
@@ -185,7 +187,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 }
                 // FIXME: should be based on animations object or user interation
                 var self = this;
-                requestAnimationFrame(function() {self.draw.call(self)});
+                requestAnimationFrame(function() {self.draw.call(self)}, this.canvas);
                 if (this.delegate)
                     this.delegate.didDraw(this);
             }
