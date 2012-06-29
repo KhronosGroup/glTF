@@ -178,10 +178,10 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
             }
         },
 
-        _mouseIsDown: { value: false },
-        _mousePosition: { value : null },
+        _mouseIsDown: { writable: true, value: false },
+        _mousePosition: { writable: true, value : null },
 
-        userControlMatrix: { value: null },
+        userControlMatrix: { writable: true, value: null },
 
         draw: {
             value: function() {
