@@ -1,4 +1,4 @@
-collada2jason
+collada2json
 =============
 
 Details about the project to be added soon.
