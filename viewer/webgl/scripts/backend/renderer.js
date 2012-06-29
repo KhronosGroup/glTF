@@ -47,6 +47,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
     
         _debugProgram: { value: null, writable: true },
     
+        _lambertProgram: { value: null, writable: true },
+
         _resourceManager: { value: null, writable: true },
     
         _webGLContext: { value : null, writable: true },
@@ -57,7 +59,35 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 if (!this._debugProgram) {
                     this._debugProgram = Object.create(GLSLProgram);
                     
-                    var vertexShader = "precision highp float;" +
+                    var debugVS = "precision highp float;" +
+                                        "attribute vec3 vert;"  +
+                                        "uniform mat4 u_mvMatrix; " +
+                                        "uniform mat4 u_projMatrix; " +
+                                        "void main(void) { " +
+                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
+                
+                    var debugFS = "precision highp float;" +
+                    " void main(void) { " +
+                    " gl_FragColor = vec4(1.,0.,0.,1.); }";
+                
+                    this._debugProgram.initWithShaders( { "x-shader/x-vertex" : debugVS , "x-shader/x-fragment" : debugFS } );
+                    if (!this._debugProgram.build(this.webGLContext)) {
+                        console.log(this._debugProgram.errorLogs);                     
+                    } 
+
+                }
+                        
+                return this._debugProgram;
+            }
+        },
+    
+        lambertProgram: {
+            get: function() {            
+            
+                if (!this._lambertProgram) {
+                    this._lambertProgram = Object.create(GLSLProgram);
+                    
+                    var lambertVS = "precision highp float;" +
                                         "attribute vec3 vert;"  +
                                         "attribute vec3 normal; " +
                                         "varying vec3 v_normal; " +
@@ -68,24 +98,26 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                                         "v_normal = normalize(u_normalMatrix * normal); " + 
                                         "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
                 
-                    var fragmentShader = "precision highp float;" +
+                    var lambertFS = "precision highp float;" +
                     " uniform vec3 color;" +
                     " varying vec3 v_normal;" +
                     " void main(void) { " +
                     " vec3 normal = normalize(v_normal); " +
                     " float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);" +
                     " gl_FragColor = vec4(color.xyz * lambert, 1.); }";
-                
-                    this._debugProgram.initWithShaders( { "x-shader/x-vertex" : vertexShader , "x-shader/x-fragment" : fragmentShader } );
-                    if (!this._debugProgram.build(this.webGLContext)) {
-                        console.log(this._debugProgram.errorLogs);                     
+
+                    this._lambertProgram.initWithShaders( { "x-shader/x-vertex" : lambertVS , "x-shader/x-fragment" : lambertFS } );
+                    if (!this._lambertProgram.build(this.webGLContext)) {
+                        console.log(this._lambertProgram.errorLogs);                     
                     } 
+
                 }
                         
-                return this._debugProgram;
+                return this._lambertProgram;
             }
         },
-    
+
+
         webGLContext: {
             get: function() {
                 return this._webGLContext;
@@ -202,13 +234,13 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
     
         renderPrimitive: {
             value: function(primitiveDescription) {
-        
+                var renderVertices = false;
                 var worldMatrix = primitiveDescription.worldMatrix;
                 var projectionMatrix = primitiveDescription.projectionMatrix;
                 var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
-                var program = this.debugProgram;
+                var program =  renderVertices ? this.debugProgram : this.lambertProgram;
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal" };
 
                 //var mvpMatrix = mat4.create();
@@ -299,28 +331,34 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                         }
                     
                         if (available) {
-                            var attributeLocation = this.debugProgram.getLocationForSymbol(symbol);
+                            var attributeLocation = program.getLocationForSymbol(symbol);
                             if (typeof attributeLocation !== "undefined") {
-                        
-                                if (attributeLocation > newMaxEnabledArray)
+                                
+                                if (attributeLocation > newMaxEnabledArray) {
                                     newMaxEnabledArray = attributeLocation;
-                        
+                                }
+
                                 //Just enable what was not enabled before...
                                 if (this._lastMaxEnabledArray < attributeLocation) {
                                     gl.enableVertexAttribArray(attributeLocation);
                                 } 
                                 gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
+
+                                if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
+                                   gl.drawArrays(gl.POINTS, 0, accessor.count);
+                                }
                             }
                         }
                     }                
                 
                 }, this);
                 //Just disable what is not required here…
-                for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++)
+                for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
                     gl.disableVertexAttribArray(i);
+                }
                 this._lastMaxEnabledArray = newMaxEnabledArray;
-            
-                if (available)  { 
+                
+                if (!renderVertices && available)  { 
                     if (primitive.step < 1.0)
                         primitive.step += 0.05;
               
