@@ -32,7 +32,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     // camera
                     var camera = Object.create(Camera);
                     camera.init();
-                    camera.matrix = mat4.perspective(45, 1., 0.1, 2.0);    
+                    camera.matrix = mat4.perspective(45, 1., 0.1, 100.0);    
     
                     // node
                     var cameraNode = Object.create(Node);
@@ -147,7 +147,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     /* ------------------------------------------------------------------------------------------------------------
                         Update scene 
                      ------------------------------------------------------------------------------------------------------------ */        
-                    var node = view.scene.rootNode.children[0];
+                    var node = view.scene.rootNode;
                     node.transform = mat4.identity();
                     var sceneBBox = view.sceneBBox;
         
@@ -160,8 +160,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
                     scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
                     
-                    scaleFactor = 1.0 / scaleFactor;
-        
+                    scaleFactor =  1.0 / scaleFactor;
                     var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
                     var translation = mat4.translate(scaleMatrix, [ 
                                         ((-sceneSize[0] / 2) - sceneBBox[0][0] ) , 
@@ -189,7 +188,6 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                 glView.delegate = viewDelegate;
     
                 var reader = Object.create(Reader);
-                
                 reader.initWithPath(scenePath);
                 reader.readEntries(["defaultScene"], readerDelegate, null);    
             }
