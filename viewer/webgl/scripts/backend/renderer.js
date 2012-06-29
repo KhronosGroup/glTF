@@ -352,13 +352,13 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     }                
                 
                 }, this);
-                //Just disable what is not required here…
-                for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
-                    gl.disableVertexAttribArray(i);
-                }
-                this._lastMaxEnabledArray = newMaxEnabledArray;
                 
                 if (!renderVertices && available)  { 
+                    //Just disable what is not required here…
+                    for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
+                        gl.disableVertexAttribArray(i);
+                    }
+
                     if (primitive.step < 1.0)
                         primitive.step += 0.05;
               
@@ -371,7 +371,9 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
                 }
+                this._lastMaxEnabledArray = newMaxEnabledArray;
             }
+
         }
     });
     
