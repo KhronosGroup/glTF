@@ -136,7 +136,6 @@ define(function() {
 
                 var resource = this._getResource(id);
                 if (resource) {
-                    delegate.resourceAvailable(resource, ctx);
                     return resource;
                 }                               
                 
