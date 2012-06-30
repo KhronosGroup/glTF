@@ -183,10 +183,9 @@ namespace DAE2JSON
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToEffect _uniqueIDToEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
-        shared_ptr <JSONExport::JSONFileBuffer> _fileBuffer;
-        std::vector <shared_ptr <JSONExport::JSONBuffer> > _allBuffers;
         JSONExport::JSONWriter _writer;
-        shared_ptr <JSONExport::JSONObject> _rootJSONObject;;        
+        shared_ptr <JSONExport::JSONObject> _rootJSONObject;
+        ofstream _fileOutputStream;
 	};
 } 
 

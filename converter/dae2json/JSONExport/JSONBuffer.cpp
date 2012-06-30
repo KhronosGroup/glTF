@@ -64,7 +64,6 @@ namespace JSONExport
     JSONBuffer(byteSize),
     _ownData(ownData)
     {
-        
         this->_ID = JSONUtils::generateIDForType("buffer");
     }
     
@@ -85,58 +84,5 @@ namespace JSONExport
     {
         return this->_data;
     }   
-
-    //--------------------------------------------------------------------------------------------------------------------------------    
-
-    bool JSONFileBuffer::_open() 
-    {
-        this->_fd = fopen(this->_path.c_str(), "wb" );        
-        
-        return (this->_fd != NULL);
-    }
-
-    void JSONFileBuffer::_close() 
-    {
-        if (this->_fd) {
-            fclose(this->_fd);
-        }
-    }
-
-    JSONFileBuffer::JSONFileBuffer(const std::string &path):
-    JSONBuffer(0),
-    _path(path)
-    {
-        this->_ID = JSONUtils::generateIDForType("buffer");
-        
-        this->_open();
-    }
-
-    JSONFileBuffer::JSONFileBuffer(const std::string &ID, const std::string &path):
-    JSONBuffer(ID, 0),
-    _path(path)
-    {
-        this->_open();
-    }
-    
-    JSONFileBuffer::~JSONFileBuffer()
-    {
-        this->_close();
-    }
-    
-    bool JSONFileBuffer::appendData(void* data, size_t size)
-    {
-        bool success = false;
-        if (this->_fd) {
-            success = fwrite (data , 1 ,size  , this->_fd ) == size;
-            if (success) {
-                this->_byteSize += size;
-            } else {
-                // FIXME: better error report
-                printf("ERROR: could not write bytes in range [%d %d] for file:%s\n", (int)this->_byteSize, (int)(this->_byteSize + size), this->_path.c_str());
-            }
-        } 
-        
-        return success;
-    }
     
 }

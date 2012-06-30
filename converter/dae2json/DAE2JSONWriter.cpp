@@ -252,7 +252,6 @@ namespace DAE2JSON
 
         URI dataURL(folder);
         String dataURLString = dataURL.getURIString();        
-        cvtMesh->setDirectory(dataURLString);
         
         const MeshPrimitiveArray& primitives =  openCOLLADAMesh->getMeshPrimitives();
         size_t primitiveCount = primitives.getCount();
@@ -320,15 +319,12 @@ namespace DAE2JSON
 	bool DAE2JSONWriter::write()
 	{
         this->_uniqueIDToMesh.clear();   
-        this->_allBuffers.clear();
 
-#if WRITE_SINGLE_BLOB
-        URI dataURL(this->_inputFile.getPathDir());
-        String dataURLString = dataURL.getURIString() + "buffer.1";        
+        std::string sharedBufferID = this->_inputFile.getPathFileBase() + ".bin";
+        std::string outputFilePath = this->_inputFile.getPathDir() + sharedBufferID;
         
-        this->_fileBuffer = shared_ptr <JSONExport::JSONFileBuffer> (new JSONExport::JSONFileBuffer(dataURLString.c_str()));    
-        this->_allBuffers.push_back(this->_fileBuffer);
-#endif
+        this->_fileOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);        
+        //this->_fileOutputStream.seekp(-this->_fileOutputStream.tellp());
         
         this->_rootJSONObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
         this->_rootJSONObject->setString("version", "0.1");
@@ -339,6 +335,8 @@ namespace DAE2JSON
          
 		if (!root.loadDocument(_inputFile.toNativePath()))
 			return false;
+        
+        shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, this->_fileOutputStream.tellp()));
         
         UniqueIDToMesh::const_iterator UniqueIDToMeshIterator;
 
@@ -352,7 +350,7 @@ namespace DAE2JSON
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONMesh> mesh = (*UniqueIDToMeshIterator).second;
             
-            shared_ptr <JSONExport::JSONObject> meshObject = this->_writer.serializeMesh(mesh.get(), 0);
+            shared_ptr <JSONExport::JSONObject> meshObject = this->_writer.serializeMesh(mesh.get(), (void*)sharedBuffer.get());
             
             meshesObject->setValue(mesh->getID(), meshObject);
         }
@@ -375,17 +373,19 @@ namespace DAE2JSON
         // ----
 
         shared_ptr <JSONExport::JSONObject> buffersObject(new JSONExport::JSONObject());
-        
+        shared_ptr <JSONExport::JSONObject> bufferObject = this->_writer.serializeBuffer(sharedBuffer.get(), 0);
+
         this->_rootJSONObject->setValue("buffers", buffersObject);
-
-        for (int i = 0 ; i < this->_allBuffers.size() ; i++) {
-            shared_ptr <JSONExport::JSONObject> bufferObject = this->_writer.serializeBuffer(this->_allBuffers[i].get(), 0);
-            buffersObject->setValue(this->_allBuffers[i]->getID(), bufferObject);
-        }
-
+        buffersObject->setValue(sharedBufferID, bufferObject);
+        
         // ----
         
         this->_rootJSONObject->write(&this->_writer);
+                
+        shared_ptr <JSONExport::JSONObject> flattenedNode = JSONExport::JSONCreateFlattenedScene(this->_rootJSONObject);
+        
+        //this->_fileOutputStream.flush();
+        //this->_fileOutputStream.close();
         
 		return true;
 	}
@@ -484,13 +484,7 @@ namespace DAE2JSON
                 shared_ptr <JSONExport::JSONMesh> mesh = this->_uniqueIDToMesh[meshUID];
                 
                 std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
-                /*
-                size_t effectIDsCount = effectIDs.size();
-                size_t primitivesCount = primitives.size();
-                */
-                std::map<unsigned int , unsigned int> materialIDToReferenceID;
 
-                
                 for (int j = 0 ; j < primitives.size() ; j++) {
                     shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
                     
@@ -502,11 +496,7 @@ namespace DAE2JSON
                         }
                     }
                     
-                    //FIXME: asset materialBindingIndex != -1
-                    
                     unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
-                        
-                    materialIDToReferenceID[primitive->getMaterialObjectID()] = referencedMaterialID;
                         
                     unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
                     shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
@@ -567,7 +557,6 @@ namespace DAE2JSON
         //FIXME: only one visual scene assumed/handled
         shared_ptr <JSONExport::JSONObject> sceneObject(new JSONExport::JSONObject());
         
-        
         this->_rootJSONObject->setValue("scenes", scenesObject);
 
         sceneObject->setString("type", "scene");
@@ -578,12 +567,9 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("nodes"));
         shared_ptr <JSONExport::JSONObject> rootObject(new JSONExport::JSONObject());
         
-        //this->_rootJSONObject->setValue("nodes", nodesObject);
-
         nodesObject->setValue("root", rootObject);
         
         rootObject->setString("type", "node");                
-        //rootObject->setValue("matrix",this->serializeMatrix4Array(COLLADABU::Math::Matrix4::IDENTITY));
                 
         //first pass to output children name of our root node
         shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
@@ -642,7 +628,7 @@ namespace DAE2JSON
                     cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, _inputFile.getPathDir());
                 
                     cvtMesh->buildUniqueIndexes();
-                    cvtMesh->writeAllBuffers(this->_fileBuffer, this->_allBuffers);               
+                    cvtMesh->writeAllBuffers(this->_fileOutputStream);               
 
                     this->_uniqueIDToMesh[meshID] = cvtMesh;
                 } 

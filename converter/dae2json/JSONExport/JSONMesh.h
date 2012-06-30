@@ -56,11 +56,8 @@ namespace JSONExport
 
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > getPrimitives();
 
-        bool const writeAllBuffers(shared_ptr <JSONExport::JSONFileBuffer> fileBuffer, std::vector <shared_ptr <JSONExport::JSONBuffer> > allBuffers);
-        
-        std::string getDirectory();
-        void setDirectory(std::string getDirectory);
-        
+        bool const writeAllBuffers(std::ofstream& fileOutputStream);
+                
     private:        
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > _primitives;
         SemanticToAccessorHashmap _semanticToAccessors;
@@ -68,7 +65,6 @@ namespace JSONExport
         JSONExport::AccessorVector _allOriginalAccessors;
         JSONExport::AccessorVector _allRemappedAccessors;
         std::string _ID, _name;
-        std::string _directory;
     };    
 
 }

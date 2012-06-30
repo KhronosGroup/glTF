@@ -222,23 +222,15 @@ namespace JSONExport
     {
         return this->_primitives;
     }
-    
-    std::string JSONMesh::getDirectory()
-    {
-        return this->_directory;
-    }
-    
-    void JSONMesh::setDirectory(std::string directory)
-    {
-        this->_directory = directory;
-    }
-    
-    bool const JSONMesh::writeAllBuffers(shared_ptr <JSONExport::JSONFileBuffer> fileBuffer, std::vector <shared_ptr <JSONExport::JSONBuffer> > allBuffers) 
+        
+    bool const JSONMesh::writeAllBuffers(std::ofstream& fileOutputStream) 
     {
         typedef map<std::string , shared_ptr<JSONExport::JSONBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
         vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = this->remappedAccessors();
+        
+        shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0));
         
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = this->getPrimitives();
         unsigned int primitivesCount =  primitives.size();
@@ -251,7 +243,7 @@ namespace JSONExport
              Convert the indices to unsigned short and write the blob 
              */
             
-            unsigned int indicesCount = primitive->getUniqueIndices()->getCount();
+            unsigned int indicesCount = uniqueIndices->getCount();
             unsigned int* uniqueIndicesBuffer = (unsigned int*) static_pointer_cast <JSONDataBuffer> (uniqueIndices->getBuffer())->getData();
             if (indicesCount <= 0) {
                 // FIXME: report error
@@ -263,15 +255,11 @@ namespace JSONExport
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                 }
                     
-                if (!fileBuffer.get()) {
-                    std::string bufferPath = this->getDirectory() + uniqueIndices->getBuffer()->getID();
-                    JSONExport::JSONUtils::writeData(bufferPath , (unsigned char*)ushortIndices, indicesLength);
-                    allBuffers.push_back(uniqueIndices->getBuffer());
-                } else {
-                    uniqueIndices->setByteOffset(fileBuffer->getByteSize());
-                    fileBuffer->appendData((unsigned char*)ushortIndices, indicesLength);
-                    uniqueIndices->setBuffer( shared_ptr <JSONExport::JSONFileBuffer> (fileBuffer));
-                }
+                uniqueIndices->setByteOffset(fileOutputStream.tellp());
+                fileOutputStream.write((const char*)ushortIndices, indicesLength);
+                
+                //now that we wrote to the stream we can release the buffer.
+                uniqueIndices->setBuffer(dummyBuffer);
                 
                 free(ushortIndices);
             }
@@ -290,22 +278,17 @@ namespace JSONExport
                 // for this, add a type to buffers , and check this type in setBuffer , then call compuateMinMax
                 accessor->computeMinMax();
                 
-                if (!fileBuffer.get()) {
-                    std::string bufferPath = this->getDirectory() + buffer->getID();
-                    JSONExport::JSONUtils::writeData(bufferPath,  (unsigned char*)(static_pointer_cast <JSONDataBuffer> (buffer)->getData()), buffer->getByteSize());
-                    allBuffers.push_back(buffer);
-                } else {
-                    accessor->setByteOffset(fileBuffer->getByteSize());
-                    fileBuffer->appendData((unsigned char*)(static_pointer_cast <JSONDataBuffer> (buffer)->getData()), buffer->getByteSize());
-                    accessor->setBuffer( shared_ptr <JSONExport::JSONFileBuffer> (fileBuffer));
-                }
+                accessor->setByteOffset(fileOutputStream.tellp());
+                fileOutputStream.write((const char*)(static_pointer_cast <JSONDataBuffer> (buffer)->getData()), buffer->getByteSize());
+
+                //now that we wrote to the stream we can release the buffer.
+                accessor->setBuffer(dummyBuffer);
                 
                 IDToBuffer[buffer->getID()] = buffer;
             } 
         }
                 
         return true;
-        
     }
 
 }
