@@ -34,7 +34,7 @@ define(function() {
         INVALID_TYPE: { value: "INVALID_TYPE" },
         XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
         NOT_FOUND: { value: "NOT_FOUND" },
-        MAX_CONCURRENT_XHR: { value: 32 },
+        MAX_CONCURRENT_XHR: { value: 6 },
         // misc constants
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
@@ -125,7 +125,7 @@ define(function() {
             }
         },
     
-        /*
+        /* 
             process the queue of resources one at a time and pick them in "_resourcesToBeProcessed"
             this method should be cleaned up a bit. dequeuing code is redundant.
         
@@ -136,7 +136,6 @@ define(function() {
 
                 var resource = this._getResource(id);
                 if (resource) {
-                    delegate.resourceAvailable(resource, ctx);
                     return resource;
                 }
                 

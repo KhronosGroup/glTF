@@ -127,7 +127,6 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                     function(callback) {
                         window.setTimeout( callback, 1000 / 60, new Date()); };
                 } )();
-        
                 // first thing, get gl context
                 this.canvas = document.getElementById(canvasId);
                 var webGLContext = this.canvas.getContext("experimental-webgl", { antialias: true}) ||this.canvas.getContext("webgl", { antialias: true});
@@ -135,9 +134,38 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 var options = null;
                 this.engine = Object.create(Engine);
                 this.engine.init(webGLContext, options);
-                        
+                
+                this.userControlMatrix = mat4.identity();
+
+                //test
+                //this.canvas.style["-webkit-transform"] = "translate(1000px,100px)";
+
                 var self = this;
-                requestAnimationFrame(function() { self.draw.call(self); });
+                requestAnimationFrame(function() {self.draw.call(self);}, this.canvas);
+
+                this.canvas.addEventListener('mousedown', function (event) {
+                    self._mouseIsDown = true;
+                    self._mousePosition = [event.pageX, event.pageY];
+                }, false);
+                
+                document.addEventListener('mouseup', function (event) {
+                    self._mouseIsDown = false;
+                }, false);
+
+                document.addEventListener('mousemove', function (event) {
+                    if (self._mouseIsDown) {
+                        var newPosition = [event.pageX, event.pageY];
+
+                        var dx = newPosition[0] - self._mousePosition[0];
+                        var dy = newPosition[1] - self._mousePosition[1];
+
+                        var rotation = mat4.rotate(mat4.identity(), dx * 0.005, [0, 1, 0]);
+                        mat4.rotate(rotation, dy * 0.005, [1, 0, 0]);
+                        mat4.multiply(rotation, self.userControlMatrix, self.userControlMatrix);
+
+                        self._mousePosition = newPosition;
+                    }
+                }, false);
             }
         },
     
@@ -150,6 +178,11 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
             }
         },
 
+        _mouseIsDown: { writable: true, value: false },
+        _mousePosition: { writable: true, value : null },
+
+        userControlMatrix: { writable: true, value: null },
+
         draw: {
             value: function() {
                 
@@ -160,6 +193,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                     var renderer = this.engine.renderer;
                     var webGLContext = renderer.webGLContext;
                     if (webGLContext) {
+
                         // FIXME: cache this
                         var width = parseInt(this.canvas.getAttribute("width"), 10);
                         var height = parseInt(this.canvas.getAttribute("height"), 10);
@@ -185,7 +219,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 }
                 // FIXME: should be based on animations object or user interation
                 var self = this;
-                requestAnimationFrame(function() { self.draw.call(self); });
+                requestAnimationFrame(function() {self.draw.call(self);}, this.canvas);
                 if (this.delegate)
                     this.delegate.didDraw(this);
             }
