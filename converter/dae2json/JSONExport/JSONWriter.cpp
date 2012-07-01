@@ -221,28 +221,28 @@ namespace JSONExport
 
         accessorObject->setString("buffer", buffer->getID());
         
-        //FIXME: should not assume float here
-        float* min = (float*)accessor->getMin();
+        //FIXME: should not assume 3 components here
+        const double* min = accessor->getMin3();
         if (min) {         
             shared_ptr <JSONExport::JSONArray> minArray(new JSONExport::JSONArray());
             
             accessorObject->setValue("min", minArray);
             
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[0])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[1])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[2])));
+            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[0])));
+            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[1])));
+            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[2])));
         }
         
-        //FIXME: should not assume float here
-        float* max = (float*)accessor->getMax();
+        //FIXME: should not assume 3 components here
+        const double* max = accessor->getMax3();
         if (max) {
             shared_ptr <JSONExport::JSONArray> maxArray(new JSONExport::JSONArray());
             
             accessorObject->setValue("max", maxArray);
             
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[0])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[1])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[2])));
+            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[0])));
+            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[1])));
+            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[2])));
         }
         
         return accessorObject;

@@ -37,9 +37,7 @@ namespace JSONExport
         this->_ID = JSONUtils::generateIDForType("accessor");
     }
     
-    JSONAccessor::JSONAccessor() : 
-    _min(0),
-    _max(0)
+    JSONAccessor::JSONAccessor() 
     {
         this->setElementType(NOT_A_SOURCE_TYPE);
         this->setByteStride(0);
@@ -50,9 +48,7 @@ namespace JSONExport
     }
         
     JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
-    _buffer(accessor->getBuffer()),
-    _min(0),
-    _max(0)
+    _buffer(accessor->getBuffer())
     {
         this->setElementType(accessor->getElementType());
         this->setByteStride(accessor->getByteStride());
@@ -64,12 +60,6 @@ namespace JSONExport
         
     JSONAccessor::~JSONAccessor()
     {
-        if (this->_min) {
-            free(this->_min);
-        }
-        if (this->_max) {
-            free(this->_max);
-        }
     }
         
     void JSONAccessor::setBuffer(shared_ptr <JSONExport::JSONBuffer> buffer)
@@ -162,44 +152,35 @@ namespace JSONExport
         return 0;
     }
     
-    void* JSONAccessor::getMin()
+    const double* JSONAccessor::getMin3()
     {
         return this->_min;
     }
 
-    void* JSONAccessor::getMax()
+    const double* JSONAccessor::getMax3()
     {
         return this->_max;
     }
 
     void JSONAccessor::computeMinMax() 
     {
-        if (this->_min) {
-            free(this->_min);
-        }
-        if (this->_max) {
-            free(this->_max);
-        }
-        
-        this->_min = malloc(this->getElementByteLength());
-        this->_max = malloc(this->getElementByteLength());
-
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-        
+
+        //FIXME: only support elementsPerVertexAttribute == 3 now
+        if (elementsPerVertexAttribute > 3) 
+            elementsPerVertexAttribute = 3;
+
         SourceType type = this->getElementType();
         switch (type) {
             case JSONExport::FLOAT: {
-                
+
                 shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
                 char* bufferData = ((char*)  ((JSONDataBuffer*)buffer.get())->getData() + this->getByteOffset());
                 float* vector = (float*)bufferData;
-                
-                float* min = (float*)this->_min;
-                float* max = (float*)this->_max;
-                
+                                
                 for (size_t i = 0 ; i < elementsPerVertexAttribute ; i++) {
-                    min[i] = max[i] = vector[i];
+                    this->_min[i] = this->_max[i] = vector[i];
                 }
                 
                 size_t count = this->getCount();
@@ -207,11 +188,11 @@ namespace JSONExport
                     vector = (float*)(bufferData + (i * byteStride));
                     
                     for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
-                        if (vector[j] < min[j]) {
-                            min[j] = vector[j];
+                        if (vector[j] < this->_min[j]) {
+                            this->_min[j] = vector[j];
                         }
-                        if (vector[j] > max[j]) {
-                            max[j] = vector[j];
+                        if (vector[j] > this->_max[j]) {
+                            this->_max[j] = vector[j];
                         }
                     }
                 }

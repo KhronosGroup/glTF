@@ -236,7 +236,6 @@ namespace JSONExport
         unsigned int primitivesCount =  primitives.size();
         for (int i = 0 ; i < primitivesCount ; i++) {            
             shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];            
-            
             shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
             
             /*

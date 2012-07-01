@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// TODO: check for - in JSON keys
+// TODO: check for '-' in JSON keys
 // TODO: consider LOD
 // TODO: normal generation when needed
 
@@ -41,6 +41,55 @@
 
 namespace DAE2JSON
 {    
+    BBOX::BBOX() {
+        this->_min = COLLADABU::Math::Vector3(DBL_MAX, DBL_MAX, DBL_MAX);
+        this->_max = COLLADABU::Math::Vector3(DBL_MIN, DBL_MIN, DBL_MIN);
+    }
+    
+    BBOX::BBOX(const COLLADABU::Math::Vector3 &min, const COLLADABU::Math::Vector3 &max) {
+        this->_min = min;
+        this->_max = max;
+    }
+    
+    const COLLADABU::Math::Vector3&  BBOX::getMin3() {
+        return this->_min;
+    }
+
+    const COLLADABU::Math::Vector3& BBOX::getMax3() {
+        return this->_max;
+    }
+
+    void BBOX::merge(BBOX* bbox) {
+        this->_min.makeFloor(bbox->getMin3());
+        this->_max.makeCeil(bbox->getMax3());
+    }
+    
+    void BBOX::transform(const COLLADABU::Math::Matrix4& mat4) {
+        COLLADABU::Math::Vector3 min = COLLADABU::Math::Vector3(DBL_MAX, DBL_MAX, DBL_MAX);
+        COLLADABU::Math::Vector3 max = COLLADABU::Math::Vector3(DBL_MIN, DBL_MIN, DBL_MIN);
+        
+        COLLADABU::Math::Vector3 pt0 = mat4 * COLLADABU::Math::Vector3(this->_min.x, this->_min.y, this->_min.z);
+        COLLADABU::Math::Vector3 pt1 = mat4 * COLLADABU::Math::Vector3(this->_max.x, this->_min.y, this->_min.z);
+        COLLADABU::Math::Vector3 pt2 = mat4 * COLLADABU::Math::Vector3(this->_min.x, this->_max.y, this->_min.z);
+        COLLADABU::Math::Vector3 pt3 = mat4 * COLLADABU::Math::Vector3(this->_max.x, this->_max.y, this->_min.z);
+        COLLADABU::Math::Vector3 pt4 = mat4 * COLLADABU::Math::Vector3(this->_min.x, this->_min.y, this->_max.z);
+        COLLADABU::Math::Vector3 pt5 = mat4 * COLLADABU::Math::Vector3(this->_max.x, this->_min.y, this->_max.z);
+        COLLADABU::Math::Vector3 pt6 = mat4 * COLLADABU::Math::Vector3(this->_min.x, this->_max.y, this->_max.z);
+        COLLADABU::Math::Vector3 pt7 = mat4 * COLLADABU::Math::Vector3(this->_max.x, this->_max.y, this->_max.z);
+        
+        min.makeFloor(pt0); max.makeCeil(pt0);
+        min.makeFloor(pt1); max.makeCeil(pt1);
+        min.makeFloor(pt2); max.makeCeil(pt2);
+        min.makeFloor(pt3); max.makeCeil(pt3);
+        min.makeFloor(pt4); max.makeCeil(pt4);
+        min.makeFloor(pt5); max.makeCeil(pt5);
+        min.makeFloor(pt6); max.makeCeil(pt6);
+        min.makeFloor(pt7); max.makeCeil(pt7);
+        
+        this->_min = min;
+        this->_max = max;
+    }
+        
     //---- Convert OpenCOLLADA mesh to mesh -------------------------------------------
   
     static unsigned int ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(const COLLADAFW::MeshVertexData &vertexData, JSONExport::IndexSetToAccessorHashmap &accessors) 
@@ -109,7 +158,6 @@ namespace DAE2JSON
         
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <JSONExport::JSONDataBuffer> cvtBuffer(new JSONExport::JSONDataBuffer(name, sourceData, sourceSize, false));
-            
             shared_ptr <JSONExport::JSONAccessor> cvtAccessor(new JSONExport::JSONAccessor());
         
             cvtAccessor->setBuffer(cvtBuffer);
@@ -450,7 +498,10 @@ namespace DAE2JSON
          */
     }
         
-    bool DAE2JSONWriter::writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject) 
+    bool DAE2JSONWriter::writeNode( const COLLADAFW::Node* node, 
+                                    shared_ptr <JSONExport::JSONObject> nodesObject, 
+                                    COLLADABU::Math::Matrix4 parentMatrix,
+                                    SceneFlatteningInfo* sceneFlatteningInfo) 
     {
         const String& originalID = getNodeID(node);
         
@@ -460,6 +511,9 @@ namespace DAE2JSON
         
         nodeObject->setString("type", "node");
         const COLLADABU::Math::Matrix4 &matrix = node->getTransformationMatrix();
+        
+        const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
+    
         if (!matrix.isIdentity())
             nodeObject->setValue("matrix", this->serializeMatrix4Array(node->getTransformationMatrix()));
         
@@ -482,9 +536,19 @@ namespace DAE2JSON
                 
                 unsigned int meshUID = instanceGeometry->getInstanciatedObjectId().getObjectId();
                 shared_ptr <JSONExport::JSONMesh> mesh = this->_uniqueIDToMesh[meshUID];
+
+                if (sceneFlatteningInfo) {
+                    JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::Semantic::VERTEX); 
+                    shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
+                    
+                    BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin3()), 
+                                    COLLADABU::Math::Vector3(vertexAccessor->getMax3()));
+                    vertexBBOX.transform(worldMatrix);
+                    
+                    sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
+                }
                 
                 std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
-
                 for (int j = 0 ; j < primitives.size() ; j++) {
                     shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
                     
@@ -502,6 +566,16 @@ namespace DAE2JSON
                     shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
                         
                     primitive->setMaterialID(effect->getID());
+                    
+                    if (sceneFlatteningInfo) {
+                        shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(mesh->getID(), i, parentMatrix));
+                        shared_ptr <MeshFlatteningInfoVector> meshesInfo = sceneFlatteningInfo->materialIDToMeshFlatteningInfoVector[effect->getID()];
+                        if (!meshesInfo) {
+                            meshesInfo = shared_ptr <MeshFlatteningInfoVector> (new MeshFlatteningInfoVector());
+                            sceneFlatteningInfo->materialIDToMeshFlatteningInfoVector[effect->getID()] = meshesInfo; 
+                        }
+                        meshesInfo->push_back(meshFlatteningInfo);
+                    }
                 }
             
                 meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
@@ -525,7 +599,7 @@ namespace DAE2JSON
          */
         
         for (int i = 0 ; i < count ; i++)  {
-            this->writeNode(nodes[i], nodesObject);
+            this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
         }
         
         const InstanceNodePointerArray& instanceNodes = node->getInstanceNodes();
@@ -546,7 +620,8 @@ namespace DAE2JSON
     /* 
         For nodes, lights, cameras and materials, contrary to meshes we export directly the nodes without using the JSON intermediate model.
         The main reason is that we only need to make important transformations for meshes.
-     */         
+     */      
+            
     bool DAE2JSONWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
 	{
         shared_ptr <JSONExport::JSONObject> scenesObject(new JSONExport::JSONObject());
@@ -580,10 +655,12 @@ namespace DAE2JSON
         }
         
         rootObject->setValue("children", childrenArray);
-                                      
+
+        SceneFlatteningInfo sceneFlatteningInfo;
+        
         //second pass to actually output the JSON of the node themselves (and for all sub nodes)
         for (int i = 0 ; i < nodeCount ; i++) {
-            this->writeNode(nodePointerArray[i], nodesObject);
+            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, &sceneFlatteningInfo);
         }
         
 		return true;
@@ -606,7 +683,7 @@ namespace DAE2JSON
         for (int i = 0 ; i < count ; i++) {
             const COLLADAFW::Node *node = nodes[i];
 
-            if (!this->writeNode(node,  nodesObject))
+            if (!this->writeNode(node,  nodesObject, COLLADABU::Math::Matrix4::IDENTITY, 0))
                 return false;
         }
         

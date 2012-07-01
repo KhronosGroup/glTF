@@ -81,8 +81,47 @@ namespace DAE2JSON
 {
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONMesh> > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;
-
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;    
+    
+    class BBOX
+    {
+    public:
+        BBOX();
+        BBOX(const COLLADABU::Math::Vector3 &min, const COLLADABU::Math::Vector3 &max);
+        
+        void merge(BBOX* bbox);
+        const COLLADABU::Math::Vector3& getMin3();
+        const COLLADABU::Math::Vector3& getMax3();
+        
+        void transform(const COLLADABU::Math::Matrix4& mat4);
+    private:
+        COLLADABU::Math::Vector3 _min;
+        COLLADABU::Math::Vector3 _max;
+    };
+    
+    
+    class MeshFlatteningInfo  
+    {
+    public:
+        MeshFlatteningInfo(const std::string& meshID, size_t primitiveIndex, const COLLADABU::Math::Matrix4& worldMatrix) :
+        _meshID(meshID),
+        _worldMatrix(worldMatrix),
+        _primitiveIndex(primitiveIndex) {}
+    private:
+        COLLADABU::Math::Matrix4 _worldMatrix;
+        std::string _meshID;
+        size_t _primitiveIndex;
+    };
+    
+    typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
+    typedef std::map<std::string, shared_ptr <MeshFlatteningInfoVector> > MaterialIDToMeshFlatteningInfoVector;
+        
+    typedef struct 
+    {
+        BBOX sceneBBOX;
+        MaterialIDToMeshFlatteningInfoVector materialIDToMeshFlatteningInfoVector;
+    } SceneFlatteningInfo;
+    
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
@@ -90,7 +129,7 @@ namespace DAE2JSON
 		virtual ~DAE2JSONWriter();
 
 		static void reportError(const String& method, const String& message);
-        bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject);
+        bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         
 	public:        
