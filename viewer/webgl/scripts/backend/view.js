@@ -89,10 +89,8 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         //compute hierarchical bbox for the whole scene
                         //this will be removed from this place when node bounding box become is implemented as hierarchical
                     
-                    
                         var ctx = mat4.identity();
-                        var node = value.rootNode.children[0];
-                        //node.transform = mat4.identity();
+                        var node = value.rootNode;
                         var sceneBBox = value.rootNode.boundingBox;
                         value.rootNode.apply( function(node, parentTransform) {
                             var modelMatrix = mat4.create();
@@ -110,7 +108,6 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                             return modelMatrix;
                         }, true, ctx);
                         this.sceneBBox = sceneBBox;
-                        debugger;
                         this.engine.rootPass.scene = value;
                     }
                 }
