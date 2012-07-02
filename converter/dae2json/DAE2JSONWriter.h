@@ -83,6 +83,8 @@ namespace DAE2JSON
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;    
     
+    //-- BBOX helper class
+    
     class BBOX
     {
     public:
@@ -99,38 +101,39 @@ namespace DAE2JSON
         COLLADABU::Math::Vector3 _max;
     };
     
+    // -- SceneFlattening
     
     class MeshFlatteningInfo  
     {
     public:
-        MeshFlatteningInfo(const std::string& meshID, size_t primitiveIndex, const COLLADABU::Math::Matrix4& worldMatrix) :
+        MeshFlatteningInfo(const std::string& meshID, const COLLADABU::Math::Matrix4& worldMatrix) :
         _meshID(meshID),
-        _worldMatrix(worldMatrix),
-        _primitiveIndex(primitiveIndex) {}
+        _worldMatrix(worldMatrix) {}
     private:
         COLLADABU::Math::Matrix4 _worldMatrix;
         std::string _meshID;
-        size_t _primitiveIndex;
     };
     
     typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
-    typedef std::map<std::string, shared_ptr <MeshFlatteningInfoVector> > MaterialIDToMeshFlatteningInfoVector;
         
     typedef struct 
     {
         BBOX sceneBBOX;
-        MaterialIDToMeshFlatteningInfoVector materialIDToMeshFlatteningInfoVector;
+        MeshFlatteningInfoVector allMeshes;
     } SceneFlatteningInfo;
+    
+    //-- OpenCOLLADA -> JSON writer implementation
     
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
 		DAE2JSONWriter( const COLLADABU::URI& inputFile, PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
-
+    private:
 		static void reportError(const String& method, const String& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
+        bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         
 	public:        
         
@@ -225,6 +228,7 @@ namespace DAE2JSON
         JSONExport::JSONWriter _writer;
         shared_ptr <JSONExport::JSONObject> _rootJSONObject;
         ofstream _fileOutputStream;
+        SceneFlatteningInfo _sceneFlatteningInfo;
 	};
 } 
 

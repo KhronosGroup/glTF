@@ -126,10 +126,10 @@ namespace DAE2JSON
             void *sourceData = 0;
             size_t sourceSize = 0;
         
-            JSONExport::SourceType sourceType = JSONExport::NOT_A_SOURCE_TYPE;
+            JSONExport::ElementType elementType = JSONExport::NOT_AN_ELEMENT_TYPE;
             switch (vertexData.getType()) {
                 case MeshVertexData::DATA_TYPE_FLOAT: {
-                    sourceType = JSONExport::FLOAT;
+                    elementType = JSONExport::FLOAT;
                     stride = sizeof(float) * size;
                     const FloatArray& array = vertexData.getFloatValues()[indexOfSet];
                     const size_t count = array.getCount();
@@ -163,7 +163,7 @@ namespace DAE2JSON
             cvtAccessor->setBuffer(cvtBuffer);
             cvtAccessor->setElementsPerVertexAttribute(size);
             cvtAccessor->setByteStride(stride);
-            cvtAccessor->setElementType(sourceType);
+            cvtAccessor->setElementType(elementType);
             cvtAccessor->setByteOffset(0);
             cvtAccessor->setCount(elementsCount);
             
@@ -430,10 +430,14 @@ namespace DAE2JSON
         
         this->_rootJSONObject->write(&this->_writer);
                 
-        shared_ptr <JSONExport::JSONObject> flattenedNode = JSONExport::JSONCreateFlattenedScene(this->_rootJSONObject);
+        bool sceneFlatteningEnabled = true;
+        if (sceneFlatteningEnabled) {
+            //second pass to actually output the JSON of the node themselves (and for all sub nodes)
+            processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
+        }
         
-        //this->_fileOutputStream.flush();
-        //this->_fileOutputStream.close();
+        this->_fileOutputStream.flush();
+        this->_fileOutputStream.close();
         
 		return true;
 	}
@@ -541,8 +545,8 @@ namespace DAE2JSON
                     JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::Semantic::VERTEX); 
                     shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
                     
-                    BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin3()), 
-                                    COLLADABU::Math::Vector3(vertexAccessor->getMax3()));
+                    BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()), 
+                                    COLLADABU::Math::Vector3(vertexAccessor->getMax()));
                     vertexBBOX.transform(worldMatrix);
                     
                     sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
@@ -565,21 +569,16 @@ namespace DAE2JSON
                     unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
                     shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
                         
-                    primitive->setMaterialID(effect->getID());
-                    
-                    if (sceneFlatteningInfo) {
-                        shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(mesh->getID(), i, parentMatrix));
-                        shared_ptr <MeshFlatteningInfoVector> meshesInfo = sceneFlatteningInfo->materialIDToMeshFlatteningInfoVector[effect->getID()];
-                        if (!meshesInfo) {
-                            meshesInfo = shared_ptr <MeshFlatteningInfoVector> (new MeshFlatteningInfoVector());
-                            sceneFlatteningInfo->materialIDToMeshFlatteningInfoVector[effect->getID()] = meshesInfo; 
-                        }
-                        meshesInfo->push_back(meshFlatteningInfo);
-                    }
+                    primitive->setMaterialID(effect->getID());                    
                 }
             
                 meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
                 
+                if (sceneFlatteningInfo) {
+                    shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(mesh->getID(), parentMatrix));
+                    sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo); 
+                }
+
             }
         }
         
@@ -617,33 +616,53 @@ namespace DAE2JSON
         return true;
     }
 
-    /* 
-        For nodes, lights, cameras and materials, contrary to meshes we export directly the nodes without using the JSON intermediate model.
-        The main reason is that we only need to make important transformations for meshes.
-     */      
+
+    // Flattening    
+    //conditions for flattening
+    // -> same material
+    // option to merge of not non-opaque geometry
+    //  -> check per primitive that sources / semantic layout matches 
+    
+    // [accessors]
+    
+    
+    // -> for all meshes 
+    //   -> collect all kind of semantic
+    // -> for all meshes
+    //   -> get all accessors 
+    //   -> transforms & write vtx attributes
+    //   -> for all primitives
+    //     -> 
+    
+    bool DAE2JSONWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) {
+
+        MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
+        
+        //First collect all kind of accessors available
+        size_t count = allMeshes.size();
+        for (size_t i = 0 ; i < count ; i++) {
             
+        }
+        
+        return true;
+    }
+    
     bool DAE2JSONWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
 	{
+        //FIXME: only one visual scene assumed/handled
         shared_ptr <JSONExport::JSONObject> scenesObject(new JSONExport::JSONObject());
-        
+        shared_ptr <JSONExport::JSONObject> sceneObject(new JSONExport::JSONObject());
+        shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("nodes"));
+        shared_ptr <JSONExport::JSONObject> rootObject(new JSONExport::JSONObject());
+
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
         
-        //FIXME: only one visual scene assumed/handled
-        shared_ptr <JSONExport::JSONObject> sceneObject(new JSONExport::JSONObject());
-        
         this->_rootJSONObject->setValue("scenes", scenesObject);
-
         sceneObject->setString("type", "scene");
         sceneObject->setString("node", "root");
-
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
-        
-        shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("nodes"));
-        shared_ptr <JSONExport::JSONObject> rootObject(new JSONExport::JSONObject());
-        
         nodesObject->setValue("root", rootObject);
-        
         rootObject->setString("type", "node");                
                 
         //first pass to output children name of our root node
@@ -655,12 +674,9 @@ namespace DAE2JSON
         }
         
         rootObject->setValue("children", childrenArray);
-
-        SceneFlatteningInfo sceneFlatteningInfo;
         
-        //second pass to actually output the JSON of the node themselves (and for all sub nodes)
         for (int i = 0 ; i < nodeCount ; i++) {
-            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, &sceneFlatteningInfo);
+            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, &this->_sceneFlatteningInfo);
         }
         
 		return true;

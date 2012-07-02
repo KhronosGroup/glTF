@@ -27,6 +27,8 @@
 #ifndef __JSON_UTILS_H__
 #define __JSON_UTILS_H__
 
+#include <float.h>
+
 namespace JSONExport 
 {    
     class JSONUtils 
@@ -70,9 +72,9 @@ namespace JSONExport
             return type;
         }
         
-        static std::string getStringForType(int sourceType) 
+        static std::string getStringForType(int elementType) 
         {
-            switch (sourceType) {
+            switch (elementType) {
                 case JSONExport::BYTE:
                     return "Int8";
                 case JSONExport::UNSIGNED_BYTE:
@@ -90,9 +92,9 @@ namespace JSONExport
             }
         }
         
-        static std::string getStringForTypedArray(int sourceType) 
+        static std::string getStringForTypedArray(int elementType) 
         {
-            switch (sourceType) {
+            switch (elementType) {
                 case JSONExport::BYTE:
                     return "Int8Array";
                 case JSONExport::UNSIGNED_BYTE:
@@ -138,9 +140,9 @@ namespace JSONExport
             stream << value;
             return stream.str();
         }
-                
+                        
     };
-
+    
 }
 
 #endif
