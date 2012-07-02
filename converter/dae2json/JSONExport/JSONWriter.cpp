@@ -222,27 +222,23 @@ namespace JSONExport
         accessorObject->setString("buffer", buffer->getID());
         
         //FIXME: should not assume 3 components here
-        const double* min = accessor->getMin3();
+        const double* min = accessor->getMin();
         if (min) {         
             shared_ptr <JSONExport::JSONArray> minArray(new JSONExport::JSONArray());
-            
             accessorObject->setValue("min", minArray);
-            
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[0])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[1])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[2])));
+            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+                minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[i])));
+            }
         }
         
         //FIXME: should not assume 3 components here
-        const double* max = accessor->getMax3();
+        const double* max = accessor->getMax();
         if (max) {
             shared_ptr <JSONExport::JSONArray> maxArray(new JSONExport::JSONArray());
-            
             accessorObject->setValue("max", maxArray);
-            
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[0])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[1])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[2])));
+            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+                maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[i])));
+            }
         }
         
         return accessorObject;

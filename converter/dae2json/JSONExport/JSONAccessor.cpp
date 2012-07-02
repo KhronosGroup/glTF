@@ -37,9 +37,9 @@ namespace JSONExport
         this->_ID = JSONUtils::generateIDForType("accessor");
     }
     
-    JSONAccessor::JSONAccessor() 
+    JSONAccessor::JSONAccessor(): _min(0), _max(0) 
     {
-        this->setElementType(NOT_A_SOURCE_TYPE);
+        this->setElementType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
         this->setByteOffset(0);
         this->_generateID();
@@ -48,7 +48,7 @@ namespace JSONExport
     }
         
     JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
-    _buffer(accessor->getBuffer())
+    _buffer(accessor->getBuffer()), _min(0), _max(0)
     {
         this->setElementType(accessor->getElementType());
         this->setByteStride(accessor->getByteStride());
@@ -60,6 +60,12 @@ namespace JSONExport
         
     JSONAccessor::~JSONAccessor()
     {
+        if (this->_min) {
+            delete [] this->_min;
+        }
+        if (this->_max) {
+            delete [] this->_max;
+        }
     }
         
     void JSONAccessor::setBuffer(shared_ptr <JSONExport::JSONBuffer> buffer)
@@ -92,12 +98,12 @@ namespace JSONExport
         return this->_byteStride;
     }
         
-    void JSONAccessor::setElementType(SourceType elementType)
+    void JSONAccessor::setElementType(ElementType elementType)
     {
         this->_elementType = elementType;
     }
         
-    SourceType JSONAccessor::getElementType()
+    ElementType JSONAccessor::getElementType()
     {
         return this->_elementType;
     }
@@ -130,7 +136,7 @@ namespace JSONExport
     size_t JSONAccessor::getElementByteLength()
     {
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-        SourceType type = this->getElementType();
+        ElementType type = this->getElementType();
         switch (type) {
             case JSONExport::BYTE:
             case JSONExport::UNSIGNED_BYTE:
@@ -152,12 +158,12 @@ namespace JSONExport
         return 0;
     }
     
-    const double* JSONAccessor::getMin3()
+    const double* JSONAccessor::getMin()
     {
         return this->_min;
     }
 
-    const double* JSONAccessor::getMax3()
+    const double* JSONAccessor::getMax()
     {
         return this->_max;
     }
@@ -166,12 +172,18 @@ namespace JSONExport
     {
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-
-        //FIXME: only support elementsPerVertexAttribute == 3 now
-        if (elementsPerVertexAttribute > 3) 
-            elementsPerVertexAttribute = 3;
-
-        SourceType type = this->getElementType();
+        
+        if (this->_min) {
+            delete [] this->_min;
+        }
+        if (this->_max) {
+            delete [] this->_max;
+        }
+        
+        this->_min = new double[elementsPerVertexAttribute];
+        this->_max = new double[elementsPerVertexAttribute];
+        
+        ElementType type = this->getElementType();
         switch (type) {
             case JSONExport::FLOAT: {
 

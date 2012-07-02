@@ -56,8 +56,8 @@ namespace JSONExport
         void setByteStride(size_t stride);
         size_t getByteStride();
         
-        void setElementType(SourceType type);
-        SourceType getElementType();
+        void setElementType(ElementType type);
+        ElementType getElementType();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
@@ -71,8 +71,8 @@ namespace JSONExport
         
         size_t getElementByteLength();
         
-        const double* getMin3();
-        const double* getMax3();
+        const double* getMin();
+        const double* getMax();
 
     private:
         shared_ptr <JSONExport::JSONBuffer> _buffer;
@@ -80,10 +80,10 @@ namespace JSONExport
         size_t              _count;
         size_t              _byteStride;
         size_t              _byteOffset;
-        SourceType          _elementType;
+        ElementType         _elementType;
         std::string         _ID;
-        double              _min[3];
-        double              _max[3];
+        double              *_min;
+        double              *_max;
     };
 
 }
