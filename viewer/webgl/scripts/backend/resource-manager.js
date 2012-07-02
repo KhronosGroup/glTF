@@ -137,20 +137,20 @@ define(function() {
                 var resource = this._getResource(id);
                 if (resource) {
                     return resource;
-                }                               
-                
-                var resourceToBeProcessed = {"resourceDescription" : resourceDescription , 
+                }
+
+                var resourceToBeProcessed = {"resourceDescription" : resourceDescription,
                                             "delegate" : delegate,
                                             "ctx" : ctx,
                                             "range" : range,
                                             "id" : id  };
                 
-                if (this._resourcesBeingProcessedCount > ResourceManager.MAX_CONCURRENT_XHR) {
+                if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
                     if (!fromQueue) {
                         this._resourcesToBeProcessed.push(resourceToBeProcessed);
                     }
                     return null;
-                }            
+                }
             
                 if (delegate) {
                     var self = this;
@@ -167,23 +167,26 @@ define(function() {
                         delegate.resourceAvailable(convertedResource, ctx);
                         self._resourcesBeingProcessedCount--;
                         //process next element
+                        var existingResource = null;
                         if (self._resourcesToBeProcessed.length > 0) {
-                            var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
-                            self.getWebGLResource(  nextResourceToBeProcessed.id, 
-                                                    nextResourceToBeProcessed.resourceDescription, 
-                                                    nextResourceToBeProcessed.range, 
-                                                    nextResourceToBeProcessed.delegate, 
-                                                    nextResourceToBeProcessed.ctx,
-                                                    true);
+                            do {
+                                var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
+                                existingResource = self.getWebGLResource(nextResourceToBeProcessed.id,
+                                                        nextResourceToBeProcessed.resourceDescription,
+                                                        nextResourceToBeProcessed.range,
+                                                        nextResourceToBeProcessed.delegate,
+                                                        nextResourceToBeProcessed.ctx,
+                                                        true);
+                            } while ((self._resourcesToBeProcessed.length > 0) && (existingResource !== null));
                         }
-                    }
+                    };
                 
                     processResourceDelegate.handleError = function(errorCode, info) {
                         delegate.handleError(errorCode, info);
-                    }
+                    };
 
                     self._resourcesBeingProcessedCount++;
-                    this._loadResource(processResourceDelegate, resourceToBeProcessed, range);                  
+                    this._loadResource(processResourceDelegate, resourceToBeProcessed, range);
                 }
                 
                 return null;
