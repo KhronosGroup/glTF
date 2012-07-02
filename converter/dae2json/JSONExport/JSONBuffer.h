@@ -53,7 +53,6 @@ namespace JSONExport
         size_t _byteSize;
     };
     
-    
     class JSONDataBuffer : public JSONBuffer {        
     public:
         JSONDataBuffer(std::string ID, void *data, size_t size, bool ownData);
@@ -67,24 +66,6 @@ namespace JSONExport
         unsigned char* _data;
         bool    _ownData;
     };
-    
-    class JSONFileBuffer : public JSONBuffer {
-    private:
-        bool _open(); 
-        void _close(); 
-    public:
-        
-        JSONFileBuffer(const std::string &ID,const std::string  &path);
-        JSONFileBuffer(const std::string  &path);
-        virtual ~JSONFileBuffer();
-        
-        bool appendData(void* data, size_t size);
-                
-    private:
-        std::string _path;
-        FILE *_fd;
-    };
-
 }
 
 

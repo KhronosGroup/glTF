@@ -37,11 +37,9 @@ namespace JSONExport
         this->_ID = JSONUtils::generateIDForType("accessor");
     }
     
-    JSONAccessor::JSONAccessor() : 
-    _min(0),
-    _max(0)
+    JSONAccessor::JSONAccessor(): _min(0), _max(0) 
     {
-        this->setElementType(NOT_A_SOURCE_TYPE);
+        this->setElementType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
         this->setByteOffset(0);
         this->_generateID();
@@ -50,10 +48,10 @@ namespace JSONExport
     }
         
     JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
-    _buffer(accessor->getBuffer()),
-    _min(0),
-    _max(0)
+    _buffer(accessor->getBuffer()), _min(0), _max(0)
     {
+        assert(accessor);
+        
         this->setElementType(accessor->getElementType());
         this->setByteStride(accessor->getByteStride());
         this->setByteOffset(accessor->getByteOffset());
@@ -65,10 +63,10 @@ namespace JSONExport
     JSONAccessor::~JSONAccessor()
     {
         if (this->_min) {
-            free(this->_min);
+            delete [] this->_min;
         }
         if (this->_max) {
-            free(this->_max);
+            delete [] this->_max;
         }
     }
         
@@ -102,12 +100,12 @@ namespace JSONExport
         return this->_byteStride;
     }
         
-    void JSONAccessor::setElementType(SourceType elementType)
+    void JSONAccessor::setElementType(ElementType elementType)
     {
         this->_elementType = elementType;
     }
         
-    SourceType JSONAccessor::getElementType()
+    ElementType JSONAccessor::getElementType()
     {
         return this->_elementType;
     }
@@ -140,7 +138,7 @@ namespace JSONExport
     size_t JSONAccessor::getElementByteLength()
     {
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-        SourceType type = this->getElementType();
+        ElementType type = this->getElementType();
         switch (type) {
             case JSONExport::BYTE:
             case JSONExport::UNSIGNED_BYTE:
@@ -162,44 +160,41 @@ namespace JSONExport
         return 0;
     }
     
-    void* JSONAccessor::getMin()
+    const double* JSONAccessor::getMin()
     {
         return this->_min;
     }
 
-    void* JSONAccessor::getMax()
+    const double* JSONAccessor::getMax()
     {
         return this->_max;
     }
 
     void JSONAccessor::computeMinMax() 
     {
-        if (this->_min) {
-            free(this->_min);
-        }
-        if (this->_max) {
-            free(this->_max);
-        }
-        
-        this->_min = malloc(this->getElementByteLength());
-        this->_max = malloc(this->getElementByteLength());
-
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         
-        SourceType type = this->getElementType();
+        if (this->_min) {
+            delete [] this->_min;
+        }
+        if (this->_max) {
+            delete [] this->_max;
+        }
+        
+        this->_min = new double[elementsPerVertexAttribute];
+        this->_max = new double[elementsPerVertexAttribute];
+        
+        ElementType type = this->getElementType();
         switch (type) {
             case JSONExport::FLOAT: {
-                
+
                 shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
                 char* bufferData = ((char*)  ((JSONDataBuffer*)buffer.get())->getData() + this->getByteOffset());
                 float* vector = (float*)bufferData;
-                
-                float* min = (float*)this->_min;
-                float* max = (float*)this->_max;
-                
+                                
                 for (size_t i = 0 ; i < elementsPerVertexAttribute ; i++) {
-                    min[i] = max[i] = vector[i];
+                    this->_min[i] = this->_max[i] = vector[i];
                 }
                 
                 size_t count = this->getCount();
@@ -207,11 +202,11 @@ namespace JSONExport
                     vector = (float*)(bufferData + (i * byteStride));
                     
                     for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
-                        if (vector[j] < min[j]) {
-                            min[j] = vector[j];
+                        if (vector[j] < this->_min[j]) {
+                            this->_min[j] = vector[j];
                         }
-                        if (vector[j] > max[j]) {
-                            max[j] = vector[j];
+                        if (vector[j] > this->_max[j]) {
+                            this->_max[j] = vector[j];
                         }
                     }
                 }
@@ -223,5 +218,14 @@ namespace JSONExport
         }
     }
     
+    bool JSONAccessor::matchesLayout(JSONAccessor* accessor)
+    {
+        assert(accessor);
+        
+        return ((accessor->getElementsPerVertexAttribute() == this->getElementsPerVertexAttribute()) &&
+                (accessor->getByteStride() == this->getByteStride()) &&
+                (accessor->getElementType() == this->getElementType()) &&
+                (accessor->getElementByteLength() == this->getElementByteLength()));
+    }
                     
 }

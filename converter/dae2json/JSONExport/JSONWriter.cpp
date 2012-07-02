@@ -161,8 +161,14 @@ namespace JSONExport
         for (int i = 0 ; i < primitivesCount ; i++) {
             
             shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];   
-            shared_ptr <JSONExport::JSONObject> primitiveObject = this->serializePrimitive(primitive.get(), mesh);
             shared_ptr <JSONExport::JSONIndices> uniqueIndices =  primitive->getUniqueIndices();
+
+            void *primitiveContext[2];
+            
+            primitiveContext[0] = mesh;
+            primitiveContext[1] = context;
+            
+            shared_ptr <JSONExport::JSONObject> primitiveObject = this->serializePrimitive(primitive.get(), primitiveContext);
             
             primitivesArray->appendValue(primitiveObject);
             
@@ -177,20 +183,7 @@ namespace JSONExport
             }
             
         }
-        
-        for (unsigned int j = 0 ; j < allAccessors.size() ; j++) {
-            shared_ptr <JSONExport::JSONAccessor> accessor = allAccessors[j];
-            shared_ptr <JSONExport::JSONBuffer> buffer = accessor->getBuffer();
-            
-            if (!buffer.get()) {
-                // FIXME: report error
-            }
-            if (!IDToBuffer[buffer->getID().c_str()].get()) {
-                std::string bufferPath = mesh->getDirectory() + buffer->getID();
-                IDToBuffer[buffer->getID()] = buffer;
-            } 
-        }
-        
+                
         vector <JSONExport::Semantic> allSemantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
             JSONExport::Semantic semantic = allSemantics[i];
@@ -223,30 +216,29 @@ namespace JSONExport
         accessorObject->setUnsignedInt32("elementsPerValue", accessor->getElementsPerVertexAttribute());
         accessorObject->setUnsignedInt32("count", accessor->getCount());
         accessorObject->setString("elementType", JSONUtils::getStringForType(accessor->getElementType()));
-        accessorObject->setString("buffer", accessor->getBuffer()->getID());
         
-        //FIXME: should not assume float here
-        float* min = (float*)accessor->getMin();
+        JSONBuffer* buffer = context ? (JSONBuffer*)context : accessor->getBuffer().get();
+
+        accessorObject->setString("buffer", buffer->getID());
+        
+        //FIXME: should not assume 3 components here
+        const double* min = accessor->getMin();
         if (min) {         
             shared_ptr <JSONExport::JSONArray> minArray(new JSONExport::JSONArray());
-            
             accessorObject->setValue("min", minArray);
-            
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[0])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[1])));
-            minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)min[2])));
+            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+                minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[i])));
+            }
         }
         
-        //FIXME: should not assume float here
-        float* max = (float*)accessor->getMax();
+        //FIXME: should not assume 3 components here
+        const double* max = accessor->getMax();
         if (max) {
             shared_ptr <JSONExport::JSONArray> maxArray(new JSONExport::JSONArray());
-            
             accessorObject->setValue("max", maxArray);
-            
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[0])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[1])));
-            maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)max[2])));
+            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+                maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[i])));
+            }
         }
         
         return accessorObject;
@@ -257,8 +249,10 @@ namespace JSONExport
     {
         shared_ptr <JSONExport::JSONObject> indicesObject(new JSONExport::JSONObject());
 
+        JSONBuffer* buffer = context ? (JSONBuffer*)context : indices->getBuffer().get();
+
         indicesObject->setString("type", JSONUtils::getStringForTypedArray(JSONExport::UNSIGNED_SHORT));
-        indicesObject->setString("buffer", indices->getBuffer()->getID());
+        indicesObject->setString("buffer", buffer->getID());
         indicesObject->setUnsignedInt32("byteOffset", indices->getByteOffset());
         indicesObject->setUnsignedInt32("length", indices->getCount());
 
@@ -267,9 +261,10 @@ namespace JSONExport
     
     shared_ptr <JSONExport::JSONObject> JSONWriter::serializePrimitive(JSONPrimitive* primitive, void *context)
     {
+        void** primitiveContext = (void**)context;
         shared_ptr <JSONExport::JSONObject> primitiveObject(new JSONExport::JSONObject());
 
-        JSONMesh* mesh = (JSONMesh*)context;
+        JSONMesh* mesh = (JSONMesh*)primitiveContext[0];
         
         primitiveObject->setString("type", "primitive");
         primitiveObject->setString("primitive", primitive->getType());
@@ -298,10 +293,10 @@ namespace JSONExport
         
         shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
         
-        shared_ptr <JSONExport::JSONObject> serializedIndices = this->serializeIndices(uniqueIndices.get(), context);
+        shared_ptr <JSONExport::JSONObject> serializedIndices = this->serializeIndices(uniqueIndices.get(), primitiveContext[1]);
         
         primitiveObject->setValue("indices", serializedIndices);
-        
+            
         return primitiveObject;
     }
     

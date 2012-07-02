@@ -125,7 +125,7 @@ define(function() {
             }
         },
     
-        /* 
+        /*
             process the queue of resources one at a time and pick them in "_resourcesToBeProcessed"
             this method should be cleaned up a bit. dequeuing code is redundant.
         
@@ -138,14 +138,14 @@ define(function() {
                 if (resource) {
                     return resource;
                 }
-                
+
                 var resourceToBeProcessed = {"resourceDescription" : resourceDescription,
                                             "delegate" : delegate,
                                             "ctx" : ctx,
                                             "range" : range,
                                             "id" : id  };
                 
-                if (this._resourcesBeingProcessedCount > ResourceManager.MAX_CONCURRENT_XHR) {
+                if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
                     if (!fromQueue) {
                         this._resourcesToBeProcessed.push(resourceToBeProcessed);
                     }
@@ -167,14 +167,17 @@ define(function() {
                         delegate.resourceAvailable(convertedResource, ctx);
                         self._resourcesBeingProcessedCount--;
                         //process next element
+                        var existingResource = null;
                         if (self._resourcesToBeProcessed.length > 0) {
-                            var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
-                            self.getWebGLResource(  nextResourceToBeProcessed.id,
-                                                    nextResourceToBeProcessed.resourceDescription,
-                                                    nextResourceToBeProcessed.range,
-                                                    nextResourceToBeProcessed.delegate,
-                                                    nextResourceToBeProcessed.ctx,
-                                                    true);
+                            do {
+                                var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
+                                existingResource = self.getWebGLResource(nextResourceToBeProcessed.id,
+                                                        nextResourceToBeProcessed.resourceDescription,
+                                                        nextResourceToBeProcessed.range,
+                                                        nextResourceToBeProcessed.delegate,
+                                                        nextResourceToBeProcessed.ctx,
+                                                        true);
+                            } while ((self._resourcesToBeProcessed.length > 0) && (existingResource !== null));
                         }
                     };
                 

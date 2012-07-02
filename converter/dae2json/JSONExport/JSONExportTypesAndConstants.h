@@ -97,8 +97,8 @@ namespace JSONExport
         PRIMITIVE = 10
     };
     
-    enum SourceType {
-        NOT_A_SOURCE_TYPE = 0,
+    enum ElementType {
+        NOT_AN_ELEMENT_TYPE = 0,
         BYTE = 1,
         UNSIGNED_BYTE = 2,
         SHORT = 3,

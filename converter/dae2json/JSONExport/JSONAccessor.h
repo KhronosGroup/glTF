@@ -28,7 +28,7 @@
 #define __JSON_ACCESSOR_H__
 
 /* 
-    A JSONAcessor contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
+    A JSONAccessor contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
      
     Its design is very inspired by COLLADA (http://www.khronos.org/files/collada_spec_1_4.pdf )but was adapted for consistent naming and requirements (like byte sizes) to be consistent with typed arrays.
  
@@ -56,14 +56,14 @@ namespace JSONExport
         void setByteStride(size_t stride);
         size_t getByteStride();
         
-        void setElementType(SourceType type);
-        SourceType getElementType();
+        void setElementType(ElementType type);
+        ElementType getElementType();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
         
-        size_t getCount();
         void setCount(size_t length);
+        size_t getCount();
         
         const std::string& getID();
         
@@ -71,8 +71,10 @@ namespace JSONExport
         
         size_t getElementByteLength();
         
-        void* getMin();
-        void* getMax();
+        const double* getMin();
+        const double* getMax();
+        
+        bool matchesLayout(JSONAccessor* accessor);
 
     private:
         shared_ptr <JSONExport::JSONBuffer> _buffer;
@@ -80,13 +82,12 @@ namespace JSONExport
         size_t              _count;
         size_t              _byteStride;
         size_t              _byteOffset;
-        SourceType          _elementType;
+        ElementType         _elementType;
         std::string         _ID;
-        void*               _min;
-        void*               _max;
+        double              *_min;
+        double              *_max;
     };
 
 }
-
 
 #endif

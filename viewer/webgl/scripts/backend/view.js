@@ -110,6 +110,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                             return modelMatrix;
                         }, true, ctx);
                         this.sceneBBox = sceneBBox;
+                        debugger;
                         this.engine.rootPass.scene = value;
                     }
                 }
