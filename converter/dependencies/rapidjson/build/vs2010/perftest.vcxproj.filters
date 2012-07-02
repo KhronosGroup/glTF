@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="include">
+			<UniqueIdentifier>{1EAE8BBB-FA41-984C-93D9-68E5E6F66411}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="include\rapidjson">
+			<UniqueIdentifier>{A3C89614-765D-DC42-AC07-9E42E410E2C7}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="include\rapidjson\internal">
+			<UniqueIdentifier>{699F31E3-9EB1-274E-B2E4-A86EBA346A7C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="test">
+			<UniqueIdentifier>{89507169-40D6-4A45-886A-99DD39583817}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="test\perftest">
+			<UniqueIdentifier>{C71A6AD1-95DE-C948-85CF-906DF3655411}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\include\rapidjson\document.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\filestream.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\prettywriter.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\rapidjson.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\reader.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\stringbuffer.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\writer.h">
+			<Filter>include\rapidjson</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\internal\pow10.h">
+			<Filter>include\rapidjson\internal</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\internal\stack.h">
+			<Filter>include\rapidjson\internal</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\include\rapidjson\internal\strfunc.h">
+			<Filter>include\rapidjson\internal</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\test\perftest\perftest.h">
+			<Filter>test\perftest</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\test\perftest\jsoncpptest.cpp">
+			<Filter>test\perftest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\test\perftest\perftest.cpp">
+			<Filter>test\perftest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\test\perftest\rapidjsontest.cpp">
+			<Filter>test\perftest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\test\perftest\yajltest.cpp">
+			<Filter>test\perftest</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\test\perftest\yajl_all.c">
+			<Filter>test\perftest</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>
