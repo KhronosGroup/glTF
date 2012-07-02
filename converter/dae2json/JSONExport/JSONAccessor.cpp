@@ -50,6 +50,8 @@ namespace JSONExport
     JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
     _buffer(accessor->getBuffer()), _min(0), _max(0)
     {
+        assert(accessor);
+        
         this->setElementType(accessor->getElementType());
         this->setByteStride(accessor->getByteStride());
         this->setByteOffset(accessor->getByteOffset());
@@ -216,5 +218,14 @@ namespace JSONExport
         }
     }
     
+    bool JSONAccessor::matchesLayout(JSONAccessor* accessor)
+    {
+        assert(accessor);
+        
+        return ((accessor->getElementsPerVertexAttribute() == this->getElementsPerVertexAttribute()) &&
+                (accessor->getByteStride() == this->getByteStride()) &&
+                (accessor->getElementType() == this->getElementType()) &&
+                (accessor->getElementByteLength() == this->getElementByteLength()));
+    }
                     
 }
