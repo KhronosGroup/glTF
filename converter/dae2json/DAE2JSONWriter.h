@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -37,11 +37,14 @@
 
 #include "COLLADAFWRoot.h"
 #include "COLLADAFWGeometry.h"
+#include "COLLADAFWCamera.h"
 #include "COLLADAFWMesh.h"
 #include "COLLADAFWMeshVertexData.h"
 #include "COLLADAFWNode.h"
 #include "COLLADAFWVisualScene.h"
 #include "COLLADAFWInstanceGeometry.h"
+#include "COLLADAFWInstanceCamera.h"
+#include "COLLADAFWLookAt.h"
 
 #include "COLLADAFWIWriter.h"
 #include "COLLADAFWUniqueId.h"
@@ -106,12 +109,16 @@ namespace DAE2JSON
     class MeshFlatteningInfo  
     {
     public:
-        MeshFlatteningInfo(const std::string& meshID, const COLLADABU::Math::Matrix4& worldMatrix) :
-        _meshID(meshID),
+        MeshFlatteningInfo(unsigned int meshUID, const COLLADABU::Math::Matrix4& worldMatrix) :
+        _meshUID(meshUID),
         _worldMatrix(worldMatrix) {}
+        
+        unsigned int getUID() { return this->_meshUID; }
+        const COLLADABU::Math::Matrix4& getWorldMatrix() { return this->_worldMatrix; }
+        
     private:
         COLLADABU::Math::Matrix4 _worldMatrix;
-        std::string _meshID;
+        unsigned int _meshUID;
     };
     
     typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -27,20 +27,66 @@
 // TODO: check for '-' in JSON keys
 // TODO: consider LOD
 // TODO: normal generation when needed
-
 // DESIGN: justification generation shader. geometry may need regeneration if lambert
 // DESIGN: difference between COLLADA and JSON format. In JSON format it is possible to make an interleaved array not only made by float.
 // reminder; to run recursively against all dae files...
 // find . -name '*.dae' -exec dae2json {} \;
 
-#define WRITE_SINGLE_BLOB 1
-
 #include "JSONExport.h"
-
 #include "DAE2JSONWriter.h"
 
 namespace DAE2JSON
 {    
+    std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
+    {
+        std::string id = "";
+        
+        id += type + "_" + JSONExport::JSONUtils::toString(uniqueId.getObjectId());
+        
+        return id;
+    }
+    
+    //converted to C++ from gl-matrix by Brandon Jones ( https://github.com/toji/gl-matrix )
+    void buildLookAtMatrix(Lookat *lookat, COLLADABU::Math::Matrix4& matrix)
+    {
+        assert(lookat);
+        
+        const COLLADABU::Math::Vector3& eye = lookat->getEyePosition();
+        const COLLADABU::Math::Vector3& center = lookat->getInterestPointPosition();
+        const COLLADABU::Math::Vector3& up = lookat->getUpAxisDirection();
+        
+        if (eye.x == center.x && eye.y == center.y && eye.z == center.z) {
+            matrix = COLLADABU::Math::Matrix4::IDENTITY;
+            return;
+        }
+        
+        COLLADABU::Math::Vector3 z = (eye - center);
+        z.normalise(); // TODO: OpenCOLLADA typo should be normalize (with a z).
+        COLLADABU::Math::Vector3 x = up.crossProduct(z);
+        x.normalise();
+        COLLADABU::Math::Vector3 y = z.crossProduct(x);
+        y.normalise();
+                
+        matrix.setAllElements(x.x,
+                              y.x,
+                              z.x,
+                              0,
+                              x.y,
+                              y.y,
+                              z.y,
+                              0,
+                              x.x,
+                              y.y,
+                              z.z,
+                              0,
+                              -(x.x * eye.x + x.y  * eye.y + x.z * eye.z),
+                              -(y.x * eye.x + y.y * eye.y + y.z * eye.z),
+                              -(z.x * eye.x + z.y * eye.y + z.z * eye.z),
+                              1);
+        
+        matrix = matrix.transpose();
+    }
+    
     BBOX::BBOX() {
         this->_min = COLLADABU::Math::Vector3(DBL_MAX, DBL_MAX, DBL_MAX);
         this->_max = COLLADABU::Math::Vector3(DBL_MIN, DBL_MIN, DBL_MIN);
@@ -482,44 +528,60 @@ namespace DAE2JSON
 
         return array;
     }
-    
-    String getNodeID(const COLLADAFW::Node* node) 
-    {
-        String id = "";
-        
-        id += "node_";
-        id += JSONExport::JSONUtils::toString(node->getUniqueId().getObjectId());
-         return id;
-        
-        /* 
-        String originalID = node->getOriginalId();
-        if (originalID.size() == 0) {
-            originalID = node->getName(); //work-around when we don't have a name
-        }
-        
-        //FIXME: report error
-        return originalID;
-         */
-    }
-        
+
     bool DAE2JSONWriter::writeNode( const COLLADAFW::Node* node, 
                                     shared_ptr <JSONExport::JSONObject> nodesObject, 
                                     COLLADABU::Math::Matrix4 parentMatrix,
                                     SceneFlatteningInfo* sceneFlatteningInfo) 
     {
-        const String& originalID = getNodeID(node);
+        const NodePointerArray& nodes = node->getChildNodes();
+        const std::string& originalID = uniqueIdWithType("node", node->getUniqueId());
+        COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
         shared_ptr <JSONExport::JSONObject> nodeObject(new JSONExport::JSONObject());
-        
-        const NodePointerArray& nodes = node->getChildNodes();
-        
         nodeObject->setString("type", "node");
-        const COLLADABU::Math::Matrix4 &matrix = node->getTransformationMatrix();
         
+        bool nodeContainsLookAtTr = false;
+        const InstanceCameraPointerArray& instanceCameras = node->getInstanceCameras();
+        size_t camerasCount = instanceCameras.getCount();
+        if (camerasCount > 0) {
+            InstanceCamera* instanceCamera = instanceCameras[0];
+            shared_ptr <JSONExport::JSONObject> cameraObject(new JSONExport::JSONObject());
+
+            std::string cameraId = uniqueIdWithType("camera", instanceCamera->getInstanciatedObjectId());
+            nodeObject->setString("camera", cameraId);
+            
+            //FIXME: just handle the first camera within a node now
+            //for (size_t i = 0 ; i < camerasCount ; i++) {
+            //}
+            
+            //Checks if we have a "look at" transformm because it is not handled by getTransformationMatrix when baking the matrix. (TODO: file a OpenCOLLADA issue for that).        
+            const TransformationPointerArray& transformations = node->getTransformations();
+            size_t transformationsCount = transformations.getCount();
+            for (size_t i = 0 ; i < transformationsCount ; i++) {
+                const Transformation* tr = transformations[i];
+                if (tr->getTransformationType() == Transformation::LOOKAT) {
+                    Lookat* lookAt = (Lookat*)tr;
+                    buildLookAtMatrix(lookAt, matrix);
+                    nodeContainsLookAtTr = true;
+                    break;
+                }
+            }
+                    
+            if (nodeContainsLookAtTr && (transformationsCount > 1)) {
+                //FIXME: handle warning/error
+                printf("WARNING: node contains a look at transform combined with other transforms\n");
+            }
+        } 
+        
+        if (!nodeContainsLookAtTr) {
+            node->getTransformationMatrix(matrix);
+        }
+                
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
-    
+
         if (!matrix.isIdentity())
-            nodeObject->setValue("matrix", this->serializeMatrix4Array(node->getTransformationMatrix()));
+            nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
         
         // save mesh
 		const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();
@@ -528,7 +590,6 @@ namespace DAE2JSON
         if (count > 0) {
             //FIXME: should not have to have a special attribute name for multiple meshes.
             // this might end up as making mode node, one per mesh.
-            
             //JSONExport
             shared_ptr <JSONExport::JSONArray> meshesArray(new JSONExport::JSONArray());
             nodeObject->setValue("meshes", meshesArray);
@@ -575,7 +636,7 @@ namespace DAE2JSON
                 meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
                 
                 if (sceneFlatteningInfo) {
-                    shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(mesh->getID(), parentMatrix));
+                    shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
                     sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo); 
                 }
 
@@ -588,14 +649,11 @@ namespace DAE2JSON
         count = nodes.getCount();
         
         for (int i = 0 ; i < count ; i++)  {
-            childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(getNodeID(nodes[i]))));
+            std::string id = uniqueIdWithType("node", nodes[i]->getUniqueId());
+            childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
         }
         
         nodesObject->setValue(originalID, static_pointer_cast <JSONExport::JSONValue> (nodeObject));
-        
-        /*
-         walk through the tree
-         */
         
         for (int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
@@ -606,42 +664,35 @@ namespace DAE2JSON
         for (int i = 0 ; i < count ; i++) {
             InstanceNode* instanceNode  = instanceNodes[i];
             
-            String id = "";
-            id += "node_";
-            id += JSONExport::JSONUtils::toString(instanceNode->getInstanciatedObjectId().getObjectId());
-            
+            String id = uniqueIdWithType("node", instanceNode->getInstanciatedObjectId());
             childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
         }
         
         return true;
     }
 
-
     // Flattening    
     //conditions for flattening
     // -> same material
     // option to merge of not non-opaque geometry
     //  -> check per primitive that sources / semantic layout matches 
-    
     // [accessors]
-    
-    
     // -> for all meshes 
     //   -> collect all kind of semantic
     // -> for all meshes
     //   -> get all accessors 
     //   -> transforms & write vtx attributes
-    //   -> for all primitives
-    //     -> 
-    
-    bool DAE2JSONWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) {
-
+    bool DAE2JSONWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
+    {
         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
-        
         //First collect all kind of accessors available
         size_t count = allMeshes.size();
         for (size_t i = 0 ; i < count ; i++) {
-            
+            shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
+            shared_ptr <JSONExport::JSONMesh>  mesh = this->_uniqueIDToMesh[meshInfo->getUID()];
+            std::vector <shared_ptr< JSONExport::JSONAccessor> > accessors = mesh->remappedAccessors();
+
+            //_uniqueIDToMesh
         }
         
         return true;
@@ -669,7 +720,9 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
         
         for (int i = 0 ; i < nodeCount ; i++) { 
-            shared_ptr <JSONExport::JSONString> nodeIDValue(new JSONExport::JSONString(getNodeID(nodePointerArray[i])));            
+            std::string id = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());
+
+            shared_ptr <JSONExport::JSONString> nodeIDValue(new JSONExport::JSONString(id));            
             childrenArray->appendValue(static_pointer_cast <JSONExport::JSONValue> (nodeIDValue));
         }
         
@@ -787,6 +840,87 @@ namespace DAE2JSON
 	//--------------------------------------------------------------------
 	bool DAE2JSONWriter::writeCamera( const COLLADAFW::Camera* camera )
 	{
+        shared_ptr <JSONExport::JSONObject> camerasObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("cameras"));
+        if (!camerasObject) {
+            camerasObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            this->_rootJSONObject->setValue("cameras", camerasObject);
+        }
+        
+        shared_ptr <JSONExport::JSONObject> cameraObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+        
+        std::string id = uniqueIdWithType("camera", camera->getUniqueId());
+        
+        camerasObject->setValue(id, cameraObject);
+        cameraObject->setString("type", "camera");
+        
+        switch (camera->getCameraType()) {
+            case Camera::CameraType::UNDEFINED_CAMERATYPE:
+                printf("WARNING: unknown camera type: using perspective\n");
+                cameraObject->setString("cameraType", "perspective");
+                break;
+            case Camera::CameraType::ORTHOGRAPHIC:
+            {
+                cameraObject->setString("projection", "orthographic");
+                switch (camera->getDescriptionType()) {
+                    case Camera::DescriptionType::UNDEFINED: //!< The perspective camera object is invalid
+                        //FIXME: handle error
+                        break;
+                    case Camera::DescriptionType::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
+                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
+                        break;
+                    case Camera::DescriptionType::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
+                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
+                        break;
+                    case Camera::DescriptionType::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
+                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
+                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
+                        break;
+                    case Camera::DescriptionType::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
+                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
+                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        break;
+                    case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
+                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
+                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        break;
+                }
+                
+            }
+                break;
+            case Camera::CameraType::PERSPECTIVE: 
+            {
+                cameraObject->setString("projection", "perspective");
+                switch (camera->getDescriptionType()) {
+                    case Camera::DescriptionType::UNDEFINED: //!< The perspective camera object is invalid
+                        //FIXME: handle error
+                        break;
+                    case Camera::DescriptionType::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
+                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
+                        break;
+                    case Camera::DescriptionType::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
+                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
+                        break;
+                    case Camera::DescriptionType::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
+                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
+                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
+                        break;
+                    case Camera::DescriptionType::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
+                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
+                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        break;
+                    case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
+                        cameraObject->setDouble("yfov", camera->getXFov().getValue());
+                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        break;
+                }
+                
+            }
+                break;
+        }      
+        
+        cameraObject->setDouble("znear", camera->getNearClippingPlane().getValue());
+        cameraObject->setDouble("zfar", camera->getFarClippingPlane().getValue());
+        
 		return true;
 	}
     
