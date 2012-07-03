@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -55,8 +55,8 @@ namespace JSONExport
                 if (!warned) {
                     printf("WARNING: ignoring a mesh which as a number of sources per primitives that differs\n");
                     warned = true;
-                    return false;
                 }
+                return false;
             }
         }
         

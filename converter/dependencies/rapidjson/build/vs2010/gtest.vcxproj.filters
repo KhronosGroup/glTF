@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="thirdparty">
+			<UniqueIdentifier>{6A1C7150-2CEA-C44F-AA12-42298FDB300C}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="thirdparty\gtest">
+			<UniqueIdentifier>{C1E37E06-6EA1-5B4D-95B6-F62EED02A900}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="thirdparty\gtest\src">
+			<UniqueIdentifier>{DE0452B6-25D0-9E42-AD27-23AFA2A818E4}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="..\..\thirdparty\gtest\src\gtest-internal-inl.h">
+			<Filter>thirdparty\gtest\src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="..\..\thirdparty\gtest\src\gtest-all.cc">
+			<Filter>thirdparty\gtest\src</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>
