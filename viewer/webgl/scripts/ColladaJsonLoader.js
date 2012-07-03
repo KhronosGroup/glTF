@@ -32,6 +32,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
             var a, b, c;
             var i, l;
             var faceNormals = null;
+
             for(i = 0, l = this.indexArray.length; i < l; i += 3) {
                 a = indexArray[i];
                 b = indexArray[i+1];
@@ -139,45 +140,18 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
     // Loader
 
-    THREE.ColladaJsonLoader = function ( context, showStatus ) {
-        this.context = context;
+    var ColladaJsonDelegate = function() {
         this.resourceManager = Object.create(ResourceManager);
         this.resourceManager.init();
-
-        THREE.Loader.call( this, showStatus );
     };
 
-    THREE.ColladaJsonLoader.prototype = new THREE.Loader();
-    THREE.ColladaJsonLoader.prototype.constructor = THREE.ColladaJsonLoader;
-
-    THREE.ColladaJsonLoader.prototype.load = function( url, callback ) {
-
-        var self = this;
-
-        var rootObj = new THREE.Object3D();
-
-        var readerDelegate = {
-            readCompleted: function (key, value, userInfo) {
-                console.log("key:"+key+" value:"+value.length);
-                if (key === "entries") {
-                    var scene = value[0];
-                    self.processNodes(rootObj, scene, callback);
-                    //scene.rootNode.children.push(cameraNode);
-                    //glView.scene = scene;
-                }
-            }
-        };
-
-        var reader = Object.create(Reader);
-        reader.initWithPath(url);
-        reader.readEntries(["defaultScene"], readerDelegate, null); // TODO: How do we know what to put here? Can we request "all" or "*"?
-
-        return rootObj;
+    ColladaJsonDelegate.prototype.readCompleted = function(key, value, ctx) {
+        if (key === "entries") {
+            this.processNodes(value[0], ctx.rootObj, ctx.callback);
+        }
     };
 
-    // Load multiple CTM parts defined in JSON
-
-    THREE.ColladaJsonLoader.prototype.processNodes = function(rootObj, scene, callback ) {
+    ColladaJsonDelegate.prototype.processNodes = function(scene, rootObj, callback) {
         var self = this;
         
         var materialProps = {
@@ -238,7 +212,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                             });
                             totalMeshes++;
 
-                            var geometry = new ColladaJsonClassicGeometry(self.context);
+                            var geometry = new ColladaJsonClassicGeometry();
                             geometry.onload = function() {
                                 var mesh = new THREE.Mesh(geometry, material);
                                 obj.add(mesh);
@@ -272,6 +246,30 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
         }, true, rootObj);
 
         return;
+    };
+
+    var colladaJsonDelegate = new ColladaJsonDelegate();
+
+    var ColladaJsonContext = function(rootObj, callback) {
+        this.rootObj = rootObj;
+        this.callback = callback;
+    };
+
+    THREE.ColladaJsonLoader = function ( context, showStatus ) {
+        THREE.Loader.call( this, showStatus );
+    };
+
+    THREE.ColladaJsonLoader.prototype = new THREE.Loader();
+    THREE.ColladaJsonLoader.prototype.constructor = THREE.ColladaJsonLoader;
+
+    THREE.ColladaJsonLoader.prototype.load = function( url, callback ) {
+        var rootObj = new THREE.Object3D();
+
+        var reader = Object.create(Reader);
+        reader.initWithPath(url);
+        reader.readEntries(["defaultScene"], colladaJsonDelegate, new ColladaJsonContext(rootObj, callback));
+
+        return rootObj;
     };
 
     return {
