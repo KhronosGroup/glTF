@@ -7,10 +7,9 @@
 define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "backend/resource-manager", "dependencies/gl-matrix"],
     function(Utilities, Node, Camera, View, GLSLProgram, Reader, ResourceManager) {
 
-    var ColladaJsonClassicGeometry = function(gl) {
+    var ColladaJsonClassicGeometry = function() {
         THREE.Geometry.call( this );
 
-        var self = this;
         this.totalAttributes = 0;
         this.loadedAttributes = 0;
         this.indicesLoaded = false;
@@ -20,93 +19,110 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
         this.normals = null;
         this.indexArray = null;
-
-        this.indicesDelegate = {
-            handleError: function(errorCode, info) {
-                // FIXME: report error
-                console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
-            },
-
-            //should be called only once
-            convert: function (resource, ctx) {
-                return new Uint16Array(resource, 0, ctx.length);
-            },
-    
-            resourceAvailable: function (indexArray, ctx) {
-                self.indexArray = indexArray;
-                self.checkFinished();
-            }
-        };
-    
-        this.vertexAttributeBufferDelegate = {
-            handleError: function(errorCode, info) {
-                // FIXME: report error
-                console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
-            },
-
-            //should be called only once
-            convert: function (resource, ctx) {
-                return resource;
-            },
-    
-            resourceAvailable: function (resource, ctx) {
-                var accessor = ctx.accessor;
-                var floatArray;
-                var i, l;
-
-                if(ctx.semantic == "VERTEX") {
-                    // TODO: Should be easy to take strides into account here
-                    floatArray = new Float32Array(resource, 0, accessor.count * accessor.elementsPerValue);
-                    for(i = 0, l = floatArray.length; i < l; i += 3) {
-                        self.vertices.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
-                    }
-                } else if(ctx.semantic == "NORMAL") {
-                    self.normals = [];
-                    floatArray = new Float32Array(resource, 0, accessor.count * accessor.elementsPerValue);
-                    for(i = 0, l = floatArray.length; i < l; i += 3) {
-                        self.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
-                    }
-                }
-                self.loadedAttributes++;
-                self.checkFinished();
-            }
-        };
-
-        this.checkFinished = function() {
-            if(this.indexArray && this.loadedAttributes === this.totalAttributes) {
-                // Build indexed mesh
-                var indexArray = this.indexArray;
-                var normals = this.normals;
-                var a, b, c;
-                var i, l;
-                var faceNormals = null;
-                for(i = 0, l = this.indexArray.length; i < l; i += 3) {
-                    a = indexArray[i];
-                    b = indexArray[i+1];
-                    c = indexArray[i+2];
-                    if(normals) {
-                        faceNormals = [normals[a], normals[b], normals[c]];
-                    }
-                    this.faces.push( new THREE.Face3( a, b, c, faceNormals, null, null ) );
-                }
-
-                // Allow Three.js to calculate some values for us
-                this.computeCentroids();
-                if(!normals) {
-                    this.computeFaceNormals();
-                }
-
-                this.finished = true;
-
-                if(this.onload) {
-                    this.onload();
-                }
-            }
-        };
     };
 
     ColladaJsonClassicGeometry.prototype = new THREE.Geometry();
     ColladaJsonClassicGeometry.prototype.constructor = ColladaJsonClassicGeometry;
+
+    ColladaJsonClassicGeometry.prototype.checkFinished = function() {
+        if(this.indexArray && this.loadedAttributes === this.totalAttributes) {
+            // Build indexed mesh
+            var indexArray = this.indexArray;
+            var normals = this.normals;
+            var a, b, c;
+            var i, l;
+            var faceNormals = null;
+            for(i = 0, l = this.indexArray.length; i < l; i += 3) {
+                a = indexArray[i];
+                b = indexArray[i+1];
+                c = indexArray[i+2];
+                if(normals) {
+                    faceNormals = [normals[a], normals[b], normals[c]];
+                }
+                this.faces.push( new THREE.Face3( a, b, c, faceNormals, null, null ) );
+            }
+
+            // Allow Three.js to calculate some values for us
+            this.computeCentroids();
+            if(!normals) {
+                this.computeFaceNormals();
+            }
+
+            this.finished = true;
+
+            if(this.onload) {
+                this.onload();
+            }
+        }
+    };
+
+    // Delegate for processing index buffers
+    var IndicesDelegate = function() {};
+
+    IndicesDelegate.prototype.handleError = function(errorCode, info) {
+        // FIXME: report error
+        console.log("ERROR(IndicesDelegate):"+errorCode+":"+info);
+    };
+
+    IndicesDelegate.prototype.convert = function(resource, ctx) {
+        return new Uint16Array(resource, 0, ctx.indices.length);
+    };
+
+    IndicesDelegate.prototype.resourceAvailable = function(glResource, ctx) {
+        var geometry = ctx.geometry;
+        geometry.indexArray = glResource;
+        geometry.checkFinished();
+    };
+
+    var indicesDelegate = new IndicesDelegate();
+
+    var IndicesContext = function(indices, geometry) {
+        this.indices = indices;
+        this.geometry = geometry;
+    };
+    
+    // Delegate for processing vertex attribute buffers
+    var VertexAttributeDelegate = function() {};
+
+    VertexAttributeDelegate.prototype.handleError = function(errorCode, info) {
+        // FIXME: report error
+        console.log("ERROR(VertexAttributeDelegate):"+errorCode+":"+info);
+    };
+
+    VertexAttributeDelegate.prototype.convert = function(resource, ctx) {
+        return resource;
+    };
+
+    VertexAttributeDelegate.prototype.resourceAvailable = function(glResource, ctx) {
+        var geometry = ctx.geometry;
+        var attribute = ctx.attribute;
+        var accessor = attribute.accessor;
+        var floatArray;
+        var i, l;
+
+        if(attribute.semantic == "VERTEX") {
+            // TODO: Should be easy to take strides into account here
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            for(i = 0, l = floatArray.length; i < l; i += 3) {
+                geometry.vertices.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
+            }
+        } else if(attribute.semantic == "NORMAL") {
+            geometry.normals = [];
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            for(i = 0, l = floatArray.length; i < l; i += 3) {
+                geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
+            }
+        }
+        geometry.loadedAttributes++;
+        geometry.checkFinished();
+    };
+
+    var vertexAttributeDelegate = new VertexAttributeDelegate();
+
+    var VertexAttributeContext = function(attribute, geometry) {
+        this.attribute = attribute;
+        this.geometry = geometry;
+    };
 
     // Utilities
 
@@ -236,31 +252,22 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
                             // Load Indices
                             var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
-                            glIndices = self.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, geometry.indicesDelegate, primitive.indices);
+                            var indicesContext = new IndicesContext(primitive.indices, geometry);
+                            self.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, indicesDelegate, indicesContext);
 
-                            // Load Attributes
+                            // Load Vertex Attributes
                             primitive.vertexAttributes.forEach( function(vertexAttribute) {
                                 var accessor = vertexAttribute.accessor;
                                 geometry.totalAttributes++;
-                                //FIXME: do not assume continuous data, this will break with interleaved arrays (should not use byteStride here).
                                 var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
-                                var glResource = self.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, geometry.vertexAttributeBufferDelegate, vertexAttribute);
-                                // this call will bind the resource when available
-                                if (glResource) {
-                                    gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
-                                } else {
-                                     available = false;
-                                }
+                                var attribContext = new VertexAttributeContext(vertexAttribute, geometry);
+                                self.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, vertexAttributeDelegate, attribContext);
                             }, this);
-
-                            // TODO: Three.js doesn't handle interleaved arrays or odd element sizes. Need to normalize that somewhere.
-                            // TODO: What happens with the geometry at this point?
-                            // TODO: Need a way to identify when the mesh is completely loaded
                         }, this);
                     }
                 }, this);
             }
-                    
+
             return obj;
         }, true, rootObj);
 
