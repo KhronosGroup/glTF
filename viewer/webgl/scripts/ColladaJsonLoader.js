@@ -153,31 +153,20 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
     ColladaJsonDelegate.prototype.processNodes = function(scene, rootObj, callback) {
         var self = this;
-        
-        var materialProps = {
-            color: 0xFF00EEFF
-        };
-        var defaultMaterial = new THREE.MeshLambertMaterial( materialProps );
 
         var totalMeshes = 0;
         var loadedMeshes = 0;
 
+        rootObj.treeMatrix = new THREE.Matrix4();
+
         scene.rootNode.apply( function(node, parentObj) {
             var obj = new THREE.Object3D();
-            obj.up = new THREE.Vector3( 0, 0, 1 );
+            obj.name = node.id || "";
 
             var nodeMatrix;
             var t = node.transform;
             if(t) {
-                // Normal
-                /*nodeMatrix = new THREE.Matrix4(
-                    t[0],  t[1],  t[2],  t[3],
-                    t[4],  t[5],  t[6],  t[7],
-                    t[8],  t[9],  t[10], t[11],
-                    t[12], t[13], t[14], t[15]
-                );*/
-                
-                // Transposed
+                // Not sure why I need to transpose this...
                 nodeMatrix = new THREE.Matrix4(
                     t[0],  t[4],  t[8],  t[12],
                     t[1],  t[5],  t[9],  t[13],
@@ -185,67 +174,67 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     t[3],  t[7],  t[11], t[15]
                 );
 
-                //obj.matrix = nodeMatrix;
-                //obj.updateWorldMatrix();
-                //obj.applyMatrix(nodeMatrix);
-
-                // Ugh...
-                obj.name = node.id || "";
-                obj.useQuaternion = true;
-                obj.matrix = nodeMatrix;
-                var props = nodeMatrix.decompose();
-
-                obj.position = props[ 0 ];
-                obj.quaternion = props[ 1 ];
-                obj.scale = props[ 2 ];
+                obj.matrixAutoUpdate = false;
+                obj.applyMatrix(nodeMatrix);
             }
 
             parentObj.add(obj);
 
-            if (node.meshes) {
-                node.meshes.forEach( function(mesh) {
-            
-                    if (mesh.primitives) {
-                        mesh.primitives.forEach( function (primitive) {
-                            var material = new THREE.MeshLambertMaterial({
-                                color: RgbArraytoHex(primitive.material.color)
-                            });
-                            totalMeshes++;
-
-                            var geometry = new ColladaJsonClassicGeometry();
-                            geometry.onload = function() {
-                                var mesh = new THREE.Mesh(geometry, material);
-                                obj.add(mesh);
-                                loadedMeshes++;
-                                if(loadedMeshes === totalMeshes) {
-                                    if(callback) {
-                                        callback(rootObj);
-                                    }
-                                }
-                            };
-
-                            // Load Indices
-                            var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
-                            var indicesContext = new IndicesContext(primitive.indices, geometry);
-                            self.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, indicesDelegate, indicesContext);
-
-                            // Load Vertex Attributes
-                            primitive.vertexAttributes.forEach( function(vertexAttribute) {
-                                var accessor = vertexAttribute.accessor;
-                                geometry.totalAttributes++;
-                                var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
-                                var attribContext = new VertexAttributeContext(vertexAttribute, geometry);
-                                self.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, vertexAttributeDelegate, attribContext);
-                            }, this);
-                        }, this);
-                    }
-                }, this);
-            }
+            self.processNodeMeshes(node, obj, callback);
 
             return obj;
         }, true, rootObj);
 
         return;
+    };
+
+    ColladaJsonDelegate.prototype.processNodeMeshes = function(node, obj, callback) {
+        var self = this;
+
+        if (node.meshes) {
+            node.meshes.forEach( function(mesh) {
+                if (mesh.primitives) {
+                    mesh.primitives.forEach( function (primitive) {
+                        var material = new THREE.MeshLambertMaterial({
+                            color: RgbArraytoHex(primitive.material.color)
+                        });
+                        //totalMeshes++;
+
+                        var geometry = new ColladaJsonClassicGeometry();
+                        geometry.onload = function() {
+                            //geometry.applyMatrix(obj.treeMatrix);
+                            var mesh = new THREE.Mesh(geometry, material);
+                            obj.add(mesh);
+                            /*loadedMeshes++;
+                            if(loadedMeshes === totalMeshes) {
+                                if(callback) {
+                                    callback(rootObj);
+                                }
+                            }*/
+                        };
+
+                        self.processMeshPrimitive(primitive, geometry);
+                        
+                    }, this);
+                }
+            }, this);
+        }
+    };
+
+    ColladaJsonDelegate.prototype.processMeshPrimitive = function(primitive, geometry) {
+        // Load Indices
+        var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
+        var indicesContext = new IndicesContext(primitive.indices, geometry);
+        this.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, indicesDelegate, indicesContext);
+
+        // Load Vertex Attributes
+        primitive.vertexAttributes.forEach( function(vertexAttribute) {
+            var accessor = vertexAttribute.accessor;
+            geometry.totalAttributes++;
+            var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
+            var attribContext = new VertexAttributeContext(vertexAttribute, geometry);
+            this.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, vertexAttributeDelegate, attribContext);
+        }, this);
     };
 
     var colladaJsonDelegate = new ColladaJsonDelegate();
