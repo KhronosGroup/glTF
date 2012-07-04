@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["dependencies/gl-matrix"], function() {
+define(["backend/node", "backend/projection", "backend/camera", "dependencies/gl-matrix"], function(Node, Projection, Camera) {
 
     var Pass = Object.create(Object, {
 
@@ -43,7 +43,6 @@ define(["dependencies/gl-matrix"], function() {
     
         sceneDidChange: {
             value: function() {
-            
                 // search for all cameras
                 var cameraNodes = [];
                 this._scene.rootNode.apply( function(node) {
@@ -53,10 +52,26 @@ define(["dependencies/gl-matrix"], function() {
                     }
                     return null;
                 } , true, null);
-            
+
                 // arbitry set first coming camera as the view point
                 if (cameraNodes.length) {
                     this.viewPoint = cameraNodes[0];
+                } else {
+                    var projection = Object.create(Projection);
+                    projection.initWithDescription( { "projection":"perspective", "yfov":45, "aspectRatio":1, "znear":0.1, "zfar":100});
+
+                    var camera = Object.create(Camera);
+                    camera.init();
+                    camera.projection = projection;
+    
+                    // node
+                    var cameraNode = Object.create(Node);
+                    cameraNode.init();
+                    cameraNode.id = "__default_camera";
+                    cameraNode.cameras.push(camera);
+                    if (cameraNode)
+                        this.scene.rootNode.children.push(cameraNode);
+                    this.viewPoint = cameraNode;
                 }
             }
         },
@@ -73,46 +88,41 @@ define(["dependencies/gl-matrix"], function() {
     
         render: {
             value: function(engine) {  
+
                 if (!this.viewPoint)
                     return;
-                var ctx = mat4.identity();
-                var projectionMatrix = this.viewPoint.cameras[0].matrix;
-            
+
+                var projectionMatrix = this.viewPoint.cameras[0].projection.matrix;
+                var cameraMatrix = mat4.create();
+                var self = this;
+                mat4.inverse(this.viewPoint.transform, cameraMatrix);
+                var ctx = cameraMatrix;
+
                 this._scene.rootNode.apply( function(node, parentTransform) {
-                                
-                    //FIXME: ouch , remove that create !
-                    var modelMatrix = mat4.create();
-                    mat4.multiply( parentTransform, node.transform, modelMatrix);
-                
-                    //FIXME: cache this 
-                    //FIXME: re-enable after demo !
-                    var normalMatrix = mat3.transpose(mat4.toInverseMat3(modelMatrix));
-                
+                    //FIXME: ouch , remove these create !
+                    var modelViewMatrix = mat4.create();
+
+                    mat4.multiply(parentTransform, node.transform , modelViewMatrix);
+
+                    //TODO: cache this 
+                    var normalMatrix = mat3.transpose(mat4.toInverseMat3(modelViewMatrix));
                     if (node.meshes) {                    
                         node.meshes.forEach( function(mesh) {
                     
                             if (mesh.primitives) {
                                 mesh.primitives.forEach( function (primitive) {                            
-                                /*
-                                console.log("mesh:"+mesh.name);
-                                console.log(parentTransform);
-                                console.log(modelMatrix);
-                                console.log(node.transform);
-                                
-                                debugger;
-                                */
-                                    //FIXME: create a pool for all those anonymous objects
-                                    engine.commandQueue.enqueuePrimitive({  "primitive" : primitive , 
-                                                                            "worldMatrix" : modelMatrix, 
-                                                                            "normalMatrix" : normalMatrix, 
-                                                                            "projectionMatrix" : projectionMatrix });
-                                
+
+                                //TODO: create a pool for all those anonymous objects
+                                engine.commandQueue.enqueuePrimitive({  "primitive" : primitive , 
+                                                                        "worldMatrix" : modelViewMatrix, 
+                                                                        "normalMatrix" : normalMatrix, 
+                                                                        "projectionMatrix" : projectionMatrix });
                                 }, this);
                             }
                         }, this);
                     }
                             
-                    return modelMatrix;
+                    return modelViewMatrix;
                 
                 }, true, ctx);
          

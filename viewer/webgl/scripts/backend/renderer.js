@@ -104,7 +104,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     " void main(void) { " +
                     " vec3 normal = normalize(v_normal); " +
                     " float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);" +
-                    " gl_FragColor = vec4(color.xyz * lambert, 1.); }";
+                    " gl_FragColor = vec4(color.xyz *lambert, 1.); }";
 
                     this._lambertProgram.initWithShaders( { "x-shader/x-vertex" : lambertVS , "x-shader/x-fragment" : lambertFS } );
                     if (!this._lambertProgram.build(this.webGLContext)) {
@@ -222,11 +222,16 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
             }
         },
     
-    
         _lastMaxEnabledArray: { value: 0, writable: true },
     
         resetStates : {
             value: function() {
+                var gl = this.webGLContext;
+                if (gl && (this._lastMaxEnabledArray !== -1)) {
+                    for (var i = 0 ; i < this._lastMaxEnabledArray ; i++) {
+                        gl.disableVertexAttribArray(i);
+                    }
+                }
                 this._lastMaxEnabledArray = -1;
                 this.bindedProgram = null;
             }

@@ -24,25 +24,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
+define(["backend/base", "backend/projection", "dependencies/gl-matrix"], function(Base, Projection, glMatrix) {
 
     var Camera = Object.create(Base, {
 
-        _matrix: { value: null, writable: true },
-    
-        matrix: {
+        _projection: { value: null, writable: true },
+
+        projection: {
             get: function() { 
-                return this._matrix; 
+                return this._projection; 
             },
             set: function(value) { 
-                this._matrix = value; 
+                this._projection = value; 
             }
         },
-    
+
         init: {
             value: function() {
                 this.__Base_init();
-                this._matrix = mat4.identity();
+            }
+        },
+    
+        read: {
+            enumerable: true,
+            value: function(entryID, cameraDescription, delegate, reader, userInfo) {
+
+                var projection = Object.create(Projection);
+                projection.initWithDescription(cameraDescription);
+                this.projection = projection;
+                delegate.readCompleted("camera", this, userInfo);
             }
         }
 

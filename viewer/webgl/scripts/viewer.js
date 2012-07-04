@@ -29,26 +29,15 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
         var Viewer = Object.create(Object, {
             run: {
                 value: function(scenePath) {
-                    // camera
-                    var camera = Object.create(Camera);
-                    camera.init();
-                    camera.matrix = mat4.perspective(45, 1., 0.1, 100.0);    
-    
-                    // node
-                    var cameraNode = Object.create(Node);
-                    cameraNode.init();
-                    cameraNode.id = "Camera";
-                    cameraNode.cameras.push(camera);
-    
+                
                     var glView = Object.create(View);
                     glView.init("gl-canvas");    
-    
+
                     var readerDelegate = {};
                     readerDelegate.readCompleted = function (key, value, userInfo) {
                         console.log("key:"+key+" value:"+value.length);
                         if (key === "entries") {
                             var scene = value[0];
-                            scene.rootNode.children.push(cameraNode);
                             glView.scene = scene;
                         } 
                     };
@@ -67,7 +56,6 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                         var orthoMatrix = mat4.ortho(-1, 1, 1.0, -1, 0, 1000);
                         var gl = view.getWebGLContext();
             
-                        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
                         gl.disable(gl.DEPTH_TEST);
                         gl.disable(gl.CULL_FACE);
             
@@ -119,10 +107,6 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
                         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 
-                        gl.disableVertexAttribArray(0);
-                        gl.disableVertexAttribArray(1);
-                        gl.disableVertexAttribArray(2);
-                        gl.disableVertexAttribArray(3);
                         var attributeLocation = this._gradientProgram.getLocationForSymbol("vert");
                         if (typeof attributeLocation !== "undefined") {
                             gl.enableVertexAttribArray(attributeLocation);
@@ -144,45 +128,6 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                         this._gradientProgram.commit(gl);
                         gl.drawArrays(gl.TRIANGLES, 0, 6);
                         gl.disableVertexAttribArray(attributeLocation);
-
-                        /* ------------------------------------------------------------------------------------------------------------
-                            Update scene 
-                         ------------------------------------------------------------------------------------------------------------ */        
-                        var node = view.scene.rootNode;
-                        node.transform = mat4.identity();
-                        var sceneBBox = view.sceneBBox;
-        
-            
-                        var sceneSize = [   (sceneBBox[1][0] - sceneBBox[0][0]) , 
-                                            (sceneBBox[1][1] - sceneBBox[0][1]) , 
-                                            (sceneBBox[1][2] - sceneBBox[0][2]) ];
-
-                        //size to fit
-                        var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
-                        scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
-                    
-                        scaleFactor =  1.0 / scaleFactor;
-                        var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
-                        var translation = mat4.translate(scaleMatrix, [ 
-                                            ((-sceneSize[0] / 2) - sceneBBox[0][0] ) , 
-                                            ((-sceneSize[1] / 2) - sceneBBox[0][1] ) , 
-                                            ((-sceneSize[2] / 2) - sceneBBox[0][2] ) ]);
-        
-                        var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.5 ]);
-        
-                        //var rotationa = mat4.rotate(mat4.identity(), -1.6, [1.0, 0.0, 0.0]);
-                        //var rotationb = mat4.rotate(mat4.identity(), 0.2, [0.0, 0.0, 1.0]);
-                        //var rotation = mat4.rotate(mat4.identity(), angle, [0.0, 1.0, 0.0]);
-                        //mat4.multiply(rotationb, rotationa , rotationb); 
-                        //mat4.multiply(rotation, rotationb , rotation); 
-
-                        var centeredTr = mat4.create();
-                        //mat4.multiply(rotation, translation , centeredTr); 
-                        mat4.multiply(view.userControlMatrix, translation , centeredTr); 
-                        
-                        mat4.multiply(translation2 , centeredTr, node.transform); 
-
-                        //angle += 0.02;
                     };
 
                     viewDelegate.didDraw = function(view) {

@@ -24,7 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "dependencies/gl-matrix"], function(EntryManager, Mesh, Scene, Node) {
+define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "backend/camera", "dependencies/gl-matrix"], 
+    function(EntryManager, Mesh, Scene, Node, Camera) {
 
     var Reader = Object.create(Object, {
 
@@ -126,7 +127,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             value: function (entryID) {
                 var entryDescription = this.rootDescription[entryID];
                 if (!entryDescription) {
-                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers"];
+                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras"];
                 
                     for (var i = 0 ; !entryDescription && i < entryLevels.length ; i++) {
                         var entries = this.rootDescription[entryLevels[i]];
@@ -166,13 +167,18 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     } else if (type === this.NODE) {                
                         entry = Object.create(Node);
                         entry.init();
+                    } else if (type === this.CAMERA) {  
+                        entry = Object.create(Camera);
+                        entry.init();
                     }
+
                     if (entry) {
                         entry.id = entryID;
                         entry.read(entryID, entryDescription, entryDelegate, this, userInfo);
                     }
                 
                 } else {
+                    debugger;
                     delegate.handleError(this.NOT_FOUND);
                 }
             }    

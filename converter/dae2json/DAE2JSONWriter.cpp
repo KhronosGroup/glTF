@@ -55,7 +55,7 @@ namespace DAE2JSON
         const COLLADABU::Math::Vector3& center = lookat->getInterestPointPosition();
         const COLLADABU::Math::Vector3& up = lookat->getUpAxisDirection();
         
-        if (eye.x == center.x && eye.y == center.y && eye.z == center.z) {
+        if ((eye.x == center.x) && (eye.y == center.y) && (eye.z == center.z)) {
             matrix = COLLADABU::Math::Matrix4::IDENTITY;
             return;
         }
@@ -75,16 +75,24 @@ namespace DAE2JSON
                               y.y,
                               z.y,
                               0,
-                              x.x,
-                              y.y,
+                              x.z,
+                              y.z,
                               z.z,
                               0,
                               -(x.x * eye.x + x.y  * eye.y + x.z * eye.z),
                               -(y.x * eye.x + y.y * eye.y + y.z * eye.z),
                               -(z.x * eye.x + z.y * eye.y + z.z * eye.z),
                               1);
+/*
+        1 0 0 0 
+        0 0 1 0 
+        0 1 0 0 
+        0 0 0 1 
+*/      
+        matrix = matrix.inverse();        
+        matrix = matrix.transpose();        
+//        matrix3 [1,0,0] [0,0,1] [0,-1,0]        
         
-        matrix = matrix.transpose();
     }
     
     BBOX::BBOX() {
@@ -516,7 +524,7 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONArray> array(new JSONExport::JSONArray());
         
         COLLADABU::Math::Matrix4 transpose = matrix.transpose();
-        
+
         for (int i = 0 ; i < 4 ; i++)  {
             const COLLADABU::Math::Real * real = transpose[i];
           
@@ -909,7 +917,7 @@ namespace DAE2JSON
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                     case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        cameraObject->setDouble("yfov", camera->getXFov().getValue());
+                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                 }

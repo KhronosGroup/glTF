@@ -107,6 +107,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                                     
                             return modelMatrix;
                         }, true, ctx);
+
                         this.sceneBBox = sceneBBox;
                         this.engine.rootPass.scene = value;
                     }
@@ -183,15 +184,17 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
 
         draw: {
             value: function() {
-                
+
+                var webGLContext = this.getWebGLContext();
+                if (webGLContext)
+                    webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
+
                 if (this.delegate)
                     this.delegate.willDraw(this);
             
                 if (this.scene) {
                     var renderer = this.engine.renderer;
-                    var webGLContext = renderer.webGLContext;
                     if (webGLContext) {
-
                         // FIXME: cache this
                         var width = parseInt(this.canvas.getAttribute("width"));
                         var height = parseInt(this.canvas.getAttribute("height"));
@@ -202,9 +205,42 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         webGLContext.enable(webGLContext.DEPTH_TEST);
                         webGLContext.enable(webGLContext.CULL_FACE);
 
-                        //webGLContext.clearColor(0.2, 0, 0, 1);
-                       // webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
+                        /* ------------------------------------------------------------------------------------------------------------
+                            Update scene 
+                         ------------------------------------------------------------------------------------------------------------ */        
+                        
+                        var viewPoint = this.engine.rootPass.viewPoint;
+                        if (viewPoint) {
+                            if (viewPoint.id === "__default_camera") //FIXME: that's temporary way trigger the unit cube mode.
+                            {
+                                var node = this.scene.rootNode;
 
+                                node.transform = mat4.identity();
+                                var sceneBBox = this.sceneBBox;
+                    
+                                var sceneSize = [(sceneBBox[1][0] - sceneBBox[0][0]) , 
+                                                (sceneBBox[1][1] - sceneBBox[0][1]) , 
+                                                (sceneBBox[1][2] - sceneBBox[0][2]) ];
+
+                                //size to fit
+                                var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
+                                scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
+                    
+                                scaleFactor =  1.0 / scaleFactor;
+                                var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
+                                var translation = mat4.translate(scaleMatrix, [ 
+                                            ((-sceneSize[0] / 2) - sceneBBox[0][0] ) , 
+                                            ((-sceneSize[1] / 2) - sceneBBox[0][1] ) , 
+                                            ((-sceneSize[2] / 2) - sceneBBox[0][2] ) ]);
+        
+                                var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.5 ]);
+        
+                                var centeredTr = mat4.create();
+                                mat4.multiply(this.userControlMatrix, translation , centeredTr); 
+                                mat4.multiply(translation2 , centeredTr, node.transform); 
+                            }
+                        }
+                                                
                         this.engine.render();
 
                         webGLContext.flush();

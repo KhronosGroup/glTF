@@ -205,7 +205,7 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                 meshDelegate.readCompleted = function(entryType, entry, userInfo) {
                     self.meshes.push(entry);
                 }
-
+                
                 if (nodeDescription.mesh) {
                     reader._readEntry(nodeDescription.mesh, meshDelegate, userInfo);            
                 }
@@ -221,7 +221,17 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                 if (nodeDescription.meshes) {
                     reader._readEntries(nodeDescription.meshes, meshesDelegate, userInfo);            
                 }
-            
+
+                // load camera info (but not the binaries yet)
+                var cameraDelegate = {};
+                cameraDelegate.readCompleted = function(entryType, entry, userInfo) {
+                    self.cameras.push(entry);
+                }
+
+                if (nodeDescription.camera) {
+                    reader._readEntry(nodeDescription.camera, cameraDelegate, userInfo);            
+                }
+
                 // load node
                 var entryNodeDelegate = {};
                 entryNodeDelegate.readCompleted = function(entryType, entry, userInfo) {
