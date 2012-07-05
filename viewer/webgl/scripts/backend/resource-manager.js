@@ -235,6 +235,21 @@ define(function() {
             }
         },
     
+        _processNextResource: {
+            value: function() {
+                var nextNode = this._resourcesToBeProcessed.head;
+                if (nextNode) {
+                    var nextResourceToBeProcessed = nextNode.content;
+                    this.getWebGLResource(nextResourceToBeProcessed.id,
+                    nextResourceToBeProcessed.resourceDescription,
+                    nextResourceToBeProcessed.range,
+                    nextResourceToBeProcessed.delegate,
+                    nextResourceToBeProcessed.ctx,
+                    nextNode);
+                } 
+            }
+        },
+
         /* 
             process the queue of resources one at a time and pick them in "_resourcesToBeProcessed" 
             this method should be cleaned up a bit. dequeuing code is redundant.
@@ -292,17 +307,12 @@ define(function() {
                         delegate.resourceAvailable(convertedResource, ctx);
                         self._resourcesBeingProcessedCount--;
                         resourceInProcess.id.status = "loaded";
-                        //process next element
-                        var nextNode = self._resourcesToBeProcessed.head;
-                        if (nextNode) {
-                            var nextResourceToBeProcessed = nextNode.content;
-                            self.getWebGLResource(nextResourceToBeProcessed.id,
-                            nextResourceToBeProcessed.resourceDescription,
-                            nextResourceToBeProcessed.range,
-                            nextResourceToBeProcessed.delegate,
-                            nextResourceToBeProcessed.ctx,
-                            nextNode);
-                        } 
+                        
+                        if (self._resourcesBeingProcessedCount  >= 4) {
+                            setTimeout(self._processNextResource.bind(self), 1);
+                        } else {
+                           self._processNextResource();
+                        }
                     };
                 
                     processResourceDelegate.handleError = function(errorCode, info) {
