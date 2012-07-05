@@ -38,10 +38,16 @@ define(function() {
 
         execute: {
             value: function(renderer) {
-            
-                this._queue.forEach( function(primitive) {
-                    renderer.renderPrimitive(primitive);
-                }, this);
+                var unvavailable = 0;
+                var count = this._queue.length;
+                //give the loading some space, if we keep on being queued don't render/queue more
+                //TODO: improve more this by keeping track of the "available" primitives.
+                //Now it works well because the rendering order is always the same but this needs to be improved when we will re-order for blending.
+                for (var i = 0 ; (i < count) && (unvavailable < 7) ; i++) {
+                    if (renderer.renderPrimitive(this._queue[i]) === false) {
+                        unvavailable++;
+                    }
+                }
             }
         },
     

@@ -83,16 +83,8 @@ namespace DAE2JSON
                               -(y.x * eye.x + y.y * eye.y + y.z * eye.z),
                               -(z.x * eye.x + z.y * eye.y + z.z * eye.z),
                               1);
-/*
-        1 0 0 0 
-        0 0 1 0 
-        0 1 0 0 
-        0 0 0 1 
-*/      
         matrix = matrix.inverse();        
-        matrix = matrix.transpose();        
-//        matrix3 [1,0,0] [0,0,1] [0,-1,0]        
-        
+        matrix = matrix.transpose();                
     }
     
     BBOX::BBOX() {

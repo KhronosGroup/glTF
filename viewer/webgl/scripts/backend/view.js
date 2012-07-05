@@ -211,6 +211,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         
                         var viewPoint = this.engine.rootPass.viewPoint;
                         if (viewPoint) {
+                            viewPoint.cameras[0].projection.aspectRatio = width / height;
                             if (viewPoint.id === "__default_camera") //FIXME: that's temporary way trigger the unit cube mode.
                             {
                                 var node = this.scene.rootNode;

@@ -26,6 +26,116 @@
 
 define(function() {
 
+    var LinkedListNode = Object.create(Object, {
+
+        _content: { value: null, writable:true},
+
+        content: {
+            get: function() {
+                return this._content;
+            },
+            set: function(value) {
+                this._content = value;
+            }
+        },
+
+        _previous: { value: null, writable:true},
+
+        previous: {
+            get: function() {
+                return this._previous;
+            },
+            set: function(value) {
+                this._previous = value;
+            }
+        },
+
+        _next: { value: null, writable:true},
+
+        next: {
+            get: function() {
+                return this._next;
+            },
+            set: function(value) {
+                this._next = value;
+            }
+        },
+
+        init: {
+            value: function(content) {
+                this.content = content;
+                this.previous = null;
+                this.next = null;
+            }
+        },
+
+        removeFromList: {
+            value: function() {
+                if (this.previous) {
+                    this.previous.next = this.next;
+                }
+                if (this.next) {
+                    this.next.previous = this.previous;
+                }
+                this.next = null;
+                this.previous = null;
+            }
+        }
+
+    });
+
+    var LinkedList = Object.create(Object, {
+
+        _tail: { value: null, writable:true},
+
+        tail: {
+            get: function() {
+                return this._tail;
+            },
+            set: function(value) {
+                this._tail = value;
+            }
+        },
+
+        _head: { value: null, writable:true},
+
+        head: {
+            get: function() {
+                return this._head;
+            },
+            set: function(value) {
+                this._head = value;
+            }
+        },
+
+        append: {
+            value: function(node) {
+                if (!this.head) {
+                    this.head = node;
+                }
+                if (this.tail) {
+                    this.tail.next = node;
+                } 
+                this.tail = node;
+            }
+        },
+
+        remove: {
+            value: function(node) {
+                if (this.tail === node) {
+                    this.tail = node.previous;
+                }
+
+                if (this.head === node) {
+                    this.head = node.next;
+                }
+
+                node.removeFromList();
+            }
+        }
+
+    });
+
     var ResourceManager = Object.create(Object, {
 
         // errors
@@ -51,7 +161,7 @@ define(function() {
         init: {
             value: function() {
                 this._resources = {};
-                this._resourcesToBeProcessed = [];
+                this._resourcesToBeProcessed = Object.create(LinkedList);
                 this._resourcesBeingProcessedCount;
             }
         },
@@ -132,22 +242,33 @@ define(function() {
             FIXME: make sure to check with resource id / url before putting it again in the queue again
         */
         getWebGLResource: {
-                value: function(id, resourceDescription, range, delegate, ctx, fromQueue) {
-
+                value: function(id, resourceDescription, range, delegate, ctx, node) {
+                
                 var resource = this._getResource(id);
                 if (resource) {
                     return resource;
                 }
 
-                var resourceToBeProcessed = {"resourceDescription" : resourceDescription,
+                //FIXME: find a better object to hold the status than id (can't use resourceDescription because it is shared)
+                if (id.status === "loading")
+                    return null;
+
+                var resourceToBeProcessed = null;
+                if (node) {
+                    resourceToBeProcessed = node.content;
+                } else {
+                    resourceToBeProcessed = {"resourceDescription" : resourceDescription,
                                             "delegate" : delegate,
                                             "ctx" : ctx,
                                             "range" : range,
                                             "id" : id  };
-                
+                }
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
-                    if (!fromQueue) {
-                        this._resourcesToBeProcessed.push(resourceToBeProcessed);
+                    if (!id.status) {
+                        var listNode = Object.create(LinkedListNode);                
+                        listNode.init(resourceToBeProcessed);
+                        this._resourcesToBeProcessed.append(listNode);
+                        id.status = "queued";
                     }
                     return null;
                 }
@@ -155,30 +276,33 @@ define(function() {
                 if (delegate) {
                     var self = this;
                     var processResourceDelegate = {};
-                
+                    
+                    id.status = "loading";
+                    if (node) {
+                        this._resourcesToBeProcessed.remove(node);
+                    }
+
                     processResourceDelegate.resourceAvailable = function(resourceInProcess, resource) {
-                        var resourceDescription = resourceInProcess.resourceDescription;
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
                         // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                         //, but as of now, this flexibily does not seem necessary.
                         // console.log("call convert for:"+resourceDescription.id);
                         convertedResource = delegate.convert(resource, ctx);
-                        self._storeResource(id, convertedResource);
+                        self._storeResource(resourceInProcess.id, convertedResource);
                         delegate.resourceAvailable(convertedResource, ctx);
                         self._resourcesBeingProcessedCount--;
+                        resourceInProcess.id.status = "loaded";
                         //process next element
-                        var existingResource = null;
-                        if (self._resourcesToBeProcessed.length > 0) {
-                            do {
-                                var nextResourceToBeProcessed = self._resourcesToBeProcessed.pop();
-                                existingResource = self.getWebGLResource(nextResourceToBeProcessed.id,
-                                                        nextResourceToBeProcessed.resourceDescription,
-                                                        nextResourceToBeProcessed.range,
-                                                        nextResourceToBeProcessed.delegate,
-                                                        nextResourceToBeProcessed.ctx,
-                                                        true);
-                            } while ((self._resourcesToBeProcessed.length > 0) && (existingResource !== null));
-                        }
+                        var nextNode = self._resourcesToBeProcessed.head;
+                        if (nextNode) {
+                            var nextResourceToBeProcessed = nextNode.content;
+                            self.getWebGLResource(nextResourceToBeProcessed.id,
+                            nextResourceToBeProcessed.resourceDescription,
+                            nextResourceToBeProcessed.range,
+                            nextResourceToBeProcessed.delegate,
+                            nextResourceToBeProcessed.ctx,
+                            nextNode);
+                        } 
                     };
                 
                     processResourceDelegate.handleError = function(errorCode, info) {

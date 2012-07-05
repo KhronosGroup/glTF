@@ -214,11 +214,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         
                 if (vecA === vecB)
                     return true;
-
-                if ((vecA[0] === vecB[0]) && (vecA[1] === vecB[1]) && (vecA[2] === vecB[2]))
-                    return true;
-
-                return false;
+                return vec3.equal(vecA, vecB);
             }
         },
     
@@ -334,7 +330,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                         } else {
                              available = false;
                         }
-                    
+
                         if (available) {
                             var attributeLocation = program.getLocationForSymbol(symbol);
                             if (typeof attributeLocation !== "undefined") {
@@ -377,8 +373,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     }
                 }
                 this._lastMaxEnabledArray = newMaxEnabledArray;
+                return available;
             }
-
         }
     });
     
