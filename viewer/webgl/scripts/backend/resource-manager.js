@@ -197,35 +197,33 @@ define(function() {
         _resourcesToBeProcessed: { value: null, writable: true },
     
         _loadResource: {
-            value: function(delegate, resource, range) {
+            value: function(request, delegate) {
 
                 var self = this;
-                var description = resource.resourceDescription.description;
-            
-                if (!description.type) {
+                if (!request.type) {
+                    debugger;
                     delegate.handleError(ResourceManager.INVALID_TYPE, null);
                     return;
                 }
-                if (description.type === this.ARRAY_BUFFER) {
-                    if (!description.path) {
+                if (request.type === this.ARRAY_BUFFER) {
+                    if (!request.path) {
                         delegate.handleError(ResourceManager.INVALID_PATH);
                         return;
                     }
                     
                     var xhr = new XMLHttpRequest();
                 
-                  xhr.open('GET', description.path, true);
+                    xhr.open('GET', request.path, true);
                     xhr.responseType = 'arraybuffer';
-                    if (range) {
-                        var header = "bytes=" + range[0] + "-" + (range[1] - 1);
+                    if (request.range) {
+                        var header = "bytes=" + request.range[0] + "-" + (request.range[1] - 1);
                         xhr.setRequestHeader("Range", header);
                     }
                     //if this is not specified, 1 "big blob" scenes fails to load.
                     xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");                                                
                     xhr.onload = function(e) {
                         if ((this.status == 200) || (this.status == 206)) {
-                            self._resource = this.response; 
-                            delegate.resourceAvailable(resource, self._resource);
+                            delegate.resourceAvailable(request, this.response);
                         } else {
                             delegate.handleError(ResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                         }
@@ -233,7 +231,7 @@ define(function() {
                     xhr.send(null);
                        
                 } else {
-                    delegate.handleError(ResourceManager.INVALID_TYPE, description.type);
+                    delegate.handleError(ResourceManager.INVALID_TYPE, request.type);
                 }
             }
         },
@@ -242,65 +240,47 @@ define(function() {
             value: function() {
                 var nextNode = this._resourcesToBeProcessed.head;
                 if (nextNode) {
-                    var nextResourceToBeProcessed = nextNode.content;
-                    this.getWebGLResource(nextResourceToBeProcessed.id,
-                    nextResourceToBeProcessed.resourceDescription,
-                    nextResourceToBeProcessed.range,
-                    nextResourceToBeProcessed.delegate,
-                    nextResourceToBeProcessed.ctx,
-                    nextNode);
+                    var nextRequest = nextNode.content;
+                    this._handleRequest(nextRequest, nextNode);
                 } 
             }
         },
 
-        getWebGLResource: {
-                value: function(id, resourceDescription, range, delegate, ctx, node) {
-                
-                var resource = this._getResource(id);
-                if (resource) {
-                    return resource;
-                }
-
-                //FIXME: find a better object to hold the status than id (can't use resourceDescription because it is shared)
-                if (this._resourcesStatus[id] === "loading") 
+        _handleRequest: {
+            value: function(request, node) {
+                if (this._resourcesStatus[request.id] === "loading") 
                     return null;
-
-                var resourceToBeProcessed = node ? node.content : {
-                                            "resourceDescription" : resourceDescription,
-                                            "delegate" : delegate,
-                                            "ctx" : ctx,
-                                            "range" : range,
-                                            "id" : id };
  
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
-                    if (!this._resourcesStatus[id]) {
+                    if (!this._resourcesStatus[request.id]) {
                         var listNode = Object.create(LinkedListNode);                
-                        this._resourcesStatus[id] = "queued";
-                        listNode.init(resourceToBeProcessed);
+                        this._resourcesStatus[request.id] = "queued";
+                        listNode.init(request);
                         this._resourcesToBeProcessed.append(listNode);
                     }
                     return null;
                 }
             
-                if (delegate) {
+                if (request.delegate) {
                     var self = this;
                     var processResourceDelegate = {};
                     
-                    this._resourcesStatus[id] = "loading";
+                    this._resourcesStatus[request.id] = "loading";
                     if (node) {
                         this._resourcesToBeProcessed.remove(node);
                     }
 
-                    processResourceDelegate.resourceAvailable = function(resourceInProcess, resource) {
+                    processResourceDelegate.resourceAvailable = function(request, resource) {
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
                         // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                         //, but as of now, this flexibily does not seem necessary.
-                        convertedResource = delegate.convert(resource, ctx);
-                        self._storeResource(resourceInProcess.id, convertedResource);
-                        delegate.resourceAvailable(convertedResource, ctx);
+                        
+                        convertedResource = request.delegate.convert(resource, request.ctx);
+                        self._storeResource(request.id, convertedResource);
+                        request.delegate.resourceAvailable(convertedResource, request.ctx);
                         self._resourcesBeingProcessedCount--;
                         
-                        delete self._resourcesStatus[resourceInProcess.id];
+                        delete self._resourcesStatus[request.id];
 
                         if (self._resourcesBeingProcessedCount  >= 4) {
                             setTimeout(self._processNextResource.bind(self), 1);
@@ -310,13 +290,60 @@ define(function() {
                     };
                 
                     processResourceDelegate.handleError = function(errorCode, info) {
-                        delegate.handleError(errorCode, info);
+                        request.delegate.handleError(errorCode, info);
                     }
 
                     self._resourcesBeingProcessedCount++;
-                    this._loadResource(processResourceDelegate, resourceToBeProcessed, range);
+                    this._loadResource(request, processResourceDelegate);
                 }
                 
+                return null;
+
+            }
+        },
+
+        _handleAccessorResourceLoading: {
+            value: function(accessor, delegate, ctx) {
+                var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
+                this._handleRequest({   "id" : accessor.id,
+                                        "range" : range,
+                                        "type" : accessor.buffer.description.type,
+                                        "path" : accessor.buffer.description.path,
+                                        "delegate" : delegate,
+                                        "ctx" : ctx }, null);
+            }
+        },
+
+        _handleTypedArrayLoading: {
+            value: function(typedArrayDescr, delegate, ctx) {
+            
+                if (typedArrayDescr.type === "Uint16Array") {
+                    var range = [typedArrayDescr.byteOffset, typedArrayDescr.byteOffset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
+
+                    this._handleRequest({   "id":typedArrayDescr.id,
+                                            "range" : range,
+                                            "type" : typedArrayDescr.buffer.description.type,
+                                            "path" : typedArrayDescr.buffer.description.path,
+                                            "delegate" : delegate,
+                                            "ctx" : ctx }, null);
+                }
+            }
+        },
+
+        getResource: {
+                value: function(resource, delegate, ctx, node) {
+
+                var managedResource = this._getResource(resource.id);
+                if (managedResource) {
+                    return managedResource;
+                }
+
+                if (resource.type === "accessor") {
+                    this._handleAccessorResourceLoading(resource, delegate, ctx, node);
+                } else {
+                    this._handleTypedArrayLoading(resource, delegate, ctx, node);
+                }
+
                 return null;
             }
         },

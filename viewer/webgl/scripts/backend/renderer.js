@@ -322,8 +322,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     var symbol = materialSemantic[vertexAttribute.semantic];
                     if (symbol) {
                         //FIXME: do not assume continuous data, this will break with interleaved arrays (should not use byteStride here).
-                        var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];    
-                        var glResource = this.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, this.vertexAttributeBufferDelegate, this.webGLContext);
+                        var glResource = this.resourceManager.getResource(accessor, this.vertexAttributeBufferDelegate, this.webGLContext);
                         // this call will bind the resource when available
                         if (glResource) {
                             gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
@@ -365,8 +364,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
               
                    var glIndices = null;
                     //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
-                    var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
-                    glIndices = this.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, this.indicesDelegate, this.webGLContext);              
+                    glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, this.webGLContext);              
                     if (glIndices) {
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
