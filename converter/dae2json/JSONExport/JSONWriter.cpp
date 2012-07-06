@@ -131,13 +131,8 @@ namespace JSONExport
     {
         shared_ptr <JSONExport::JSONObject> effectObject(new JSONExport::JSONObject());
         shared_ptr <JSONExport::JSONArray> colorObject(new JSONExport::JSONArray());
-            
-        effectObject->setValue("color", colorObject);
-        
-        float *rgbColor = effect->getRGBColor();
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[0])));
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[1])));
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[2])));
+
+        effectObject->setString("type", "effect");
 
         effectObject->setString("technique", effect->getTechniqueID());
         effectObject->setValue("inputs", effect->getInputs());

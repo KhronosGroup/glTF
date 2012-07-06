@@ -24,12 +24,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "backend/camera", "dependencies/gl-matrix"], 
-    function(EntryManager, Mesh, Scene, Node, Camera) {
+define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "backend/camera", "backend/material", "backend/technique", "dependencies/gl-matrix"], 
+    function(EntryManager, Mesh, Scene, Node, Camera, Material, Technique, glMatrix) {
 
     var Reader = Object.create(Object, {
 
         MESH: { value: "mesh" },
+        MATERIAL: { value: "material" },
+        TECHNIQUE: { value: "technique" },
         SCENE: { value: "scene" },
         NODE: { value: "node" },
         CAMERA: { value: "camera" },
@@ -127,7 +129,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             value: function (entryID) {
                 var entryDescription = this.rootDescription[entryID];
                 if (!entryDescription) {
-                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras"];
+                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras", "techniques"];
                 
                     for (var i = 0 ; !entryDescription && i < entryLevels.length ; i++) {
                         var entries = this.rootDescription[entryLevels[i]];
@@ -158,21 +160,25 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     if (entryManager.containsEntry(entryID)) {
                         delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);                    
                         return;
-                    } else if (type === this.MESH) {
+                    }
+
+                    //TODO: make a factory..
+                    if (type === this.MESH) {
                         entry = Object.create(Mesh);
-                        //entry.init();
                     } else if (type === this.SCENE) {
                         entry = Object.create(Scene);
-                        entry.init();
                     } else if (type === this.NODE) {                
                         entry = Object.create(Node);
-                        entry.init();
                     } else if (type === this.CAMERA) {  
                         entry = Object.create(Camera);
-                        entry.init();
+                    } else if (type === this.MATERIAL) {
+                        entry = Object.create(Material);
+                    } else if (type == this.TECHNIQUE) {
+                        entry = Object.create(Technique);
                     }
 
                     if (entry) {
+                        entry.init();
                         entry.id = entryID;
                         entry.read(entryID, entryDescription, entryDelegate, this, userInfo);
                     }

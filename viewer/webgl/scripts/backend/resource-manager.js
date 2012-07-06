@@ -161,8 +161,9 @@ define(function() {
         init: {
             value: function() {
                 this._resources = {};
+                this._resourcesStatus = {};
                 this._resourcesToBeProcessed = Object.create(LinkedList);
-                this._resourcesBeingProcessedCount;
+                this._resourcesBeingProcessedCount = 0;
             }
         },
     
@@ -188,6 +189,8 @@ define(function() {
                 return this._resources[resourceID];
             }
         },
+
+        _resourcesStatus: { value: null, writable: true },
     
         _resourcesBeingProcessedCount: { value: 0, writable: true },
     
@@ -250,12 +253,6 @@ define(function() {
             }
         },
 
-        /* 
-            process the queue of resources one at a time and pick them in "_resourcesToBeProcessed" 
-            this method should be cleaned up a bit. dequeuing code is redundant.
-        
-            FIXME: make sure to check with resource id / url before putting it again in the queue again
-        */
         getWebGLResource: {
                 value: function(id, resourceDescription, range, delegate, ctx, node) {
                 
@@ -265,25 +262,22 @@ define(function() {
                 }
 
                 //FIXME: find a better object to hold the status than id (can't use resourceDescription because it is shared)
-                if (id.status === "loading")
+                if (this._resourcesStatus[id] === "loading") 
                     return null;
 
-                var resourceToBeProcessed = null;
-                if (node) {
-                    resourceToBeProcessed = node.content;
-                } else {
-                    resourceToBeProcessed = {"resourceDescription" : resourceDescription,
+                var resourceToBeProcessed = node ? node.content : {
+                                            "resourceDescription" : resourceDescription,
                                             "delegate" : delegate,
                                             "ctx" : ctx,
                                             "range" : range,
-                                            "id" : id  };
-                }
+                                            "id" : id };
+ 
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
-                    if (!id.status) {
+                    if (!this._resourcesStatus[id]) {
                         var listNode = Object.create(LinkedListNode);                
+                        this._resourcesStatus[id] = "queued";
                         listNode.init(resourceToBeProcessed);
                         this._resourcesToBeProcessed.append(listNode);
-                        id.status = "queued";
                     }
                     return null;
                 }
@@ -292,7 +286,7 @@ define(function() {
                     var self = this;
                     var processResourceDelegate = {};
                     
-                    id.status = "loading";
+                    this._resourcesStatus[id] = "loading";
                     if (node) {
                         this._resourcesToBeProcessed.remove(node);
                     }
@@ -301,13 +295,13 @@ define(function() {
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
                         // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                         //, but as of now, this flexibily does not seem necessary.
-                        // console.log("call convert for:"+resourceDescription.id);
                         convertedResource = delegate.convert(resource, ctx);
                         self._storeResource(resourceInProcess.id, convertedResource);
                         delegate.resourceAvailable(convertedResource, ctx);
                         self._resourcesBeingProcessedCount--;
-                        resourceInProcess.id.status = "loaded";
                         
+                        delete self._resourcesStatus[resourceInProcess.id];
+
                         if (self._resourcesBeingProcessedCount  >= 4) {
                             setTimeout(self._processNextResource.bind(self), 1);
                         } else {
@@ -317,7 +311,7 @@ define(function() {
                 
                     processResourceDelegate.handleError = function(errorCode, info) {
                         delegate.handleError(errorCode, info);
-                    };
+                    }
 
                     self._resourcesBeingProcessedCount++;
                     this._loadResource(processResourceDelegate, resourceToBeProcessed, range);

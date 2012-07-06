@@ -18,11 +18,15 @@
     },
     "materials": {
         "material.0": {
-            "color": [
-                1,
-                1,
-                1
-            ]
+            "inputs": {
+                "diffuseColor": [
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "technique": "lambert0",
+            "type": "material"
         }
     },
     "meshes": {
@@ -179,6 +183,29 @@
         "defaultScene": {
             "node": "root",
             "type": "scene"
+        }
+    },
+    "shaders": {
+        "lambert0Fs": {
+            "path": "lambert0Fs.glsl",
+            "type": "shader"
+        },
+        "lambert0Vs": {
+            "path": "lambert0Vs.glsl",
+            "type": "shader"
+        }
+    },
+    "techniques": {
+        "lambert0": {
+            "defaultPass": {
+                "inputs": {
+                    "diffuseColor": {
+                        "symbol": "u_diffuseColor"
+                    }
+                },
+                "x-shader/x-fragment": "lambert0Fs",
+                "x-shader/x-vertex": "lambert0Vs"
+            }
         }
     },
     "version": "0.1"

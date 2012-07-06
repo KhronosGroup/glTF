@@ -118,6 +118,12 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
             }
         },
         
+        init: {
+            value: function() {
+                this.__Base_init();
+            }
+        },
+
         read: {
             enumerable: true,
             value: function(entryID, meshDescription, delegate, reader, userInfo) {
@@ -137,42 +143,45 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
                         var primitiveDescription = primitivesDescription[i];
                     
                         if (primitiveDescription.primitive === "TRIANGLES") {
-                    
-                        var primitive = Object.create(Primitive);                    
-                        primitive.init();
-                    
-                       primitive.material = reader.getEntryFromRootDescription(primitiveDescription.material);
-                        this.primitives.push(primitive);
-                    
-                        var vertexAttributesDescription = primitiveDescription.vertexAttributes;
-                    
-                        vertexAttributesDescription.forEach( function(vertexAttributeDescription) {
-                            var accessorID = vertexAttributeDescription.accessor;
-                            var accessor = reader.entryManager.getEntry(accessorID);
-                                
-                            if (!accessor) {
-                                //let's just use an anonymous objecst for the accessor
-                                accessor = meshDescription[accessorID];
-                                accessor.id = accessorID;
-                            
-                                var bufferDescription = reader.entryManager.getEntry(accessor.buffer);
-            
-                                if (!bufferDescription) {
-                                    bufferDescription = Object.create(ResourceDescription);                
-                                    bufferDescription.init(accessor.buffer, reader.getEntryFromRootDescription(accessor.buffer));
-                                    reader.entryManager.storeEntry(bufferDescription);
-                                }
-                            
-                                accessor.buffer = bufferDescription;
-                            
-                                reader.entryManager.storeEntry(accessor);
+                            var primitive = Object.create(Primitive);                    
+                            primitive.init();
+
+                            //read material
+                            var materialDelegate = {};
+                            materialDelegate.readCompleted = function(entryType, entry, userInfo) {
+                                primitive.material = entry;
                             }
-                            //this is a set ID, it has to stay a string
-                            var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";
-                                                
-                            primitive.addVertexAttribute( { "semantic" :  vertexAttributeDescription.semantic,
-                                                            "set" : set,
-                                                            "accessor" : accessor });
+                            reader._readEntry(primitiveDescription.material, materialDelegate, userInfo);            
+                
+                            this.primitives.push(primitive);
+                        
+                            var vertexAttributesDescription = primitiveDescription.vertexAttributes;
+                    
+                            vertexAttributesDescription.forEach( function(vertexAttributeDescription) {
+                                var accessorID = vertexAttributeDescription.accessor;
+                                var accessor = reader.entryManager.getEntry(accessorID);
+                                
+                                if (!accessor) {
+                                    //let's just use an anonymous objecst for the accessor
+                                    accessor = meshDescription[accessorID];
+                                    accessor.id = accessorID;
+                                    var bufferDescription = reader.entryManager.getEntry(accessor.buffer);
+            
+                                    if (!bufferDescription) {
+                                        bufferDescription = Object.create(ResourceDescription);                
+                                        bufferDescription.init(accessor.buffer, reader.getEntryFromRootDescription(accessor.buffer));
+                                        reader.entryManager.storeEntry(bufferDescription);
+                                    }
+                            
+                                    accessor.buffer = bufferDescription;
+                                    reader.entryManager.storeEntry(accessor);
+                                }
+                                //this is a set ID, it has to stay a string
+                                var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";
+                                                    
+                                primitive.addVertexAttribute( { "semantic" :  vertexAttributeDescription.semantic,
+                                                                "set" : set,
+                                                                "accessor" : accessor });
                         }, this);
                     
                             //set indices

@@ -463,6 +463,8 @@ namespace DAE2JSON
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONEffect> effect = (*UniqueIDToEffectIterator).second;
             shared_ptr <JSONExport::JSONObject> effectObject = this->_writer.serializeEffect(effect.get(), 0);
+            //FIXME:HACK: effects are exported as materials
+            effectObject->setString("type", "material");
             materialsObject->setValue(effect->getID(), effectObject);
         }
 

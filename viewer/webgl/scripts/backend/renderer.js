@@ -294,7 +294,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 
             
                 if (program.getLocationForSymbol("color")) {
-                    var color = primitive.material.color;
+                    var color = primitive.material.inputs.diffuseColor;
                     var step = primitive.step * primitive.step;
                     var oneMinusPrimitiveStep = 1 - (1 * step);
                     var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])), 
@@ -364,7 +364,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                         primitive.step += 0.05;
               
                    var glIndices = null;
-                    //FIXME should not assume 2 bytes per indices (WebGL supports one too…)
+                    //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
                     var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
                     glIndices = this.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, this.indicesDelegate, this.webGLContext);              
                     if (glIndices) {
