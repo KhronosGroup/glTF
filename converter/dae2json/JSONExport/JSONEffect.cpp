@@ -44,6 +44,26 @@ namespace JSONExport
         return this->_ID;
     }
     
+    void JSONEffect::setTechniqueID(const std::string& techniqueID)
+    {
+        this->_techniqueID = techniqueID;
+    }
+    
+    const std::string& JSONEffect::getTechniqueID()
+    {
+        return this->_techniqueID;
+    }
+    
+    void JSONEffect::setInputs(shared_ptr <JSONExport::JSONArray> inputs)
+    {
+        this->_inputs = inputs;
+    }
+    
+    shared_ptr <JSONExport::JSONArray> JSONEffect::getInputs()
+    {
+        return this->_inputs;
+    }
+    
     //temporary
     void JSONEffect::setRGBColor(float* rgb) {
         this->_diffuseColor[0] = rgb[0];

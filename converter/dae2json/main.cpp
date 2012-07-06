@@ -112,7 +112,7 @@ int main (int argc, char * const argv[]) {
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
             printf("converting:%s ...\n",converterArgs.inputFile.c_str());
-            DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs.inputFile, &jsonWriter);        
+            DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs.inputFile, converterArgs.outputFile, &jsonWriter);        
             writer->write();
             printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT
