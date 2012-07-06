@@ -920,17 +920,15 @@ namespace DAE2JSON
             rgb[2] = blue;
             cvtEffect->setRGBColor(rgb);
             
-            shared_ptr <JSONExport::JSONArray> inputs = shared_ptr <JSONExport::JSONArray> (new JSONExport::JSONArray());
+            shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             
             shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
-            shared_ptr <JSONExport::JSONObject> diffuseColorObject(new JSONExport::JSONObject());
             
             diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[0])));
             diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[1])));
             diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[2])));
             
-            diffuseColorObject->setValue("diffuseColor", diffuseColorArray);
-            inputs->appendValue(diffuseColorObject);
+            inputs->setValue("diffuseColor", diffuseColorArray);
             
             cvtEffect->setInputs(inputs);
             cvtEffect->setTechniqueID(techniqueID);

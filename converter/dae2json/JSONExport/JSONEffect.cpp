@@ -54,12 +54,12 @@ namespace JSONExport
         return this->_techniqueID;
     }
     
-    void JSONEffect::setInputs(shared_ptr <JSONExport::JSONArray> inputs)
+    void JSONEffect::setInputs(shared_ptr <JSONExport::JSONObject> inputs)
     {
         this->_inputs = inputs;
     }
     
-    shared_ptr <JSONExport::JSONArray> JSONEffect::getInputs()
+    shared_ptr <JSONExport::JSONObject> JSONEffect::getInputs()
     {
         return this->_inputs;
     }
