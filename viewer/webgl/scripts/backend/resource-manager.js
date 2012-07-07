@@ -282,8 +282,8 @@ define(function() {
                         
                         delete self._resourcesStatus[request.id];
 
-                        if (self._resourcesBeingProcessedCount  >= 4) {
-                            setTimeout(self._processNextResource.bind(self), 1);
+                        if (self._resourcesBeingProcessedCount  >= 3) {
+                            setTimeout(self._processNextResource.bind(self), 10);
                         } else {
                            self._processNextResource();
                         }
@@ -331,7 +331,7 @@ define(function() {
         },
 
         getResource: {
-                value: function(resource, delegate, ctx, node) {
+                value: function(resource, delegate, ctx) {
 
                 var managedResource = this._getResource(resource.id);
                 if (managedResource) {
@@ -339,9 +339,9 @@ define(function() {
                 }
 
                 if (resource.type === "accessor") {
-                    this._handleAccessorResourceLoading(resource, delegate, ctx, node);
+                    this._handleAccessorResourceLoading(resource, delegate, ctx);
                 } else {
-                    this._handleTypedArrayLoading(resource, delegate, ctx, node);
+                    this._handleTypedArrayLoading(resource, delegate, ctx);
                 }
 
                 return null;
