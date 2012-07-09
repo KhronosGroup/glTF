@@ -62,7 +62,6 @@ define(function() {
                         this.range[0] = request.range[0];
                     } else {
                         console.log("ERROR: should not reach");
-                        debugger;
                     }
                 }
             }
@@ -140,7 +139,6 @@ define(function() {
                     }
                 } else {
                     console.log("ERROR: should not reach");
-                    debugger;
                 }
             }
         }
@@ -239,10 +237,6 @@ define(function() {
                     this.tail.next = node;
                 } 
                 this.tail = node;
-
-                if (!this.tail) {
-                    debugger;
-                }
             }
         },
 
@@ -265,8 +259,7 @@ define(function() {
                 /* consistency check 
                 for (cnode = this.head ; cnode != null ; cnode = cnode.next) {
                     if (id === cnode.content.id) {
-                        console.log("isTail:"+isTail+" isHead:"+isHead);
-                        debugger;
+                        console.log("ERROR: inconsistency found isTail:"+isTail+" isHead:"+isHead);
                     }
                 }
                 */
@@ -342,7 +335,6 @@ define(function() {
             value: function(request, delegate) {
                 var self = this;
                 if (!request.type) {
-                    debugger;
                     delegate.handleError(ResourceManager.INVALID_TYPE, null);
                     return;
                 }
@@ -384,7 +376,7 @@ define(function() {
                     var nextRequest = nextNode.content;
 
                     if (!this._resourcesStatus[nextRequest.id]) {
-                        debugger;
+                        console("ERROR: should not reach");
                     }
 
                     this._handleRequest(nextRequest);
@@ -406,20 +398,12 @@ define(function() {
  
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
                     if (!status) {     
-                        if (node) {
-                            debugger;
-                        }
-
-                        if (request.id === "accessor.6")
-                            debugger;
-
                         var listNode = Object.create(LinkedListNode);                
                         listNode.init(request);
 
                         this._resourcesStatus[request.id] =  { "status": "queued", "node": listNode };
-                        /*
-                        var contRequests = Object.create(ContiguousRequests);
-                        contRequests.initWithRequests([request]);
+                        
+                        var contRequests = Object.create(ContiguousRequests).initWithRequests([request]);
                         if (!this._requestTree) {
                             var rootTreeNode = Object.create(RequestTreeNode);
                             rootTreeNode.content = contRequests;
@@ -427,7 +411,7 @@ define(function() {
                         } else {
                             this._requestTree.insert(contRequests);
                         }
-                        */
+                        
                         this._resourcesToBeProcessed.append(listNode);
                     }
                     return null;
