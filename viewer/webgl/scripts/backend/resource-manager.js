@@ -26,6 +26,127 @@
 
 define(function() {
 
+    var ContiguousRequests = Object.create(Object, {
+
+        range: { value: null, writable:true },
+
+        _requests: { value: null, writable:true },
+
+        requests: {
+            get: function() {
+                return this._requests;
+            },
+            set: function(value) {
+                this._requests = value;
+            }
+        },
+
+        canMergeRequest: {
+            value: function(request) {
+                return  ((request.range[0] === this.range[1]) ||
+                         (request.range[1] === this.range[0]));
+            }
+        },
+
+        mergeRequest: {
+            value: function(request) {
+                if (this.requests.length === 0) {
+                    this.requests.push(request);
+                    this.range = request.range;
+                } else {
+                    if (request.range[0] === this.range[1]) {
+                        this.requests.push(request);
+                        this.range[1] = request.range[1];
+                    } else if (request.range[1] === this.range[0]) {
+                        this.requests.unshift(request);
+                        this.range[0] = request.range[0];
+                    } else {
+                        console.log("ERROR: should not reach");
+                        debugger;
+                    }
+                }
+            }
+        },
+
+        initWithRequests: {
+            value: function(requests) {
+                this.requests = [];
+
+                requests.forEach(function(request) {
+                    this.mergeRequest(request);
+                }, this);
+
+                return this;
+            }
+        }
+
+    })
+
+    var RequestTreeNode = Object.create(Object, {
+
+        _content: { value: null, writable:true},
+
+        content: {
+            get: function() {
+                return this._content;
+            },
+            set: function(value) {
+                this._content = value;
+            }
+        },
+
+        _left: { value: null, writable:true},
+
+        left: {
+            get: function() {
+                return this._left;
+            },
+            set: function(value) {
+                this._left = value;
+            }
+        },
+
+        _right: { value: null, writable:true},
+
+        right: {
+            get: function() {
+                return this._right;
+            },
+            set: function(value) {
+                this._right = value;
+            }
+        },
+
+        insert: {
+            value: function(requests) {
+                //insert before ?
+                if (requests.range[1] <= this.content.range[0]) {
+                    if (this.left) {
+                        this.left.insert(requests);
+                    } else {
+                        var treeNode = Object.create(RequestTreeNode);
+                        treeNode.content = requests; 
+                        this.left = treeNode;
+                    }
+
+                //insert after ?
+                } else if (requests.range[0] >= this.content.range[1]) {
+                    if (this.right) {
+                        this.right.insert(requests);
+                    } else {
+                        var treeNode = Object.create(RequestTreeNode);
+                        treeNode.content = requests; 
+                        this.right = treeNode;
+                    }
+                } else {
+                    console.log("ERROR: should not reach");
+                    debugger;
+                }
+            }
+        }
+
+    });
+
     var LinkedListNode = Object.create(Object, {
 
         _content: { value: null, writable:true},
@@ -114,23 +235,41 @@ define(function() {
                     this.head = node;
                 }
                 if (this.tail) {
+                    node.previous = this.tail;
                     this.tail.next = node;
                 } 
                 this.tail = node;
+
+                if (!this.tail) {
+                    debugger;
+                }
             }
         },
 
         remove: {
             value: function(node) {
+                var id = node.content.id;
+
+                var isTail = false,isHead = false;
                 if (this.tail === node) {
+                    isTail = true;
                     this.tail = node.previous;
                 }
 
                 if (this.head === node) {
+                    isHead = true;
                     this.head = node.next;
                 }
 
                 node.removeFromList();
+                /* consistency check 
+                for (cnode = this.head ; cnode != null ; cnode = cnode.next) {
+                    if (id === cnode.content.id) {
+                        console.log("isTail:"+isTail+" isHead:"+isHead);
+                        debugger;
+                    }
+                }
+                */
             }
         }
 
@@ -149,6 +288,8 @@ define(function() {
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
         _resources: { value: null, writable: true },
+
+        _requestTree: { value: null, writable: true },
         
         //manage entries
         _containsResource: {
@@ -160,6 +301,7 @@ define(function() {
     
         init: {
             value: function() {
+                this._requestTree = null;
                 this._resources = {};
                 this._resourcesStatus = {};
                 this._resourcesToBeProcessed = Object.create(LinkedList);
@@ -198,7 +340,6 @@ define(function() {
     
         _loadResource: {
             value: function(request, delegate) {
-
                 var self = this;
                 if (!request.type) {
                     debugger;
@@ -241,21 +382,52 @@ define(function() {
                 var nextNode = this._resourcesToBeProcessed.head;
                 if (nextNode) {
                     var nextRequest = nextNode.content;
-                    this._handleRequest(nextRequest, nextNode);
+
+                    if (!this._resourcesStatus[nextRequest.id]) {
+                        debugger;
+                    }
+
+                    this._handleRequest(nextRequest);
                 } 
             }
         },
 
         _handleRequest: {
-            value: function(request, node) {
-                if (this._resourcesStatus[request.id] === "loading") 
-                    return null;
+            value: function(request) {
+                var resourceStatus = this._resourcesStatus[request.id];
+                var node = null;
+                var status = null;
+                if (resourceStatus) {
+                    if (resourceStatus.status === "loading" )
+                        return null;
+                    node = resourceStatus.node;
+                    status = resourceStatus.status;
+                }
  
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
-                    if (!this._resourcesStatus[request.id]) {
+                    if (!status) {     
+                        if (node) {
+                            debugger;
+                        }
+
+                        if (request.id === "accessor.6")
+                            debugger;
+
                         var listNode = Object.create(LinkedListNode);                
-                        this._resourcesStatus[request.id] = "queued";
                         listNode.init(request);
+
+                        this._resourcesStatus[request.id] =  { "status": "queued", "node": listNode };
+                        /*
+                        var contRequests = Object.create(ContiguousRequests);
+                        contRequests.initWithRequests([request]);
+                        if (!this._requestTree) {
+                            var rootTreeNode = Object.create(RequestTreeNode);
+                            rootTreeNode.content = contRequests;
+                            this._requestTree = rootTreeNode;
+                        } else {
+                            this._requestTree.insert(contRequests);
+                        }
+                        */
                         this._resourcesToBeProcessed.append(listNode);
                     }
                     return null;
@@ -265,28 +437,33 @@ define(function() {
                     var self = this;
                     var processResourceDelegate = {};
                     
-                    this._resourcesStatus[request.id] = "loading";
+                    //if (request.id === "accessor.6")
+                    //     console.log("load node:"+request.id+":node:"+node)
+
                     if (node) {
                         this._resourcesToBeProcessed.remove(node);
                     }
 
-                    processResourceDelegate.resourceAvailable = function(request, resource) {
+                    this._resourcesStatus[request.id] =  { "status": "loading"};
+
+                    processResourceDelegate.resourceAvailable = function(req_, res_) {
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
                         // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                         //, but as of now, this flexibily does not seem necessary.
-                        
-                        convertedResource = request.delegate.convert(resource, request.ctx);
-                        self._storeResource(request.id, convertedResource);
-                        request.delegate.resourceAvailable(convertedResource, request.ctx);
+                        convertedResource = req_.delegate.convert(res_, req_.ctx);
+                        self._storeResource(req_.id, convertedResource);
+                        req_.delegate.resourceAvailable(convertedResource, req_.ctx);
                         self._resourcesBeingProcessedCount--;
                         
-                        delete self._resourcesStatus[request.id];
+                        //console.log("delete:"+req_.id)
+                        delete self._resourcesStatus[req_.id];
 
                         if (self._resourcesBeingProcessedCount  >= 3) {
-                            setTimeout(self._processNextResource.bind(self), 10);
+                            setTimeout(self._processNextResource.bind(self), 1);
                         } else {
-                           self._processNextResource();
+                            self._processNextResource();
                         }
+
                     };
                 
                     processResourceDelegate.handleError = function(errorCode, info) {
@@ -336,7 +513,7 @@ define(function() {
                 var managedResource = this._getResource(resource.id);
                 if (managedResource) {
                     return managedResource;
-                }
+                }                
 
                 if (resource.type === "accessor") {
                     this._handleAccessorResourceLoading(resource, delegate, ctx);
