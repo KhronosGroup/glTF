@@ -65,8 +65,10 @@ define(["backend/renderer","backend/pass", "backend/command-queue"], function(Re
             value: function( webGLContext, options) {
                 this.renderer = Object.create(Renderer);
                 this.rootPass = Object.create(Pass);
+                this.rootPass.init();
                 this.commandQueue = Object.create(CommandQueue);
                 this.renderer.webGLContext = webGLContext;      
+                return this;
             }
         },
     
@@ -74,7 +76,7 @@ define(["backend/renderer","backend/pass", "backend/command-queue"], function(Re
             value: function() {
                 this.renderer.resetStates();
                 this.commandQueue.reset();
-                this.rootPass.render(this);
+                this.rootPass.execute(this);
                 this.commandQueue.execute(this.renderer);
             }
         }

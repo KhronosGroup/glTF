@@ -24,20 +24,75 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/* 
+    a pass has the following 3 key elements
+        -> inputs  []  -> scene,viewpoint
+        -> program
+        -> outputs
+
+        handleDidChange/handleWillChange inputs
+
+        inputs -> program -> ouput (default to framebuffer)
+
+        -> delegate , to give control to another client object
+*/
+
 define(["backend/node", "backend/projection", "backend/camera", "dependencies/gl-matrix"], function(Node, Projection, Camera) {
 
     var Pass = Object.create(Object, {
 
-        _scene: { value: null, writable: true },
-
-        _viewPoint: { value: null, writable: true },
+        //TODO: outputs (i.e render target)
+        _inputs: { value: null, writable: true },
     
-        viewPoint: {
+        inputs: {
             get: function() {
-                return this._viewPoint;
+                return this._inputs;
             },
             set: function(value) {
-                this._viewPoint = value;
+                this._inputs = value;
+            }
+        },
+
+        inputWillChange: {
+            value: function(name, newValue) {
+            }
+        },
+
+        inputDidChange: {
+            value: function(name) {
+                if (name === "scene") {
+                    this.sceneDidChange();
+                }
+            }
+        },
+
+        _addInputPropertyIfNeeded: {
+            value: function(property) {
+                var privateName = "_" + property;
+                var self = this;
+                if (this.inputs.hasOwnProperty(property) === false) {
+                
+                    Object.defineProperty(this.inputs, privateName, { writable:true , value: null });
+
+                    Object.defineProperty(this.inputs, property, {
+                        get: function() { return self.inputs[privateName]; },
+                        set: function(value) {  
+                            self.inputWillChange.call(self, property, value)                                            
+                            self.inputs[privateName] = value;
+                            self.inputDidChange.call(self, property)                
+                        }
+                    }); 
+                }
+            }
+        },
+
+        _prepareInputsProperties: {
+            value: function() {
+                var properties = ["scene", "viewPoint"];
+
+                properties.forEach( function(property) {
+                    this._addInputPropertyIfNeeded(property);
+                }, this);
             }
         },
     
@@ -45,7 +100,7 @@ define(["backend/node", "backend/projection", "backend/camera", "dependencies/gl
             value: function() {
                 // search for all cameras
                 var cameraNodes = [];
-                this._scene.rootNode.apply( function(node) {
+                this.inputs.scene.rootNode.apply( function(node) {
                     if (node.cameras) {
                         if (node.cameras.length)
                             cameraNodes = cameraNodes.concat(node);
@@ -55,7 +110,7 @@ define(["backend/node", "backend/projection", "backend/camera", "dependencies/gl
 
                 // arbitry set first coming camera as the view point
                 if (cameraNodes.length) {
-                    this.viewPoint = cameraNodes[0];
+                    this.inputs.viewPoint = cameraNodes[0];
                 } else {
                     var projection = Object.create(Projection);
                     projection.initWithDescription( { "projection":"perspective", "yfov":45, "aspectRatio":1, "znear":0.1, "zfar":100});
@@ -70,35 +125,33 @@ define(["backend/node", "backend/projection", "backend/camera", "dependencies/gl
                     cameraNode.id = "__default_camera";
                     cameraNode.cameras.push(camera);
                     if (cameraNode)
-                        this.scene.rootNode.children.push(cameraNode);
-                    this.viewPoint = cameraNode;
+                        this.inputs.scene.rootNode.children.push(cameraNode);
+                    this.inputs.viewPoint = cameraNode;
                 }
             }
         },
         
-        scene: {
-            get: function() {
-                return this._scene;
-            },
-            set: function(value) {
-                this._scene = value;
-                this.sceneDidChange();
+        init: {
+            value: function() {
+                this.inputs = {};
+                this._prepareInputsProperties();
+                return this;
             }
         },
     
-        render: {
+        execute: {
             value: function(engine) {  
 
-                if (!this.viewPoint)
+                if (!this.inputs.viewPoint)
                     return;
 
-                var projectionMatrix = this.viewPoint.cameras[0].projection.matrix;
+                var projectionMatrix = this.inputs.viewPoint.cameras[0].projection.matrix;
                 var cameraMatrix = mat4.create();
                 var self = this;
-                mat4.inverse(this.viewPoint.transform, cameraMatrix);
+                mat4.inverse(this.inputs.viewPoint.transform, cameraMatrix);
                 var ctx = cameraMatrix;
 
-                this._scene.rootNode.apply( function(node, parentTransform) {
+                this.inputs.scene.rootNode.apply( function(node, parentTransform) {
                     //FIXME: ouch , remove these create !
                     var modelViewMatrix = mat4.create();
 

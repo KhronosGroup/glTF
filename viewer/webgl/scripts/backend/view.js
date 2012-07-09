@@ -34,7 +34,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
             get: function() { 
                 return this._sceneBBox; 
             },
-            set: function(value) { 
+            set: function(value) {
                 this._sceneBBox = value; 
             }
         },
@@ -77,7 +77,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
             get: function() { 
                 if (this.engine) {
                     if (this.engine.rootPass) {
-                        return this.engine.rootPass.scene;
+                        return this.engine.rootPass.inputs.scene;
                     }
                 }
                 return null;
@@ -109,7 +109,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         }, true, ctx);
 
                         this.sceneBBox = sceneBBox;
-                        this.engine.rootPass.scene = value;
+                        this.engine.rootPass.inputs.scene = value;
                     }
                 }
            }
@@ -209,7 +209,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                             Update scene 
                          ------------------------------------------------------------------------------------------------------------ */        
                         
-                        var viewPoint = this.engine.rootPass.viewPoint;
+                        var viewPoint = this.engine.rootPass.inputs.viewPoint;
                         if (viewPoint) {
                             viewPoint.cameras[0].projection.aspectRatio = width / height;
                             if (viewPoint.id === "__default_camera") //FIXME: that's temporary way trigger the unit cube mode.
