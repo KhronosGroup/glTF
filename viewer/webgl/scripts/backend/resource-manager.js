@@ -28,6 +28,8 @@ define(function() {
 
     var ContiguousRequests = Object.create(Object, {
 
+        kind: { value:"multi-parts", writable:true },
+
         range: { value: null, writable:true },
 
         _requests: { value: null, writable:true },
@@ -44,7 +46,9 @@ define(function() {
         canMergeRequest: {
             value: function(request) {
                 return  ((request.range[0] === this.range[1]) ||
-                         (request.range[1] === this.range[0]));
+                         (request.range[1] === this.range[0]) ||
+                         (request.type === request.type) ||
+                         (request.path === request.path));
             }
         },
 
@@ -52,7 +56,7 @@ define(function() {
             value: function(request) {
                 if (this.requests.length === 0) {
                     this.requests.push(request);
-                    this.range = request.range;
+                    this.range = [request.range[0], request.range[1]];
                 } else {
                     if (request.range[0] === this.range[1]) {
                         this.requests.push(request);
@@ -67,14 +71,23 @@ define(function() {
             }
         },
 
-        initWithRequests: {
+        mergeRequests: {
             value: function(requests) {
-                this.requests = [];
 
                 requests.forEach(function(request) {
                     this.mergeRequest(request);
                 }, this);
+            }
+        },
 
+        id: { value: null, writable:true},
+
+        initWithRequests: {
+            value: function(requests) {
+                this.requests = [];
+
+                this.mergeRequests(requests);
+                this.id = requests[0].id;
                 return this;
             }
         }
@@ -91,6 +104,17 @@ define(function() {
             },
             set: function(value) {
                 this._content = value;
+            }
+        },
+
+        _parent: { value: null, writable:true},
+
+        parent: {
+            get: function() {
+                return this._parent;
+            },
+            set: function(value) {
+                this._parent = value;
             }
         },
 
@@ -117,28 +141,128 @@ define(function() {
         },
 
         insert: {
-            value: function(requests) {
+            value: function(requests, parent) {
                 //insert before ?
                 if (requests.range[1] <= this.content.range[0]) {
-                    if (this.left) {
-                        this.left.insert(requests);
+                     if (requests.range[1] === this.content.range[0]) {
+                        if (requests.kind === "multi-parts")
+                            this.content.mergeRequests(requests.requests);
+                        else
+                            this.content.mergeRequests(requests);
+                        //console.log("requests:"+this.content.requests.length);
+                        return null;
+                    } else if (this.left) {
+                        return this.left.insert(requests, this);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
+                        treeNode.parent = this;
                         treeNode.content = requests; 
                         this.left = treeNode;
+                        return treeNode;
                     }
-
                 //insert after ?
                 } else if (requests.range[0] >= this.content.range[1]) {
-                    if (this.right) {
-                        this.right.insert(requests);
+                    if (requests.range[0] === this.content.range[1]) {
+                        if (requests.kind === "multi-parts")
+                            this.content.mergeRequests(requests.requests);
+                        else
+                            this.content.mergeRequests(requests);
+                        //console.log("requests:"+this.content.requests.length);
+                        return null;
+                    } else if (this.right) {
+                        return this.right.insert(requests, this);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
+                        treeNode.parent = this;
                         treeNode.content = requests; 
                         this.right = treeNode;
+                        return treeNode;
                     }
                 } else {
                     console.log("ERROR: should not reach");
+                }
+            }
+        },
+
+        contains: {
+            value: function(node) {
+                if (this.node === node) {
+                    return true;
+                }
+
+                if (this.left) {
+                    if (this.left.contains(node))
+                        return true;
+                }
+
+                if (this.right) {
+                    if (this.right.contains(node))
+                        return true;
+                }
+
+                return false;
+            }
+        },
+
+        remove: {
+            value: function() {
+
+                if (!this.left  && !this.right) {
+                    if (this.parent) {
+                        if (this.parent.left === this) {
+                            this.parent.left = null;
+                        } else {
+                            this.parent.right = null;
+                        }
+                    }
+                    return null;
+                } else {
+                    //if right tree is null, move left in place of element
+                    if (!this.right) {
+                        if (this.parent) {
+                            if (this.parent.left === this) {
+                                this.parent.left = this.left;
+                            } else {
+                                this.parent.right = this.left;
+                            }
+                            this.left.parent = this.parent;
+                        }
+                        return this.left;
+                    } else {
+                        //otherwise take the minimum  of the right tree
+                        var minNode = this.right;
+
+                        while (minNode.left) {
+                            minNode = minNode.left;
+                        }
+
+                        minNode.left = this.left;
+                        if (this.left)
+                            this.left.parent = minNode;
+
+                        if (minNode.parent !== this) {
+                            if (minNode.parent)
+                                minNode.parent.left = minNode.right;
+                            if (minNode.right) {
+                                if (minNode.parent)
+                                    minNode.right.parent = minNode.parent.left;
+                            }
+
+                            minNode.right = this.right;
+                            this.right.parent = minNode;
+                        }
+                        
+                        if (this.parent) {
+                            if (this.parent.left === this) {
+                                this.parent.left = minNode;
+                            } else {
+                                this.parent.right = minNode;
+                            }
+                        }
+                        minNode.parent = this.parent;
+
+                        return minNode;
+                    }
                 }
             }
         }
@@ -297,7 +421,7 @@ define(function() {
                 this._requestTree = null;
                 this._resources = {};
                 this._resourcesStatus = {};
-                this._resourcesToBeProcessed = Object.create(LinkedList);
+                //this._resourcesToBeProcessed = Object.create(LinkedList);
                 this._resourcesBeingProcessedCount = 0;
             }
         },
@@ -334,19 +458,28 @@ define(function() {
         _loadResource: {
             value: function(request, delegate) {
                 var self = this;
-                if (!request.type) {
+                var type;
+                var path = request.path;
+                if (request.kind === "multi-parts") {
+                    type = request.requests[0].type; 
+                    path = request.requests[0].path;
+                } else {
+                    type = request.type;
+                    path = request.path;
+                }
+
+                if (!type) {
                     delegate.handleError(ResourceManager.INVALID_TYPE, null);
                     return;
                 }
-                if (request.type === this.ARRAY_BUFFER) {
-                    if (!request.path) {
+                if (type === this.ARRAY_BUFFER) {
+                    if (!path) {
                         delegate.handleError(ResourceManager.INVALID_PATH);
                         return;
                     }
                     
                     var xhr = new XMLHttpRequest();
-                
-                    xhr.open('GET', request.path, true);
+                    xhr.open('GET', path, true);
                     xhr.responseType = 'arraybuffer';
                     if (request.range) {
                         var header = "bytes=" + request.range[0] + "-" + (request.range[1] - 1);
@@ -356,7 +489,16 @@ define(function() {
                     xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");                                                
                     xhr.onload = function(e) {
                         if ((this.status == 200) || (this.status == 206)) {
-                            delegate.resourceAvailable(request, this.response);
+                            if (request.kind === "multi-parts") {
+                                request.requests.forEach( function(req_) {
+                                    var subArray = this.response.slice(req_.range[0] - request.range[0], req_.range[1] - request.range[0]);
+                                    delegate.resourceAvailable(req_, subArray);
+
+                                }, this);
+                            } else {
+                                delegate.resourceAvailable(request, this.response);
+                            }
+
                         } else {
                             delegate.handleError(ResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                         }
@@ -364,23 +506,31 @@ define(function() {
                     xhr.send(null);
                        
                 } else {
-                    delegate.handleError(ResourceManager.INVALID_TYPE, request.type);
+                    delegate.handleError(ResourceManager.INVALID_TYPE, type);
                 }
             }
         },
     
         _processNextResource: {
             value: function() {
+                /*
                 var nextNode = this._resourcesToBeProcessed.head;
                 if (nextNode) {
                     var nextRequest = nextNode.content;
+
 
                     if (!this._resourcesStatus[nextRequest.id]) {
                         console("ERROR: should not reach");
                     }
 
                     this._handleRequest(nextRequest);
+                } */
+
+
+                if (this._requestTree) {
+                    this._handleRequest(this._requestTree.content);
                 } 
+
             }
         },
 
@@ -391,44 +541,74 @@ define(function() {
                 var status = null;
                 if (resourceStatus) {
                     if (resourceStatus.status === "loading" )
-                        return null;
+                        return;
                     node = resourceStatus.node;
                     status = resourceStatus.status;
                 }
  
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
                     if (!status) {     
-                        var listNode = Object.create(LinkedListNode);                
-                        listNode.init(request);
-
-                        this._resourcesStatus[request.id] =  { "status": "queued", "node": listNode };
+                        //var listNode = Object.create(LinkedListNode);                
+                        //listNode.init(request);
                         
-                        var contRequests = Object.create(ContiguousRequests).initWithRequests([request]);
+                        var trNode = null;
+
+                        var contRequests;
+
+                        if (request.kind === "multi-parts") {
+                             contRequests = Object.create(ContiguousRequests).initWithRequests(request.requests);
+                        } else {
+                             contRequests = Object.create(ContiguousRequests).initWithRequests([request]);                            
+                        }
+
                         if (!this._requestTree) {
                             var rootTreeNode = Object.create(RequestTreeNode);
                             rootTreeNode.content = contRequests;
                             this._requestTree = rootTreeNode;
+                            trNode = rootTreeNode;
                         } else {
-                            this._requestTree.insert(contRequests);
+                            trNode = this._requestTree.insert(contRequests);
                         }
-                        
-                        this._resourcesToBeProcessed.append(listNode);
+
+                        if (request.kind ==="multi-parts") {
+                            request.requests.forEach( function(req_) {
+                                this._resourcesStatus[req_.id] =  { "status": "queued", "node": trNode };
+                            }, this);
+
+                        } else {
+                            this._resourcesStatus[request.id] =  { "status": "queued", "node": trNode };
+                        }
+
+                        //this._resourcesStatus[request.id] =  { "status": "queued", "node": listNode };
+                        //this._resourcesToBeProcessed.append(listNode);
                     }
-                    return null;
+                    return;
                 }
             
-                if (request.delegate) {
+                //if (request.delegate) {
                     var self = this;
                     var processResourceDelegate = {};
-                    
-                    //if (request.id === "accessor.6")
-                    //     console.log("load node:"+request.id+":node:"+node)
 
-                    if (node) {
+                    if (node && this._resourcesToBeProcessed) {
                         this._resourcesToBeProcessed.remove(node);
                     }
 
-                    this._resourcesStatus[request.id] =  { "status": "loading"};
+                    if (node) {
+                        if (node === this._requestTree) {
+                            this._requestTree = node.remove();
+                        } else {
+                            node.remove();
+                        }
+                    }
+
+                    if (request.kind ==="multi-parts") {
+                        request.requests.forEach( function(req_) {
+                            this._resourcesStatus[req_.id] =  { "status": "loading" };
+                        }, this);
+
+                    } else {
+                        this._resourcesStatus[request.id] =  { "status": "loading"};
+                    }
 
                     processResourceDelegate.resourceAvailable = function(req_, res_) {
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
@@ -442,11 +622,11 @@ define(function() {
                         //console.log("delete:"+req_.id)
                         delete self._resourcesStatus[req_.id];
 
-                        if (self._resourcesBeingProcessedCount  >= 3) {
-                            setTimeout(self._processNextResource.bind(self), 1);
-                        } else {
-                            self._processNextResource();
-                        }
+                        if (self._resourcesBeingProcessedCount <  ResourceManager.MAX_CONCURRENT_XHR) {
+                            //self._processNextResource();
+                            setTimeout(self._processNextResource.bind(self), 1000);
+                        } //else {
+                        //}
 
                     };
                 
@@ -457,10 +637,7 @@ define(function() {
                     self._resourcesBeingProcessedCount++;
                     this._loadResource(request, processResourceDelegate);
                 }
-                
-                return null;
-
-            }
+            //}
         },
 
         _handleAccessorResourceLoading: {
@@ -471,7 +648,8 @@ define(function() {
                                         "type" : accessor.buffer.description.type,
                                         "path" : accessor.buffer.description.path,
                                         "delegate" : delegate,
-                                        "ctx" : ctx }, null);
+                                        "ctx" : ctx,
+                                        "kind" : "single-part" }, null);
             }
         },
 
@@ -486,7 +664,8 @@ define(function() {
                                             "type" : typedArrayDescr.buffer.description.type,
                                             "path" : typedArrayDescr.buffer.description.path,
                                             "delegate" : delegate,
-                                            "ctx" : ctx }, null);
+                                            "ctx" : ctx,
+                                            "kind" : "single-part" }, null);
                 }
             }
         },
