@@ -624,7 +624,7 @@ define(function() {
 
                         if (self._resourcesBeingProcessedCount <  ResourceManager.MAX_CONCURRENT_XHR) {
                             //self._processNextResource();
-                            setTimeout(self._processNextResource.bind(self), 1000);
+                            setTimeout(self._processNextResource.bind(self), 100);
                         } //else {
                         //}
 
