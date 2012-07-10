@@ -204,11 +204,19 @@ define(function() {
                 //insert before ?
                 
                 if (requests.range[1] <= this.content.range[0]) {
-                    if ((requests.range[1]) === this.content.range[0]) {
+                    if ( (requests.range[1] === this.content.range[0])) {
                         if (requests.kind === "multi-parts")
                             this.content.mergeRequests(requests.requests);
                         else
                             this.content.mergeRequests(requests);
+                        
+                        if (this.left) {
+                            if(this.content.canMergeRequest(this.left.content)) {
+                                this.content.mergeRequests(this.left.content._requests);
+                                this.left.remove();
+                            }
+                        }
+                            
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.left) {
@@ -222,12 +230,19 @@ define(function() {
                     }
                 //insert after ?
                 } else if (requests.range[0] >= this.content.range[1]) {
-                    if (requests.range[0] === this.content.range[1]) {
+                    if ( requests.range[0] === this.content.range[1]) {
                         if (requests.kind === "multi-parts")
                             this.content.mergeRequests(requests.requests);
                         else
                             this.content.mergeRequests(requests);
-
+                        
+                        if (this.right) {
+                            if(this.content.canMergeRequest(this.right.content)) {
+                                this.content.mergeRequests(this.right.content._requests);
+                                this.right.remove();
+                            }
+                        }
+                        
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
@@ -461,7 +476,7 @@ define(function() {
         INVALID_TYPE: { value: "INVALID_TYPE" },
         XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
         NOT_FOUND: { value: "NOT_FOUND" },
-        MAX_CONCURRENT_XHR: { value: 7 },
+        MAX_CONCURRENT_XHR: { value: 6 },
         // misc constants
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
