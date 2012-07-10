@@ -1,4 +1,7 @@
 {
+    "asset": { 
+	"origin": "http://sketchup.google.com/3dwarehouse/details?mid=ef03dd4f46c327d414df4131188c8580&prevstart=0" 
+    },
     "buffers": {
         "Rambler.bin": {
             "byteLength": 11554264,
