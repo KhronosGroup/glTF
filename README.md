@@ -1,20 +1,22 @@
 ##COLLADA2JSON
 
+
 COLLADA2JSON introduces a JSON format that aims at filling the gap between COLLADA and WebGL.
+
 
 #### JSON Format
 
 The key aspect of this JSON format is to be driven by WebGL.
-It is a final format which extends the worflow from COLLADA to WebGL.
+It is a final format which extends the workflow from COLLADA to WebGL.
 COLLADA (https://www.khronos.org/collada/) is an intermediate format which allows to get scene informations out the authoring tools.
 
-This JSON format is an hybrid format that:
+This JSON format is actually an hybrid format that:
 - describes the scene graph (and its entities).
 - relies on a separate binary blob to host all heavy data (indices/vertices).
 
-To satisfy WebGL constraints the tool named COLLADA2JSON performs the following transformations:
+To satisfy WebGL constraints, the provided tool named COLLADA2JSON performs the following transformations:
 - unify index buffers with unique indices for all vertex attributes. (i.e referred as deindexing)
-- split meshes into indexes buffer that do not 65535 indexes to satisfy UNSIGNED_SHORT contraint for WebGL
+- split meshes into indexes buffer that do not exceed 65535 indexes to satisfy UNSIGNED_SHORT contraint for WebGL
 - generate GLES 2.0 shaders from COLLADA materials.
 - convert axis up from scenes to allow seamless merging.
 - ...
@@ -28,9 +30,9 @@ note: some transformations are either a work in progress or about to be started 
 
 #### What's in there
 
-- viewer
-- converter
-- importers
+- viewer: a webgl viewer that loads a model asynchronously (loads the scene graph at once but all the vertex buffers and indices progressivly)
+- converter: source code for COLLADA2JSON based on OpenCOLLADA
+- importers: A Three.js importer. To be extended with support for other popular WebGL frameworks.
 
 #### Project status
 
