@@ -24,55 +24,26 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
 
-using namespace rapidjson;
+    var Technique = Object.create(Base, {
 
-namespace JSONExport 
-{
-    JSONEffect::JSONEffect(const std::string& ID):
-    _ID(ID)
-    {
-    }
+        init: {
+            value: function() {
+                this.__Base_init();
+            }
+        },
+    
+        read: {
+            enumerable: true,
+            value: function(entryID, techniqueDescription, delegate, reader, userInfo) {
 
-    JSONEffect::~JSONEffect()
-    {
-    }
-                        
-    const std::string& JSONEffect::getID()
-    {
-        return this->_ID;
-    }
-    
-    void JSONEffect::setTechniqueID(const std::string& techniqueID)
-    {
-        this->_techniqueID = techniqueID;
-    }
-    
-    const std::string& JSONEffect::getTechniqueID()
-    {
-        return this->_techniqueID;
-    }
-    
-    void JSONEffect::setInputs(shared_ptr <JSONExport::JSONObject> inputs)
-    {
-        this->_inputs = inputs;
-    }
-    
-    shared_ptr <JSONExport::JSONObject> JSONEffect::getInputs()
-    {
-        return this->_inputs;
-    }
-    
-    //temporary
-    void JSONEffect::setRGBColor(float* rgb) {
-        this->_diffuseColor[0] = rgb[0];
-        this->_diffuseColor[1] = rgb[1];
-        this->_diffuseColor[2] = rgb[2];
-    }
+                delegate.readCompleted("technique", this, userInfo);
+            }
+        }
 
-    float* JSONEffect::getRGBColor() {
-        return this->_diffuseColor;
+    });
+    
+        return Technique;
     }
-
-}
+);

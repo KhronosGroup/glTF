@@ -43,10 +43,10 @@ namespace JSONExport
             return true;
         }
         
-        static bool writeData(std::string filename, unsigned char* data, size_t length)
+        static bool writeData(std::string filename, const char* mode, unsigned char* data, size_t length)
         {
             // FIXME: check encode / decode 
-            FILE* fd = fopen(filename.c_str(), "wb" );        
+            FILE* fd = fopen(filename.c_str(), mode);        
             
             if (fd) {
                 fwrite (data , 1 ,length  , fd );
@@ -55,7 +55,6 @@ namespace JSONExport
             
             return true;
         }
-        
         
         static std::string generateIDForType(const char* typeCStr, const char* suffix = 0)
         {   

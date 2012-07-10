@@ -24,55 +24,47 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
 
-using namespace rapidjson;
+    var Material = Object.create(Base, {
 
-namespace JSONExport 
-{
-    JSONEffect::JSONEffect(const std::string& ID):
-    _ID(ID)
-    {
-    }
+        _inputs: { value: null, writable: true },
+    
+        inputs: {
+            enumerable: false,
+            get: function() {
+                return this._inputs;
+            },
+            set: function(value) {
+                this._inputs = value;
+            }
+        },
 
-    JSONEffect::~JSONEffect()
-    {
-    }
-                        
-    const std::string& JSONEffect::getID()
-    {
-        return this->_ID;
-    }
+        init: {
+            value: function() {
+                this.__Base_init();
+            }
+        },
     
-    void JSONEffect::setTechniqueID(const std::string& techniqueID)
-    {
-        this->_techniqueID = techniqueID;
-    }
-    
-    const std::string& JSONEffect::getTechniqueID()
-    {
-        return this->_techniqueID;
-    }
-    
-    void JSONEffect::setInputs(shared_ptr <JSONExport::JSONObject> inputs)
-    {
-        this->_inputs = inputs;
-    }
-    
-    shared_ptr <JSONExport::JSONObject> JSONEffect::getInputs()
-    {
-        return this->_inputs;
-    }
-    
-    //temporary
-    void JSONEffect::setRGBColor(float* rgb) {
-        this->_diffuseColor[0] = rgb[0];
-        this->_diffuseColor[1] = rgb[1];
-        this->_diffuseColor[2] = rgb[2];
-    }
+        read: {
+            enumerable: true,
+            value: function(entryID, materialDescription, delegate, reader, userInfo) {
+                var self = this;
+                this.inputs = materialDescription.inputs;
 
-    float* JSONEffect::getRGBColor() {
-        return this->_diffuseColor;
-    }
+                var techniqueDelegate = {};
+                techniqueDelegate.readCompleted = function(entryType, entry, userInfo) {
+                    debugger;
+                    self.technique = entry;
+                }
+                reader._readEntry(materialDescription.technique, techniqueDelegate, userInfo);            
 
-}
+                delegate.readCompleted("material", this, userInfo);
+            }
+        }
+
+    });
+    
+        return Material;
+    }
+);

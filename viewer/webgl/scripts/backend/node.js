@@ -31,22 +31,22 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
         _children: { value: null, writable: true },
     
         children: {
-            get: function() {
-                return this._children;
+            get: function() {         
+                return this._children; 
             },
-            set: function(value) {
-                this._children = value;
+            set: function(value) { 
+                this._children = value; 
             }
         },
 
         _id: { value: null, writable: true },
     
         id: {
-            get: function() {
-                return this._id;
+            get: function() { 
+                return this._id; 
             },
-            set: function(value) {
-                this._id = value;
+            set: function(value) { 
+                this._id = value; 
             }
         },
     
@@ -55,11 +55,11 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
             value: function() {
                 if (!this._boundingBox) {
                 
-                    var meshes = this._properties["meshes"];
+                    var meshes = this._properties["meshes"];                
                     var count = this.meshes.length;
                     if (count > 0) {
                         var bbox = this.meshes[0].boundingBox;
-                        //bbox = Utilities.transformBBox(bbox, this.transform);
+                        //bbox = Utilities.transformBBox(bbox, this.transform);                   
                         if (bbox) {
                             var i;
                             for (i = 1 ; i <  count ; i++) {
@@ -73,7 +73,7 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                         
                             this._boundingBox = Utilities.transformBBox(bbox, this.transform);
                         }
-                    }
+                    }                
                 }
             }
         },
@@ -98,7 +98,7 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
 
        meshesDidChange: {
             value: function(meshes) {
-                this._boundingBox = null; //invalidate bounding box
+                this._boundingBox = null; //invalidate bounding box 
             }
         },
 
@@ -114,7 +114,7 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                     var result = Array.prototype.push.call(this, data);
                     self.meshesDidChange(this);
                     return result;
-                };
+                }
             
                 this._properties["cameras"] = [];
                 this._properties["lights"] = [];
@@ -122,46 +122,46 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
         },
 
         getPropertyArrayNamed: {
-            value: function(name) {
-                return this._properties[name];
+            value: function(name) {        
+                return this._properties[name]
             }
         },
         
         _transform: { value: null, writable: true },
 
         transform: {
-            get: function() {
-                return this._transform;
+            get: function() { 
+                return this._transform; 
             },
-            set: function(value) {
-                this._transform = value;
+            set: function(value) { 
+                this._transform = value; 
             }
         },
 
         meshes: {
-            get: function() {
-                return this.getPropertyArrayNamed("meshes");
+            get: function() { 
+                return this.getPropertyArrayNamed("meshes"); 
             },
-            set: function(value) {
+            set: function(value) { 
                 this._properties["meshes"] = value;
                 this.meshesDidChange(value);
             }
         },
     
         cameras: {
-            get: function() {
-                return this.getPropertyArrayNamed("cameras");
+            get: function() { 
+                return this.getPropertyArrayNamed("cameras"); 
             },
-            set: function(value) {
+            set: function(value) { 
                 this._properties["cameras"] = value;
             }
         },
 
         lights: {
-            get: function() {
-                return this.getPropertyArrayNamed("lights");
+            get: function() { 
+                return this.getPropertyArrayNamed("lights"); 
             },
-            set: function(value) {
+            set: function(value) { 
                 this._properties["lights"] = value;
             }
         },
@@ -204,10 +204,10 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                 var meshDelegate = {};
                 meshDelegate.readCompleted = function(entryType, entry, userInfo) {
                     self.meshes.push(entry);
-                };
-
+                }
+                
                 if (nodeDescription.mesh) {
-                    reader._readEntry(nodeDescription.mesh, meshDelegate, userInfo);
+                    reader._readEntry(nodeDescription.mesh, meshDelegate, userInfo);            
                 }
 
                 // load meshes info (but not the binaries yet)
@@ -216,12 +216,22 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                     entry.forEach( function(mesh) {
                         self.meshes.push(mesh);
                     }, this);
-                };
+                }
 
                 if (nodeDescription.meshes) {
-                    reader._readEntries(nodeDescription.meshes, meshesDelegate, userInfo);
+                    reader._readEntries(nodeDescription.meshes, meshesDelegate, userInfo);            
                 }
-            
+
+                // load camera info (but not the binaries yet)
+                var cameraDelegate = {};
+                cameraDelegate.readCompleted = function(entryType, entry, userInfo) {
+                    self.cameras.push(entry);
+                }
+
+                if (nodeDescription.camera) {
+                    reader._readEntry(nodeDescription.camera, cameraDelegate, userInfo);            
+                }
+
                 // load node
                 var entryNodeDelegate = {};
                 entryNodeDelegate.readCompleted = function(entryType, entry, userInfo) {
@@ -233,15 +243,15 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                     } else {
                         reader._readEntry(nodeDescription.children[childIndex], entryNodeDelegate, userInfo);
                     }
-                };
+                }
             
                 if (childrenCount > 0) {
                     reader._readEntry(nodeDescription.children[childIndex], entryNodeDelegate, userInfo);
                 }  else if (delegate) {
                     delegate.readCompleted("node", this, userInfo);
-                }
+                }      
             }
-        }
+        }    
     });
         return Node;
     }

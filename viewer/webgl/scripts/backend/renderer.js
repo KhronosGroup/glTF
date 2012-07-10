@@ -40,7 +40,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     this._bindedProgram = value;
                     if (this._bindedProgram) {
                         this._bindedProgram.use(this._webGLContext, false);
-                    }
+                    } 
                 }
             }
         },
@@ -54,7 +54,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         _webGLContext: { value : null, writable: true },
     
         debugProgram: {
-            get: function() {
+            get: function() {            
             
                 if (!this._debugProgram) {
                     this._debugProgram = Object.create(GLSLProgram);
@@ -64,7 +64,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                                         "uniform mat4 u_mvMatrix; " +
                                         "uniform mat4 u_projMatrix; " +
                                         "void main(void) { " +
-                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }";
+                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
                 
                     var debugFS = "precision highp float;" +
                     " void main(void) { " +
@@ -72,8 +72,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 
                     this._debugProgram.initWithShaders( { "x-shader/x-vertex" : debugVS , "x-shader/x-fragment" : debugFS } );
                     if (!this._debugProgram.build(this.webGLContext)) {
-                        console.log(this._debugProgram.errorLogs);
-                    }
+                        console.log(this._debugProgram.errorLogs);                     
+                    } 
 
                 }
                         
@@ -82,7 +82,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         },
     
         lambertProgram: {
-            get: function() {
+            get: function() {            
             
                 if (!this._lambertProgram) {
                     this._lambertProgram = Object.create(GLSLProgram);
@@ -95,8 +95,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                                         "uniform mat3 u_normalMatrix; " +
                                         "uniform mat4 u_projMatrix; " +
                                         "void main(void) { " +
-                                        "v_normal = normalize(u_normalMatrix * normal); " +
-                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }";
+                                        "v_normal = normalize(u_normalMatrix * normal); " + 
+                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
                 
                     var lambertFS = "precision highp float;" +
                     " uniform vec3 color;" +
@@ -104,15 +104,15 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     " void main(void) { " +
                     " vec3 normal = normalize(v_normal); " +
                     " float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);" +
-                    " gl_FragColor = vec4(color.xyz * lambert, 1.); }";
+                    " gl_FragColor = vec4(color.xyz *lambert, 1.); }";
 
                     this._lambertProgram.initWithShaders( { "x-shader/x-vertex" : lambertVS , "x-shader/x-fragment" : lambertFS } );
                     if (!this._lambertProgram.build(this.webGLContext)) {
-                        console.log(this._lambertProgram.errorLogs);
-                    }
+                        console.log(this._lambertProgram.errorLogs);                     
+                    } 
 
                 }
-
+                        
                 return this._lambertProgram;
             }
         },
@@ -148,13 +148,13 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         
                 //should be called only once
                 convert: function (resource, ctx) {
-                    var gl = ctx;
+                    var gl = ctx;                
                     var previousBuffer = gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING);
 
-                    var glResource =  gl.createBuffer();
+                    var glResource =  gl.createBuffer();                
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glResource);
                 
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, resource, gl.STATIC_DRAW);
+                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, resource, gl.STATIC_DRAW);                
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, previousBuffer);
                                 
                     return glResource;
@@ -174,13 +174,13 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         
                 //should be called only once
                 convert: function (resource, ctx) {
-                    var gl = ctx;
+                    var gl = ctx;                
 
                     var previousBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
     
-                    var glResource =  gl.createBuffer();
+                    var glResource =  gl.createBuffer();                
                     gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
-                    gl.bufferData(gl.ARRAY_BUFFER, resource, gl.STATIC_DRAW);
+                    gl.bufferData(gl.ARRAY_BUFFER, resource, gl.STATIC_DRAW);                
 
                     gl.bindBuffer(gl.ARRAY_BUFFER, previousBuffer);
                     return glResource;
@@ -193,7 +193,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
     
         //Debug test
         isMat4Equals: {
-            value: function(matA, matB) {
+            value: function(matA, matB) {            
                 if (matA === matB)
                     return true;
                 return mat4.equal(matA,matB);
@@ -214,19 +214,20 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
         
                 if (vecA === vecB)
                     return true;
-
-                if ((vecA[0] === vecB[0]) && (vecA[1] === vecB[1]) && (vecA[2] === vecB[2]))
-                    return true;
-
-                return false;
+                return vec3.equal(vecA, vecB);
             }
         },
-    
     
         _lastMaxEnabledArray: { value: 0, writable: true },
     
         resetStates : {
             value: function() {
+                var gl = this.webGLContext;
+                if (gl && (this._lastMaxEnabledArray !== -1)) {
+                    for (var i = 0 ; i < this._lastMaxEnabledArray ; i++) {
+                        gl.disableVertexAttribArray(i);
+                    }
+                }
                 this._lastMaxEnabledArray = -1;
                 this.bindedProgram = null;
             }
@@ -251,8 +252,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 if (currentMVPMatrix) {
                     if (!this.isMat4Equals(currentMVPMatrix, mvpMatrix)) {
                         program.setValueForSymbol("u_mvpMatrix",mvpMatrix);
-                    }
-                } else {
+                    }  
+                } else {                
                     program.setValueForSymbol("u_mvpMatrix",mvpMatrix);
                 }
                  }
@@ -262,8 +263,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     if (currentProjectionMatrix) {
                         if (!this.isMat4Equals(currentProjectionMatrix, projectionMatrix)) {
                             program.setValueForSymbol("u_projMatrix",projectionMatrix);
-                        }
-                    } else {
+                        }  
+                    } else {                
                         program.setValueForSymbol("u_projMatrix",projectionMatrix);
                     }
                 }
@@ -273,8 +274,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     if (currentNormalMatrix) {
                         if (!this.isMat3Equals(currentNormalMatrix, primitiveDescription.normalMatrix)) {
                             program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
-                        }
-                    } else {
+                        } 
+                    } else {                
                         program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
                     }
                 }
@@ -284,8 +285,8 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     if (currentWorldMatrix) {
                         if (!this.isMat4Equals(currentWorldMatrix, worldMatrix)) {
                             program.setValueForSymbol("u_mvMatrix",worldMatrix);
-                        }
-                    } else {
+                        }                     
+                    } else {                
                         program.setValueForSymbol("u_mvMatrix",worldMatrix);
                     }
                 }
@@ -293,10 +294,10 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                 
             
                 if (program.getLocationForSymbol("color")) {
-                    var color = primitive.material.color;
+                    var color = primitive.material.inputs.diffuseColor;
                     var step = primitive.step * primitive.step;
                     var oneMinusPrimitiveStep = 1 - (1 * step);
-                    var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])),
+                    var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])), 
                                     ((oneMinusPrimitiveStep) + (step * color[1])),
                                     ((oneMinusPrimitiveStep) + (step * color[2]))];
 
@@ -311,7 +312,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     }
                 }
 
-                this.bindedProgram = program;
+                this.bindedProgram = program;               
                 program.commit(gl);
             
                 var available = true;
@@ -321,15 +322,14 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     var symbol = materialSemantic[vertexAttribute.semantic];
                     if (symbol) {
                         //FIXME: do not assume continuous data, this will break with interleaved arrays (should not use byteStride here).
-                        var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
-                        var glResource = this.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, this.vertexAttributeBufferDelegate, this.webGLContext);
+                        var glResource = this.resourceManager.getResource(accessor, this.vertexAttributeBufferDelegate, this.webGLContext);
                         // this call will bind the resource when available
                         if (glResource) {
                             gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
                         } else {
                              available = false;
                         }
-                    
+
                         if (available) {
                             var attributeLocation = program.getLocationForSymbol(symbol);
                             if (typeof attributeLocation !== "undefined") {
@@ -341,7 +341,7 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                                 //Just enable what was not enabled before...
                                 if (this._lastMaxEnabledArray < attributeLocation) {
                                     gl.enableVertexAttribArray(attributeLocation);
-                                }
+                                } 
                                 gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
 
                                 if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
@@ -349,31 +349,31 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                                 }
                             }
                         }
-                    }
+                    }                
                 
                 }, this);
                 
-                if (!renderVertices && available) {
+                if (!renderVertices)  { 
                     //Just disable what is not required here…
-                    for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
-                        gl.disableVertexAttribArray(i);
+                    if (available) {
+                        for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
+                            gl.disableVertexAttribArray(i);
+                        }
+                        if (primitive.step < 1.0)
+                            primitive.step += 0.05;
                     }
-
-                    if (primitive.step < 1.0)
-                        primitive.step += 0.05;
               
-                   var glIndices = null;
-                    //FIXME should not assume 2 bytes per indices (WebGL supports one too…)
-                    var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
-                    glIndices = this.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, this.indicesDelegate, this.webGLContext);
-                    if (glIndices) {
+                    var glIndices = null;
+                    //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
+                    glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, this.webGLContext);              
+                    if (glIndices && available) {
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
-                        gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);
+                        gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
                 }
                 this._lastMaxEnabledArray = newMaxEnabledArray;
+                return available;
             }
-
         }
     });
     

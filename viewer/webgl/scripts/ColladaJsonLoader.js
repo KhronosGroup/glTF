@@ -196,7 +196,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                 if (mesh.primitives) {
                     mesh.primitives.forEach( function (primitive) {
                         var material = new THREE.MeshLambertMaterial({
-                            color: RgbArraytoHex(primitive.material.color)
+                            color: RgbArraytoHex(primitive.material.inputs.diffuseColor)
                         });
                         //totalMeshes++;
 
@@ -225,7 +225,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
         // Load Indices
         var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
         var indicesContext = new IndicesContext(primitive.indices, geometry);
-        this.resourceManager.getWebGLResource(primitive.indices.id, primitive.indices.buffer, range, indicesDelegate, indicesContext);
+        this.resourceManager.getResource(primitive.indices, indicesDelegate, indicesContext);
 
         // Load Vertex Attributes
         primitive.vertexAttributes.forEach( function(vertexAttribute) {
@@ -233,7 +233,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
             geometry.totalAttributes++;
             var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
             var attribContext = new VertexAttributeContext(vertexAttribute, geometry);
-            this.resourceManager.getWebGLResource(accessor.id, accessor.buffer, range, vertexAttributeDelegate, attribContext);
+            this.resourceManager.getResource(accessor, vertexAttributeDelegate, attribContext);
         }, this);
     };
 

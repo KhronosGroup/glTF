@@ -38,10 +38,10 @@ define(function() {
 
         execute: {
             value: function(renderer) {
-            
-                this._queue.forEach( function(primitive) {
-                    renderer.renderPrimitive(primitive);
-                }, this);
+                var count = this._queue.length;
+                for (var i = 0 ; (i < count)  ; i++) {
+                    renderer.renderPrimitive(this._queue[i]);
+                }
             }
         },
     

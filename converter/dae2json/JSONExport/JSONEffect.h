@@ -39,6 +39,12 @@ namespace JSONExport
         
         const std::string& getID();        
 
+        void setTechniqueID(const std::string& techniqueID);
+        const std::string& getTechniqueID();
+        
+        void setInputs(shared_ptr <JSONExport::JSONObject>);
+        shared_ptr <JSONExport::JSONObject> getInputs();
+        
         void setRGBColor(float* rgba);
         float* getRGBColor();
                 
@@ -46,6 +52,8 @@ namespace JSONExport
         float _diffuseColor[3];
         std::string _ID;
         unsigned char* _data;
+        std::string _techniqueID;
+        shared_ptr <JSONExport::JSONObject> _inputs;
     };
 
 }

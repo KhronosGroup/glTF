@@ -85,6 +85,7 @@ namespace DAE2JSON
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONMesh> > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;    
+    typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     
     //-- BBOX helper class
     
@@ -134,14 +135,16 @@ namespace DAE2JSON
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2JSONWriter( const COLLADABU::URI& inputFile, PrettyWriter <FileStream> *jsonWriter );
+		DAE2JSONWriter( const COLLADABU::URI& inputFile, const COLLADABU::URI& outputFile,PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
     private:
 		static void reportError(const String& method, const String& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
-        
+        const std::string writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon);
+        bool writeShaderIfNeeded(const std::string& shaderId);
+
 	public:        
         
 		bool write();
@@ -228,6 +231,7 @@ namespace DAE2JSON
         
 	private:
         COLLADABU::URI _inputFile;
+        COLLADABU::URI _outputFile;
         const COLLADAFW::VisualScene* _visualScene;
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToEffect _uniqueIDToEffect;
@@ -236,6 +240,7 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONObject> _rootJSONObject;
         ofstream _fileOutputStream;
         SceneFlatteningInfo _sceneFlatteningInfo;
+        ShaderIdToShaderString _shaderIdToShaderString;
 	};
 } 
 

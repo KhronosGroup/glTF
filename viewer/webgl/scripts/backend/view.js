@@ -31,11 +31,11 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
         _sceneBBox: { value: null, writable: true },
     
         sceneBBox: {
-            get: function() {
-                return this._sceneBBox;
+            get: function() { 
+                return this._sceneBBox; 
             },
             set: function(value) {
-                this._sceneBBox = value;
+                this._sceneBBox = value; 
             }
         },
 
@@ -43,47 +43,47 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
         _canvas: { value: null, writable: true },
     
         canvas: {
-            get: function() {
-                return this._canvas;
+            get: function() { 
+                return this._canvas; 
             },
-            set: function(value) {
-                this._canvas = value;
+            set: function(value) { 
+                this._canvas = value; 
             }
         },
 
         _delegate: { value: null, writable: true },
     
         delegate: {
-            get: function() {
-                return this._delegate;
+            get: function() { 
+                return this._delegate; 
             },
-            set: function(value) {
-                this._delegate = value;
+            set: function(value) { 
+                this._delegate = value; 
             }
         },
 
         _engine: { value: null, writable: true },
     
         engine: {
-            get: function() {
-                return this._engine;
+            get: function() { 
+                return this._engine; 
             },
-            set: function(value) {
-                this._engine = value;
+            set: function(value) { 
+                this._engine = value; 
             }
         },
 
         scene: {
-            get: function() {
+            get: function() { 
                 if (this.engine) {
                     if (this.engine.rootPass) {
-                        return this.engine.rootPass.scene;
+                        return this.engine.rootPass.inputs.scene;
                     }
                 }
                 return null;
             },
             
-            set: function(value) {
+            set: function(value) { 
                 if (this.engine) {
                     if (this.engine.rootPass) {
                         //compute hierarchical bbox for the whole scene
@@ -103,12 +103,13 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                                 } else {
                                     sceneBBox = bbox;
                                 }
-                            }
+                            }                            
                                     
                             return modelMatrix;
                         }, true, ctx);
+
                         this.sceneBBox = sceneBBox;
-                        this.engine.rootPass.scene = value;
+                        this.engine.rootPass.inputs.scene = value;
                     }
                 }
            }
@@ -122,7 +123,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                     window.mozRequestAnimationFrame ||
                     window.oRequestAnimationFrame ||
                     window.msRequestAnimationFrame ||
-                    function(callback) {
+                    function(callback) { 
                         window.setTimeout( callback, 1000 / 60, new Date()); };
                 } )();
                 // first thing, get gl context
@@ -139,7 +140,7 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 //this.canvas.style["-webkit-transform"] = "translate(1000px,100px)";
 
                 var self = this;
-                requestAnimationFrame(function() {self.draw.call(self);}, this.canvas);
+                requestAnimationFrame(function() {self.draw.call(self)}, this.canvas);
 
                 this.canvas.addEventListener('mousedown', function (event) {
                     self._mouseIsDown = true;
@@ -161,11 +162,11 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         mat4.rotate(rotation, dy * 0.005, [1, 0, 0]);
                         mat4.multiply(rotation, self.userControlMatrix, self.userControlMatrix);
 
-                        self._mousePosition = newPosition;
+                        self._mousePosition = newPosition
                     }
                 }, false);
             }
-        },
+        }, 
     
         getWebGLContext: {
             value: function() {
@@ -183,18 +184,20 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
 
         draw: {
             value: function() {
-                
+
+                var webGLContext = this.getWebGLContext();
+                if (webGLContext)
+                    webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
+
                 if (this.delegate)
                     this.delegate.willDraw(this);
             
                 if (this.scene) {
                     var renderer = this.engine.renderer;
-                    var webGLContext = renderer.webGLContext;
                     if (webGLContext) {
-
                         // FIXME: cache this
-                        var width = parseInt(this.canvas.getAttribute("width"), 10);
-                        var height = parseInt(this.canvas.getAttribute("height"), 10);
+                        var width = parseInt(this.canvas.getAttribute("width"));
+                        var height = parseInt(this.canvas.getAttribute("height"));
                 
                         webGLContext.viewport(0, 0, width, height);
 
@@ -202,9 +205,43 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                         webGLContext.enable(webGLContext.DEPTH_TEST);
                         webGLContext.enable(webGLContext.CULL_FACE);
 
-                        //webGLContext.clearColor(0.2, 0, 0, 1);
-                       // webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
+                        /* ------------------------------------------------------------------------------------------------------------
+                            Update scene 
+                         ------------------------------------------------------------------------------------------------------------ */        
+                        
+                        var viewPoint = this.engine.rootPass.inputs.viewPoint;
+                        if (viewPoint) {
+                            viewPoint.cameras[0].projection.aspectRatio = width / height;
+                            if (viewPoint.id === "__default_camera") //FIXME: that's temporary way trigger the unit cube mode.
+                            {
+                                var node = this.scene.rootNode;
 
+                                node.transform = mat4.identity();
+                                var sceneBBox = this.sceneBBox;
+                    
+                                var sceneSize = [(sceneBBox[1][0] - sceneBBox[0][0]) , 
+                                                (sceneBBox[1][1] - sceneBBox[0][1]) , 
+                                                (sceneBBox[1][2] - sceneBBox[0][2]) ];
+
+                                //size to fit
+                                var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
+                                scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
+                    
+                                scaleFactor =  1.0 / scaleFactor;
+                                var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
+                                var translation = mat4.translate(scaleMatrix, [ 
+                                            ((-sceneSize[0] / 2) - sceneBBox[0][0] ) , 
+                                            ((-sceneSize[1] / 2) - sceneBBox[0][1] ) , 
+                                            ((-sceneSize[2] / 2) - sceneBBox[0][2] ) ]);
+        
+                                var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.5 ]);
+        
+                                var centeredTr = mat4.create();
+                                mat4.multiply(this.userControlMatrix, translation , centeredTr); 
+                                mat4.multiply(translation2 , centeredTr, node.transform); 
+                            }
+                        }
+                                                
                         this.engine.render();
 
                         webGLContext.flush();
@@ -217,11 +254,11 @@ define(["backend/engine", "backend/utilities", "dependencies/gl-matrix"], functi
                 }
                 // FIXME: should be based on animations object or user interation
                 var self = this;
-                requestAnimationFrame(function() {self.draw.call(self);}, this.canvas);
+                requestAnimationFrame(function() {self.draw.call(self)}, this.canvas);
                 if (this.delegate)
                     this.delegate.didDraw(this);
             }
-        }
+        }    
     });
     
         return View;

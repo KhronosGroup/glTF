@@ -24,11 +24,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "dependencies/gl-matrix"], function(EntryManager, Mesh, Scene, Node) {
+define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node", "backend/camera", "backend/material", "backend/technique", "dependencies/gl-matrix"], 
+    function(EntryManager, Mesh, Scene, Node, Camera, Material, Technique, glMatrix) {
 
     var Reader = Object.create(Object, {
 
         MESH: { value: "mesh" },
+        MATERIAL: { value: "material" },
+        TECHNIQUE: { value: "technique" },
         SCENE: { value: "scene" },
         NODE: { value: "node" },
         CAMERA: { value: "camera" },
@@ -63,7 +66,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
 
         _loadJSONIfNeeded: {
             enumerable: true,
-            value: function(callback) {
+            value: function(callback) {        
                 var self = this;
             
                 //FIXME: handle error
@@ -73,7 +76,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     jsonfile.onreadystatechange = function() {
                         if (jsonfile.readyState == 4) {
                             if (jsonfile.status == 200) {
-                                self._json = JSON.parse(jsonfile.responseText);
+                                self._json = JSON.parse(jsonfile.responseText);                        
                                 if (callback) {
                                     callback(self._json);
                                 }
@@ -96,7 +99,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
 
         json: {
             enumerable: true,
-            get: function() {
+            get: function() {        
                 return this._json;
             },
             set: function(value) {
@@ -126,7 +129,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             value: function (entryID) {
                 var entryDescription = this.rootDescription[entryID];
                 if (!entryDescription) {
-                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers"];
+                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras", "techniques"];
                 
                     for (var i = 0 ; !entryDescription && i < entryLevels.length ; i++) {
                         var entries = this.rootDescription[entryLevels[i]];
@@ -142,7 +145,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             
         _readEntry: {
             enumerable: false,
-            value: function(entryID, delegate, userInfo) {
+            value: function(entryID, delegate, userInfo) {              
                 var entryManager = this.entryManager;
                 var entryDescription = this.getEntryFromRootDescription(entryID);
                 if (entryDescription) {
@@ -151,31 +154,40 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     entryDelegate.readCompleted = function(entryType, entry, userInfo) {
                         entryManager.storeEntry(entry);
                         delegate.readCompleted(entryType, entry, userInfo);
-                    };
+                    } 
                     var entry = null;
                     var type = entryDescription.type;
                     if (entryManager.containsEntry(entryID)) {
-                        delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);
+                        delegate.readCompleted(entryDescription.type, entryManager.getEntry(entryID), useInfo);                    
                         return;
-                    } else if (type === this.MESH) {
+                    }
+
+                    //TODO: make a factory..
+                    if (type === this.MESH) {
                         entry = Object.create(Mesh);
-                        //entry.init();
                     } else if (type === this.SCENE) {
                         entry = Object.create(Scene);
-                        entry.init();
-                    } else if (type === this.NODE) {
+                    } else if (type === this.NODE) {                
                         entry = Object.create(Node);
-                        entry.init();
+                    } else if (type === this.CAMERA) {  
+                        entry = Object.create(Camera);
+                    } else if (type === this.MATERIAL) {
+                        entry = Object.create(Material);
+                    } else if (type == this.TECHNIQUE) {
+                        entry = Object.create(Technique);
                     }
+
                     if (entry) {
+                        entry.init();
                         entry.id = entryID;
                         entry.read(entryID, entryDescription, entryDelegate, this, userInfo);
                     }
                 
                 } else {
+                    debugger;
                     delegate.handleError(this.NOT_FOUND);
                 }
-            }
+            }    
         },
     
         _readEntries: {
@@ -198,10 +210,10 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                         }
                     } else {
                         self._readEntry(entryIDs[idx], entryDelegate, userInfo);
-                    }
-                };
+                    }                
+                }
             
-                if (count > 0)
+                if (count > 0) 
                     this._readEntry(entryIDs[0], entryDelegate, userInfo);
             }
         },
@@ -212,7 +224,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 var self = this;
                 function JSONReady(json) {
                     self.rootDescription = json;
-                    if (callback)
+                    if (callback) 
                         callback(this);
                 }
 
@@ -228,7 +240,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 this._buildReader(function readerReady(reader) {
                     self._readEntry(entryID, delegate,  userInfo);
                 });
-            }
+            }    
         },
     
         readEntries: {
@@ -238,7 +250,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 var self = this;
                 this._buildReader(function readerReady(reader) {
                     self._readEntries(entryIDs, delegate, userInfo);
-                });
+                });            
             }
         }
     });

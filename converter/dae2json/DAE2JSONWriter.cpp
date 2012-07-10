@@ -34,6 +34,7 @@
 
 #include "JSONExport.h"
 #include "DAE2JSONWriter.h"
+#include "commonProfileShaders.h"
 
 namespace DAE2JSON
 {    
@@ -55,7 +56,7 @@ namespace DAE2JSON
         const COLLADABU::Math::Vector3& center = lookat->getInterestPointPosition();
         const COLLADABU::Math::Vector3& up = lookat->getUpAxisDirection();
         
-        if (eye.x == center.x && eye.y == center.y && eye.z == center.z) {
+        if ((eye.x == center.x) && (eye.y == center.y) && (eye.z == center.z)) {
             matrix = COLLADABU::Math::Matrix4::IDENTITY;
             return;
         }
@@ -75,16 +76,16 @@ namespace DAE2JSON
                               y.y,
                               z.y,
                               0,
-                              x.x,
-                              y.y,
+                              x.z,
+                              y.z,
                               z.z,
                               0,
                               -(x.x * eye.x + x.y  * eye.y + x.z * eye.z),
                               -(y.x * eye.x + y.y * eye.y + y.z * eye.z),
                               -(z.x * eye.x + z.y * eye.y + z.z * eye.z),
                               1);
-        
-        matrix = matrix.transpose();
+        matrix = matrix.inverse();        
+        matrix = matrix.transpose();                
     }
     
     BBOX::BBOX() {
@@ -392,8 +393,9 @@ namespace DAE2JSON
     }
         
     //--------------------------------------------------------------------
-	DAE2JSONWriter::DAE2JSONWriter( const COLLADABU::URI& inputFile, PrettyWriter <FileStream> *jsonWriter ):
+	DAE2JSONWriter::DAE2JSONWriter( const COLLADABU::URI& inputFile, const COLLADABU::URI& outputFile, PrettyWriter <FileStream> *jsonWriter ):
     _inputFile(inputFile),
+    _outputFile(outputFile),
      _visualScene(0)
 	{
         this->_writer.setWriter(jsonWriter);
@@ -415,7 +417,7 @@ namespace DAE2JSON
         this->_uniqueIDToMesh.clear();   
 
         std::string sharedBufferID = this->_inputFile.getPathFileBase() + ".bin";
-        std::string outputFilePath = this->_inputFile.getPathDir() + sharedBufferID;
+        std::string outputFilePath = this->_outputFile.getPathDir() + sharedBufferID;
         
         this->_fileOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);        
         //this->_fileOutputStream.seekp(-this->_fileOutputStream.tellp());
@@ -461,6 +463,8 @@ namespace DAE2JSON
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONEffect> effect = (*UniqueIDToEffectIterator).second;
             shared_ptr <JSONExport::JSONObject> effectObject = this->_writer.serializeEffect(effect.get(), 0);
+            //FIXME:HACK: effects are exported as materials
+            effectObject->setString("type", "material");
             materialsObject->setValue(effect->getID(), effectObject);
         }
 
@@ -516,7 +520,7 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONArray> array(new JSONExport::JSONArray());
         
         COLLADABU::Math::Matrix4 transpose = matrix.transpose();
-        
+
         for (int i = 0 ; i < 4 ; i++)  {
             const COLLADABU::Math::Real * real = transpose[i];
           
@@ -771,7 +775,7 @@ namespace DAE2JSON
                 shared_ptr <JSONExport::JSONMesh> cvtMesh = this->_uniqueIDToMesh[meshID];
                 
                 if (!cvtMesh) {
-                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, _inputFile.getPathDir());
+                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, _outputFile.getPathDir());
                 
                     cvtMesh->buildUniqueIndexes();
                     cvtMesh->writeAllBuffers(this->_fileOutputStream);               
@@ -801,39 +805,138 @@ namespace DAE2JSON
 		return true;
 	}
     
+    bool DAE2JSONWriter::writeShaderIfNeeded(const std::string& shaderId) 
+    {
+        shared_ptr <JSONExport::JSONObject> shadersObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("shaders"));
+        if (!shadersObject) {
+            shadersObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            this->_rootJSONObject->setValue("shaders", shadersObject);
+        }
+        
+        shared_ptr <JSONExport::JSONObject> shaderObject  = static_pointer_cast <JSONExport::JSONObject> (shadersObject->getValue(shaderId));
+        
+        if (!shaderObject) {
+            shaderObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+
+            std::string path = shaderId+".glsl";
+            shadersObject->setValue(shaderId, shaderObject);
+            shaderObject->setString("type", "shader");
+            shaderObject->setString("path", path);
+            
+            //also write the file on disk
+            std::string shaderString = this->_shaderIdToShaderString[shaderId];
+            if (shaderString.size()>0) {
+                std::string shaderPath = this->_outputFile.getPathDir() + path;
+                JSONExport::JSONUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
+ 
+                printf("[shader]: %s\n", shaderPath.c_str());
+            }
+        }
+        
+        return true;
+    }
+    
+    const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon)
+    {
+        //get or create if necessary the techniques object
+        shared_ptr <JSONExport::JSONObject> techniquesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("techniques"));
+        if (!techniquesObject) {
+            techniquesObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            this->_rootJSONObject->setValue(std::string("techniques"), techniquesObject);
+            
+            //take the opportunity of initializing the techniques object to also setup the shaderIdToString map,
+            //this map is just until we have a proper a shader generation
+            this->_shaderIdToShaderString["lambert0Fs"] = lambert0Fs;        
+            this->_shaderIdToShaderString["lambert0Vs"] = lambert0Vs;        
+        }
+
+        //compute/retrieve the technique matching the specified common profile (TODO).        
+        //for now we just have one shader available :).. 
+        std::string techniqueName = "lambert0";
+        
+        shared_ptr <JSONExport::JSONObject> techniqueObject  = static_pointer_cast <JSONExport::JSONObject> (techniquesObject->getValue(techniqueName));
+        
+        if (!techniqueObject) {
+            techniqueObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            //if the technique has not been serialized, first thing create the default pass for this technique
+            shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            
+            std::string shaderName = techniqueName; //simplification
+            
+            std::string vs =  shaderName + "Vs";
+            std::string fs =  shaderName + "Fs";
+            
+            this->writeShaderIfNeeded(vs);
+            this->writeShaderIfNeeded(fs);
+            
+            pass->setString("x-shader/x-vertex", vs);
+            pass->setString("x-shader/x-fragment", fs);
+                        
+            shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            
+            techniqueObject->setValue("defaultPass", pass);
+            pass->setValue("inputs", inputs);
+            
+            shared_ptr <JSONExport::JSONObject> diffuseColorObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            diffuseColorObject->setString("symbol", "u_diffuseColor");
+            inputs->setValue("diffuseColor", diffuseColorObject);
+            techniquesObject->setValue(techniqueName, techniqueObject);
+        }
+        
+        return techniqueName;
+    }
+    
 	//--------------------------------------------------------------------
 	bool DAE2JSONWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
-        const ColorOrTexture& diffuse = commonEffects[0]->getDiffuse ();
         
-        float red = 1, green = 1, blue = 1;
+        if (commonEffects.getCount() > 0) {
+            const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
         
-        if (diffuse.isColor()) {
-            const Color& color = diffuse.getColor();
-            red = color.getRed();
-            green = color.getGreen();
-            blue = color.getBlue();
-        }
+            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(effectCommon);
+            
+            const ColorOrTexture& diffuse = effectCommon->getDiffuse ();
+        
+            float red = 1, green = 1, blue = 1;
+        
+            if (diffuse.isColor()) {
+                const Color& color = diffuse.getColor();
+                red = color.getRed();
+                green = color.getGreen();
+                blue = color.getBlue();
+            }
 
-        std::string uniqueId = "";
+            std::string uniqueId = "";
 #if EXPORT_MATERIALS_AS_EFFECTS        
-        uniqueId += "material.";
+            uniqueId += "material.";
 #else
-        uniqueId += "effect.";
+            uniqueId += "effect.";
 #endif
-        uniqueId += JSONExport::JSONUtils::toString(effect->getUniqueId().getObjectId());;
-        
-        shared_ptr <JSONExport::JSONEffect> cvtEffect(new JSONExport::JSONEffect(uniqueId));
-
-        float rgb[3];
-        rgb[0] = red;
-        rgb[1] = green;
-        rgb[2] = blue;
-        cvtEffect->setRGBColor(rgb);
-        
-        this->_uniqueIDToEffect[effect->getUniqueId().getObjectId()] = cvtEffect;
-
+            uniqueId += JSONExport::JSONUtils::toString(effect->getUniqueId().getObjectId());;
+            shared_ptr <JSONExport::JSONEffect> cvtEffect(new JSONExport::JSONEffect(uniqueId));
+            
+            float rgb[3];
+            rgb[0] = red;
+            rgb[1] = green;
+            rgb[2] = blue;
+            cvtEffect->setRGBColor(rgb);
+            
+            shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            
+            shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
+            
+            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[0])));
+            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[1])));
+            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[2])));
+            
+            inputs->setValue("diffuseColor", diffuseColorArray);
+            
+            cvtEffect->setInputs(inputs);
+            cvtEffect->setTechniqueID(techniqueID);
+            this->_uniqueIDToEffect[effect->getUniqueId().getObjectId()] = cvtEffect;            
+            
+        }
 		return true;                
 	}
     
@@ -909,7 +1012,7 @@ namespace DAE2JSON
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                     case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        cameraObject->setDouble("yfov", camera->getXFov().getValue());
+                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                 }

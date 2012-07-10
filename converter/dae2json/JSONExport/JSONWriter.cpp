@@ -79,8 +79,10 @@ namespace JSONExport
         
         for (size_t i = 0 ; i < count ; i++) {
             shared_ptr <JSONValue> value = object->getValue(keys[i]);
-            this->_writer->String(keys[i].c_str());
-            value->write(this, context);
+            const std::string& key = keys[i];
+            this->_writer->String(key.c_str());
+            if (value)
+                value->write(this, context);
         }
         
         this->_writer->EndObject(); 
@@ -129,14 +131,12 @@ namespace JSONExport
     {
         shared_ptr <JSONExport::JSONObject> effectObject(new JSONExport::JSONObject());
         shared_ptr <JSONExport::JSONArray> colorObject(new JSONExport::JSONArray());
-            
-        effectObject->setValue("color", colorObject);
-        
-        float *rgbColor = effect->getRGBColor();
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[0])));
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[1])));
-        colorObject->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgbColor[2])));
 
+        effectObject->setString("type", "effect");
+
+        effectObject->setString("technique", effect->getTechniqueID());
+        effectObject->setValue("inputs", effect->getInputs());
+        
         return effectObject;
     }
         
