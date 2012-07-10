@@ -46,9 +46,7 @@ define(function() {
         canMergeRequest: {
             value: function(request) {
                 return  ((request.range[0] === this.range[1]) ||
-                         (request.range[1] === this.range[0]) ||
-                         (request.type === request.type) ||
-                         (request.path === request.path));
+                         ((request.range[1]) === this.range[0]));
             }
         },
 
@@ -140,11 +138,73 @@ define(function() {
             }
         },
 
+        _checkConsistency: {
+            value: function(ranges) {
+                
+                if (ranges.length >= 50) //to avoid max stack size
+                    return;
+
+                if (this.left)
+                    this.left._checkConsistency(ranges);
+                
+                ranges.push(this.content.range);
+
+                if (this.right)
+                    this.right._checkConsistency(ranges);
+                
+            }
+        },
+
+        checkConsistency: {
+            value: function() {
+                var ranges = [];                
+                this._checkConsistency(ranges);
+                if (ranges.length > 1) {
+                    for (var i = 0; i < ranges.length-1 ;i++) {
+                        var rangeA = ranges[0];
+                        var rangeB = ranges[1];
+                        if (!(rangeA[1] <= rangeB[0])) {
+                            console("ERROR: INCONSISTENCY CHECK Failed, ranges are not ordered in btree")
+                        }
+                    }
+                }
+                
+            }
+        },
+
+        _collect: {
+            value: function(nodes, nb) {
+                
+
+                if (this.left)
+                    this.left._collect(nodes, nb);
+                
+                if (nodes.length >= nb) 
+                    return;
+
+                nodes.push(this);
+
+                if (this.right)
+                    this.right._collect(nodes, nb);
+                
+            }
+        },
+
+        collect: {
+            value: function(nb) {
+                var nodes = [];                
+                this._collect(nodes, nb);
+                return nodes;
+            }
+        },
+
+
         insert: {
             value: function(requests, parent) {
                 //insert before ?
+                
                 if (requests.range[1] <= this.content.range[0]) {
-                     if (requests.range[1] === this.content.range[0]) {
+                    if ((requests.range[1]) === this.content.range[0]) {
                         if (requests.kind === "multi-parts")
                             this.content.mergeRequests(requests.requests);
                         else
@@ -167,6 +227,7 @@ define(function() {
                             this.content.mergeRequests(requests.requests);
                         else
                             this.content.mergeRequests(requests);
+
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
@@ -245,7 +306,7 @@ define(function() {
                                 minNode.parent.left = minNode.right;
                             if (minNode.right) {
                                 if (minNode.parent)
-                                    minNode.right.parent = minNode.parent.left;
+                                    minNode.right.parent = minNode.parent;
                             }
 
                             minNode.right = this.right;
@@ -379,7 +440,7 @@ define(function() {
                     this.head = node.next;
                 }
 
-                node.removeFromList();
+                //node.removeFromList();
                 /* consistency check 
                 for (cnode = this.head ; cnode != null ; cnode = cnode.next) {
                     if (id === cnode.content.id) {
@@ -546,6 +607,7 @@ define(function() {
                     status = resourceStatus.status;
                 }
  
+                //if (this._requestTree) {
                 if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
                     if (!status) {     
                         //var listNode = Object.create(LinkedListNode);                
@@ -568,6 +630,7 @@ define(function() {
                             trNode = rootTreeNode;
                         } else {
                             trNode = this._requestTree.insert(contRequests);
+                            //this._requestTree.checkConsistency();
                         }
 
                         if (request.kind ==="multi-parts") {
@@ -592,13 +655,17 @@ define(function() {
                     if (node && this._resourcesToBeProcessed) {
                         this._resourcesToBeProcessed.remove(node);
                     }
-
+                    
                     if (node) {
+                        
                         if (node === this._requestTree) {
                             this._requestTree = node.remove();
                         } else {
                             node.remove();
                         }
+                        //if (this._requestTree)
+                         //   this._requestTree.checkConsistency();
+
                     }
 
                     if (request.kind ==="multi-parts") {
@@ -625,8 +692,7 @@ define(function() {
                         if (self._resourcesBeingProcessedCount <  ResourceManager.MAX_CONCURRENT_XHR) {
                             //self._processNextResource();
                             setTimeout(self._processNextResource.bind(self), 100);
-                        } //else {
-                        //}
+                        }
 
                     };
                 
