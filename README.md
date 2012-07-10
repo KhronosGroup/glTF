@@ -14,7 +14,8 @@ This JSON format is actually an hybrid format that:
 - describes the scene graph (and its entities).
 - relies on a separate binary blob that hosts all heavy datas (indices/vertices).
 
-To satisfy WebGL constraints, the provided tool named COLLADA2JSON performs the following transformations[these are work in progress]:
+To satisfy WebGL constraints, the provided tool named COLLADA2JSON performs the following transformations:
+[most of these are work in progress]
 - unify index buffers with unique indices for all vertex attributes. (i.e referred as deindexing)
 - split meshes into indexes buffer that do not exceed 65535 indexes to satisfy UNSIGNED_SHORT contraint for WebGL
 - generate GLES 2.0 shaders from COLLADA materials.
