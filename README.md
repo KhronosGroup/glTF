@@ -39,7 +39,7 @@ The status for these features is tracked in GitHub issues.
 
 COLLADA2JSON provides a reliable toolchain based on OpenCOLLADA.
 Starting from exporter plugins in major authoring tools to COLLADA parsing when converting to JSON, 
-OpenCOLLADA is where all efforts to read COLLADA files are centralized.
+OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
 #### Project status
 
