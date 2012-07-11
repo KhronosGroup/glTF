@@ -32,17 +32,17 @@ define(["dependencies/gl-matrix"], function() {
             value: function(boxa, boxb) {
             
                 var minBoxA = boxa[0];
-                var maxBoxA = boxa[1];    
+                var maxBoxA = boxa[1];
                 var minBoxB = boxb[0];
                 var maxBoxB = boxb[1];
             
                 var min = [ (minBoxA[0] < minBoxB[0]) ? minBoxA[0] : minBoxB[0],
                             (minBoxA[1] < minBoxB[1]) ? minBoxA[1] : minBoxB[1],
-                            (minBoxA[2] < minBoxB[2]) ? minBoxA[2] : minBoxB[2] ];  
+                            (minBoxA[2] < minBoxB[2]) ? minBoxA[2] : minBoxB[2] ];
             
                 var max = [ (maxBoxA[0] > maxBoxB[0]) ? maxBoxA[0] : maxBoxB[0],
                             (maxBoxA[1] > maxBoxB[1]) ? maxBoxA[1] : maxBoxB[1],
-                            (maxBoxA[2] > maxBoxB[2]) ? maxBoxA[2] : maxBoxB[2] ];  
+                            (maxBoxA[2] > maxBoxB[2]) ? maxBoxA[2] : maxBoxB[2] ];
                         
                 return [min, max];
             }
@@ -56,8 +56,8 @@ define(["dependencies/gl-matrix"], function() {
                 var min = [vectors[0][0], vectors[0][1], vectors[0][2]];
                 var max = [vectors[0][0], vectors[0][1], vectors[0][2]];
             
-                for (var i = 0 ; i < 8 ; i++) 
-                {  
+                for (var i = 0 ; i < 8 ; i++)
+                {
                     if (vectors[i][0] < min[0])
                         min[0] = vectors[i][0];
                     if (vectors[i][1] < min[1])
@@ -70,7 +70,7 @@ define(["dependencies/gl-matrix"], function() {
                     if (vectors[i][1] > max[1])
                       max[1] = vectors[i][1];
                     if (vectors[i][2] > max[2])
-                       max[2] = vectors[i][2];                
+                       max[2] = vectors[i][2];
                 }
               return [min, max];
             }

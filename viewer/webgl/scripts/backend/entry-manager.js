@@ -74,7 +74,7 @@ define(function() {
         
         init: {
             value: function() {
-                this._entries = {};         
+                this._entries = {};
             }
         }
 

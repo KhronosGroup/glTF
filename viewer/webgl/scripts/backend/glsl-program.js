@@ -208,7 +208,7 @@ define(["dependencies/gl-matrix"], function() {
             writable: true
         },
         
-        //API        
+        //API
         GLProgram: {
             enumerable: false,
             get: function() {
@@ -220,7 +220,7 @@ define(["dependencies/gl-matrix"], function() {
         },
         
         getTypeForSymbol: {
-            value: function(symbol) {   
+            value: function(symbol) {
                 var type = null;
                 var activeInfo = this.symbolToActiveInfo[symbol];
                 if (activeInfo) {
@@ -231,14 +231,14 @@ define(["dependencies/gl-matrix"], function() {
         },
 
         getLocationForSymbol: {
-            value: function(symbol) {   
+            value: function(symbol) {
                 return this.symbolToLocation[symbol];
             }
         },
 
     
         getSymbolForSemantic: {
-            value: function(semantic) { 
+            value: function(semantic) {
                 return this.semanticToSymbol[semantic];
             }
         },
@@ -266,7 +266,7 @@ define(["dependencies/gl-matrix"], function() {
                     var previousSemantic = this.symbolToSemantic[symbol];
                     if ((previousSemantic) && (previousSemantic !== semantic)) {
                         this.semanticToSymbol[previousSemantic] = null;
-                    } 
+                    }
                 
                     this.symbolToSemantic[symbol] = semantic;
                 }
@@ -286,7 +286,7 @@ define(["dependencies/gl-matrix"], function() {
         },
 
         getSemanticForSymbol: {
-            value: function(symbol) {   
+            value: function(symbol) {
                 return this.symbolToSemantic[symbol];
             }
         },
@@ -315,7 +315,7 @@ define(["dependencies/gl-matrix"], function() {
                 for (i = 0 ; i < count ; i++) {
                     var symbol = this.pendingCommits[i];
                     var type = this.getTypeForSymbol(symbol);
-                    var location = GL.getUniformLocation(this.GLProgram,symbol); 
+                    var location = GL.getUniformLocation(this.GLProgram,symbol);
                     var value = this.getValueForSymbol(symbol);
             
                     switch (type) {
@@ -345,8 +345,8 @@ define(["dependencies/gl-matrix"], function() {
         },
     
         use: {
-            value: function(GL, commitValues) { 
-                GL.useProgram(this.GLProgram);        
+            value: function(GL, commitValues) {
+                GL.useProgram(this.GLProgram);
                 if (commitValues) {
                     this.commit(GL);
                 }
@@ -377,12 +377,13 @@ define(["dependencies/gl-matrix"], function() {
             }
         },
     
-        build: {   
+        build: {
             value: function(GL) {
                 var i;
                 var vertexShaderSource = this.shaders[GLSLProgram.VERTEX_SHADER];
-                var fragmentShaderSource = this.shaders[GLSLProgram.FRAGMENT_SHADER];            
+                var fragmentShaderSource = this.shaders[GLSLProgram.FRAGMENT_SHADER];
                 var buildSuccess = false;
+                var activeInfo;
             
                 var vertexShader = this.createShaderWithSourceAndType(GL,vertexShaderSource,GLSLProgram.VERTEX_SHADER);
                 if (vertexShader === null)
@@ -400,7 +401,7 @@ define(["dependencies/gl-matrix"], function() {
                 GL.linkProgram(this.GLProgram);
                 if (GL.getProgramParameter(this.GLProgram, GL.LINK_STATUS)) {
                 
-                    this.pendingCommits = [];       
+                    this.pendingCommits = [];
                     this.symbolToActiveInfo = {};
                     this.symbolToValue = {};
                     this.symbolToLocation = {};
@@ -409,22 +410,22 @@ define(["dependencies/gl-matrix"], function() {
                     this.symbolToSemantic = {};
                     this.semanticToSymbol = {};
 
-                    var currentProgram = GL.getParameter( GL.CURRENT_PROGRAM );                
+                    var currentProgram = GL.getParameter( GL.CURRENT_PROGRAM );
                     GL.useProgram(this.GLProgram);
                 
                     var uniformsCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_UNIFORMS);
                     for (i = 0 ; i < uniformsCount ; i++) {
-                        var activeInfo = GL.getActiveUniform(this.GLProgram, i);
+                        activeInfo = GL.getActiveUniform(this.GLProgram, i);
                         this.symbolToActiveInfo[activeInfo.name] = activeInfo;
-                        this.symbolToLocation[activeInfo.name] = GL.getUniformLocation(this.GLProgram,activeInfo.name);    
+                        this.symbolToLocation[activeInfo.name] = GL.getUniformLocation(this.GLProgram,activeInfo.name);
                         this.uniformSymbols.push(activeInfo.name);
                     }
                 
                     var attributesCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_ATTRIBUTES);
                     for (i = 0 ; i < attributesCount ; i++) {
-                        var activeInfo = GL.getActiveAttrib(this.GLProgram, i);
+                        activeInfo = GL.getActiveAttrib(this.GLProgram, i);
                         this.symbolToActiveInfo[activeInfo.name] = activeInfo;
-                        this.symbolToLocation[activeInfo.name] = GL.getAttribLocation(this.GLProgram,activeInfo.name);    
+                        this.symbolToLocation[activeInfo.name] = GL.getAttribLocation(this.GLProgram,activeInfo.name);
                         this.attributeSymbols.push(activeInfo.name);
                     }
                 
@@ -438,7 +439,7 @@ define(["dependencies/gl-matrix"], function() {
         },
 
         initWithShaders: {
-            value: function(shaders) {   
+            value: function(shaders) {
                 this.shaders = shaders;
             }
         },

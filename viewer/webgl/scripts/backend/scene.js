@@ -42,11 +42,11 @@ define(["backend/base", "backend/node", "dependencies/gl-matrix"], function(Base
         _id: { value: null, writable: true },
     
         id: {
-            get: function() { 
-                return this._id; 
+            get: function() {
+                return this._id;
             },
-            set: function(value) { 
-                this._id = value; 
+            set: function(value) {
+                this._id = value;
             }
         },
     
@@ -75,7 +75,7 @@ define(["backend/base", "backend/node", "dependencies/gl-matrix"], function(Base
                         if (delegate) {
                             delegate.readCompleted("scene", self, userInfo);
                         }
-                    }
+                    };
 
                     reader._readEntry(sceneDescription.node, entryDelegate, userInfo);
                 }

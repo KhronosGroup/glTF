@@ -31,11 +31,11 @@ define(function() {
         _properties: { value: null, writable: true },
 
         properties: {
-            get: function() {         
-                return this._properties; 
+            get: function() {
+                return this._properties;
             },
-            set: function(value) { 
-                this._properties = value; 
+            set: function(value) {
+                this._properties = value;
             }
         },
 
