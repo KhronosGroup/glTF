@@ -858,8 +858,10 @@ namespace DAE2JSON
         
         if (!techniqueObject) {
             techniqueObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            techniqueObject->setString("type", "technique");
             //if the technique has not been serialized, first thing create the default pass for this technique
             shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            pass->setString("type", "pass");
             
             std::string shaderName = techniqueName; //simplification
             
@@ -875,12 +877,14 @@ namespace DAE2JSON
             shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             
             techniqueObject->setValue("defaultPass", pass);
+            techniqueObject->setString("pass", "defaultPass");
             pass->setValue("inputs", inputs);
             
             shared_ptr <JSONExport::JSONObject> diffuseColorObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             diffuseColorObject->setString("symbol", "u_diffuseColor");
             inputs->setValue("diffuseColor", diffuseColorObject);
             techniquesObject->setValue(techniqueName, techniqueObject);
+            
         }
         
         return techniqueName;
