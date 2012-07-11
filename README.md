@@ -1,39 +1,37 @@
 ##COLLADA2JSON
 
 
-COLLADA2JSON introduces a JSON format that aims at filling the gap between COLLADA and WebGL.
+COLLADA2JSON introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.
 
 
 #### JSON Format
 
-The key aspect of this JSON format is to be driven by WebGL.
-It is a final format which extends the workflow from COLLADA to WebGL.
-COLLADA (https://www.khronos.org/collada/) is an intermediate format which allows to get scene informations out of the authoring tools.
+The JSON format has been designed from the ground up with an eye towards the requirements of WebGL, and is intended to be the final step in a COLLADA to WebGL workflow.
+[COLLADA](https://www.khronos.org/collada/) is an interchange format created to allow information to easily be passed between authoring tools, but is not well suited for use in realtime applications.
 
-This JSON format is actually an hybrid format that:
-- describes the scene graph (and its entities).
-- relies on a separate binary blob that hosts all heavy datas (indices/vertices).
+The JSON format is actually a hybrid format consisting of two files:
+- A JSON document describing the scene graph and its entities.
+- A separate binary blob containing all large data arrays (indices/vertices).
 
 To satisfy WebGL constraints, the provided tool named COLLADA2JSON performs the following transformations:
-[most of these are work in progress]
-- unify index buffers with unique indices for all vertex attributes. (i.e referred as deindexing)
-- split meshes into indexes buffer that do not exceed 65535 indexes to satisfy UNSIGNED_SHORT contraint for WebGL
-- generate GLES 2.0 shaders from COLLADA materials.
-- convert axis up from scenes to allow seamless merging.
-- ...
+(Most of these are work in progress)
+- Unify index buffers with unique indices for all vertex attributes. (Known as "deindexing")
+- Split meshes into buffers that do not exceed 65535 indices to satisfy the WebGL's maximum index size of UNSIGNED_SHORT 
+- Generate default GLSL shaders from the COLLADA materials.
+- Normalize the "Up" axis of all scenes to allow easy resource sharing.
 
-This design based on an external binary blob also provides the following opportunities:
+Using an external binary blob has several advantages:
  
-- within the core of the JSON format refers to buffers as typed arrays.
-- add compression support.
+- The JSON format references the buffers as opaque typed arrays.
+- The binary format provides opportunities for better data compression.
 
-The status for these features is tracked in GitHub issues.
+Watch the GitHub issues tracker for updates on the status of these features.
 
-#### What's in there:
+#### What's provided in this repository:
 
-- viewer: a webgl viewer that loads a model asynchronously (loads vertex buffers and indices progressivly)
-- converter: source code for COLLADA2JSON based on OpenCOLLADA
-- importers: A Three.js importer. To be extended with support for other popular WebGL frameworks.
+- viewer: A sample WebGL viewer that loads and displays a model asynchronously (vertex and index buffers loaded progressivly)
+- converter: Source code for COLLADA2JSON converter based on OpenCOLLADA
+- loaders: Loader utilities for 3rd party WebGL libraries. Currently contains a Three.js loader, with support planned for other popular WebGL frameworks.
 
 #### Workflow
 
@@ -43,8 +41,8 @@ OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
 #### Project status
 
-The project is released in a very preliminary stage to encourage early feedback from the community.
-So far it has been tested only on OSX, but all the components involved are cross platforms, testing will be extended to all major platforms.
+The project is currently in an early state to encourage community feedback.
+It has been tested on OSX, but all the components involved are cross platform. Testing will be extended to all major platforms in the near future.
 
 
 
