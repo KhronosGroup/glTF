@@ -7,7 +7,7 @@ COLLADA2JSON introduces a JSON format that aims to bridge the gap between COLLAD
 #### JSON Format
 
 The JSON format has been designed from the ground up with an eye towards the requirements of WebGL, and is intended to be the final step in a COLLADA to WebGL workflow.
-[COLLADA](https://www.khronos.org/collada/) is an interchange format created to allow information to easily be passed between authoring tools, but is not well suited for use in realtime applications.
+[COLLADA](https://www.khronos.org/collada/) is an interchange format created to allow information to easily be passed between authoring tools, but is not well suited for use in web and embedded device applications.
 
 The JSON format is actually a hybrid format consisting of two files:
 - A JSON document describing the scene graph and its entities.
