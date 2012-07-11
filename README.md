@@ -30,7 +30,7 @@ Watch the GitHub issues tracker for updates on the status of these features.
 #### What's provided in this repository:
 
 - viewer: A sample WebGL viewer (Chrome canary recommanded) that loads and displays a model asynchronously (vertex and index buffers loaded progressivly).
-The example model contains thousands of meshes and buffers that not flattened (the original hierarchy is kept, which is better to show progressive loading).
+The example model contains thousands of independant meshes and buffers (to show progressive loading).
 - converter: Source code for COLLADA2JSON converter based on OpenCOLLADA
 - loaders: Loader utilities for 3rd party WebGL libraries. Currently contains a Three.js loader, with support planned for other popular WebGL frameworks.
 
