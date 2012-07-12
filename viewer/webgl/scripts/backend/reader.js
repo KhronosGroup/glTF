@@ -107,14 +107,19 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 if (!this._json)  {
                     var baseURL;
                     var parser = document.createElement("a");
-                
+                    
                     parser.href = window.location.href;
+                    var port = "";
+                    if (parser.port)
+                        port += ":"+parser.port;
+
+                    baseURL = parser.protocol+"//"+parser.hostname+ port;                    
                     if (parser.pathname.charAt(parser.pathname.length - 1) !== '/') {
                         var filebase = parser.pathname.split("/");
                         filebase.pop();
-                        baseURL = parser.protocol+parser.port + "//"+parser.hostname+filebase.join("/") + "/";  
+                        baseURL += filebase.join("/") + "/";  
                     } else {
-                        baseURL = parser.protocol+parser.port +"//"+parser.hostname+parser.pathname;
+                        baseURL += parser.pathname;
                     }
 
                     if (!this._isAbsolutePath(this._path)) {
@@ -125,7 +130,6 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                             baseURL += pathBase.join("/") + "/";
                         }
                     } 
-
                     this.baseURL = baseURL;
 
                     var jsonfile = new XMLHttpRequest();
