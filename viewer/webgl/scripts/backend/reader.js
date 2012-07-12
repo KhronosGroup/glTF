@@ -32,6 +32,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
         MESH: { value: "mesh" },
         MATERIAL: { value: "material" },
         TECHNIQUE: { value: "technique" },
+        SHADER: { value: "shader" },
         SCENE: { value: "scene" },
         NODE: { value: "node" },
         CAMERA: { value: "camera" },
@@ -46,21 +47,54 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
         rootDescription: {
             set: function(value) {
                 this._rootDescription = value;
-                this._entryManager = null;
             },
             get: function() {
                 return this._rootDescription;
             }
         },
-    
+
+        baseURL: { value: null, writable: true },
+
         entryManager: {
-            get: function() {
-                if (!this._entryManager) {
-                    this._entryManager = Object.create(EntryManager);
-                    this._entryManager.init();
-                }
-            
+            get: function() {            
                 return this._entryManager;
+            }, 
+            set: function(value) {
+                this._entryManager = value;
+            }
+        },
+
+        //detect absolute path following the same protocol than window.location
+        _isAbsolutePath: {
+            value: function(path) {
+                var isAbsolutePathRegExp = new RegExp("^"+window.location.protocol, "i");
+
+                return path.match(isAbsolutePathRegExp) ? true : false;
+            }
+        },
+
+        resolvePathIfNeeded: {
+            value: function(path) {
+                if (this._isAbsolutePath(path)) {
+                    return path;
+                } else {
+                    var pathComponents = path.split("/");
+                    var lastPathComponent = pathComponents.pop();
+                    return this.baseURL + lastPathComponent;
+                }
+            }
+        },
+
+        _resolveBufferPaths: {
+            value: function() {
+                var buffers = this.json.buffers;
+                if (buffers) {
+                    var bufferKeys = Object.keys(buffers);
+                    bufferKeys.forEach( function(bufferKey) {
+                        var buffer = buffers[bufferKey];
+                        buffer.path = this.resolvePathIfNeeded(buffer.path);
+                    }, this);
+                }
             }
         },
 
@@ -68,17 +102,40 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             enumerable: true,
             value: function(callback) {        
                 var self = this;
-            
+
                 //FIXME: handle error
                 if (!this._json)  {
+                    var baseURL;
+                    var parser = document.createElement("a");
+                
+                    parser.href = window.location.href;
+                    if (parser.pathname.charAt(parser.pathname.length - 1) !== '/') {
+                        var filebase = parser.pathname.split("/");
+                        filebase.pop();
+                        baseURL = parser.protocol+"//"+parser.hostname+filebase.join("/") + "/";  
+                    } else {
+                        baseURL = parser.protocol+"//"+parser.hostname+parser.pathname;
+                    }
+
+                    if (!this._isAbsolutePath(this._path)) {
+                        //we don't want the last component of the path
+                        var pathBase = this._path.split("/");
+                        if (pathBase.length > 1) {
+                            pathBase.pop();
+                            baseURL += pathBase.join("/") + "/";
+                        }
+                    } 
+
+                    this.baseURL = baseURL;
+
                     var jsonfile = new XMLHttpRequest();
                     jsonfile.open("GET", this._path, true);
                     jsonfile.onreadystatechange = function() {
                         if (jsonfile.readyState == 4) {
                             if (jsonfile.status == 200) {
-                                self._json = JSON.parse(jsonfile.responseText);                        
+                                self.json = JSON.parse(jsonfile.responseText);     
                                 if (callback) {
-                                    callback(self._json);
+                                    callback(self.json);
                                 }
                             }
                         }
@@ -86,7 +143,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     jsonfile.send(null);
                } else {
                     if (callback) {
-                        callback(this._json);
+                        callback(this.json);
                     }
                 }
             }
@@ -103,7 +160,10 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                 return this._json;
             },
             set: function(value) {
-                this._json = value;
+                if (this._json !== value) {
+                    this._json = value; 
+                    this._resolveBufferPaths();                   
+                }
             }
         },
     
@@ -112,16 +172,31 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             writable: true
         },
 
+        _commonInit: {
+            value: function() {
+                this.entryManager = Object.create(EntryManager);
+                this.entryManager.init();
+            }
+        },
+
         initWithPath: {
             value: function(path) {
                 this._path = path;
                 this._json = null;
+                this._commonInit();
+                return this;
             }
         },
     
         initWithJSON: {
-            value: function(json) {
-                this._json = json;
+            value: function(json, baseURL) {
+                this.json = json;
+                this.baseURL = baseURL;
+                if (!baseURL) {
+                    console.log("WARNING: no base URL passed to Reader:initWithJSON");
+                }
+                this._commonInit();
+                return this;
             }
         },
       
@@ -129,7 +204,8 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             value: function (entryID) {
                 var entryDescription = this.rootDescription[entryID];
                 if (!entryDescription) {
-                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras", "techniques"];
+                    //FIXME: infer directly the main (higher level) property out of the entryDescription type
+                    var entryLevels = ["scenes", "meshes", "nodes", "lights", "materials", "buffers", "cameras", "techniques", "shaders"];
                 
                     for (var i = 0 ; !entryDescription && i < entryLevels.length ; i++) {
                         var entries = this.rootDescription[entryLevels[i]];
@@ -145,7 +221,7 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
             
         _readEntry: {
             enumerable: false,
-            value: function(entryID, delegate, userInfo) {              
+            value: function(entryID, delegate, userInfo) { 
                 var entryManager = this.entryManager;
                 var entryDescription = this.getEntryFromRootDescription(entryID);
                 if (entryDescription) {
@@ -175,7 +251,13 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                         entry = Object.create(Material);
                     } else if (type == this.TECHNIQUE) {
                         entry = Object.create(Technique);
+                    } else if (type == this.SHADER) {
+                        //local handling of shaders
+                        entryDescription.id = entryID;
+                        delegate.readCompleted("shader", entryDescription, userInfo);
+                        return;
                     }
+
 
                     if (entry) {
                         entry.init();
@@ -184,7 +266,6 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     }
                 
                 } else {
-                    debugger;
                     delegate.handleError(this.NOT_FOUND);
                 }
             }    

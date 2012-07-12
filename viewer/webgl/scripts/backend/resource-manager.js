@@ -736,7 +736,7 @@ define(function() {
 
         _handleTypedArrayLoading: {
             value: function(typedArrayDescr, delegate, ctx) {
-            
+                //FIXME: better testing
                 if (typedArrayDescr.type === "Uint16Array") {
                     var range = [typedArrayDescr.byteOffset, typedArrayDescr.byteOffset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
 
@@ -751,6 +751,19 @@ define(function() {
             }
         },
 
+
+        _handleProgramLoading: {
+            value: function(program) {
+
+            }
+        },
+
+        _handleShaderLoading: {
+            value: function(program) {
+
+            }
+        },
+
         getResource: {
                 value: function(resource, delegate, ctx) {
 
@@ -761,7 +774,12 @@ define(function() {
 
                 if (resource.type === "accessor") {
                     this._handleAccessorResourceLoading(resource, delegate, ctx);
+                } else if (resource.type === "program") {
+                    this._handleProgramLoading(resource, delegate, ctx);
+                } else if (resource.type === "shader") {
+                    this._handleShaderLoading(resource, delegate, ctx);
                 } else {
+                    //FIXME: better testing
                     this._handleTypedArrayLoading(resource, delegate, ctx);
                 }
 

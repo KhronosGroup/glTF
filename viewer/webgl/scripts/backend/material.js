@@ -54,7 +54,6 @@ define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
 
                 var techniqueDelegate = {};
                 techniqueDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    debugger;
                     self.technique = entry;
                 }
                 reader._readEntry(materialDescription.technique, techniqueDelegate, userInfo);            

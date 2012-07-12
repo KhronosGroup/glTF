@@ -37,6 +37,7 @@ define(function() {
             value: function(id, description) {
                 this._id = id;
                 this._description = description;
+                return this;
             }
         },
     

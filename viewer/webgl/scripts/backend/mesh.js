@@ -143,7 +143,7 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
                         var primitiveDescription = primitivesDescription[i];
                     
                         if (primitiveDescription.primitive === "TRIANGLES") {
-                            var primitive = Object.create(Primitive);                    
+                             var primitive = Object.create(Primitive);                    
                             primitive.init();
 
                             //read material
@@ -162,7 +162,7 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
                                 var accessor = reader.entryManager.getEntry(accessorID);
                                 
                                 if (!accessor) {
-                                    //let's just use an anonymous objecst for the accessor
+                                    //let's just use an anonymous object for the accessor
                                     accessor = meshDescription[accessorID];
                                     accessor.id = accessorID;
                                     var bufferDescription = reader.entryManager.getEntry(accessor.buffer);
@@ -172,7 +172,7 @@ define(["backend/base", "backend/resource-description", "backend/primitive", "ba
                                         bufferDescription.init(accessor.buffer, reader.getEntryFromRootDescription(accessor.buffer));
                                         reader.entryManager.storeEntry(bufferDescription);
                                     }
-                            
+                                
                                     accessor.buffer = bufferDescription;
                                     reader.entryManager.storeEntry(accessor);
                                 }

@@ -24,7 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
+define(["backend/base", "backend/resource-description", "backend/pass", "backend/glsl-program", "dependencies/gl-matrix"], 
+    function(Base, ResourceDescription, Pass, GLSLProgram, glMatrix) {
 
     var Technique = Object.create(Base, {
 
@@ -33,11 +34,23 @@ define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
                 this.__Base_init();
             }
         },
+
+        _rootPass: { value: null, writable: true },
+    
+        rootPass: {
+            get: function() {
+                return this._rootPass;
+            },
+            set: function(value) {
+                this._rootPass = value;
+            }
+        },
     
         read: {
             enumerable: true,
             value: function(entryID, techniqueDescription, delegate, reader, userInfo) {
-
+                this.rootPass = Object.create(Pass);
+                this.rootPass.read(techniqueDescription.pass, techniqueDescription[techniqueDescription.pass], delegate, reader, userInfo);
                 delegate.readCompleted("technique", this, userInfo);
             }
         }
