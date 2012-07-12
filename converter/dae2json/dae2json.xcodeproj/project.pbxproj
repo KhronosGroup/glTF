@@ -76,6 +76,8 @@
 		6F9F5099153E3AFD009C7B3B /* libCOLLADABaseUtils.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCOLLADABaseUtils.a; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug/libCOLLADABaseUtils.a"; sourceTree = "<group>"; };
 		6F9F509A153E3AFD009C7B3B /* libCOLLADAFramework.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCOLLADAFramework.a; path = "../opencollada-read-only/COLLADASaxFrameworkLoader/build/Debug/libCOLLADAFramework.a"; sourceTree = "<group>"; };
 		6FB3FA11153E46D800EF9A37 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		6FD48F7B15A63543002E570E /* commonProfileShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commonProfileShaders.h; sourceTree = "<group>"; };
+		6FD48F7C15A63543002E570E /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		6FE5F1E215924E3C00881F9F /* JSONWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSONWriter.cpp; path = JSONExport/JSONWriter.cpp; sourceTree = "<group>"; };
 		6FE5F1E315924E3C00881F9F /* JSONWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONWriter.h; path = JSONExport/JSONWriter.h; sourceTree = "<group>"; };
 		6FE5F1E515924E5300881F9F /* JSONNumber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSONNumber.cpp; path = JSONExport/JSONNumber.cpp; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				6FD48F7A15A63543002E570E /* shaders */,
 				6F3A10AC15702F0B00E1A31D /* JSONExport */,
 				08FB7796FE84155DC02AAC07 /* main.cpp */,
 				6F65BB6D152269F000C04888 /* DAE2JSONWriter.h */,
@@ -179,6 +182,15 @@
 				6F9F5096153E3AF2009C7B3B /* libpcre.a */,
 			);
 			name = projects;
+			sourceTree = "<group>";
+		};
+		6FD48F7A15A63543002E570E /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				6FD48F7B15A63543002E570E /* commonProfileShaders.h */,
+				6FD48F7C15A63543002E570E /* readme.txt */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 		C6859E8C029090F304C91782 /* Documentation */ = {
