@@ -28,12 +28,16 @@
         <a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> - Collada JSON Loader
         </div>
 
-        <script src="scripts/dependencies/require.js"></script>
-        <script src="scripts/Three.js"></script>
+        <script src="Three.js"></script>
+        <script src="../../viewer/webgl/scripts/dependencies/require.js"></script>
 
         <script>
             require.config({
-                baseUrl: "scripts"
+                baseUrl: ".",
+                paths: {
+                    backend: "../../viewer/webgl/scripts/backend",
+                    dependencies: "../../viewer/webgl/scripts/dependencies",
+                }
             });
 
             require(['ColladaJsonLoader'], function() {
@@ -76,7 +80,7 @@
                     var loader = new THREE.ColladaJsonLoader( renderer.context );
 
                     
-                    var colladaObj = loader.load( "output.json", function(object) {
+                    var colladaObj = loader.load( "../../viewer/webgl/output.json", function(object) {
                         // To delay adding the collada data to the scene until it's fully loaded, attach object to the scene here instead of using the return value
                     });
                     colladaObj.position.x = -200;
