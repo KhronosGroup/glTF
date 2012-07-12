@@ -112,9 +112,9 @@ define(["backend/entry-manager", "backend/mesh", "backend/scene", "backend/node"
                     if (parser.pathname.charAt(parser.pathname.length - 1) !== '/') {
                         var filebase = parser.pathname.split("/");
                         filebase.pop();
-                        baseURL = parser.protocol+"//"+parser.hostname+filebase.join("/") + "/";  
+                        baseURL = parser.protocol+parser.port + "//"+parser.hostname+filebase.join("/") + "/";  
                     } else {
-                        baseURL = parser.protocol+"//"+parser.hostname+parser.pathname;
+                        baseURL = parser.protocol+parser.port +"//"+parser.hostname+parser.pathname;
                     }
 
                     if (!this._isAbsolutePath(this._path)) {
