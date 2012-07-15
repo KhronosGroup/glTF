@@ -24,8 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "dependencies/gl-matrix"],
-    function(Utilities, Node, Camera, View, GLSLProgram, Reader) {
+define( ["runtime/utilities", "runtime/node", "runtime/camera", "runtime/view", "runtime/glsl-program", "runtime/runtime-tf-loader", "dependencies/gl-matrix"],
+    function(Utilities, Node, Camera, View, GLSLProgram, RuntimeTFLoader, glMatrix) {
         var Viewer = Object.create(Object, {
             run: {
                 value: function(scenePath) {
@@ -34,12 +34,8 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     glView.init("gl-canvas");    
 
                     var readerDelegate = {};
-                    readerDelegate.readCompleted = function (key, value, userInfo) {
-                        console.log("key:"+key+" value:"+value.length);
-                        if (key === "entries") {
-                            var scene = value[0];
-                            glView.scene = scene;
-                        } 
+                    readerDelegate.loadCompleted = function (scene) {
+                        glView.scene = scene;
                     };
     
                     var angle = 0;    
@@ -134,10 +130,11 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
                     };
     
                 glView.delegate = viewDelegate;
-    
-                var reader = Object.create(Reader);
-                reader.initWithPath(scenePath);
-                reader.readEntries(["defaultScene"], readerDelegate, null);    
+
+                var loader = Object.create(RuntimeTFLoader);
+                loader.initWithPath(scenePath);
+                loader.delegate = readerDelegate;
+                loader.load(null /* userInfo */, null /* options */);    
             }
         }
     });  

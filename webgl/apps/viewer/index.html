@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+
+	<script type="text/javascript" data-main="viewer.js" src="../../runtime/dependencies/require.js"></script>
+	
+  <script type="text/javascript"> 
+
+  require.config({
+    baseUrl: ".",
+    paths: {
+      loader: "../../.",
+      runtime: "../../runtime",
+      helpers: "../../helpers",
+      dependencies: "../../runtime/dependencies"
+  }});
+
+  require( ["viewer"],
+    function(Viewer) {
+      Viewer.run("output.json");
+  });
+
+	</script>	
+
+</head>
+    <body>
+        <canvas id="gl-canvas" width="800px" height="800px"></canvas>
+	</body>
+</html>

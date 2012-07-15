@@ -37,7 +37,7 @@
         -> delegate , to give control to another client object
 */
 
-define(["backend/node", "backend/projection", "backend/resource-description", "backend/camera", "backend/glsl-program", "dependencies/gl-matrix"], 
+define(["runtime/node", "runtime/projection", "runtime/resource-description", "runtime/camera", "runtime/glsl-program", "dependencies/gl-matrix"], 
     function(Node, Projection, ResourceDescription, Camera, GLSLProgram, glMatrix) {
 
     var Pass = Object.create(Object, {
@@ -140,29 +140,6 @@ define(["backend/node", "backend/projection", "backend/resource-description", "b
             }
         },
     
-        read: {
-            enumerable: true,
-            value: function(entryID, passDescription, delegate, reader, userInfo) {
-                //read material
-                var programs = {};
-                var shaderDelegate = {};
-                var self = this;
-                this.id = entryID;
-                shaderDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    var shaderType = userInfo;
-                    programs[shaderType] = entry;
-
-                    if (programs[GLSLProgram.VERTEX_SHADER] && programs[GLSLProgram.FRAGMENT_SHADER]) {
-                        var programDescription = Object.create(ResourceDescription).init(entryID+"_program", programs);
-                        self.program = programDescription;
-                        delegate.readCompleted("pass", self, userInfo);
-                    }
-                }
-                reader.readEntry(passDescription[GLSLProgram.VERTEX_SHADER], shaderDelegate, GLSLProgram.VERTEX_SHADER);            
-                reader.readEntry(passDescription[GLSLProgram.FRAGMENT_SHADER], shaderDelegate, GLSLProgram.FRAGMENT_SHADER);            
-            }
-        },
-
         execute: {
             value: function(engine) {  
 

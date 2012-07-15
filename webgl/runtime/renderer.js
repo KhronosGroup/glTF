@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-matrix"], function(GLSLProgram, ResourceManager) {
+define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-matrix"], function(GLSLProgram, ResourceManager) {
 
     var Renderer = Object.create(Object, {
 
@@ -352,11 +352,13 @@ define(["backend/glsl-program", "backend/resource-manager", "dependencies/gl-mat
                     }                
                 
                 }, this);
-                
                 if (!renderVertices)  { 
                     //Just disable what is not required here…
                     if (available) {
                         for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
+                            if (i === 0) {
+                                debugger;
+                            }
                             gl.disableVertexAttribArray(i);
                         }
                         if (primitive.step < 1.0)

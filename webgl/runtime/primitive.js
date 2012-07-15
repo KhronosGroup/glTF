@@ -48,6 +48,7 @@ define(["dependencies/gl-matrix"], function() {
             value: function() {
                 this.step = 0;
                 this.vertexAttributes = null;
+                return this;
             }
         },
 

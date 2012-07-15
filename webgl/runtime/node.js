@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(Base, Utilities) {
+define(["runtime/base","runtime/utilities", "dependencies/gl-matrix"], function(Base, Utilities) {
 
     var Node = Object.create(Base, {
 
@@ -118,6 +118,8 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
             
                 this._properties["cameras"] = [];
                 this._properties["lights"] = [];
+
+                return this;
             }
         },
 
@@ -179,79 +181,8 @@ define(["backend/base","backend/utilities", "dependencies/gl-matrix"], function(
                     }
                 }
             }
-        },
-    
-        read: {
-            enumerable: true,
-            value: function(entryID, nodeDescription, delegate, reader, userInfo) {
+        }
 
-                var childIndex = 0;
-                var self = this;
-                var childrenCount = nodeDescription.children ? nodeDescription.children.length : 0;
-                if (!entryID) {
-                    debugger;
-                }
-                this.id = entryID;
-                this.name = nodeDescription.name;
-            
-                if (nodeDescription.matrix) {
-                    this.transform = mat4.create(nodeDescription.matrix);
-                } else {
-                    this.transform = mat4.identity();
-                }
-
-                // load mesh info (but not the binaries yet)
-                var meshDelegate = {};
-                meshDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    self.meshes.push(entry);
-                }
-                
-                if (nodeDescription.mesh) {
-                    reader._readEntry(nodeDescription.mesh, meshDelegate, userInfo);            
-                }
-
-                // load meshes info (but not the binaries yet)
-                var meshesDelegate = {};
-                meshesDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    entry.forEach( function(mesh) {
-                        self.meshes.push(mesh);
-                    }, this);
-                }
-
-                if (nodeDescription.meshes) {
-                    reader._readEntries(nodeDescription.meshes, meshesDelegate, userInfo);            
-                }
-
-                // load camera info (but not the binaries yet)
-                var cameraDelegate = {};
-                cameraDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    self.cameras.push(entry);
-                }
-
-                if (nodeDescription.camera) {
-                    reader._readEntry(nodeDescription.camera, cameraDelegate, userInfo);            
-                }
-
-                // load node
-                var entryNodeDelegate = {};
-                entryNodeDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    //debugger;
-                    self.children.push(entry);
-                    childIndex++;
-                    if (delegate && (childIndex == childrenCount)) {
-                        delegate.readCompleted(entryType, self, userInfo);
-                    } else {
-                        reader._readEntry(nodeDescription.children[childIndex], entryNodeDelegate, userInfo);
-                    }
-                }
-            
-                if (childrenCount > 0) {
-                    reader._readEntry(nodeDescription.children[childIndex], entryNodeDelegate, userInfo);
-                }  else if (delegate) {
-                    delegate.readCompleted("node", this, userInfo);
-                }      
-            }
-        }    
     });
         return Node;
     }

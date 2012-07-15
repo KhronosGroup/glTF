@@ -24,39 +24,67 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base", "backend/resource-description", "backend/pass", "backend/glsl-program", "dependencies/gl-matrix"], 
-    function(Base, ResourceDescription, Pass, GLSLProgram, glMatrix) {
+var DummyLoader = Object.create(WebGLTFLoader, {
 
-    var Technique = Object.create(Base, {
-
-        init: {
-            value: function() {
-                this.__Base_init();
-            }
-        },
-
-        _rootPass: { value: null, writable: true },
-    
-        rootPass: {
-            get: function() {
-                return this._rootPass;
-            },
-            set: function(value) {
-                this._rootPass = value;
-            }
-        },
-    
-        read: {
-            enumerable: true,
-            value: function(entryID, techniqueDescription, delegate, reader, userInfo) {
-                this.rootPass = Object.create(Pass);
-                this.rootPass.read(techniqueDescription.pass, techniqueDescription[techniqueDescription.pass], delegate, reader, userInfo);
-                delegate.readCompleted("technique", this, userInfo);
-            }
+    handleBuffer: {
+        value: function(entryID, description, userInfo) {
+            return true;
         }
+    },
 
-    });
-    
-        return Technique;
+    handleShader: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleTechnique: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleMaterial: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleLight: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleMesh: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleCamera: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleLight: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleScene: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+
+    handleNode: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
     }
-);
+
+});
+

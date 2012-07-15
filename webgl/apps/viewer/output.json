@@ -1,7 +1,4 @@
 {
-    "asset": { 
-	"origin": "http://sketchup.google.com/3dwarehouse/details?mid=ef03dd4f46c327d414df4131188c8580&prevstart=0" 
-    },
     "buffers": {
         "Rambler.bin": {
             "byteLength": 11554264,
@@ -64495,9 +64492,12 @@
                         "symbol": "u_diffuseColor"
                     }
                 },
+                "type": "pass",
                 "x-shader/x-fragment": "lambert0Fs",
                 "x-shader/x-vertex": "lambert0Vs"
-            }
+            },
+            "pass": "defaultPass",
+            "type": "technique"
         }
     },
     "version": "0.1"

@@ -24,62 +24,65 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(function() {
+define(["runtime/renderer","runtime/pass", "runtime/command-queue"], function(Renderer, Pass, CommandQueue) {
 
-    var EntryManager = Object.create(Object, {
+    var Engine = Object.create(Object, {
 
-        _entries: {
-            enumerable: false,
-            value: null,
-            writable: true
+        _commandQueue: { value: null, writable: true },
+
+        _renderer: { value: null, writable: true },
+
+        _rootPass: { value: null, writable: true },
+    
+        commandQueue: {
+            get: function() {
+                return this._commandQueue;
+            },
+            set: function(value) {
+                this._commandQueue = value;
+            }
+        },
+
+        rootPass: {
+            get: function() {
+                return this._rootPass;
+            },
+            set: function(value) {
+                this._rootPass = value;
+            }
         },
     
-        removeAllEntries: {
+        renderer: {
+            get: function() {
+                return this._renderer;
+            },
+            set: function(value) {
+                this._renderer = value;
+            }
+        },
+    
+        init: { 
+            value: function( webGLContext, options) {
+                this.renderer = Object.create(Renderer);
+                this.rootPass = Object.create(Pass);
+                this.rootPass.init();
+                this.commandQueue = Object.create(CommandQueue);
+                this.renderer.webGLContext = webGLContext;      
+                return this;
+            }
+        },
+    
+        render: {
             value: function() {
-                this._entries = {};
-            }
-        },
-    
-        //manage entries
-        containsEntry: {
-            enumerable: false,
-            value: function(entry) {
-                return this._entries[entry.id] ? true : false;
-            }
-        },
-    
-        storeEntry: {
-            enumerable: false,
-            value: function(entry) {
-                if (!entry.id) {
-                    debugger;
-                    console.log("ERROR: entry does not contain id, cannot store");
-                    return;
-                }
-        
-                if (this.containsEntry[entry.id]) {
-                    console.log("WARNING: entry:"+entry.id+" is already stored, overriding");
-                }
-            
-                this._entries[entry.id] = entry;
-            }
-        },
-    
-        getEntry: {
-            enumerable: false,
-            value: function(entryID) {
-                return this._entries[entryID];
-            }
-        },
-        
-        init: {
-            value: function() {
-                this._entries = {};
+                this.renderer.resetStates();
+                this.commandQueue.reset();
+                this.rootPass.execute(this);
+                this.commandQueue.execute(this.renderer);
             }
         }
 
     });
     
-        return EntryManager;
+        return Engine;
     }
 );

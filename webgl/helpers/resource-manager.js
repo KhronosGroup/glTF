@@ -24,7 +24,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(function() {
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+        module.exports = factory(global);
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    "use strict";
 
     var ContiguousRequests = Object.create(Object, {
 
@@ -468,7 +484,7 @@ define(function() {
 
     });
 
-    var ResourceManager = Object.create(Object, {
+    var WebGLTFResourceManager = Object.create(Object, {
 
         // errors
         MISSING_DESCRIPTION: { value: "MISSING_DESCRIPTION" },
@@ -545,12 +561,12 @@ define(function() {
                 }
 
                 if (!type) {
-                    delegate.handleError(ResourceManager.INVALID_TYPE, null);
+                    delegate.handleError(WebGLTFResourceManager.INVALID_TYPE, null);
                     return;
                 }
                 if (type === this.ARRAY_BUFFER) {
                     if (!path) {
-                        delegate.handleError(ResourceManager.INVALID_PATH);
+                        delegate.handleError(WebGLTFResourceManager.INVALID_PATH);
                         return;
                     }
                     
@@ -576,13 +592,13 @@ define(function() {
                             }
 
                         } else {
-                            delegate.handleError(ResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
+                            delegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                         }
                     };
                     xhr.send(null);
                        
                 } else {
-                    delegate.handleError(ResourceManager.INVALID_TYPE, type);
+                    delegate.handleError(WebGLTFResourceManager.INVALID_TYPE, type);
                 }
             }
         },
@@ -623,7 +639,7 @@ define(function() {
                 }
  
                 //if (this._requestTree) {
-                if (this._resourcesBeingProcessedCount >= ResourceManager.MAX_CONCURRENT_XHR) {
+                if (this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
                     if (!status) {     
                         //var listNode = Object.create(LinkedListNode);                
                         //listNode.init(request);
@@ -696,7 +712,7 @@ define(function() {
                         // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
                         // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
                         //, but as of now, this flexibily does not seem necessary.
-                        convertedResource = req_.delegate.convert(res_, req_.ctx);
+                        var convertedResource = req_.delegate.convert(res_, req_.ctx);
                         self._storeResource(req_.id, convertedResource);
                         req_.delegate.resourceAvailable(convertedResource, req_.ctx);
                         self._resourcesBeingProcessedCount--;
@@ -704,7 +720,7 @@ define(function() {
                         //console.log("delete:"+req_.id)
                         delete self._resourcesStatus[req_.id];
 
-                        if (self._resourcesBeingProcessedCount <  ResourceManager.MAX_CONCURRENT_XHR) {
+                        if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
                             //self._processNextResource();
                             setTimeout(self._processNextResource.bind(self), 100);
                         }
@@ -736,7 +752,7 @@ define(function() {
 
         _handleTypedArrayLoading: {
             value: function(typedArrayDescr, delegate, ctx) {
-                //FIXME: better testing
+                //FIXME: extend testing to UInt8, 32, float and so on ...
                 if (typedArrayDescr.type === "Uint16Array") {
                     var range = [typedArrayDescr.byteOffset, typedArrayDescr.byteOffset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
 
@@ -794,7 +810,11 @@ define(function() {
         },
         
     });
-    
-        return ResourceManager;
+
+    if(root) {
+        root.WebGLTFResourceManager = WebGLTFResourceManager;
     }
-);
+
+    return WebGLTFResourceManager;
+
+}));

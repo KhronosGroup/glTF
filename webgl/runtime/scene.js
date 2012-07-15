@@ -24,46 +24,58 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
+define(["runtime/base", "runtime/node", "dependencies/gl-matrix"], function(Base, Node) {
 
-    var Material = Object.create(Base, {
+    var Scene = Object.create(Base, {
 
-        _inputs: { value: null, writable: true },
+        _rootNode: { value : null, writable: true },
     
-        inputs: {
-            enumerable: false,
+        rootNode: {
             get: function() {
-                return this._inputs;
+                return this._rootNode;
             },
             set: function(value) {
-                this._inputs = value;
+                this._rootNode = value;
             }
         },
 
+        _id: { value: null, writable: true },
+    
+        id: {
+            get: function() {
+                return this._id;
+            },
+            set: function(value) {
+                this._id = value;
+            }
+        },
+    
         init: {
             value: function() {
                 this.__Base_init();
+                this.rootNode = Object.create(Node);
+                this.rootNode.init();
+                return this;
             }
         },
-    
-        read: {
+
+        _name: {
+            value: null,
+            writable: true
+        },
+
+        name: {
             enumerable: true,
-            value: function(entryID, materialDescription, delegate, reader, userInfo) {
-                var self = this;
-                this.inputs = materialDescription.inputs;
-
-                var techniqueDelegate = {};
-                techniqueDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    self.technique = entry;
-                }
-                reader._readEntry(materialDescription.technique, techniqueDelegate, userInfo);            
-
-                delegate.readCompleted("material", this, userInfo);
+            get: function() {
+                return this._name;
+            },
+            set: function(value) {
+                this._name = value;
             }
         }
 
     });
     
-        return Material;
+        return Scene;
     }
 );

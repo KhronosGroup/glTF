@@ -24,65 +24,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/base", "backend/node", "dependencies/gl-matrix"], function(Base, Node) {
+define(["runtime/base", "runtime/projection", "dependencies/gl-matrix"], function(Base, Projection, glMatrix) {
 
-    var Scene = Object.create(Base, {
+    var Camera = Object.create(Base, {
 
-        _rootNode: { value : null, writable: true },
-    
-        rootNode: {
-            get: function() {
-                return this._rootNode;
+        _projection: { value: null, writable: true },
+
+        projection: {
+            get: function() { 
+                return this._projection; 
             },
-            set: function(value) {
-                this._rootNode = value;
+            set: function(value) { 
+                this._projection = value; 
             }
         },
 
-        _id: { value: null, writable: true },
-    
-        id: {
-            get: function() {
-                return this._id;
-            },
-            set: function(value) {
-                this._id = value;
-            }
-        },
-    
         init: {
             value: function() {
                 this.__Base_init();
-                this.rootNode = Object.create(Node);
-                this.rootNode.init();
-            }
-        },
-
-        read: {
-            enumerable: true,
-            value: function(entryID, sceneDescription, delegate, reader, userInfo) {
-                var self = this;
-                this.id = entryID;
-                this.name = sceneDescription.name;
-            
-                if (!sceneDescription.node) {
-                    // FIXME: todo
-                } else {
-                
-                    var entryDelegate = {};
-                    entryDelegate.readCompleted = function(entryType, entry, userInfo) {
-                        self.rootNode = entry;
-                        if (delegate) {
-                            delegate.readCompleted("scene", self, userInfo);
-                        }
-                    };
-
-                    reader._readEntry(sceneDescription.node, entryDelegate, userInfo);
-                }
+                return this;
             }
         }
+    
+
     });
     
-        return Scene;
+        return Camera;
     }
 );

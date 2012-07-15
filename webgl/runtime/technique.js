@@ -24,25 +24,19 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["backend/renderer","backend/pass", "backend/command-queue"], function(Renderer, Pass, CommandQueue) {
+define(["runtime/base", "runtime/resource-description", "runtime/pass", "runtime/glsl-program", "dependencies/gl-matrix"], 
+    function(Base, ResourceDescription, Pass, GLSLProgram, glMatrix) {
 
-    var Engine = Object.create(Object, {
+    var Technique = Object.create(Base, {
 
-        _commandQueue: { value: null, writable: true },
-
-        _renderer: { value: null, writable: true },
-
-        _rootPass: { value: null, writable: true },
-    
-        commandQueue: {
-            get: function() {
-                return this._commandQueue;
-            },
-            set: function(value) {
-                this._commandQueue = value;
+        init: {
+            value: function() {
+                this.__Base_init();
             }
         },
 
+        _rootPass: { value: null, writable: true },
+    
         rootPass: {
             get: function() {
                 return this._rootPass;
@@ -52,37 +46,17 @@ define(["backend/renderer","backend/pass", "backend/command-queue"], function(Re
             }
         },
     
-        renderer: {
-            get: function() {
-                return this._renderer;
-            },
-            set: function(value) {
-                this._renderer = value;
-            }
-        },
-    
-        init: { 
-            value: function( webGLContext, options) {
-                this.renderer = Object.create(Renderer);
+        read: {
+            enumerable: true,
+            value: function(entryID, techniqueDescription, delegate, reader, userInfo) {
                 this.rootPass = Object.create(Pass);
-                this.rootPass.init();
-                this.commandQueue = Object.create(CommandQueue);
-                this.renderer.webGLContext = webGLContext;      
-                return this;
-            }
-        },
-    
-        render: {
-            value: function() {
-                this.renderer.resetStates();
-                this.commandQueue.reset();
-                this.rootPass.execute(this);
-                this.commandQueue.execute(this.renderer);
+                this.rootPass.read(techniqueDescription.pass, techniqueDescription[techniqueDescription.pass], delegate, reader, userInfo);
+                delegate.readCompleted("technique", this, userInfo);
             }
         }
 
     });
     
-        return Engine;
+        return Technique;
     }
 );
