@@ -179,12 +179,6 @@
             writable: true
         },
       
-        abort: {
-            value: function(reason) {
-                //FIXME:TODO
-            }
-        },
-
         getEntryDescription: {
             value: function (entryID, entryType) {
                 var entryDescription = null;
@@ -207,9 +201,9 @@
                 if (this._state.categoryIndex !== -1) {
                     var category = categoriesDepsOrder[this._state.categoryIndex];
                     this._state.categoryState.index = 0;
-
+                    return true;
                 } else {
-
+                    return false;
                 }
             }
         },
@@ -217,18 +211,19 @@
         _stepToNextDescription: {
             enumerable: false,
             value: function() { 
-                
                 var category = categoriesDepsOrder[this._state.categoryIndex];
                 var categoryState = this._state.categoryState;
                 var keys = categoryState.keys;
                 if (!keys) {
-                    console.log("INCONSISTENCY ERROR")
+                    console.log("INCONSISTENCY ERROR");
+                    return false;
                 } else {
                     categoryState.index++;
                     categoryState.keys = null;
                     if (categoryState.index >= keys.length) {
-                        this._stepToNextCategory();
+                        return this._stepToNextCategory();
                     }
+                    return false;;
                 }
             }    
         },
@@ -242,8 +237,6 @@
         _handleState: {
             value: function() {
 
-                var success = true; 
-
                 var methodForType = {
                     "buffer" : this.handleBuffer,
                     "shader" : this.handleShader,
@@ -255,34 +248,42 @@
                     "node" : this.handleNode,
                     "scene" : this.handleScene
                 };
-
-                while (success && this._state.categoryIndex !== -1) {
+                
+                var success = true;
+                var self = this;
+                while (this._state.categoryIndex !== -1) {
                     var category = categoriesDepsOrder[this._state.categoryIndex];
                     var categoryState = this._state.categoryState;
-                    var self = this;
 
                     var keys = categoryState.keys;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
                     }
-
                     var type = typeForCategory[category];
                     var entryID = keys[categoryState.index];
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
-                        this.abort("ERROR: could not retrieve entry with ID:"+this._state.targetID);
+                        if (this.handleError) {
+                            this.handleError("INCONSISTENCY ERROR: no description found for entry "+entryID);
+                            success = false;
+                            break;
+                        }
                     } else {
-                        //console.log("will handle:"+entryID+" type:"+type);
-
                         if (methodForType[type]) {
-                            success = methodForType[type].call(this, entryID, description, this._state.userInfo);
+                            if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
+                                success = false;
+                                break;
+                            }
                         }
 
-                        if (success) {
-                            this._stepToNextDescription();
-                        }
+                        this._stepToNextDescription();
                     }
                 }
+
+                if (this.handleLoadCompleted) {
+                    this.handleLoadCompleted(success);
+                }
+
             }
         },
 
@@ -427,34 +428,3 @@
     return WebGLTFLoader;
 
 }));
-
-        /* Multiple ready entries to be re-integrated..
-        _readEntries: {
-            enumerable: false,
-            value: function(entryIDs, delegate, userInfo) {
-            
-                var self = this;
-                var count = entryIDs.length;
-                var idx = 0;
-                var allEntries = [];
-                var entryDelegate = {};
-            
-                entryDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    //console.log("readCompleted for entry:"+entryType+" id:"+entry.id);
-                
-                    allEntries[idx++] = entry;
-                    if (idx == count) {
-                        if (delegate) {
-                            delegate.readCompleted("entries", allEntries, userInfo);
-                        }
-                    } else {
-                        self._readEntry(entryIDs[idx], entryDelegate, userInfo);
-                    }                
-                }
-            
-                if (count > 0) 
-                    this._readEntry(entryIDs[0], entryDelegate, userInfo);
-            }
-        },
-        */
-

@@ -29,6 +29,8 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
 
     var RuntimeTFLoader = Object.create(WebGLTFLoader, {
 
+        _scenes: { value: null },  
+
         //----- implements WebGLTFLoader ----------------------------
 
        handleBuffer: {
@@ -207,6 +209,10 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
         handleScene: {
             value: function(entryID, description, userInfo) {
 
+                if (!this._scenes) {
+                    this._scenes = [];
+                }
+
                 if (!description.node) {
                     console.log("ERROR: invalid file required node property is missing from scene");
                     return false;
@@ -220,13 +226,9 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 var nodeEntry = this.getEntry(description.node);
                 
                 scene.rootNode = nodeEntry.entry;
-
+                this._scenes.push(scene);
                 //now build the hirerarchy
                 this.buildNodeHirerachy(nodeEntry);
-
-                if (this.delegate) {
-                    this.delegate.loadCompleted(scene);
-                }
 
                 return true;
             }
@@ -265,6 +267,22 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 }
 
                 return true;
+            }
+        },
+
+        handleLoadCompleted: {
+            value: function(success) {
+                if (this._scenes && this.delegate) {
+                    if (this._scenes.length > 0) {
+                        this.delegate.loadCompleted(this._scenes[0]);
+                    }
+                }
+            }
+        },
+
+        handleError: {
+            value: function(reason) {
+                //TODO: propagate in the delegate
             }
         },
 
