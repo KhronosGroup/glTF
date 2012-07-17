@@ -40,10 +40,8 @@ namespace DAE2JSON
 {    
     std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
     {
-        std::string id = "";
-        
+        std::string id = "";        
         id += type + "_" + JSONExport::JSONUtils::toString(uniqueId.getObjectId());
-        
         return id;
     }
     
@@ -812,7 +810,6 @@ namespace DAE2JSON
             shadersObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             this->_rootJSONObject->setValue("shaders", shadersObject);
         }
-        
         shared_ptr <JSONExport::JSONObject> shaderObject  = static_pointer_cast <JSONExport::JSONObject> (shadersObject->getValue(shaderId));
         
         if (!shaderObject) {
@@ -840,19 +837,29 @@ namespace DAE2JSON
     {
         //get or create if necessary the techniques object
         shared_ptr <JSONExport::JSONObject> techniquesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("techniques"));
+        
+        //compute/retrieve the technique matching the specified common profile (TODO).        
+        //for now we just have one shader available :).. 
+        std::string techniqueName = effectCommon->getDiffuse().isTexture() ? "lambert1" : "lambert0";
+        
+        std::string shaderName = techniqueName; //simplification
+        std::string vs =  shaderName + "Vs";
+        std::string fs =  shaderName + "Fs";
+        
         if (!techniquesObject) {
             techniquesObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             this->_rootJSONObject->setValue(std::string("techniques"), techniquesObject);
-            
-            //take the opportunity of initializing the techniques object to also setup the shaderIdToString map,
-            //this map is just until we have a proper a shader generation
-            this->_shaderIdToShaderString["lambert0Fs"] = lambert0Fs;        
-            this->_shaderIdToShaderString["lambert0Vs"] = lambert0Vs;        
         }
+        if (shaderName == "lambert0") {
+            this->_shaderIdToShaderString[vs.c_str()] = lambert0Vs;        
+            this->_shaderIdToShaderString[fs.c_str()] = lambert0Fs;        
+        } 
+        
+        if (shaderName == "lambert1") {
+            this->_shaderIdToShaderString[vs.c_str()] = lambert1Vs;        
+            this->_shaderIdToShaderString[fs.c_str()] = lambert1Fs;        
+        } 
 
-        //compute/retrieve the technique matching the specified common profile (TODO).        
-        //for now we just have one shader available :).. 
-        std::string techniqueName = "lambert0";
         
         shared_ptr <JSONExport::JSONObject> techniqueObject  = static_pointer_cast <JSONExport::JSONObject> (techniquesObject->getValue(techniqueName));
         
@@ -862,11 +869,6 @@ namespace DAE2JSON
             //if the technique has not been serialized, first thing create the default pass for this technique
             shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             pass->setString("type", "pass");
-            
-            std::string shaderName = techniqueName; //simplification
-            
-            std::string vs =  shaderName + "Vs";
-            std::string fs =  shaderName + "Fs";
             
             this->writeShaderIfNeeded(vs);
             this->writeShaderIfNeeded(fs);
@@ -884,7 +886,6 @@ namespace DAE2JSON
             diffuseColorObject->setString("symbol", "u_diffuseColor");
             inputs->setValue("diffuseColor", diffuseColorObject);
             techniquesObject->setValue(techniqueName, techniqueObject);
-            
         }
         
         return techniqueName;
@@ -897,20 +898,9 @@ namespace DAE2JSON
         
         if (commonEffects.getCount() > 0) {
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
-        
             const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(effectCommon);
-            
             const ColorOrTexture& diffuse = effectCommon->getDiffuse ();
-        
-            float red = 1, green = 1, blue = 1;
-        
-            if (diffuse.isColor()) {
-                const Color& color = diffuse.getColor();
-                red = color.getRed();
-                green = color.getGreen();
-                blue = color.getBlue();
-            }
-
+            
             std::string uniqueId = "";
 #if EXPORT_MATERIALS_AS_EFFECTS        
             uniqueId += "material.";
@@ -919,22 +909,35 @@ namespace DAE2JSON
 #endif
             uniqueId += JSONExport::JSONUtils::toString(effect->getUniqueId().getObjectId());;
             shared_ptr <JSONExport::JSONEffect> cvtEffect(new JSONExport::JSONEffect(uniqueId));
-            
-            float rgb[3];
-            rgb[0] = red;
-            rgb[1] = green;
-            rgb[2] = blue;
-            cvtEffect->setRGBColor(rgb);
-            
+
             shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            
-            shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
-            
-            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[0])));
-            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[1])));
-            diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)rgb[2])));
-            
-            inputs->setValue("diffuseColor", diffuseColorArray);
+
+            float red = 1, green = 1, blue = 1;
+            bool hasDiffuseTexture = diffuse.isTexture();
+            if (!hasDiffuseTexture) {
+                const Color& color = diffuse.getColor();
+                            
+                red = color.getRed();
+                green = color.getGreen();
+                blue = color.getBlue();
+                
+                shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
+                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)red)));
+                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)green)));
+                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)blue)));
+                inputs->setValue("diffuseColor", diffuseColorArray);
+                
+            } else {
+                const Texture&  diffuseTexture = diffuse.getTexture();
+                const SamplerPointerArray& samplers = effectCommon->getSamplerPointerArray();
+                const Sampler* sampler = samplers[diffuseTexture.getSamplerId()]; 
+                const UniqueId& imageUID = sampler->getSourceImage();
+                
+                COLLADABU::URI imageURI = this->_imageIdToImageURL[uniqueIdWithType("image",imageUID)];               
+                
+                //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
+                inputs->setString("diffuseTexture",imageURI.getPathFile());
+            }
             
             cvtEffect->setInputs(inputs);
             cvtEffect->setTechniqueID(techniqueID);
@@ -1034,7 +1037,8 @@ namespace DAE2JSON
 	//--------------------------------------------------------------------
 	bool DAE2JSONWriter::writeImage( const COLLADAFW::Image* image )
 	{
-		return true;        
+        this->_imageIdToImageURL[uniqueIdWithType("image",image->getUniqueId()) ] = image->getImageURI();       
+        return true;        
 	}
     
 	//--------------------------------------------------------------------

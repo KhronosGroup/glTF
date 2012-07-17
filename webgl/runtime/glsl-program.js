@@ -337,7 +337,10 @@ define(["dependencies/gl-matrix"], function() {
                         case GL.FLOAT_VEC4:
                             GL.uniform4fv(location,value);
                             break;
-                    
+                        case GL.INT:
+                        case GL.SAMPLER_2D:
+                            GL.uniform1i(location, value);
+                            break;
                     }
                 }
                 this.pendingCommits = [];

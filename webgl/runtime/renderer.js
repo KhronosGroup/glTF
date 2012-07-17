@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-matrix"], function(GLSLProgram, ResourceManager) {
+define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-matrix", "dependencies/webgl-texture-utils"], function(GLSLProgram, ResourceManager) {
 
     var Renderer = Object.create(Object, {
 
@@ -200,6 +200,23 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
             }
         },
+
+        textureDelegate: {
+            value: {
+                handleError: function(errorCode, info) {
+                    // FIXME: report error
+                    console.log("ERROR:textureDelegate:"+errorCode+" :"+info);
+                },
+        
+                //should be called only once
+                convert: function (resource, ctx) {
+                    return resource;
+                },
+        
+                resourceAvailable: function (glResource, ctx) {
+                }
+            }
+        },
     
         //Debug test
         isMat4Equals: {
@@ -252,7 +269,9 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
                 var program =  renderVertices ? this.debugProgram : this.bindedProgram;
-                var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal" };
+
+                //FIXME: remove that association
+                var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
                 //this.bindedProgram = program;               
 
                 //var mvpMatrix = mat4.create();
@@ -269,6 +288,8 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
                  }
                 */
+
+                //FIXME: should got through inputs without hardcoded symbols
                 if (program.getLocationForSymbol("u_projMatrix")) {
                     var currentProjectionMatrix = program.getValueForSymbol("u_projMatrix");
                     if (currentProjectionMatrix) {
@@ -301,9 +322,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                         program.setValueForSymbol("u_mvMatrix",worldMatrix);
                     }
                 }
-            
-                
-            
+                            
                 if (program.getLocationForSymbol("u_diffuseColor")) {
                     var color = primitive.material.inputs.diffuseColor;
                     var step = primitive.step * primitive.step;
@@ -323,11 +342,30 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                     }
                 }
 
+                if (program.getLocationForSymbol("u_diffuseTexture")) {
+                    var image = primitive.material.inputs.diffuseTexture;
+                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
+                    if (texture) {
+
+                        gl.activeTexture(gl.TEXTURE0);
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+                        var samplerLocation = program.getValueForSymbol("u_diffuseTexture");
+                        if (typeof samplerLocation === "undefined") {
+                            program.setValueForSymbol("u_diffuseTexture", 0);
+                        }
+                    }
+                }
                 program.commit(gl);
             
                 var available = true;
                 //Bind Attribute
                 primitive.vertexAttributes.forEach( function(vertexAttribute) {
+
                     var accessor = vertexAttribute.accessor;
                     var symbol = materialSemantic[vertexAttribute.semantic];
                     if (symbol) {
@@ -353,7 +391,6 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                                     gl.enableVertexAttribArray(attributeLocation);
                                 } 
                                 gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
-
                                 if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
                                    gl.drawArrays(gl.POINTS, 0, accessor.count);
                                 }
@@ -398,6 +435,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                     var glslProgram = Object.create(GLSLProgram);
                     glslProgram.initWithShaders( resource );
                     if (!glslProgram.build(ctx)) {
+                        console.log(resource)
                         console.log(glslProgram.errorLogs);                     
                     } 
 

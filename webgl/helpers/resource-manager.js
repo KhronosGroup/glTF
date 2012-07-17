@@ -705,6 +705,29 @@
             }
         },
 
+        _handleImageLoading: {
+            value: function(image, delegate, ctx) {
+                //TODO: unify with binaries
+                var resourceStatus = this._resourcesStatus[image.id];
+                var status = null;
+                if (resourceStatus) {
+                    if (resourceStatus.status === "loading" )
+                        return;
+                }
+                this._resourcesStatus[image.id] = { status: "loading" };
+
+                var self = this;
+                var textureLoader = new TextureUtil.TextureLoader(ctx);
+                var texture = textureLoader.load(image.description.path, function(texture) {
+                    delete self._resourcesStatus[image.id];
+
+                    var convertedResource = delegate.convert(texture, ctx);
+                    self._storeResource(image.id, convertedResource);
+                    delegate.resourceAvailable(convertedResource, ctx);
+                });
+            }
+        },
+
         getResource: {
                 value: function(resource, delegate, ctx) {
 
@@ -719,6 +742,8 @@
                     this._handleProgramLoading(resource, delegate, ctx);
                 } else if (resource.type === "shader") {
                     this._handleShaderLoading(resource, delegate, ctx);
+                } else if (resource.type === "image") {
+                    this._handleImageLoading(resource, delegate, ctx);
                 } else {
                     //FIXME: better testing
                     this._handleTypedArrayLoading(resource, delegate, ctx);

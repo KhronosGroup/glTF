@@ -83,10 +83,18 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 this.storeEntry(entryID, material, description);
 
                 material.inputs = description.inputs;
-
                 var techniqueEntry = this.getEntry(description.technique);
                 if (techniqueEntry) {
                     material.technique = techniqueEntry.entry;
+
+                    //FIXME:HACK: for the moment we have a short-cut for texture, we'll get rid of this when we have a proper texture/image object coming from JSON
+                    var diffuseTexture = material.inputs["diffuseTexture"];
+                    if (diffuseTexture) {
+                        var imageResource = Object.create(ResourceDescription).init(diffuseTexture, { path: diffuseTexture });
+                        imageResource.type = "image";
+                        material.inputs["diffuseTexture"] = imageResource;
+                    }
+
                     return true;
                 } else {
                     console.log("ERROR: invalid file, cannot find referenced technique:"+description.technique);

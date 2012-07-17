@@ -267,9 +267,9 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                     Object.defineProperty(this.inputs, property, {
                         get: function() { return self.inputs[privateName]; },
                         set: function(value) {  
-                            self.inputWillChange.call(self, property, value)                                            
+                            self.inputWillChange.call(self, property, value); 
                             self.inputs[privateName] = value;
-                            self.inputDidChange.call(self, property)                
+                            self.inputDidChange.call(self, property);                
                         }
                     }); 
                 }
@@ -407,7 +407,7 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                     engine.renderer.projectionMatrix = this.inputs.viewPoint.cameras[0].projection.matrix;
                     this.inputs.scene.rootNode.apply( function(node, parent, parentTransform) {
                         var primitives = self._nodeIDToPrimitives[node.id];
-                        if (primitives && parent) {
+                        if (primitives) {
                             var primitivesWithParent = primitives[parent.id];
                             mat4.multiply(parentTransform, node.transform , primitivesWithParent.worldMatrix);
                             mat3.transpose(mat4.toInverseMat3(primitivesWithParent.worldMatrix), primitivesWithParent.normalMatrix);

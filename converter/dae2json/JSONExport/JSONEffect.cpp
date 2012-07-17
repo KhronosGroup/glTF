@@ -64,15 +64,4 @@ namespace JSONExport
         return this->_inputs;
     }
     
-    //temporary
-    void JSONEffect::setRGBColor(float* rgb) {
-        this->_diffuseColor[0] = rgb[0];
-        this->_diffuseColor[1] = rgb[1];
-        this->_diffuseColor[2] = rgb[2];
-    }
-
-    float* JSONEffect::getRGBColor() {
-        return this->_diffuseColor;
-    }
-
 }
