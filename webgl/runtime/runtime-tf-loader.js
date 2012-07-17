@@ -46,6 +46,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
             value: function(entryID, description, userInfo) {
                 var shader = Object.create(ResourceDescription).init(entryID, description);
                 shader.id = entryID;
+                shader.type = "shader"; //FIXME should I pass directly the description ? add a type property in resource-description ? (probably first solution...)
                 this.storeEntry(entryID, shader, description);
                 return true;
             }
@@ -58,7 +59,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 technique.id = entryID;
                 this.storeEntry(entryID, technique, description);
 
-                technique.rootPass = Object.create(Pass);
+                technique.rootPass = Object.create(Pass).init();
                 technique.rootPass.id = entryID+"_"+rootPassID;
                 var rootPassID = description.pass;
                 var passDescription = description[rootPassID];
@@ -69,7 +70,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
                 programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
                 technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
-                
+                technique.rootPass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
                 return true;
             }
         },

@@ -323,7 +323,7 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                                                 var pass = this.passes[technique.rootPass.id];
 
                                                 if (!pass) {
-                                                    this.passes[technique.rootPass.id] = pass = Object.create(Pass).init();
+                                                    this.passes[technique.rootPass.id] = pass = technique.rootPass;
                                                 }
                                                 var primitiveInfo = 
                                                 {   "primitive" : primitive , 

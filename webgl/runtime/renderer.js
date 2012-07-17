@@ -251,8 +251,9 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
-                var program =  renderVertices ? this.debugProgram : this.lambertProgram;
+                var program =  renderVertices ? this.debugProgram : this.bindedProgram;
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal" };
+                //this.bindedProgram = program;               
 
                 //var mvpMatrix = mat4.create();
                 //mat4.multiply(projectionMatrix, worldMatrix, mvpMatrix);
@@ -303,7 +304,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
             
                 
             
-                if (program.getLocationForSymbol("color")) {
+                if (program.getLocationForSymbol("u_diffuseColor")) {
                     var color = primitive.material.inputs.diffuseColor;
                     var step = primitive.step * primitive.step;
                     var oneMinusPrimitiveStep = 1 - (1 * step);
@@ -311,18 +312,17 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                                     ((oneMinusPrimitiveStep) + (step * color[1])),
                                     ((oneMinusPrimitiveStep) + (step * color[2]))];
 
-                    var currentColor = program.getValueForSymbol("color");
+                    var currentColor = program.getValueForSymbol("u_diffuseColor");
                     if (currentColor) {
                         if (currentColor !== colorStep) {
                             if (!this.isVec3Equals(currentColor,colorStep))
-                                program.setValueForSymbol("color",colorStep);
+                                program.setValueForSymbol("u_diffuseColor",colorStep);
                         }
                     } else {
-                        program.setValueForSymbol("color",colorStep);
+                        program.setValueForSymbol("u_diffuseColor",colorStep);
                     }
                 }
 
-                this.bindedProgram = program;               
                 program.commit(gl);
             
                 var available = true;
@@ -366,9 +366,6 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                     //Just disable what is not required here…
                     if (available) {
                         for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
-                            if (i === 0) {
-                                debugger;
-                            }
                             gl.disableVertexAttribArray(i);
                         }
                         if (primitive.step < 1.0)
@@ -388,12 +385,42 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
             }
         },
 
+        programDelegate: {
+            value: {
+                handleError: function(errorCode, info) {
+                    // FIXME: report error
+                    console.log("ERROR:programDelegate:"+errorCode+" :"+info);
+                },
+        
+                //should be called only once
+                convert: function (resource, ctx) {
+                    var gl = ctx;
+                    var glslProgram = Object.create(GLSLProgram);
+                    glslProgram.initWithShaders( resource );
+                    if (!glslProgram.build(ctx)) {
+                        console.log(glslProgram.errorLogs);                     
+                    } 
+
+                    return glslProgram;
+                },
+        
+                resourceAvailable: function (glResource, ctx) {
+                }
+            }
+        },
+
         renderPass: {
             value: function(pass) {
                 var primitives = pass.primitives;
                 var count = primitives.length;
-                for (var i = 0 ; i < count ; i++) {
-                    this.renderPrimitive(primitives[i]);
+                if (pass.program) {
+                    var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, this.webGLContext);
+                    if (glProgram) {
+                        this.bindedProgram = glProgram;
+                        for (var i = 0 ; i < count ; i++) {
+                            this.renderPrimitive(primitives[i]);
+                        }
+                    }
                 }
             }
         }

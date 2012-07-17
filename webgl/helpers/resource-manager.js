@@ -399,6 +399,7 @@
             enumerable: false,
             value: function(resourceID, resource) {
                 if (!resourceID) {
+                    debugger;
                     console.log("ERROR: entry does not contain id, cannot store");
                     return;
                 }
@@ -441,42 +442,37 @@
                     delegate.handleError(WebGLTFResourceManager.INVALID_TYPE, null);
                     return;
                 }
-                if (type === this.ARRAY_BUFFER) {
-                    if (!path) {
-                        delegate.handleError(WebGLTFResourceManager.INVALID_PATH);
-                        return;
-                    }
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', path, true);
-                    xhr.responseType = 'arraybuffer';
-                    if (request.range) {
-                        var header = "bytes=" + request.range[0] + "-" + (request.range[1] - 1);
-                        xhr.setRequestHeader("Range", header);
-                    }
-                    //if this is not specified, 1 "big blob" scenes fails to load.
-                    xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");                                                
-                    xhr.onload = function(e) {
-                        if ((this.status == 200) || (this.status == 206)) {
-                            if (request.kind === "multi-parts") {
-                                request.requests.forEach( function(req_) {
-                                    var subArray = this.response.slice(req_.range[0] - request.range[0], req_.range[1] - request.range[0]);
-                                    delegate.resourceAvailable(req_, subArray);
 
-                                }, this);
-                            } else {
-                                delegate.resourceAvailable(request, this.response);
-                            }
-
-                        } else {
-                            delegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
-                        }
-                    };
-                    xhr.send(null);
-                       
-                } else {
-                    delegate.handleError(WebGLTFResourceManager.INVALID_TYPE, type);
+                if (!path) {
+                    delegate.handleError(WebGLTFResourceManager.INVALID_PATH);
+                    return;
                 }
+                    
+                var xhr = new XMLHttpRequest();
+                 xhr.open('GET', path, true);
+                xhr.responseType = (type === this.ARRAY_BUFFER) ? "arraybuffer" : "text";
+                if (request.range) {
+                    var header = "bytes=" + request.range[0] + "-" + (request.range[1] - 1);
+                    xhr.setRequestHeader("Range", header);
+                }
+                //if this is not specified, 1 "big blob" scenes fails to load.
+                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");                                                
+                xhr.onload = function(e) {
+                    if ((this.status == 200) || (this.status == 206)) {
+                        if (request.kind === "multi-parts") {
+                            request.requests.forEach( function(req_) {
+                                var subArray = this.response.slice(req_.range[0] - request.range[0], req_.range[1] - request.range[0]);
+                                delegate.resourceAvailable(req_, subArray);
+                            }, this);
+                        } else {
+                            delegate.resourceAvailable(request, this.response);
+                        }
+
+                    } else {
+                        delegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
+                    }
+                };
+                xhr.send(null);
             }
         },
     
@@ -516,7 +512,7 @@
                 }
  
                 //if (this._requestTree) {
-                if (this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
+                if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type !== "text")) {
                     if (!status) {     
                         //var listNode = Object.create(LinkedListNode);                
                         //listNode.init(request);
@@ -644,16 +640,52 @@
             }
         },
 
+        //TODO: move this in the renderer, to do so, add dynamic handler to the resource manager.
+        shaderDelegate: {
+            value: {
+                handleError: function(errorCode, info) {
+                    console.log("ERROR:shaderDelegate:"+errorCode+" :"+info);
+                },
+        
+                convert: function (resource, ctx) {
+                    return resource;
+                },
+        
+                resourceAvailable: function (resource, ctx) {
+                    //FIXME: ... 
+                    ctx.sources[ctx.stage] = resource;
+                    var self = this;
+                    if (ctx.sources["x-shader/x-fragment"] && ctx.sources["x-shader/x-vertex"]) {
+                        var delegate = ctx.programCtx.delegate;
+                        var convertedResource = delegate.convert(ctx.sources, ctx.programCtx.ctx);
+                        ctx.programCtx.resourceManager._storeResource(ctx.programCtx.id, convertedResource);
+                        delegate.resourceAvailable(convertedResource, ctx.programCtx.ctx);
+                    }               
+                }
+            }
+        },
 
         _handleProgramLoading: {
-            value: function(program) {
+            value: function(program, delegate, ctx) {
+                var programCtx = { "delegate" : delegate, "ctx"  : ctx, "resourceManager" : this, "id" : program.id };
 
+                var sources = {};
+                var fsCtx = { stage: "x-shader/x-fragment", "sources" : sources,  "programCtx" : programCtx };
+                var vsCtx = { stage: "x-shader/x-vertex", "sources" : sources,  "programCtx" : programCtx };
+
+                this.getResource(program.description["x-shader/x-fragment"], this.shaderDelegate, fsCtx);
+                this.getResource(program.description["x-shader/x-vertex"], this.shaderDelegate, vsCtx);
             }
         },
 
         _handleShaderLoading: {
-            value: function(program) {
-
+            value: function(shader, delegate, ctx) {
+                this._handleRequest({   "id":shader.id,
+                                            "type" : "text",
+                                            "path" : shader.description.path,
+                                            "delegate" : delegate,
+                                            "ctx" : ctx,
+                                            "kind" : "single-part" }, null);
             }
         },
 
