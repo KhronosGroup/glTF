@@ -61,8 +61,9 @@
 
         canMergeRequest: {
             value: function(request) {
-                return  ((request.range[0] === this.range[1]) ||
-                         ((request.range[1]) === this.range[0]));
+                return  (((request.range[0] === this.range[1]) ||
+                         ((request.range[1]) === this.range[0])) && 
+                         (request.type ===  this.type));
             }
         },
 
@@ -72,9 +73,11 @@
                     this.requests.push(request);
                     this.range = [request.range[0], request.range[1]];
                 } else {
+                    //are we merging at end ?
                     if (request.range[0] === this.range[1]) {
                         this.requests.push(request);
                         this.range[1] = request.range[1];
+                    //or at the beginning ?
                     } else if (request.range[1] === this.range[0]) {
                         this.requests.unshift(request);
                         this.range[0] = request.range[0];
@@ -87,10 +90,22 @@
 
         mergeRequests: {
             value: function(requests) {
+                if (this.range) {
+                    if (requests[0].range[1] < this.range[0]) {
+                        for (var i = requests.length-1 ; i >= 0 ; i--) {
+                            this.mergeRequest(requests[i]);
+                        }
+                    } else {
+                        for (var i = 0 ; i < requests.length ; i++) {
+                            this.mergeRequest(requests[i]);
+                        }
+                    }
+                } else {
+                    requests.forEach( function(request) {
+                        this.mergeRequest(request);
+                    }, this);
+                }
 
-                requests.forEach(function(request) {
-                    this.mergeRequest(request);
-                }, this);
             }
         },
 
@@ -271,6 +286,7 @@
                         return treeNode;
                     }
                 } else {
+                    debugger;
                     console.log("ERROR: should not reach");
                 }
             }
