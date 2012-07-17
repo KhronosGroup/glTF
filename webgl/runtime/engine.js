@@ -24,25 +24,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/renderer","runtime/pass", "runtime/command-queue"], function(Renderer, Pass, CommandQueue) {
+define(["runtime/renderer","runtime/pass"], function(Renderer, Pass) {
 
     var Engine = Object.create(Object, {
-
-        _commandQueue: { value: null, writable: true },
 
         _renderer: { value: null, writable: true },
 
         _rootPass: { value: null, writable: true },
     
-        commandQueue: {
-            get: function() {
-                return this._commandQueue;
-            },
-            set: function(value) {
-                this._commandQueue = value;
-            }
-        },
-
         rootPass: {
             get: function() {
                 return this._rootPass;
@@ -66,7 +55,6 @@ define(["runtime/renderer","runtime/pass", "runtime/command-queue"], function(Re
                 this.renderer = Object.create(Renderer);
                 this.rootPass = Object.create(Pass);
                 this.rootPass.init();
-                this.commandQueue = Object.create(CommandQueue);
                 this.renderer.webGLContext = webGLContext;      
                 return this;
             }
@@ -75,9 +63,7 @@ define(["runtime/renderer","runtime/pass", "runtime/command-queue"], function(Re
         render: {
             value: function() {
                 this.renderer.resetStates();
-                this.commandQueue.reset();
                 this.rootPass.execute(this);
-                this.commandQueue.execute(this.renderer);
             }
         }
 

@@ -44,7 +44,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
             }
         },
-    
+
         _debugProgram: { value: null, writable: true },
     
         _lambertProgram: { value: null, writable: true },
@@ -53,6 +53,17 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
     
         _webGLContext: { value : null, writable: true },
     
+        _projectionMatrix: { value : null, writable: true },
+
+        projectionMatrix: {
+            get: function() {
+                return this._projectionMatrix;
+            },
+            set: function(value) {
+                this._projectionMatrix = value;
+            }
+        },
+
         debugProgram: {
             get: function() {            
             
@@ -116,7 +127,6 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 return this._lambertProgram;
             }
         },
-
 
         webGLContext: {
             get: function() {
@@ -237,7 +247,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
             value: function(primitiveDescription) {
                 var renderVertices = false;
                 var worldMatrix = primitiveDescription.worldMatrix;
-                var projectionMatrix = primitiveDescription.projectionMatrix;
+                var projectionMatrix = this.projectionMatrix;
                 var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
@@ -376,7 +386,18 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 this._lastMaxEnabledArray = newMaxEnabledArray;
                 return available;
             }
+        },
+
+        renderPass: {
+            value: function(pass) {
+                var primitives = pass.primitives;
+                var count = primitives.length;
+                for (var i = 0 ; i < count ; i++) {
+                    this.renderPrimitive(primitives[i]);
+                }
+            }
         }
+
     });
     
         return Renderer;

@@ -44,17 +44,8 @@ define(["runtime/base", "runtime/resource-description", "runtime/pass", "runtime
             set: function(value) {
                 this._rootPass = value;
             }
-        },
-    
-        read: {
-            enumerable: true,
-            value: function(entryID, techniqueDescription, delegate, reader, userInfo) {
-                this.rootPass = Object.create(Pass);
-                this.rootPass.read(techniqueDescription.pass, techniqueDescription[techniqueDescription.pass], delegate, reader, userInfo);
-                delegate.readCompleted("technique", this, userInfo);
-            }
         }
-
+    
     });
     
         return Technique;

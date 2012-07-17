@@ -143,16 +143,18 @@
             }
         },
 
-        _resolveBufferPaths: {
-            value: function() {
-                var buffers = this.json.buffers;
-                if (buffers) {
-                    var bufferKeys = Object.keys(buffers);
-                    bufferKeys.forEach( function(bufferKey) {
-                        var buffer = buffers[bufferKey];
-                        buffer.path = this.resolvePathIfNeeded(buffer.path);
-                    }, this);
-                }
+        _resolvePathsForCategories: {
+            value: function(categories) {
+                categories.forEach( function(category) {
+                    var descriptions = this.json[category];
+                    if (descriptions) {
+                        var descriptionKeys = Object.keys(descriptions);
+                        descriptionKeys.forEach( function(descriptionKey) {
+                            var description = descriptions[descriptionKey];
+                            description.path = this.resolvePathIfNeeded(description.path);
+                        }, this);
+                    }
+                }, this);
             }
         },
 
@@ -169,7 +171,7 @@
             set: function(value) {
                 if (this._json !== value) {
                     this._json = value; 
-                    this._resolveBufferPaths();                   
+                    this._resolvePathsForCategories(["buffers", "shaders"]);                   
                 }
             }
         },
@@ -248,7 +250,7 @@
                     "node" : this.handleNode,
                     "scene" : this.handleScene
                 };
-                
+
                 var success = true;
                 var self = this;
                 while (this._state.categoryIndex !== -1) {

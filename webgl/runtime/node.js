@@ -167,19 +167,25 @@ define(["runtime/base","runtime/utilities", "dependencies/gl-matrix"], function(
                 this._properties["lights"] = value;
             }
         },
-    
-        apply: {
-            value: function( callback, recurse, ctx) {
+
+        _apply: {
+            value: function( callback, recurse, parent, ctx) {
     
                 if (callback) {
-                    ctx = callback(this, ctx);
+                    ctx = callback(this, parent, ctx);
                 
                     if (recurse) {
                         this.children.forEach( function(node) {
-                            node.apply(callback, recurse, ctx);
+                            node._apply(callback, recurse, this, ctx);
                         }, this);
                     }
                 }
+            }
+        },
+    
+        apply: {
+            value: function( callback, recurse, ctx) {
+                this._apply(callback, recurse, null, ctx);
             }
         }
 

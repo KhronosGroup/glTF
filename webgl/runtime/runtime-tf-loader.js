@@ -59,7 +59,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 this.storeEntry(entryID, technique, description);
 
                 technique.rootPass = Object.create(Pass);
-
+                technique.rootPass.id = entryID+"_"+rootPassID;
                 var rootPassID = description.pass;
                 var passDescription = description[rootPassID];
                 var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
@@ -68,8 +68,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 var programs = {};
                 programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
                 programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
-
-                technique.rootPass.program = Object.create(ResourceDescription).init(rootPassID+"_program", programs);
+                technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
                 
                 return true;
             }

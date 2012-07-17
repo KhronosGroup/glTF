@@ -92,7 +92,7 @@ define(["runtime/engine", "runtime/utilities", "dependencies/gl-matrix"], functi
                         var ctx = mat4.identity();
                         var node = value.rootNode;
                         var sceneBBox = value.rootNode.boundingBox;
-                        value.rootNode.apply( function(node, parentTransform) {
+                        value.rootNode.apply( function(node, parent, parentTransform) {
                             var modelMatrix = mat4.create();
                             mat4.multiply( parentTransform, node.transform, modelMatrix);
                 
