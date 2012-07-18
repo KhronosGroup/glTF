@@ -220,16 +220,22 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
         
         _lastMaxEnabledArray: { value: 0, writable: true },
     
+        _blend: { value: false },
+
         setState: {
-            value: function(stateID, flag) {
+            value: function(stateID, flag, force) {
+                var gl = this.webGLContext;
                 switch (stateID) {
-                    case this.webGLContext.BLEND:
-                        if (flag) {
-                            this.webGLContext.enable(this.webGLContext)
-                        } else {
-                            this.webGLContext.disable(this.webGLContext)
+                    case gl.BLEND:
+                        if ((this._blend !== flag) || force) {
+                            if (flag) {
+                                gl.enable(gl.BLEND);
+                            } else {
+                                gl.disable(gl.BLEND);                               
+                            }
+                            this._blend = flag;
                         }
-                        break; 
+                    break; 
 
                     default:
                     break;
@@ -247,7 +253,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
                 this._lastMaxEnabledArray = -1;
                 this.bindedProgram = null;
-                this.setState(this.BLEND, true);
+                this.setState(this.BLEND, true, true);
             }
         },
     
@@ -407,10 +413,10 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
 
                         if (pass.states) {
                             if (pass.states.BLEND) {
-                                gl.enable(gl.BLEND);
+                                this.setState(gl.BLEND, true);
                                 gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                             } else {
-                                gl.disable(gl.BLEND);
+                                this.setState(gl.BLEND, false);
                             }
                         }
 
