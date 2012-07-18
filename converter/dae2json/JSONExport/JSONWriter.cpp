@@ -103,6 +103,12 @@ namespace JSONExport
             {   
                 double value = number->getDouble();
                 this->_writer->Double(value);
+                break;
+            }
+            case JSONNumber::JSONNumberType::BOOL:
+            {   
+                bool value = number->getBool();
+                this->_writer->Bool(value);
             }
                 break;
             default:

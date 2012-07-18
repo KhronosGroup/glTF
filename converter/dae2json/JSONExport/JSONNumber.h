@@ -39,12 +39,14 @@ namespace JSONExport
             NOT_A_NUMBER = 0,
             UNSIGNED_INT32 = 1,
             INT32 = 2,
-            DOUBLE = 3 
+            DOUBLE = 3,
+            BOOL = 4
         };
                 
         explicit JSONNumber(unsigned int value);
         explicit JSONNumber(int value);
         explicit JSONNumber(double value);
+        explicit JSONNumber(bool value);
 
         virtual ~JSONNumber();
         
@@ -53,6 +55,7 @@ namespace JSONExport
         unsigned int getUnsignedInt32();
         int getInt32();
         double getDouble();
+        bool getBool();
         
         JSONNumber::JSONNumberType getType();
 

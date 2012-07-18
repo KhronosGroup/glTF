@@ -42,6 +42,14 @@ define(["dependencies/gl-matrix"], function() {
         PROJECTION_MATRIX: { value: "PROJECTION_MATRIX" },
         MODELVIEW_PROJECTION_MATRIX: { value: "MODELVIEW_PROJECTION_MATRIX" },
 
+        _GLTypes:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
+        },
+
+
         //FIXME: shaders should be private
         _shaders:
         {
@@ -293,11 +301,59 @@ define(["dependencies/gl-matrix"], function() {
 
         setValueForSymbol: {
             value: function(symbol,value)  {
+                var existingValue = this.symbolToValue[symbol];
+                var type = this.getTypeForSymbol(symbol);
+                var GL = this._GLTypes;
+                if ((typeof existingValue !== "undefined") && (existingValue !== "null")) {
+                    if (type === GL.FLOAT_MAT4) {
+                        if (mat4.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_MAT3) {
+                        if (mat3.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_VEC3) {
+                        if (vec3.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_VEC4) {
+                        if (vec4.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                }
+
                 if (this.symbolToActiveInfo[symbol] !== null) {
                     if (this.pendingCommits.indexOf(symbol) === -1) {
                         this.pendingCommits.push(symbol);
                     }
                 }
+
+                if ((typeof value !== "undefined") && (value !== "null")) {
+                    var temp;
+                    if (type === GL.FLOAT_MAT4) {
+                        temp = mat4.create();
+                        value = mat4.set(value,temp);
+
+                    }
+                    if (type === GL.FLOAT_MAT3) {
+                        temp = mat3.create();
+                        value = mat3.set(value,temp);
+                    }
+                    if (type === GL.FLOAT_VEC3) {
+                        temp = vec3.create();
+                        value = vec3.set(value,temp);
+                    }
+                    if (type === GL.FLOAT_VEC4) {
+                        temp = vec4.create();
+                        value = vec4.set(value,temp);
+                    }
+                }
+
                 this.symbolToValue[symbol] = value;
             }
         },
@@ -317,7 +373,7 @@ define(["dependencies/gl-matrix"], function() {
                     var type = this.getTypeForSymbol(symbol);
                     var location = GL.getUniformLocation(this.GLProgram,symbol);
                     var value = this.getValueForSymbol(symbol);
-            
+                    
                     switch (type) {
                         case GL.FLOAT_MAT2:
                             GL.uniformMatrix2fv(location , false, value);
@@ -412,6 +468,12 @@ define(["dependencies/gl-matrix"], function() {
                     this.attributeSymbols = [];
                     this.symbolToSemantic = {};
                     this.semanticToSymbol = {};
+                    this._GLTypes = {
+                        "FLOAT_MAT4" : GL.FLOAT_MAT4,
+                        "FLOAT_MAT3" : GL.FLOAT_MAT3,
+                        "FLOAT_VEC3" : GL.FLOAT_VEC3,
+                        "FLOAT_VEC4" : GL.FLOAT_VEC4
+                    }
 
                     var currentProgram = GL.getParameter( GL.CURRENT_PROGRAM );
                     GL.useProgram(this.GLProgram);

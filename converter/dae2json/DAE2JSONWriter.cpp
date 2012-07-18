@@ -38,6 +38,18 @@
 
 namespace DAE2JSON
 {    
+    float getTransparency(const COLLADAFW::EffectCommon* effectCommon)
+    {
+        //super naive for now, also need to check sketchup work-around
+        return 1. - effectCommon->getOpacity().getColor().getAlpha();
+    }
+    
+    float isOpaque(const COLLADAFW::EffectCommon* effectCommon)
+    {
+        return getTransparency(effectCommon)  >= 1;
+    }
+    
+    
     std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
     {
         std::string id = "";        
@@ -836,11 +848,24 @@ namespace DAE2JSON
     const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon)
     {
         //get or create if necessary the techniques object
-        shared_ptr <JSONExport::JSONObject> techniquesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("techniques"));
-        
+        shared_ptr <JSONExport::JSONObject> techniquesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("techniques"));        
         //compute/retrieve the technique matching the specified common profile (TODO).        
         //for now we just have one shader available :).. 
-        std::string techniqueName = effectCommon->getDiffuse().isTexture() ? "lambert1" : "lambert0";
+        std::string techniqueName;
+                
+        if (effectCommon->getDiffuse().isTexture()) {
+            if (!isOpaque(effectCommon)) {
+                techniqueName = "lambert3";
+            } else {
+                techniqueName = "lambert1";
+            }
+        } else {
+            if (!isOpaque(effectCommon)) {
+                techniqueName = "lambert2";
+            } else {
+                techniqueName = "lambert0";
+            }
+        }
         
         std::string shaderName = techniqueName; //simplification
         std::string vs =  shaderName + "Vs";
@@ -860,6 +885,15 @@ namespace DAE2JSON
             this->_shaderIdToShaderString[fs.c_str()] = lambert1Fs;        
         } 
 
+        if (shaderName == "lambert2") {
+            this->_shaderIdToShaderString[vs.c_str()] = lambert2Vs;        
+            this->_shaderIdToShaderString[fs.c_str()] = lambert2Fs;        
+        } 
+
+        if (shaderName == "lambert3") {
+            this->_shaderIdToShaderString[vs.c_str()] = lambert3Vs;        
+            this->_shaderIdToShaderString[fs.c_str()] = lambert3Fs;        
+        } 
         
         shared_ptr <JSONExport::JSONObject> techniqueObject  = static_pointer_cast <JSONExport::JSONObject> (techniquesObject->getValue(techniqueName));
         
@@ -869,6 +903,14 @@ namespace DAE2JSON
             //if the technique has not been serialized, first thing create the default pass for this technique
             shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             pass->setString("type", "pass");
+            
+            shared_ptr <JSONExport::JSONObject> states = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            pass->setValue("states", states);
+            if (!isOpaque(effectCommon)) {
+                states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)true)));
+            } else {
+                states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)false)));
+            }
             
             this->writeShaderIfNeeded(vs);
             this->writeShaderIfNeeded(fs);
@@ -937,6 +979,10 @@ namespace DAE2JSON
                 
                 //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
                 inputs->setString("diffuseTexture",imageURI.getPathFile());
+            }
+            
+            if (!isOpaque(effectCommon)) {
+                inputs->setValue("transparency", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)getTransparency(effectCommon))));
             }
             
             cvtEffect->setInputs(inputs);

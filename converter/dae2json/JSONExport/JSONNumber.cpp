@@ -55,6 +55,14 @@ namespace JSONExport
         this->_value = malloc(sizeof(double));
         memcpy(this->_value, &value, sizeof(double));
     }
+
+    JSONNumber::JSONNumber(bool value):
+    JSONValue(JSONExport::NUMBER),
+    _type(JSONNumberType::BOOL)        
+    {
+        this->_value = malloc(sizeof(bool));
+        memcpy(this->_value, &value, sizeof(bool));
+    }
     
     JSONNumber::~JSONNumber() 
     {
@@ -86,7 +94,14 @@ namespace JSONExport
             memcpy(&value, this->_value, sizeof(double));
         return value;
     }      
-    
+
+    bool JSONNumber::getBool() {
+        bool value = 0;
+        if (this->_type == JSONNumberType::BOOL)
+            memcpy(&value, this->_value, sizeof(bool));
+        return value;
+    }      
+
     JSONNumber::JSONNumberType JSONNumber::getType()
     {
         return this->_type;

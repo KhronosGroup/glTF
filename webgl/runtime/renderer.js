@@ -217,36 +217,26 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
             }
         },
+        
+        _lastMaxEnabledArray: { value: 0, writable: true },
     
-        //Debug test
-        isMat4Equals: {
-            value: function(matA, matB) {            
-                if (matA === matB)
-                    return true;
-                return mat4.equal(matA,matB);
+        setState: {
+            value: function(stateID, flag) {
+                switch (stateID) {
+                    case this.webGLContext.BLEND:
+                        if (flag) {
+                            this.webGLContext.enable(this.webGLContext)
+                        } else {
+                            this.webGLContext.disable(this.webGLContext)
+                        }
+                        break; 
+
+                    default:
+                    break;
+                }
             }
         },
 
-        isMat3Equals: {
-            value: function(matA, matB) {
-        
-                if (matA === matB)
-                    return true;
-                return mat3.equal(matA,matB);
-            }
-        },
-    
-        isVec3Equals: {
-            value: function(vecA, vecB) {
-        
-                if (vecA === vecB)
-                    return true;
-                return vec3.equal(vecA, vecB);
-            }
-        },
-    
-        _lastMaxEnabledArray: { value: 0, writable: true },
-    
         resetStates : {
             value: function() {
                 var gl = this.webGLContext;
@@ -257,6 +247,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 }
                 this._lastMaxEnabledArray = -1;
                 this.bindedProgram = null;
+                this.setState(this.BLEND, true);
             }
         },
     
@@ -272,57 +263,29 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
 
                 //FIXME: remove that association
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
-                //this.bindedProgram = program;               
-
-                //var mvpMatrix = mat4.create();
-                //mat4.multiply(projectionMatrix, worldMatrix, mvpMatrix);
-                /*
-                if (program.getLocationForSymbol("u_mvpMatrix")) {
-                var currentMVPMatrix = program.getValueForSymbol("u_mvpMatrix");
-                if (currentMVPMatrix) {
-                    if (!this.isMat4Equals(currentMVPMatrix, mvpMatrix)) {
-                        program.setValueForSymbol("u_mvpMatrix",mvpMatrix);
-                    }  
-                } else {                
-                    program.setValueForSymbol("u_mvpMatrix",mvpMatrix);
-                }
-                 }
-                */
 
                 //FIXME: should got through inputs without hardcoded symbols
                 if (program.getLocationForSymbol("u_projMatrix")) {
-                    var currentProjectionMatrix = program.getValueForSymbol("u_projMatrix");
-                    if (currentProjectionMatrix) {
-                        if (!this.isMat4Equals(currentProjectionMatrix, projectionMatrix)) {
-                            program.setValueForSymbol("u_projMatrix",projectionMatrix);
-                        }  
-                    } else {                
-                        program.setValueForSymbol("u_projMatrix",projectionMatrix);
-                    }
+                    program.setValueForSymbol("u_projMatrix",projectionMatrix);
                 }
             
                 if (program.getLocationForSymbol("u_normalMatrix")) {
-                    var currentNormalMatrix = program.getValueForSymbol("u_normalMatrix");
-                    if (currentNormalMatrix) {
-                        if (!this.isMat3Equals(currentNormalMatrix, primitiveDescription.normalMatrix)) {
-                            program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
-                        } 
-                    } else {                
-                        program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
-                    }
+                     program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
                 }
             
                 if (program.getLocationForSymbol("u_mvMatrix")) {
-                    var currentWorldMatrix = program.getValueForSymbol("u_mvMatrix");
-                    if (currentWorldMatrix) {
-                        if (!this.isMat4Equals(currentWorldMatrix, worldMatrix)) {
-                            program.setValueForSymbol("u_mvMatrix",worldMatrix);
-                        }                     
-                    } else {                
-                        program.setValueForSymbol("u_mvMatrix",worldMatrix);
-                    }
+                    program.setValueForSymbol("u_mvMatrix",worldMatrix);
                 }
-                            
+                
+                var transparency = 1;
+                if (program.getLocationForSymbol("u_transparency")) {
+                    transparency = primitive.material.inputs.transparency;
+                    if (typeof transparency === "undefined") {
+                        transparency = 1;
+                    }
+                    program.setValueForSymbol("u_transparency",transparency);
+                }
+
                 if (program.getLocationForSymbol("u_diffuseColor")) {
                     var color = primitive.material.inputs.diffuseColor;
                     var step = primitive.step * primitive.step;
@@ -331,29 +294,15 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                                     ((oneMinusPrimitiveStep) + (step * color[1])),
                                     ((oneMinusPrimitiveStep) + (step * color[2]))];
 
-                    var currentColor = program.getValueForSymbol("u_diffuseColor");
-                    if (currentColor) {
-                        if (currentColor !== colorStep) {
-                            if (!this.isVec3Equals(currentColor,colorStep))
-                                program.setValueForSymbol("u_diffuseColor",colorStep);
-                        }
-                    } else {
-                        program.setValueForSymbol("u_diffuseColor",colorStep);
-                    }
+                    program.setValueForSymbol("u_diffuseColor",colorStep);
                 }
 
                 if (program.getLocationForSymbol("u_diffuseTexture")) {
                     var image = primitive.material.inputs.diffuseTexture;
                     var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
                     if (texture) {
-
                         gl.activeTexture(gl.TEXTURE0);
                         gl.bindTexture(gl.TEXTURE_2D, texture);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
                         var samplerLocation = program.getValueForSymbol("u_diffuseTexture");
                         if (typeof samplerLocation === "undefined") {
                             program.setValueForSymbol("u_diffuseTexture", 0);
@@ -451,9 +400,20 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
             value: function(pass) {
                 var primitives = pass.primitives;
                 var count = primitives.length;
+                var gl = this.webGLContext;
                 if (pass.program) {
-                    var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, this.webGLContext);
+                    var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, gl);
                     if (glProgram) {
+
+                        if (pass.states) {
+                            if (pass.states.BLEND) {
+                                gl.enable(gl.BLEND);
+                                gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+                            } else {
+                                gl.disable(gl.BLEND);
+                            }
+                        }
+
                         this.bindedProgram = glProgram;
                         for (var i = 0 ; i < count ; i++) {
                             this.renderPrimitive(primitives[i]);

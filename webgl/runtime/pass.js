@@ -183,6 +183,17 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
             }
         },
 
+        _states: { value: null, writable: true },
+    
+        states: {
+            get: function() {
+                return this._states;
+            },
+            set: function(value) {
+                this._states = value;
+            }
+        },
+
         _program: { value: null, writable: true },
     
         program: {
@@ -290,14 +301,6 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
             value: function(node, parent) {
                 //in the dag configuration a node has always the same children but not necessarly the same parent
                 //so keep track of the parent to handle different matrices entries 
-                var meshesCount = 0;
-                if (node.meshes) {
-                    meshesCount = node.meshes.length;
-                }
-
-                if (meshesCount === 0) {
-                    return;
-                }
 
                 var primitives = this._nodeIDToPrimitives[node.id];
                 if (!primitives) {
@@ -313,6 +316,15 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                             "primitivesInfo" : []
                         }
 
+                        var meshesCount = 0;
+                        if (node.meshes) {
+                            meshesCount = node.meshes.length;
+                        }
+
+                        if (meshesCount === 0) {
+                            return;
+                        }
+
                         node.meshes.forEach( function(mesh) {
                             if (mesh.primitives) {
                                 mesh.primitives.forEach( function (primitive) {
@@ -321,7 +333,6 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                                         if (technique) {
                                             if (technique.rootPass) {
                                                 var pass = this.passes[technique.rootPass.id];
-
                                                 if (!pass) {
                                                     this.passes[technique.rootPass.id] = pass = technique.rootPass;
                                                 }
@@ -330,7 +341,6 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                                                     "worldMatrix" : primitivesWithParent.worldMatrix, 
                                                     "normalMatrix" : primitivesWithParent.normalMatrix 
                                                 };  
-
                                                 pass.primitives.push(primitiveInfo);
 
                                                 //now dispatch in passes
@@ -395,7 +405,7 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                 return this;
             }
         },
-    
+
         execute: {
             value: function(engine) {  
 
@@ -405,18 +415,35 @@ define(["runtime/node", "runtime/projection", "runtime/resource-description", "r
                     mat4.inverse(this.inputs.viewPoint.transform, cameraMatrix);
                     var ctx = cameraMatrix;
                     engine.renderer.projectionMatrix = this.inputs.viewPoint.cameras[0].projection.matrix;
+                    window.transform = this.inputs.scene.rootNode.transform;
                     this.inputs.scene.rootNode.apply( function(node, parent, parentTransform) {
                         var primitives = self._nodeIDToPrimitives[node.id];
-                        if (primitives) {
-                            var primitivesWithParent = primitives[parent.id];
-                            mat4.multiply(parentTransform, node.transform , primitivesWithParent.worldMatrix);
-                            mat3.transpose(mat4.toInverseMat3(primitivesWithParent.worldMatrix), primitivesWithParent.normalMatrix);
-                            return primitivesWithParent.worldMatrix;
-                        } else {
-                            var worldMatrix = mat4.create();
-                            mat4.multiply(parentTransform, node.transform , worldMatrix);
-                            return worldMatrix;
+                        var primitivesWithParent = null;
+                        var worldMatrix = null;
+                        var normalMatrix = null;
+
+                        if (parent) {
+                            if (primitives) {
+                                primitivesWithParent = primitives[parent.id];
+
+                                worldMatrix = primitivesWithParent.worldMatrix;
+                                normalMatrix = primitivesWithParent.normalMatrix;
+                            } 
                         }
+
+                        if (!worldMatrix) {
+                            worldMatrix = mat4.create();
+                        }
+
+                        if (!normalMatrix) {
+                            normalMatrix = mat3.create();
+                        }
+
+                        mat4.multiply(parentTransform, node.transform , worldMatrix);
+                        if (primitives)
+                            mat3.transpose(mat4.toInverseMat3(worldMatrix), normalMatrix);
+
+                        return worldMatrix;
 
                     }, true, ctx);
                 }

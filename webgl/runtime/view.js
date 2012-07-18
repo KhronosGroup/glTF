@@ -234,7 +234,7 @@ define(["runtime/engine", "runtime/utilities", "dependencies/gl-matrix"], functi
                                             ((-sceneSize[1] / 2) - sceneBBox[0][1] ) , 
                                             ((-sceneSize[2] / 2) - sceneBBox[0][2] ) ]);
         
-                                var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.5 ]);
+                                var translation2 = mat4.translate(mat4.identity(), [ 0 , 0 , - 1.3 ]);
         
                                 var centeredTr = mat4.create();
                                 mat4.multiply(this.userControlMatrix, translation , centeredTr); 

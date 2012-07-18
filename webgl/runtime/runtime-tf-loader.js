@@ -71,6 +71,7 @@ define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/tech
                 programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
                 technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
                 technique.rootPass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
+                technique.rootPass.states = passDescription.states;
                 return true;
             }
         },
