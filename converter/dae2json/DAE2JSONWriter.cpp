@@ -38,17 +38,6 @@
 
 namespace DAE2JSON
 {    
-    float getTransparency(const COLLADAFW::EffectCommon* effectCommon)
-    {
-        //super naive for now, also need to check sketchup work-around
-        return 1. - effectCommon->getOpacity().getColor().getAlpha();
-    }
-    
-    float isOpaque(const COLLADAFW::EffectCommon* effectCommon)
-    {
-        return getTransparency(effectCommon)  >= 1;
-    }
-    
     
     std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
     {
@@ -403,9 +392,8 @@ namespace DAE2JSON
     }
         
     //--------------------------------------------------------------------
-	DAE2JSONWriter::DAE2JSONWriter( const COLLADABU::URI& inputFile, const COLLADABU::URI& outputFile, PrettyWriter <FileStream> *jsonWriter ):
-    _inputFile(inputFile),
-    _outputFile(outputFile),
+	DAE2JSONWriter::DAE2JSONWriter( const COLLADA2JSONArgs &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
+    _converterArgs(converterArgs),
      _visualScene(0)
 	{
         this->_writer.setWriter(jsonWriter);
@@ -426,8 +414,8 @@ namespace DAE2JSON
 	{
         this->_uniqueIDToMesh.clear();   
 
-        std::string sharedBufferID = this->_inputFile.getPathFileBase() + ".bin";
-        std::string outputFilePath = this->_outputFile.getPathDir() + sharedBufferID;
+        std::string sharedBufferID = this->_converterArgs.inputFile.getPathFileBase() + ".bin";
+        std::string outputFilePath = this->_converterArgs.outputFile.getPathDir() + sharedBufferID;
         
         this->_fileOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);        
         //this->_fileOutputStream.seekp(-this->_fileOutputStream.tellp());
@@ -439,7 +427,7 @@ namespace DAE2JSON
         COLLADASaxFWL::Loader loader;
 		COLLADAFW::Root root(&loader, this);
          
-		if (!root.loadDocument(_inputFile.toNativePath()))
+		if (!root.loadDocument( this->_converterArgs.inputFile.toNativePath()))
 			return false;
         
         shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, this->_fileOutputStream.tellp()));
@@ -542,6 +530,20 @@ namespace DAE2JSON
 
         return array;
     }
+
+    float DAE2JSONWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
+    {
+        //super naive for now, also need to check sketchup work-around
+        float transparency = effectCommon->getOpacity().getColor().getAlpha();
+        
+        return this->_converterArgs.invertTransparency ? 1 - transparency : transparency;
+    }
+    
+    float DAE2JSONWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
+    {
+        return getTransparency(effectCommon)  >= 1;
+    }
+    
 
     bool DAE2JSONWriter::writeNode( const COLLADAFW::Node* node, 
                                     shared_ptr <JSONExport::JSONObject> nodesObject, 
@@ -785,7 +787,7 @@ namespace DAE2JSON
                 shared_ptr <JSONExport::JSONMesh> cvtMesh = this->_uniqueIDToMesh[meshID];
                 
                 if (!cvtMesh) {
-                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, _outputFile.getPathDir());
+                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh,  this->_converterArgs.outputFile.getPathDir());
                 
                     cvtMesh->buildUniqueIndexes();
                     cvtMesh->writeAllBuffers(this->_fileOutputStream);               
@@ -834,8 +836,8 @@ namespace DAE2JSON
             
             //also write the file on disk
             std::string shaderString = this->_shaderIdToShaderString[shaderId];
-            if (shaderString.size()>0) {
-                std::string shaderPath = this->_outputFile.getPathDir() + path;
+            if (shaderString.size() > 0) {
+                std::string shaderPath =  this->_converterArgs.outputFile.getPathDir() + path;
                 JSONExport::JSONUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
  
                 printf("[shader]: %s\n", shaderPath.c_str());

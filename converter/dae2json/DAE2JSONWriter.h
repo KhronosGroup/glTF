@@ -90,6 +90,15 @@ namespace DAE2JSON
     
     //-- BBOX helper class
     
+    typedef struct 
+    {
+        COLLADABU::URI inputFile;
+        COLLADABU::URI outputFile;
+        bool invertTransparency;
+        
+        //TODO: add options here
+    } COLLADA2JSONArgs;
+    
     class BBOX
     {
     public:
@@ -136,7 +145,7 @@ namespace DAE2JSON
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2JSONWriter( const COLLADABU::URI& inputFile, const COLLADABU::URI& outputFile,PrettyWriter <FileStream> *jsonWriter );
+		DAE2JSONWriter( const COLLADA2JSONArgs &converterArgs,PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
     private:
 		static void reportError(const String& method, const String& message);
@@ -145,6 +154,8 @@ namespace DAE2JSON
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         const std::string writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon);
         bool writeShaderIfNeeded(const std::string& shaderId);
+        float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
+        float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
 
 	public:        
         
@@ -231,8 +242,7 @@ namespace DAE2JSON
         bool writeData(String filename, unsigned char* data, size_t length);
         
 	private:
-        COLLADABU::URI _inputFile;
-        COLLADABU::URI _outputFile;
+        COLLADA2JSONArgs _converterArgs;
         const COLLADAFW::VisualScene* _visualScene;
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToEffect _uniqueIDToEffect;

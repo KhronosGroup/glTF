@@ -410,15 +410,15 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 if (pass.program) {
                     var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, gl);
                     if (glProgram) {
-
+                        var blending = false;
+                        
                         if (pass.states) {
                             if (pass.states.BLEND) {
-                                this.setState(gl.BLEND, true);
+                                blending = true;
                                 gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-                            } else {
-                                this.setState(gl.BLEND, false);
-                            }
+                            } 
                         }
+                        this.setState(gl.BLEND, blending);
 
                         this.bindedProgram = glProgram;
                         for (var i = 0 ; i < count ; i++) {

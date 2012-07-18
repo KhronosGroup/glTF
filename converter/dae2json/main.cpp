@@ -33,14 +33,6 @@
 
 #define STDOUT_OUTPUT 0
 
-typedef struct 
-{
-    COLLADABU::URI inputFile;
-    COLLADABU::URI outputFile;
-    
-    //TODO: add options here
-} COLLADA2JSONArgs;
-
 enum ArgsState
 {
     PARSE_INPUT_FILE_ARG = 0,
@@ -51,7 +43,7 @@ enum ArgsState
 
 void usage(char* prog)
 {
-	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [JSON outputFile] \n", prog);
+	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [JSON outputFile] [options] \n", prog);
 }
 
 static COLLADABU::URI __ReplacePathExtensionWithJSON(const COLLADABU::URI& inputFileURI)
@@ -63,7 +55,7 @@ static COLLADABU::URI __ReplacePathExtensionWithJSON(const COLLADABU::URI& input
     return COLLADABU::URI(pathDir + fileBase + ".json");
 }
 
-static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], COLLADA2JSONArgs *converterArgs)
+static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], DAE2JSON::COLLADA2JSONArgs *converterArgs)
 {
     assert(converterArgs);
         
@@ -73,8 +65,9 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], COLLADA2JSONA
 		exit(1);
         return false;
     }
+    converterArgs->invertTransparency = false;
     
-    for (int argIndex = 1, state = PARSE_INPUT_FILE_ARG ; state < PARSE_STATES_END ; state++) {
+    for (int argIndex = 1, state = PARSE_INPUT_FILE_ARG ; argIndex < argc && state < PARSE_STATES_END ; state++) {
         switch (state) {
             case PARSE_INPUT_FILE_ARG:
                 converterArgs->inputFile = COLLADABU::URI(argv[argIndex++]); 
@@ -88,7 +81,13 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], COLLADA2JSONA
                 } else {
                     converterArgs->outputFile = COLLADABU::URI(argv[argIndex++]); 
                 }
-                            
+                break;
+            case PARSE_OPTIONS_ARG:
+                if (strcmp(argv[argIndex++], "-i") == 0) {
+                    converterArgs->invertTransparency = true;
+                    printf("[option] invert transparency: on\n");
+                }
+
                 break;
         }
     }
@@ -98,8 +97,9 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], COLLADA2JSONA
 
 
 int main (int argc, char * const argv[]) {
-    COLLADA2JSONArgs converterArgs;
+    DAE2JSON::COLLADA2JSONArgs converterArgs;
     
+    printf("Collada2JSON [pre-alpha] 0.1\n");
     if (__SetupCOLLADA2JSONArgs( argc, argv, &converterArgs)) {
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterArgs.outputFile.getURIString().c_str(), "w");
@@ -109,9 +109,8 @@ int main (int argc, char * const argv[]) {
             FileStream s(stdout);
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
-            printf("Collada2JSON [pre-alpha] 0.1\n");
             printf("converting:%s ...\n",converterArgs.inputFile.getPathFile().c_str());
-            DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs.inputFile, converterArgs.outputFile, &jsonWriter);        
+            DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs, &jsonWriter);        
             writer->write();
             printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT
