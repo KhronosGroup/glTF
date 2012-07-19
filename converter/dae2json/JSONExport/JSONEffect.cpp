@@ -54,6 +54,16 @@ namespace JSONExport
         return this->_techniqueID;
     }
     
+    void JSONEffect::setName(const std::string& name)
+    {
+        this->_name = name;
+    }
+    
+    const std::string& JSONEffect::getName()
+    {
+        return this->_name;
+    }
+    
     void JSONEffect::setInputs(shared_ptr <JSONExport::JSONObject> inputs)
     {
         this->_inputs = inputs;

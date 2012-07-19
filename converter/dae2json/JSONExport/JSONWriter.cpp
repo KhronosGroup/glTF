@@ -141,6 +141,7 @@ namespace JSONExport
         effectObject->setString("type", "effect");
 
         effectObject->setString("technique", effect->getTechniqueID());
+        effectObject->setString("name", effect->getName());
         effectObject->setValue("inputs", effect->getInputs());
         
         return effectObject;

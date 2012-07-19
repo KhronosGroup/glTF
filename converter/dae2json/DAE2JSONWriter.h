@@ -84,6 +84,7 @@ namespace DAE2JSON
 {
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONMesh> > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;    
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
@@ -247,6 +248,7 @@ namespace DAE2JSON
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToEffect _uniqueIDToEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
+        MaterialUIDToName _materialUIDToName;
         ImageIdToImageURL _imageIdToImageURL;
         JSONExport::JSONWriter _writer;
         shared_ptr <JSONExport::JSONObject> _rootJSONObject;

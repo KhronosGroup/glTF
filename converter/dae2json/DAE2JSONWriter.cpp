@@ -644,8 +644,10 @@ namespace DAE2JSON
                     unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                         
                     unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
+                    std::string materialName = this->_materialUIDToName[referencedMaterialID];
                     shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
-                        
+                    //short cut from material -> effect
+                    effect->setName(materialName);
                     primitive->setMaterialID(effect->getID());                    
                 }
             
@@ -811,9 +813,8 @@ namespace DAE2JSON
 	bool DAE2JSONWriter::writeMaterial( const COLLADAFW::Material* material )
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
-        
+        this->_materialUIDToName[material->getUniqueId().getObjectId()] = material->getName();
         this->_materialUIDToEffectUID[material->getUniqueId().getObjectId()] = (unsigned int)effectUID.getObjectId();
-        //printf("material:%s\n",material->getUniqueId().toAscii().c_str());        
 		return true;
 	}
     
