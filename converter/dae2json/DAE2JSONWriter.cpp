@@ -556,6 +556,7 @@ namespace DAE2JSON
         
         shared_ptr <JSONExport::JSONObject> nodeObject(new JSONExport::JSONObject());
         nodeObject->setString("type", "node");
+        nodeObject->setString("name",node->getName());
         
         bool nodeContainsLookAtTr = false;
         const InstanceCameraPointerArray& instanceCameras = node->getInstanceCameras();
