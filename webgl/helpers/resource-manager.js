@@ -746,6 +746,7 @@ var global = window;
                     self.fireResourceAvailable.call(self, id);
                 }  
 
+
                 if (image.description.path) {
                     var imageObject = new Image();  
                     imageObject.onload = function() { handleTextureLoaded(imageObject, image.id, ctx); }  
