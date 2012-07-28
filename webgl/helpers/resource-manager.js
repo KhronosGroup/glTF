@@ -23,13 +23,14 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+var global = window;
 (function (root, factory) {
     if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         module.exports = factory(global);
+        module.exports.ResourceManager = module.exports;
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
@@ -62,7 +63,7 @@
         canMergeRequest: {
             value: function(request) {
                 return  (((request.range[0] === this.range[1]) ||
-                         ((request.range[1]) === this.range[0])) && 
+                         ((request.range[1]) === this.range[0])) &&
                          (request.type ===  this.type));
             }
         },
@@ -171,24 +172,24 @@
 
         _checkConsistency: {
             value: function(ranges) {
-                
+
                 if (ranges.length >= 50) //to avoid max stack size
                     return;
 
                 if (this.left)
                     this.left._checkConsistency(ranges);
-                
+
                 ranges.push(this.content.range);
 
                 if (this.right)
                     this.right._checkConsistency(ranges);
-                
+
             }
         },
 
         checkConsistency: {
             value: function() {
-                var ranges = [];                
+                var ranges = [];
                 this._checkConsistency(ranges);
                 if (ranges.length > 1) {
                     for (var i = 0; i < ranges.length-1 ;i++) {
@@ -199,31 +200,30 @@
                         }
                     }
                 }
-                
+
             }
         },
 
         _collect: {
             value: function(nodes, nb) {
-                
 
                 if (this.left)
                     this.left._collect(nodes, nb);
-                
-                if (nodes.length >= nb) 
+
+                if (nodes.length >= nb)
                     return;
 
                 nodes.push(this);
 
                 if (this.right)
                     this.right._collect(nodes, nb);
-                
+
             }
         },
 
         collect: {
             value: function(nb) {
-                var nodes = [];                
+                var nodes = [];
                 this._collect(nodes, nb);
                 return nodes;
             }
@@ -233,21 +233,21 @@
         insert: {
             value: function(requests, parent) {
                 //insert before ?
-                
+
                 if (requests.range[1] <= this.content.range[0]) {
                     if ( (requests.range[1] === this.content.range[0])) {
                         if (requests.kind === "multi-parts")
                             this.content.mergeRequests(requests.requests);
                         else
                             this.content.mergeRequests(requests);
-                        
+
                         if (this.left) {
                             if(this.content.canMergeRequest(this.left.content)) {
                                 this.content.mergeRequests(this.left.content._requests);
-                                this.left.remove();
+                                this.left.remove(this.left.content);
                             }
                         }
-                            
+
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.left) {
@@ -255,7 +255,7 @@
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
-                        treeNode.content = requests; 
+                        treeNode.content = requests;
                         this.left = treeNode;
                         return treeNode;
                     }
@@ -266,14 +266,14 @@
                             this.content.mergeRequests(requests.requests);
                         else
                             this.content.mergeRequests(requests);
-                        
+
                         if (this.right) {
                             if(this.content.canMergeRequest(this.right.content)) {
                                 this.content.mergeRequests(this.right.content._requests);
-                                this.right.remove();
+                                this.right.remove(this.right.content);
                             }
                         }
-                        
+
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
@@ -281,12 +281,11 @@
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
-                        treeNode.content = requests; 
+                        treeNode.content = requests;
                         this.right = treeNode;
                         return treeNode;
                     }
                 } else {
-                    debugger;
                     console.log("ERROR: should not reach");
                 }
             }
@@ -312,64 +311,54 @@
             }
         },
 
-        remove: {
+        min: {
             value: function() {
+                var node = this;
+                while (node.left) {
+                    node = node.left;
+                }
+                return node;
+            }
+        },
 
-                if (!this.left  && !this.right) {
-                    if (this.parent) {
-                        if (this.parent.left === this) {
-                            this.parent.left = null;
-                        } else {
-                            this.parent.right = null;
-                        }
-                    }
-                    return null;
-                } else {
-                    //if right tree is null, move left in place of element
-                    if (!this.right) {
-                        if (this.parent) {
-                            if (this.parent.left === this) {
-                                this.parent.left = this.left;
-                            } else {
-                                this.parent.right = this.left;
-                            }
-                            this.left.parent = this.parent;
-                        }
-                        return this.left;
+        _updateParentWithNode: {
+            value: function(node) {
+                if (this.parent) {
+                    if (this === this.parent.left) {
+                        this.parent.left = node;
                     } else {
-                        //otherwise take the minimum  of the right tree
-                        var minNode = this.right;
+                        this.parent.right = node;
+                    }
+                }
+                if (node) {
+                    node.parent = this.parent;
+                }
+            }
+        },
 
-                        while (minNode.left) {
-                            minNode = minNode.left;
-                        }
-
-                        minNode.left = this.left;
-                        if (this.left)
-                            this.left.parent = minNode;
-
-                        if (minNode.parent !== this) {
-                            if (minNode.parent)
-                                minNode.parent.left = minNode.right;
-                            if (minNode.right) {
-                                if (minNode.parent)
-                                    minNode.right.parent = minNode.parent;
-                            }
-
-                            minNode.right = this.right;
-                            this.right.parent = minNode;
-                        }
-                        
-                        if (this.parent) {
-                            if (this.parent.left === this) {
-                                this.parent.left = minNode;
+        remove: {
+            value: function(content) {
+                if (content.range[1] <= this.content.range[0]) {
+                    this.left.remove(content);
+                } else if (content.range[0] >= this.content.range[1]) {
+                    this.right.remove(content);
+                } else {
+                    if (content === this.content) {
+                        if (this.left && this.right) {
+                            var successor = this.right.min();
+                            this.content = successor.content;
+                            successor._updateParentWithNode(successor.right);
+                        } else if (this.left || this.right) {
+                            if (this.left) {
+                                this._updateParentWithNode(this.left);
                             } else {
-                                this.parent.right = minNode;
+                                this._updateParentWithNode(this.right);
                             }
+                        } else {
+                            this._updateParentWithNode(null);
                         }
-                        minNode.parent = this.parent;
-
-                        return minNode;
+                    } else {
+                        debugger;
                     }
                 }
             }
@@ -392,7 +381,18 @@
         _resources: { value: null, writable: true },
 
         _requestTree: { value: null, writable: true },
+
+        _observers: { value: null, writable: true },
         
+        observers: {
+            get: function() {
+                return this._observers;
+            },
+            set: function(value) {
+                this._observers = value;
+            }
+        },
+
         //manage entries
         _containsResource: {
             enumerable: false,
@@ -400,17 +400,18 @@
                 return this._resources[resourceID] ? true : false;
             }
         },
-    
+
         init: {
             value: function() {
                 this._requestTree = null;
                 this._resources = {};
                 this._resourcesStatus = {};
+                this._observers = [];
                 //this._resourcesToBeProcessed = Object.create(LinkedList);
                 this._resourcesBeingProcessedCount = 0;
             }
         },
-    
+
         _storeResource: {
             enumerable: false,
             value: function(resourceID, resource) {
@@ -419,15 +420,15 @@
                     console.log("ERROR: entry does not contain id, cannot store");
                     return;
                 }
-        
+
                 if (this._containsResource[resourceID]) {
                     console.log("WARNING: resource:"+resourceID+" is already stored, overriding");
                 }
-            
+
                this._resources[resourceID] = resource;
             }
         },
-    
+
         _getResource: {
             enumerable: false,
             value: function(resourceID) {
@@ -436,18 +437,18 @@
         },
 
         _resourcesStatus: { value: null, writable: true },
-    
+
         _resourcesBeingProcessedCount: { value: 0, writable: true },
-    
+
         _resourcesToBeProcessed: { value: null, writable: true },
-    
+
         _loadResource: {
             value: function(request, delegate) {
                 var self = this;
                 var type;
                 var path = request.path;
                 if (request.kind === "multi-parts") {
-                    type = request.requests[0].type; 
+                    type = request.requests[0].type;
                     path = request.requests[0].path;
                 } else {
                     type = request.type;
@@ -463,7 +464,7 @@
                     delegate.handleError(WebGLTFResourceManager.INVALID_PATH);
                     return;
                 }
-                    
+
                 var xhr = new XMLHttpRequest();
                  xhr.open('GET', path, true);
                 xhr.responseType = (type === this.ARRAY_BUFFER) ? "arraybuffer" : "text";
@@ -472,7 +473,7 @@
                     xhr.setRequestHeader("Range", header);
                 }
                 //if this is not specified, 1 "big blob" scenes fails to load.
-                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");                                                
+                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
                 xhr.onload = function(e) {
                     if ((this.status == 200) || (this.status == 206)) {
                         if (request.kind === "multi-parts") {
@@ -485,13 +486,13 @@
                         }
 
                     } else {
-                        delegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
+                        setdelegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                     }
                 };
                 xhr.send(null);
             }
         },
-    
+
         _processNextResource: {
             value: function() {
                 /*
@@ -510,8 +511,21 @@
 
                 if (this._requestTree) {
                     this._handleRequest(this._requestTree.content);
-                } 
+                }
 
+            }
+        },
+
+        fireResourceAvailable: {
+            value: function(id) {
+
+                if (this.observers) {
+                    this.observers.forEach(function(observer) {
+                        if (observer.resourceAvailable) {
+                            observer.resourceAvailable(id);
+                        }
+                    }, this);
+                }
             }
         },
 
@@ -526,13 +540,13 @@
                     node = resourceStatus.node;
                     status = resourceStatus.status;
                 }
- 
+
                 //if (this._requestTree) {
                 if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type !== "text")) {
-                    if (!status) {     
-                        //var listNode = Object.create(LinkedListNode);                
+                    if (!status) {
+                        //var listNode = Object.create(LinkedListNode);
                         //listNode.init(request);
-                        
+
                         var trNode = null;
 
                         var contRequests;
@@ -540,7 +554,7 @@
                         if (request.kind === "multi-parts") {
                              contRequests = Object.create(ContiguousRequests).initWithRequests(request.requests);
                         } else {
-                             contRequests = Object.create(ContiguousRequests).initWithRequests([request]);                            
+                             contRequests = Object.create(ContiguousRequests).initWithRequests([request]);
                         }
 
                         if (!this._requestTree) {
@@ -567,7 +581,7 @@
                     }
                     return;
                 }
-            
+
                 //if (request.delegate) {
                     var self = this;
                     var processResourceDelegate = {};
@@ -575,17 +589,14 @@
                     if (node && this._resourcesToBeProcessed) {
                         this._resourcesToBeProcessed.remove(node);
                     }
-                    
-                    if (node) {
-                        
-                        if (node === this._requestTree) {
-                            this._requestTree = node.remove();
-                        } else {
-                            node.remove();
-                        }
-                        //if (this._requestTree)
-                         //   this._requestTree.checkConsistency();
 
+                    if (node) {
+                        var isRoot = (node === this._requestTree);
+                        if (this._requestTree)
+                            this._requestTree.remove(node.content);
+                        if (isRoot) {
+                            this._requestTree = null;
+                        }
                     }
 
                     if (request.kind ==="multi-parts") {
@@ -605,17 +616,19 @@
                         self._storeResource(req_.id, convertedResource);
                         req_.delegate.resourceAvailable(convertedResource, req_.ctx);
                         self._resourcesBeingProcessedCount--;
-                        
+
                         //console.log("delete:"+req_.id)
                         delete self._resourcesStatus[req_.id];
 
+                        self.fireResourceAvailable.call(self, req_.id);
+
                         if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
-                            //self._processNextResource();
-                            setTimeout(self._processNextResource.bind(self), 100);
+                            self._processNextResource();
+                            //setTimeout(self._processNextResource.bind(self), 1000);
                         }
 
                     };
-                
+
                     processResourceDelegate.handleError = function(errorCode, info) {
                         request.delegate.handleError(errorCode, info);
                     }
@@ -662,13 +675,13 @@
                 handleError: function(errorCode, info) {
                     console.log("ERROR:shaderDelegate:"+errorCode+" :"+info);
                 },
-        
+
                 convert: function (resource, ctx) {
                     return resource;
                 },
-        
+
                 resourceAvailable: function (resource, ctx) {
-                    //FIXME: ... 
+                    //FIXME: ...
                     ctx.sources[ctx.stage] = resource;
                     var self = this;
                     if (ctx.sources["x-shader/x-fragment"] && ctx.sources["x-shader/x-vertex"]) {
@@ -676,7 +689,7 @@
                         var convertedResource = delegate.convert(ctx.sources, ctx.programCtx.ctx);
                         ctx.programCtx.resourceManager._storeResource(ctx.programCtx.id, convertedResource);
                         delegate.resourceAvailable(convertedResource, ctx.programCtx.ctx);
-                    }               
+                    }
                 }
             }
         },
@@ -715,16 +728,31 @@
                         return;
                 }
                 this._resourcesStatus[image.id] = { status: "loading" };
-
                 var self = this;
-                var textureLoader = new TextureUtil.TextureLoader(ctx);
-                var texture = textureLoader.load(image.description.path, function(texture) {
-                    delete self._resourcesStatus[image.id];
+                function handleTextureLoaded(image, id, gl) { 
+                    var texture = gl.createTexture(); 
+                    gl.bindTexture(gl.TEXTURE_2D, texture);  
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
+                    gl.bindTexture(gl.TEXTURE_2D, null);  
 
-                    var convertedResource = delegate.convert(texture, ctx);
-                    self._storeResource(image.id, convertedResource);
-                    delegate.resourceAvailable(convertedResource, ctx);
-                });
+                    delete self._resourcesStatus[id];
+                    var convertedResource = delegate.convert(texture, gl);
+                    self._storeResource(id, convertedResource);
+                    delegate.resourceAvailable(convertedResource, gl);
+                    self.fireResourceAvailable.call(self, id);
+                }  
+
+                if (image.description.path) {
+                    var imageObject = new Image();  
+                    imageObject.onload = function() { handleTextureLoaded(imageObject, image.id, ctx); }  
+                    imageObject.src = image.description.path;  
+                } else if (image.description.image) {
+                    handleTextureLoaded(image.description.image, image.id, ctx);                  
+                }
             }
         },
 
@@ -734,7 +762,7 @@
                 var managedResource = this._getResource(resource.id);
                 if (managedResource) {
                     return managedResource;
-                }                
+                }
 
                 if (resource.type === "accessor") {
                     this._handleAccessorResourceLoading(resource, delegate, ctx);
@@ -758,7 +786,7 @@
                 this._resources = {};
             }
         },
-        
+
     });
 
     if(root) {
