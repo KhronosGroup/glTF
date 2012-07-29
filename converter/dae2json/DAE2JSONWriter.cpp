@@ -970,12 +970,15 @@ namespace DAE2JSON
             bool hasDiffuseTexture = diffuse.isTexture();
             if (!hasDiffuseTexture) {
                 const Color& color = diffuse.getColor();
-                            
-                red = color.getRed();
-                green = color.getGreen();
-                blue = color.getBlue();
+                         
+                if (diffuse.getType() != COLLADAFW::ColorOrTexture::Type::UNSPECIFIED) {
+                    red = color.getRed();
+                    green = color.getGreen();
+                    blue = color.getBlue();
+                }
                 
                 shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
+                
                 diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)red)));
                 diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)green)));
                 diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)blue)));
