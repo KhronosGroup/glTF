@@ -231,9 +231,8 @@ var global = window;
 
 
         insert: {
-            value: function(requests, parent) {
+            value: function(requests) {
                 //insert before ?
-
                 if (requests.range[1] <= this.content.range[0]) {
                     if ( (requests.range[1] === this.content.range[0])) {
                         if (requests.kind === "multi-parts")
@@ -246,12 +245,18 @@ var global = window;
                                 this.content.mergeRequests(this.left.content._requests);
                                 this.left.remove(this.left.content);
                             }
+                        } 
+                        if (this.parent) {
+                            if (this.parent.content.canMergeRequest(this.content)) {
+                                this.parent.content.mergeRequests(this.content._requests);
+                                this.remove(this.content);
+                            }
                         }
 
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.left) {
-                        return this.left.insert(requests, this);
+                        return this.left.insert(requests);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
@@ -267,17 +272,25 @@ var global = window;
                         else
                             this.content.mergeRequests(requests);
 
+                        
                         if (this.right) {
                             if(this.content.canMergeRequest(this.right.content)) {
                                 this.content.mergeRequests(this.right.content._requests);
                                 this.right.remove(this.right.content);
                             }
+                        }  
+                        if (this.parent) {
+                            if (this.parent.content.canMergeRequest(this.content)) {
+                                this.parent.content.mergeRequests(this.content._requests);
+                                this.remove(this.content);
+                            }
                         }
+
 
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
-                        return this.right.insert(requests, this);
+                        return this.right.insert(requests);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
@@ -540,15 +553,12 @@ var global = window;
                     node = resourceStatus.node;
                     status = resourceStatus.status;
                 }
-
-                //if (this._requestTree) {
+                //if (request.type !== "text") {
                 if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type !== "text")) {
                     if (!status) {
                         //var listNode = Object.create(LinkedListNode);
                         //listNode.init(request);
-
                         var trNode = null;
-
                         var contRequests;
 
                         if (request.kind === "multi-parts") {
@@ -622,6 +632,7 @@ var global = window;
 
                         self.fireResourceAvailable.call(self, req_.id);
 
+                        if (req_.type !== "text")
                         if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
                             self._processNextResource();
                             //setTimeout(self._processNextResource.bind(self), 1000);
