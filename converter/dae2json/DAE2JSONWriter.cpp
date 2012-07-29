@@ -354,7 +354,8 @@ namespace DAE2JSON
         for (int i = 0 ; i < primitiveCount ; i++) {
             
             shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i]);
-            cvtMesh->appendPrimitive(primitive);
+            if (primitive->getType() == "TRIANGLES")
+                cvtMesh->appendPrimitive(primitive);
 
             // once we got a primitive, keep track of its accessors
             std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = primitive->allIndices();
@@ -444,9 +445,11 @@ namespace DAE2JSON
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONMesh> mesh = (*UniqueIDToMeshIterator).second;
             
-            shared_ptr <JSONExport::JSONObject> meshObject = this->_writer.serializeMesh(mesh.get(), (void*)sharedBuffer.get());
+            if (mesh) {
+                shared_ptr <JSONExport::JSONObject> meshObject = this->_writer.serializeMesh(mesh.get(), (void*)sharedBuffer.get());
             
-            meshesObject->setValue(mesh->getID(), meshObject);
+                meshesObject->setValue(mesh->getID(), meshObject);
+            }
         }
         
         // ----
@@ -618,7 +621,11 @@ namespace DAE2JSON
                 
                 unsigned int meshUID = instanceGeometry->getInstanciatedObjectId().getObjectId();
                 shared_ptr <JSONExport::JSONMesh> mesh = this->_uniqueIDToMesh[meshUID];
-
+                
+                if (!mesh) {
+                    continue;
+                }
+                
                 if (sceneFlatteningInfo) {
                     JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::Semantic::VERTEX); 
                     shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
@@ -791,11 +798,12 @@ namespace DAE2JSON
                 
                 if (!cvtMesh) {
                     cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh,  this->_converterArgs.outputFile.getPathDir());
-                
-                    cvtMesh->buildUniqueIndexes();
-                    cvtMesh->writeAllBuffers(this->_fileOutputStream);               
+                    if (cvtMesh->getPrimitives().size() > 0) {
+                        cvtMesh->buildUniqueIndexes();
+                        cvtMesh->writeAllBuffers(this->_fileOutputStream);               
 
-                    this->_uniqueIDToMesh[meshID] = cvtMesh;
+                        this->_uniqueIDToMesh[meshID] = cvtMesh;
+                    }
                 } 
             }
                 break;
