@@ -45,6 +45,11 @@ OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 The project is currently in an early state to encourage community feedback.
 It has been tested on OSX, but all the components involved are cross platform. Testing will be extended to all major platforms in the near future.
 
+#### Viewer setup 
+1. git clone https://github.com/Motorola-Mobility/collada2json.git
+2. git submodule init
+3. git submodule update
+
 #### JSON Format description
 
 coming soon...
