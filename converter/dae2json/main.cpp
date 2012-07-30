@@ -71,6 +71,7 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], DAE2JSON::COL
         switch (state) {
             case PARSE_INPUT_FILE_ARG:
                 converterArgs->inputFile = COLLADABU::URI(argv[argIndex++]); 
+                converterArgs->outputFile = __ReplacePathExtensionWithJSON(converterArgs->inputFile); 
                 break;
             case PARSE_OUTPUT_FILE_ARG:
                 if (argIndex == argc) {

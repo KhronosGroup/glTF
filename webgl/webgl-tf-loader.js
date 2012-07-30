@@ -139,7 +139,7 @@ var global = window;
                 } else {
                     var pathComponents = path.split("/");
                     var lastPathComponent = pathComponents.pop();
-                    return this.baseURL + lastPathComponent;
+                    return this.baseURL + path;//lastPathComponent;
                 }
             }
         },

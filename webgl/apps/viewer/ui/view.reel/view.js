@@ -181,7 +181,6 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
 
     prepareForDraw: {
         value: function() {
-
             // first thing, get gl context
             var webGLContext = this.canvas.getContext("experimental-webgl", { antialias: true}) ||this.canvas.getContext("webgl", { antialias: true});
             this.canvas.style.opacity = 1;
@@ -838,7 +837,6 @@ MontageOrbitCamera.prototype._hookEvents = function (element) {
         lastY = event.translateY;
     }, false);
 
-
     translateComposer.addPropertyChangeListener("translateY", function(notification) {
         if (moving) {
             var xDelta = notification.target.translateX  - lastX,
@@ -849,7 +847,6 @@ MontageOrbitCamera.prototype._hookEvents = function (element) {
 
             self.orbit(xDelta * 0.013, yDelta * 0.013);
         }
-
     });
 
     translateComposer.addPropertyChangeListener("translateX", function(notification) {

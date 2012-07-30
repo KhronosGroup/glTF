@@ -992,8 +992,16 @@ namespace DAE2JSON
                 
                 COLLADABU::URI imageURI = this->_imageIdToImageURL[uniqueIdWithType("image",imageUID)];               
                 
+                std::string pathDir = imageURI.getPathDir();
+                bool relativePath = true;
+                if (pathDir.size() > 0) {
+                    if ((pathDir[0] != '.') || (pathDir[0] == '/')) {
+                        relativePath = false;
+                    }
+                }
+                //FIXME: handle absolute path case
                 //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
-                inputs->setString("diffuseTexture",imageURI.getPathFile());
+                inputs->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
             }
             
             if (!isOpaque(effectCommon)) {
