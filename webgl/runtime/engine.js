@@ -24,51 +24,49 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/renderer","runtime/pass"], function(Renderer, Pass) {
+require("dependencies/gl-matrix");
+var Renderer = require("renderer").Renderer;
+var Pass = require("pass").Pass;
 
-    var Engine = Object.create(Object, {
+exports.Engine = Object.create(Object.prototype, {
 
-        _renderer: { value: null, writable: true },
+    _renderer: { value: null, writable: true },
 
-        _rootPass: { value: null, writable: true },
-    
-        rootPass: {
-            get: function() {
-                return this._rootPass;
-            },
-            set: function(value) {
-                this._rootPass = value;
-            }
+    _rootPass: { value: null, writable: true },
+
+    rootPass: {
+        get: function() {
+            return this._rootPass;
         },
-    
-        renderer: {
-            get: function() {
-                return this._renderer;
-            },
-            set: function(value) {
-                this._renderer = value;
-            }
-        },
-    
-        init: { 
-            value: function( webGLContext, options) {
-                this.renderer = Object.create(Renderer);
-                this.rootPass = Object.create(Pass);
-                this.rootPass.init();
-                this.renderer.webGLContext = webGLContext;      
-                return this;
-            }
-        },
-    
-        render: {
-            value: function() {
-                this.renderer.resetStates();
-                this.rootPass.execute(this);
-            }
+        set: function(value) {
+            this._rootPass = value;
         }
+    },
 
-    });
-    
-        return Engine;
+    renderer: {
+        get: function() {
+            return this._renderer;
+        },
+        set: function(value) {
+            this._renderer = value;
+        }
+    },
+
+    init: {
+        value: function( webGLContext, options) {
+            this.renderer = Object.create(Renderer);
+            this.rootPass = Object.create(Pass);
+            this.rootPass.init();
+            this.renderer.webGLContext = webGLContext;
+            return this;
+        }
+    },
+
+    render: {
+        value: function() {
+            this.renderer.resetStates();
+            this.rootPass.execute(this);
+        }
     }
-);
+
+});

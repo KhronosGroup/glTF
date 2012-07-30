@@ -1,0 +1,10 @@
+{
+    "name":"c2j",
+    "version":"0.0.0",
+    "directories":{
+        "lib":"."
+    },
+    "mappings":{
+        "montage":"runtime/dependencies/montage"
+    }
+}

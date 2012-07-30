@@ -24,7 +24,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/*  
+/*
     The Abstract Loader has two modes:
         #1: [static] load all the JSON at once [as of now]
         #2: [stream] stream and parse JSON progressively [not yet supported]
@@ -37,8 +37,8 @@
     In case #2: the concrete implementation will have to solve the dependencies. no order is guaranteed.
 
     When case #1 is used the followed dependency order is:
-    
-    scenes -> nodes -> meshes -> materials -> techniques -> shaders 
+
+    scenes -> nodes -> meshes -> materials -> techniques -> shaders
                     -> buffers
                     -> cameras
                     -> lights
@@ -50,13 +50,14 @@
     or false if a callback on client side will notify the loader that the next handle method can be called.
 
 */
-
+var global = window;
 (function (root, factory) {
     if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         module.exports = factory(global);
+        module.exports.WebGLTFLoader = module.exports;
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
@@ -96,7 +97,7 @@
         "scenes" : "scene"
     };
 
-    var WebGLTFLoader = Object.create(Object, {
+    var WebGLTFLoader = Object.create(Object.prototype, {
 
         MESH: { value: "mesh" },
         MATERIAL: { value: "material" },
@@ -108,9 +109,9 @@
         VERTEX_ATTRIBUTES: { value: "vertexAttributes" },
         TYPE: { value: "type" },
         BUFFER : { value: "buffer" },
-        
+
         _rootDescription: { value: null, writable: true },
-                
+
         rootDescription: {
             set: function(value) {
                 this._rootDescription = value;
@@ -165,22 +166,22 @@
 
         json: {
             enumerable: true,
-            get: function() {        
+            get: function() {
                 return this._json;
             },
             set: function(value) {
                 if (this._json !== value) {
-                    this._json = value; 
-                    this._resolvePathsForCategories(["buffers", "shaders"]);                   
+                    this._json = value;
+                    this._resolvePathsForCategories(["buffers", "shaders"]);
                 }
             }
         },
-    
+
         _path: {
             value: null,
             writable: true
         },
-      
+
         getEntryDescription: {
             value: function (entryID, entryType) {
                 var entryDescription = null;
@@ -196,7 +197,7 @@
                 return entries ? entries[entryID] : null;
             }
         },
-            
+
         _stepToNextCategory: {
             value: function() {
                 this._state.categoryIndex = this.getNextCategoryIndex(this._state.categoryIndex + 1);
@@ -212,7 +213,7 @@
 
         _stepToNextDescription: {
             enumerable: false,
-            value: function() { 
+            value: function() {
                 var category = categoriesDepsOrder[this._state.categoryIndex];
                 var categoryState = this._state.categoryState;
                 var keys = categoryState.keys;
@@ -227,9 +228,9 @@
                     }
                     return false;;
                 }
-            }    
+            }
         },
-    
+
         hasCategory: {
             value: function(category) {
                 return this.rootDescription[category] ? true : false;
@@ -256,7 +257,6 @@
                 while (this._state.categoryIndex !== -1) {
                     var category = categoriesDepsOrder[this._state.categoryIndex];
                     var categoryState = this._state.categoryState;
-
                     var keys = categoryState.keys;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
@@ -291,24 +291,24 @@
 
         _loadJSONIfNeeded: {
             enumerable: true,
-            value: function(callback) {        
+            value: function(callback) {
                 var self = this;
 
                 //FIXME: handle error
                 if (!this._json)  {
                     var baseURL;
                     var parser = document.createElement("a");
-                    
+
                     parser.href = window.location.href;
                     var port = "";
                     if (parser.port)
                         port += ":"+parser.port;
 
-                    baseURL = parser.protocol+"//"+parser.hostname+ port;                    
+                    baseURL = parser.protocol+"//"+parser.hostname+ port;
                     if (parser.pathname.charAt(parser.pathname.length - 1) !== '/') {
                         var filebase = parser.pathname.split("/");
                         filebase.pop();
-                        baseURL += filebase.join("/") + "/";  
+                        baseURL += filebase.join("/") + "/";
                     } else {
                         baseURL += parser.pathname;
                     }
@@ -320,7 +320,7 @@
                             pathBase.pop();
                             baseURL += pathBase.join("/") + "/";
                         }
-                    } 
+                    }
                     this.baseURL = baseURL;
 
                     var jsonfile = new XMLHttpRequest();
@@ -328,7 +328,7 @@
                     jsonfile.onreadystatechange = function() {
                         if (jsonfile.readyState == 4) {
                             if (jsonfile.status == 200) {
-                                self.json = JSON.parse(jsonfile.responseText);     
+                                self.json = JSON.parse(jsonfile.responseText);
                                 if (callback) {
                                     callback(self.json);
                                 }
@@ -350,14 +350,14 @@
                 var self = this;
                 function JSONReady(json) {
                     self.rootDescription = json;
-                    if (callback) 
+                    if (callback)
                         callback(this);
                 }
 
                 this._loadJSONIfNeeded(JSONReady);
             }
         },
-        
+
         _state: { value: null, writable: true },
 
         _getEntryType: {
@@ -397,8 +397,8 @@
                                         "categoryIndex" : startCategory,
                                         "categoryState" : { "index" : "0" } };
                         self._handleState();
-                    } 
-                });            
+                    }
+                });
             }
         },
 
@@ -409,7 +409,7 @@
                 return this;
             }
         },
-    
+
         initWithJSON: {
             value: function(json, baseURL) {
                 this.json = json;
@@ -419,10 +419,10 @@
                 }
                 return this;
             }
-        },
-       
+        }
+
     });
-    
+
     if(root) {
         root.WebGLTFLoader = WebGLTFLoader;
     }

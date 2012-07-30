@@ -24,109 +24,133 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/base", "runtime/resource-description", "runtime/primitive", "runtime/utilities", "dependencies/gl-matrix"], 
-    function(Base, ResourceDescription, Primitive, Utilities) {
+require("dependencies/gl-matrix");
+var Base = require("base").Base;
+var Utilities = require("utilities").Utilities;
 
-    var Mesh = Object.create(Base, {
+exports.Mesh = Object.create(Base, {
 
-        PRIMITIVES: { value: "primitives" },
+    PRIMITIVES: { value: "primitives" },
 
-        _primitives: {
-            value: null,
-            writable: true
+    //FIXME:temporary demo crap
+    //client side vertices arraybuffer
+    _verticesBuffer: {
+        value: null,
+        writable: true
+    },
+    verticesBuffer: { 
+        enumerable: true,
+        get: function() {
+            return this._verticesBuffer;
         },
+        set: function(value) {
+            this._verticesBuffer = value;
+        }
+    },
 
-        primitives: {
-            enumerable: true,
-            get: function() {
-                if (!this._primitives)
-                    this._primitives = [];  //FIXME: make an init
-                return this._primitives;
-            },
-            set: function(value) {
-                this._primitives = value;
-            }
-        },
+    _hidden: { value: null, writable: true },
 
-        _id: {
-            value: null,
-            writable: true
+    hidden: {
+        get: function() {
+            return this._hidden;
         },
+        set: function(value) {
+            this._hidden = value;
+        }
+    },
 
-        id: {
-            enumerable: true,
-            get: function() {
-                return this._id;
-            },
-            set: function(value) {
-                this._id = value;
-            }
-        },
-    
-        _name: {
-            value: null,
-            writable: true
-        },
+    _primitives: {
+        value: null,
+        writable: true
+    },
 
-        name: {
-            enumerable: true,
-            get: function() {
-                return this._name;
-            },
-            set: function(value) {
-                this._name = value;
-            }
+    primitives: {
+        enumerable: true,
+        get: function() {
+            if (!this._primitives)
+                this._primitives = [];  //FIXME: make an init
+            return this._primitives;
         },
-            
-        _computeBBOXIfNeeded: {
-            enumerable: false,
-            value: function() {
-                if ( (!this._boundingBox) && this.primitives) {
-                
-                    var count = this.primitives.length;
-                
-                    if (count > 0) {
-                        var bbox = this.primitives[0].boundingBox;
-                        if (bbox) {
-                            var i;
-                            for (i = 1 ; i <  count ; i++) {
-                                if (this.primitives[i].boundingBox) { //it could be not here here as we are loading everything asynchronously
-                                    bbox = Utilities.mergeBBox(bbox, this.primitives[i].boundingBox);
-                                }
+        set: function(value) {
+            this._primitives = value;
+        }
+    },
+
+    _id: {
+        value: null,
+        writable: true
+    },
+
+    id: {
+        enumerable: true,
+        get: function() {
+            return this._id;
+        },
+        set: function(value) {
+            this._id = value;
+        }
+    },
+
+    _name: {
+        value: null,
+        writable: true
+    },
+
+    name: {
+        enumerable: true,
+        get: function() {
+            return this._name;
+        },
+        set: function(value) {
+            this._name = value;
+        }
+    },
+
+    _computeBBOXIfNeeded: {
+        enumerable: false,
+        value: function() {
+            if ( (!this._boundingBox) && this.primitives) {
+
+                var count = this.primitives.length;
+
+                if (count > 0) {
+                    var bbox = this.primitives[0].boundingBox;
+                    if (bbox) {
+                        var i;
+                        for (i = 1 ; i <  count ; i++) {
+                            if (this.primitives[i].boundingBox) { //it could be not here here as we are loading everything asynchronously
+                                bbox = Utilities.mergeBBox(bbox, this.primitives[i].boundingBox);
                             }
-                            this._boundingBox = bbox;
                         }
+                        this._boundingBox = bbox;
                     }
                 }
             }
-        },
-    
-        _boundingBox: {
-            value: null,
-            writable: true
-        },
-    
-        boundingBox: {
-            enumerable: true,
-            get: function() {
-                this._computeBBOXIfNeeded();
-                return this._boundingBox;
-            },
-            // we let the possibility to override by hand the bounding volume.
-            set: function(value) {
-                this._boundingBox = value;
-            }
-        },
-        
-        init: {
-            value: function() {
-                this.__Base_init();
-                return this;
-            }
         }
+    },
 
-    });
-    
-        return Mesh;
+    _boundingBox: {
+        value: null,
+        writable: true
+    },
+
+    boundingBox: {
+        enumerable: true,
+        get: function() {
+            this._computeBBOXIfNeeded();
+            return this._boundingBox;
+        },
+        // we let the possibility to override by hand the bounding volume.
+        set: function(value) {
+            this._boundingBox = value;
+        }
+    },
+
+    init: {
+        value: function() {
+            this.__Base_init();
+            return this;
+        }
     }
-);
+
+});

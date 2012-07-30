@@ -24,39 +24,48 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(function() {
+exports.ResourceDescription = Object.create(Object.prototype, {
 
-    var ResourceDescription = Object.create(Object, {
+    _description: { value: null, writable: true },
 
-        _description: { value: null, writable: true },
+    _id: { value: null, writable: true },
 
-        _id: { value: null, writable: true },
-            
-        init: {
-            enumerable: true,
-            value: function(id, description) {
-                this._id = id;
-                this._description = description;
-                return this;
-            }
-        },
-    
-        description: {
-            enumerable: true,
-            get: function() {
-                return this._description;
-            }
-        },
-    
-        id: {
-            enumerable: true,
-            get: function() {
-                return this._id;
-            }
+    _type: { value: null, writable: true },
+
+    init: {
+        enumerable: true,
+        value: function(id, description) {
+            this._id = id;
+            this._description = description;
+            return this;
         }
+    },
 
-    });
-    
-        return ResourceDescription;
+    description: {
+        enumerable: true,
+        get: function() {
+            return this._description;
+        }
+    },
+
+    id: {
+        enumerable: true,
+        get: function() {
+            return this._id;
+        },
+        set: function(value) {
+            this._id = value;
+        }
+    },
+
+    type: {
+        enumerable: true,
+        get: function() {
+            return this._type;
+        },
+        set: function(value) {
+            this._type = value;
+        }
     }
-);
+
+});

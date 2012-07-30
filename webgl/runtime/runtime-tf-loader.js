@@ -24,375 +24,346 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define( ["loader/webgl-tf-loader", "runtime/resource-description", "runtime/technique", "runtime/pass", "runtime/glsl-program", "runtime/material", "runtime/mesh", "runtime/node", "runtime/primitive", "runtime/projection", "runtime/camera", "runtime/scene", "dependencies/gl-matrix"],
-    function(WebGLTFLoader, ResourceDescription, Technique, Pass, GLSLProgram, Material, Mesh, Node, Primitive, Projection, Camera, Scene, glMatrix) {
+require("dependencies/gl-matrix");
+var WebGLTFLoader = require("c2j/webgl-tf-loader").WebGLTFLoader;
+var ResourceDescription = require("resource-description").ResourceDescription;
+var Technique = require("technique").Technique;
+var Pass = require("pass").Pass;
+var GLSLProgram = require("glsl-program").GLSLProgram;
+var Material = require("material").Material;
+var Mesh = require("mesh").Mesh;
+var Node = require("node").Node;
+var Primitive = require("primitive").Primitive;
+var Projection = require("projection").Projection;
+var Camera = require("camera").Camera;
+var Scene = require("scene").Scene;
 
-    var RuntimeTFLoader = Object.create(WebGLTFLoader, {
+exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
 
-        _scenes: { value: null },  
+    _scenes: { writable:true, value: null },
 
-        //----- implements WebGLTFLoader ----------------------------
+    //----- implements WebGLTFLoader ----------------------------
 
-       handleBuffer: {
-            value: function(entryID, description, userInfo) {
-                var buffer = Object.create(ResourceDescription).init(entryID, description);
-                buffer.id = entryID;
-                this.storeEntry(entryID, buffer, description);
+   handleBuffer: {
+        value: function(entryID, description, userInfo) {
+            var buffer = Object.create(ResourceDescription).init(entryID, description);
+            buffer.id = entryID;
+            this.storeEntry(entryID, buffer, description);
+            return true;
+        }
+    },
+
+    handleShader: {
+        value: function(entryID, description, userInfo) {
+            var shader = Object.create(ResourceDescription).init(entryID, description);
+            shader.id = entryID;
+            shader.type = "shader"; //FIXME should I pass directly the description ? add a type property in resource-description ? (probably first solution...)
+            this.storeEntry(entryID, shader, description);
+            return true;
+        }
+    },
+
+    handleTechnique: {
+        value: function(entryID, description, userInfo) {
+
+            var technique = Object.create(Technique);
+            technique.id = entryID;
+            this.storeEntry(entryID, technique, description);
+
+            technique.rootPass = Object.create(Pass).init();
+            technique.rootPass.id = entryID+"_"+rootPassID;
+            var rootPassID = description.pass;
+            var passDescription = description[rootPassID];
+            var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
+            var fsShaderEntry = this.getEntry(passDescription[GLSLProgram.FRAGMENT_SHADER]);
+
+            var programs = {};
+            programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
+            programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
+            technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
+            technique.rootPass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
+            technique.rootPass.states = passDescription.states;
+            return true;
+        }
+    },
+
+    handleMaterial: {
+        value: function(entryID, description, userInfo) {
+            var material = Object.create(Material).init(entryID);
+            this.storeEntry(entryID, material, description);
+            if (description.inputs.diffuseTexture) {
+                description.inputs.diffuseTexture = this.resolvePathIfNeeded(description.inputs.diffuseTexture)                
+            }
+
+            material.inputs = description.inputs;
+            material.name = description.name;
+            var techniqueEntry = this.getEntry(description.technique);
+            if (techniqueEntry) {
+                material.technique = techniqueEntry.entry;
                 return true;
+            } else {
+                console.log("ERROR: invalid file, cannot find referenced technique:"+description.technique);
+                return false;
             }
-        },
+        }
+    },
 
-        handleShader: {
-            value: function(entryID, description, userInfo) {
-                var shader = Object.create(ResourceDescription).init(entryID, description);
-                shader.id = entryID;
-                shader.type = "shader"; //FIXME should I pass directly the description ? add a type property in resource-description ? (probably first solution...)
-                this.storeEntry(entryID, shader, description);
-                return true;
+    handleLight: {
+        value: function(entryID, description, userInfo) {
+            //no lights yet.
+            return true;
+        }
+    },
+
+    handleMesh: {
+        value: function(entryID, description, userInfo) {
+
+            var mesh = Object.create(Mesh).init();
+            mesh.id = entryID;
+            mesh.name = description.name;
+
+            this.storeEntry(entryID, mesh, description);
+
+            var primitivesDescription = description[Mesh.PRIMITIVES];
+            if (!primitivesDescription) {
+                //FIXME: not implemented in delegate
+                console.log("MISSING_PRIMITIVES for mesh:"+ entryID);
+                return false;
             }
-        },
 
-        handleTechnique: {
-            value: function(entryID, description, userInfo) {
+            for (var i = 0 ; i < primitivesDescription.length ; i++) {
+                var primitiveDescription = primitivesDescription[i];
 
-                var technique = Object.create(Technique);
-                technique.id = entryID;
-                this.storeEntry(entryID, technique, description);
+                if (primitiveDescription.primitive === "TRIANGLES") {
+                    var primitive = Object.create(Primitive).init();
 
-                technique.rootPass = Object.create(Pass).init();
-                technique.rootPass.id = entryID+"_"+rootPassID;
-                var rootPassID = description.pass;
-                var passDescription = description[rootPassID];
-                var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
-                var fsShaderEntry = this.getEntry(passDescription[GLSLProgram.FRAGMENT_SHADER]);
+                    //read material
+                    var materialEntry = this.getEntry(primitiveDescription.material);
+                    primitive.material = materialEntry.entry;
 
-                var programs = {};
-                programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
-                programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
-                technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
-                technique.rootPass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
-                technique.rootPass.states = passDescription.states;
-                return true;
-            }
-        },
+                    primitive.mesh = mesh; //FIXME: demo crap to be removed.
+                    mesh.primitives.push(primitive);
 
-        handleMaterial: {
-            value: function(entryID, description, userInfo) {
+                    var vertexAttributesDescription = primitiveDescription.vertexAttributes;
 
-                var material = Object.create(Material).init();
-                material.id = entryID;
-                this.storeEntry(entryID, material, description);
+                    vertexAttributesDescription.forEach( function(vertexAttributeDescription) {
+                        var accessorID = vertexAttributeDescription.accessor;
+                        var accessorEntry = this.getEntry(accessorID);
+                        if (!accessorEntry) {
+                            //let's just use an anonymous object for the accessor
+                            var accessor = description[accessorID];
+                            accessor.id = accessorID;
+                            this.storeEntry(accessorID, accessor, accessor);
 
-                material.inputs = description.inputs;
-                var techniqueEntry = this.getEntry(description.technique);
-                if (techniqueEntry) {
-                    material.technique = techniqueEntry.entry;
-
-                    //FIXME:HACK: for the moment we have a short-cut for texture, we'll get rid of this when we have a proper texture/image object coming from JSON
-                    var diffuseTexture = material.inputs["diffuseTexture"];
-                    if (diffuseTexture) {
-                        var imageResource = Object.create(ResourceDescription).init(diffuseTexture, { path: diffuseTexture });
-                        imageResource.type = "image";
-                        material.inputs["diffuseTexture"] = imageResource;
-                    }
-
-                    return true;
-                } else {
-                    console.log("ERROR: invalid file, cannot find referenced technique:"+description.technique);
-                    return false;
-                }
-            }
-        },
-
-        handleLight: {
-            value: function(entryID, description, userInfo) {
-                //no lights yet.
-                return true;
-            }
-        },
-
-        handleMesh: {
-            value: function(entryID, description, userInfo) {
-
-                var mesh = Object.create(Mesh).init();
-                mesh.id = entryID;
-                mesh.name = description.name;
-
-                this.storeEntry(entryID, mesh, description);
-
-                var primitivesDescription = description[Mesh.PRIMITIVES];
-                if (!primitivesDescription) {
-                    //FIXME: not implemented in delegate
-                    console.log("MISSING_PRIMITIVES for mesh:"+ entryID);
-                    return false;
-                }
-
-                for (var i = 0 ; i < primitivesDescription.length ; i++) {
-                    var primitiveDescription = primitivesDescription[i];
-                    
-                    if (primitiveDescription.primitive === "TRIANGLES") {
-                        var primitive = Object.create(Primitive).init();                    
-
-                        //read material
-                        var materialEntry = this.getEntry(primitiveDescription.material);
-                        primitive.material = materialEntry.entry;
-                
-                        mesh.primitives.push(primitive);
-                        
-                        var vertexAttributesDescription = primitiveDescription.vertexAttributes;
-                    
-                        vertexAttributesDescription.forEach( function(vertexAttributeDescription) {
-                            var accessorID = vertexAttributeDescription.accessor;
-                            var accessorEntry = this.getEntry(accessorID);
-                            if (!accessorEntry) {
-                                //let's just use an anonymous object for the accessor
-                                var accessor = description[accessorID];
-                                accessor.id = accessorID;
-                                this.storeEntry(accessorID, accessor, accessor);
-            
-                                var bufferEntry = this.getEntry(accessor.buffer);
-                                accessor.buffer = bufferEntry.entry;
-                                accessorEntry = this.getEntry(accessorID);
-                                //this is a set ID, it has to stay a string
-                            }
-                            var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";
-                                                    
-                            primitive.addVertexAttribute( { "semantic" :  vertexAttributeDescription.semantic,
-                                                            "set" : set,
-                                                            "accessor" : accessorEntry.entry });
-
-                        }, this);
-                    
-                        //set indices
-                        var indicesID = entryID + "_indices"+"_"+i;
-                        var indicesEntry = this.getEntry(indicesID);
-                        if (!indicesEntry) {
-                            indices = primitiveDescription.indices;
-                            indices.id = indicesID;
-                            var bufferEntry = this.getEntry(indices.buffer);
-                            indices.buffer = bufferEntry.entry;
-                            this.storeEntry(indicesID, indices, indices);
-                            indicesEntry = this.getEntry(indicesID);
+                            var bufferEntry = this.getEntry(accessor.buffer);
+                            accessor.buffer = bufferEntry.entry;
+                            accessorEntry = this.getEntry(accessorID);
+                            //this is a set ID, it has to stay a string
                         }
-                        primitive.indices = indicesEntry.entry;
-                    }
-                }
-                return true;
-            }
-        },
+                        var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";
 
-        handleCamera: {
-            value: function(entryID, description, userInfo) {
+                        primitive.addVertexAttribute( { "semantic" :  vertexAttributeDescription.semantic,
+                                                        "set" : set,
+                                                        "accessor" : accessorEntry.entry });
 
-                var camera = Object.create(Camera).init();
-                camera.id = entryID;
-                this.storeEntry(entryID, camera, description);
-
-                var projection = Object.create(Projection);
-                projection.initWithDescription(description);
-                camera.projection = projection;
-                return true;
-            }
-        },
-
-        handleLight: {
-            value: function(entryID, description, userInfo) {
-                return true;
-            }
-        },
-
-        buildNodeHirerachy: {
-            value: function(parentEntry) {
-                var parentNode = parentEntry.entry;
-                var children = parentEntry.description.children;
-                if (children) {
-                    children.forEach( function(childID) {
-                        var nodeEntry = this.getEntry(childID);
-                        parentNode.children.push(nodeEntry.entry);
-                        this.buildNodeHirerachy(nodeEntry);
                     }, this);
+
+                    //set indices
+                    var indicesID = entryID + "_indices"+"_"+i;
+                    var indicesEntry = this.getEntry(indicesID);
+                    if (!indicesEntry) {
+                        indices = primitiveDescription.indices;
+                        indices.id = indicesID;
+                        var bufferEntry = this.getEntry(indices.buffer);
+                        indices.buffer = bufferEntry.entry;
+                        this.storeEntry(indicesID, indices, indices);
+                        indicesEntry = this.getEntry(indicesID);
+                    }
+                    primitive.indices = indicesEntry.entry;
                 }
             }
-        },
+            return true;
+        }
+    },
 
-        handleScene: {
-            value: function(entryID, description, userInfo) {
+    handleCamera: {
+        value: function(entryID, description, userInfo) {
 
-                if (!this._scenes) {
-                    this._scenes = [];
-                }
+            var camera = Object.create(Camera).init();
+            camera.id = entryID;
+            this.storeEntry(entryID, camera, description);
 
-                if (!description.node) {
-                    console.log("ERROR: invalid file required node property is missing from scene");
-                    return false;
-                }
+            var projection = Object.create(Projection);
+            projection.initWithDescription(description);
+            camera.projection = projection;
+            return true;
+        }
+    },
 
-                var scene = Object.create(Scene).init();
-                scene.id = entryID;
-                scene.name = description.name;
-                this.storeEntry(entryID, scene, description);
+    handleLight: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
 
-                var nodeEntry = this.getEntry(description.node);
-                
-                scene.rootNode = nodeEntry.entry;
-                this._scenes.push(scene);
-                //now build the hirerarchy
-                this.buildNodeHirerachy(nodeEntry);
-
-                return true;
+    buildNodeHirerachy: {
+        value: function(parentEntry) {
+            var parentNode = parentEntry.entry;
+            var children = parentEntry.description.children;
+            if (children) {
+                children.forEach( function(childID) {
+                    var nodeEntry = this.getEntry(childID);
+                    parentNode.children.push(nodeEntry.entry);
+                    this.buildNodeHirerachy(nodeEntry);
+                }, this);
             }
-        },
+        }
+    },
 
-        handleNode: {
-            value: function(entryID, description, userInfo) {
-                var childIndex = 0;
-                var self = this;
+    handleScene: {
+        value: function(entryID, description, userInfo) {
 
-                var node = Object.create(Node).init();
-                node.id = entryID;
-                node.name = description.name;
+            if (!this._scenes) {
+                this._scenes = [];
+            }
 
-                this.storeEntry(entryID, node, description);
-            
-                node.transform = description.matrix ? mat4.create(description.matrix) : mat4.identity();
-    
-                //FIXME: decision needs to be made between these 2 ways, probably meshes will be discarded.
-                var meshEntry;
-                if (description.mesh) {
-                    meshEntry = this.getEntry(description.mesh);
+            if (!description.node) {
+                console.log("ERROR: invalid file required node property is missing from scene");
+                return false;
+            }
+
+            var scene = Object.create(Scene).init();
+            scene.id = entryID;
+            scene.name = description.name;
+            this.storeEntry(entryID, scene, description);
+
+            var nodeEntry = this.getEntry(description.node);
+
+            scene.rootNode = nodeEntry.entry;
+            this._scenes.push(scene);
+            //now build the hirerarchy
+            this.buildNodeHirerachy(nodeEntry);
+
+            return true;
+        }
+    },
+
+    handleNode: {
+        value: function(entryID, description, userInfo) {
+            var childIndex = 0;
+            var self = this;
+
+            var node = Object.create(Node).init();
+            node.id = entryID;
+            node.name = description.name;
+
+            this.storeEntry(entryID, node, description);
+
+            node.transform = description.matrix ? mat4.create(description.matrix) : mat4.identity();
+
+            //FIXME: decision needs to be made between these 2 ways, probably meshes will be discarded.
+            var meshEntry;
+            if (description.mesh) {
+                meshEntry = this.getEntry(description.mesh);
+                node.meshes.push(meshEntry.entry);
+            }
+
+            if (description.meshes) {
+                description.meshes.forEach( function(meshID) {
+                    meshEntry = this.getEntry(meshID);
                     node.meshes.push(meshEntry.entry);
-                }
-
-                if (description.meshes) {
-                    description.meshes.forEach( function(meshID) {
-                        meshEntry = this.getEntry(meshID);
-                        node.meshes.push(meshEntry.entry);
-                    }, this);
-                }
-
-                if (description.camera) {
-                    var cameraEntry = this.getEntry(description.camera);
-                    node.cameras.push(cameraEntry.entry);
-                }
-
-                return true;
+                }, this);
             }
-        },
 
-        handleLoadCompleted: {
-            value: function(success) {
-                if (this._scenes && this.delegate) {
-                    if (this._scenes.length > 0) {
-                        this.delegate.loadCompleted(this._scenes[0]);
-                    }
+            if (description.camera) {
+                var cameraEntry = this.getEntry(description.camera);
+                node.cameras.push(cameraEntry.entry);
+            }
+
+            return true;
+        }
+    },
+
+    handleLoadCompleted: {
+        value: function(success) {
+            if (this._scenes && this.delegate) {
+                if (this._scenes.length > 0) {
+                    this.delegate.loadCompleted(this._scenes[0]);
                 }
             }
-        },
+        }
+    },
 
-        handleError: {
-            value: function(reason) {
-                //TODO: propagate in the delegate
-            }
-        },
+    handleError: {
+        value: function(reason) {
+            //TODO: propagate in the delegate
+        }
+    },
 
-        //----- store model values
+    //----- store model values
 
-        _delegate: {
-            value: null,
-            writable: true
-        },
+    _delegate: {
+        value: null,
+        writable: true
+    },
 
-        delegate: {
-            enumerable: true,
-            get: function() {
-                return this._delegate;
-            },
-            set: function(value) {
-                this._delegate = value;
-            }
+    delegate: {
+        enumerable: true,
+        get: function() {
+            return this._delegate;
         },
+        set: function(value) {
+            this._delegate = value;
+        }
+    },
 
-        _entries: {
-            enumerable: false,
-            value: null,
-            writable: true
-        },
-    
-        removeAllEntries: {
-            value: function() {
+    _entries: {
+        enumerable: false,
+        value: null,
+        writable: true
+    },
+
+    removeAllEntries: {
+        value: function() {
+            this._entries = {};
+        }
+    },
+
+    containsEntry: {
+        enumerable: false,
+        value: function(entryID) {
+            if (!this._entries)
+                return false;
+            return this._entries[entryID] ? true : false;
+        }
+    },
+
+    storeEntry: {
+        enumerable: false,
+        value: function(id, entry, description) {
+            if (!this._entries) {
                 this._entries = {};
             }
-        },
-    
-        containsEntry: {
-            enumerable: false,
-            value: function(entryID) {
-                if (!this._entries)
-                    return false;
-                return this._entries[entryID] ? true : false;
-            }
-        },
-    
-        storeEntry: {
-            enumerable: false,
-            value: function(id, entry, description) {
-                if (!this._entries) {
-                    this._entries = {};
-                }
 
-                if (!id) {
-                    console.log("ERROR: not id provided, cannot store");
-                    return;
-                }
-        
-                if (this.containsEntry[id]) {
-                    console.log("WARNING: entry:"+id+" is already stored, overriding");
-                }
-            
-                this._entries[id] = { "id" : id, "entry" : entry, "description" : description };
+            if (!id) {
+                console.log("ERROR: not id provided, cannot store");
+                return;
             }
-        },
-    
-        getEntry: {
-            enumerable: false,
-            value: function(entryID) {
-                return this._entries ? this._entries[entryID] : null;
+
+            if (this.containsEntry[id]) {
+                console.log("WARNING: entry:"+id+" is already stored, overriding");
             }
-        },
-        
-       
-    });
-    
-        return RuntimeTFLoader;
+
+            this._entries[id] = { "id" : id, "entry" : entry, "description" : description };
+        }
+    },
+
+    getEntry: {
+        enumerable: false,
+        value: function(entryID) {
+            return this._entries ? this._entries[entryID] : null;
+        }
     }
-);
-        /* Multiple ready entries to be re-integrated..
-        _readEntries: {
-            enumerable: false,
-            value: function(entryIDs, delegate, userInfo) {
-            
-                var self = this;
-                var count = entryIDs.length;
-                var idx = 0;
-                var allEntries = [];
-                var entryDelegate = {};
-            
-                entryDelegate.readCompleted = function(entryType, entry, userInfo) {
-                    //console.log("readCompleted for entry:"+entryType+" id:"+entry.id);
-                
-                    allEntries[idx++] = entry;
-                    if (idx == count) {
-                        if (delegate) {
-                            delegate.readCompleted("entries", allEntries, userInfo);
-                        }
-                    } else {
-                        self._readEntry(entryIDs[idx], entryDelegate, userInfo);
-                    }                
-                }
-            
-                if (count > 0) 
-                    this._readEntry(entryIDs[0], entryDelegate, userInfo);
-            }
-        },
-        */
 
+
+});

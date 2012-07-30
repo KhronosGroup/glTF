@@ -1,0 +1,3 @@
+[submodule "webgl/runtime/dependencies/montage"]
+	path = webgl/runtime/dependencies/montage
+	url = https://github.com/Motorola-Mobility/montage.git

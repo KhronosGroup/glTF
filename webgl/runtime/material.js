@@ -24,31 +24,141 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/base", "dependencies/gl-matrix"], function(Base, glMatrix) {
+require("dependencies/gl-matrix");
+var Base = require("base").Base;
+var Technique = require("technique").Technique;
+var Pass = require("pass").Pass;
+var GLSLProgram = require("glsl-program").GLSLProgram;
+var ResourceDescription = require("resource-description").ResourceDescription;
+var Uuid = require("montage/core/uuid").Uuid;
+var Montage = require("montage").Montage;
 
-    var Material = Object.create(Base, {
 
-        _inputs: { value: null, writable: true },
-    
-        inputs: {
-            enumerable: false,
-            get: function() {
-                return this._inputs;
-            },
-            set: function(value) {
-                this._inputs = value;
-            }
-        },
+exports.Material = Object.create(Base, {
 
-        init: {
-            value: function() {
-                this.__Base_init();
-                return this;
+    animationDuration: { value: 0.7, writable: false},
+
+    animationDelegate: { value: null, writable: true},
+
+    //use this property to behave as a technique factory
+    _techniqueForID: { value: {}, writable: true },
+
+    inputWillChange: {
+        value: function(name, value) {
+        }
+    },
+
+    //update the technique when change parameters
+    //the combinatory possibilties could explode here, and should not be handled that way for future devs..
+    inputDidChange: {
+        value: function(name) {
+
+        }
+    },
+
+    _addInputPropertyIfNeeded: {
+        value: function(property) {
+            var privateName = "_" + property;
+            var self = this;
+            if (this.inputs.hasOwnProperty(property) === false) {
+                Object.defineProperty(this.inputs, privateName, { writable:true , value: null });
+
+                Object.defineProperty(this.inputs, property, {
+                    get: function() { return self.inputs[privateName]; },
+                    set: function(value) {
+                        var currentValue = self.inputs[property];
+                        self.inputWillChange.call(self, property, value);
+                        if ((property === "diffuseTexture")||(property === "reflectionTexture")) {
+                            if (typeof value === "string") {
+                                var texture = value;
+                                var imageResource = Object.create(ResourceDescription).init(texture, { path: texture });
+                                imageResource.type = "image";
+                                value = imageResource;
+                            }  else if (value !== null) {
+                                var image = value;
+                                //check if the uuid that we potentially stored is here
+                                var uuid = image["__uuid"];
+                                if (!uuid) {
+                                    var src = image.src;
+                                    if (src) {
+                                        uuid = src.split("/").join("_");
+                                    } else {
+                                        uuid = Uuid.generate();
+                                    }
+                                    image["__uuid"] = uuid;
+                                }
+
+                                var imageResource = Object.create(ResourceDescription).init(uuid, { "image": image });
+                                imageResource.type = "image";
+                                value = imageResource;
+                            }
+                        }  
+                        self.inputs[privateName] = value;
+                        self.inputDidChange.call(self, property);
+                    }
+                });
             }
         }
-    
-    });
-    
-        return Material;
-    }
-);
+    },
+
+    _prepareInputsProperties: {
+        value: function() {
+            var properties = ["diffuseColor", "diffuseTexture", "transparency", "reflectionTexture", "reflectionIntensity", "shininess", "specularColor"];
+
+            properties.forEach( function(property) {
+                this._addInputPropertyIfNeeded(property);
+            }, this);
+        }
+    },
+
+    _technique: { value: null, writable: true },
+
+    technique: {
+        enumerable: false,
+        get: function() {
+            return this._technique;
+        },
+        set: function(value) {
+            this._technique = value;
+        }
+    },
+
+    _material: { value: null, writable: true },
+
+    material: {
+        enumerable: false,
+        get: function() {
+            return this._material;
+        },
+        set: function(value) {
+            this._material = value;
+        }
+    },
+
+    _inputs: { value: null, writable: true },
+
+    inputs: {
+        enumerable: false,
+        get: function() {
+            return this._inputs;
+        },
+        set: function(value) {
+            //FIXME: handle !value
+            var keys = Object.keys(value);
+            keys.forEach( function(key) {
+                this._inputs[key] = value[key];
+            }, this);
+        }
+    },
+
+    init: {
+        value: function(id) {
+            this.id = id;
+            this.__Base_init();
+            this._inputs = {};
+            this._prepareInputsProperties();
+            return this;
+        }
+    },
+
+});

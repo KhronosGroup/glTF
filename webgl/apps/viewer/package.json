@@ -1,0 +1,12 @@
+{
+    "name": "viewer",
+    "version": "0.0.0",
+    "dependencies": {
+        "montage" : "0.10.x - 0.11.x"
+    },
+    "mappings":{
+        "runtime":"../../runtime",
+        "c2j" : "../../../webgl"
+    }
+    
+}

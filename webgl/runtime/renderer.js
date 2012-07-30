@@ -24,26 +24,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-matrix", "dependencies/webgl-texture-utils"], function(GLSLProgram, ResourceManager) {
+require("dependencies/gl-matrix");
+var GLSLProgram = require("glsl-program").GLSLProgram;
+var ResourceManager = require("c2j/helpers/resource-manager").ResourceManager;
 
-    var Renderer = Object.create(Object, {
+exports.Renderer = Object.create(Object, {
 
-        //temporary state for testing
-        _bindedProgram: { value: null, writable: true },
+    shininess: { value: 200, writable: true },
+
+    light: { value: [0, 0, -1], writable: true },
+
+    specularColor: { value: [1, 1, 1], writable: true },
+
+    //temporary state for testing
+    _bindedProgram: { value: null, writable: true },
     
-        bindedProgram: {
-            get: function() {
-                return this._bindedProgram;
-            },
-            set: function(value) {
-                if ((this._bindedProgram !== value) && this._webGLContext) {
-                    this._bindedProgram = value;
-                    if (this._bindedProgram) {
-                        this._bindedProgram.use(this._webGLContext, false);
-                    } 
-                }
-            }
+    bindedProgram: {
+        get: function() {
+            return this._bindedProgram;
         },
+        set: function(value) {
+            if ((this._bindedProgram !== value) && this._webGLContext) {
+                this._bindedProgram = value;
+                if (this._bindedProgram) {
+                   this._bindedProgram.use(this._webGLContext, false);
+                } 
+            }
+        }
+    },
 
         _debugProgram: { value: null, writable: true },
     
@@ -151,6 +159,10 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
     
         indicesDelegate: {
             value: {
+                webGLContext:  {
+                    value: null, writable: true
+                },
+
                 handleError: function(errorCode, info) {
                     // FIXME: report error
                     console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
@@ -158,7 +170,8 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
         
                 //should be called only once
                 convert: function (resource, ctx) {
-                    var gl = ctx;                
+                    ctx.indicesBuffer = new Uint16Array(resource);
+                    var gl = this.webGLContext;                
                     var previousBuffer = gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING);
 
                     var glResource =  gl.createBuffer();                
@@ -177,15 +190,20 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
     
         vertexAttributeBufferDelegate: {
             value: {
+                webGLContext:  {
+                    value: null, writable: true
+                },
+
                 handleError: function(errorCode, info) {
-                    // FIXME: report error
                     console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
                 },
         
-                //should be called only once
                 convert: function (resource, ctx) {
-                    var gl = ctx;                
-
+                    if (ctx.semantic === "VERTEX") {
+                        ctx.primitive.mesh.verticesBuffer = new Float32Array(resource);
+                    }
+ 
+                    var gl = this.webGLContext;                
                     var previousBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
     
                     var glResource =  gl.createBuffer();                
@@ -229,8 +247,10 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                     case gl.BLEND:
                         if ((this._blend !== flag) || force) {
                             if (flag) {
+                                //gl.depthMask(false);
                                 gl.enable(gl.BLEND);
                             } else {
+                                //gl.depthMask(true);
                                 gl.disable(gl.BLEND);                               
                             }
                             this._blend = flag;
@@ -282,39 +302,93 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                 if (program.getLocationForSymbol("u_mvMatrix")) {
                     program.setValueForSymbol("u_mvMatrix",worldMatrix);
                 }
-                
-                var transparency = 1;
+
+                var shininess = this.shininess;
+                if (program.getLocationForSymbol("u_shininess")) {
+                    shininess = primitive.material.inputs.shininess;
+                    if ((typeof shininess === "undefined") || (shininess === null)) {
+                        shininess = this.shininess;
+                    }
+                    program.setValueForSymbol("u_shininess",shininess);
+                }
+
+                var light = this.light;
+                if (program.getLocationForSymbol("u_light")) {
+                    light = primitive.material.inputs.light;
+                    if ((typeof light === "undefined") || (light === null)) {
+                        light = this.light;
+                    }
+                    program.setValueForSymbol("u_light",light);
+                }
+
+                var specularColor = this.specularColor;
+                if (program.getLocationForSymbol("u_specularColor")) {
+                    specularColor = primitive.material.inputs.specularColor;
+                    if ((typeof specularColor === "undefined") || (specularColor === null)) {
+                        specularColor = this.specularColor;
+                    }
+                    program.setValueForSymbol("u_specularColor",specularColor);
+                } 
+
+                var defaultReflectionIntensity = 0.3;
+                var reflectionIntensity = defaultReflectionIntensity;
+                if (program.getLocationForSymbol("u_reflectionIntensity")) {
+                    reflectionIntensity = primitive.material.inputs.reflectionIntensity;
+                    if ((typeof reflectionIntensity === "undefined") || (reflectionIntensity === null)) {
+                        reflectionIntensity = defaultReflectionIntensity;
+                    }
+                    program.setValueForSymbol("u_reflectionIntensity",reflectionIntensity);
+                }
+                var defaultTransparency = 1.0;
+                var transparency = defaultTransparency;
                 if (program.getLocationForSymbol("u_transparency")) {
                     transparency = primitive.material.inputs.transparency;
-                    if (typeof transparency === "undefined") {
-                        transparency = 1;
+                    if ((typeof transparency === "undefined") || (transparency === null)) {
+                        transparency = defaultTransparency;
                     }
                     program.setValueForSymbol("u_transparency",transparency);
                 }
 
                 if (program.getLocationForSymbol("u_diffuseColor")) {
                     var color = primitive.material.inputs.diffuseColor;
-                    var step = primitive.step * primitive.step;
+                    /*var step = primitive.step * primitive.step;
                     var oneMinusPrimitiveStep = 1 - (1 * step);
                     var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])), 
                                     ((oneMinusPrimitiveStep) + (step * color[1])),
                                     ((oneMinusPrimitiveStep) + (step * color[2]))];
-
-                    program.setValueForSymbol("u_diffuseColor",colorStep);
+*/
+                    program.setValueForSymbol("u_diffuseColor",color);
                 }
 
+                var currentTexture = 0;
                 if (program.getLocationForSymbol("u_diffuseTexture")) {
                     var image = primitive.material.inputs.diffuseTexture;
                     var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
                     if (texture) {
-                        gl.activeTexture(gl.TEXTURE0);
+                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
                         gl.bindTexture(gl.TEXTURE_2D, texture);
-                        var samplerLocation = program.getValueForSymbol("u_diffuseTexture");
-                        if (typeof samplerLocation === "undefined") {
-                            program.setValueForSymbol("u_diffuseTexture", 0);
+                        var samplerLocation = program.getLocationForSymbol("u_diffuseTexture");
+                        if (typeof samplerLocation !== "undefined") {
+                            program.setValueForSymbol("u_diffuseTexture", currentTexture);
+                            currentTexture++;
                         }
                     }
                 }
+
+                if (program.getLocationForSymbol("u_reflectionTexture")) {
+                    var image = primitive.material.inputs.reflectionTexture;
+                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
+                    if (texture) {
+                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        var samplerLocation = program.getLocationForSymbol("u_reflectionTexture");
+                        if (typeof samplerLocation !== "undefined") {
+                            program.setValueForSymbol("u_reflectionTexture", currentTexture);
+                            currentTexture++;
+                        }
+                    }
+                }
+
                 program.commit(gl);
             
                 var available = true;
@@ -325,7 +399,8 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                     var symbol = materialSemantic[vertexAttribute.semantic];
                     if (symbol) {
                         //FIXME: do not assume continuous data, this will break with interleaved arrays (should not use byteStride here).
-                        var glResource = this.resourceManager.getResource(accessor, this.vertexAttributeBufferDelegate, this.webGLContext);
+                        this.vertexAttributeBufferDelegate.webGLContext = this.webGLContext;
+                        var glResource = this.resourceManager.getResource(accessor, this.vertexAttributeBufferDelegate,  { "semantic": vertexAttribute.semantic, "primitive": primitive});
                         // this call will bind the resource when available
                         if (glResource) {
                             gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
@@ -347,7 +422,7 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                                 } 
                                 gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
                                 if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
-                                   gl.drawArrays(gl.POINTS, 0, accessor.count);
+                                    gl.drawArrays(gl.POINTS, 0, accessor.count);
                                 }
                             }
                         }
@@ -366,7 +441,9 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
               
                     var glIndices = null;
                     //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
-                    glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, this.webGLContext);              
+
+                    this.indicesDelegate.webGLContext = this.webGLContext;
+                    glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, primitive);              
                     if (glIndices && available) {
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
@@ -417,20 +494,17 @@ define(["runtime/glsl-program", "helpers/resource-manager", "dependencies/gl-mat
                                 blending = true;
                                 gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                             } 
-                        }
+                        } 
                         this.setState(gl.BLEND, blending);
 
                         this.bindedProgram = glProgram;
                         for (var i = 0 ; i < count ; i++) {
-                            this.renderPrimitive(primitives[i]);
+                            if (!primitives[i].mesh.hidden)
+                                this.renderPrimitive(primitives[i]);
                         }
                     }
                 }
             }
         }
 
-    });
-    
-        return Renderer;
-    }
-);
+});

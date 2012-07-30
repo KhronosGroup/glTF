@@ -23,31 +23,27 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+require("dependencies/gl-matrix");
+var Base = require("base").Base;
 
-define(["runtime/base", "runtime/resource-description", "runtime/pass", "runtime/glsl-program", "dependencies/gl-matrix"], 
-    function(Base, ResourceDescription, Pass, GLSLProgram, glMatrix) {
+exports.Technique = Object.create(Base, {
 
-    var Technique = Object.create(Base, {
-
-        init: {
-            value: function() {
-                this.__Base_init();
-            }
-        },
-
-        _rootPass: { value: null, writable: true },
-    
-        rootPass: {
-            get: function() {
-                return this._rootPass;
-            },
-            set: function(value) {
-                this._rootPass = value;
-            }
+    init: {
+        value: function() {
+            this.__Base_init();
+            return this;
         }
-    
-    });
-    
-        return Technique;
+    },
+
+    _rootPass: { value: null, writable: true },
+
+    rootPass: {
+        get: function() {
+            return this._rootPass;
+        },
+        set: function(value) {
+            this._rootPass = value;
+        }
     }
-);
+
+});

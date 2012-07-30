@@ -24,172 +24,233 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define(["runtime/base","runtime/utilities", "dependencies/gl-matrix"], function(Base, Utilities) {
+require("dependencies/gl-matrix");
+var Base = require("base").Base;
+var Utilities = require("utilities").Utilities;
 
-    var Node = Object.create(Base, {
+exports.Node = Object.create(Base, {
 
-        _children: { value: null, writable: true },
-    
-        children: {
-            get: function() {         
-                return this._children; 
-            },
-            set: function(value) { 
-                this._children = value; 
-            }
+    _children: { value: null, writable: true },
+
+    children: {
+        get: function() {
+            return this._children;
         },
+        set: function(value) {
+            this._children = value;
+        }
+    },
 
-        _id: { value: null, writable: true },
-    
-        id: {
-            get: function() { 
-                return this._id; 
-            },
-            set: function(value) { 
-                this._id = value; 
-            }
+    _id: { value: null, writable: true },
+
+    id: {
+        get: function() {
+            return this._id;
         },
-    
-        _computeBBOXIfNeeded: {
-            enumerable: false,
-            value: function() {
-                if (!this._boundingBox) {
-                
-                    var meshes = this._properties["meshes"];                
-                    var count = this.meshes.length;
-                    if (count > 0) {
-                        var bbox = this.meshes[0].boundingBox;
-                        //bbox = Utilities.transformBBox(bbox, this.transform);                   
-                        if (bbox) {
-                            var i;
-                            for (i = 1 ; i <  count ; i++) {
-                                var aBBox = this.meshes[i].boundingBox;
-                                if (aBBox) { //it could be not here here as we are loading everything asynchronously
+        set: function(value) {
+            this._id = value;
+        }
+    },
 
-                                    //aBBox = Utilities.transformBBox(aBBox, this.transform);
-                                    bbox = Utilities.mergeBBox(bbox, aBBox);
-                                }
+    _hidden: { value: null, writable: true },
+
+    hidden: {
+        get: function() {
+            return this._hidden;
+        },
+        set: function(value) {
+            this._hidden = value;
+        }
+    },
+
+    _computeBBOXIfNeeded: {
+        enumerable: false,
+        value: function() {
+            if (!this._boundingBox) {
+
+                var meshes = this._properties["meshes"];
+                var count = this.meshes.length;
+                if (count > 0) {
+                    var bbox = this.meshes[0].boundingBox;
+                    if (bbox) {
+                        var i;
+                        for (i = 1 ; i <  count ; i++) {
+                            var aBBox = this.meshes[i].boundingBox;
+                            if (aBBox) { //it could be not here here as we are loading everything asynchronously
+                                bbox = Utilities.mergeBBox(bbox, aBBox);
                             }
-                        
-                            this._boundingBox = Utilities.transformBBox(bbox, this.transform);
                         }
-                    }                
-                }
-            }
-        },
-        
-        _boundingBox: {
-            enumerable: false,
-            value: null,
-            writable: true
-        },
-    
-        boundingBox: {
-            enumerable: true,
-            get: function() {
-                this._computeBBOXIfNeeded();
-                return this._boundingBox;
-            },
-            // we let the possibility to override by hand the bounding volume.
-            set: function(value) {
-                this._boundingBox = value;
-            }
-        },
 
-       meshesDidChange: {
-            value: function(meshes) {
-                this._boundingBox = null; //invalidate bounding box 
-            }
-        },
-
-        init: {
-            value: function() {
-                this.__Base_init();
-                this._children = [];
-                this._transform = mat4.identity();
-                this._properties["meshes"] = [];
-                
-                var self = this;
-                this._properties["meshes"].push = function(data) {
-                    var result = Array.prototype.push.call(this, data);
-                    self.meshesDidChange(this);
-                    return result;
-                }
-            
-                this._properties["cameras"] = [];
-                this._properties["lights"] = [];
-
-                return this;
-            }
-        },
-
-        getPropertyArrayNamed: {
-            value: function(name) {        
-                return this._properties[name]
-            }
-        },
-        
-        _transform: { value: null, writable: true },
-
-        transform: {
-            get: function() { 
-                return this._transform; 
-            },
-            set: function(value) { 
-                this._transform = value; 
-            }
-        },
-
-        meshes: {
-            get: function() { 
-                return this.getPropertyArrayNamed("meshes"); 
-            },
-            set: function(value) { 
-                this._properties["meshes"] = value;
-                this.meshesDidChange(value);
-            }
-        },
-    
-        cameras: {
-            get: function() { 
-                return this.getPropertyArrayNamed("cameras"); 
-            },
-            set: function(value) { 
-                this._properties["cameras"] = value;
-            }
-        },
-
-        lights: {
-            get: function() { 
-                return this.getPropertyArrayNamed("lights"); 
-            },
-            set: function(value) { 
-                this._properties["lights"] = value;
-            }
-        },
-
-        _apply: {
-            value: function( callback, recurse, parent, ctx) {
-    
-                if (callback) {
-                    ctx = callback(this, parent, ctx);
-                
-                    if (recurse) {
-                        this.children.forEach( function(node) {
-                            node._apply(callback, recurse, this, ctx);
-                        }, this);
+                        this._boundingBox = bbox;//Utilities.transformBBox(bbox, this.transform);
                     }
                 }
             }
+        }
+    },
+
+    _boundingBox: {
+        enumerable: false,
+        value: null,
+        writable: true
+    },
+
+    boundingBox: {
+        enumerable: true,
+        get: function() {
+            this._computeBBOXIfNeeded();
+            return this._boundingBox;
         },
-    
-        apply: {
-            value: function( callback, recurse, ctx) {
-                this._apply(callback, recurse, null, ctx);
+        // we let the possibility to override by hand the bounding volume.
+        set: function(value) {
+            this._boundingBox = value;
+        }
+    },
+
+    meshesDidChange: {
+        value: function(meshes) {
+            this._boundingBox = null; //invalidate bounding box
+        }
+    },
+
+    init: {
+        value: function() {
+            this.__Base_init();
+            this._children = [];
+            this._transform = mat4.identity();
+            this._properties["meshes"] = [];
+
+            var self = this;
+            this._properties["meshes"].push = function(data) {
+                var result = Array.prototype.push.call(this, data);
+                self.meshesDidChange(this);
+                return result;
+            }
+
+            this._properties["cameras"] = [];
+            this._properties["lights"] = [];
+
+            return this;
+        }
+    },
+
+    getPropertyArrayNamed: {
+        value: function(name) {
+            return this._properties[name]
+        }
+    },
+
+    _transform: { value: null, writable: true },
+
+    transform: {
+        get: function() {
+            return this._transform;
+        },
+        set: function(value) {
+            this._transform = value;
+        }
+    },
+
+    meshes: {
+        get: function() {
+            return this.getPropertyArrayNamed("meshes");
+        },
+        set: function(value) {
+            this._properties["meshes"] = value;
+            this.meshesDidChange(value);
+        }
+    },
+
+    cameras: {
+        get: function() {
+            return this.getPropertyArrayNamed("cameras");
+        },
+        set: function(value) {
+            this._properties["cameras"] = value;
+        }
+    },
+
+    lights: {
+        get: function() {
+            return this.getPropertyArrayNamed("lights");
+        },
+        set: function(value) {
+            this._properties["lights"] = value;
+        }
+    },
+
+    _apply: {
+        value: function( callback, recurse, parent, ctx) {
+
+            if (callback) {
+                ctx = callback(this, parent, ctx);
+
+                if (recurse) {
+                    this.children.forEach( function(node) {
+                        node._apply(callback, recurse, this, ctx);
+                    }, this);
+                }
             }
         }
+    },
 
-    });
-        return Node;
-    }
-);
+    apply: {
+        value: function( callback, recurse, ctx) {
+            this._apply(callback, recurse, null, ctx);
+        }
+    },
+
+    //TODO: generalize nodeWithName and apply
+    _nodeWithName: {
+        value: function( name) {
+            if (this.name === name) 
+                return this;
+
+            if (this.children) {
+                for (var i = 0 ; i < this.children.length ; i++) {
+                    var node = this.children[i];
+                    var res = node._nodeWithName(name);
+                    if (res) {
+                        return res;
+                    }
+                }           
+            } 
+
+            return null;
+        }
+    },
+
+    nodeWithName: {
+        value: function(name) {
+            return this._nodeWithName(name);
+        }
+    },
+
+
+    _nodeWithID: {
+        value: function( id) {
+            if (this.id === id) 
+                return this;
+
+            if (this.children) {
+                for (var i = 0 ; i < this.children.length ; i++) {
+                    var node = this.children[i];
+                    var res = node._nodeWithID(id);
+                    if (res) {
+                        return res;
+                    }
+                }           
+            } 
+
+            return null;
+        }
+    },
+
+    nodeWithID: {
+        value: function(id) {
+            return this._nodeWithID(id);
+        }
+    },
+
+
+
+});
