@@ -34,75 +34,76 @@ POSSIBILITY OF SUCH DAMAGE.
     <title></title>
     <link rel="stylesheet" type="text/css" href="options.css">
     <script type="text/montage-serialization">
-        {
-            "owner": {
-                "prototype": "ui/options.reel",
-                "properties": {
-                    "element": {"#": "options"}
-                }
-            },
-            "range": {
-              "prototype": "montage/ui/input-range.reel",
-              "properties": {
-              "minValue": 0,
-              "maxValue": 100,
-              "value": 50,
-              "element": {"#": "range"}
-            },
-            "enableReflection": {
-              "prototype": "montage/ui/input-checkbox.reel",
-              "properties": {
-              "checked": true,
-              "element": {"#": "enableReflection"}
-              }
-            },
-            "selectModel": {
-              "prototype": "montage/ui/select.reel",
-              "properties": {
-              "element": {"#": "selectModel"}
-              }
-            },            
-            "progress": {
-              "prototype": "montage/ui/progress.reel",
-              "properties": {
-              "element": {"#": "progress"}
-              }
-            }            
-
-          }            
+    {
+        "owner": {
+            "prototype": "ui/options.reel",
+            "properties": {
+                "element": {"#": "options"}
+            }
+        },
+        
+        "range": {
+            "prototype": "montage/ui/input-range.reel",
+            "properties": {
+                "minValue": 0,
+                "maxValue": 100,
+                "value": 50,
+                "element": {"#": "range"}
+            }
+        },
+        
+        "enableReflection": {
+            "prototype": "montage/ui/input-checkbox.reel",
+            "properties": {
+                "checked": true,
+                "element": {"#": "enableReflection"}
+            }
+        },
+        
+        "selectModel": {
+            "prototype": "montage/ui/select.reel",
+            "properties": {
+                "element": {"#": "selectModel"}
+            }
+        },
+                
+        "progress": {
+            "prototype": "montage/ui/progress.reel",
+            "properties": {
+                "element": {"#": "progress"}
+            }
         }
+    }
     </script>
 
 </head>
 <body>
-<div data-montage-id="options" class="options">
-    <section data-montage-id="progressiveLoadingSection" class="optionsGroup">
-      <h3>Progressive Loading</h3>
-        <ul data-montage-id="progressiveLoadingSectionUL" class="Configurator">
-          <input type="range" data-montage-id="range">
-        </ul>
-    </section>
+    <div data-montage-id="options" class="options">
+        
+        <h1 class="title">Collada2JSON</h1>
+        
+        <section data-montage-id="LoadingInfo" class="optionsGroup">
+            <h3>Progress</h3>
+            <div type="progress" data-montage-id="progress"></div>
+        </section>
 
-    <section data-montage-id="renderingOptions" class="optionsGroup">
-      <h3>Rendering options</h3>
-        <ul data-montage-id="enableReflectionUL" class="Configurator">
-          <input type="checkbox" data-montage-id="enableReflection">  
-        </ul>
-    </section>
-
-    <section data-montage-id="modelOptions" class="optionsGroup">
-      <h3>Model</h3>
-        <ul data-montage-id="modelOptionsUL" class="Configurator">
-          <select type="select" data-montage-id="selectModel"> </select>
-        </ul>
-    </section>
-
-    <section data-montage-id="LoadingInfo" class="optionsGroup">
-      <h3>Progress</h3>
-        <ul data-montage-id="LoadingInfoUL" class="Configurator">
-          <div type="progress" data-montage-id="progress">  </div>
-        </ul>
-    </section>
-</div>
+        <section data-montage-id="progressiveLoadingSection" class="optionsGroup">
+            <h3>Progressive Loading</h3>
+            <input type="range" data-montage-id="range">
+        </section>
+        
+        <section data-montage-id="renderingOptions" class="optionsGroup">
+            <h3>Rendering options</h3>
+            <label><input type="checkbox" data-montage-id="enableReflection"> Reflection</label>
+        </section>
+        
+        <section data-montage-id="modelOptions" class="optionsGroup">
+            <h3>Model</h3>
+            <select type="select" data-montage-id="selectModel">
+                <option>Car</option>
+            </select>
+        </section>
+        
+    </div>
 </body>
 </html>
