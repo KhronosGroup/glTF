@@ -45,6 +45,7 @@ var dom = require("montage/ui/dom");
 var Point = require("montage/core/geometry/point").Point;
 var OrbitCamera = require("runtime/dependencies/camera.js").OrbitCamera;
 var TranslateComposer = require("montage/ui/composer/translate-composer").TranslateComposer;
+var RuntimeTFLoader = require("runtime/runtime-tf-loader").RuntimeTFLoader;
 
 Material.implicitAnimationsEnabled = true;
 
@@ -54,15 +55,6 @@ Material.implicitAnimationsEnabled = true;
     @extends module:montage/ui/component.Component
 */
 exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel".view# */ {
-
-    implicitAnimationsEnabled: {
-        get: function() {
-            return Material.implicitAnimationsEnabled;
-        },
-        set: function(value) {
-            Material.implicitAnimationsEnabled = value;
-        }
-    },
 
     modelController: {
         value: null
@@ -77,7 +69,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
         }
     },
 
-scaleFactor: { value: window.devicePixelRatio, writable: true},
+    scaleFactor: { value: window.devicePixelRatio, writable: true},
 
     _sceneBBox: { value: null, writable: true },
 
@@ -92,7 +84,10 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
 
     canvas: {
         get: function() {
-            return this.templateObjects.canvas;
+            if (this.templateObjects) {
+                return this.templateObjects.canvas;
+            } 
+            return null;
         }
     },
 
@@ -118,34 +113,32 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
         }
     },
 
-    _scene: {
-        value: null
-    },
-
     scene: {
         get: function() {
-            if (this._scene === null && this.engine) {
+            if (this.engine) {
                 if (this.engine.rootPass) {
-                    this._scene = this.engine.rootPass.inputs.scene;
+                    return this.engine.rootPass.inputs.scene;
                 }
             }
-            return this._scene;
+            return null;
         },
 
         set: function(value) {
-            this._scene = value;
-            this.applyScene();
+            if (this.scene !== value) {
+                this._scene = value;
+                this.applyScene(value);
+            }
        }
     },
 
+    scenePath: { value: null },
+
     applyScene: {
-        value:function () {
-            var scene = this._scene;
+        value:function (scene) {
             if (this.engine) {
                 if (this.engine.rootPass) {
                     //compute hierarchical bbox for the whole scene
                     //this will be removed from this place when node bounding box become is implemented as hierarchical
-
                     var ctx = mat4.identity();
                     var node = scene.rootNode;
                     var sceneBBox = null;
@@ -167,7 +160,29 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
                     }, true, ctx);
 
                     this.sceneBBox = sceneBBox;
+
+                    var sceneSize = [(sceneBBox[1][0] - sceneBBox[0][0]) ,
+                            (sceneBBox[1][1] - sceneBBox[0][1]) ,
+                            (sceneBBox[1][2] - sceneBBox[0][2]) ];
+
+                    //size to fit
+                    var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
+                    scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
+
+                    scaleFactor =  1 / scaleFactor;
+                     var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
+            
+                    var translationVector = vec3.createFrom(    -((sceneSize[0] / 2) + sceneBBox[0][0]), 
+                                                        -((sceneSize[1] / 2) + sceneBBox[0][1]),
+                                                        -( sceneBBox[0][2]));
+                    var translation = mat4.translate(scaleMatrix, [
+                                        translationVector[0],
+                                        translationVector[1],
+                                        translationVector[2]]);
+
+                    mat4.set(translation, scene.rootNode.transform);
                     this.engine.rootPass.inputs.scene = scene;
+                    this.needsDraw = true;
                 }
             }
         }
@@ -181,17 +196,11 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
 
     prepareForDraw: {
         value: function() {
-            // first thing, get gl context
             var webGLContext = this.canvas.getContext("experimental-webgl", { antialias: true}) ||this.canvas.getContext("webgl", { antialias: true});
-            this.canvas.style.opacity = 1;
             var options = null;
             this.engine = Object.create(Engine);
             this.engine.init(webGLContext, options);
             this.engine.renderer.resourceManager.observers.push(this);
-
-            if (this._scene) {
-                this.applyScene();
-            }
 
             this.canvas.setAttribute("height", this._height);
             this.canvas.setAttribute("width", this._width);
@@ -212,29 +221,6 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
 
             this.camera.constrainXOrbit = true;
 
-            var sceneBBox = this.sceneBBox;
-
-            var sceneSize = [(sceneBBox[1][0] - sceneBBox[0][0]) ,
-                            (sceneBBox[1][1] - sceneBBox[0][1]) ,
-                            (sceneBBox[1][2] - sceneBBox[0][2]) ];
-
-            //size to fit
-            var scaleFactor = sceneSize[0] > sceneSize[1] ? sceneSize[0] : sceneSize[1];
-            scaleFactor = sceneSize[2] > scaleFactor ? sceneSize[2] : scaleFactor;
-
-            scaleFactor =  1 / scaleFactor;
-            var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
-            
-            var translationVector = vec3.createFrom(    -((sceneSize[0] / 2) + sceneBBox[0][0]), 
-                                                        -((sceneSize[1] / 2) + sceneBBox[0][1]),
-                                                        -( sceneBBox[0][2]));
-            var translation = mat4.translate(scaleMatrix, [
-                                        translationVector[0],
-                                        translationVector[1],
-                                        translationVector[2]]);
-
-            mat4.set(translation, this.scene.rootNode.transform);
-            //var center = vec3.createFrom(-translation[12]/2,-translation[13]/2,-translation[14]/2);
             var center = vec3.createFrom(0,0,0.2);
                         this.camera.setCenter(center);
 
@@ -254,6 +240,17 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
             document.addEventListener('mouseup', this.end.bind(this), true);
             document.addEventListener('mousemove', this.move.bind(this), true);
             document.addEventListener('mousewheel', this, true);
+
+            var readerDelegate = {};
+            readerDelegate.loadCompleted = function (scene) {
+                this.scene = scene;
+                this.needsDraw = true;
+            }.bind(this);
+
+            var loader = Object.create(RuntimeTFLoader);
+            loader.initWithPath(this.scenePath);
+            loader.delegate = readerDelegate;
+            loader.load(null /* userInfo */, null /* options */);
         }
     },
 
@@ -644,11 +641,6 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
 
     draw: {
         value: function() {
-            // FIXME: should be based on animations object or user interation
-            //PIERRE UNCOMMENT THIS
-
-            //this.needsDraw = true;
-
             var self = this;
 
             if (null == this.width || null == this.height) {
@@ -780,7 +772,7 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
     },
 
     templateDidLoad: {
-        value: function() {
+        value: function() {            
             var composer = TranslateComposer.create(),
                 self = this;
             translateComposer = composer;

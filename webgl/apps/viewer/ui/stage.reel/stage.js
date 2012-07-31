@@ -39,7 +39,6 @@ var Utilities = require("runtime/utilities").Utilities;
 var Node = require("runtime/node").Node;
 var Camera = require("runtime/camera").Camera;
 var GLSLProgram = require("runtime/glsl-program").GLSLProgram;
-var RuntimeTFLoader = require("runtime/runtime-tf-loader").RuntimeTFLoader;
 var glMatrix = require("runtime/dependencies/gl-matrix").glMatrix;
 
 /**
@@ -137,27 +136,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
     run: {
         value: function(scenePath) {
-
-            var readerDelegate = {};
-            readerDelegate.loadCompleted = function (scene) {
-                this.view.scene = scene;
-                this.view.needsDraw = true;
-            }.bind(this);
-            var self = this;
-            var angle = 0;
-            var viewDelegate = {};
-            viewDelegate.willDraw = function(view) {
-            };
-
-            viewDelegate.didDraw = function(view) {
-            };
-
-            this.view.delegate = viewDelegate;
-
-            var loader = Object.create(RuntimeTFLoader);
-            loader.initWithPath(scenePath);
-            loader.delegate = readerDelegate;
-            loader.load(null /* userInfo */, null /* options */);
+            this.view.scenePath = scenePath;
             this.view.needsDraw = true;
         }
     }
