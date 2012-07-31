@@ -1,4 +1,4 @@
-.Options {
+.options {
     height: 100%;
     border-left: 1px solid hsl(0,0%,80%);
     display: -webkit-box;
@@ -6,11 +6,11 @@
     background-color: rgb(239,240,240);
 }
 
-.Options .scroller {
+.options .scroller {
     -webkit-box-flex: 1;
 }
 
-.Options h3 {
+.options h3 {
     display: inline-block;
     margin: 0 0 10px 0;
     color: black;
@@ -18,7 +18,7 @@
 
 }
 
-.Options .selectedInfo {
+.options .selectedInfo {
     position: absolute;
     top: 13px;
     right: 15px;
@@ -26,7 +26,7 @@
     margin: 0;
 }
 
-.Options .OptionsGroup {
+.options .optionsGroup {
     position: relative;
     display: block;
     padding: 15px;
@@ -35,15 +35,15 @@
     -webkit-transition: background 0.2s ease;
 }
 
-.Options .highlighted {
+.options .highlighted {
     background-color: white;
 }
 
-.Options .OptionsGroup:first-child {
+.options .optionsGroup:first-child {
     border: none;
 }
 
-.Options .selectedInfo {
+.options .selectedInfo {
     margin: 5px 0 0 0;
 }
 
