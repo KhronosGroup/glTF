@@ -29,16 +29,17 @@
         </div>
 
         <script src="Three.js"></script>
-        <script src="../../viewer/webgl/scripts/dependencies/require.js"></script>
+        <script src="../../runtime/dependencies/require.js"></script>
 
         <script>
             require.config({
                 baseUrl: ".",
                 paths: {
-                    backend: "../../viewer/webgl/scripts/backend",
-                    dependencies: "../../viewer/webgl/scripts/dependencies",
-                }
-            });
+                    loader: "../../.",
+                    runtime: "../../runtime",
+                    helpers: "../../helpers",
+                    dependencies: "../../runtime/dependencies"
+            }});
 
             require(['ColladaJsonLoader'], function() {
                 var container, stats;
@@ -80,7 +81,7 @@
                     var loader = new THREE.ColladaJsonLoader( renderer.context );
 
                     
-                    var colladaObj = loader.load( "../../viewer/webgl/output.json", function(object) {
+                    var colladaObj = loader.load( "../../apps/viewer/model/Rambler.json", function(object) {
                         // To delay adding the collada data to the scene until it's fully loaded, attach object to the scene here instead of using the return value
                     });
                     colladaObj.position.x = -200;

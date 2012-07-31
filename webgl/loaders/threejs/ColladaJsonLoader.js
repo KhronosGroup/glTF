@@ -24,8 +24,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", "backend/glsl-program", "backend/reader", "backend/resource-manager", "dependencies/gl-matrix"],
-    function(Utilities, Node, Camera, View, GLSLProgram, Reader, ResourceManager) {
+define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
+    function(WebGLTFLoader, ResourceManager) {
+
+    // Utilities
+
+    function RgbArraytoHex(colorArray) {
+        var r = Math.floor(colorArray[0] * 255),
+            g = Math.floor(colorArray[1] * 255),
+            b = Math.floor(colorArray[2] * 255),
+            a = Math.floor(colorArray[3] ? colorArray[3] * 255 : 255);
+
+        var color = (a << 24) + (r << 16) + (g << 8) + b;
+
+        return color;
+    }
+
+    // Geometry processing
 
     var ColladaJsonClassicGeometry = function() {
         THREE.Geometry.call( this );
@@ -117,7 +132,7 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
     VertexAttributeDelegate.prototype.resourceAvailable = function(glResource, ctx) {
         var geometry = ctx.geometry;
         var attribute = ctx.attribute;
-        var accessor = attribute.accessor;
+        var accessor = ctx.accessor;
         var floatArray;
         var i, l;
 
@@ -140,124 +155,324 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
 
     var vertexAttributeDelegate = new VertexAttributeDelegate();
 
-    var VertexAttributeContext = function(attribute, geometry) {
+    var VertexAttributeContext = function(attribute, accessor, geometry) {
         this.attribute = attribute;
+        this.accessor = accessor;
         this.geometry = geometry;
     };
 
-    // Utilities
+    var ThreeColladaMesh = function() {
+        this.primitives = [];
+        this.loadedGeometry = 0;
+        this.onCompleteCallbacks = [];
+    };
 
-    function RgbArraytoHex(colorArray) {
-        var r = Math.floor(colorArray[0] * 255),
-            g = Math.floor(colorArray[1] * 255),
-            b = Math.floor(colorArray[2] * 255),
-            a = Math.floor(colorArray[3] ? colorArray[3] * 255 : 255);
+    ThreeColladaMesh.prototype.addPrimitive = function(geometry, material) {
+        var self = this;
+        geometry.onload = function() {
+            self.loadedGeometry++;
+            self.checkComplete();
+        };
+        this.primitives.push({
+            geometry: geometry,
+            material: material,
+            mesh: null
+        });
+    };
 
-        var color = (a << 24) + (r << 16) + (g << 8) + b;
+    ThreeColladaMesh.prototype.onComplete = function(callback) {
+        this.onCompleteCallbacks.push(callback);
+        this.checkComplete();
+    };
 
-        return color;
-    }
+    ThreeColladaMesh.prototype.checkComplete = function() {
+        var self = this;
+        if(this.onCompleteCallbacks.length && this.primitives.length == this.loadedGeometry) {
+            this.onCompleteCallbacks.forEach(function(callback) {
+                callback(self);
+            });
+            this.onCompleteCallbacks = [];
+        }
+    };
+
+    ThreeColladaMesh.prototype.attachToNode = function(threeNode) {
+        // Assumes that the geometry is complete
+        this.primitives.forEach(function(primitive) {
+            if(!primitive.mesh) {
+                primitive.mesh = new THREE.Mesh(primitive.geometry, primitive.material);
+            }
+            threeNode.add(primitive.mesh);
+        });
+    };
+
+    // Resource management
+
+    var ThreeEntry = function(entryID, object, description) {
+        this.entryID = entryID;
+        this.object = object;
+        this.description = description;
+    };
+
+    var ThreeResourceManager = function() {
+        this._entries = {};
+        this.binaryManager = Object.create(ResourceManager);
+        this.binaryManager.init();
+    };
+
+    ThreeResourceManager.prototype.setEntry = function(entryID, object, description) {
+        if (!entryID) {
+            console.error("No EntryID provided, cannot store", description);
+            return;
+        }
+
+        if (this._entries[entryID]) {
+            console.warn("entry["+entryID+"] is being overwritten");
+        }
+    
+        this._entries[entryID] = new ThreeEntry(entryID, object, description );
+    };
+    
+    ThreeResourceManager.prototype.getEntry = function(entryID) {
+        return this._entries[entryID];
+    };
+
+    ThreeResourceManager.prototype.clearEntries = function() {
+        this._entries = {};
+    };
 
     // Loader
 
-    var ColladaJsonDelegate = function() {
-        this.resourceManager = Object.create(ResourceManager);
-        this.resourceManager.init();
-    };
+    var ThreeWebGLTFLoader = Object.create(WebGLTFLoader, {
 
-    ColladaJsonDelegate.prototype.readCompleted = function(key, value, ctx) {
-        if (key === "entries") {
-            this.processNodes(value[0], ctx.rootObj, ctx.callback);
-        }
-    };
-
-    ColladaJsonDelegate.prototype.processNodes = function(scene, rootObj, callback) {
-        var self = this;
-
-        var totalMeshes = 0;
-        var loadedMeshes = 0;
-
-        rootObj.treeMatrix = new THREE.Matrix4();
-
-        scene.rootNode.apply( function(node, parentObj) {
-            var obj = new THREE.Object3D();
-            obj.name = node.id || "";
-
-            var nodeMatrix;
-            var t = node.transform;
-            if(t) {
-                // Not sure why I need to transpose this...
-                nodeMatrix = new THREE.Matrix4(
-                    t[0],  t[4],  t[8],  t[12],
-                    t[1],  t[5],  t[9],  t[13],
-                    t[2],  t[6],  t[10], t[14],
-                    t[3],  t[7],  t[11], t[15]
-                );
-
-                obj.matrixAutoUpdate = false;
-                obj.applyMatrix(nodeMatrix);
+        load: {
+            enumerable: true,
+            value: function(userInfo, options) {
+                this.threeResources = new ThreeResourceManager();
+                WebGLTFLoader.load.call(this, userInfo, options);
             }
+        },
 
-            parentObj.add(obj);
+        threeResources: {
+            value: null
+        },
 
-            self.processNodeMeshes(node, obj, callback);
+        // Implement WebGLTFLoader handlers
 
-            return obj;
-        }, true, rootObj);
+        handleBuffer: {
+            value: function(entryID, description, userInfo) {
+                this.threeResources.setEntry(entryID, null, description);
+                return true;
+            }
+        },
 
-        return;
-    };
+        handleShader: {
+            value: function(entryID, description, userInfo) {
+                // No shader handling at this time
+                return true;
+            }
+        },
 
-    ColladaJsonDelegate.prototype.processNodeMeshes = function(node, obj, callback) {
-        var self = this;
+        handleTechnique: {
+            value: function(entryID, description, userInfo) {
+                // No technique handling at this time
+                return true;
+            }
+        },
 
-        if (node.meshes) {
-            node.meshes.forEach( function(mesh) {
-                if (mesh.primitives) {
-                    mesh.primitives.forEach( function (primitive) {
-                        var material = new THREE.MeshLambertMaterial({
-                            color: RgbArraytoHex(primitive.material.inputs.diffuseColor)
-                        });
-                        //totalMeshes++;
+        handleMaterial: {
+            value: function(entryID, description, userInfo) {
+                var material = new THREE.MeshLambertMaterial({
+                    color: RgbArraytoHex(description.inputs.diffuseColor)
+                });
+
+                this.threeResources.setEntry(entryID, material, description);
+
+                // TODO: Need more robust material support, currently only accepts flat colors
+                return true;
+            }
+        },
+
+        handleLight: {
+            value: function(entryID, description, userInfo) {
+                // No light handling at this time
+                return true;
+            }
+        },
+
+        handleMesh: {
+            value: function(entryID, description, userInfo) {
+                var mesh = new ThreeColladaMesh();
+                this.threeResources.setEntry(entryID, mesh, description);
+
+                var primitivesDescription = description.primitives;
+                if (!primitivesDescription) {
+                    //FIXME: not implemented in delegate
+                    console.log("MISSING_PRIMITIVES for mesh:"+ entryID);
+                    return false;
+                }
+
+                for (var i = 0 ; i < primitivesDescription.length ; i++) {
+                    var primitiveDescription = primitivesDescription[i];
+                    
+                    if (primitiveDescription.primitive === "TRIANGLES") {
 
                         var geometry = new ColladaJsonClassicGeometry();
-                        geometry.onload = function() {
-                            //geometry.applyMatrix(obj.treeMatrix);
-                            var mesh = new THREE.Mesh(geometry, material);
-                            obj.add(mesh);
-                            /*loadedMeshes++;
-                            if(loadedMeshes === totalMeshes) {
-                                if(callback) {
-                                    callback(rootObj);
-                                }
-                            }*/
-                        };
+                        var materialEntry = this.threeResources.getEntry(primitiveDescription.material);
 
-                        self.processMeshPrimitive(primitive, geometry);
-                        
+                        mesh.addPrimitive(geometry, materialEntry.object);
+
+                        var indicesID = entryID + "_indices"+"_"+i;
+                        var indicesEntry = this.threeResources.getEntry(indicesID);
+                        if (!indicesEntry) {
+                            indices = primitiveDescription.indices;
+                            indices.id = indicesID;
+                            var bufferEntry = this.threeResources.getEntry(indices.buffer);
+                            indices.buffer = bufferEntry;
+                            this.threeResources.setEntry(indicesID, indices, indices);
+                            indicesEntry = this.threeResources.getEntry(indicesID);
+                        }
+                        primitiveDescription.indices = indicesEntry.object;
+
+                        var indicesContext = new IndicesContext(primitiveDescription.indices, geometry);
+                        this.threeResources.binaryManager.getResource(primitiveDescription.indices, indicesDelegate, indicesContext);
+
+                        // Load Vertex Attributes
+                        primitiveDescription.vertexAttributes.forEach( function(vertexAttribute) {
+                            geometry.totalAttributes++;
+
+                            var accessor;
+                            var accessorID = vertexAttribute.accessor;
+                            var accessorEntry = this.threeResources.getEntry(accessorID);
+                            if (!accessorEntry) {
+                                //let's just use an anonymous object for the accessor
+                                accessor = description[accessorID];
+                                accessor.id = accessorID;
+                                this.threeResources.setEntry(accessorID, accessor, accessor);
+            
+                                var bufferEntry = this.threeResources.getEntry(accessor.buffer);
+                                accessor.buffer = bufferEntry;
+                                accessorEntry = this.threeResources.getEntry(accessorID);
+                                //this is a set ID, it has to stay a string
+                            } else {
+                                accessor = accessorEntry.object;
+                            }
+
+                            var attribContext = new VertexAttributeContext(vertexAttribute, accessor, geometry);
+                            this.threeResources.binaryManager.getResource(accessorEntry.object, vertexAttributeDelegate, attribContext);
+                        }, this);
+                    }
+                }
+                return true;
+            }
+        },
+
+        handleCamera: {
+            value: function(entryID, description, userInfo) {
+                // No camera handling at this time
+                return true;
+            }
+        },
+
+        buildNodeHirerachy: {
+            value: function(nodeEntryId, parentThreeNode) {
+                var nodeEntry = this.threeResources.getEntry(nodeEntryId);
+                var threeNode = nodeEntry.object;
+                parentThreeNode.add(threeNode);
+
+                var children = nodeEntry.description.children;
+                if (children) {
+                    children.forEach( function(childID) {
+                        this.buildNodeHirerachy(childID, threeNode);
                     }, this);
                 }
-            }, this);
+
+                return threeNode;
+            }
+        },
+
+        handleScene: {
+            value: function(entryID, description, userInfo) {
+
+                if (!description.node) {
+                    console.log("ERROR: invalid file required node property is missing from scene");
+                    return false;
+                }
+
+                this.buildNodeHirerachy(description.node, userInfo.rootObj);
+
+                /*if (this.delegate) {
+                    this.delegate.loadCompleted(scene);
+                }*/
+
+                return true;
+            }
+        },
+
+        handleNode: {
+            value: function(entryID, description, userInfo) {
+
+                var threeNode = new THREE.Object3D();
+                threeNode.name = description.name;
+
+                this.threeResources.setEntry(entryID, threeNode, description);
+
+                var m = description.matrix;
+                if(m) {
+                    threeNode.matrixAutoUpdate = false;
+                    threeNode.applyMatrix(new THREE.Matrix4(
+                        m[0],  m[4],  m[8],  m[12],
+                        m[1],  m[5],  m[9],  m[13],
+                        m[2],  m[6],  m[10], m[14],
+                        m[3],  m[7],  m[11], m[15]
+                    ));
+                }
+
+                // Iterate through all node meshes and attach the appropriate objects
+                //FIXME: decision needs to be made between these 2 ways, probably meshes will be discarded.
+                var meshEntry;
+                if (description.mesh) {
+                    meshEntry = this.threeResources.getEntry(description.mesh);
+                    meshEntry.object.onComplete(function(mesh) {
+                        mesh.attachToNode(threeNode);
+                    });
+                }
+
+                if (description.meshes) {
+                    description.meshes.forEach( function(meshID) {
+                        meshEntry = this.threeResources.getEntry(meshID);
+                        meshEntry.object.onComplete(function(mesh) {
+                            mesh.attachToNode(threeNode);
+                        });
+                    }, this);
+                }
+
+                /*if (description.camera) {
+                    var cameraEntry = this.threeResources.getEntry(description.camera);
+                    node.cameras.push(cameraEntry.entry);
+                }*/
+
+                return true;
+            }
+        },
+
+        _delegate: {
+            value: null,
+            writable: true
+        },
+
+        delegate: {
+            enumerable: true,
+            get: function() {
+                return this._delegate;
+            },
+            set: function(value) {
+                this._delegate = value;
+            }
         }
-    };
+    });
 
-    ColladaJsonDelegate.prototype.processMeshPrimitive = function(primitive, geometry) {
-        // Load Indices
-        var range = [primitive.indices.byteOffset, primitive.indices.byteOffset + ( primitive.indices.length * Uint16Array.BYTES_PER_ELEMENT)];
-        var indicesContext = new IndicesContext(primitive.indices, geometry);
-        this.resourceManager.getResource(primitive.indices, indicesDelegate, indicesContext);
 
-        // Load Vertex Attributes
-        primitive.vertexAttributes.forEach( function(vertexAttribute) {
-            var accessor = vertexAttribute.accessor;
-            geometry.totalAttributes++;
-            var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
-            var attribContext = new VertexAttributeContext(vertexAttribute, geometry);
-            this.resourceManager.getResource(accessor, vertexAttributeDelegate, attribContext);
-        }, this);
-    };
-
-    var colladaJsonDelegate = new ColladaJsonDelegate();
+    // Loader
 
     var ColladaJsonContext = function(rootObj, callback) {
         this.rootObj = rootObj;
@@ -274,9 +489,10 @@ define( ["backend/utilities", "backend/node", "backend/camera", "backend/view", 
     THREE.ColladaJsonLoader.prototype.load = function( url, callback ) {
         var rootObj = new THREE.Object3D();
 
-        var reader = Object.create(Reader);
-        reader.initWithPath(url);
-        reader.readEntries(["defaultScene"], colladaJsonDelegate, new ColladaJsonContext(rootObj, callback));
+        var loader = Object.create(ThreeWebGLTFLoader);
+            loader.initWithPath(url);
+            //loader.delegate = colladaJsonDelegate;
+            loader.load(new ColladaJsonContext(rootObj, callback) /* userInfo */, null /* options */);
 
         return rootObj;
     };
