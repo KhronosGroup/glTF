@@ -46,14 +46,21 @@ POSSIBILITY OF SUCH DAMAGE.
                 "properties": {
                     "element": {"#": "view"}
                 }
+            },
+            "options": {
+                "prototype": "ui/options.reel",
+                "properties": {
+                    "element": {"#": "options"}
+                }
             }
         }
     </script>
 
 </head>
 <body>
-<div data-montage-id="component">
+<div data-montage-id="component" class="Stage">
     <div data-montage-id="view"></div>
-</div>
+   <div data-montage-id="options"></div>
+ </div>
 </body>
 </html>

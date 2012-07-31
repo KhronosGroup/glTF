@@ -1,3 +1,13 @@
-.stage {
+.Stage {
+    display: -webkit-box;
+    height: 100%;
+}
 
+.Stage .View {
+    -webkit-box-flex: 1;
+}
+
+.Stage .Options {
+    width: 270px;
+    height: 100%;
 }

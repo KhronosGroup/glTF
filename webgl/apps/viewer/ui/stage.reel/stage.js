@@ -64,7 +64,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
-    model: {value: null},
+    _model: {value: null},
 
     model: {
         get: function() {
@@ -129,7 +129,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
     willDraw: {
         value: function() {
-            this.view.width = this.width = window.innerWidth /*- 270*/;
+            this.view.width = this.width = window.innerWidth - 270;
             this.view.height = this.height = window.innerHeight;
         }
     },
