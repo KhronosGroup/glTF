@@ -39,7 +39,11 @@ POSSIBILITY OF SUCH DAMAGE.
                 "prototype": "ui/stage.reel",
                 "properties": {
                     "element": {"#": "component"}
+                },
+                "bindings": {
+                  "bytesLimit": {"<-" : "@options.range.value"}
                 }
+
             },
             "view": {
                 "prototype": "ui/view.reel",

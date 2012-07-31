@@ -134,6 +134,26 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
+    bytesLimitDidChange: {
+        value: function() {
+            
+        }
+    },
+
+    _bytesLimit: { value: 1000, writable: true },
+
+    bytesLimit: {
+        set: function(value) {
+            if (this._bytesLimit !== value) {
+                this._bytesLimit = value;
+                this.bytesLimitDidChange();                
+            }
+        }, 
+        get: function(value) {
+            return this._bytesLimit;
+        }
+    },
+
     run: {
         value: function(scenePath) {
             this.view.scenePath = scenePath;

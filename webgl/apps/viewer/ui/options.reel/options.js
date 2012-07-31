@@ -38,9 +38,9 @@ var Montage = require("montage").Montage,
 
 exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.reel".Stage# */ {
 
-
     templateDidLoad:{
         value:function () {
+          this.range = this.templateObjects.range;
         }
     },
 
