@@ -517,14 +517,12 @@ var global = window;
                 if (this._requestTree) {
                     this._handleRequest(this._requestTree.content);
                 }
-
             }
         },
 
         fireResourceAvailable: {
             value: function(id) {
-
-                if (this.observers) {
+                if (this.observers) {   
                     this.observers.forEach(function(observer) {
                         if (observer.resourceAvailable) {
                             observer.resourceAvailable(id);
@@ -577,17 +575,24 @@ var global = window;
                     }
                     return;
                 }
-
                 var self = this;
                 var processResourceDelegate = {};
 
                 if (node) {
                     var isRoot = (node === this._requestTree);
+                    var successor = null;
+                    if (isRoot) {
+                        if (node.left || node.right) {
+                            successor = node.left ? node.left : node.right;
+                        }
+                    }
+
                     if (this._requestTree)
                         this._requestTree.remove(node.content);
+                    
                     if (isRoot) {
-                        this._requestTree = null;
-                    }
+                        this._requestTree = successor;
+                     }
                 }
 
                 if (request.kind ==="multi-parts") {
@@ -606,7 +611,8 @@ var global = window;
                     var convertedResource = req_.delegate.convert(res_, req_.ctx);
                     self._storeResource(req_.id, convertedResource);
                     req_.delegate.resourceAvailable(convertedResource, req_.ctx);
-                    self._resourcesBeingProcessedCount--;
+                    if (self._resourcesBeingProcessedCount > 0)
+                        self._resourcesBeingProcessedCount--;
 
                     //console.log("delete:"+req_.id)
                     delete self._resourcesStatus[req_.id];
@@ -615,6 +621,8 @@ var global = window;
 
                     if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
                         self._processNextResource();
+                    } else {
+                        debugger;
                     }
 
                 };
@@ -735,7 +743,6 @@ var global = window;
                     self.fireResourceAvailable.call(self, id);
                 }  
 
-
                 if (image.description.path) {
                     var imageObject = new Image();  
                     imageObject.onload = function() { handleTextureLoaded(imageObject, image.id, ctx); }  
@@ -745,7 +752,7 @@ var global = window;
                 }
             }
         },
-
+        
         getResource: {
                 value: function(resource, delegate, ctx) {
 
