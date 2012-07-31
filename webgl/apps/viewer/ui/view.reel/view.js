@@ -785,6 +785,8 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
                 self = this;
             translateComposer = composer;
             translateComposer.hasMomentum = true;
+            translateComposer.allowFloats = true;
+            translateComposer.pointerSpeedMultiplier = 0.15;
             this.addComposerForElement(composer, this.canvas);
 
             var animationTimeout = null;
@@ -812,7 +814,6 @@ scaleFactor: { value: window.devicePixelRatio, writable: true},
                     self.needsDraw = true;
                 }, 3000)
             }, false);
-
 
         }
     },
