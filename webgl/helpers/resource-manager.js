@@ -62,6 +62,12 @@ var global = window;
 
         canMergeRequest: {
             value: function(request) {
+                var requestSize = request.range[1] - request.range[0];
+                var size = this.range[1] - this.range[0];
+//                if ((requestSize + size) > 12000000)
+                if ((requestSize + size) > 10000000)
+                    return false;
+
                 return  (((request.range[0] === this.range[1]) ||
                          ((request.range[1]) === this.range[0])) &&
                          (request.type ===  this.type));
@@ -508,20 +514,6 @@ var global = window;
 
         _processNextResource: {
             value: function() {
-                /*
-                var nextNode = this._resourcesToBeProcessed.head;
-                if (nextNode) {
-                    var nextRequest = nextNode.content;
-
-
-                    if (!this._resourcesStatus[nextRequest.id]) {
-                        console("ERROR: should not reach");
-                    }
-
-                    this._handleRequest(nextRequest);
-                } */
-
-
                 if (this._requestTree) {
                     this._handleRequest(this._requestTree.content);
                 }
@@ -553,11 +545,9 @@ var global = window;
                     node = resourceStatus.node;
                     status = resourceStatus.status;
                 }
-                //if (request.type !== "text") {
-                if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type !== "text")) {
+
+                if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type === "ArrayBuffer")) {
                     if (!status) {
-                        //var listNode = Object.create(LinkedListNode);
-                        //listNode.init(request);
                         var trNode = null;
                         var contRequests;
 
@@ -574,7 +564,6 @@ var global = window;
                             trNode = rootTreeNode;
                         } else {
                             trNode = this._requestTree.insert(contRequests);
-                            //this._requestTree.checkConsistency();
                         }
 
                         if (request.kind ==="multi-parts") {
@@ -585,69 +574,58 @@ var global = window;
                         } else {
                             this._resourcesStatus[request.id] =  { "status": "queued", "node": trNode };
                         }
-
-                        //this._resourcesStatus[request.id] =  { "status": "queued", "node": listNode };
-                        //this._resourcesToBeProcessed.append(listNode);
                     }
                     return;
                 }
 
-                //if (request.delegate) {
-                    var self = this;
-                    var processResourceDelegate = {};
+                var self = this;
+                var processResourceDelegate = {};
 
-                    if (node && this._resourcesToBeProcessed) {
-                        this._resourcesToBeProcessed.remove(node);
+                if (node) {
+                    var isRoot = (node === this._requestTree);
+                    if (this._requestTree)
+                        this._requestTree.remove(node.content);
+                    if (isRoot) {
+                        this._requestTree = null;
                     }
-
-                    if (node) {
-                        var isRoot = (node === this._requestTree);
-                        if (this._requestTree)
-                            this._requestTree.remove(node.content);
-                        if (isRoot) {
-                            this._requestTree = null;
-                        }
-                    }
-
-                    if (request.kind ==="multi-parts") {
-                        request.requests.forEach( function(req_) {
-                            this._resourcesStatus[req_.id] =  { "status": "loading" };
-                        }, this);
-
-                    } else {
-                        this._resourcesStatus[request.id] =  { "status": "loading"};
-                    }
-
-                    processResourceDelegate.resourceAvailable = function(req_, res_) {
-                        // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
-                        // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
-                        //, but as of now, this flexibily does not seem necessary.
-                        var convertedResource = req_.delegate.convert(res_, req_.ctx);
-                        self._storeResource(req_.id, convertedResource);
-                        req_.delegate.resourceAvailable(convertedResource, req_.ctx);
-                        self._resourcesBeingProcessedCount--;
-
-                        //console.log("delete:"+req_.id)
-                        delete self._resourcesStatus[req_.id];
-
-                        self.fireResourceAvailable.call(self, req_.id);
-
-                        if (req_.type !== "text")
-                        if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
-                            self._processNextResource();
-                            //setTimeout(self._processNextResource.bind(self), 1000);
-                        }
-
-                    };
-
-                    processResourceDelegate.handleError = function(errorCode, info) {
-                        request.delegate.handleError(errorCode, info);
-                    }
-
-                    self._resourcesBeingProcessedCount++;
-                    this._loadResource(request, processResourceDelegate);
                 }
-            //}
+
+                if (request.kind ==="multi-parts") {
+                    request.requests.forEach( function(req_) {
+                        this._resourcesStatus[req_.id] =  { "status": "loading" };
+                    }, this);
+
+                } else {
+                    this._resourcesStatus[request.id] =  { "status": "loading"};
+                }
+
+                processResourceDelegate.resourceAvailable = function(req_, res_) {
+                    // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
+                    // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
+                    //, but as of now, this flexibily does not seem necessary.
+                    var convertedResource = req_.delegate.convert(res_, req_.ctx);
+                    self._storeResource(req_.id, convertedResource);
+                    req_.delegate.resourceAvailable(convertedResource, req_.ctx);
+                    self._resourcesBeingProcessedCount--;
+
+                    //console.log("delete:"+req_.id)
+                    delete self._resourcesStatus[req_.id];
+
+                    self.fireResourceAvailable.call(self, req_.id);
+
+                    if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
+                        self._processNextResource();
+                    }
+
+                };
+
+                processResourceDelegate.handleError = function(errorCode, info) {
+                    request.delegate.handleError(errorCode, info);
+                }
+
+                self._resourcesBeingProcessedCount++;
+                this._loadResource(request, processResourceDelegate);
+            }
         },
 
         _handleAccessorResourceLoading: {
