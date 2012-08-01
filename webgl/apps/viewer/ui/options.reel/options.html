@@ -42,13 +42,30 @@ POSSIBILITY OF SUCH DAMAGE.
             }
         },
         
+        "progress": {
+            "prototype": "montage/ui/progress.reel",
+            "properties": {
+                "element": {"#": "progress"}
+            }
+        },
+        
         "range": {
             "prototype": "montage/ui/input-range.reel",
             "properties": {
-                "minValue": 0,
-                "maxValue": 100,
-                "value": 50,
                 "element": {"#": "range"}
+            },
+            "bindings": {
+                "value": {
+                    "<->": "@number.value",
+                    "converter": {"@": "owner"}
+                }
+            }
+        },
+        
+        "number": {
+            "prototype": "montage/ui/input-number.reel",
+            "properties": {
+                "element": {"#": "number"}
             }
         },
         
@@ -65,14 +82,9 @@ POSSIBILITY OF SUCH DAMAGE.
             "properties": {
                 "element": {"#": "selectModel"}
             }
-        },
-                
-        "progress": {
-            "prototype": "montage/ui/progress.reel",
-            "properties": {
-                "element": {"#": "progress"}
-            }
         }
+                
+        
     }
     </script>
 
@@ -84,17 +96,18 @@ POSSIBILITY OF SUCH DAMAGE.
         
         <section data-montage-id="LoadingInfo" class="optionsGroup">
             <h3>Progress</h3>
-            <div type="progress" data-montage-id="progress"></div>
+            <div type="progress" data-montage-id="progress" class="progress"></div>
         </section>
 
         <section data-montage-id="progressiveLoadingSection" class="optionsGroup">
             <h3>Progressive Loading</h3>
-            <input type="range" data-montage-id="range">
+            <input type="range" data-montage-id="range" class="range" min="0" max="1000" value="500">
+            <input type="number" data-montage-id="number" class="number"> <label>kb/s</label>
         </section>
         
         <section data-montage-id="renderingOptions" class="optionsGroup">
             <h3>Rendering options</h3>
-            <label><input type="checkbox" data-montage-id="enableReflection"> Reflection</label>
+            <label><input type="checkbox" data-montage-id="enableReflection" class="checkbox"> Reflection</label>
         </section>
         
         <section data-montage-id="modelOptions" class="optionsGroup">

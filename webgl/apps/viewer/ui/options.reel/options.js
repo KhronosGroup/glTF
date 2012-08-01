@@ -53,6 +53,20 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
         value: function() {
         }
     },
+    
+    convert: {
+        value:function(v) {
+            return Number(Math.round(v)).toString()
+        }
+    },
+    
+    // TODO this is a lossy revert, which is not a good idea
+    // but it gets this example working as expected
+    revert: {
+        value:function(v) {
+            return Number(Math.round(v)).toString()
+        }
+    }
 
 
 });

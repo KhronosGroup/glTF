@@ -29,12 +29,26 @@
     line-height: 20px;
 }
 
-.options .montage-inputRange {
-    width: 100%;
-    margin: 10px 0;
+.options label {
+    vertical-align: middle;
 }
 
-.options .montage-progress {
+.options .range {
+    width: 100%;
+    margin: 10px 0 20px 0;
+}
+
+.options .progress {
     width: 100%;
     box-sizing: border-box;
 }
+
+.options .number {
+    width: 100px;
+    text-align: center;
+}
+
+.options .checkbox {
+    font-size: 16px;
+}
+
