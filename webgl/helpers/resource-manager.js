@@ -65,9 +65,9 @@ var global = window;
                 var requestSize = request.range[1] - request.range[0];
                 var size = this.range[1] - this.range[0];
 //                if ((requestSize + size) > 12000000)
-                if ((requestSize + size) > 10000000)
+                if ((requestSize + size) > 1000)
                     return false;
-
+                return false;
                 return  (((request.range[0] === this.range[1]) ||
                          ((request.range[1]) === this.range[0])) &&
                          (request.type ===  this.type));
@@ -355,6 +355,26 @@ var global = window;
             }
         },
 
+        removeMin: {
+            value: function() {
+                if (this.parent) {
+                    debugger;
+                }
+
+                var node = this;
+                while (node.left || node.right) {
+                    if (node.left) {
+                       node = node.min();
+                    } 
+                    if (node.right) {
+                        node = node.right.min();
+                    } 
+                }
+                node._updateParentWithNode(null);
+                return node;
+            }
+        },
+
         remove: {
             value: function(content) {
                 if (content.range[1] <= this.content.range[0]) {
@@ -393,7 +413,7 @@ var global = window;
         INVALID_TYPE: { value: "INVALID_TYPE" },
         XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
         NOT_FOUND: { value: "NOT_FOUND" },
-        MAX_CONCURRENT_XHR: { value: 6 },
+        MAX_CONCURRENT_XHR: { value: 1 },
         // misc constants
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
@@ -495,6 +515,8 @@ var global = window;
                 xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
                 xhr.onload = function(e) {
                     if ((this.status == 200) || (this.status == 206)) {
+                        self._resourcesBeingProcessedCount--;
+
                         if (request.kind === "multi-parts") {
                             request.requests.forEach( function(req_) {
                                 var subArray = this.response.slice(req_.range[0] - request.range[0], req_.range[1] - request.range[0]);
@@ -515,7 +537,15 @@ var global = window;
         _processNextResource: {
             value: function() {
                 if (this._requestTree) {
-                    this._handleRequest(this._requestTree.content);
+                    var rootIsLeaf = !this._requestTree.left && !this._requestTree.right;
+                    if (rootIsLeaf) {
+                        this._handleRequest(this._requestTree.content);
+                        this._requestTree = null;
+                    } else {
+                        var min = this._requestTree.removeMin();
+                        this._handleRequest(min.content);
+                    }
+
                 }
             }
         },
@@ -531,6 +561,9 @@ var global = window;
                 }
             }
         },
+
+        send: { value: 0, writable: true },
+        requested: { value: 0, writable: true },
 
         _handleRequest: {
             value: function(request) {
@@ -578,23 +611,6 @@ var global = window;
                 var self = this;
                 var processResourceDelegate = {};
 
-                if (node) {
-                    var isRoot = (node === this._requestTree);
-                    var successor = null;
-                    if (isRoot) {
-                        if (node.left || node.right) {
-                            successor = node.left ? node.left : node.right;
-                        }
-                    }
-
-                    if (this._requestTree)
-                        this._requestTree.remove(node.content);
-                    
-                    if (isRoot) {
-                        this._requestTree = successor;
-                     }
-                }
-
                 if (request.kind ==="multi-parts") {
                     request.requests.forEach( function(req_) {
                         this._resourcesStatus[req_.id] =  { "status": "loading" };
@@ -611,9 +627,14 @@ var global = window;
                     var convertedResource = req_.delegate.convert(res_, req_.ctx);
                     self._storeResource(req_.id, convertedResource);
                     req_.delegate.resourceAvailable(convertedResource, req_.ctx);
-                    if (self._resourcesBeingProcessedCount > 0)
-                        self._resourcesBeingProcessedCount--;
+                    //if (self._resourcesBeingProcessedCount > 0)
 
+                    /*
+                    if (req_.id.search("indices") !== -1) {
+                        self.send++;
+                        console.log("nb:"+self.send);
+                    }
+                    */
                     //console.log("delete:"+req_.id)
                     delete self._resourcesStatus[req_.id];
 
@@ -621,9 +642,7 @@ var global = window;
 
                     if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
                         self._processNextResource();
-                    } else {
-                        debugger;
-                    }
+                    } 
 
                 };
 
@@ -755,6 +774,12 @@ var global = window;
         
         getResource: {
                 value: function(resource, delegate, ctx) {
+                /*
+                    if (resource.id.search("indices") !== -1) {
+                        this.requested++;
+                        console.log("requested:"+this.requested);
+                    }
+                */
 
                 var managedResource = this._getResource(resource.id);
                 if (managedResource) {
@@ -770,7 +795,7 @@ var global = window;
                 } else if (resource.type === "image") {
                     this._handleImageLoading(resource, delegate, ctx);
                 } else {
-                    //FIXME: better testing
+
                     this._handleTypedArrayLoading(resource, delegate, ctx);
                 }
 
