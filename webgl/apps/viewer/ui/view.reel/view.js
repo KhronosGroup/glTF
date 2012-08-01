@@ -306,12 +306,23 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
         }
     },
 
+    getRenderer: {
+        value: function() {
+            return this.engine ? this.engine.renderer : null;
+        }
+    },
+
     getWebGLContext: {
         value: function() {
-            if (this.engine) {
-                return this.engine.renderer.webGLContext;
-            }
-            return null;
+            var renderer = this.getRenderer();
+            return renderer ? renderer.webGLContext : null;
+        }
+    },
+
+    getResourceManager: {
+        value: function() {
+            var renderer = this.getRenderer();
+            return renderer ? renderer.resourceManager : null;
         }
     },
 

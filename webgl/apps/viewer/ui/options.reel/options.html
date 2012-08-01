@@ -65,7 +65,8 @@ POSSIBILITY OF SUCH DAMAGE.
         "number": {
             "prototype": "montage/ui/input-number.reel",
             "properties": {
-                "element": {"#": "number"}
+                "element": {"#": "number"},
+                "value" : 500
             }
         },
         
@@ -79,7 +80,8 @@ POSSIBILITY OF SUCH DAMAGE.
         "requests": {
             "prototype": "montage/ui/select.reel",
             "properties": {
-                "element": {"#": "requests"}
+                "element": {"#": "requests"},
+                "value" : "6"
             }
         },
         
@@ -114,12 +116,12 @@ POSSIBILITY OF SUCH DAMAGE.
         <section class="optionsGroup speed">
             <h3>Progressive Loading</h3>
             <input type="range" data-montage-id="range" class="range" min="0" max="1000" value="500">
-            <input type="number" data-montage-id="number" class="number"> <label>kb/s</label>
+            <input type="number" data-montage-id="number" class="number"> <label>kb</label>
             <button data-montage-id="restart" class="button">Restart</button>
         </section>
         
         <section class="optionsGroup">
-            <h3>Simultaneous Requests</h3>
+            <h3>Concurrent Requests</h3>
             <select type="select" data-montage-id="requests">
                 <option value="1">1</option>
                 <option value="2">2</option>

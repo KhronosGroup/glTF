@@ -60,7 +60,20 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
      */
     templateDidLoad:{
         value:function () {
-                this.run("model/output.json");
+            this.run("model/output.json");
+
+            var listenerObj = {};
+            var self = this;
+            listenerObj.handleRestartAction = function(event) {
+                var resourceManager = self.view.getResourceManager();
+                if (resourceManager) {
+                    resourceManager.maxConcurrentRequests = self.concurrentRequests;
+                    resourceManager.reset();
+                }
+            }
+
+            this.templateObjects.options.addEventListener("action", listenerObj, false);
+
         }
     },
 
@@ -136,7 +149,13 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
     bytesLimitDidChange: {
         value: function() {
-            
+            //FIXME:would be better to not expose these details here.
+            if (this.view) {
+                var resourceManager = this.view.getResourceManager();
+                if (resourceManager) {
+                    resourceManager.bytesLimit = this.bytesLimit * 1000;
+                }
+            }
         }
     },
 
@@ -145,12 +164,23 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
     bytesLimit: {
         set: function(value) {
             if (this._bytesLimit !== value) {
-                this._bytesLimit = value;
+                this._bytesLimit = Math.floor(value);
                 this.bytesLimitDidChange();                
             }
         }, 
         get: function(value) {
             return this._bytesLimit;
+        }
+    },
+
+    _concurrentRequests: { value: 1, writable: true },
+
+    concurrentRequests: {
+        set: function(value) {
+            this._concurrentRequests = Math.floor(parseInt(value));
+        }, 
+        get: function(value) {
+            return this._concurrentRequests;
         }
     },
 

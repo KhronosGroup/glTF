@@ -41,6 +41,7 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
     templateDidLoad:{
         value:function () {
           this.range = this.templateObjects.range;
+          this.requests = this.templateObjects.requests;
         }
     },
 

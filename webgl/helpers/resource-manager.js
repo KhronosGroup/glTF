@@ -60,25 +60,11 @@ var global = window;
             }
         },
 
-        _bytesLimit: { value: 10000000, writable: true },
-        
-        bytesLimit: {
-            get: function() {
-                return this._bytesLimit;
-            },
-            set: function(value) {
-                if (this._bytesLimit !== value) {
-                 //   this.abortRequests();
-                    this._bytesLimit = value;
-                }
-            }
-        },
-
         canMergeRequest: {
-            value: function(request) {
+            value: function(request, bytesLimit) {
                 var requestSize = request.range[1] - request.range[0];
                 var size = this.range[1] - this.range[0];
-                if ((requestSize + size) > this.bytesLimit)
+                if ((requestSize + size) > bytesLimit)
                     return false;
                 return  (((request.range[0] === this.range[1]) ||
                          ((request.range[1]) === this.range[0])) &&
@@ -124,7 +110,6 @@ var global = window;
                         this.mergeRequest(request);
                     }, this);
                 }
-
             }
         },
 
@@ -139,7 +124,6 @@ var global = window;
                 return this;
             }
         }
-
     })
 
     var RequestTreeNode = Object.create(Object, {
@@ -249,7 +233,7 @@ var global = window;
 
 
         insert: {
-            value: function(requests) {
+            value: function(requests, bytesLimit) {
                 //insert before ?
                 if (requests.range[1] <= this.content.range[0]) {
                     if ( (requests.range[1] === this.content.range[0])) {
@@ -259,13 +243,13 @@ var global = window;
                             this.content.mergeRequests(requests);
 
                         if (this.left) {
-                            if(this.content.canMergeRequest(this.left.content)) {
+                            if(this.content.canMergeRequest(this.left.content, bytesLimit)) {
                                 this.content.mergeRequests(this.left.content._requests);
                                 this.left.remove(this.left.content);
                             }
                         } 
                         if (this.parent) {
-                            if (this.parent.content.canMergeRequest(this.content)) {
+                            if (this.parent.content.canMergeRequest(this.content, bytesLimit)) {
                                 this.parent.content.mergeRequests(this.content._requests);
                                 this.remove(this.content);
                             }
@@ -274,7 +258,7 @@ var global = window;
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.left) {
-                        return this.left.insert(requests);
+                        return this.left.insert(requests, bytesLimit);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
@@ -292,23 +276,22 @@ var global = window;
 
                         
                         if (this.right) {
-                            if(this.content.canMergeRequest(this.right.content)) {
+                            if(this.content.canMergeRequest(this.right.content, bytesLimit)) {
                                 this.content.mergeRequests(this.right.content._requests);
                                 this.right.remove(this.right.content);
                             }
                         }  
                         if (this.parent) {
-                            if (this.parent.content.canMergeRequest(this.content)) {
+                            if (this.parent.content.canMergeRequest(this.content, bytesLimit)) {
                                 this.parent.content.mergeRequests(this.content._requests);
                                 this.remove(this.content);
                             }
                         }
 
-
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
-                        return this.right.insert(requests);
+                        return this.right.insert(requests, bytesLimit);
                     } else {
                         var treeNode = Object.create(RequestTreeNode);
                         treeNode.parent = this;
@@ -425,7 +408,6 @@ var global = window;
         INVALID_TYPE: { value: "INVALID_TYPE" },
         XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
         NOT_FOUND: { value: "NOT_FOUND" },
-        MAX_CONCURRENT_XHR: { value: 6 },
         // misc constants
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
@@ -433,14 +415,62 @@ var global = window;
 
         _requestTree: { value: null, writable: true },
 
+        _resourcesStatus: { value: null, writable: true },
+
+        _resourcesBeingProcessedCount: { value: 0, writable: true },
+
         _observers: { value: null, writable: true },
         
+        _maxConcurrentRequests: { value: 6, writable: true },
+
         observers: {
             get: function() {
                 return this._observers;
             },
             set: function(value) {
                 this._observers = value;
+            }
+        },
+
+        maxConcurrentRequests: {
+            get: function() {
+                return this._maxConcurrentRequests;
+            },
+            set: function(value) {
+                this._maxConcurrentRequests = value;
+            }
+        },
+
+        reset: {
+            value: function() {
+                if (this._resourcesStatus) {
+                    var ids = Object.keys(this._resourcesStatus);
+                    ids.forEach(function(id) {
+                        var status = this._resourcesStatus[id];
+                        if (status) {
+                            if (status.xhr)
+                                status.xhr.abort();
+                        }
+                    }, this);
+                }
+
+                this._resources = {};
+                this._requestTree = null;
+                this._resourcesStatus = {};
+                this._resourcesBeingProcessedCount = 0;
+            }
+        },
+
+        _bytesLimit: { value: 100000000, writable: true },
+        
+        bytesLimit: {
+            get: function() {
+                return this._bytesLimit;
+            },
+            set: function(value) {
+                if (this._bytesLimit !== value) {
+                    this._bytesLimit = value;
+                }
             }
         },
 
@@ -458,7 +488,6 @@ var global = window;
                 this._resources = {};
                 this._resourcesStatus = {};
                 this._observers = [];
-                //this._resourcesToBeProcessed = Object.create(LinkedList);
                 this._resourcesBeingProcessedCount = 0;
             }
         },
@@ -486,12 +515,6 @@ var global = window;
                 return this._resources[resourceID];
             }
         },
-
-        _resourcesStatus: { value: null, writable: true },
-
-        _resourcesBeingProcessedCount: { value: 0, writable: true },
-
-        _resourcesToBeProcessed: { value: null, writable: true },
 
         _loadResource: {
             value: function(request, delegate) {
@@ -543,6 +566,10 @@ var global = window;
                     }
                 };
                 xhr.send(null);
+                var resourceStatus = this._resourcesStatus[request.id];
+                if (resourceStatus) {
+                    resourceStatus.xhr = xhr;
+                }
             }
         },
 
@@ -589,7 +616,7 @@ var global = window;
                     status = resourceStatus.status;
                 }
 
-                if ((this._resourcesBeingProcessedCount >= WebGLTFResourceManager.MAX_CONCURRENT_XHR) && (request.type === "ArrayBuffer")) {
+                if ((this._resourcesBeingProcessedCount >= this.maxConcurrentRequests) && (request.type === "ArrayBuffer")) {
                     if (!status) {
                         var trNode = null;
                         var contRequests;
@@ -606,7 +633,7 @@ var global = window;
                             this._requestTree = rootTreeNode;
                             trNode = rootTreeNode;
                         } else {
-                            trNode = this._requestTree.insert(contRequests);
+                            trNode = this._requestTree.insert(contRequests, this.bytesLimit);
                         }
 
                         if (request.kind ==="multi-parts") {
@@ -639,7 +666,6 @@ var global = window;
                     var convertedResource = req_.delegate.convert(res_, req_.ctx);
                     self._storeResource(req_.id, convertedResource);
                     req_.delegate.resourceAvailable(convertedResource, req_.ctx);
-                    //if (self._resourcesBeingProcessedCount > 0)
 
                     /*
                     if (req_.id.search("indices") !== -1) {
@@ -652,7 +678,7 @@ var global = window;
 
                     self.fireResourceAvailable.call(self, req_.id);
 
-                    if (self._resourcesBeingProcessedCount <  WebGLTFResourceManager.MAX_CONCURRENT_XHR) {
+                    if (self._resourcesBeingProcessedCount < self.maxConcurrentRequests) {
                         self._processNextResource();
                     } 
 
