@@ -60,14 +60,26 @@ var global = window;
             }
         },
 
+        _bytesLimit: { value: 10000000, writable: true },
+        
+        bytesLimit: {
+            get: function() {
+                return this._bytesLimit;
+            },
+            set: function(value) {
+                if (this._bytesLimit !== value) {
+                 //   this.abortRequests();
+                    this._bytesLimit = value;
+                }
+            }
+        },
+
         canMergeRequest: {
             value: function(request) {
                 var requestSize = request.range[1] - request.range[0];
                 var size = this.range[1] - this.range[0];
-//                if ((requestSize + size) > 12000000)
-                if ((requestSize + size) > 1000)
+                if ((requestSize + size) > this.bytesLimit)
                     return false;
-                return false;
                 return  (((request.range[0] === this.range[1]) ||
                          ((request.range[1]) === this.range[0])) &&
                          (request.type ===  this.type));
@@ -413,7 +425,7 @@ var global = window;
         INVALID_TYPE: { value: "INVALID_TYPE" },
         XMLHTTPREQUEST_STATUS_ERROR: { value: "XMLHTTPREQUEST_STATUS_ERROR" },
         NOT_FOUND: { value: "NOT_FOUND" },
-        MAX_CONCURRENT_XHR: { value: 1 },
+        MAX_CONCURRENT_XHR: { value: 6 },
         // misc constants
         ARRAY_BUFFER: { value: "ArrayBuffer" },
 
