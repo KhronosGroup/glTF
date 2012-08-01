@@ -42,6 +42,13 @@ POSSIBILITY OF SUCH DAMAGE.
             }
         },
         
+        "restart": {
+            "prototype": "montage/ui/button.reel",
+            "properties": {
+                "element": {"#": "restart"}
+            }
+        },
+        
         "progress": {
             "prototype": "montage/ui/progress.reel",
             "properties": {
@@ -83,8 +90,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 "element": {"#": "selectModel"}
             }
         }
-                
-        
+
     }
     </script>
 
@@ -94,28 +100,35 @@ POSSIBILITY OF SUCH DAMAGE.
         
         <h1 class="title">Collada2JSON</h1>
         
-        <section data-montage-id="LoadingInfo" class="optionsGroup">
+        <section class="optionsGroup">
+            <button data-montage-id="restart">Restart</button>
+        </section>
+        
+        <section class="optionsGroup">
             <h3>Progress</h3>
             <div type="progress" data-montage-id="progress" class="progress"></div>
         </section>
-
-        <section data-montage-id="progressiveLoadingSection" class="optionsGroup">
+        
+        <section class="optionsGroup">
             <h3>Progressive Loading</h3>
             <input type="range" data-montage-id="range" class="range" min="0" max="1000" value="500">
             <input type="number" data-montage-id="number" class="number"> <label>kb/s</label>
         </section>
         
-        <section data-montage-id="renderingOptions" class="optionsGroup">
+        <section class="optionsGroup">
             <h3>Rendering options</h3>
             <label><input type="checkbox" data-montage-id="enableReflection" class="checkbox"> Reflection</label>
         </section>
         
-        <section data-montage-id="modelOptions" class="optionsGroup">
+        <section class="optionsGroup">
             <h3>Model</h3>
             <select type="select" data-montage-id="selectModel">
                 <option>Car</option>
             </select>
         </section>
+        
+        
+        
         
     </div>
 </body>
