@@ -35,7 +35,6 @@
 
 .options .range {
     width: 100%;
-    margin: 10px 0 20px 0;
 }
 
 .options .progress {
@@ -52,3 +51,13 @@
     font-size: 16px;
 }
 
+
+/* Custom */
+
+.speed .range {
+    margin: 10px 0 20px 0;
+}
+
+.speed label {
+    margin: 0 10px 0 4px;
+}

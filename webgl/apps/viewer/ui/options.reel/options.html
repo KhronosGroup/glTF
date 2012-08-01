@@ -42,13 +42,6 @@ POSSIBILITY OF SUCH DAMAGE.
             }
         },
         
-        "restart": {
-            "prototype": "montage/ui/button.reel",
-            "properties": {
-                "element": {"#": "restart"}
-            }
-        },
-        
         "progress": {
             "prototype": "montage/ui/progress.reel",
             "properties": {
@@ -76,6 +69,20 @@ POSSIBILITY OF SUCH DAMAGE.
             }
         },
         
+        "restart": {
+            "prototype": "montage/ui/button.reel",
+            "properties": {
+                "element": {"#": "restart"}
+            }
+        },
+        
+        "requests": {
+            "prototype": "montage/ui/select.reel",
+            "properties": {
+                "element": {"#": "requests"}
+            }
+        },
+        
         "enableReflection": {
             "prototype": "montage/ui/input-checkbox.reel",
             "properties": {
@@ -100,18 +107,27 @@ POSSIBILITY OF SUCH DAMAGE.
         <h1 class="title">Collada2JSON</h1>
         
         <section class="optionsGroup">
-            <button data-montage-id="restart">Restart</button>
-        </section>
-        
-        <section class="optionsGroup">
             <h3>Progress</h3>
             <div type="progress" data-montage-id="progress" class="progress"></div>
         </section>
         
-        <section class="optionsGroup">
+        <section class="optionsGroup speed">
             <h3>Progressive Loading</h3>
             <input type="range" data-montage-id="range" class="range" min="0" max="1000" value="500">
             <input type="number" data-montage-id="number" class="number"> <label>kb/s</label>
+            <button data-montage-id="restart" class="button">Restart</button>
+        </section>
+        
+        <section class="optionsGroup">
+            <h3>Simultaneous Requests</h3>
+            <select type="select" data-montage-id="requests">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
         </section>
         
         <section class="optionsGroup">
@@ -122,12 +138,9 @@ POSSIBILITY OF SUCH DAMAGE.
         <section class="optionsGroup">
             <h3>Model</h3>
             <select type="select" data-montage-id="selectModel">
-                <option>Car</option>
+                <option value="car">Car</option>
             </select>
         </section>
-        
-        
-        
         
     </div>
 </body>
