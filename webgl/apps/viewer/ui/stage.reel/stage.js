@@ -80,6 +80,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                 var progress = self.progress;
                 if (progress) {
                     progress.value = 0;
+                    progress.element.style.opacity = 1;
                 }
             }
 
@@ -206,6 +207,8 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         value: function() {
             var progress = this.progress;
             if (progress) {
+                progress.element.style["-webkit-transition-duration"] = "1s";
+                progress.element.style.opacity = 1;
                 progress.max = this.view.totalBufferSize;
                 progress.value = 0;
                 var resourceManager = this.view.getResourceManager();
@@ -224,6 +227,13 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
             if (progress) {
                 if (resource.range) {
                     progress.value += resource.range[1] - resource.range[0];
+                    if (progress.value >= progress.max) {
+                        progress.element.style.opacity = 0;
+                        setTimeout(function() { 
+                            progress.value = 0;
+                        },1000);
+
+                    }
                 }
             }
         }
