@@ -40,6 +40,12 @@
 .options .progress {
     width: 100%;
     box-sizing: border-box;
+    background-color: hsl(0,0%,97%);
+}
+
+.options .progress .montage-progress-bar {
+    background-color: hsl(200,100%,50%);
+    height: 8px;
 }
 
 .options .number {
