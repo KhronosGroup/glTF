@@ -42,6 +42,7 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
         value:function () {
           this.range = this.templateObjects.range;
           this.requests = this.templateObjects.requests;
+          this.progress = this.templateObjects.progress;
         }
     },
 

@@ -288,6 +288,7 @@ var global = window;
                             }
                         }
 
+
                         //console.log("requests:"+this.content.requests.length);
                         return null;
                     } else if (this.right) {
@@ -421,7 +422,7 @@ var global = window;
 
         _observers: { value: null, writable: true },
         
-        _maxConcurrentRequests: { value: 6, writable: true },
+        _maxConcurrentRequests: { value: 1, writable: true },
 
         observers: {
             get: function() {
@@ -461,7 +462,7 @@ var global = window;
             }
         },
 
-        _bytesLimit: { value: 100000000, writable: true },
+        _bytesLimit: { value: 500000, writable: true },
         
         bytesLimit: {
             get: function() {
@@ -590,11 +591,11 @@ var global = window;
         },
 
         fireResourceAvailable: {
-            value: function(id) {
+            value: function(request) {
                 if (this.observers) {   
                     this.observers.forEach(function(observer) {
                         if (observer.resourceAvailable) {
-                            observer.resourceAvailable(id);
+                            observer.resourceAvailable(request);
                         }
                     }, this);
                 }
@@ -676,7 +677,7 @@ var global = window;
                     //console.log("delete:"+req_.id)
                     delete self._resourcesStatus[req_.id];
 
-                    self.fireResourceAvailable.call(self, req_.id);
+                    self.fireResourceAvailable.call(self, req_);
 
                     if (self._resourcesBeingProcessedCount < self.maxConcurrentRequests) {
                         self._processNextResource();

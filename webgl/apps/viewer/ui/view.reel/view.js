@@ -127,6 +127,11 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
             if (this.scene !== value) {
                 this._scene = value;
                 this.applyScene(value);
+                if (this.delegate) {
+                    if (this.delegate.sceneDidChange) {
+                        this.delegate.sceneDidChange();
+                    }
+                }
             }
        }
     },
@@ -222,7 +227,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
             this.camera.constrainXOrbit = true;
 
             var center = vec3.createFrom(0,0,0.2);
-                        this.camera.setCenter(center);
+            this.camera.setCenter(center);
 
             this.needsDraw = true;
 
@@ -241,10 +246,14 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
             document.addEventListener('mousemove', this.move.bind(this), true);
             document.addEventListener('mousewheel', this, true);
 
+            var loader = Object.create(RuntimeTFLoader);
+
             var readerDelegate = {};
             readerDelegate.loadCompleted = function (scene) {
+                this.totalBufferSize =  loader.totalBufferSize;
                 this.scene = scene;
                 this.needsDraw = true;
+                //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
             }.bind(this);
 
             var loader = Object.create(RuntimeTFLoader);
@@ -679,9 +688,10 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                 webGLContext.clearColor(0,0,0,0);
                 webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
             }
-            if (this.delegate)
-                this.delegate.willDraw(this);
-
+            if (this.delegate) {
+                if (this.delegate.willDraw)   
+                    this.delegate.willDraw(this);
+            }
             if (this.scene) {
                 renderer = this.engine.renderer;
                 if (webGLContext) {
@@ -728,8 +738,6 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                     mat4.set(this.scene.rootNode.transform, savedTr);
                     webGLContext.depthMask(true);
 
-
-                    //debugger;
                     var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
                     var scaleMatrix = mat4.scale(translationMatrix, [1, 1, -1]);
                     mat4.multiply(scaleMatrix, node.transform) ;
@@ -777,7 +785,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     },
 
     resourceAvailable: {
-        value: function(resourceID) {
+        value: function(resource) {
             this.needsDraw = true;
         }
     },

@@ -44,11 +44,15 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
 
     //----- implements WebGLTFLoader ----------------------------
 
-   handleBuffer: {
+    totalBufferSize: { value: 0, writable: true },
+
+    handleBuffer: {
         value: function(entryID, description, userInfo) {
             var buffer = Object.create(ResourceDescription).init(entryID, description);
             buffer.id = entryID;
             this.storeEntry(entryID, buffer, description);
+
+            this.totalBufferSize += description.byteLength;
             return true;
         }
     },

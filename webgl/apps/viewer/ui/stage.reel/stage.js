@@ -54,6 +54,13 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
+    progress: {
+        get: function() {
+            var options = this.templateObjects.options;
+            return options ? options.progress : null;
+        }
+    },
+
     /**
      @param
          @returns
@@ -70,10 +77,14 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                     resourceManager.maxConcurrentRequests = self.concurrentRequests;
                     resourceManager.reset();
                 }
+                var progress = self.progress;
+                if (progress) {
+                    progress.value = 0;
+                }
             }
 
             this.templateObjects.options.addEventListener("action", listenerObj, false);
-
+            this.view.delegate = this;
         }
     },
 
@@ -189,6 +200,34 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
             this.view.scenePath = scenePath;
             this.view.needsDraw = true;
         }
-    }
+    },
+
+    sceneDidChange: {
+        value: function() {
+            var progress = this.progress;
+            if (progress) {
+                progress.max = this.view.totalBufferSize;
+                progress.value = 0;
+                var resourceManager = this.view.getResourceManager();
+                if (resourceManager) {
+                    if (resourceManager.observers.length === 1) { //FIXME:...
+                        resourceManager.observers.push(this);
+                    }
+                }
+            }
+        }
+    },
+
+    resourceAvailable: {
+        value: function(resource) {
+            var progress = this.progress;
+            if (progress) {
+                if (resource.range) {
+                    progress.value += resource.range[1] - resource.range[0];
+                }
+            }
+        }
+    },
+
 
 });
