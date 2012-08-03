@@ -66,6 +66,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
             var resourceManager = this.view.getResourceManager();
             if (resourceManager) {
                 resourceManager.maxConcurrentRequests = this.concurrentRequests;
+                resourceManager.bytesLimit = this.bytesLimit * 1000;
                 resourceManager.reset();
             }
             var progress = this.progress;
@@ -109,7 +110,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
-    location: {value: null},
+    location: {value: null, writable: true},
 
     _fillViewport: {
         value: true
@@ -136,8 +137,8 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
-    height: {value: null},
-    width: {value: null},
+    height: {value: null, writable:true},
+    width: {value: null, writable:true},
 
     prepareForDraw: {
         value: function() {
@@ -160,25 +161,13 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
-    bytesLimitDidChange: {
-        value: function() {
-            //FIXME:would be better to not expose these details here.
-            if (this.view) {
-                var resourceManager = this.view.getResourceManager();
-                if (resourceManager) {
-                    resourceManager.bytesLimit = this.bytesLimit * 1000;
-                }
-            }
-        }
-    },
 
-    _bytesLimit: { value: 1000, writable: true },
+    _bytesLimit: { value: 0, writable: true },
 
     bytesLimit: {
         set: function(value) {
             if (this._bytesLimit !== value) {
-                this._bytesLimit = Math.floor(value);
-                this.bytesLimitDidChange();                
+                this._bytesLimit = value ;
             }
         }, 
         get: function(value) {
