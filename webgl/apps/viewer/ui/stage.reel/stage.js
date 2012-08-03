@@ -61,48 +61,49 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
+    restart: {
+        value: function() {
+            var resourceManager = this.view.getResourceManager();
+            if (resourceManager) {
+                resourceManager.maxConcurrentRequests = this.concurrentRequests;
+                resourceManager.reset();
+            }
+            var progress = self.progress;
+            if (progress) {
+                progress.value = 0;
+                progress.element.style.opacity = 1;
+            }
+        }
+    },
+
     /**
      @param
          @returns
      */
     templateDidLoad:{
         value:function () {
-            this.run("model/output.json");
-
             var listenerObj = {};
             var self = this;
             listenerObj.handleRestartAction = function(event) {
-                var resourceManager = self.view.getResourceManager();
-                if (resourceManager) {
-                    resourceManager.maxConcurrentRequests = self.concurrentRequests;
-                    resourceManager.reset();
-                }
-                var progress = self.progress;
-                if (progress) {
-                    progress.value = 0;
-                    progress.element.style.opacity = 1;
-                }
+                self.restart.call(self);
             }
 
             this.templateObjects.options.addEventListener("action", listenerObj, false);
             this.view.delegate = this;
+
+            this.model = "model/output.json";
         }
     },
 
-    _model: {value: null},
+    _model: {value: null, writable:true},
 
     model: {
         get: function() {
             return this._model;
         },
         set: function(value) {
-            if (value === this._model) {
-                return;
-            }
-
-            this._model = value;
-
-            if (this._isComponentExpanded) {
+            if (value !== this._model) {
+                this._model = value;
                 this.run(this.model);
             }
         }
@@ -185,7 +186,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
-    _concurrentRequests: { value: 1, writable: true },
+    _concurrentRequests: { value: 6, writable: true },
 
     concurrentRequests: {
         set: function(value) {
@@ -211,6 +212,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                 progress.element.style.opacity = 1;
                 progress.max = this.view.totalBufferSize;
                 progress.value = 0;
+                this.restart();
                 var resourceManager = this.view.getResourceManager();
                 if (resourceManager) {
                     if (resourceManager.observers.length === 1) { //FIXME:...
