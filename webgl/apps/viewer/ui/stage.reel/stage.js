@@ -68,7 +68,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                 resourceManager.maxConcurrentRequests = this.concurrentRequests;
                 resourceManager.reset();
             }
-            var progress = self.progress;
+            var progress = this.progress;
             if (progress) {
                 progress.value = 0;
                 progress.element.style.opacity = 1;
