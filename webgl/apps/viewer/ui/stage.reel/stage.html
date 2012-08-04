@@ -41,8 +41,9 @@ POSSIBILITY OF SUCH DAMAGE.
                     "element": {"#": "component"}
                 },
                 "bindings": {
-                  "bytesLimit": {"<-" : "@options.range.value"},
-                  "concurrentRequests" : {"<-" : "@options.requests.value"}
+                    "bytesLimit": {"<-" : "@options.range.value"},
+                    "concurrentRequests" : {"<-" : "@options.requests.value"},
+                    "model" : {"<->" : "@options.selectModel.value"}
                 }
             },
             "view": {

@@ -41,12 +41,14 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
     range: { value: null, writable:true },
     requests: { value: null, writable:true },
     progress: { value: null, writable:true },
+    selectModel: { value: null, writable: true },
 
     templateDidLoad:{
         value:function () {
           this.range = this.templateObjects.range;
           this.requests = this.templateObjects.requests;
           this.progress = this.templateObjects.progress;
+          this.selectModel = this.templateObjects.selectModel;
         }
     },
 

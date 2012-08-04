@@ -192,7 +192,8 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
 
     handleCamera: {
         value: function(entryID, description, userInfo) {
-
+            //Do not handle camera for now.
+            /*
             var camera = Object.create(Camera).init();
             camera.id = entryID;
             this.storeEntry(entryID, camera, description);
@@ -200,6 +201,7 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
             var projection = Object.create(Projection);
             projection.initWithDescription(description);
             camera.projection = projection;
+            */
             return true;
         }
     },
@@ -275,13 +277,15 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
             if (description.meshes) {
                 description.meshes.forEach( function(meshID) {
                     meshEntry = this.getEntry(meshID);
-                    node.meshes.push(meshEntry.entry);
+                    if (meshEntry)
+                        node.meshes.push(meshEntry.entry);
                 }, this);
             }
 
             if (description.camera) {
                 var cameraEntry = this.getEntry(description.camera);
-                node.cameras.push(cameraEntry.entry);
+                if (cameraEntry)
+                    node.cameras.push(cameraEntry.entry);
             }
 
             return true;

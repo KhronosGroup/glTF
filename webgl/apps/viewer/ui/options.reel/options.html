@@ -92,10 +92,22 @@ POSSIBILITY OF SUCH DAMAGE.
                 "element": {"#": "enableReflection"}
             }
         },
+
+        "modelController": {
+        "prototype": "montage/ui/controller/array-controller",
+        "properties": {
+            "selectObjectsOnAddition": true,
+            "automaticallyOrganizeObjects": true,
+            "content": []
+            }
+        },
         
         "selectModel": {
             "prototype": "montage/ui/select.reel",
             "properties": {
+                "contentController": {"@": "modelController"},
+                "textPropertyPath": "name",
+                "valuePropertyPath": "path",
                 "element": {"#": "selectModel"}
             }
         }
@@ -140,7 +152,6 @@ POSSIBILITY OF SUCH DAMAGE.
         <section class="optionsGroup">
             <h3>Model</h3>
             <select type="select" data-montage-id="selectModel">
-                <option value="car">Car</option>
             </select>
         </section>
         

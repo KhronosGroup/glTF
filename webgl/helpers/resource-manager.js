@@ -87,6 +87,7 @@ var global = window;
                         this.requests.unshift(request);
                         this.range[0] = request.range[0];
                     } else {
+                        debugger;
                         console.log("ERROR: should not reach");
                     }
                 }
@@ -301,6 +302,7 @@ var global = window;
                         return treeNode;
                     }
                 } else {
+                    debugger;
                     console.log("ERROR: should not reach");
                 }
             }
@@ -793,7 +795,6 @@ var global = window;
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
                     gl.bindTexture(gl.TEXTURE_2D, null);  
-
                     delete self._resourcesStatus[id];
                     var convertedResource = delegate.convert(texture, gl);
                     self._storeResource(id, convertedResource);

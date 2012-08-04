@@ -136,7 +136,34 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
        }
     },
 
-    scenePath: { value: null },
+    _scenePath: { value: null, writable: true },
+
+    scenePath: {
+        set: function(value) {
+            if (value !== this._scenePath) {
+
+                var loader = Object.create(RuntimeTFLoader);
+
+                var readerDelegate = {};
+                readerDelegate.loadCompleted = function (scene) {
+                    this.totalBufferSize =  loader.totalBufferSize;
+                    this.scene = scene;
+                    this.needsDraw = true;
+                    //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
+                }.bind(this);
+
+                var loader = Object.create(RuntimeTFLoader);
+                loader.initWithPath(value);
+                loader.delegate = readerDelegate;
+                loader.load(null /* userInfo */, null /* options */);
+
+                this._scenePath = value;
+            }
+        }, 
+        get: function() {
+            return this._scenePath;
+        }
+    },
 
     applyScene: {
         value:function (scene) {
@@ -201,6 +228,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
     prepareForDraw: {
         value: function() {
+
             var webGLContext = this.canvas.getContext("experimental-webgl", { antialias: true}) ||this.canvas.getContext("webgl", { antialias: true});
             var options = null;
             this.engine = Object.create(Engine);
@@ -245,21 +273,6 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
             document.addEventListener('mouseup', this.end.bind(this), true);
             document.addEventListener('mousemove', this.move.bind(this), true);
             document.addEventListener('mousewheel', this, true);
-
-            var loader = Object.create(RuntimeTFLoader);
-
-            var readerDelegate = {};
-            readerDelegate.loadCompleted = function (scene) {
-                this.totalBufferSize =  loader.totalBufferSize;
-                this.scene = scene;
-                this.needsDraw = true;
-                //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
-            }.bind(this);
-
-            var loader = Object.create(RuntimeTFLoader);
-            loader.initWithPath(this.scenePath);
-            loader.delegate = readerDelegate;
-            loader.load(null /* userInfo */, null /* options */);
         }
     },
 

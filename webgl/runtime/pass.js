@@ -381,6 +381,7 @@ exports.Pass = Object.create(Object.prototype, {
     sceneDidChange: {
         value: function() {
             //TODO: perform this only when the scene is about to be used and just set a dirty flag intread
+            this.passes = {};
             this._nodeIDToPrimitives = {};
             var self = this;
             // search for all cameras

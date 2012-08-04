@@ -61,8 +61,22 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
         }
     },
 
+    selectModel: {
+        get: function() {
+            var options = this.templateObjects.options;
+            return options ? options.selectModel : null;
+        }
+    },
+
     restart: {
         value: function() {
+            /*
+            if (this.selectModel) {
+                this.selectModel.content.push( { "name": "car", "path":"model/output.json"} );
+                this.selectModel.needsDraw = true;
+            }
+            */
+
             var resourceManager = this.view.getResourceManager();
             if (resourceManager) {
                 resourceManager.maxConcurrentRequests = this.concurrentRequests;
@@ -91,8 +105,6 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
             this.templateObjects.options.addEventListener("action", listenerObj, false);
             this.view.delegate = this;
-
-            this.model = "model/output.json";
         }
     },
 
@@ -142,6 +154,14 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
     prepareForDraw: {
         value: function() {
+            if (this.selectModel) {
+                this.selectModel.content.push( { "name": "Buggy", "path":"model/rambler/Rambler.json"} );
+                this.selectModel.content.push( { "name": "SuperMurdoch", "path":"model/SuperMurdoch/SuperMurdoch.json"} );
+                this.selectModel.content.push( { "name": "Wine", "path":"model/wine/wine.json"} );
+                this.selectModel.needsDraw = true;
+                this.model = this.selectModel.content[0].path;
+            }
+
             if (this.fillViewport) {
                 window.addEventListener("resize", this, true);
             }
@@ -188,6 +208,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
 
     run: {
         value: function(scenePath) {
+            this.restart();
             this.view.scenePath = scenePath;
             this.view.needsDraw = true;
         }
