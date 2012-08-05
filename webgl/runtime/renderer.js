@@ -247,10 +247,11 @@ exports.Renderer = Object.create(Object, {
                     case gl.BLEND:
                         if ((this._blend !== flag) || force) {
                             if (flag) {
-                                //gl.depthMask(false);
+                                gl.depthMask(false);
                                 gl.enable(gl.BLEND);
+                                gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                             } else {
-                                //gl.depthMask(true);
+                                gl.depthMask(true);
                                 gl.disable(gl.BLEND);                               
                             }
                             this._blend = flag;
@@ -273,7 +274,7 @@ exports.Renderer = Object.create(Object, {
                 }
                 this._lastMaxEnabledArray = -1;
                 this.bindedProgram = null;
-                this.setState(this.BLEND, true, true);
+                this.setState(this.BLEND, false, true);
             }
         },
     
@@ -391,7 +392,7 @@ exports.Renderer = Object.create(Object, {
 
                 program.commit(gl);
             
-                var available = true;
+                var availableCount = 0;
                 //Bind Attribute
                 primitive.vertexAttributes.forEach( function(vertexAttribute) {
 
@@ -404,11 +405,7 @@ exports.Renderer = Object.create(Object, {
                         // this call will bind the resource when available
                         if (glResource) {
                             gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
-                        } else {
-                             available = false;
-                        }
 
-                        if (available) {
                             var attributeLocation = program.getLocationForSymbol(symbol);
                             if (typeof attributeLocation !== "undefined") {
                                 
@@ -417,34 +414,44 @@ exports.Renderer = Object.create(Object, {
                                 }
 
                                 //Just enable what was not enabled before...
-                                if (this._lastMaxEnabledArray < attributeLocation) {
+                                //FIXME: find root cause why it is needed to disable this optimization as it works well 99% of the time
+                                //if (this._lastMaxEnabledArray < attributeLocation) {
                                     gl.enableVertexAttribArray(attributeLocation);
-                                } 
+                                //} 
                                 gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
                                 if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
                                     gl.drawArrays(gl.POINTS, 0, accessor.count);
                                 }
                             }
+
+                            availableCount++;
+                        } else {
+                            this._lastMaxEnabledArray = -1;
                         }
+
                     }                
-                
                 }, this);
+
+                var available = (availableCount === primitive.vertexAttributes.length);
                 if (!renderVertices)  { 
                     //Just disable what is not required here…
                     if (available) {
                         for (var i = (newMaxEnabledArray + 1); i < this._lastMaxEnabledArray ; i++) {
                             gl.disableVertexAttribArray(i);
                         }
-                        if (primitive.step < 1.0)
-                            primitive.step += 0.05;
                     }
               
                     var glIndices = null;
                     //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
-
                     this.indicesDelegate.webGLContext = this.webGLContext;
                     glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, primitive);              
                     if (glIndices && available) {
+                        /*
+                        var enabled = gl.getVertexAttrib(0, gl.VERTEX_ATTRIB_ARRAY_ENABLED);                        
+                        if (!enabled) {
+                            debugger;
+                        }
+                        */
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
@@ -488,11 +495,9 @@ exports.Renderer = Object.create(Object, {
                     var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, gl);
                     if (glProgram) {
                         var blending = false;
-                        
-                        if (pass.states) {
+                        if (pass.states) {  
                             if (pass.states.BLEND) {
                                 blending = true;
-                                gl.blendFunc (gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
                             } 
                         } 
                         this.setState(gl.BLEND, blending);
