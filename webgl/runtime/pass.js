@@ -442,7 +442,7 @@ exports.Pass = Object.create(Object.prototype, {
                 var cameraMatrix = mat4.create();
                 var self = this;
                 mat4.inverse(this.inputs.viewPoint.transform, cameraMatrix);
-                var ctx = mat4.identity();//cameraMatrix;
+                var ctx = cameraMatrix;
                 engine.renderer.projectionMatrix = this.inputs.viewPoint.cameras[0].projection.matrix;
                 this.inputs.scene.rootNode.apply( function(node, parent, parentTransform) {
                     var primitives = self._nodeIDToPrimitives[node.id];
@@ -462,19 +462,19 @@ exports.Pass = Object.create(Object.prototype, {
                     if (!worldMatrix) {
                         worldMatrix = mat4.create();
                     }
-
+                    
                     if (!normalMatrix) {
                         normalMatrix = mat3.create();
                     }
                     var modelview = mat4.create();
-                    mat4.multiply(parentTransform, node.transform , modelview);
-                    mat4.multiply(cameraMatrix, modelview, worldMatrix);
+                    mat4.multiply(parentTransform, node.transform , worldMatrix);
+                    //mat4.multiply(cameraMatrix, modelview, worldMatrix);
                     
                     if (primitives)
                         mat3.transpose(mat4.toInverseMat3(worldMatrix), normalMatrix);
-
-                    return modelview;
-
+                    
+                    return worldMatrix;
+                    
                 }, true, ctx);
             }
             /*

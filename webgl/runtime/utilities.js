@@ -42,7 +42,7 @@ exports.Utilities = Object.create(Object.prototype, {
         }
     },
 
-    vec4Max: {
+    vec3Max: {
         value: function(max, aVec) {
             if (aVec[0] > max[0]) {
                 max[0] = aVec[0];
@@ -94,11 +94,11 @@ exports.Utilities = Object.create(Object.prototype, {
                     min[2] = vectors[i][2];
 
                 if (vectors[i][0] > max[0])
-                  max[0] = vectors[i][0];
+                    max[0] = vectors[i][0];
                 if (vectors[i][1] > max[1])
-                  max[1] = vectors[i][1];
+                    max[1] = vectors[i][1];
                 if (vectors[i][2] > max[2])
-                   max[2] = vectors[i][2];
+                    max[2] = vectors[i][2];
             }
           return [min, max];
         }

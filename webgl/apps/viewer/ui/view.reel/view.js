@@ -71,17 +71,6 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
     scaleFactor: { value: window.devicePixelRatio, writable: true},
 
-    _sceneBBox: { value: null, writable: true },
-
-    sceneBBox: {
-        get: function() {
-            return this._sceneBBox;
-        },
-        set: function(value) {
-            this._sceneBBox = value;
-        }
-    },
-
     canvas: {
         get: function() {
             if (this.templateObjects) {
@@ -191,8 +180,6 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                         return modelMatrix;
                     }, true, ctx);
 
-                    this.sceneBBox = sceneBBox;
-
                     var sceneSize = [(sceneBBox[1][0] - sceneBBox[0][0]) ,
                             (sceneBBox[1][1] - sceneBBox[0][1]) ,
                             (sceneBBox[1][2] - sceneBBox[0][2]) ];
@@ -207,6 +194,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                     var translationVector = vec3.createFrom(    -((sceneSize[0] / 2) + sceneBBox[0][0]), 
                                                         -((sceneSize[1] / 2) + sceneBBox[0][1]),
                                                         -( sceneBBox[0][2]));
+                         
                     var translation = mat4.translate(scaleMatrix, [
                                         translationVector[0],
                                         translationVector[1],
@@ -453,7 +441,6 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                 return;
             var gl = this.getWebGLContext();
             var self = this;
-
             
             function handleTextureLoaded(image, texture) {
                 gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -613,6 +600,172 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
             }
     },
 
+    displayBBOX: {
+        value: function(bbox, cameraMatrix, modelMatrix) {
+
+            if (!this.engine || !this.scene)
+                return;
+            if (!this.engine.rootPass.inputs.viewPoint)
+                return;
+            var gl = this.getWebGLContext();
+            var self = this;
+
+            this.engine.renderer.bindedProgram = null;
+
+            var viewPoint = this.engine.rootPass.inputs.viewPoint;
+            var projectionMatrix = viewPoint.cameras[0].projection.matrix;
+
+            gl.disable(gl.BLEND);
+            //gl.disable(gl.DEPTH_TEST);
+            gl.disable(gl.CULL_FACE);
+
+            if (!this._BBOXProgram) {
+                this._BBOXProgram = Object.create(GLSLProgram);
+
+                var vertexShader =  "precision highp float;" +
+                                    "attribute vec3 vert;"  +
+                                    "uniform mat4 u_projMatrix; " +
+                                    "uniform mat4 u_vMatrix; " +
+                                    "void main(void) { " +
+                                    "gl_Position = u_projMatrix * u_vMatrix * vec4(vert,1.0); }";
+
+                var fragmentShader =    "precision highp float;" +
+                                        " void main(void) { " +
+                                     " gl_FragColor = vec4(.6,.7,.8,1.);" +
+                                    "}";
+
+                this._BBOXProgram.initWithShaders( {    "x-shader/x-vertex" : vertexShader , 
+                                                        "x-shader/x-fragment" : fragmentShader } );
+                if (!this._BBOXProgram.build(gl))
+                    console.log(this._BBOXProgram.errorLogs);
+            }
+
+            var min = bbox[0];
+            var max = bbox[1];
+            var mid = [ ((max[0]-min[0]) * 0.5) , 
+                        ((max[1]-min[1]) * 0.5) , 
+                        ((max[2]-min[2]) * 0.5) ];
+
+            var X = 0;
+            var Y = 1;
+            var Z = 2;
+
+            var pt0 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(min[X], min[Y], min[Z]));
+            var pt1 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(max[X], min[Y], min[Z]));
+            var pt2 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(max[X], max[Y], min[Z]));
+            var pt3 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(min[X], max[Y], min[Z]));
+            var pt4 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(min[X], min[Y], max[Z]));
+            var pt5 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(max[X], min[Y], max[Z]));
+            var pt6 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(max[X], max[Y], max[Z]));
+            var pt7 = mat4.multiplyVec3(modelMatrix, vec3.createFrom(min[X], max[Y], max[Z]));
+
+            //var translationMatrix = mat4.translate(mat4.identity(), mid);
+            //var modelMatrixMid = mat4.create();
+            //mat4.multiply(modelMatrix, translationMatrix, modelMatrixMid);
+
+            if (!this._BBOXIndices) {
+                //should be strip that but couldn't figure yet why I can't couldn't close the strip
+                // i was expecting that repeating the index (like for triangles) would work
+                var indices = [ 0, 1,
+                                1, 2,
+                                2, 3,
+                                3, 0,
+                                4, 5,
+                                5, 6,
+                                6, 7,
+                                7, 4,
+                                3, 7,
+                                2, 6,
+                                0, 4,
+                                1, 5];
+
+                this._BBOXIndices = gl.createBuffer();
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._BBOXIndices);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+            }
+            
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._BBOXIndices);
+
+            if (!this._BBOXVertexBuffer) {
+                this._BBOXVertexBuffer = gl.createBuffer();
+            }
+            var vertices = [
+                    pt0[0], pt0[1], pt0[2], 
+                    pt1[0], pt1[1], pt1[2], 
+                    pt2[0], pt2[1], pt2[2], 
+                    pt3[0], pt3[1], pt3[2], 
+                    pt4[0], pt4[1], pt4[2], 
+                    pt5[0], pt5[1], pt5[2], 
+                    pt6[0], pt6[1], pt6[2], 
+                    pt7[0], pt7[1], pt7[2]
+                ];
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this._BBOXVertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            var vertLocation = this._BBOXProgram.getLocationForSymbol("vert");
+            if (typeof vertLocation !== "undefined") {
+                gl.enableVertexAttribArray(vertLocation);
+                gl.vertexAttribPointer(vertLocation, 3, gl.FLOAT, false, 12, 0);
+            }
+
+            this.engine.renderer.bindedProgram = this._BBOXProgram;
+
+            var projectionMatrixLocation = this._BBOXProgram.getLocationForSymbol("u_projMatrix");
+            if (projectionMatrixLocation) {
+                this._BBOXProgram.setValueForSymbol("u_projMatrix",projectionMatrix);
+            }
+/*
+            var mMatrixLocation = this._BBOXProgram.getLocationForSymbol("u_mMatrix");
+            if (mMatrixLocation) {
+                this._BBOXProgram.setValueForSymbol("u_mMatrix",modelMatrixMid);
+            }
+*/
+            var vMatrixLocation = this._BBOXProgram.getLocationForSymbol("u_vMatrix");
+            if (vMatrixLocation) {
+                this._BBOXProgram.setValueForSymbol("u_vMatrix",cameraMatrix);
+            }
+
+
+            this._BBOXProgram.commit(gl);
+            //void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
+            gl.drawElements(gl.LINES, 24, gl.UNSIGNED_SHORT, 0);
+            gl.disableVertexAttribArray(vertLocation);
+
+            gl.disable(gl.BLEND);
+
+        }
+    },
+
+
+    displayAllBBOX: {
+        value: function(cameraMatrix) {
+            if (!this.scene)
+                return;
+
+            var ctx = mat4.identity();
+            var node = this.scene.rootNode;
+            var self = this;
+
+            node.apply( function(node, parent, parentTransform) {
+
+                var modelMatrix = mat4.create();
+                mat4.multiply( parentTransform, node.transform, modelMatrix);
+                if (node.boundingBox) {
+                    if (node.meshes) {
+                        if (node.meshes.length > 0) {
+                            node.meshes.forEach( function(mesh) {
+                                self.displayBBOX(mesh.boundingBox, cameraMatrix, modelMatrix);
+                            }, this);
+                        }
+                    }
+                }
+                return modelMatrix;
+            }, true, ctx);
+        }
+    },
+
+
     _width: {
         value: null
     },
@@ -698,7 +851,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                 height;
 
             if (webGLContext) {
-                webGLContext.clearColor(0,0,0,0);
+                webGLContext.clearColor(0,0,0,0.);
                 webGLContext.clear(webGLContext.DEPTH_BUFFER_BIT | webGLContext.COLOR_BUFFER_BIT);
             }
             if (this.delegate) {
@@ -778,12 +931,14 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
                     this.engine.render();
 
-                    //webGLContext.flush();
+                    webGLContext.flush();
 
                     var error = webGLContext.getError();
                     if (error != webGLContext.NO_ERROR) {
                         console.log("gl error"+webGLContext.getError());
                     }
+                    
+                    //this.displayAllBBOX(cameraMatrix);
                 }
             }
         }
