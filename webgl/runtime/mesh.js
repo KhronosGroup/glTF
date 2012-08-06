@@ -32,33 +32,6 @@ exports.Mesh = Object.create(Base, {
 
     PRIMITIVES: { value: "primitives" },
 
-    //FIXME:temporary demo crap
-    //client side vertices arraybuffer
-    _verticesBuffer: {
-        value: null,
-        writable: true
-    },
-    verticesBuffer: { 
-        enumerable: true,
-        get: function() {
-            return this._verticesBuffer;
-        },
-        set: function(value) {
-            this._verticesBuffer = value;
-        }
-    },
-
-    _hidden: { value: null, writable: true },
-
-    hidden: {
-        get: function() {
-            return this._hidden;
-        },
-        set: function(value) {
-            this._hidden = value;
-        }
-    },
-
     _primitives: {
         value: null,
         writable: true

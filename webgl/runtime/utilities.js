@@ -126,64 +126,6 @@ exports.Utilities = Object.create(Object.prototype, {
         }
     },
 
-        //http://jgt.akpeters.com/papers/MollerTrumbore97/code.html
-        rayIntersectsTriangle: {
-            value : function(ray, vert0, vert1, vert2) {
-                var edge1 = vec3.create();
-                var edge2 = vec3.create();
-                var pvec = vec3.create();
-                var EPSILON = 0.000001;
-
-                var orig = ray[0];
-                var dir = ray[1];
-
-                var det, inv_det;
-
-                /* find vectors for two edges sharing vert0 */
-                vec3.subtract(vert1, vert0, edge1);
-                vec3.subtract(vert2, vert0, edge2);
-
-                /* begin calculating determinant - also used to calculate U parameter */
-                vec3.cross(dir, edge2, pvec);
-
-                /* if determinant is near zero, ray lies in plane of triangle */
-                det = vec3.dot(edge1, pvec);
-
-               //Non Culling branch
-                if (det > -EPSILON && det < EPSILON)
-                    return null;
-                var tvec = vec3.create();
-
-                inv_det = 1.0 / det;
-
-                /* calculate distance from vert0 to ray origin */
-                vec3.subtract(orig, vert0, tvec);
-
-                /* calculate U parameter and test bounds */
-                var u = vec3.dot(tvec, pvec) * inv_det;
-                if (u < 0.0 || u > 1.0)
-                    return null;
-
-                var qvec = vec3.create();
-
-                /* prepare to test V parameter */
-                vec3.cross(tvec, edge1, qvec);
-
-                /* calculate V parameter and test bounds */
-                var v = vec3.dot(dir, qvec) * inv_det;
-                if (v < 0.0 || (u + v) > 1.0)
-                    return null;
-
-                /* calculate t, ray intersects triangle */
-                var t = vec3.dot(edge2, qvec) * inv_det;
-
-                var out = vec3.create();
-                out[0] = orig[0] + dir[0] * t;
-                out[1] = orig[1] + dir[1] * t;
-                out[2] = orig[2] + dir[2] * t;
-                return out;
-            }
-        },
 
         rayIntersectsMesh: {
             value: function(ray, mesh, worldMatrix, results, options) {
@@ -198,10 +140,6 @@ exports.Utilities = Object.create(Object.prototype, {
                 var vert2 = vec3.create();
                 for (var i = 0 ; i < count ; i++) {
                     var primitive = mesh.primitives[i];
-
-                    if (mesh.hidden) {
-                        continue;
-                    }
                     
                     if (options) {
                         var materials = options.materials;
@@ -212,11 +150,6 @@ exports.Utilities = Object.create(Object.prototype, {
                         }
                     }
 
-                    var indicesBuffer = primitive.indicesBuffer;
-                    if (!indicesBuffer) {
-                        continue;
-                    }
-
                     if ((primitive.material.inputs.transparency !== null) && (typeof primitive.material.inputs.transparency !== "undefined")) {
                         if (primitive.material.inputs.transparency < 1)
                             continue;
@@ -225,43 +158,7 @@ exports.Utilities = Object.create(Object.prototype, {
                     var bbox = primitive.boundingBox;
                     if (!this.intersectsBBOX(bbox, ray))
                         continue;
-                    //FIXME: assume 16bits and triangles
-                    for (var j = 0 ; j < indicesBuffer.length ; j += 3) {
-                        var idx0 = indicesBuffer[j] * 3;
-                        var idx1 = indicesBuffer[j + 1] * 3;
-                        var idx2 = indicesBuffer[j + 2] * 3;
-
-                        vert0[0] = verticesBuffer[idx0];
-                        vert0[1] = verticesBuffer[idx0 + 1];
-                        vert0[2] = verticesBuffer[idx0 + 2];
-
-                        vert1[0] = verticesBuffer[idx1];
-                        vert1[1] = verticesBuffer[idx1 + 1];
-                        vert1[2] = verticesBuffer[idx1 + 2];
-
-                        vert2[0] = verticesBuffer[idx2];
-                        vert2[1] = verticesBuffer[idx2 + 1];
-                        vert2[2] = verticesBuffer[idx2 + 2];
-
-                        //just take the hit for the first primitive
-                        var intersectionPoint = this.rayIntersectsTriangle(ray, vert0, vert1, vert2);
-                        if (intersectionPoint) {
-                            mat4.multiplyVec3(worldMatrix, vert0);
-                            mat4.multiplyVec3(worldMatrix, vert1);
-                            mat4.multiplyVec3(worldMatrix, vert2);
-                            var U = vec3.create();
-                            var V = vec3.create();
-                            var N = vec3.create();
-                            vec3.subtract(vert1, vert0, U);
-                            vec3.subtract(vert2, vert0, V);
-                            vec3.cross(U,V, N);
-                            if (N[2] > 0) {
-                                mat4.multiplyVec3(worldMatrix, intersectionPoint);
-                                results.push({ "intersection" : intersectionPoint, "material" : primitive.material, "mesh": mesh});
-                                hasResults = true;
-                            }
-                        }
-                    }
+                    return true;
                 }
                 return hasResults;
             }

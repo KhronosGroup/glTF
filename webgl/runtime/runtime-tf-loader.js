@@ -145,7 +145,6 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                     var materialEntry = this.getEntry(primitiveDescription.material);
                     primitive.material = materialEntry.entry;
 
-                    primitive.mesh = mesh; //FIXME: demo crap to be removed.
                     mesh.primitives.push(primitive);
 
                     var vertexAttributesDescription = primitiveDescription.vertexAttributes;

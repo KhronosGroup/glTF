@@ -28,53 +28,6 @@ require("dependencies/gl-matrix");
 var Utilities = require("utilities").Utilities;
 exports.Primitive = Object.create(Object.prototype, {
 
-    /* this is to be removed */
-    _mesh: {
-        value: 0,
-        writable: true
-    },
-    mesh: {
-        enumerable: true,
-        get: function() {
-            return this._mesh;
-        },
-        set: function(value) {
-            this._mesh = value;
-        }
-    },
-
-    //client side vertices arraybuffer
-    _indicesBuffer: {
-        value: null,
-        writable: true
-    },
-    
-    indicesBuffer: {
-        enumerable: true,
-        get: function() {
-            return this._indicesBuffer;
-        },
-        set: function(value) {
-            this._indicesBuffer = value;
-        }
-    },
-
-    /* step is temporary demo stuff */
-   _step: {
-        value: 0,
-        writable: true
-    },
-
-    step: {
-        enumerable: true,
-        get: function() {
-            return this._step;
-        },
-        set: function(value) {
-            this._step = value;
-        }
-    },
-
     init: {
         value: function() {
             this.step = 0;
@@ -132,27 +85,6 @@ exports.Primitive = Object.create(Object.prototype, {
     _computeBBOXIfNeeded: {
         enumerable: false,
         value: function() {
-            if (!this._boundingBox && this.mesh && this.indicesBuffer) {
-                var indicesBuffer = this.indicesBuffer;
-                if (!indicesBuffer) {
-                    return;
-                }
-                //FIXME: assume 16bits and triangles
-                var vert0 = vec3.create();
-                var min = vec3.create();
-                var max = vec3.create();
-                for (var j = 0 ; j < indicesBuffer.length ; j ++) {
-                    var idx0 = indicesBuffer[j];
-
-                    vert0[0] = verticesBuffer[(idx0 * 3)];
-                    vert0[1] = verticesBuffer[(idx0 * 3) + 1];
-                    vert0[2] = verticesBuffer[(idx0 * 3) + 2];
-
-                    Utilities.vec3Min(min, vert0);
-                    Utilities.vec3Max(max, vert0);
-                }
-                this.boundingBox = [min, max];
-            }
         }
     },
 

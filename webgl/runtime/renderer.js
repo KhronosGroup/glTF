@@ -170,7 +170,6 @@ exports.Renderer = Object.create(Object, {
         
                 //should be called only once
                 convert: function (resource, ctx) {
-                    ctx.indicesBuffer = new Uint16Array(resource);
                     var gl = this.webGLContext;                
                     var previousBuffer = gl.getParameter(gl.ELEMENT_ARRAY_BUFFER_BINDING);
 
@@ -199,10 +198,6 @@ exports.Renderer = Object.create(Object, {
                 },
         
                 convert: function (resource, ctx) {
-                    if (ctx.semantic === "VERTEX") {
-                        ctx.primitive.mesh.verticesBuffer = new Float32Array(resource);
-                    }
- 
                     var gl = this.webGLContext;                
                     var previousBuffer = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
     
@@ -352,12 +347,6 @@ exports.Renderer = Object.create(Object, {
 
                 if (program.getLocationForSymbol("u_diffuseColor")) {
                     var color = primitive.material.inputs.diffuseColor;
-                    /*var step = primitive.step * primitive.step;
-                    var oneMinusPrimitiveStep = 1 - (1 * step);
-                    var colorStep = [((oneMinusPrimitiveStep) + (step * color[0])), 
-                                    ((oneMinusPrimitiveStep) + (step * color[1])),
-                                    ((oneMinusPrimitiveStep) + (step * color[2]))];
-*/
                     program.setValueForSymbol("u_diffuseColor",color);
                 }
 
@@ -446,12 +435,6 @@ exports.Renderer = Object.create(Object, {
                     this.indicesDelegate.webGLContext = this.webGLContext;
                     glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, primitive);              
                     if (glIndices && available) {
-                        /*
-                        var enabled = gl.getVertexAttrib(0, gl.VERTEX_ATTRIB_ARRAY_ENABLED);                        
-                        if (!enabled) {
-                            debugger;
-                        }
-                        */
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
@@ -504,8 +487,7 @@ exports.Renderer = Object.create(Object, {
 
                         this.bindedProgram = glProgram;
                         for (var i = 0 ; i < count ; i++) {
-                            if (!primitives[i].mesh.hidden)
-                                this.renderPrimitive(primitives[i]);
+                            this.renderPrimitive(primitives[i]);
                         }
                     }
                 }
