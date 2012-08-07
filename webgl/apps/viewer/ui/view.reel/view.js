@@ -389,8 +389,8 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                         |   \ |
                         0----1/4
                     */
-                var c2 = [1.0, 1.0, 1.0];
-                var c1 = [0.25, 0.25, 0.25];
+                var c2 = [.8, .8, .8];
+                var c1 = [0., 0., 0.];
                 var vertices = [
                         - 1.0,-1, 0.0,       c1[0], c1[1], c1[2],
                         1.0,-1, 0.0,        c1[0], c1[1], c1[2],
@@ -639,7 +639,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                 var fragmentShader =    "precision highp float;" +
                                     "uniform float u_transparency; " +
                                         " void main(void) { " +
-                                     " gl_FragColor = vec4(vec3(.5,.5,.5) , u_transparency);" +
+                                     " gl_FragColor = vec4(vec3(1.,1.,1.) , u_transparency);" +
                                     "}";
 
                 this._BBOXProgram.initWithShaders( {    "x-shader/x-vertex" : vertexShader , 
@@ -686,13 +686,14 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
             var incrBox = (1 - mesh.step) * 5.;
 
-            min[X] -= incrBox;
-            min[Y] -= incrBox;
-            min[Z] -= incrBox;
-            max[X] += incrBox;
-            max[Y] += incrBox;
-            max[Z] += incrBox;
-
+            if (mesh.loaded) {
+                min[X] -= incrBox;
+                min[Y] -= incrBox;
+                min[Z] -= incrBox;
+                max[X] += incrBox;
+                max[Y] += incrBox;
+                max[Z] += incrBox;
+            }
             var vertices = [
                     max[X], min[Y], min[Z], 
                     max[X], max[Y], min[Z], 
