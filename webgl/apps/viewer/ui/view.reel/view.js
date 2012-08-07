@@ -341,7 +341,11 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     _floorTextureLoaded : { writable: true, value: false },
 
     enableReflection: {
-        value: true
+        value: true, writable: true
+    },
+
+    showBBOX: {
+        value: true, writable: true
     },
 
     drawGradient: {
@@ -785,10 +789,10 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                                     var scaleMatrix = mat4.scale(mat4.identity(), vec3.createFrom(scale,scale,scale));
                                     mat4.multiply( node.transform, scaleMatrix , nodeMatrix);
                                     mat4.multiply( parentTransform, nodeMatrix, scaledModelMatrix);
+                                    if (self.showBBOX)
+                                        self.displayBBOX(mesh, cameraMatrix, scaledModelMatrix);
                                 }
-
-                                self.displayBBOX(mesh, cameraMatrix, scaledModelMatrix);
-                            }, this);
+                            }, self);
                         }
                     }
                 }
