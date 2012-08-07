@@ -30,7 +30,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
     // Utilities
 
     function RgbArraytoHex(colorArray) {
-        if(!colorArray) return 0;
+        if(!colorArray) return 0xFFFFFFFF;
         var r = Math.floor(colorArray[0] * 255),
             g = Math.floor(colorArray[1] * 255),
             b = Math.floor(colorArray[2] * 255),
@@ -39,6 +39,11 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         var color = (a << 24) + (r << 16) + (g << 8) + b;
 
         return color;
+    }
+
+    function LoadTexture(src) {
+        if(!src) { return null; }
+        return THREE.ImageUtils.loadTexture(src);
     }
 
     // Geometry processing
@@ -54,6 +59,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         this.onload = null;
 
         this.normals = null;
+        this.uvs = null;
         this.indexArray = null;
     };
 
@@ -65,9 +71,11 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             // Build indexed mesh
             var indexArray = this.indexArray;
             var normals = this.normals;
+            var uvs = this.uvs;
             var a, b, c;
             var i, l;
             var faceNormals = null;
+            var faceTexcoords = null;
 
             for(i = 0, l = this.indexArray.length; i < l; i += 3) {
                 a = indexArray[i];
@@ -77,6 +85,9 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                     faceNormals = [normals[a], normals[b], normals[c]];
                 }
                 this.faces.push( new THREE.Face3( a, b, c, faceNormals, null, null ) );
+                if(uvs) {
+                    this.faceVertexUvs[0].push([ uvs[a], uvs[b], uvs[c] ]);
+                }
             }
 
             // Allow Three.js to calculate some values for us
@@ -149,6 +160,12 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
+            }
+        } else if(attribute.semantic == "TEXCOORD") {
+            geometry.uvs = [];
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            for(i = 0, l = floatArray.length; i < l; i += 2) {
+                geometry.uvs.push( new THREE.UV( floatArray[i], 1.0 - floatArray[i+1] ) );
             }
         }
         geometry.loadedAttributes++;
@@ -284,8 +301,12 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
 
         handleMaterial: {
             value: function(entryID, description, userInfo) {
+                if(description.inputs.diffuseTexture) {
+                    description.inputs.diffuseTexture = this.resolvePathIfNeeded(description.inputs.diffuseTexture);
+                }
                 var material = new THREE.MeshLambertMaterial({
-                    color: RgbArraytoHex(description.inputs.diffuseColor)
+                    color: RgbArraytoHex(description.inputs.diffuseColor),
+                    map: LoadTexture(description.inputs.diffuseTexture)
                 });
 
                 this.threeResources.setEntry(entryID, material, description);
