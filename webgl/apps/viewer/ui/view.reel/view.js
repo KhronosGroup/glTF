@@ -340,6 +340,9 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     _mousePosition: { writable: true, value : null },
     _floorTextureLoaded : { writable: true, value: false },
 
+    enableReflection: {
+        value: true
+    },
 
     drawGradient: {
         value: function() {
@@ -922,27 +925,29 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                             - enable depth testing
                             - enable culling
                      ------------------------------------------------------------------------------------------------------------ */
-                    webGLContext.depthFunc(webGLContext.LESS);
-                    webGLContext.enable(webGLContext.DEPTH_TEST);
-                    webGLContext.frontFace(webGLContext.CW);
-                    var savedTr = mat4.create();
+                    if(this.enableReflection) {
+                        webGLContext.depthFunc(webGLContext.LESS);
+                        webGLContext.enable(webGLContext.DEPTH_TEST);
+                        webGLContext.frontFace(webGLContext.CW);
+                        var savedTr = mat4.create();
 
-                    var node = this.scene.rootNode;
+                        var node = this.scene.rootNode;
 
-                    //save car matrix
-                    mat4.set(this.scene.rootNode.transform, savedTr);
-                    webGLContext.depthMask(true);
+                        //save car matrix
+                        mat4.set(this.scene.rootNode.transform, savedTr);
+                        webGLContext.depthMask(true);
 
-                    var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
-                    var scaleMatrix = mat4.scale(translationMatrix, [1, 1, -1]);
-                    mat4.multiply(scaleMatrix, node.transform) ;
-                    mat4.set(scaleMatrix, node.transform);
+                        var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
+                        var scaleMatrix = mat4.scale(translationMatrix, [1, 1, -1]);
+                        mat4.multiply(scaleMatrix, node.transform) ;
+                        mat4.set(scaleMatrix, node.transform);
 
-                    this.engine.render();
-                    webGLContext.depthMask(true);
+                        this.engine.render();
+                        webGLContext.depthMask(true);
 
-                    //restore car matrix
-                    mat4.set(savedTr, node.transform);
+                        //restore car matrix
+                        mat4.set(savedTr, node.transform);
+                    }
                     
                     //restore culling order
                     webGLContext.frontFace(webGLContext.CCW);

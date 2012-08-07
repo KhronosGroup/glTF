@@ -42,6 +42,7 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
     requests: { value: null, writable:true },
     progress: { value: null, writable:true },
     selectModel: { value: null, writable: true },
+    enableReflection: { value: null, writable:true },
 
     templateDidLoad:{
         value:function () {
@@ -49,6 +50,7 @@ exports.Options = Montage.create(Component, /** @lends module:"montage/ui/stage.
           this.requests = this.templateObjects.requests;
           this.progress = this.templateObjects.progress;
           this.selectModel = this.templateObjects.selectModel;
+          this.enableReflection = this.templateObjects.enableReflection;
         }
     },
 
