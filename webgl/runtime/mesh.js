@@ -40,12 +40,20 @@ exports.Mesh = Object.create(Base, {
     primitives: {
         enumerable: true,
         get: function() {
-            if (!this._primitives)
-                this._primitives = [];  //FIXME: make an init
             return this._primitives;
         },
         set: function(value) {
             this._primitives = value;
+        }
+    },
+
+    //theses 2 propreties are just for the demo...
+    step: { value: 0, writable:true },
+    loadedPrimitivesCount: { value: 0, writable:true },
+
+    loaded: {
+        get: function() {
+            return (this.loadedPrimitivesCount === this.primitives.length);
         }
     },
 
@@ -122,6 +130,7 @@ exports.Mesh = Object.create(Base, {
     init: {
         value: function() {
             this.__Base_init();
+            this._primitives = []; 
             return this;
         }
     }

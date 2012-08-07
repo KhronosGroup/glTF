@@ -283,6 +283,8 @@ exports.Renderer = Object.create(Object, {
                 var gl = this.webGLContext;
                 var program =  renderVertices ? this.debugProgram : this.bindedProgram;
 
+                var meshLoaded = primitiveDescription.mesh.loaded;
+
                 //FIXME: remove that association
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
 
@@ -435,6 +437,9 @@ exports.Renderer = Object.create(Object, {
                     this.indicesDelegate.webGLContext = this.webGLContext;
                     glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, primitive);              
                     if (glIndices && available) {
+                        if (!primitiveDescription.mesh.loaded) {
+                            primitiveDescription.mesh.loadedPrimitivesCount++;
+                        }
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
