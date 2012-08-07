@@ -93,6 +93,14 @@ POSSIBILITY OF SUCH DAMAGE.
             }
         },
 
+        "showBBOX": {
+            "prototype": "montage/ui/input-checkbox.reel",
+            "properties": {
+                "checked": false,
+                "element": {"#": "showBBOX"}
+            }
+        },
+
         "modelController": {
         "prototype": "montage/ui/controller/array-controller",
         "properties": {
@@ -147,6 +155,7 @@ POSSIBILITY OF SUCH DAMAGE.
         <section class="optionsGroup">
             <h3>Rendering options</h3>
             <label><input type="checkbox" data-montage-id="enableReflection" class="checkbox"> Reflection</label>
+            <label><input type="checkbox" data-montage-id="showBBOX" class="checkbox"> Bounding Box</label>
         </section>
         
         <section class="optionsGroup">
