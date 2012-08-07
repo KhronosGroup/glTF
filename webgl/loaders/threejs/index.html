@@ -80,8 +80,9 @@
 
                     var loader = new THREE.ColladaJsonLoader( renderer.context );
 
-                    
-                    var colladaObj = loader.load( "../../apps/viewer/model/Rambler.json", function(object) {
+                    var objSrc = "../../apps/viewer/model/rambler/Rambler.json";
+                    //var objSrc = "../../apps/viewer/model/wine/wine.json";
+                    var colladaObj = loader.load( objSrc, function(object) {
                         // To delay adding the collada data to the scene until it's fully loaded, attach object to the scene here instead of using the return value
                     });
                     colladaObj.position.x = -200;

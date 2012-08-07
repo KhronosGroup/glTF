@@ -30,6 +30,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
     // Utilities
 
     function RgbArraytoHex(colorArray) {
+        if(!colorArray) return 0;
         var r = Math.floor(colorArray[0] * 255),
             g = Math.floor(colorArray[1] * 255),
             b = Math.floor(colorArray[2] * 255),
@@ -108,6 +109,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         var geometry = ctx.geometry;
         geometry.indexArray = glResource;
         geometry.checkFinished();
+        return true;
     };
 
     var indicesDelegate = new IndicesDelegate();
@@ -151,6 +153,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         }
         geometry.loadedAttributes++;
         geometry.checkFinished();
+        return true;
     };
 
     var vertexAttributeDelegate = new VertexAttributeDelegate();
@@ -198,10 +201,10 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
     ThreeColladaMesh.prototype.attachToNode = function(threeNode) {
         // Assumes that the geometry is complete
         this.primitives.forEach(function(primitive) {
-            if(!primitive.mesh) {
+            /*if(!primitive.mesh) {
                 primitive.mesh = new THREE.Mesh(primitive.geometry, primitive.material);
-            }
-            threeNode.add(primitive.mesh);
+            }*/
+            threeNode.add(new THREE.Mesh(primitive.geometry, primitive.material));
         });
     };
 
@@ -334,7 +337,10 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                         primitiveDescription.indices = indicesEntry.object;
 
                         var indicesContext = new IndicesContext(primitiveDescription.indices, geometry);
-                        this.threeResources.binaryManager.getResource(primitiveDescription.indices, indicesDelegate, indicesContext);
+                        var alreadyProcessedIndices = this.threeResources.binaryManager.getResource(primitiveDescription.indices, indicesDelegate, indicesContext);
+                        /*if(alreadyProcessedIndices) {
+                            indicesDelegate.resourceAvailable(alreadyProcessedIndices, indicesContext);
+                        }*/
 
                         // Load Vertex Attributes
                         primitiveDescription.vertexAttributes.forEach( function(vertexAttribute) {
@@ -358,7 +364,10 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                             }
 
                             var attribContext = new VertexAttributeContext(vertexAttribute, accessor, geometry);
-                            this.threeResources.binaryManager.getResource(accessorEntry.object, vertexAttributeDelegate, attribContext);
+                            var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(accessorEntry.object, vertexAttributeDelegate, attribContext);
+                            /*if(alreadyProcessedAttribute) {
+                                vertexAttributeDelegate.resourceAvailable(alreadyProcessedAttribute, attribContext);
+                            }*/
                         }, this);
                     }
                 }
