@@ -61,7 +61,7 @@
                     scene = new THREE.Scene();
 
                     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-                    camera.position.z = 250;
+                    camera.position.y = -275;
                     camera.up = new THREE.Vector3( 0, 0, 1 );
                     scene.add( camera );
 
@@ -69,7 +69,7 @@
                     scene.add( ambient );
 
                     var directionalLight = new THREE.DirectionalLight( 0xdddddd );
-                    directionalLight.position.set( 0, 0, 1 ).normalize();
+                    directionalLight.position.set( 0, -1, 1 ).normalize();
                     scene.add( directionalLight );
 
                     // RENDERER
@@ -80,15 +80,19 @@
 
                     var loader = new THREE.ColladaJsonLoader( renderer.context );
 
-                    var objSrc = "../../apps/viewer/model/rambler/Rambler.json";
+                    //var objSrc = "../../apps/viewer/model/rambler/Rambler.json";
                     //var objSrc = "../../apps/viewer/model/wine/wine.json";
                     //var objSrc = "../../apps/viewer/model/SuperMurdoch/SuperMurdoch.json";
-                    //var objSrc = "../../apps/viewer/model/duck/duck.json";
+                    var objSrc = "../../apps/viewer/model/duck/duck.json";
                     var colladaObj = loader.load( objSrc, function(object) {
                         // To delay adding the collada data to the scene until it's fully loaded, attach object to the scene here instead of using the return value
                     });
-                    colladaObj.position.x = -200;
-                    colladaObj.position.y = -100;
+                    //colladaObj.position.x = -200;
+                    //colladaObj.position.y = -100;
+
+                    colladaObj.position.z = -80;
+                    colladaObj.rotation.x = Math.PI * 0.5;
+                    colladaObj.rotation.y = Math.PI * -0.5;
                     scene.add( colladaObj );
 
                     document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -106,7 +110,7 @@
 
                 function render() {
                     camera.position.x += ( mouseX - camera.position.x ) * .05;
-                    camera.position.y += ( - mouseY - camera.position.y ) * .05;
+                    camera.position.z += ( - mouseY - camera.position.z ) * .05;
 
                     camera.lookAt( scene.position );
 

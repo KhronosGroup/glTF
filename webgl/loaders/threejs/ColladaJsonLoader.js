@@ -237,6 +237,8 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         this._entries = {};
         this.binaryManager = Object.create(ResourceManager);
         this.binaryManager.init();
+        this.binaryManager.maxConcurrentRequests = 4;
+        this.binaryManager.bytesLimit = 1024 * 1024;
     };
 
     ThreeResourceManager.prototype.setEntry = function(entryID, object, description) {
@@ -521,7 +523,6 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
 
         var loader = Object.create(ThreeWebGLTFLoader);
             loader.initWithPath(url);
-            //loader.delegate = colladaJsonDelegate;
             loader.load(new ColladaJsonContext(rootObj, callback) /* userInfo */, null /* options */);
 
         return rootObj;
