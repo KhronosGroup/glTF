@@ -61,22 +61,44 @@
                     scene = new THREE.Scene();
 
                     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-                    camera.position.y = -275;
+                    
                     camera.up = new THREE.Vector3( 0, 0, 1 );
                     scene.add( camera );
 
                     var ambient = new THREE.AmbientLight( 0x101010 );
                     scene.add( ambient );
 
-                    var directionalLight = new THREE.DirectionalLight( 0xdddddd );
+                    /*var directionalLight = new THREE.DirectionalLight( 0xdddddd );
                     directionalLight.position.set( 0, -1, 1 ).normalize();
-                    scene.add( directionalLight );
+                    scene.add( directionalLight );*/
+
+                    var spot1   = new THREE.SpotLight( 0x888888, 2 );
+                    spot1.position.set( -100, -200, 150 );
+                    spot1.target.position.set( 0, 0, 0 );
+                    spot1.shadowCameraNear      = 1;
+                    spot1.shadowCameraFar      = 1024;
+                    spot1.castShadow            = true;
+                    spot1.shadowDarkness        = 0.5;
+                    //spot1.shadowCameraVisible   = true;
+                    scene.add( spot1 );
 
                     // RENDERER
 
                     renderer = new THREE.WebGLRenderer();
                     renderer.setSize( window.innerWidth, window.innerHeight );
+
+                    renderer.shadowMapEnabled = true;
+                    renderer.shadowMapSoft = true;
+
                     container.appendChild( renderer.domElement );
+
+                    var groundMaterial = new THREE.MeshLambertMaterial({
+                            color: 0xFFFFFF,
+                            shading: THREE.SmoothShading,
+                        });
+                    var ground = new THREE.Mesh( new THREE.CubeGeometry(1024, 1024, 1), groundMaterial);
+                    ground.receiveShadow = true;
+                    scene.add(ground);
 
                     var loader = new THREE.ColladaJsonLoader( renderer.context );
 
@@ -87,12 +109,25 @@
                     var colladaObj = loader.load( objSrc, function(object) {
                         // To delay adding the collada data to the scene until it's fully loaded, attach object to the scene here instead of using the return value
                     });
-                    //colladaObj.position.x = -200;
-                    //colladaObj.position.y = -100;
 
+                    // For the car
+                    /*camera.position.y = -250;
+                    colladaObj.position.x = -200;
+                    colladaObj.position.y = -100;*/
+
+                    // For the wine rack
+                    /*camera.position.y = -120;
+                    colladaObj.position.x = -60;
+                    colladaObj.position.z = -20;*/
+
+                    // For the duck
+                    camera.position.y = -275;
                     colladaObj.position.z = -80;
                     colladaObj.rotation.x = Math.PI * 0.5;
                     colladaObj.rotation.y = Math.PI * -0.5;
+                    ground.position.z = -70;
+                    
+                    colladaObj.castShadow = true;
                     scene.add( colladaObj );
 
                     document.addEventListener( 'mousemove', onDocumentMouseMove, false );

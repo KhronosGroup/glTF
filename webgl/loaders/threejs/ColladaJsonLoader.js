@@ -34,7 +34,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         var r = Math.floor(colorArray[0] * 255),
             g = Math.floor(colorArray[1] * 255),
             b = Math.floor(colorArray[2] * 255),
-            a = Math.floor(colorArray[3] ? colorArray[3] * 255 : 255);
+            a = 255;
 
         var color = (a << 24) + (r << 16) + (g << 8) + b;
 
@@ -221,7 +221,10 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             /*if(!primitive.mesh) {
                 primitive.mesh = new THREE.Mesh(primitive.geometry, primitive.material);
             }*/
-            threeNode.add(new THREE.Mesh(primitive.geometry, primitive.material));
+            var threeMesh = new THREE.Mesh(primitive.geometry, primitive.material);
+            threeMesh.doubleSided = false;
+            threeMesh.castShadow = true;
+            threeNode.add(threeMesh);
         });
     };
 
@@ -308,6 +311,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                 }
                 var material = new THREE.MeshLambertMaterial({
                     color: RgbArraytoHex(description.inputs.diffuseColor),
+                    opacity: 'transparency' in description.inputs ? description.inputs.transparency : 1.0,
                     map: LoadTexture(description.inputs.diffuseTexture)
                 });
 
