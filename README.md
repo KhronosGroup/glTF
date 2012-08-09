@@ -1,3 +1,5 @@
+[Update: working on huge cleanup post Siggraph demos + make paper to describe format + use OpenCOLLADA as submodule to easy compile the whole tool...]
+
 ##COLLADA2JSON
 
 
