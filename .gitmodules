@@ -1,3 +1,6 @@
 [submodule "webgl/runtime/dependencies/montage"]
 	path = webgl/runtime/dependencies/montage
 	url = https://github.com/Motorola-Mobility/montage.git
+[submodule "converter/dae2json/dependencies/OpenCOLLADA"]
+	path = converter/dae2json/dependencies/OpenCOLLADA
+	url = https://github.com/KhronosGroup/OpenCOLLADA.git

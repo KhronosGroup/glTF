@@ -69,7 +69,7 @@ namespace JSONExport
         this->_semanticToAccessors[semantic] = indexSetToAccessorHashmap;
     }
     
-    IndexSetToAccessorHashmap& JSONMesh::getAccessorsForSemantic(JSONExport::Semantic semantic)
+    IndexSetToAccessorHashmap& JSONMesh::getAccessorsForSemantic(Semantic semantic)
     {
         return this->_semanticToAccessors[semantic];
     }

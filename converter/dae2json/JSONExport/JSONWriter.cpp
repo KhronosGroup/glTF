@@ -61,7 +61,7 @@ namespace JSONExport
     {
         this->_writer->StartArray();
         
-        vector <shared_ptr <JSONValue>> values = array->values();
+        vector <shared_ptr <JSONValue> > values = array->values();
         size_t count = values.size();
         for (int i = 0 ; i < count ; i++) {
             values[i]->write(this, context);
@@ -93,19 +93,19 @@ namespace JSONExport
         JSONNumber::JSONNumberType type = number->getType();
         
         switch (type) {
-            case JSONNumber::JSONNumberType::UNSIGNED_INT32:
+            case JSONNumber::UNSIGNED_INT32:
                 this->_writer->Uint(number->getUnsignedInt32());
                 break;
-            case JSONNumber::JSONNumberType::INT32:
+            case JSONNumber::INT32:
                 this->_writer->Int(number->getInt32());
                 break;
-            case JSONNumber::JSONNumberType::DOUBLE:
+            case JSONNumber::DOUBLE:
             {   
                 double value = number->getDouble();
                 this->_writer->Double(value);
                 break;
             }
-            case JSONNumber::JSONNumberType::BOOL:
+            case JSONNumber::BOOL:
             {   
                 bool value = number->getBool();
                 this->_writer->Bool(value);

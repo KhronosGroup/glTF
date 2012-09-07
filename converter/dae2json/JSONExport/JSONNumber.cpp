@@ -34,7 +34,7 @@ namespace JSONExport
 {    
     JSONNumber::JSONNumber(unsigned int value):
     JSONValue(JSONExport::NUMBER),
-    _type(JSONNumberType::UNSIGNED_INT32)        
+    _type(UNSIGNED_INT32)        
     {
         this->_value = malloc(sizeof(unsigned int));
         memcpy(this->_value, &value, sizeof(unsigned int));
@@ -42,7 +42,7 @@ namespace JSONExport
     
     JSONNumber::JSONNumber(int value):
     JSONValue(JSONExport::NUMBER),
-    _type(JSONNumberType::INT32)        
+    _type(INT32)        
     {
         this->_value = malloc(sizeof(int));
         memcpy(this->_value, &value, sizeof(int));
@@ -50,7 +50,7 @@ namespace JSONExport
     
     JSONNumber::JSONNumber(double value):
     JSONValue(JSONExport::NUMBER),
-    _type(JSONNumberType::DOUBLE)        
+    _type(DOUBLE)        
     {
         this->_value = malloc(sizeof(double));
         memcpy(this->_value, &value, sizeof(double));
@@ -58,7 +58,7 @@ namespace JSONExport
 
     JSONNumber::JSONNumber(bool value):
     JSONValue(JSONExport::NUMBER),
-    _type(JSONNumberType::BOOL)        
+    _type(BOOL)        
     {
         this->_value = malloc(sizeof(bool));
         memcpy(this->_value, &value, sizeof(bool));
@@ -76,28 +76,28 @@ namespace JSONExport
     
     unsigned int JSONNumber::getUnsignedInt32() {
         unsigned int value = 0;
-        if (this->_type == JSONNumberType::UNSIGNED_INT32)
+        if (this->_type == UNSIGNED_INT32)
             memcpy(&value, this->_value, sizeof(unsigned int));
         return value;
     }        
     
     int JSONNumber::getInt32() {
         int value = 0;
-        if (this->_type == JSONNumberType::INT32)
+        if (this->_type == INT32)
             memcpy(&value, this->_value, sizeof(int));
         return value;
     }        
     
     double JSONNumber::getDouble() {
         double value = 0;
-        if (this->_type == JSONNumberType::DOUBLE)
+        if (this->_type == DOUBLE)
             memcpy(&value, this->_value, sizeof(double));
         return value;
     }      
 
     bool JSONNumber::getBool() {
         bool value = 0;
-        if (this->_type == JSONNumberType::BOOL)
+        if (this->_type == BOOL)
             memcpy(&value, this->_value, sizeof(bool));
         return value;
     }      

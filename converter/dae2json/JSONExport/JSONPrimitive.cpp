@@ -32,8 +32,8 @@ namespace JSONExport
 {
     //---- JSONPrimitiveRemapInfos ------------------------------------------------------------------------------------------
     JSONPrimitiveRemapInfos::JSONPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount):
-    _generatedIndices(generatedIndices),
-    _generatedIndicesCount(generatedIndicesCount)
+    _generatedIndicesCount(generatedIndicesCount),
+    _generatedIndices(generatedIndices)
     {
     }
     

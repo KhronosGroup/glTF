@@ -41,7 +41,7 @@ namespace JSONExport
 
         virtual void appendValue(shared_ptr <JSONValue>);
         
-        std::vector <shared_ptr <JSONValue>> values();
+        std::vector <shared_ptr <JSONValue> > values();
 
     private:
         std::vector <shared_ptr <JSONValue> > _values;

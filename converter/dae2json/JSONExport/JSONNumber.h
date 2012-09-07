@@ -34,14 +34,14 @@ namespace JSONExport
         JSONNumber():JSONValue(JSONExport::NUMBER), _type(NOT_A_NUMBER) {}
         
     public:        
-        enum JSONNumberType
+        typedef enum 
         {
             NOT_A_NUMBER = 0,
             UNSIGNED_INT32 = 1,
             INT32 = 2,
             DOUBLE = 3,
             BOOL = 4
-        };
+        } JSONNumberType;
                 
         explicit JSONNumber(unsigned int value);
         explicit JSONNumber(int value);

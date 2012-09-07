@@ -122,8 +122,8 @@ namespace DAE2JSON
     {
     public:
         MeshFlatteningInfo(unsigned int meshUID, const COLLADABU::Math::Matrix4& worldMatrix) :
-        _meshUID(meshUID),
-        _worldMatrix(worldMatrix) {}
+        _worldMatrix(worldMatrix),
+        _meshUID(meshUID) {}
         
         unsigned int getUID() { return this->_meshUID; }
         const COLLADABU::Math::Matrix4& getWorldMatrix() { return this->_worldMatrix; }

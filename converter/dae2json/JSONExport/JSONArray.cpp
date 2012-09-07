@@ -47,7 +47,7 @@ namespace JSONExport
         writer->writeArray(this, context);
     }
     
-    vector <shared_ptr <JSONValue>> JSONArray::values()
+    vector <shared_ptr <JSONValue> > JSONArray::values()
     {
         return this->_values;
     }

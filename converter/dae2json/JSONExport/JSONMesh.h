@@ -42,7 +42,7 @@ namespace JSONExport
         bool appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive);
         
         void setAccessorsForSemantic(JSONExport::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap);        
-        IndexSetToAccessorHashmap& getAccessorsForSemantic(JSONExport::Semantic semantic); 
+        IndexSetToAccessorHashmap& getAccessorsForSemantic(Semantic semantic); 
         
         std::vector <JSONExport::Semantic> allSemantics();
                 

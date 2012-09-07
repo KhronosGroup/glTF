@@ -69,20 +69,14 @@ namespace JSONExport
         }
     };
         
-    enum Semantic {
+    typedef enum {
         VERTEX = 1,
         NORMAL = 2,
         TEXCOORD = 3,
         COLOR = 4
-    };    
-/*
-    enum JSONNumberType {
-        UNSIGNED_INT,
-        INT,
-        DOUBLE
-    };
-  */  
-    enum JSONValueType {
+    } Semantic;    
+
+    typedef enum {
         NOT_A_JSON_TYPE = 0,
         NUMBER = 1,
         OBJECT = 2,
@@ -95,9 +89,9 @@ namespace JSONExport
         INDICES = 8,
         MESH = 9,
         PRIMITIVE = 10
-    };
+    } JSONValueType;
     
-    enum ElementType {
+    typedef enum {
         NOT_AN_ELEMENT_TYPE = 0,
         BYTE = 1,
         UNSIGNED_BYTE = 2,
@@ -105,7 +99,7 @@ namespace JSONExport
         UNSIGNED_SHORT = 4,
         FIXED = 5,
         FLOAT = 6
-    };
+    } ElementType;
     
 };
 

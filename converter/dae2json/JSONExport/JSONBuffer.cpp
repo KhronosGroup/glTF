@@ -60,16 +60,16 @@ namespace JSONExport
     //--------------------------------------------------------------------------------------------------------------------------------    
     
     JSONDataBuffer::JSONDataBuffer(void *data, size_t byteSize, bool ownData): 
-    _data((unsigned char*)data),
     JSONBuffer(byteSize),
+    _data((unsigned char*)data),
     _ownData(ownData)
     {
         this->_ID = JSONUtils::generateIDForType("buffer");
     }
     
     JSONDataBuffer::JSONDataBuffer(std::string ID,void *data, size_t byteSize, bool ownData): 
-    _data((unsigned char*)data),
     JSONBuffer(ID, byteSize),
+    _data((unsigned char*)data),
     _ownData(ownData)
     {
     }

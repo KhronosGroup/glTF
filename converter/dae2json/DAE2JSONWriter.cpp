@@ -9,7 +9,7 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
+//  * Neither the name of the Motorola Mobility, Inc. nor the names of its 
 //    contributors may be used to endorse or promote products derived from this
 //    software without specific prior written permission.
 //
@@ -29,8 +29,7 @@
 // TODO: normal generation when needed
 // DESIGN: justification generation shader. geometry may need regeneration if lambert
 // DESIGN: difference between COLLADA and JSON format. In JSON format it is possible to make an interleaved array not only made by float.
-// reminder; to run recursively against all dae files...
-// find . -name '*.dae' -exec dae2json {} \;
+// reminder; to run recursively against all dae files: find . -name '*.dae' -exec dae2json {} \;
 
 #include "JSONExport.h"
 #include "DAE2JSONWriter.h"
@@ -141,8 +140,8 @@ namespace DAE2JSON
     static unsigned int ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(const COLLADAFW::MeshVertexData &vertexData, JSONExport::IndexSetToAccessorHashmap &accessors) 
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
-        //- "set"(s) other than texCoord don't have valid input infos
-        //- not the original id in the source
+        //1. "set"(s) other than texCoord don't have valid input infos
+        //2. not the original id in the source
         
         std::string name; 
         size_t length, elementsCount;
@@ -156,8 +155,8 @@ namespace DAE2JSON
             setCount = 1;
         
         for (int indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
-        
-            if (setCount > 0) {
+            
+            if (!unpatchedOpenCOLLADA) {
                 name = vertexData.getName(indexOfSet);
                 size = vertexData.getStride(indexOfSet);
             } else {
@@ -230,7 +229,7 @@ namespace DAE2JSON
                 //these 2 requires transforms
             case MeshPrimitive::POLYLIST:
             case MeshPrimitive::POLYGONS:
-                // FIXME: perform conversion, but until done report error
+                // FIXME: perform conversion, but until not done report error
                 //these mode are supported by WebGL                    
                 break;
             case  MeshPrimitive::LINES:
@@ -594,14 +593,15 @@ namespace DAE2JSON
             }
         } 
         
-        if (!nodeContainsLookAtTr) {
+        if (!nodeContainsLookAtTr) { 
             node->getTransformationMatrix(matrix);
         }
                 
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
 
-        if (!matrix.isIdentity())
-            nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
+        //Need to FIX OpenCOLLADA typo for isIdentity to reenable this
+        //if (!matrix.isIdentity())
+        nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
         
         // save mesh
 		const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();
@@ -627,7 +627,7 @@ namespace DAE2JSON
                 }
                 
                 if (sceneFlatteningInfo) {
-                    JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::Semantic::VERTEX); 
+                    JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::VERTEX); 
                     shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
                     
                     BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()), 
@@ -642,24 +642,25 @@ namespace DAE2JSON
                     shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
                     
                     //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
-                    unsigned int materialBindingIndex = -1;
+                    int materialBindingIndex = -1;
                     for (int k = 0; k < materialBindings.getCount() ; k++) {
                         if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
                             materialBindingIndex = k;
                         }
                     }
-                    
-                    unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
+                    if (materialBindingIndex != -1) {
+                        unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                         
-                    unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
-                    std::string materialName = this->_materialUIDToName[referencedMaterialID];
-                    shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
-                    //short cut from material -> effect
-                    effect->setName(materialName);
-                    primitive->setMaterialID(effect->getID());                    
+                        unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
+                        std::string materialName = this->_materialUIDToName[referencedMaterialID];
+                        shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
+                        effect->setName(materialName);
+                        primitive->setMaterialID(effect->getID());                    
+                    }
                 }
-            
-                meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
+                
+                meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(mesh->getID())));
+                //meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
                 
                 if (sceneFlatteningInfo) {
                     shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
@@ -697,7 +698,7 @@ namespace DAE2JSON
         return true;
     }
 
-    // Flattening    
+    // Flattening   [UNFINISHED CODE]
     //conditions for flattening
     // -> same material
     // option to merge of not non-opaque geometry
@@ -971,7 +972,7 @@ namespace DAE2JSON
             if (!hasDiffuseTexture) {
                 const Color& color = diffuse.getColor();
                          
-                if (diffuse.getType() != COLLADAFW::ColorOrTexture::Type::UNSPECIFIED) {
+                if (diffuse.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
                     red = color.getRed();
                     green = color.getGreen();
                     blue = color.getBlue();
@@ -1033,32 +1034,32 @@ namespace DAE2JSON
         cameraObject->setString("type", "camera");
         
         switch (camera->getCameraType()) {
-            case Camera::CameraType::UNDEFINED_CAMERATYPE:
+            case Camera::UNDEFINED_CAMERATYPE:
                 printf("WARNING: unknown camera type: using perspective\n");
                 cameraObject->setString("cameraType", "perspective");
                 break;
-            case Camera::CameraType::ORTHOGRAPHIC:
+            case Camera::ORTHOGRAPHIC:
             {
                 cameraObject->setString("projection", "orthographic");
                 switch (camera->getDescriptionType()) {
-                    case Camera::DescriptionType::UNDEFINED: //!< The perspective camera object is invalid
+                    case Camera::UNDEFINED: //!< The perspective camera object is invalid
                         //FIXME: handle error
                         break;
-                    case Camera::DescriptionType::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
+                    case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
                         cameraObject->setDouble("xmag", camera->getXMag().getValue());
                         break;
-                    case Camera::DescriptionType::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
+                    case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
                         cameraObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
-                    case Camera::DescriptionType::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
+                    case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
                         cameraObject->setDouble("xmag", camera->getXMag().getValue());
                         cameraObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
-                    case Camera::DescriptionType::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
+                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
                         cameraObject->setDouble("xmag", camera->getXMag().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
-                    case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
+                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
                         cameraObject->setDouble("ymag", camera->getYMag().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
@@ -1066,28 +1067,28 @@ namespace DAE2JSON
                 
             }
                 break;
-            case Camera::CameraType::PERSPECTIVE: 
+            case Camera::PERSPECTIVE: 
             {
                 cameraObject->setString("projection", "perspective");
                 switch (camera->getDescriptionType()) {
-                    case Camera::DescriptionType::UNDEFINED: //!< The perspective camera object is invalid
+                    case Camera::UNDEFINED: //!< The perspective camera object is invalid
                         //FIXME: handle error
                         break;
-                    case Camera::DescriptionType::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
+                    case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
                         cameraObject->setDouble("xfov", camera->getXFov().getValue());
                         break;
-                    case Camera::DescriptionType::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
+                    case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
                         cameraObject->setDouble("yfov", camera->getYFov().getValue());
                         break;
-                    case Camera::DescriptionType::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
+                    case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
                         cameraObject->setDouble("xfov", camera->getXFov().getValue());
                         cameraObject->setDouble("yfov", camera->getYFov().getValue());
                         break;
-                    case Camera::DescriptionType::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
+                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
                         cameraObject->setDouble("xfov", camera->getXFov().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
-                    case Camera::DescriptionType::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
+                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
                         cameraObject->setDouble("yfov", camera->getYFov().getValue());
                         cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
