@@ -127,7 +127,7 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
         
         bufferObject->setString("type", "ArrayBuffer");
-        bufferObject->setUnsignedInt32("byteLength", buffer->getByteSize());
+        bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteSize());
         bufferObject->setString("path", buffer->getID());
         
         return bufferObject;
@@ -164,8 +164,8 @@ namespace JSONExport
         vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = mesh->remappedAccessors();
         
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
-        unsigned int primitivesCount =  primitives.size();
-        for (int i = 0 ; i < primitivesCount ; i++) {
+        unsigned int primitivesCount =  (unsigned int)primitives.size();
+        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             
             shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];   
             shared_ptr <JSONExport::JSONIndices> uniqueIndices =  primitive->getUniqueIndices();
@@ -180,7 +180,7 @@ namespace JSONExport
             primitivesArray->appendValue(primitiveObject);
             
             //FIXME: check to remove that code
-            unsigned int indicesCount = primitive->getUniqueIndices()->getCount();
+            unsigned int indicesCount = (unsigned int)primitive->getUniqueIndices()->getCount();
             if (indicesCount <= 0) {
                 // FIXME: report error
             } else {
@@ -218,10 +218,10 @@ namespace JSONExport
         shared_ptr <JSONObject> accessorObject = shared_ptr<JSONObject>(new JSONObject());
                 
         accessorObject->setString("type", "accessor");
-        accessorObject->setUnsignedInt32("byteStride", accessor->getByteStride());
-        accessorObject->setUnsignedInt32("byteOffset", accessor->getByteOffset());
-        accessorObject->setUnsignedInt32("elementsPerValue", accessor->getElementsPerVertexAttribute());
-        accessorObject->setUnsignedInt32("count", accessor->getCount());
+        accessorObject->setUnsignedInt32("byteStride", (unsigned int)accessor->getByteStride());
+        accessorObject->setUnsignedInt32("byteOffset", (unsigned int)accessor->getByteOffset());
+        accessorObject->setUnsignedInt32("elementsPerValue", (unsigned int)accessor->getElementsPerVertexAttribute());
+        accessorObject->setUnsignedInt32("count", (unsigned int)accessor->getCount());
         accessorObject->setString("elementType", JSONUtils::getStringForType(accessor->getElementType()));
         
         JSONBuffer* buffer = context ? (JSONBuffer*)context : accessor->getBuffer().get();
@@ -260,8 +260,8 @@ namespace JSONExport
 
         indicesObject->setString("type", JSONUtils::getStringForTypedArray(JSONExport::UNSIGNED_SHORT));
         indicesObject->setString("buffer", buffer->getID());
-        indicesObject->setUnsignedInt32("byteOffset", indices->getByteOffset());
-        indicesObject->setUnsignedInt32("length", indices->getCount());
+        indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
+        indicesObject->setUnsignedInt32("length", (unsigned int)indices->getCount());
 
         return indicesObject;
     }

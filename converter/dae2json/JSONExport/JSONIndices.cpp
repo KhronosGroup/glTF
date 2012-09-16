@@ -81,12 +81,12 @@ namespace JSONExport
         return this->_indexOfSet;
     }
         
-    const std::string const JSONIndices::getAccessorID()
+    std::string const JSONIndices::getAccessorID()
     {
         return this->_accessorID;
     }
     
-    const shared_ptr <JSONExport::JSONBuffer>  const JSONIndices::getBuffer()
+    shared_ptr <JSONExport::JSONBuffer>  const JSONIndices::getBuffer()
     {
         return this->_buffer;
     }

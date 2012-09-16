@@ -46,7 +46,7 @@ namespace JSONExport
         virtual ~JSONBuffer();
         
         size_t const getByteSize();
-        const std::string const getID();
+        std::string const getID();
                 
     protected:
         std::string  _ID;

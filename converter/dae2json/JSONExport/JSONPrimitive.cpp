@@ -121,7 +121,7 @@ namespace JSONExport
         }
         
         //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count and remappedIndex)
-        unsigned int vertexAttributesCount = this->_allIndices.size();
+        unsigned int vertexAttributesCount = (unsigned int)this->_allIndices.size();
         
         //get the primitive infos to know where we need to "go" for remap 
         unsigned int count = primitiveRemapInfos->generatedIndicesCount();
@@ -131,7 +131,7 @@ namespace JSONExport
         
         unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONDataBuffer> (this->_uniqueIndices->getBuffer())->getData());
         
-        for (int k = 0 ; k < count ; k++) { 
+        for (unsigned int k = 0 ; k < count ; k++) { 
             unsigned int idx = indices[k];                
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (vertexAttributesCount + 1)];
             
@@ -161,7 +161,7 @@ namespace JSONExport
         
         //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count)
         unsigned int generatedIndicesCount = 0;
-        unsigned int vertexAttributesCount = _allIndices.size();
+        unsigned int vertexAttributesCount = (unsigned int)_allIndices.size();
         size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
         this->_originalCountAndIndexes = (unsigned int*)malloc( indicesCount * sizeOfRemappedIndex);
         
@@ -173,7 +173,7 @@ namespace JSONExport
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             
             remappedIndex[0] = vertexAttributesCount;
-            for (int i = 0 ; i < vertexAttributesCount ; i++) {
+            for (unsigned int i = 0 ; i < vertexAttributesCount ; i++) {
                 //FIXME: test indirection in ->getBuffer..
                 remappedIndex[1 + i] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
             }

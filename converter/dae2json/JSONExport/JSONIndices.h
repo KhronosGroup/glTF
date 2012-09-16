@@ -41,9 +41,9 @@ namespace JSONExport
         size_t const getCount();
         JSONExport::Semantic const getSemantic();
         unsigned int const getIndexOfSet();
-        const std::string const getAccessorID();
+        std::string const getAccessorID();
 
-        const shared_ptr <JSONBuffer> const getBuffer();
+        shared_ptr <JSONBuffer> const getBuffer();
         const void setBuffer(shared_ptr <JSONBuffer>);
         void setByteOffset(size_t byteOffset);
         size_t getByteOffset();

@@ -114,7 +114,7 @@ namespace JSONExport
     {
         unsigned int startIndex = 1; // begin at 1 because the hashtable will return 0 when the element is not present
         unsigned int endIndex = 0;
-        unsigned int primitiveCount = _primitives.size();
+        unsigned int primitiveCount = (unsigned int)_primitives.size();
         
         if (primitiveCount == 0) {
             // FIXME: report error
@@ -126,7 +126,7 @@ namespace JSONExport
         if (primitiveCount > 0) {
             JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
             
-            for (int i = 0 ; i < primitiveCount ; i++) {
+            for (unsigned int i = 0 ; i < primitiveCount ; i++) {
                 shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, startIndex, endIndex);
                 if (primitiveRemapInfos.get()) {
                     startIndex = endIndex;
@@ -202,7 +202,7 @@ namespace JSONExport
             return false;
         }
         
-        for (int i = 0 ; i < primitiveCount ; i++) {
+        for (unsigned int i = 0 ; i < primitiveCount ; i++) {
             if (!_primitives[i]->_remapVertexes(this->_allOriginalAccessors , this->_allRemappedAccessors, allPrimitiveRemapInfos[i])) {
                 // FIXME: report error
                 return false;
@@ -233,8 +233,8 @@ namespace JSONExport
         shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0));
         
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = this->getPrimitives();
-        unsigned int primitivesCount =  primitives.size();
-        for (int i = 0 ; i < primitivesCount ; i++) {            
+        unsigned int primitivesCount =  (unsigned int)primitives.size();
+        for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
             shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];            
             shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
             
@@ -242,7 +242,7 @@ namespace JSONExport
              Convert the indices to unsigned short and write the blob 
              */
             
-            unsigned int indicesCount = uniqueIndices->getCount();
+            unsigned int indicesCount = (unsigned int)uniqueIndices->getCount();
             unsigned int* uniqueIndicesBuffer = (unsigned int*) static_pointer_cast <JSONDataBuffer> (uniqueIndices->getBuffer())->getData();
             if (indicesCount <= 0) {
                 // FIXME: report error
@@ -250,7 +250,7 @@ namespace JSONExport
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)malloc(indicesLength);
                 
-                for (int idx = 0 ; idx < indicesCount ; idx++) {
+                for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                 }
                     

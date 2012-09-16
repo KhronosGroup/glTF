@@ -215,7 +215,7 @@ namespace DAE2JSON
             accessors[indexOfSet] = cvtAccessor;
         }
         
-        return setCount;
+        return (unsigned int)setCount;
     }
     
     static shared_ptr <JSONExport::JSONPrimitive> ConvertOpenCOLLADAMeshPrimitive(COLLADAFW::MeshPrimitive* openCOLLADAMeshPrimitive) 
@@ -224,7 +224,7 @@ namespace DAE2JSON
         
         // We want to match OpenGL/ES mode , as WebGL spec points to OpenGL/ES spec...
         // "Symbolic constants GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, and GL_TRIANGLES are accepted."
-        String type;
+        std::string type;
         switch(openCOLLADAMeshPrimitive->getPrimitiveType()) {
                 //these 2 requires transforms
             case MeshPrimitive::POLYLIST:
@@ -305,7 +305,7 @@ namespace DAE2JSON
                                                                                               colorBuffer,
                                                                                               count,
                                                                                               JSONExport::COLOR,
-                                                                                              indexList->getSetIndex()));
+                                                                                              (unsigned int)indexList->getSetIndex()));
 
                 cvtPrimitive->appendIndices(colorIndices);
             }
@@ -327,7 +327,7 @@ namespace DAE2JSON
                                                                                            uvBuffer,
                                                                                            count,
                                                                                            JSONExport::TEXCOORD,
-                                                                                           indexList->getSetIndex()));
+                                                                                           (unsigned int)indexList->getSetIndex()));
                         
                 cvtPrimitive->appendIndices(uvIndices);
             }
@@ -344,7 +344,7 @@ namespace DAE2JSON
         cvtMesh->setName(openCOLLADAMesh->getName());
 
         URI dataURL(folder);
-        String dataURLString = dataURL.getURIString();        
+        std::string dataURLString = dataURL.getURIString();        
         
         const MeshPrimitiveArray& primitives =  openCOLLADAMesh->getMeshPrimitives();
         size_t primitiveCount = primitives.getCount();
@@ -405,7 +405,7 @@ namespace DAE2JSON
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::reportError( const String& method, const String& message)
+	void DAE2JSONWriter::reportError( const std::string& method, const std::string& message)
 	{
 	}
     
@@ -493,7 +493,7 @@ namespace DAE2JSON
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::cancel( const String& errorMessage )
+	void DAE2JSONWriter::cancel( const std::string& errorMessage )
 	{
 	}
     
@@ -536,7 +536,7 @@ namespace DAE2JSON
     float DAE2JSONWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
         //super naive for now, also need to check sketchup work-around
-        float transparency = effectCommon->getOpacity().getColor().getAlpha();
+        float transparency = (float)effectCommon->getOpacity().getColor().getAlpha();
         
         return this->_converterArgs.invertTransparency ? 1 - transparency : transparency;
     }
@@ -606,7 +606,7 @@ namespace DAE2JSON
         // save mesh
 		const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();
         
-        unsigned count = instanceGeometries.getCount();
+        unsigned int count = (unsigned int)instanceGeometries.getCount();
         if (count > 0) {
             //FIXME: should not have to have a special attribute name for multiple meshes.
             // this might end up as making mode node, one per mesh.
@@ -614,12 +614,12 @@ namespace DAE2JSON
             shared_ptr <JSONExport::JSONArray> meshesArray(new JSONExport::JSONArray());
             nodeObject->setValue("meshes", meshesArray);
             
-            for (int i = 0 ; i < count; i++) {
+            for (unsigned int i = 0 ; i < count; i++) {
                 InstanceGeometry* instanceGeometry = instanceGeometries[i];
                 
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 
-                unsigned int meshUID = instanceGeometry->getInstanciatedObjectId().getObjectId();
+                unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
                 shared_ptr <JSONExport::JSONMesh> mesh = this->_uniqueIDToMesh[meshUID];
                 
                 if (!mesh) {
@@ -673,25 +673,25 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
         nodeObject->setValue("children", childrenArray);
         
-        count = nodes.getCount();
+        count = (unsigned int)nodes.getCount();
         
-        for (int i = 0 ; i < count ; i++)  {
+        for (unsigned int i = 0 ; i < count ; i++)  {
             std::string id = uniqueIdWithType("node", nodes[i]->getUniqueId());
             childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
         }
         
         nodesObject->setValue(originalID, static_pointer_cast <JSONExport::JSONValue> (nodeObject));
         
-        for (int i = 0 ; i < count ; i++)  {
+        for (unsigned int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
         }
         
         const InstanceNodePointerArray& instanceNodes = node->getInstanceNodes();
-        count = instanceNodes.getCount();
-        for (int i = 0 ; i < count ; i++) {
+        count = (unsigned int)instanceNodes.getCount();
+        for (unsigned int i = 0 ; i < count ; i++) {
             InstanceNode* instanceNode  = instanceNodes[i];
             
-            String id = uniqueIdWithType("node", instanceNode->getInstanciatedObjectId());
+            std::string id = uniqueIdWithType("node", instanceNode->getInstanciatedObjectId());
             childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
         }
         
@@ -823,8 +823,9 @@ namespace DAE2JSON
 	bool DAE2JSONWriter::writeMaterial( const COLLADAFW::Material* material )
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
-        this->_materialUIDToName[material->getUniqueId().getObjectId()] = material->getName();
-        this->_materialUIDToEffectUID[material->getUniqueId().getObjectId()] = (unsigned int)effectUID.getObjectId();
+		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
+        this->_materialUIDToName[materialID] = material->getName();
+        this->_materialUIDToEffectUID[materialID] = (unsigned int)effectUID.getObjectId();
 		return true;
 	}
     
@@ -973,9 +974,9 @@ namespace DAE2JSON
                 const Color& color = diffuse.getColor();
                          
                 if (diffuse.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
-                    red = color.getRed();
-                    green = color.getGreen();
-                    blue = color.getBlue();
+                    red = (float)color.getRed();
+                    green = (float)color.getGreen();
+                    blue = (float)color.getBlue();
                 }
                 
                 shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
@@ -1011,7 +1012,7 @@ namespace DAE2JSON
             
             cvtEffect->setInputs(inputs);
             cvtEffect->setTechniqueID(techniqueID);
-            this->_uniqueIDToEffect[effect->getUniqueId().getObjectId()] = cvtEffect;            
+            this->_uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;            
             
         }
 		return true;                

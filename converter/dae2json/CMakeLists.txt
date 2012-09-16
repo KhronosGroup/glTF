@@ -13,6 +13,9 @@ include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAS
 
 link_directories(${COLLADA2JSON_BINARY_DIR}/lib)
 
+if (WIN32)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
 
@@ -48,4 +51,4 @@ add_executable(collada2json main.cpp
     JSONExport/JSONValue.h
     JSONExport/JSONWriter.h)
 
-target_link_libraries (collada2json  pcre pcrecpp GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static xml2)
+target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static $(LIBXML2_LIBRARIES))

@@ -52,7 +52,7 @@ namespace JSONExport
         return this->_byteSize;
     }
         
-    const std::string const JSONBuffer::getID()
+    std::string const JSONBuffer::getID()
     {
         return this->_ID;
     }

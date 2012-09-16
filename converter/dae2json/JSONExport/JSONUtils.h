@@ -46,7 +46,7 @@ namespace JSONExport
         static bool writeData(std::string filename, const char* mode, unsigned char* data, size_t length)
         {
             // FIXME: check encode / decode 
-            FILE* fd = fopen(filename.c_str(), mode);        
+			FILE* fd = fopen(filename.c_str(), mode);        
             
             if (fd) {
                 fwrite (data , 1 ,length  , fd );

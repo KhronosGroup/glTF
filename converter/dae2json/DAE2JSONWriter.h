@@ -155,7 +155,7 @@ namespace DAE2JSON
 		DAE2JSONWriter( const COLLADA2JSONArgs &converterArgs,PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
     private:
-		static void reportError(const String& method, const String& message);
+		static void reportError(const std::string& method, const std::string& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
@@ -171,7 +171,7 @@ namespace DAE2JSON
 		/** Deletes the entire scene.
          @param errorMessage A message containing informations about the error that occurred.
          */
-		void cancel(const String& errorMessage);;
+		void cancel(const std::string& errorMessage);;
         
 		/** Prepare to receive data.*/
 		void start();;
@@ -246,7 +246,7 @@ namespace DAE2JSON
         
 	protected:
         
-        bool writeData(String filename, unsigned char* data, size_t length);
+        bool writeData(std::string filename, unsigned char* data, size_t length);
         
 	private:
         COLLADA2JSONArgs _converterArgs;
