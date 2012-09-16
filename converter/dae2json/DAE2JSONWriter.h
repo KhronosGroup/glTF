@@ -68,8 +68,14 @@
 #include <iostream>
 
 #include <vector>
+
+#if WIN32
+#include <memory>
+#include <unordered_map>
+#else
 #include <tr1/memory>
 #include <tr1/unordered_map>
+#endif
 
 using namespace COLLADAFW;
 using namespace COLLADABU;

@@ -37,8 +37,13 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#ifdef WIN32
+#include <memory>
+#include <unordered_map>
+#else 
 #include <tr1/memory>
 #include <tr1/unordered_map>
+#endif
 
 // RapidJSON headers
 #include "prettywriter.h"	
