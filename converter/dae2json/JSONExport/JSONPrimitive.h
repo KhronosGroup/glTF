@@ -64,7 +64,7 @@ namespace JSONExport
         std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices();
         size_t indicesCount();
 
-        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int startIndex, unsigned int &endIndex);
+        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int maxVertexAtrributes, unsigned int startIndex, unsigned int &endIndex);
         shared_ptr <JSONExport::JSONIndices> getUniqueIndices();
         
         std::string getType();

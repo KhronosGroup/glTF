@@ -154,7 +154,7 @@ namespace JSONExport
         return true;        
     }
     
-    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int startIndex, unsigned int &endIndex)
+    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int maxVertexAttributes, unsigned int startIndex, unsigned int &endIndex)
     {
         //get indices[0] presumably the VERTEX
         size_t indicesCount = this->indicesCount();
@@ -162,7 +162,7 @@ namespace JSONExport
         //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count)
         unsigned int generatedIndicesCount = 0;
         unsigned int vertexAttributesCount = (unsigned int)_allIndices.size();
-        size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
+        size_t sizeOfRemappedIndex = (maxVertexAttributes + 1) * sizeof(unsigned int);
         this->_originalCountAndIndexes = (unsigned int*)malloc( indicesCount * sizeOfRemappedIndex);
         
         unsigned int *uniqueIndexes = (unsigned int*)malloc( indicesCount * sizeof(unsigned int));
@@ -170,12 +170,18 @@ namespace JSONExport
         unsigned int currentIndex = startIndex;
         
         for (int k = 0 ; k < indicesCount ; k++) {
-            unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
+            unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (maxVertexAttributes + 1)];
             
-            remappedIndex[0] = vertexAttributesCount;
-            for (unsigned int i = 0 ; i < vertexAttributesCount ; i++) {
+            remappedIndex[0] = maxVertexAttributes;
+            for (unsigned int i = 0 ; i < maxVertexAttributes ; i++) {
                 //FIXME: test indirection in ->getBuffer..
-                remappedIndex[1 + i] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
+                if (i < vertexAttributesCount) {
+                    remappedIndex[1 + i] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
+                } else {
+                    //just point to the index 0 if a source if unused for a given primitive.
+                    remappedIndex[1 + i] = 0;
+                }
+                
             }
             
             unsigned int index = remappedMeshIndexesMap[remappedIndex];

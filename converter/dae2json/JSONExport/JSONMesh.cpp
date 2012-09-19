@@ -47,19 +47,6 @@ namespace JSONExport
     
     bool JSONMesh::appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive)
     {
-        //FIXME: add specific define
-        //consistency check, ensure 
-        if (this->_primitives.size() > 0) {
-            if (this->_primitives[0]->allIndices().size() != primitive->allIndices().size()) {
-                static int warned = 0;
-                if (!warned) {
-                    printf("WARNING: ignoring a mesh which as a number of sources per primitives that differs\n");
-                    warned = true;
-                }
-                return false;
-            }
-        }
-        
         this->_primitives.push_back(primitive);
         return true;
     }
@@ -115,19 +102,27 @@ namespace JSONExport
         unsigned int startIndex = 1; // begin at 1 because the hashtable will return 0 when the element is not present
         unsigned int endIndex = 0;
         unsigned int primitiveCount = (unsigned int)_primitives.size();
+        unsigned int maxVertexAttributes = 0;
         
         if (primitiveCount == 0) {
             // FIXME: report error
             return false;
         }
-        
+            
         vector <shared_ptr<JSONExport::JSONPrimitiveRemapInfos> > allPrimitiveRemapInfos;
         
         if (primitiveCount > 0) {
             JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
             
+            for (unsigned int i = 0 ; i < maxVertexAttributes ; i++) {
+                unsigned int indicesCount = (unsigned int)this->_primitives[i]->indicesCount();
+                if (indicesCount > maxVertexAttributes) {
+                    maxVertexAttributes = indicesCount; 
+                }
+            }
+            
             for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-                shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, startIndex, endIndex);
+                shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, maxVertexAttributes, startIndex, endIndex);
                 if (primitiveRemapInfos.get()) {
                     startIndex = endIndex;
                     allPrimitiveRemapInfos.push_back(primitiveRemapInfos);               
@@ -136,6 +131,9 @@ namespace JSONExport
                     return false;
                 }
             }
+        } else {
+            
+            return false;
         }
         
         // we are using WebGL for rendering, this involve OpenGL/ES where only float are supported.
