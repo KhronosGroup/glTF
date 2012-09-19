@@ -114,8 +114,8 @@ namespace JSONExport
         if (primitiveCount > 0) {
             JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
             
-            for (unsigned int i = 0 ; i < maxVertexAttributes ; i++) {
-                unsigned int indicesCount = (unsigned int)this->_primitives[i]->indicesCount();
+            for (unsigned int i = 0 ; i < primitiveCount ; i++) {
+                unsigned int indicesCount = (unsigned int)this->_primitives[i]->allIndices().size();
                 if (indicesCount > maxVertexAttributes) {
                     maxVertexAttributes = indicesCount; 
                 }
