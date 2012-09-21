@@ -31,6 +31,8 @@
 // DESIGN: difference between COLLADA and JSON format. In JSON format it is possible to make an interleaved array not only made by float.
 // reminder; to run recursively against all dae files: find . -name '*.dae' -exec dae2json {} \;
 
+#include <algorithm>
+
 #include "JSONExport.h"
 #include "DAE2JSONWriter.h"
 #include "commonProfileShaders.h"
@@ -209,7 +211,6 @@ namespace DAE2JSON
             cvtAccessor->setElementsPerVertexAttribute(size);
             cvtAccessor->setByteStride(stride);
             cvtAccessor->setElementType(elementType);
-            cvtAccessor->setByteOffset(0);
             cvtAccessor->setCount(elementsCount);
             
             accessors[indexOfSet] = cvtAccessor;
@@ -274,6 +275,7 @@ namespace DAE2JSON
         
         cvtPrimitive->appendIndices(positionIndices);
         
+        
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
             if (count != openCOLLADAMeshPrimitive->getNormalIndices().getCount()) {
                 // FIXME: report error
@@ -301,8 +303,7 @@ namespace DAE2JSON
 
                 shared_ptr <JSONExport::JSONDataBuffer> colorBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
 
-                shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(indexList->getName(),
-                                                                                              colorBuffer,
+                shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
                                                                                               count,
                                                                                               JSONExport::COLOR,
                                                                                               (unsigned int)indexList->getSetIndex()));
@@ -323,8 +324,7 @@ namespace DAE2JSON
                 }
                 
                 shared_ptr <JSONExport::JSONDataBuffer> uvBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
-                shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(indexList->getName(),
-                                                                                           uvBuffer,
+                shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(uvBuffer,
                                                                                            count,
                                                                                            JSONExport::TEXCOORD,
                                                                                            (unsigned int)indexList->getSetIndex()));
@@ -477,7 +477,7 @@ namespace DAE2JSON
         buffersObject->setValue(sharedBufferID, bufferObject);
         
         // ----
-        
+
         this->_rootJSONObject->write(&this->_writer);
                 
         bool sceneFlatteningEnabled = true;
@@ -536,7 +536,10 @@ namespace DAE2JSON
     float DAE2JSONWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
         //super naive for now, also need to check sketchup work-around
-        float transparency = (float)effectCommon->getOpacity().getColor().getAlpha();
+        if (effectCommon->getOpacity().isTexture()) {
+            return 1;
+        }
+        float transparency = effectCommon->getOpacity().getColor().getAlpha();
         
         return this->_converterArgs.invertTransparency ? 1 - transparency : transparency;
     }
@@ -546,7 +549,6 @@ namespace DAE2JSON
         return getTransparency(effectCommon)  >= 1;
     }
     
-
     bool DAE2JSONWriter::writeNode( const COLLADAFW::Node* node, 
                                     shared_ptr <JSONExport::JSONObject> nodesObject, 
                                     COLLADABU::Math::Matrix4 parentMatrix,
