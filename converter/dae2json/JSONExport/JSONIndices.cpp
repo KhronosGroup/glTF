@@ -41,18 +41,6 @@ namespace JSONExport
     JSONIndices::JSONIndices() {}
     
     JSONIndices::JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet):
-    _accessorID(""),
-    _count(count),
-    _byteOffset(0),
-    _semantic(semantic),
-    _indexOfSet(indexOfSet),
-    _buffer(buffer)
-    {
-        this->_indicesCommonInit();
-    }
-
-    JSONIndices::JSONIndices(std::string accessorID, shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet):
-    _accessorID(""),
     _count(count),
     _byteOffset(0),
     _semantic(semantic),
@@ -80,12 +68,7 @@ namespace JSONExport
     {
         return this->_indexOfSet;
     }
-        
-    std::string const JSONIndices::getAccessorID()
-    {
-        return this->_accessorID;
-    }
-    
+            
     shared_ptr <JSONExport::JSONBuffer>  const JSONIndices::getBuffer()
     {
         return this->_buffer;

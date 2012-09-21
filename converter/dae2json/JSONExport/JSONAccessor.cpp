@@ -41,7 +41,7 @@ namespace JSONExport
     {
         this->setElementType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
-        this->setByteOffset(0);
+        this->_byteOffset = 0;
         this->_generateID();
         this->setElementsPerVertexAttribute(0);
         this->setCount(0);
@@ -54,7 +54,7 @@ namespace JSONExport
         
         this->setElementType(accessor->getElementType());
         this->setByteStride(accessor->getByteStride());
-        this->setByteOffset(accessor->getByteOffset());
+        this->_byteOffset = accessor->getByteOffset();
         this->_generateID();
         this->setElementsPerVertexAttribute(accessor->getElementsPerVertexAttribute());
         this->setCount(accessor->getCount());

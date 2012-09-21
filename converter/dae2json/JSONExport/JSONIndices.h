@@ -35,13 +35,11 @@ namespace JSONExport
         void _indicesCommonInit();
     public:
         JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet);         
-        JSONIndices(std::string accessorID, shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet);         
         virtual ~JSONIndices();
         
         size_t const getCount();
         JSONExport::Semantic const getSemantic();
         unsigned int const getIndexOfSet();
-        std::string const getAccessorID();
 
         shared_ptr <JSONBuffer> const getBuffer();
         const void setBuffer(shared_ptr <JSONBuffer>);
@@ -49,7 +47,6 @@ namespace JSONExport
         size_t getByteOffset();
                 
     private:
-        std::string _accessorID;
         size_t _count;
         size_t _byteOffset;
         JSONExport::Semantic _semantic;
