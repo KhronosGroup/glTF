@@ -154,9 +154,13 @@ namespace JSONExport
                 
         meshObject->setString("name", mesh->getName());
 
+        //primitives
         shared_ptr <JSONExport::JSONArray> primitivesArray(new JSONExport::JSONArray());
-
         meshObject->setValue("primitives", primitivesArray);
+        
+        //accessors
+        shared_ptr <JSONExport::JSONObject> accessorsObject(new JSONExport::JSONObject());
+        meshObject->setValue("accessors", accessorsObject);
         
         vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = mesh->remappedAccessors();
         
@@ -203,7 +207,7 @@ namespace JSONExport
                 
                 shared_ptr <JSONExport::JSONObject> accessorObject = this->serializeAccessor(accessor.get(), context);
 
-                meshObject->setValue(accessor->getID(), accessorObject);
+                accessorsObject->setValue(accessor->getID(), accessorObject);
             }
         }
         
