@@ -138,8 +138,6 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONObject> effectObject(new JSONExport::JSONObject());
         shared_ptr <JSONExport::JSONArray> colorObject(new JSONExport::JSONArray());
 
-        effectObject->setString("type", "effect");
-
         effectObject->setString("technique", effect->getTechniqueID());
         effectObject->setString("name", effect->getName());
         effectObject->setValue("inputs", effect->getInputs());
@@ -154,7 +152,6 @@ namespace JSONExport
                 
         shared_ptr <JSONExport::JSONObject> meshObject(new JSONExport::JSONObject());
                 
-        meshObject->setString("type", "mesh");
         meshObject->setString("name", mesh->getName());
 
         shared_ptr <JSONExport::JSONArray> primitivesArray(new JSONExport::JSONArray());
@@ -217,7 +214,6 @@ namespace JSONExport
     {
         shared_ptr <JSONObject> accessorObject = shared_ptr<JSONObject>(new JSONObject());
                 
-        accessorObject->setString("type", "accessor");
         accessorObject->setUnsignedInt32("byteStride", (unsigned int)accessor->getByteStride());
         accessorObject->setUnsignedInt32("byteOffset", (unsigned int)accessor->getByteOffset());
         accessorObject->setUnsignedInt32("elementsPerValue", (unsigned int)accessor->getElementsPerVertexAttribute());
@@ -273,7 +269,6 @@ namespace JSONExport
 
         JSONMesh* mesh = (JSONMesh*)primitiveContext[0];
         
-        primitiveObject->setString("type", "primitive");
         primitiveObject->setString("primitive", primitive->getType());
         primitiveObject->setString("material", primitive->getMaterialID());
         

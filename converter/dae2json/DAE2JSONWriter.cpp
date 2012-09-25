@@ -464,7 +464,6 @@ namespace DAE2JSON
             shared_ptr <JSONExport::JSONEffect> effect = (*UniqueIDToEffectIterator).second;
             shared_ptr <JSONExport::JSONObject> effectObject = this->_writer.serializeEffect(effect.get(), 0);
             //FIXME:HACK: effects are exported as materials
-            effectObject->setString("type", "material");
             materialsObject->setValue(effect->getID(), effectObject);
         }
 
@@ -559,7 +558,6 @@ namespace DAE2JSON
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
         shared_ptr <JSONExport::JSONObject> nodeObject(new JSONExport::JSONObject());
-        nodeObject->setString("type", "node");
         nodeObject->setString("name",node->getName());
         
         bool nodeContainsLookAtTr = false;
@@ -739,11 +737,9 @@ namespace DAE2JSON
         size_t nodeCount = nodePointerArray.getCount();
         
         this->_rootJSONObject->setValue("scenes", scenesObject);
-        sceneObject->setString("type", "scene");
         sceneObject->setString("node", "root");
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         nodesObject->setValue("root", rootObject);
-        rootObject->setString("type", "node");                
                 
         //first pass to output children name of our root node
         shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
@@ -845,7 +841,6 @@ namespace DAE2JSON
 
             std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
-            shaderObject->setString("type", "shader");
             shaderObject->setString("path", path);
             
             //also write the file on disk
@@ -915,10 +910,8 @@ namespace DAE2JSON
         
         if (!techniqueObject) {
             techniqueObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            techniqueObject->setString("type", "technique");
             //if the technique has not been serialized, first thing create the default pass for this technique
             shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            pass->setString("type", "pass");
             
             shared_ptr <JSONExport::JSONObject> states = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
             pass->setValue("states", states);
@@ -1034,7 +1027,6 @@ namespace DAE2JSON
         std::string id = uniqueIdWithType("camera", camera->getUniqueId());
         
         camerasObject->setValue(id, cameraObject);
-        cameraObject->setString("type", "camera");
         
         switch (camera->getCameraType()) {
             case Camera::UNDEFINED_CAMERATYPE:

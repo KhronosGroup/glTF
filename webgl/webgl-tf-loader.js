@@ -107,7 +107,6 @@ var global = window;
         NODE: { value: "node" },
         CAMERA: { value: "camera" },
         VERTEX_ATTRIBUTES: { value: "vertexAttributes" },
-        TYPE: { value: "type" },
         BUFFER : { value: "buffer" },
 
         _rootDescription: { value: null, writable: true },
@@ -251,7 +250,6 @@ var global = window;
                     "node" : this.handleNode,
                     "scene" : this.handleScene
                 };
-
                 var success = true;
                 var self = this;
                 while (this._state.categoryIndex !== -1) {
@@ -271,6 +269,10 @@ var global = window;
                             break;
                         }
                     } else {
+                        if (typeof description.type === "undefined") {
+                            description.type = type;
+                        }
+
                         if (methodForType[type]) {
                             if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
                                 success = false;

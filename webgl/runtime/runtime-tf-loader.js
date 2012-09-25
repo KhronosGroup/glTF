@@ -155,6 +155,7 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                         if (!accessorEntry) {
                             //let's just use an anonymous object for the accessor
                             var accessor = description[accessorID];
+                            accessor.type = "accessor";
                             accessor.id = accessorID;
                             this.storeEntry(accessorID, accessor, accessor);
 
