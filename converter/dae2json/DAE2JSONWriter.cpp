@@ -40,6 +40,29 @@
 namespace DAE2JSON
 {    
     
+    static shared_ptr <JSONExport::JSONObject> createJSONObjectIfNeededForObject(shared_ptr <JSONExport::JSONObject> &anObject, const std::string& key) {
+        shared_ptr <JSONExport::JSONObject> outObject;
+        //get or create if necessary the techniques object
+        if (!anObject->contains(key)) {
+            outObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            anObject->setValue(key, outObject);
+        } else {
+            outObject = static_pointer_cast <JSONExport::JSONObject> (anObject->getValue(key));
+        }
+        return outObject;
+    }
+
+    static shared_ptr <JSONExport::JSONValue> serializeVec3(double x,double y, double z) {
+        shared_ptr <JSONExport::JSONArray> vec3(new JSONExport::JSONArray());
+        
+        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(x)));
+        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(y)));
+        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(z)));
+
+        return vec3;
+    }
+    
+    
     std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
     {
         std::string id = "";        
@@ -573,7 +596,6 @@ namespace DAE2JSON
             //FIXME: just handle the first camera within a node now
             //for (size_t i = 0 ; i < camerasCount ; i++) {
             //}
-            
             //Checks if we have a "look at" transformm because it is not handled by getTransformationMatrix when baking the matrix. (TODO: file a OpenCOLLADA issue for that).        
             const TransformationPointerArray& transformations = node->getTransformations();
             size_t transformationsCount = transformations.getCount();
@@ -856,14 +878,112 @@ namespace DAE2JSON
         return true;
     }
     
+    static std::string kVertexAttribute = "vert";
+    static std::string kNormalAttribute = "normal";
+    static std::string kTexcoordAttribute = "texcoord";
+    static std::string kModelViewMatrixUniform = "u_mvMatrix";
+    static std::string kNormalMatrixUniform = "u_normalMatrix";
+    static std::string kProjectionMatrixUniform = "u_projMatrix";
+    static std::string kDiffuseColorUniform = "u_diffuseColor";
+    static std::string kDiffuseTextureUniform = "u_diffuseTexture";
+    static std::string kTransparencyUniform = "u_transparency";
+    
+    
+    //support this style for semantics
+    //http://www.nvidia.com/object/using_sas.html
+    /*
+     WORLD
+     VIEW
+     PROJECTION
+     WORLDVIEW
+     VIEWPROJECTION
+     WORLDVIEWPROJECTION
+     WORLDINVERSE
+     VIEWINVERSE
+     PROJECTIONINVERSE
+     WORLDVIEWINVERSE
+     VIEWPROJECTIONINVERSE
+     WORLDVIEWPROJECTIONINVERSE
+     WORLDTRANSPOSE
+     VIEWTRANSPOSE
+     PROJECTIONTRANSPOSE
+     WORLDVIEWTRANSPOSE
+     VIEWPROJECTIONTRANSPOSE
+     WORLDVIEWPROJECTIONTRANSPOSE
+     WORLDINVERSETRANSPOSE
+     VIEWINVERSETRANSPOSE
+     PROJECTIONINVERSETRANSPOSE
+     WORLDVIEWINVERSETRANSPOSE
+     VIEWPROJECTIONINVERSETRANSPOSE
+     WORLDVIEWPROJECTIONINVERSETRANSPOSE
+    */
+    
+    static std::string WORLDVIEW = "WORLDVIEW";
+    static std::string WORLDVIEWINVERSETRANSPOSE = "WORLDVIEWINVERSETRANSPOSE";
+    static std::string PROJECTION = "PROJECTION";
+    
+    static std::string parameterForUniform(const std::string& symbol) {
+        static std::map<std::string , std::string> symbolToParameter;
+        if (symbolToParameter.empty()) {
+            symbolToParameter[kModelViewMatrixUniform] = WORLDVIEW;
+            symbolToParameter[kNormalMatrixUniform] = WORLDVIEWINVERSETRANSPOSE;
+            symbolToParameter[kProjectionMatrixUniform] = PROJECTION;
+            symbolToParameter[kDiffuseColorUniform] = "diffuseColor";
+            symbolToParameter[kDiffuseTextureUniform] = "diffuseTexture";
+            symbolToParameter[kTransparencyUniform] = "transparency";
+        }
+        return symbolToParameter[symbol];
+    }
+    
+    //FIXME: this won't be hardcoded anymore when we will rely on a "real" shader generation.
+    static void appendAttributeSymbolsForShaderID(const std::string& shaderID, 
+                                         std::vector <std::string> &symbols) 
+    {      
+        if ((shaderID == "lambert0Vs") || (shaderID == "lambert2Vs"))  {
+            symbols.push_back(kVertexAttribute);
+            symbols.push_back(kNormalAttribute);
+        } else if ((shaderID == "lambert1Vs") || (shaderID == "lambert3Vs")) {
+            symbols.push_back(kVertexAttribute);
+            symbols.push_back(kNormalAttribute);
+            symbols.push_back(kTexcoordAttribute);
+        } else {
+            printf("WARNING: unexpected shaderID: %s\n", shaderID.c_str());
+        }
+    }
+
+    static void appendUniformSymbolsForShaderID(const std::string& shaderID, 
+                                                  std::vector <std::string> &symbols) 
+    {      
+        if ((shaderID == "lambert0Vs") || 
+            (shaderID == "lambert2Vs") || 
+            (shaderID == "lambert1Vs") || 
+            (shaderID == "lambert3Vs"))  {
+            symbols.push_back(kModelViewMatrixUniform);
+            symbols.push_back(kNormalMatrixUniform);
+            symbols.push_back(kProjectionMatrixUniform);
+        } else if (shaderID == "lambert0Fs") {
+            symbols.push_back(kDiffuseColorUniform);
+        } else if (shaderID == "lambert1Fs") {
+            symbols.push_back(kDiffuseTextureUniform);
+        } else if (shaderID == "lambert2Fs") {
+            symbols.push_back(kDiffuseColorUniform);
+            symbols.push_back(kTransparencyUniform);
+        } else if (shaderID == "lambert3Fs") {
+            symbols.push_back(kDiffuseTextureUniform);
+            symbols.push_back(kTransparencyUniform);
+        } else {
+            printf("WARNING: unexpected shaderID: %s\n", shaderID.c_str());
+        }
+    }
+    
     const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon)
-    {
-        //get or create if necessary the techniques object
-        shared_ptr <JSONExport::JSONObject> techniquesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("techniques"));        
+    {        
+        shared_ptr <JSONExport::JSONObject> techniquesObject;
+        shared_ptr <JSONExport::JSONObject> techniqueObject;
+        
         //compute/retrieve the technique matching the specified common profile (TODO).        
         //for now we just have one shader available :).. 
         std::string techniqueName;
-                
         if (effectCommon->getDiffuse().isTexture()) {
             if (!isOpaque(effectCommon)) {
                 techniqueName = "lambert3";
@@ -878,65 +998,110 @@ namespace DAE2JSON
             }
         }
         
+        std::vector <std::string> allAttributes;
+        std::vector <std::string> allUniforms;
         std::string shaderName = techniqueName; //simplification
         std::string vs =  shaderName + "Vs";
         std::string fs =  shaderName + "Fs";
         
-        if (!techniquesObject) {
-            techniquesObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            this->_rootJSONObject->setValue(std::string("techniques"), techniquesObject);
-        }
         if (shaderName == "lambert0") {
-            this->_shaderIdToShaderString[vs.c_str()] = lambert0Vs;        
-            this->_shaderIdToShaderString[fs.c_str()] = lambert0Fs;        
+            this->_shaderIdToShaderString[vs] = lambert0Vs;        
+            this->_shaderIdToShaderString[fs] = lambert0Fs;        
         } 
         
         if (shaderName == "lambert1") {
-            this->_shaderIdToShaderString[vs.c_str()] = lambert1Vs;        
-            this->_shaderIdToShaderString[fs.c_str()] = lambert1Fs;        
+            this->_shaderIdToShaderString[vs] = lambert1Vs;        
+            this->_shaderIdToShaderString[fs] = lambert1Fs;        
         } 
 
         if (shaderName == "lambert2") {
-            this->_shaderIdToShaderString[vs.c_str()] = lambert2Vs;        
-            this->_shaderIdToShaderString[fs.c_str()] = lambert2Fs;        
+            this->_shaderIdToShaderString[vs] = lambert2Vs;        
+            this->_shaderIdToShaderString[fs] = lambert2Fs;        
         } 
 
         if (shaderName == "lambert3") {
-            this->_shaderIdToShaderString[vs.c_str()] = lambert3Vs;        
-            this->_shaderIdToShaderString[fs.c_str()] = lambert3Fs;        
+            this->_shaderIdToShaderString[vs] = lambert3Vs;        
+            this->_shaderIdToShaderString[fs] = lambert3Fs;        
         } 
         
-        shared_ptr <JSONExport::JSONObject> techniqueObject  = static_pointer_cast <JSONExport::JSONObject> (techniquesObject->getValue(techniqueName));
+        appendAttributeSymbolsForShaderID(vs, allAttributes);
+        appendUniformSymbolsForShaderID(vs, allUniforms);
+        appendUniformSymbolsForShaderID(fs, allUniforms);
         
-        if (!techniqueObject) {
-            techniqueObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+        //get or create if necessary the techniques object
+        techniquesObject = createJSONObjectIfNeededForObject(this->_rootJSONObject, "techniques");
+        techniqueObject = createJSONObjectIfNeededForObject(techniquesObject, techniqueName);
+        
+        if (techniqueObject->isEmpty()) {
+            std::string passName("defaultPass");
             //if the technique has not been serialized, first thing create the default pass for this technique
-            shared_ptr <JSONExport::JSONObject> pass = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            
-            shared_ptr <JSONExport::JSONObject> states = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            shared_ptr <JSONExport::JSONObject> pass(new JSONExport::JSONObject());
+
+            shared_ptr <JSONExport::JSONObject> states(new JSONExport::JSONObject());
             pass->setValue("states", states);
-            if (!isOpaque(effectCommon)) {
-                states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)true)));
-            } else {
-                states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)false)));
-            }
+            states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)!isOpaque(effectCommon))));
             
             this->writeShaderIfNeeded(vs);
             this->writeShaderIfNeeded(fs);
             
             pass->setString("x-shader/x-vertex", vs);
             pass->setString("x-shader/x-fragment", fs);
+            pass->setString("type", "program");
+                                    
+            techniqueObject->setString("pass", passName);
+
+            shared_ptr <JSONExport::JSONObject> parameters = createJSONObjectIfNeededForObject(techniqueObject, "parameters");
                         
-            shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+
+            shared_ptr <JSONExport::JSONObject> uniforms(new JSONExport::JSONObject());
+            pass->setValue("uniforms", uniforms);
+            for (unsigned int i = 0 ; i < allUniforms.size() ; i++) {
+                std::string symbol = allUniforms[i];
+                std::string parameter = parameterForUniform(symbol);
+                uniforms->setString(symbol, parameter);
+
+                //if we want to set default values... 
+                if (!parameters->contains("parameter")) {
+                    //just set white for diffuseColor
+                    if (parameter == "diffuseColor")
+                        parameters->setValue(parameter, serializeVec3(1,1,1));
+                }
+            }
             
-            techniqueObject->setValue("defaultPass", pass);
-            techniqueObject->setString("pass", "defaultPass");
-            pass->setValue("inputs", inputs);
+            shared_ptr <JSONExport::JSONObject> attributes(new JSONExport::JSONObject());
+            pass->setValue("attributes", attributes);
+            for (unsigned int i = 0 ; i < allAttributes.size() ; i++) {
+                shared_ptr <JSONExport::JSONObject> vertexAttribute(new JSONExport::JSONObject());
+                std::string semantic;
+                
+                std::string attribute = allAttributes[i];
+                if (attribute == kVertexAttribute) {
+                    semantic = "VERTEX";
+                } else if (attribute == kNormalAttribute) {
+                    semantic = "NORMAL";
+                } else if (attribute == kTexcoordAttribute) {
+                    semantic = "TEXCOORD";
+                } else {
+                    printf("WARNING:attribute not handled %s\n", attribute.c_str());
+                    continue;
+                }
+                
+                vertexAttribute->setString("semantic", semantic);
+                //TODO: handle multiple sets => that would be
+                //vertexAttribute->setValue("set", set);
+                
+                attributes->setValue(attribute, vertexAttribute);
+            }
+             
+            /*
+             shared_ptr <JSONExport::JSONObject> diffuseColorObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+             diffuseColorObject->setString("symbol", "u_diffuseColor");
+             inputs->setValue("diffuseColor", diffuseColorObject);
+             */
             
-            shared_ptr <JSONExport::JSONObject> diffuseColorObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-            diffuseColorObject->setString("symbol", "u_diffuseColor");
-            inputs->setValue("diffuseColor", diffuseColorObject);
-            techniquesObject->setValue(techniqueName, techniqueObject);
+            shared_ptr <JSONExport::JSONObject> passes = createJSONObjectIfNeededForObject(techniqueObject, "passes");
+            
+            passes->setValue(passName, pass);
         }
         
         return techniqueName;
@@ -959,27 +1124,28 @@ namespace DAE2JSON
             uniqueId += "effect.";
 #endif
             uniqueId += JSONExport::JSONUtils::toString(effect->getUniqueId().getObjectId());;
+            
             shared_ptr <JSONExport::JSONEffect> cvtEffect(new JSONExport::JSONEffect(uniqueId));
+            shared_ptr <JSONExport::JSONObject> techniques(new JSONExport::JSONObject());
+            shared_ptr <JSONExport::JSONObject> technique(new JSONExport::JSONObject());
+            shared_ptr <JSONExport::JSONObject> parameters(new JSONExport::JSONObject());
+            //shared_ptr <JSONExport::JSONObject> parameter(new JSONExport::JSONObject());
 
-            shared_ptr <JSONExport::JSONObject> inputs = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-
-            float red = 1, green = 1, blue = 1;
+            techniques->setValue(techniqueID.c_str(), technique);
+            technique->setValue("parameters", parameters);
+            
+            //retrive the type, parameterName -> symbol -> type
+            
+            double red = 1, green = 1, blue = 1;
             bool hasDiffuseTexture = diffuse.isTexture();
             if (!hasDiffuseTexture) {
                 const Color& color = diffuse.getColor();
-                         
                 if (diffuse.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
-                    red = (float)color.getRed();
-                    green = (float)color.getGreen();
-                    blue = (float)color.getBlue();
+                    red = color.getRed();
+                    green = color.getGreen();
+                    blue = color.getBlue();
                 }
-                
-                shared_ptr <JSONExport::JSONArray> diffuseColorArray(new JSONExport::JSONArray());
-                
-                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)red)));
-                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)green)));
-                diffuseColorArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)blue)));
-                inputs->setValue("diffuseColor", diffuseColorArray);
+                parameters->setValue("diffuseColor", serializeVec3(red,green,blue));
                 
             } else {
                 const Texture&  diffuseTexture = diffuse.getTexture();
@@ -998,14 +1164,14 @@ namespace DAE2JSON
                 }
                 //FIXME: handle absolute path case
                 //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
-                inputs->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
+                parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
             }
             
             if (!isOpaque(effectCommon)) {
-                inputs->setValue("transparency", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)getTransparency(effectCommon))));
+                parameters->setValue("transparency", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)getTransparency(effectCommon))));
             }
             
-            cvtEffect->setInputs(inputs);
+            cvtEffect->setTechniques(techniques);
             cvtEffect->setTechniqueID(techniqueID);
             this->_uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;            
             

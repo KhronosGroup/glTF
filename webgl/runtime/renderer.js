@@ -30,15 +30,39 @@ var ResourceManager = require("c2j/helpers/resource-manager").ResourceManager;
 
 exports.Renderer = Object.create(Object, {
 
+    //private accessors
+    _bindedProgram: { value: null, writable: true },
+
+    _debugProgram: { value: null, writable: true },
+    
+    _lambertProgram: { value: null, writable: true },
+
+    _resourceManager: { value: null, writable: true },
+    
+    _webGLContext: { value : null, writable: true },
+
+    _projectionMatrix: { value : null, writable: true },
+
+    //default values
     shininess: { value: 200, writable: true },
 
     light: { value: [0, 0, -1], writable: true },
 
     specularColor: { value: [1, 1, 1], writable: true },
 
-    //temporary state for testing
-    _bindedProgram: { value: null, writable: true },
-    
+    initWithWebGLContext: {
+        value: function(value) {
+            this.webGLContext = value;
+            return this;
+        }
+    },
+
+    init: {
+        value: function() {
+            return this;
+        }
+    },
+
     bindedProgram: {
         get: function() {
             return this._bindedProgram;
@@ -53,52 +77,40 @@ exports.Renderer = Object.create(Object, {
         }
     },
 
-        _debugProgram: { value: null, writable: true },
-    
-        _lambertProgram: { value: null, writable: true },
-
-        _resourceManager: { value: null, writable: true },
-    
-        _webGLContext: { value : null, writable: true },
-    
-        _projectionMatrix: { value : null, writable: true },
-
-        projectionMatrix: {
-            get: function() {
-                return this._projectionMatrix;
-            },
-            set: function(value) {
-                this._projectionMatrix = value;
-            }
+    projectionMatrix: {
+        get: function() {
+            return this._projectionMatrix;
         },
+        set: function(value) {
+            this._projectionMatrix = value;
+        }
+    },
 
-        debugProgram: {
-            get: function() {            
-            
-                if (!this._debugProgram) {
-                    this._debugProgram = Object.create(GLSLProgram);
-                    
-                    var debugVS = "precision highp float;" +
-                                        "attribute vec3 vert;"  +
-                                        "uniform mat4 u_mvMatrix; " +
-                                        "uniform mat4 u_projMatrix; " +
-                                        "void main(void) { " +
-                                        "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
+    debugProgram: {
+        get: function() {            
+            if (!this._debugProgram) {
+                this._debugProgram = Object.create(GLSLProgram);
+                var debugVS =   "precision highp float;" +
+                                "attribute vec3 vert;"  +
+                                "uniform mat4 u_mvMatrix; " +
+                                "uniform mat4 u_projMatrix; " +
+                                "void main(void) { " +
+                                "gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0); }" 
                 
-                    var debugFS = "precision highp float;" +
-                    " void main(void) { " +
-                    " gl_FragColor = vec4(1.,0.,0.,1.); }";
+                var debugFS =   "precision highp float;" +
+                                "void main(void) { " +
+                                "gl_FragColor = vec4(1.,0.,0.,1.); }";
                 
-                    this._debugProgram.initWithShaders( { "x-shader/x-vertex" : debugVS , "x-shader/x-fragment" : debugFS } );
-                    if (!this._debugProgram.build(this.webGLContext)) {
-                        console.log(this._debugProgram.errorLogs);                     
-                    } 
+                this._debugProgram.initWithShaders( { "x-shader/x-vertex" : debugVS , "x-shader/x-fragment" : debugFS } );
+                if (!this._debugProgram.build(this.webGLContext)) {
+                    console.log(this._debugProgram.errorLogs);                     
+                } 
 
-                }
+            }
                         
-                return this._debugProgram;
-            }
-        },
+            return this._debugProgram;
+        }
+    },
     
         lambertProgram: {
             get: function() {            
@@ -283,12 +295,10 @@ exports.Renderer = Object.create(Object, {
                 var gl = this.webGLContext;
                 var program =  renderVertices ? this.debugProgram : this.bindedProgram;
 
-                var meshLoaded = primitiveDescription.mesh.loaded;
-
                 //FIXME: remove that association
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
 
-                //FIXME: should got through inputs without hardcoded symbols
+                //FIXME: should got through parameters without hardcoded symbols
                 if (program.getLocationForSymbol("u_projMatrix")) {
                     program.setValueForSymbol("u_projMatrix",projectionMatrix);
                 }
@@ -303,7 +313,7 @@ exports.Renderer = Object.create(Object, {
 
                 var shininess = this.shininess;
                 if (program.getLocationForSymbol("u_shininess")) {
-                    shininess = primitive.material.inputs.shininess;
+                    shininess = primitive.material.parameters.shininess;
                     if ((typeof shininess === "undefined") || (shininess === null)) {
                         shininess = this.shininess;
                     }
@@ -312,7 +322,7 @@ exports.Renderer = Object.create(Object, {
 
                 var light = this.light;
                 if (program.getLocationForSymbol("u_light")) {
-                    light = primitive.material.inputs.light;
+                    light = primitive.material.parameters.light;
                     if ((typeof light === "undefined") || (light === null)) {
                         light = this.light;
                     }
@@ -321,7 +331,7 @@ exports.Renderer = Object.create(Object, {
 
                 var specularColor = this.specularColor;
                 if (program.getLocationForSymbol("u_specularColor")) {
-                    specularColor = primitive.material.inputs.specularColor;
+                    specularColor = primitive.material.parameters.specularColor;
                     if ((typeof specularColor === "undefined") || (specularColor === null)) {
                         specularColor = this.specularColor;
                     }
@@ -331,7 +341,7 @@ exports.Renderer = Object.create(Object, {
                 var defaultReflectionIntensity = 0.3;
                 var reflectionIntensity = defaultReflectionIntensity;
                 if (program.getLocationForSymbol("u_reflectionIntensity")) {
-                    reflectionIntensity = primitive.material.inputs.reflectionIntensity;
+                    reflectionIntensity = primitive.material.parameters.reflectionIntensity;
                     if ((typeof reflectionIntensity === "undefined") || (reflectionIntensity === null)) {
                         reflectionIntensity = defaultReflectionIntensity;
                     }
@@ -340,7 +350,7 @@ exports.Renderer = Object.create(Object, {
                 var defaultTransparency = 1.0;
                 var transparency = defaultTransparency;
                 if (program.getLocationForSymbol("u_transparency")) {
-                    transparency = primitive.material.inputs.transparency;
+                    transparency = primitive.material.parameters.transparency;
                     if ((typeof transparency === "undefined") || (transparency === null)) {
                         transparency = defaultTransparency;
                     }
@@ -348,13 +358,13 @@ exports.Renderer = Object.create(Object, {
                 }
 
                 if (program.getLocationForSymbol("u_diffuseColor")) {
-                    var color = primitive.material.inputs.diffuseColor;
+                    var color = primitive.material.parameters.diffuseColor;
                     program.setValueForSymbol("u_diffuseColor",color);
                 }
 
                 var currentTexture = 0;
                 if (program.getLocationForSymbol("u_diffuseTexture")) {
-                    var image = primitive.material.inputs.diffuseTexture;
+                    var image = primitive.material.parameters.diffuseTexture;
                     var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
                     if (texture) {
                         gl.activeTexture(gl.TEXTURE0 + currentTexture);
@@ -368,7 +378,7 @@ exports.Renderer = Object.create(Object, {
                 }
 
                 if (program.getLocationForSymbol("u_reflectionTexture")) {
-                    var image = primitive.material.inputs.reflectionTexture;
+                    var image = primitive.material.parameters.reflectionTexture;
                     var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
                     if (texture) {
                         gl.activeTexture(gl.TEXTURE0 + currentTexture);
@@ -437,9 +447,9 @@ exports.Renderer = Object.create(Object, {
                     this.indicesDelegate.webGLContext = this.webGLContext;
                     glIndices = this.resourceManager.getResource(primitive.indices, this.indicesDelegate, primitive);              
                     if (glIndices && available) {
-                        if (!primitiveDescription.mesh.loaded) {
-                            primitiveDescription.mesh.loadedPrimitivesCount++;
-                        }
+                        //if (!primitiveDescription.mesh.loaded) {
+                        //    primitiveDescription.mesh.loadedPrimitivesCount++;
+                        //}
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
                         gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
                     }
@@ -474,9 +484,8 @@ exports.Renderer = Object.create(Object, {
             }
         },
 
-        renderPass: {
-            value: function(pass) {
-                var primitives = pass.primitives;
+        renderPrimitivesWithPass: {
+            value: function(primitives, pass) {
                 var count = primitives.length;
                 var gl = this.webGLContext;
                 if (pass.program) {

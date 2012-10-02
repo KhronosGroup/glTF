@@ -28,7 +28,9 @@ require("dependencies/gl-matrix");
 var WebGLTFLoader = require("c2j/webgl-tf-loader").WebGLTFLoader;
 var ResourceDescription = require("resource-description").ResourceDescription;
 var Technique = require("technique").Technique;
+var ProgramPass = require("pass").ProgramPass;
 var Pass = require("pass").Pass;
+var ScenePass = require("pass").ScenePass;
 var GLSLProgram = require("glsl-program").GLSLProgram;
 var Material = require("material").Material;
 var Mesh = require("mesh").Mesh;
@@ -51,7 +53,6 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
             var buffer = Object.create(ResourceDescription).init(entryID, description);
             buffer.id = entryID;
             this.storeEntry(entryID, buffer, description);
-
             this.totalBufferSize += description.byteLength;
             return true;
         }
@@ -69,24 +70,44 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
 
     handleTechnique: {
         value: function(entryID, description, userInfo) {
-
             var technique = Object.create(Technique);
+
             technique.id = entryID;
             this.storeEntry(entryID, technique, description);
 
-            technique.rootPass = Object.create(Pass).init();
-            technique.rootPass.id = entryID+"_"+rootPassID;
             var rootPassID = description.pass;
-            var passDescription = description[rootPassID];
-            var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
-            var fsShaderEntry = this.getEntry(passDescription[GLSLProgram.FRAGMENT_SHADER]);
+            technique.passName = rootPassID;    
 
-            var programs = {};
-            programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
-            programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
-            technique.rootPass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
-            technique.rootPass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
-            technique.rootPass.states = passDescription.states;
+            var passesDescriptions = description.passes;
+            if (!passesDescriptions) {
+                console.log("ERROR: technique does not contain pass");
+                return false;
+            }
+
+            var passes = {};
+            var allPassesNames = Object.keys(description.passes);
+            allPassesNames.forEach( function(passName) {
+                var passDescription = passesDescriptions[passName];
+
+                if (passDescription.type === Pass.PROGRAM) {
+                    var pass = Object.create(ProgramPass).init();
+                    //FIXME: check again if this is necessary
+                    pass.id = entryID+"_"+rootPassID;
+                    var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
+                    var fsShaderEntry = this.getEntry(passDescription[GLSLProgram.FRAGMENT_SHADER]);
+                    var programs = {};
+                    programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
+                    programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
+                    pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
+                    pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
+                    pass.states = passDescription.states;
+                    passes[passName] = pass;
+                }
+                
+            }, this);
+
+            technique.passes = passes;
+
             return true;
         }
     },
@@ -95,20 +116,39 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
         value: function(entryID, description, userInfo) {
             var material = Object.create(Material).init(entryID);
             this.storeEntry(entryID, material, description);
-            if (description.inputs.diffuseTexture) {
-                description.inputs.diffuseTexture = this.resolvePathIfNeeded(description.inputs.diffuseTexture)                
-            }
-
-            material.inputs = description.inputs;
+            //Simplification - Just take the selected technique
             material.name = description.name;
             var techniqueEntry = this.getEntry(description.technique);
             if (techniqueEntry) {
                 material.technique = techniqueEntry.entry;
-                return true;
             } else {
                 console.log("ERROR: invalid file, cannot find referenced technique:"+description.technique);
                 return false;
             }
+
+            //then check if that technique contains overrides for paraemeteres
+            var techniques = description.techniques;
+            if (techniques) {
+                var technique = techniques[description.technique];
+                if (technique) {
+                    var parameters = Object.keys(technique.parameters);
+                    parameters.forEach( function(parameter) {
+                        if (parameter === "diffuseTexture") {
+                            //FIXME: should...
+                            //1. not be hardcoded
+                            //2. be done in the base class...
+                            //3. be made properly using a texture object
+                            if (technique.parameters.diffuseTexture) {
+                                technique.parameters.diffuseTexture = this.resolvePathIfNeeded(technique.parameters.diffuseTexture)                
+                            }
+                        }
+                        material.parameters[parameter] = technique.parameters[parameter];
+                    }, this)
+
+                }
+            }
+
+            return true;
         }
     },
 

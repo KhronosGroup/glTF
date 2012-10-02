@@ -43,6 +43,8 @@ namespace JSONExport
         void setValue(const std::string &key, shared_ptr <JSONValue> value);
         shared_ptr <JSONValue> getValue(std::string);
         
+        bool contains(const std::string &key);
+        
         void setUnsignedInt32(const std::string &key, unsigned int value);
         unsigned int getUnsignedInt32(const std::string &key);
         
@@ -56,6 +58,8 @@ namespace JSONExport
         const std::string& getString(const std::string &key);
         
         std::vector <std::string> getAllKeys();
+        
+        bool isEmpty();
         
     private:
         KeyToJSONValue _keyToJSONValue;

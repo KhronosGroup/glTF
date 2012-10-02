@@ -122,5 +122,14 @@ namespace JSONExport
         return allKeys;
     }
     
-        
+    bool JSONObject::contains(const std::string &key)
+    {
+        return this->_keyToJSONValue.count(key) > 0;
+    }
+    
+    bool JSONObject::isEmpty() 
+    {
+        return this->_keyToJSONValue.empty();
+    }
+
 }

@@ -105,8 +105,8 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     scene: {
         get: function() {
             if (this.engine) {
-                if (this.engine.rootPass) {
-                    return this.engine.rootPass.inputs.scene;
+                if (this.engine.technique.rootPass) {
+                    return this.engine.technique.rootPass.scene;
                 }
             }
             return null;
@@ -157,7 +157,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     applyScene: {
         value:function (scene) {
             if (this.engine) {
-                if (this.engine.rootPass) {
+                if (this.engine.technique.rootPass) {
                     //compute hierarchical bbox for the whole scene
                     //this will be removed from this place when node bounding box become is implemented as hierarchical
                     var ctx = mat4.identity();
@@ -201,7 +201,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                                         translationVector[2]]);
 
                     mat4.set(translation, scene.rootNode.transform);
-                    this.engine.rootPass.inputs.scene = scene;
+                    this.engine.technique.rootPass.scene = scene;
                     this.needsDraw = true;
                 }
             }
@@ -307,9 +307,9 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     hitTest: {
         value: function(position, options) {
             if (this.engine) {
-                if ((this.engine.rootPass) && (this.canvas)) {
+                if ((this.engine.technique.rootPass) && (this.canvas)) {
                     var viewport = [0, 0, parseInt(this.canvas.getAttribute("width")), parseInt(this.canvas.getAttribute("height"))];
-                    return this.engine.rootPass.hitTest(position, viewport, options);
+                    return this.engine.technique.rootPass.hitTest(position, viewport, options);
                 }
             }
             return null;
@@ -337,7 +337,9 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     },
 
     _consideringPointerForPicking: { writable: true, value: false },
+
     _mousePosition: { writable: true, value : null },
+
     _floorTextureLoaded : { writable: true, value: false },
 
     enableReflection: {
@@ -352,7 +354,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
         value: function() {
             if (!this.engine || !this.scene)
                 return;
-            if (!this.engine.rootPass.inputs.viewPoint)
+            if (!this.engine.technique.rootPass.viewPoint)
                 return;
             var gl = this.getWebGLContext();
             var self = this;
@@ -444,7 +446,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
             if (!this.engine || !this.scene)
                 return;
-            if (!this.engine.rootPass.inputs.viewPoint)
+            if (!this.engine.technique.rootPass.viewPoint)
                 return;
             var gl = this.getWebGLContext();
             var self = this;
@@ -477,7 +479,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
             this.engine.renderer.bindedProgram = null;
 
-            var viewPoint = this.engine.rootPass.inputs.viewPoint;
+            var viewPoint = this.engine.technique.rootPass.viewPoint;
 
             var projectionMatrix = viewPoint.cameras[0].projection.matrix;
 
@@ -615,14 +617,14 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
             if (!this.engine || !this.scene)
                 return;
-            if (!this.engine.rootPass.inputs.viewPoint)
+            if (!this.engine.technique.rootPass.viewPoint)
                 return;
             var gl = this.getWebGLContext();
             var self = this;
 
             this.engine.renderer.bindedProgram = null;
 
-            var viewPoint = this.engine.rootPass.inputs.viewPoint;
+            var viewPoint = this.engine.technique.rootPass.viewPoint;
             var projectionMatrix = viewPoint.cameras[0].projection.matrix;
 
             if (mesh.step < 1.) {
@@ -910,7 +912,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
                         this.canvas.style["-webkit-transform"] =  "scale("+scale+","+scale+") translateZ(0) translate("+ offsetX +"px,"+offsetY+"px)";
                     }
-                    var viewPoint = this.engine.rootPass.inputs.viewPoint;
+                    var viewPoint = this.engine.technique.rootPass.viewPoint;
                     if (!viewPoint) {
                         return;
                     }

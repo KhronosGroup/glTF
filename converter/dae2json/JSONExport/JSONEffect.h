@@ -45,15 +45,15 @@ namespace JSONExport
         void setName(const std::string& name);
         const std::string& getName();
 
-        void setInputs(shared_ptr <JSONExport::JSONObject>);
-        shared_ptr <JSONExport::JSONObject> getInputs();
+        void setTechniques(shared_ptr <JSONExport::JSONObject>);
+        shared_ptr <JSONExport::JSONObject> getTechniques();
                         
     private:
         std::string _ID;
         std::string _name;
         unsigned char* _data;
         std::string _techniqueID;
-        shared_ptr <JSONExport::JSONObject> _inputs;
+        shared_ptr <JSONExport::JSONObject> _techniques;
     };
 
 }

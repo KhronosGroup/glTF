@@ -28,21 +28,71 @@ var Base = require("base").Base;
 
 exports.Technique = Object.create(Base, {
 
+    _parameters: { value: null, writable: true },
+
+    _passName: { value: null, writable: true },
+
+    _passes: { value: null, writable: true },
+
     init: {
         value: function() {
             this.__Base_init();
+            this.passes = {};
             return this;
         }
     },
 
-    _rootPass: { value: null, writable: true },
+    parameters: {
+        get: function() {
+            return this._parameters;
+        },
+        set: function(value) {
+            this._parameters = value;
+        }
+    },
+
+    passName: {
+        get: function() {
+            return this._passName;
+        },
+        set: function(value) {
+            if (this._passName != value) {
+                this._passName = value;
+            }
+        }
+    },
 
     rootPass: {
         get: function() {
-            return this._rootPass;
+            return this._passes[this.passName];
+        }
+    },
+
+    passesDidChange: {
+        value: function() {
+            //update the @pass when passes is changed. 
+            //For convenience set to null if there are multiple passes or to the only pass contained when there is just a single one.
+            var passesNames = Object.keys(this.passes);
+            this.passName = (passesNames.length == 1) ? passesNames[0] : null;
+        }
+    },
+
+    passes: {
+        get: function() {
+            return this._passes;
         },
         set: function(value) {
-            this._rootPass = value;
+            if (this._passes != value) {
+                this._passes = value;
+                this.passesDidChange();
+            }
+        }
+    },
+
+    execute: {
+        value: function(renderer) {
+            renderer.resetStates();
+            this.rootPass.execute(renderer);
         }
     }
 

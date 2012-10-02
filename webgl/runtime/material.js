@@ -33,16 +33,12 @@ var ResourceDescription = require("resource-description").ResourceDescription;
 var Uuid = require("montage/core/uuid").Uuid;
 var Montage = require("montage").Montage;
 
-
 exports.Material = Object.create(Base, {
 
+    /*
     animationDuration: { value: 0.7, writable: false},
-
     animationDelegate: { value: null, writable: true},
-
-    //use this property to behave as a technique factory
     _techniqueForID: { value: {}, writable: true },
-
     inputWillChange: {
         value: function(name, value) {
         }
@@ -79,13 +75,7 @@ exports.Material = Object.create(Base, {
                                 //check if the uuid that we potentially stored is here
                                 var uuid = image["__uuid"];
                                 if (!uuid) {
-                                    var src = image.src;
-                                    if (src) {
-                                        uuid = src.split("/").join("_");
-                                    } else {
-                                        uuid = Uuid.generate();
-                                    }
-                                    image["__uuid"] = uuid;
+                                    image["__uuid"] = image.src ? src.split("/").join("_") : Uuid.generate();
                                 }
 
                                 var imageResource = Object.create(ResourceDescription).init(uuid, { "image": image });
@@ -104,10 +94,18 @@ exports.Material = Object.create(Base, {
     _prepareInputsProperties: {
         value: function() {
             var properties = ["diffuseColor", "diffuseTexture", "transparency", "reflectionTexture", "reflectionIntensity", "shininess", "specularColor"];
-
             properties.forEach( function(property) {
                 this._addInputPropertyIfNeeded(property);
             }, this);
+        }
+    },
+    */
+
+    techniqueDidChange: {
+        value: function() {
+            //first thing when a technique is changed check for symbols.
+            //these symbols will provides the names of the parameters to be tracked.
+            
         }
     },
 
@@ -119,35 +117,22 @@ exports.Material = Object.create(Base, {
             return this._technique;
         },
         set: function(value) {
-            this._technique = value;
+            if (this._technique !== value) {
+               this._technique = value;
+               this.techniqueDidChange();
+            }
         }
     },
 
-    _material: { value: null, writable: true },
+    _parameters: { value: null, writable: true },
 
-    material: {
+    parameters: {
         enumerable: false,
         get: function() {
-            return this._material;
+            return this._parameters;
         },
         set: function(value) {
-            this._material = value;
-        }
-    },
-
-    _inputs: { value: null, writable: true },
-
-    inputs: {
-        enumerable: false,
-        get: function() {
-            return this._inputs;
-        },
-        set: function(value) {
-            //FIXME: handle !value
-            var keys = Object.keys(value);
-            keys.forEach( function(key) {
-                this._inputs[key] = value[key];
-            }, this);
+            this._parameters = value;
         }
     },
 
@@ -155,8 +140,7 @@ exports.Material = Object.create(Base, {
         value: function(id) {
             this.id = id;
             this.__Base_init();
-            this._inputs = {};
-            this._prepareInputsProperties();
+            this._parameters = {};
             return this;
         }
     },

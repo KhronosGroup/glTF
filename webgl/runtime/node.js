@@ -225,7 +225,6 @@ exports.Node = Object.create(Base, {
         }
     },
 
-
     _nodeWithID: {
         value: function( id) {
             if (this.id === id) 

@@ -140,7 +140,7 @@ namespace JSONExport
 
         effectObject->setString("technique", effect->getTechniqueID());
         effectObject->setString("name", effect->getName());
-        effectObject->setValue("inputs", effect->getInputs());
+        effectObject->setValue("techniques", effect->getTechniques());
         
         return effectObject;
     }
@@ -285,9 +285,7 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONIndices> indices = primitive->allIndices()[j];
             
             JSONExport::Semantic semantic = indices->getSemantic();
-            
             vertexAttributesArray->appendValue(indicesObject);
-            
             indicesObject->setString("semantic", JSONUtils::getStringForSemantic(semantic));            
             unsigned int indexOfSet = 0;
             if (mesh->getAccessorsForSemantic(semantic).size() > 1) {
@@ -298,9 +296,7 @@ namespace JSONExport
         }
         
         shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
-        
         shared_ptr <JSONExport::JSONObject> serializedIndices = this->serializeIndices(uniqueIndices.get(), primitiveContext[1]);
-        
         primitiveObject->setValue("indices", serializedIndices);
             
         return primitiveObject;

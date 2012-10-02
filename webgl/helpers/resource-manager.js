@@ -776,24 +776,33 @@ var global = window;
         },
 
         _handleImageLoading: {
-            value: function(image, delegate, ctx) {
+            value: function(resource, delegate, ctx) {
                 //TODO: unify with binaries
-                var resourceStatus = this._resourcesStatus[image.id];
+                var resourceStatus = this._resourcesStatus[resource.id];
                 var status = null;
                 if (resourceStatus) {
                     if (resourceStatus.status === "loading" )
                         return;
                 }
-                this._resourcesStatus[image.id] = { status: "loading" };
+                this._resourcesStatus[resource.id] = { status: "loading" };
                 var self = this;
                 function handleTextureLoaded(image, id, gl) { 
+
+                    var canvas = document.createElement("canvas");
+                    canvas.width = 512;//nextHighestPowerOfTwo(image.width);
+                    canvas.height = 512;//nextHighestPowerOfTwo(image.height);
+                    var graphicsContext = canvas.getContext("2d");
+                    graphicsContext.drawImage(image, 0, 0, parseInt(canvas.width), parseInt(canvas.height));
+                    canvas.id = image.id;
+                    image = canvas;
+
                     var texture = gl.createTexture(); 
                     gl.bindTexture(gl.TEXTURE_2D, texture);  
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
                     gl.bindTexture(gl.TEXTURE_2D, null);  
                     delete self._resourcesStatus[id];
                     var convertedResource = delegate.convert(texture, gl);
@@ -802,12 +811,12 @@ var global = window;
                     self.fireResourceAvailable.call(self, id);
                 }  
 
-                if (image.description.path) {
+                if (resource.description.path) {
                     var imageObject = new Image();  
-                    imageObject.onload = function() { handleTextureLoaded(imageObject, image.id, ctx); }  
-                    imageObject.src = image.description.path;  
-                } else if (image.description.image) {
-                    handleTextureLoaded(image.description.image, image.id, ctx);                  
+                    imageObject.onload = function() { handleTextureLoaded(imageObject, resource.id, ctx); }  
+                    imageObject.src = resource.description.path;  
+                } else if (resource.description.image) {
+                    handleTextureLoaded(resource.description.image, resource.id, ctx);                  
                 }
             }
         },

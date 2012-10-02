@@ -80,7 +80,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
             //that's really for the demo.. 
             var self = this;
             if (this.view.engine) 
-            this.view.engine.rootPass.inputs.scene.rootNode.apply( function(node, parent) {
+            this.view.engine.technique.rootPass.scene.rootNode.apply( function(node, parent) {
                 if (node.meshes) {
                     if (node.meshes.length) {
                         node.meshes.forEach( function(mesh) {
@@ -173,6 +173,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                 this.selectModel.content.push( { "name": "Buggy", "path":"model/rambler/Rambler.json"} );
                 this.selectModel.content.push( { "name": "SuperMurdoch", "path":"model/SuperMurdoch/SuperMurdoch.json"} );
                 this.selectModel.content.push( { "name": "Wine", "path":"model/wine/wine.json"} );
+                this.selectModel.content.push( { "name": "Chateau", "path":"model/Chateau-FH/models/warehouse_model.json"} );
                 this.selectModel.needsDraw = true;
                 this.model = this.selectModel.content[0].path;
             }

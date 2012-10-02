@@ -26,20 +26,46 @@
 
 require("dependencies/gl-matrix");
 var Renderer = require("renderer").Renderer;
-var Pass = require("pass").Pass;
+var Technique = require("technique").Technique;
+var ScenePass = require("pass").ScenePass;
 
 exports.Engine = Object.create(Object.prototype, {
 
+    createTechniqueIfNeeded: {
+        value: function() {
+            if (!this._technique) {
+                this._technique = Object.create(Technique).init();
+                var pass = Object.create(ScenePass);
+                //there is just one pass, so passName will be automatically set to "defaultPass"
+                this._technique.passes = { "defaultPass": pass };
+            }
+        }
+    },
+
     _renderer: { value: null, writable: true },
+    
+    _technique: { value: null, writable: true },
 
-    _rootPass: { value: null, writable: true },
-
-    rootPass: {
+    technique: {
         get: function() {
-            return this._rootPass;
+            this.createTechniqueIfNeeded();
+            return this._technique;
         },
         set: function(value) {
-            this._rootPass = value;
+            this.createTechniqueIfNeeded();
+            this._technique = value;
+        }
+    },
+
+    scene: {
+        get: function() {
+            return this._scene;
+        },
+        set: function(value) {
+            var scene = this.technique.rootPass.scene;
+            if (scene != value) {
+                scene = value;
+            }
         }
     },
 
@@ -54,18 +80,18 @@ exports.Engine = Object.create(Object.prototype, {
 
     init: {
         value: function( webGLContext, options) {
-            this.renderer = Object.create(Renderer);
-            this.rootPass = Object.create(Pass);
-            this.rootPass.init();
-            this.renderer.webGLContext = webGLContext;
+            this.renderer = Object.create(Renderer).initWithWebGLContext(webGLContext);
             return this;
         }
     },
 
     render: {
         value: function() {
-            this.renderer.resetStates();
-            this.rootPass.execute(this);
+            if (this.technique) {
+                this.technique.execute(this.renderer);
+            } else {
+                console.log("WARNING render invoke in engine but no technique");
+            }   
         }
     }
 
