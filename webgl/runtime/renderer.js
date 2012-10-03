@@ -288,7 +288,7 @@ exports.Renderer = Object.create(Object, {
         renderPrimitive: {
             value: function(primitiveDescription) {
                 var renderVertices = false;
-                var worldMatrix = primitiveDescription.worldMatrix;
+                var worldMatrix = primitiveDescription.worldViewMatrix;
                 var projectionMatrix = this.projectionMatrix;
                 var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;

@@ -166,30 +166,6 @@ exports.LinkedList = Object.create(Object.prototype, {
 
 });
 
-    /*
-                "defaultPass": {
-                    "attributes": {
-                        "normal": {
-                            "semantic": "NORMAL"
-                        },
-                        "vert": {
-                            "semantic": "VERTEX"
-                        }
-                    },
-                    "states": {
-                        "BLEND": false
-                    },
-                    "uniforms": {
-                        "u_diffuseColor": "diffuseColor",
-                        "u_mvMatrix": "WORLDVIEW",
-                        "u_normalMatrix": "WORLDVIEWINVERSETRANSPOSE",
-                        "u_projMatrix": "PROJECTION"
-                    },
-                    "x-shader/x-fragment": "lambert0Fs",
-                    "x-shader/x-vertex": "lambert0Vs"
-                }
-    */
-
 //-- Pass ---
 
 var Pass = exports.Pass = Object.create(Object.prototype, {
@@ -204,184 +180,336 @@ var Pass = exports.Pass = Object.create(Object.prototype, {
         get: function() {
             return this._type;
         }
-    },
+    }
 
-    //_nodeIDToPrimitives: { value: null, writable: true},
+});
 
-    /*
-    _passes: { value: null, writable: true },
+exports.ProgramPass = Object.create(Pass, {
 
-    passes: {
+    _attributes: { value: null, writable: true },
+    _uniforms: { value: null, writable: true },
+    _states: { value: null, writable: true },
+    _program: { value: null, writable: true },
+
+    attributes: {
         get: function() {
-            return this._passes;
+            return this._attributes;
         },
         set: function(value) {
-            this._passes = value;
+            this._attributes = value;
         }
     },
 
-    _parentPass: { value: null, writable: true },
-
-    parentPass: {
+    uniforms: {
         get: function() {
-            return this._parentPass;
+            return this._uniforms;
         },
         set: function(value) {
-            this._parentPass = value;
+            this._uniforms = value;
         }
     },
 
-    _getPasses: {
-        value: function(list) {
-            var node = Object.create(LinkedListNode);
-            if (this.primitives) {
-                node.init(this);
-                list.append(node);
+    states: {
+        get: function() {
+            return this._states;
+        },
+        set: function(value) {
+            this._states = value;
+        }
+    },
+
+    program: {
+        get: function() {
+            return this._program;
+        },
+        set: function(value) {
+            this._program = value;
+        }
+    },
+
+    init: {
+        value: function() {
+            this.attributes = {};
+            this.uniforms = {};
+            this.states = {};
+            this._type = Pass.ProgramPass;
+            return this;
+        }
+    }
+
+});
+
+var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
+
+    _pathsInfos: { value: null, writable: true },
+
+    _pathIDsForNodeID: { value: null, writable: true },
+
+    _primitivesPerPass: { value: null, writable: true },
+
+    _viewPoint: { value: null, writable: true },
+
+    _scene: { value: null, writable: true },
+
+    viewPoint: {
+        get: function() {
+            return this._viewPoint;
+        },
+        set: function(value) {
+            if (this._viewPoint != value) {
+                this._viewPoint = value;
             }
+        }
+    },
 
-            //no dependency solving in passes yet, just forward straitghly to all of them
-            if (this.passes) {
-                var passesKey = Object.keys(this.passes);
-                passesKey.forEach( function(key) {
-                    var pass = this.passes[key];
-                    pass._getPasses(list);
+    setupNodeAtPath: {
+        value:function(node, pathID) {
+            if (node.meshes) {
+                node.meshes.forEach( function(mesh) {
+                    if (mesh.primitives) {
+                        //go through all primitives within all meshes
+                        //TODO: cache all this
+                        mesh.primitives.forEach( function (primitive) {
+                            if (primitive.material) {
+                                var technique = primitive.material.technique;
+                                if (technique) {
+                                    if (technique.rootPass) {
+                                        var passUniqueID = technique.rootPass.id;
+                                        var passWithPrimitives = this._primitivesPerPass[passUniqueID];
+                                        if (!passWithPrimitives) {
+                                            passWithPrimitives = this._primitivesPerPass[passUniqueID] = { 
+                                                "pass" : technique.rootPass,
+                                                "primitives" : [] 
+                                            };
+                                        }
+
+                                        var pathInfo = this._pathsInfos[pathID];
+                                        if (pathInfo) {
+                                            var renderPrimitive = {   
+                                                "primitive" : primitive ,
+                                                "worldMatrix" : pathInfo["worldMatrix"],
+                                                "normalMatrix" : pathInfo["normalMatrix"],
+                                                "worldViewMatrix" : pathInfo["worldViewMatrix"]
+                                            }
+
+                                            passWithPrimitives.primitives.push(renderPrimitive);
+                                        }
+                                    }
+                                }
+                            }
+                        }, this);
+                    }
                 }, this);
             }
         }
     },
 
-    getPasses: {
+    getPathIDsForNodeID: {
+        value: function(nodeID) {
+            return this._pathIDsForNodeID[nodeID];
+        }
+    },    
+
+    addPathIDForNodeID: {
+        value: function(nodeID, pathID) {
+            var pathIDs = this.pathIDsForNodeID;
+            if (!pathIDs) {
+                pathIDs = [];
+                this._pathIDsForNodeID[nodeID] = pathIDs;
+            }
+
+            pathIDs.push(pathID);
+        }
+    },
+
+    sceneDidChange: {
         value: function() {
-            var list = Object.create(LinkedList);
-            this._getPasses(list);
-            return list;
+            //prepares all infos
+            this._pathsInfos = {};
+            this._pathIDsForNodeID = {};
+            this._primitivesPerPass = {};
+
+            //TODO: expose list of nodes / cameras / light / material
+            var nodes = {};
+
+            //Assign a view point from available nodes with camera if none
+            var self = this;
+            var cameraNodes = [];
+
+            var context = { "path" : [], "worldMatrix" : mat4.identity() };
+
+            this.scene.rootNode.apply( function(node, parent, context) {
+                var worldMatrix = mat4.create();
+
+                mat4.multiply(context.worldMatrix, node.transform , worldMatrix);
+
+                var path = context.path.concat([node.id]); 
+                var pathID = path.join('-');
+
+                nodes[node.id] = node;
+
+                var pathInfos = { 
+                    "worldMatrix" : worldMatrix,
+                    "normalMatrix" : mat3.create(),
+                    "worldViewMatrix" : mat4.create(),
+                    "path" : path
+                }
+
+                self.addPathIDForNodeID(node.id, pathID);
+                self._pathsInfos[pathID] = pathInfos;
+                self.setupNodeAtPath(node, pathID);
+
+                if (node.cameras) {
+                    if (node.cameras.length)
+                        cameraNodes = cameraNodes.concat(node);
+                }
+
+                var newContext = { "path" : path, "worldMatrix" : worldMatrix };
+
+                return newContext;
+            } , true, context);
+
+            // arbitry set first coming camera as the view point
+            if (cameraNodes.length) {
+                this.viewPoint = cameraNodes[0];
+            } else {
+                //TODO: make that a default projection method
+                var projection = Object.create(Projection);
+                projection.initWithDescription( {   "projection":"perspective", 
+                                                    "yfov":45, 
+                                                    "aspectRatio":1, 
+                                                    "znear":0.1, 
+                                                    "zfar":100});
+
+                //create camera
+                var camera = Object.create(Camera).init();
+                camera.projection = projection;
+
+                //create node to hold the camera
+                var cameraNode = Object.create(Node).init();
+                cameraNode.id = "__default_camera";
+                cameraNode.cameras.push(camera);
+                this.scene.rootNode.children.push(cameraNode);
+                this.viewPoint = cameraNode;
+            }
         }
     },
 
-    inputWillChange: {
-        value: function(name, newValue) {
+    render: {
+        value: function(renderer) {
+
+            if (!this.scene)
+                return;
+
+            //set projection matrix
+            renderer.projectionMatrix = this.viewPoint.cameras[0].projection.matrix;
+
+            //get view matrix
+            var viewMatrix = mat4.create();
+            mat4.inverse(this.viewPoint.transform, viewMatrix);
+
+            //to be cached
+            var allPaths = Object.keys(this._pathsInfos);
+            var count = allPaths.length;
+
+            if (this.viewPoint.flipped) {
+                var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
+                var scaleMatrix = mat4.scale(translationMatrix, [1, 1, -1]);
+                mat4.multiply(viewMatrix, scaleMatrix, viewMatrix) ;
+            }
+
+            for (var i = 0 ; i < count ; i++) {
+                var pathInfos = this._pathsInfos[allPaths[i]];
+                var worldMatrix = pathInfos["worldMatrix"];
+                var worldViewMatrix = pathInfos["worldViewMatrix"];
+                var normalMatrix = pathInfos["normalMatrix"];
+                mat4.multiply(viewMatrix, worldMatrix, worldViewMatrix);
+                mat4.toInverseMat3(worldViewMatrix, normalMatrix);
+                mat3.transpose(normalMatrix);
+            }
+
+            var keys = Object.keys(this._primitivesPerPass);
+            keys.forEach( function(key) {
+                var passWithPrimitives = this._primitivesPerPass[key];
+                renderer.renderPrimitivesWithPass(passWithPrimitives.primitives, passWithPrimitives.pass);
+            }, this);
+
         }
     },
 
-    inputDidChange: {
-        value: function(name) {
-            if (name === "scene") {
+    scene: {
+        get: function() {
+            return this._scene;
+        },
+        set: function(value) {
+            if (this._scene != value) {
+                this._scene = value;
                 this.sceneDidChange();
             }
         }
     },
-    */
 
-    /*
-    _addInputPropertyIfNeeded: {
-        value: function(property) {
-            var privateName = "_" + property;
-            var self = this;
-            if (this.inputs.hasOwnProperty(property) === false) {
-
-                Object.defineProperty(this.inputs, privateName, { writable:true , value: null });
-
-                Object.defineProperty(this.inputs, property, {
-                    get: function() { return self.inputs[privateName]; },
-                    set: function(value) {
-                        self.inputWillChange.call(self, property, value);
-                        self.inputs[privateName] = value;
-                        self.inputDidChange.call(self, property);
-                    }
-                });
-            }
-        }
-    },
-
-    _prepareInputsProperties: {
+    init: {
         value: function() {
-            var properties = ["scene", "viewPoint"];
-
-            properties.forEach( function(property) {
-                this._addInputPropertyIfNeeded(property);
-            }, this);
+            return this;
         }
-    },
+    }
 
-    addPass: {
-        value: function(pass) {
-            pass.parentPass = this;
-            this.passes[pass.id] = pass;
-        }
-    },
+});
 
-    _updateSubPassesWithNodeIfNeeded: {
-        value: function(node, parent) {
-            //in the dag configuration a node has always the same children but not necessarly the same parent
-            //so keep track of the parent to handle different matrices entries
+exports.ScenePass = Object.create(Pass, {
 
-            var primitives = this._nodeIDToPrimitives[node.id];
-            if (!primitives) {
-                this._nodeIDToPrimitives[node.id] = primitives = {};
-            }
+    _sceneRenderer: { value: null, writable: true },
 
-            if (parent) {
-                var primitivesWithParent = primitives[parent.id];
-                if (!primitivesWithParent) {
-                    primitives[parent.id] = primitivesWithParent =
-                    {   "worldMatrix" : mat4.create(),
-                        "normalMatrix" : mat3.create(),
-                        "primitivesInfo" : []
-                    }
-
-                    var meshesCount = 0;
-                    if (node.meshes) {
-                        meshesCount = node.meshes.length;
-                    }
-
-                    if (meshesCount === 0) {
-                        return;
-                    }
-
-                    node.meshes.forEach( function(mesh) {
-                        if (mesh.primitives) {
-                            mesh.primitives.forEach( function (primitive) {
-                                if (primitive.material) {
-                                    var technique = primitive.material.technique;
-                                    if (technique) {
-                                        if (technique.rootPass) {
-                                            var pass = this.passes[technique.rootPass.id];
-                                            if (!pass) {
-                                                this.addPass(technique.rootPass);
-                                                pass = technique.rootPass;
-                                            }
-                                            var primitiveInfo =
-                                            {   "primitive" : primitive ,
-                                                "node" : node,
-                                                "mesh" : mesh,
-                                                "worldMatrix" : primitivesWithParent.worldMatrix,
-                                                "normalMatrix" : primitivesWithParent.normalMatrix
-                                            };
-                                            pass.primitives.push(primitiveInfo);
-
-                                            //now dispatch in passes
-                                            primitivesWithParent.primitivesInfo.push(primitiveInfo);
-                                        }
-                                    }
-                                }
-                            }, this);
-                        }
-                    }, this);
-                }
-            }
-        }
-    },
-
-    */
-
-    /*
-    isOpaque:  {
+    createSceneRendererIfNeeded: {
         value: function() {
-            return !this.states ? true : (!this.states.BLEND);
+            if (!this._sceneRenderer) {
+                this._sceneRenderer = Object.create(SceneRenderer).init();
+            }
         }
     },
-    */
 
+    sceneRenderer: {
+        get: function() {
+            this.createSceneRendererIfNeeded();
+            return this._sceneRenderer;
+        },
+        set: function(value) {
+            this.createSceneRendererIfNeeded();
+            if (this._sceneRenderer != value) {
+                this._sceneRenderer = value;
+            }
+        }
+    },
+
+    viewPoint: {
+        get: function() {
+            return this.sceneRenderer ? this.sceneRenderer.viewPoint : null;
+        }
+    },
+
+    scene: {
+        get: function() {
+            return this.sceneRenderer.scene;
+        },
+        set: function(value) {
+            this.sceneRenderer.scene = value;
+        }
+    },
+
+    execute: {
+        value: function(renderer) {
+            this.sceneRenderer.render(renderer);
+        }
+    },
+
+    init: {
+        value: function() {
+            this._type = Pass.ScenePass;
+        }
+    }
+
+});     
 
     /*
     hitTest: {
@@ -459,276 +587,4 @@ var Pass = exports.Pass = Object.create(Object.prototype, {
 
     },*/
 
-});
 
-            /*
-            if (this.passes) {
-                if (Object.keys(this.passes).length > 0) {
-                    console.log("*** ROOT PASS:"+Object.keys(this.passes));
-                }
-            }
-            */
-            //console.log("render Pass:"+this.id+" opaque:"+this.isOpaque());
-
-            /*
-            engine.renderer.renderPass(this);
-
-            var nonOpaquePasses = [];
-            if (this.passes) {
-                var passesKey = Object.keys(this.passes);
-                passesKey.forEach( function(passKey) {
-                    var pass = this.passes[passKey];
-                    if (!pass.isOpaque()) {
-                        nonOpaquePasses.push(pass);
-                    } else {
-                        pass.execute(engine);
-                    }
-                }, this);
-
-                nonOpaquePasses.forEach(function(transparentPass) {
-                    transparentPass.execute(engine);
-                }, this);
-            }*/
-
-exports.ProgramPass = Object.create(Pass, {
-
-    _attributes: { value: null, writable: true },
-    _uniforms: { value: null, writable: true },
-    _states: { value: null, writable: true },
-    _program: { value: null, writable: true },
-
-    attributes: {
-        get: function() {
-            return this._attributes;
-        },
-        set: function(value) {
-            this._attributes = value;
-        }
-    },
-
-    uniforms: {
-        get: function() {
-            return this._uniforms;
-        },
-        set: function(value) {
-            this._uniforms = value;
-        }
-    },
-
-    states: {
-        get: function() {
-            return this._states;
-        },
-        set: function(value) {
-            this._states = value;
-        }
-    },
-
-    program: {
-        get: function() {
-            return this._program;
-        },
-        set: function(value) {
-            this._program = value;
-        }
-    },
-
-    init: {
-        value: function() {
-            this.attributes = {};
-            this.uniforms = {};
-            this.states = {};
-            this._type = Pass.ProgramPass;
-            return this;
-        }
-    }
-
-});
-
-var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
-
-    _viewPoint: { value: null, writable: true },
-
-    viewPoint: {
-        get: function() {
-            return this._viewPoint;
-        },
-        set: function(value) {
-            if (this._viewPoint != value) {
-                this._viewPoint = value;
-            }
-        }
-    },
-
-    _scene: { value: null, writable: true },
-
-    sceneDidChange: {
-        value: function() {    
-            //Assign a view point from available nodes with camera if none
-            var self = this;
-            var cameraNodes = [];
-            this.scene.rootNode.apply( function(node, parent) {
-                if (node.cameras) {
-                    if (node.cameras.length)
-                        cameraNodes = cameraNodes.concat(node);
-                }
-                return null;
-            } , true, null);
-
-            // arbitry set first coming camera as the view point
-            if (cameraNodes.length) {
-                this.viewPoint = cameraNodes[0];
-            } else {
-                //TODO: make that a default projection method
-                var projection = Object.create(Projection);
-                projection.initWithDescription( {   "projection":"perspective", 
-                                                    "yfov":45, 
-                                                    "aspectRatio":1, 
-                                                    "znear":0.1, 
-                                                    "zfar":100});
-
-                //create camera
-                var camera = Object.create(Camera).init();
-                camera.projection = projection;
-
-                //create node to hold the camera
-                var cameraNode = Object.create(Node).init();
-                cameraNode.id = "__default_camera";
-                cameraNode.cameras.push(camera);
-                this.scene.rootNode.children.push(cameraNode);
-                this.viewPoint = cameraNode;
-            }
-        }
-    },
-
-    render: {
-        value: function(renderer) {
-
-            var primitivesPerPass = {};
-
-            if (this.scene) {
-                var self = this;
-                var ctx = mat4.create();
-                mat4.inverse(this.viewPoint.transform, ctx);
-                renderer.projectionMatrix = this.viewPoint.cameras[0].projection.matrix;
-                
-                this.scene.rootNode.apply( function(node, parent, parentTransform) {
-                    var worldMatrix = mat4.create();
-
-                    mat4.multiply(parentTransform, node.transform , worldMatrix);
-                    
-                    node.meshes.forEach( function(mesh) {
-                        if (mesh.primitives) {
-                            //compute normal matrix
-                            var normalMatrix = mat3.create();
-                            mat3.transpose(mat4.toInverseMat3(worldMatrix), normalMatrix);
-
-                            //go through all primitives within all meshes
-                            //TODO: cache all this
-                            mesh.primitives.forEach( function (primitive) {
-                                if (primitive.material) {
-                                    var technique = primitive.material.technique;
-                                    if (technique) {
-                                        if (technique.rootPass) {
-                                            var passUniqueID = technique.rootPass.id;
-                                            var passWithPrimitives = primitivesPerPass[passUniqueID];
-                                            if (!passWithPrimitives) {
-                                                passWithPrimitives = primitivesPerPass[passUniqueID] = { 
-                                                    "pass" : technique.rootPass,
-                                                    "primitives" : [] 
-                                                };
-                                            }
-
-                                            passWithPrimitives.primitives.push({   
-                                                "primitive" : primitive ,
-                                                "worldMatrix" : worldMatrix,
-                                                "normalMatrix" : normalMatrix
-                                            });
-                                        }
-                                    }
-                                }
-                            }, this);
-                        }
-                    }, this);
-
-                    return worldMatrix;
-                    
-                }, true, ctx);
-            }
-
-            var keys = Object.keys(primitivesPerPass);
-            keys.forEach( function(key) {
-                var passWithPrimitives = primitivesPerPass[key];
-
-                renderer.renderPrimitivesWithPass(passWithPrimitives.primitives, passWithPrimitives.pass);
-            }, this);
-        }
-    },
-
-    scene: {
-        get: function() {
-            return this._scene;
-        },
-        set: function(value) {
-            if (this._scene != value) {
-                this._scene = value;
-                this.sceneDidChange();
-            }
-        }
-    }
-
-});
-
-exports.ScenePass = Object.create(Pass, {
-
-    createSceneRendererIfNeeded: {
-        value: function() {
-            if (!this._sceneRenderer) {
-                this._sceneRenderer = Object.create(SceneRenderer);
-            }
-        }
-    },
-
-    _sceneRenderer: { value: null, writable: true },
-
-    sceneRenderer: {
-        get: function() {
-            this.createSceneRendererIfNeeded();
-            return this._sceneRenderer;
-        },
-        set: function(value) {
-            this.createSceneRendererIfNeeded();
-            if (this._sceneRenderer != value) {
-                this._sceneRenderer = value;
-            }
-        }
-    },
-
-    viewPoint: {
-        get: function() {
-            return this.sceneRenderer ? this.sceneRenderer.viewPoint : null;
-        }
-    },
-
-    scene: {
-        get: function() {
-            return this.sceneRenderer.scene;
-        },
-        set: function(value) {
-            this.sceneRenderer.scene = value;
-        }
-    },
-
-    execute: {
-        value: function(renderer) {
-            this.sceneRenderer.render(renderer);
-        }
-    },
-
-    init: {
-        value: function() {
-            this._type = Pass.ScenePass;
-        }
-    }
-
-});

@@ -943,13 +943,18 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                         mat4.set(this.scene.rootNode.transform, savedTr);
                         webGLContext.depthMask(true);
 
+                        /*
                         var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
                         var scaleMatrix = mat4.scale(translationMatrix, [1, 1, -1]);
                         mat4.multiply(scaleMatrix, node.transform) ;
                         mat4.set(scaleMatrix, node.transform);
+                        */
+                        //FIXME: passing a matrix was the proper to do this, but right matrix updates are disabled (temporarly)
+                        this.engine.technique.rootPass.viewPoint.flipped = true;
 
                         this.engine.render();
                         webGLContext.depthMask(true);
+                        this.engine.technique.rootPass.viewPoint.flipped = false;
 
                         //restore car matrix
                         mat4.set(savedTr, node.transform);
