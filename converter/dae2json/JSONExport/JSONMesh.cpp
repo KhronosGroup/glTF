@@ -32,13 +32,13 @@ using namespace std;
 
 namespace JSONExport 
 {
-    static const std::string keyWithSemanticAndSet(JSONExport::Semantic semantic, unsigned int indexSet) 
+    static std::string keyWithSemanticAndSet(JSONExport::Semantic semantic, unsigned int indexSet) 
     {
         std::string semanticIndexSetKey = "";
         semanticIndexSetKey += "semantic";
-        semanticIndexSetKey += semantic;
+        semanticIndexSetKey += JSONUtils::toString(semantic);
         semanticIndexSetKey += ":indexSet";
-        semanticIndexSetKey += indexSet;
+        semanticIndexSetKey += JSONUtils::toString(indexSet);
         
         return semanticIndexSetKey;
     }
@@ -134,9 +134,13 @@ namespace JSONExport
                 //(*it).second;            // the mapped value (of type T)
                 shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
-
-                std::string semanticIndexSetKey = keyWithSemanticAndSet(allSemantics[i], indexSet);                
-                semanticAndSetToIndex[semanticIndexSetKey] = _allOriginalAccessors.size();                
+                JSONExport::Semantic semantic = allSemantics[i];
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);   
+                unsigned int size = _allOriginalAccessors.size();
+                semanticAndSetToIndex[semanticIndexSetKey] = size;   
+                
+                //printf("set %d for key: %s\n",size, semanticIndexSetKey.c_str());
+                
                 _allOriginalAccessors.push_back(selectedAccessor);
             }
         }
@@ -156,8 +160,12 @@ namespace JSONExport
                 for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
                     JSONExport::Semantic semantic = allIndices[k]->getSemantic();
                     unsigned int indexSet = allIndices[k]->getIndexOfSet();
+                    std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);   
+                    unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                     
-                    indicesInRemapping[k] = semanticAndSetToIndex[keyWithSemanticAndSet(semantic, indexSet)];
+                    //printf("git %d for key: %s\n",idx, semanticIndexSetKey.c_str());
+
+                    indicesInRemapping[k] = idx;
                 }
                 
                 shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, indicesInRemapping, startIndex, endIndex);

@@ -138,8 +138,11 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                             //1. not be hardcoded
                             //2. be done in the base class...
                             //3. be made properly using a texture object
-                            if (technique.parameters.diffuseTexture) {
-                                technique.parameters.diffuseTexture = this.resolvePathIfNeeded(technique.parameters.diffuseTexture)                
+                            if (typeof technique.parameters.diffuseTexture === "string") {
+                                var imagePath = this.resolvePathIfNeeded(technique.parameters.diffuseTexture);
+                                var imageResource = Object.create(ResourceDescription).init(imagePath, { "path": imagePath });
+                                imageResource.type = "image";
+                                technique.parameters.diffuseTexture = imageResource;               
                             }
                         }
                         material.parameters[parameter] = technique.parameters[parameter];

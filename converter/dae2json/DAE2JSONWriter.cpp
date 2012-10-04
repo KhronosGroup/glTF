@@ -323,14 +323,12 @@ namespace DAE2JSON
                 if (count != indices.getCount()) {
                     // FIXME: report error
                 }
-
                 shared_ptr <JSONExport::JSONDataBuffer> colorBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
-
+                
                 shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
                                                                                               count,
                                                                                               JSONExport::COLOR,
                                                                                               (unsigned int)indexList->getSetIndex()));
-
                 cvtPrimitive->appendIndices(colorIndices);
             }
         }
@@ -347,10 +345,15 @@ namespace DAE2JSON
                 }
                 
                 shared_ptr <JSONExport::JSONDataBuffer> uvBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
+                
+                //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
+                //for now forced to 0, to be fixed for multi texturing.
+                unsigned int idx = 0; //(unsigned int)indexList->getSetIndex();                
+                
                 shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(uvBuffer,
                                                                                            count,
                                                                                            JSONExport::TEXCOORD,
-                                                                                           (unsigned int)indexList->getSetIndex()));
+                                                                                           idx));
                         
                 cvtPrimitive->appendIndices(uvIndices);
             }

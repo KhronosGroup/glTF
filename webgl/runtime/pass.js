@@ -241,6 +241,9 @@ exports.ProgramPass = Object.create(Pass, {
 
 var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
 
+
+    _pathsInfosArray: { value: null, writable: true },
+
     _pathsInfos: { value: null, writable: true },
 
     _pathIDsForNodeID: { value: null, writable: true },
@@ -328,6 +331,7 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
             this._pathsInfos = {};
             this._pathIDsForNodeID = {};
             this._primitivesPerPass = {};
+            this._pathsInfosArray = [];
 
             //TODO: expose list of nodes / cameras / light / material
             var nodes = {};
@@ -337,6 +341,7 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
             var cameraNodes = [];
 
             var context = { "path" : [], "worldMatrix" : mat4.identity() };
+            var pathCount = 0;
 
             this.scene.rootNode.apply( function(node, parent, context) {
                 var worldMatrix = mat4.create();
@@ -357,6 +362,7 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
 
                 self.addPathIDForNodeID(node.id, pathID);
                 self._pathsInfos[pathID] = pathInfos;
+                self._pathsInfosArray[pathCount++] = pathInfos;
                 self.setupNodeAtPath(node, pathID);
 
                 if (node.cameras) {
@@ -409,8 +415,7 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
             mat4.inverse(this.viewPoint.transform, viewMatrix);
 
             //to be cached
-            var allPaths = Object.keys(this._pathsInfos);
-            var count = allPaths.length;
+            var count = this._pathsInfosArray.length;
 
             if (this.viewPoint.flipped) {
                 var translationMatrix = mat4.translate(mat4.identity(), [0, 0, 0 ]);
@@ -419,7 +424,7 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
             }
 
             for (var i = 0 ; i < count ; i++) {
-                var pathInfos = this._pathsInfos[allPaths[i]];
+                var pathInfos = this._pathsInfosArray[i];
                 var worldMatrix = pathInfos["worldMatrix"];
                 var worldViewMatrix = pathInfos["worldViewMatrix"];
                 var normalMatrix = pathInfos["normalMatrix"];
