@@ -90,18 +90,24 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                 var passDescription = passesDescriptions[passName];
 
                 if (passDescription.type === Pass.PROGRAM) {
-                    var pass = Object.create(ProgramPass).init();
-                    //FIXME: check again if this is necessary
-                    pass.id = entryID+"_"+rootPassID;
-                    var vsShaderEntry = this.getEntry(passDescription[GLSLProgram.VERTEX_SHADER]);
-                    var fsShaderEntry = this.getEntry(passDescription[GLSLProgram.FRAGMENT_SHADER]);
-                    var programs = {};
-                    programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
-                    programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
-                    pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
-                    pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
-                    pass.states = passDescription.states;
-                    passes[passName] = pass;
+                    var program = passDescription.program; 
+                    if (program) {
+                        var pass = Object.create(ProgramPass).init();
+                        //FIXME: check again if this is necessary
+                        pass.id = entryID+"_"+rootPassID;
+                        var vsShaderEntry = this.getEntry(program[GLSLProgram.VERTEX_SHADER]);
+                        var fsShaderEntry = this.getEntry(program[GLSLProgram.FRAGMENT_SHADER]);
+                        var programs = {};
+                        programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
+                        programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
+                        pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
+                        pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
+                        pass.states = passDescription.states;
+                        passes[passName] = pass;
+                    } else {
+                        console.log("ERROR: A Pass with type=program must have a program property");
+                        return false;
+                    }
                 }
                 
             }, this);

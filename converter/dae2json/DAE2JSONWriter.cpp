@@ -1047,14 +1047,17 @@ namespace DAE2JSON
             this->writeShaderIfNeeded(vs);
             this->writeShaderIfNeeded(fs);
             
-            pass->setString("x-shader/x-vertex", vs);
-            pass->setString("x-shader/x-fragment", fs);
+            shared_ptr <JSONExport::JSONObject> program(new JSONExport::JSONObject());
+            
             pass->setString("type", "program");
+            pass->setValue("program", program);
+            
+            program->setString("x-shader/x-vertex", vs);
+            program->setString("x-shader/x-fragment", fs);
                                     
             techniqueObject->setString("pass", passName);
 
             shared_ptr <JSONExport::JSONObject> parameters = createJSONObjectIfNeededForObject(techniqueObject, "parameters");
-                        
 
             shared_ptr <JSONExport::JSONObject> uniforms(new JSONExport::JSONObject());
             pass->setValue("uniforms", uniforms);
