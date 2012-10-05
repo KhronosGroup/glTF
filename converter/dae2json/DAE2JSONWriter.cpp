@@ -1074,29 +1074,31 @@ namespace DAE2JSON
                 }
             }
             
-            shared_ptr <JSONExport::JSONObject> attributes(new JSONExport::JSONObject());
+            shared_ptr <JSONExport::JSONArray> attributes(new JSONExport::JSONArray());
             pass->setValue("attributes", attributes);
             for (unsigned int i = 0 ; i < allAttributes.size() ; i++) {
-                shared_ptr <JSONExport::JSONObject> vertexAttribute(new JSONExport::JSONObject());
+                shared_ptr <JSONExport::JSONObject> attribute(new JSONExport::JSONObject());
                 std::string semantic;
                 
-                std::string attribute = allAttributes[i];
-                if (attribute == kVertexAttribute) {
+                std::string symbol = allAttributes[i];
+                if (symbol == kVertexAttribute) {
                     semantic = "VERTEX";
-                } else if (attribute == kNormalAttribute) {
+                } else if (symbol == kNormalAttribute) {
                     semantic = "NORMAL";
-                } else if (attribute == kTexcoordAttribute) {
+                } else if (symbol == kTexcoordAttribute) {
                     semantic = "TEXCOORD";
                 } else {
-                    printf("WARNING:attribute not handled %s\n", attribute.c_str());
+                    printf("WARNING:symbol not handled %s\n", symbol.c_str());
                     continue;
                 }
                 
-                vertexAttribute->setString("semantic", semantic);
+                attribute->setString("semantic", semantic);
+                attribute->setString("symbol", symbol);
+                
                 //TODO: handle multiple sets => that would be
                 //vertexAttribute->setValue("set", set);
                 
-                attributes->setValue(attribute, vertexAttribute);
+                attributes->appendValue(attribute);
             }
              
             /*

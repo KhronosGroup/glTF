@@ -298,6 +298,8 @@ exports.Renderer = Object.create(Object, {
                 //FIXME: remove that association
                 var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
 
+                var pass = primitive.material.technique.rootPass;
+
                 //FIXME: should got through parameters without hardcoded symbols
                 if (program.getLocationForSymbol("u_projMatrix")) {
                     program.setValueForSymbol("u_projMatrix",projectionMatrix);
@@ -395,6 +397,51 @@ exports.Renderer = Object.create(Object, {
             
                 var availableCount = 0;
                 //Bind Attribute
+
+                var attributes = pass.attributes;
+                var i;
+
+                for (i = 0 ; i < attributes.length ; i++) {
+                    var attribute = attributes[i];
+                    
+                    var symbol = attribute.symbol;
+                    var semantic = attribute.semantic;
+                    var set = attribute.set ? attribute.set : "0";
+
+                    var accessor = primitive.getAccessorAssociatedWithSemanticAndSet(semantic, set);
+
+                    this.vertexAttributeBufferDelegate.webGLContext = this.webGLContext;
+                    var glResource = this.resourceManager.getResource(  accessor, 
+                                                                        this.vertexAttributeBufferDelegate,  { 
+                                                                            "semantic": semantic, 
+                                                                            "primitive": primitive
+                                                                        });
+                    // this call will bind the resource when available
+                    if (glResource) {
+                        gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
+                        var attributeLocation = program.getLocationForSymbol(symbol);
+                        if (typeof attributeLocation !== "undefined") {
+                            if (attributeLocation > newMaxEnabledArray) {
+                                newMaxEnabledArray = attributeLocation;
+                            }
+
+                            //Just enable what was not enabled before...
+                            //FIXME: find root cause why it is needed to disable this optimization as it works well 99% of the time
+                            //if (this._lastMaxEnabledArray < attributeLocation) {
+                            gl.enableVertexAttribArray(attributeLocation);
+                            //} 
+                            gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
+                            if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
+                                gl.drawArrays(gl.POINTS, 0, accessor.count);
+                            }
+                        }
+                        availableCount++;
+                    } else {
+                        this._lastMaxEnabledArray = -1;
+                    }
+                }                
+
+                /*
                 primitive.vertexAttributes.forEach( function(vertexAttribute) {
 
                     var accessor = vertexAttribute.accessor;
@@ -432,6 +479,7 @@ exports.Renderer = Object.create(Object, {
 
                     }                
                 }, this);
+                */
 
                 var available = (availableCount === primitive.vertexAttributes.length);
                 if (!renderVertices)  { 

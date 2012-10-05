@@ -88,12 +88,12 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
             var allPassesNames = Object.keys(description.passes);
             allPassesNames.forEach( function(passName) {
                 var passDescription = passesDescriptions[passName];
-
                 if (passDescription.type === Pass.PROGRAM) {
                     var program = passDescription.program; 
                     if (program) {
                         var pass = Object.create(ProgramPass).init();
-                        //FIXME: check again if this is necessary
+                        //it is necessary to add an id that is composited using the techniqueID for pass, 
+                        //so that we can uniquely identify them when adding primitives per passes.
                         pass.id = entryID+"_"+rootPassID;
                         var vsShaderEntry = this.getEntry(program[GLSLProgram.VERTEX_SHADER]);
                         var fsShaderEntry = this.getEntry(program[GLSLProgram.FRAGMENT_SHADER]);
@@ -103,6 +103,8 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                         pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
                         pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
                         pass.states = passDescription.states;
+                        pass.uniforms = passDescription.uniforms;
+                        pass.attributes = passDescription.attributes;
                         passes[passName] = pass;
                     } else {
                         console.log("ERROR: A Pass with type=program must have a program property");
