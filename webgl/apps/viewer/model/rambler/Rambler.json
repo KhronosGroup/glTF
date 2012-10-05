@@ -49862,26 +49862,42 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": {
-                        "normal": {
-                            "semantic": "NORMAL"
+                    "attributes": [
+                        {
+                            "semantic": "VERTEX",
+                            "symbol": "vert"
                         },
-                        "vert": {
-                            "semantic": "VERTEX"
+                        {
+                            "semantic": "NORMAL",
+                            "symbol": "normal"
                         }
+                    ],
+                    "program": {
+                        "x-shader/x-fragment": "lambert0Fs",
+                        "x-shader/x-vertex": "lambert0Vs"
                     },
                     "states": {
                         "BLEND": false
                     },
                     "type": "program",
-                    "uniforms": {
-                        "u_diffuseColor": "diffuseColor",
-                        "u_mvMatrix": "WORLDVIEW",
-                        "u_normalMatrix": "WORLDVIEWINVERSETRANSPOSE",
-                        "u_projMatrix": "PROJECTION"
-                    },
-                    "x-shader/x-fragment": "lambert0Fs",
-                    "x-shader/x-vertex": "lambert0Vs"
+                    "uniforms": [
+                        {
+                            "semantic": "WORLDVIEW",
+                            "symbol": "u_mvMatrix"
+                        },
+                        {
+                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                            "symbol": "u_normalMatrix"
+                        },
+                        {
+                            "semantic": "PROJECTION",
+                            "symbol": "u_projMatrix"
+                        },
+                        {
+                            "parameter": "diffuseColor",
+                            "symbol": "u_diffuseColor"
+                        }
+                    ]
                 }
             }
         }

@@ -30,6 +30,31 @@ var ResourceManager = require("c2j/helpers/resource-manager").ResourceManager;
 
 exports.Renderer = Object.create(Object, {
 
+     WORLD: { value: "WORLD", writable: false},
+     VIEW: { value: "VIEW", writable: false},
+     PROJECTION: { value: "PROJECTION", writable: false},
+     WORLDVIEW: { value: "WORLDVIEW", writable: false},
+     VIEWPROJECTION: { value: "VIEWPROJECTION", writable: false},
+     WORLDVIEWPROJECTION: { value: "WORLDVIEWPROJECTION", writable: false},
+     WORLDINVERSE: { value: "WORLDINVERSE", writable: false},
+     VIEWINVERSE: { value: "VIEWINVERSE", writable: false},
+     PROJECTIONINVERSE: { value: "PROJECTIONINVERSE", writable: false},
+     WORLDVIEWINVERSE: { value: "WORLDVIEWINVERSE", writable: false},
+     VIEWPROJECTIONINVERSE: { value: "VIEWPROJECTIONINVERSE", writable: false},
+     WORLDVIEWPROJECTIONINVERSE: { value: "WORLDVIEWPROJECTIONINVERSE", writable: false},
+     WORLDTRANSPOSE: { value: "WORLDTRANSPOSE", writable: false},
+     VIEWTRANSPOSE: { value: "VIEWTRANSPOSE", writable: false},
+     PROJECTIONTRANSPOSE: { value: "PROJECTIONTRANSPOSE", writable: false},
+     WORLDVIEWTRANSPOSE: { value: "WORLDVIEWTRANSPOSE", writable: false},
+     VIEWPROJECTIONTRANSPOSE: { value: "VIEWPROJECTIONTRANSPOSE", writable: false},
+     WORLDVIEWPROJECTIONTRANSPOSE: { value: "WORLDVIEWPROJECTIONTRANSPOSE", writable: false},
+     WORLDINVERSETRANSPOSE: { value: "WORLDINVERSETRANSPOSE", writable: false},
+     VIEWINVERSETRANSPOSE: { value: "VIEWINVERSETRANSPOSE", writable: false},
+     PROJECTIONINVERSETRANSPOSE: { value: "PROJECTIONINVERSETRANSPOSE", writable: false},
+     WORLDVIEWINVERSETRANSPOSE: { value: "WORLDVIEWINVERSETRANSPOSE", writable: false},
+     VIEWPROJECTIONINVERSETRANSPOSE: { value: "VIEWPROJECTIONINVERSETRANSPOSE", writable: false},
+     WORLDVIEWPROJECTIONINVERSETRANSPOSE: { value: "WORLDVIEWPROJECTIONINVERSETRANSPOSE", writable: false},
+
     //private accessors
     _bindedProgram: { value: null, writable: true },
 
@@ -288,118 +313,55 @@ exports.Renderer = Object.create(Object, {
         renderPrimitive: {
             value: function(primitiveDescription) {
                 var renderVertices = false;
-                var worldMatrix = primitiveDescription.worldViewMatrix;
-                var projectionMatrix = this.projectionMatrix;
+                //var worldMatrix = primitiveDescription.worldViewMatrix;
+                //var projectionMatrix = this.projectionMatrix;
                 var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
                 var program =  renderVertices ? this.debugProgram : this.bindedProgram;
-
-                //FIXME: remove that association
-                var materialSemantic = { "VERTEX" : "vert" , "NORMAL" : "normal", "TEXCOORD" : "texcoord" };
-
                 var pass = primitive.material.technique.rootPass;
-
-                //FIXME: should got through parameters without hardcoded symbols
-                if (program.getLocationForSymbol("u_projMatrix")) {
-                    program.setValueForSymbol("u_projMatrix",projectionMatrix);
-                }
-            
-                if (program.getLocationForSymbol("u_normalMatrix")) {
-                     program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
-                }
-            
-                if (program.getLocationForSymbol("u_mvMatrix")) {
-                    program.setValueForSymbol("u_mvMatrix",worldMatrix);
-                }
-
-                var shininess = this.shininess;
-                if (program.getLocationForSymbol("u_shininess")) {
-                    shininess = primitive.material.parameters.shininess;
-                    if ((typeof shininess === "undefined") || (shininess === null)) {
-                        shininess = this.shininess;
-                    }
-                    program.setValueForSymbol("u_shininess",shininess);
-                }
-
-                var light = this.light;
-                if (program.getLocationForSymbol("u_light")) {
-                    light = primitive.material.parameters.light;
-                    if ((typeof light === "undefined") || (light === null)) {
-                        light = this.light;
-                    }
-                    program.setValueForSymbol("u_light",light);
-                }
-
-                var specularColor = this.specularColor;
-                if (program.getLocationForSymbol("u_specularColor")) {
-                    specularColor = primitive.material.parameters.specularColor;
-                    if ((typeof specularColor === "undefined") || (specularColor === null)) {
-                        specularColor = this.specularColor;
-                    }
-                    program.setValueForSymbol("u_specularColor",specularColor);
-                } 
-
-                var defaultReflectionIntensity = 0.3;
-                var reflectionIntensity = defaultReflectionIntensity;
-                if (program.getLocationForSymbol("u_reflectionIntensity")) {
-                    reflectionIntensity = primitive.material.parameters.reflectionIntensity;
-                    if ((typeof reflectionIntensity === "undefined") || (reflectionIntensity === null)) {
-                        reflectionIntensity = defaultReflectionIntensity;
-                    }
-                    program.setValueForSymbol("u_reflectionIntensity",reflectionIntensity);
-                }
-                var defaultTransparency = 1.0;
-                var transparency = defaultTransparency;
-                if (program.getLocationForSymbol("u_transparency")) {
-                    transparency = primitive.material.parameters.transparency;
-                    if ((typeof transparency === "undefined") || (transparency === null)) {
-                        transparency = defaultTransparency;
-                    }
-                    program.setValueForSymbol("u_transparency",transparency);
-                }
-
-                if (program.getLocationForSymbol("u_diffuseColor")) {
-                    var color = primitive.material.parameters.diffuseColor;
-                    program.setValueForSymbol("u_diffuseColor",color);
-                }
-
+                var i;
                 var currentTexture = 0;
-                if (program.getLocationForSymbol("u_diffuseTexture")) {
-                    var image = primitive.material.parameters.diffuseTexture;
-                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
-                    if (texture) {
-                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
-                        gl.bindTexture(gl.TEXTURE_2D, texture);
-                        var samplerLocation = program.getLocationForSymbol("u_diffuseTexture");
-                        if (typeof samplerLocation !== "undefined") {
-                            program.setValueForSymbol("u_diffuseTexture", currentTexture);
-                            currentTexture++;
-                        }
+                var uniforms = pass.uniforms;
+                var parameters = primitive.material.parameters;
+                for (i = 0; i < uniforms.length ; i++) {
+                    var uniform = uniforms[i];
+                    var symbol = uniform.symbol;
+                    if (uniform.semantic) {
+                        if (uniform.semantic == this.PROJECTION) {
+                            value = this.projectionMatrix;
+                        } else 
+                            value = primitiveDescription[uniform.semantic];
+                    } else {
+                        value = parameters[uniform.parameter];
                     }
-                }
 
-                if (program.getLocationForSymbol("u_reflectionTexture")) {
-                    var image = primitive.material.parameters.reflectionTexture;
-                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
-                    if (texture) {
-                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
-                        gl.bindTexture(gl.TEXTURE_2D, texture);
-                        var samplerLocation = program.getLocationForSymbol("u_reflectionTexture");
-                        if (typeof samplerLocation !== "undefined") {
-                            program.setValueForSymbol("u_reflectionTexture", currentTexture);
-                            currentTexture++;
+                    var uniformIsSampler2D = program.getTypeForSymbol(symbol) === gl.SAMPLER_2D;
+                    if (uniformIsSampler2D) {
+                        var image = value;
+                        var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
+                        if (texture) {
+                            gl.activeTexture(gl.TEXTURE0 + currentTexture);
+                            gl.bindTexture(gl.TEXTURE_2D, texture);
+                            var samplerLocation = program.getLocationForSymbol(symbol);
+                            if (typeof samplerLocation !== "undefined") {
+                                program.setValueForSymbol(symbol, currentTexture);
+                                currentTexture++;
+                            }
                         }
+                    } else {
+                        program.setValueForSymbol(symbol, value);
                     }
                 }
 
                 program.commit(gl);
             
                 var availableCount = 0;
-                //Bind Attribute
+
+
+                //----- bind attributes -----
 
                 var attributes = pass.attributes;
-                var i;
 
                 for (i = 0 ; i < attributes.length ; i++) {
                     var attribute = attributes[i];
@@ -441,45 +403,7 @@ exports.Renderer = Object.create(Object, {
                     }
                 }                
 
-                /*
-                primitive.vertexAttributes.forEach( function(vertexAttribute) {
-
-                    var accessor = vertexAttribute.accessor;
-                    var symbol = materialSemantic[vertexAttribute.semantic];
-                    if (symbol) {
-                        //FIXME: do not assume continuous data, this will break with interleaved arrays (should not use byteStride here).
-                        this.vertexAttributeBufferDelegate.webGLContext = this.webGLContext;
-                        var glResource = this.resourceManager.getResource(accessor, this.vertexAttributeBufferDelegate,  { "semantic": vertexAttribute.semantic, "primitive": primitive});
-                        // this call will bind the resource when available
-                        if (glResource) {
-                            gl.bindBuffer(gl.ARRAY_BUFFER, glResource);
-
-                            var attributeLocation = program.getLocationForSymbol(symbol);
-                            if (typeof attributeLocation !== "undefined") {
-                                
-                                if (attributeLocation > newMaxEnabledArray) {
-                                    newMaxEnabledArray = attributeLocation;
-                                }
-
-                                //Just enable what was not enabled before...
-                                //FIXME: find root cause why it is needed to disable this optimization as it works well 99% of the time
-                                //if (this._lastMaxEnabledArray < attributeLocation) {
-                                    gl.enableVertexAttribArray(attributeLocation);
-                                //} 
-                                gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
-                                if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
-                                    gl.drawArrays(gl.POINTS, 0, accessor.count);
-                                }
-                            }
-
-                            availableCount++;
-                        } else {
-                            this._lastMaxEnabledArray = -1;
-                        }
-
-                    }                
-                }, this);
-                */
+                //-----
 
                 var available = (availableCount === primitive.vertexAttributes.length);
                 if (!renderVertices)  { 
@@ -557,3 +481,98 @@ exports.Renderer = Object.create(Object, {
         }
 
 });
+
+                /*
+                //FIXME: should got through parameters without hardcoded symbols
+                if (program.getLocationForSymbol("u_projMatrix")) {
+                    program.setValueForSymbol("u_projMatrix",projectionMatrix);
+                }
+            
+                if (program.getLocationForSymbol("u_normalMatrix")) {
+                     program.setValueForSymbol("u_normalMatrix",primitiveDescription.normalMatrix);
+                }
+            
+                if (program.getLocationForSymbol("u_mvMatrix")) {
+                    program.setValueForSymbol("u_mvMatrix",worldMatrix);
+                }
+
+                var shininess = this.shininess;
+                if (program.getLocationForSymbol("u_shininess")) {
+                    shininess = primitive.material.parameters.shininess;
+                    if ((typeof shininess === "undefined") || (shininess === null)) {
+                        shininess = this.shininess;
+                    }
+                    program.setValueForSymbol("u_shininess",shininess);
+                }
+
+                var light = this.light;
+                if (program.getLocationForSymbol("u_light")) {
+                    light = primitive.material.parameters.light;
+                    if ((typeof light === "undefined") || (light === null)) {
+                        light = this.light;
+                    }
+                    program.setValueForSymbol("u_light",light);
+                }
+
+                var specularColor = this.specularColor;
+                if (program.getLocationForSymbol("u_specularColor")) {
+                    specularColor = primitive.material.parameters.specularColor;
+                    if ((typeof specularColor === "undefined") || (specularColor === null)) {
+                        specularColor = this.specularColor;
+                    }
+                    program.setValueForSymbol("u_specularColor",specularColor);
+                } 
+
+                var defaultReflectionIntensity = 0.3;
+                var reflectionIntensity = defaultReflectionIntensity;
+                if (program.getLocationForSymbol("u_reflectionIntensity")) {
+                    reflectionIntensity = primitive.material.parameters.reflectionIntensity;
+                    if ((typeof reflectionIntensity === "undefined") || (reflectionIntensity === null)) {
+                        reflectionIntensity = defaultReflectionIntensity;
+                    }
+                    program.setValueForSymbol("u_reflectionIntensity",reflectionIntensity);
+                }
+                var defaultTransparency = 1.0;
+                var transparency = defaultTransparency;
+                if (program.getLocationForSymbol("u_transparency")) {
+                    transparency = primitive.material.parameters.transparency;
+                    if ((typeof transparency === "undefined") || (transparency === null)) {
+                        transparency = defaultTransparency;
+                    }
+                    program.setValueForSymbol("u_transparency",transparency);
+                }
+
+                if (program.getLocationForSymbol("u_diffuseColor")) {
+                    var color = primitive.material.parameters.diffuseColor;
+                    program.setValueForSymbol("u_diffuseColor",color);
+                }
+
+                if (program.getLocationForSymbol("u_diffuseTexture")) {
+                    var image = primitive.material.parameters.diffuseTexture;
+                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
+                    if (texture) {
+                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        var samplerLocation = program.getLocationForSymbol("u_diffuseTexture");
+                        if (typeof samplerLocation !== "undefined") {
+                            program.setValueForSymbol("u_diffuseTexture", currentTexture);
+                            currentTexture++;
+                        }
+                    }
+                }
+
+                if (program.getLocationForSymbol("u_reflectionTexture")) {
+                    var image = primitive.material.parameters.reflectionTexture;
+                    var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
+                    if (texture) {
+                        gl.activeTexture(gl.TEXTURE0 + currentTexture);
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        var samplerLocation = program.getLocationForSymbol("u_reflectionTexture");
+                        if (typeof samplerLocation !== "undefined") {
+                            program.setValueForSymbol("u_reflectionTexture", currentTexture);
+                            currentTexture++;
+                        }
+                    }
+                }
+                */
+

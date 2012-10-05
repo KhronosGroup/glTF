@@ -928,14 +928,28 @@ namespace DAE2JSON
     static std::string parameterForUniform(const std::string& symbol) {
         static std::map<std::string , std::string> symbolToParameter;
         if (symbolToParameter.empty()) {
-            symbolToParameter[kModelViewMatrixUniform] = WORLDVIEW;
-            symbolToParameter[kNormalMatrixUniform] = WORLDVIEWINVERSETRANSPOSE;
-            symbolToParameter[kProjectionMatrixUniform] = PROJECTION;
             symbolToParameter[kDiffuseColorUniform] = "diffuseColor";
             symbolToParameter[kDiffuseTextureUniform] = "diffuseTexture";
             symbolToParameter[kTransparencyUniform] = "transparency";
         }
         return symbolToParameter[symbol];
+    }
+
+    static std::string semanticForUniform(const std::string& symbol) {
+        static std::map<std::string , std::string> symbolToSemantic;
+        if (symbolToSemantic.empty()) {
+            symbolToSemantic[kModelViewMatrixUniform] = WORLDVIEW;
+            symbolToSemantic[kNormalMatrixUniform] = WORLDVIEWINVERSETRANSPOSE;
+            symbolToSemantic[kProjectionMatrixUniform] = PROJECTION;
+        }
+        return symbolToSemantic[symbol];
+    }
+    
+    static bool symbolIsAUniformParameter(const std::string& symbol)
+    {
+        return ((symbol != kModelViewMatrixUniform) &&
+                (symbol != kNormalMatrixUniform) &&
+                (symbol != kProjectionMatrixUniform));
     }
     
     //FIXME: this won't be hardcoded anymore when we will rely on a "real" shader generation.
@@ -1054,23 +1068,30 @@ namespace DAE2JSON
             
             program->setString("x-shader/x-vertex", vs);
             program->setString("x-shader/x-fragment", fs);
-                                    
+            
             techniqueObject->setString("pass", passName);
-
+            
             shared_ptr <JSONExport::JSONObject> parameters = createJSONObjectIfNeededForObject(techniqueObject, "parameters");
-
-            shared_ptr <JSONExport::JSONObject> uniforms(new JSONExport::JSONObject());
+            
+            shared_ptr <JSONExport::JSONArray> uniforms(new JSONExport::JSONArray());
             pass->setValue("uniforms", uniforms);
             for (unsigned int i = 0 ; i < allUniforms.size() ; i++) {
+                shared_ptr <JSONExport::JSONObject> uniform(new JSONExport::JSONObject());
                 std::string symbol = allUniforms[i];
-                std::string parameter = parameterForUniform(symbol);
-                uniforms->setString(symbol, parameter);
-
-                //if we want to set default values... 
-                if (!parameters->contains("parameter")) {
-                    //just set white for diffuseColor
-                    if (parameter == "diffuseColor")
-                        parameters->setValue(parameter, serializeVec3(1,1,1));
+                
+                uniform->setString("symbol", symbol);
+                uniforms->appendValue(uniform);
+               
+                if (symbolIsAUniformParameter(symbol)) {
+                    std::string parameterName = parameterForUniform(symbol);
+                    uniform->setString("parameter",parameterName);                   //if we want to set default values... 
+                    if (!parameters->contains("parameter")) {
+                        //just set white for diffuseColor
+                        if (parameterName == "diffuseColor")
+                            parameters->setValue(parameterName, serializeVec3(1,1,1));
+                    }
+                } else {
+                    uniform->setString("semantic", semanticForUniform(symbol));
                 }
             }
             

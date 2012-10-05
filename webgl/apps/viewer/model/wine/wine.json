@@ -11777,26 +11777,42 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": {
-                        "normal": {
-                            "semantic": "NORMAL"
+                    "attributes": [
+                        {
+                            "semantic": "VERTEX",
+                            "symbol": "vert"
                         },
-                        "vert": {
-                            "semantic": "VERTEX"
+                        {
+                            "semantic": "NORMAL",
+                            "symbol": "normal"
                         }
+                    ],
+                    "program": {
+                        "x-shader/x-fragment": "lambert0Fs",
+                        "x-shader/x-vertex": "lambert0Vs"
                     },
                     "states": {
                         "BLEND": false
                     },
                     "type": "program",
-                    "uniforms": {
-                        "u_diffuseColor": "diffuseColor",
-                        "u_mvMatrix": "WORLDVIEW",
-                        "u_normalMatrix": "WORLDVIEWINVERSETRANSPOSE",
-                        "u_projMatrix": "PROJECTION"
-                    },
-                    "x-shader/x-fragment": "lambert0Fs",
-                    "x-shader/x-vertex": "lambert0Vs"
+                    "uniforms": [
+                        {
+                            "semantic": "WORLDVIEW",
+                            "symbol": "u_mvMatrix"
+                        },
+                        {
+                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                            "symbol": "u_normalMatrix"
+                        },
+                        {
+                            "semantic": "PROJECTION",
+                            "symbol": "u_projMatrix"
+                        },
+                        {
+                            "parameter": "diffuseColor",
+                            "symbol": "u_diffuseColor"
+                        }
+                    ]
                 }
             }
         },
@@ -11805,29 +11821,46 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": {
-                        "normal": {
-                            "semantic": "NORMAL"
+                    "attributes": [
+                        {
+                            "semantic": "VERTEX",
+                            "symbol": "vert"
                         },
-                        "texcoord": {
-                            "semantic": "TEXCOORD"
+                        {
+                            "semantic": "NORMAL",
+                            "symbol": "normal"
                         },
-                        "vert": {
-                            "semantic": "VERTEX"
+                        {
+                            "semantic": "TEXCOORD",
+                            "symbol": "texcoord"
                         }
+                    ],
+                    "program": {
+                        "x-shader/x-fragment": "lambert1Fs",
+                        "x-shader/x-vertex": "lambert1Vs"
                     },
                     "states": {
                         "BLEND": false
                     },
                     "type": "program",
-                    "uniforms": {
-                        "u_diffuseTexture": "diffuseTexture",
-                        "u_mvMatrix": "WORLDVIEW",
-                        "u_normalMatrix": "WORLDVIEWINVERSETRANSPOSE",
-                        "u_projMatrix": "PROJECTION"
-                    },
-                    "x-shader/x-fragment": "lambert1Fs",
-                    "x-shader/x-vertex": "lambert1Vs"
+                    "uniforms": [
+                        {
+                            "semantic": "WORLDVIEW",
+                            "symbol": "u_mvMatrix"
+                        },
+                        {
+                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                            "symbol": "u_normalMatrix"
+                        },
+                        {
+                            "semantic": "PROJECTION",
+                            "symbol": "u_projMatrix"
+                        },
+                        {
+                            "parameter": "diffuseTexture",
+                            "symbol": "u_diffuseTexture"
+                        }
+                    ]
                 }
             }
         },
@@ -11842,27 +11875,46 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": {
-                        "normal": {
-                            "semantic": "NORMAL"
+                    "attributes": [
+                        {
+                            "semantic": "VERTEX",
+                            "symbol": "vert"
                         },
-                        "vert": {
-                            "semantic": "VERTEX"
+                        {
+                            "semantic": "NORMAL",
+                            "symbol": "normal"
                         }
+                    ],
+                    "program": {
+                        "x-shader/x-fragment": "lambert2Fs",
+                        "x-shader/x-vertex": "lambert2Vs"
                     },
                     "states": {
                         "BLEND": true
                     },
                     "type": "program",
-                    "uniforms": {
-                        "u_diffuseColor": "diffuseColor",
-                        "u_mvMatrix": "WORLDVIEW",
-                        "u_normalMatrix": "WORLDVIEWINVERSETRANSPOSE",
-                        "u_projMatrix": "PROJECTION",
-                        "u_transparency": "transparency"
-                    },
-                    "x-shader/x-fragment": "lambert2Fs",
-                    "x-shader/x-vertex": "lambert2Vs"
+                    "uniforms": [
+                        {
+                            "semantic": "WORLDVIEW",
+                            "symbol": "u_mvMatrix"
+                        },
+                        {
+                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                            "symbol": "u_normalMatrix"
+                        },
+                        {
+                            "semantic": "PROJECTION",
+                            "symbol": "u_projMatrix"
+                        },
+                        {
+                            "parameter": "diffuseColor",
+                            "symbol": "u_diffuseColor"
+                        },
+                        {
+                            "parameter": "transparency",
+                            "symbol": "u_transparency"
+                        }
+                    ]
                 }
             }
         }

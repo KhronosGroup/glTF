@@ -42,6 +42,7 @@ var Node = require("node").Node;
 var Projection = require("projection").Projection;
 var Camera = require("camera").Camera;
 var Utilities = require("utilities").Utilities;
+var Renderer = require("renderer").Renderer;
 
 exports.LinkedListNode = Object.create(Object.prototype, {
 
@@ -288,12 +289,15 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
 
                                         var pathInfo = this._pathsInfos[pathID];
                                         if (pathInfo) {
-                                            var renderPrimitive = {   
-                                                "primitive" : primitive ,
-                                                "worldMatrix" : pathInfo["worldMatrix"],
-                                                "normalMatrix" : pathInfo["normalMatrix"],
-                                                "worldViewMatrix" : pathInfo["worldViewMatrix"]
-                                            }
+                                            var WORLD = Renderer.WORLD;
+                                            var WORLDVIEW = Renderer.WORLDVIEW;
+                                            var WORLDVIEWINVERSETRANSPOSE = Renderer.WORLDVIEWINVERSETRANSPOSE;
+
+                                            var renderPrimitive = {};
+                                            renderPrimitive["primitive"] = primitive;
+                                            renderPrimitive[WORLD] = pathInfo[WORLD];
+                                            renderPrimitive[WORLDVIEWINVERSETRANSPOSE] = pathInfo[WORLDVIEWINVERSETRANSPOSE];
+                                            renderPrimitive[WORLDVIEW] = pathInfo[WORLDVIEW];
 
                                             passWithPrimitives.primitives.push(renderPrimitive);
                                         }
@@ -339,26 +343,30 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
             //Assign a view point from available nodes with camera if none
             var self = this;
             var cameraNodes = [];
+            var WORLD = Renderer.WORLD;
+            var WORLDVIEW = Renderer.WORLDVIEW;
+            var WORLDVIEWINVERSETRANSPOSE = Renderer.WORLDVIEWINVERSETRANSPOSE;
 
-            var context = { "path" : [], "worldMatrix" : mat4.identity() };
+            var context = {};
+            context["path"] = [];
+            context[WORLD] = mat4.identity();
             var pathCount = 0;
 
             this.scene.rootNode.apply( function(node, parent, context) {
                 var worldMatrix = mat4.create();
 
-                mat4.multiply(context.worldMatrix, node.transform , worldMatrix);
+                mat4.multiply(context[WORLD], node.transform , worldMatrix);
 
                 var path = context.path.concat([node.id]); 
                 var pathID = path.join('-');
 
                 nodes[node.id] = node;
 
-                var pathInfos = { 
-                    "worldMatrix" : worldMatrix,
-                    "normalMatrix" : mat3.create(),
-                    "worldViewMatrix" : mat4.create(),
-                    "path" : path
-                }
+                var pathInfos = {};
+                pathInfos[WORLD] = worldMatrix;
+                pathInfos[WORLDVIEWINVERSETRANSPOSE] = mat3.create();
+                pathInfos[WORLDVIEW] = mat4.create();
+                pathInfos["path"] = path;
 
                 self.addPathIDForNodeID(node.id, pathID);
                 self._pathsInfos[pathID] = pathInfos;
@@ -370,7 +378,9 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
                         cameraNodes = cameraNodes.concat(node);
                 }
 
-                var newContext = { "path" : path, "worldMatrix" : worldMatrix };
+                var newContext = {};
+                newContext["path"] = path;
+                newContext[WORLD] = worldMatrix;
 
                 return newContext;
             } , true, context);
@@ -425,9 +435,9 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
 
             for (var i = 0 ; i < count ; i++) {
                 var pathInfos = this._pathsInfosArray[i];
-                var worldMatrix = pathInfos["worldMatrix"];
-                var worldViewMatrix = pathInfos["worldViewMatrix"];
-                var normalMatrix = pathInfos["normalMatrix"];
+                var worldMatrix = pathInfos[renderer.WORLD];
+                var worldViewMatrix = pathInfos[renderer.WORLDVIEW];
+                var normalMatrix = pathInfos[renderer.WORLDVIEWINVERSETRANSPOSE];
                 mat4.multiply(viewMatrix, worldMatrix, worldViewMatrix);
                 mat4.toInverseMat3(worldViewMatrix, normalMatrix);
                 mat3.transpose(normalMatrix);
