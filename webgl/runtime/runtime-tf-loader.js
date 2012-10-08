@@ -68,6 +68,17 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
         }
     },
 
+    handleImage: {
+        value: function(entryID, description, userInfo) {
+            var imagePath = this.resolvePathIfNeeded(description.path);
+            var imageResource = Object.create(ResourceDescription).init(imagePath, { "path": imagePath });
+            imageResource.type = "image";
+            this.storeEntry(entryID, imageResource, description);
+            return true;
+        }
+    },
+
+
     handleTechnique: {
         value: function(entryID, description, userInfo) {
             var technique = Object.create(Technique);
@@ -142,16 +153,11 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                     var parameters = Object.keys(technique.parameters);
                     parameters.forEach( function(parameter) {
                         if (parameter === "diffuseTexture") {
-                            //FIXME: should...
-                            //1. not be hardcoded
-                            //2. be done in the base class...
-                            //3. be made properly using a texture object
-                            if (typeof technique.parameters.diffuseTexture === "string") {
-                                var imagePath = this.resolvePathIfNeeded(technique.parameters.diffuseTexture);
-                                var imageResource = Object.create(ResourceDescription).init(imagePath, { "path": imagePath });
-                                imageResource.type = "image";
-                                technique.parameters.diffuseTexture = imageResource;               
-                            }
+                            var param =  technique.parameters.diffuseTexture;
+                            if (param.image) {
+                                //FIMXE: implement wrap & filter
+                                technique.parameters.diffuseTexture = this.getEntry(param.image).entry;               
+                            }  
                         }
                         material.parameters[parameter] = technique.parameters[parameter];
                     }, this)

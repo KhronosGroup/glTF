@@ -14,6 +14,17 @@
             "znear": 12.651
         }
     },
+    "images": {
+        "image_0": {
+            "path": "artezin_bottle.jpg"
+        },
+        "image_1": {
+            "path": "Wood_Cherry_Original_.jpg"
+        },
+        "image_2": {
+            "path": "_2004_old_vine_zinfandel_btl_xlg.jpg"
+        }
+    },
     "materials": {
         "material.0": {
             "name": "",
@@ -51,7 +62,13 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": "Wood_Cherry_Original_.jpg"
+                        "diffuseTexture": {
+                            "image": "image_1",
+                            "maxFilter": "LINEAR",
+                            "minFilter": "LINEAR",
+                            "wrapS": "REPEAT",
+                            "wrapT": "REPEAT"
+                        }
                     }
                 }
             }
@@ -78,7 +95,13 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": "_2004_old_vine_zinfandel_btl_xlg.jpg"
+                        "diffuseTexture": {
+                            "image": "image_2",
+                            "maxFilter": "LINEAR",
+                            "minFilter": "LINEAR",
+                            "wrapS": "REPEAT",
+                            "wrapT": "REPEAT"
+                        }
                     }
                 }
             }
@@ -104,7 +127,13 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": "artezin_bottle.jpg"
+                        "diffuseTexture": {
+                            "image": "image_0",
+                            "maxFilter": "LINEAR",
+                            "minFilter": "LINEAR",
+                            "wrapS": "REPEAT",
+                            "wrapT": "REPEAT"
+                        }
                     }
                 }
             }

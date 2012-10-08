@@ -494,15 +494,19 @@ namespace DAE2JSON
         }
 
         // ----
-
+        
+        
         shared_ptr <JSONExport::JSONObject> buffersObject(new JSONExport::JSONObject());
         shared_ptr <JSONExport::JSONObject> bufferObject = this->_writer.serializeBuffer(sharedBuffer.get(), 0);
 
         this->_rootJSONObject->setValue("buffers", buffersObject);
         buffersObject->setValue(sharedBufferID, bufferObject);
         
-        // ----
+        //---- write images
 
+//typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
+        
+        //--- 
         this->_rootJSONObject->write(&this->_writer);
                 
         bool sceneFlatteningEnabled = true;
@@ -1182,6 +1186,7 @@ namespace DAE2JSON
                 const Sampler* sampler = samplers[diffuseTexture.getSamplerId()]; 
                 const UniqueId& imageUID = sampler->getSourceImage();
                 
+                //TODO: remove this from here
                 COLLADABU::URI imageURI = this->_imageIdToImageURL[uniqueIdWithType("image",imageUID)];               
                 
                 std::string pathDir = imageURI.getPathDir();
@@ -1193,7 +1198,17 @@ namespace DAE2JSON
                 }
                 //FIXME: handle absolute path case
                 //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
-                parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
+                
+                //parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
+                shared_ptr <JSONExport::JSONObject> sampler2D(new JSONExport::JSONObject());
+                
+                sampler2D->setString("wrapS", "REPEAT");
+                sampler2D->setString("wrapT", "REPEAT");
+                sampler2D->setString("minFilter", "LINEAR");
+                sampler2D->setString("maxFilter", "LINEAR");
+                sampler2D->setString("image", uniqueIdWithType("image",imageUID));
+                
+                parameters->setValue("diffuseTexture", sampler2D);
             }
             
             if (!isOpaque(effectCommon)) {
@@ -1217,7 +1232,7 @@ namespace DAE2JSON
             this->_rootJSONObject->setValue("cameras", camerasObject);
         }
         
-        shared_ptr <JSONExport::JSONObject> cameraObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+        shared_ptr <JSONExport::JSONObject> cameraObject(new JSONExport::JSONObject());
         
         std::string id = uniqueIdWithType("camera", camera->getUniqueId());
         
@@ -1295,9 +1310,28 @@ namespace DAE2JSON
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeImage( const COLLADAFW::Image* image )
+	bool DAE2JSONWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
 	{
-        this->_imageIdToImageURL[uniqueIdWithType("image",image->getUniqueId()) ] = image->getImageURI();       
+        shared_ptr <JSONExport::JSONObject> images = createJSONObjectIfNeededForObject(this->_rootJSONObject, "images");
+        shared_ptr <JSONExport::JSONObject> image(new JSONExport::JSONObject());
+
+        images->setValue(uniqueIdWithType("image",openCOLLADAImage->getUniqueId()), image);
+        
+        std::string pathDir = openCOLLADAImage->getImageURI().getPathDir();
+        std::string imagePath = pathDir + openCOLLADAImage->getImageURI().getPathFile();
+        //parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
+        
+        /*
+        bool relativePath = true;
+        if (pathDir.size() > 0) {
+            if ((pathDir[0] != '.') || (pathDir[0] == '/')) {
+                relativePath = false;
+            }
+        }*/
+        
+        image->setString("path", imagePath);
+        
+        this->_imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = openCOLLADAImage->getImageURI();       
         return true;        
 	}
     
