@@ -443,12 +443,21 @@ var SceneRenderer = exports.SceneRenderer = Object.create(Object.prototype, {
                 mat3.transpose(normalMatrix);
             }
 
+            var nonOpaquePassesWithPrimitives = [];
             var keys = Object.keys(this._primitivesPerPass);
             keys.forEach( function(key) {
                 var passWithPrimitives = this._primitivesPerPass[key];
-                renderer.renderPrimitivesWithPass(passWithPrimitives.primitives, passWithPrimitives.pass);
+                var states = passWithPrimitives.pass.states;
+                if (states.BLEND) {
+                    nonOpaquePassesWithPrimitives.push(passWithPrimitives);
+                } else {
+                    renderer.renderPrimitivesWithPass(passWithPrimitives.primitives, passWithPrimitives.pass);
+                }
             }, this);
 
+            nonOpaquePassesWithPrimitives.forEach( function(passWithPrimitives) {
+                renderer.renderPrimitivesWithPass(passWithPrimitives.primitives, passWithPrimitives.pass);
+            }, this);
         }
     },
 
