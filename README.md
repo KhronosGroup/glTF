@@ -50,6 +50,7 @@ It has been tested on OSX, but all the components involved are cross platform. T
 #### Viewer setup 
 1. git clone https://github.com/fabrobinet/collada2json.git
 2. git submodule update --init --recursive
+3. git submodule foreach git pull origin master
 
 #### JSON Format description
 
