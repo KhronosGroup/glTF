@@ -55,7 +55,7 @@ limitations under the License.
     </library_lights>
     <library_images>
         <image id="file2" name="file2" depth="1">
-            <init_from>images/duckCM.png</init_from>
+            <init_from>duckCM.png</init_from>
         </image>
     </library_images>
     <library_materials>

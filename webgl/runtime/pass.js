@@ -192,24 +192,6 @@ exports.ProgramPass = Object.create(Pass, {
     _states: { value: null, writable: true },
     _program: { value: null, writable: true },
 
-    attributes: {
-        get: function() {
-            return this._attributes;
-        },
-        set: function(value) {
-            this._attributes = value;
-        }
-    },
-
-    uniforms: {
-        get: function() {
-            return this._uniforms;
-        },
-        set: function(value) {
-            this._uniforms = value;
-        }
-    },
-
     states: {
         get: function() {
             return this._states;

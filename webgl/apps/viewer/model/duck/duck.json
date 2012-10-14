@@ -10,78 +10,90 @@
         "camera_0": {
             "aspect_ratio": 1.5,
             "projection": "perspective",
-            "type": "camera",
             "yfov": 37.8492,
             "zfar": 10000,
             "znear": 1
         }
     },
+    "images": {
+        "image_0": {
+            "path": "duckCM.png"
+        }
+    },
     "materials": {
         "material.0": {
-            "inputs": {
-                "diffuseTexture": "duckCM.png"
-            },
             "name": "blinn3",
             "technique": "lambert1",
-            "type": "material"
+            "techniques": {
+                "lambert1": {
+                    "parameters": {
+                        "diffuseTexture": {
+                            "image": "image_0",
+                            "maxFilter": "LINEAR",
+                            "minFilter": "LINEAR",
+                            "wrapS": "REPEAT",
+                            "wrapT": "REPEAT"
+                        }
+                    }
+                }
+            }
         }
     },
     "meshes": {
         "LOD3spShape-lib": {
-            "accessor.10": {
-                "buffer": "duck.bin",
-                "byteOffset": 82848,
-                "byteStride": 8,
-                "count": 2399,
-                "elementType": "Float32",
-                "elementsPerValue": 2,
-                "max": [
-                    0.983346,
-                    0.980037
-                ],
-                "min": [
-                    0.026409,
-                    0.019963
-                ],
-                "type": "accessor"
-            },
-            "accessor.8": {
-                "buffer": "duck.bin",
-                "byteOffset": 25272,
-                "byteStride": 12,
-                "count": 2399,
-                "elementType": "Float32",
-                "elementsPerValue": 3,
-                "max": [
-                    96.1799,
-                    163.97,
-                    53.9252
-                ],
-                "min": [
-                    -69.2985,
-                    9.92937,
-                    -61.3282
-                ],
-                "type": "accessor"
-            },
-            "accessor.9": {
-                "buffer": "duck.bin",
-                "byteOffset": 54060,
-                "byteStride": 12,
-                "count": 2399,
-                "elementType": "Float32",
-                "elementsPerValue": 3,
-                "max": [
-                    0.999599,
-                    0.999581,
-                    0.998436
-                ],
-                "min": [
-                    -0.999084,
-                    -1,
-                    -0.999832
-                ],
-                "type": "accessor"
+            "accessors": {
+                "accessor.10": {
+                    "buffer": "duck.bin",
+                    "byteOffset": 25272,
+                    "byteStride": 12,
+                    "count": 2399,
+                    "elementType": "Float32",
+                    "elementsPerValue": 3,
+                    "max": [
+                        96.1799,
+                        163.97,
+                        53.9252
+                    ],
+                    "min": [
+                        -69.2985,
+                        9.92937,
+                        -61.3282
+                    ]
+                },
+                "accessor.11": {
+                    "buffer": "duck.bin",
+                    "byteOffset": 54060,
+                    "byteStride": 12,
+                    "count": 2399,
+                    "elementType": "Float32",
+                    "elementsPerValue": 3,
+                    "max": [
+                        0.999599,
+                        0.999581,
+                        0.998436
+                    ],
+                    "min": [
+                        -0.999084,
+                        -1,
+                        -0.999832
+                    ]
+                },
+                "accessor.12": {
+                    "buffer": "duck.bin",
+                    "byteOffset": 82848,
+                    "byteStride": 8,
+                    "count": 2399,
+                    "elementType": "Float32",
+                    "elementsPerValue": 2,
+                    "max": [
+                        0.983346,
+                        0.980037
+                    ],
+                    "min": [
+                        0.026409,
+                        0.019963
+                    ]
+                }
             },
             "name": "LOD3spShape",
             "primitives": [
@@ -94,34 +106,49 @@
                     },
                     "material": "material.0",
                     "primitive": "TRIANGLES",
-                    "type": "primitive",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.8",
+                            "accessor": "accessor.10",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.9",
+                            "accessor": "accessor.11",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.10",
+                            "accessor": "accessor.12",
                             "semantic": "TEXCOORD"
                         }
                     ]
                 }
-            ],
-            "type": "mesh"
+            ]
         }
     },
     "nodes": {
         "node_0": {
             "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
             "meshes": [
                 "LOD3spShape-lib"
             ],
-            "name": "LOD3sp",
-            "type": "node"
+            "name": "LOD3sp"
         },
         "node_1": {
             "camera": "camera_0",
@@ -144,8 +171,7 @@
                 -431.078,
                 1
             ],
-            "name": "camera1",
-            "type": "node"
+            "name": "camera1"
         },
         "node_2": {
             "children": [],
@@ -167,51 +193,84 @@
                 -292.179,
                 1
             ],
-            "name": "directionalLight1",
-            "type": "node"
+            "name": "directionalLight1"
         },
         "root": {
             "children": [
                 "node_0",
                 "node_1",
                 "node_2"
-            ],
-            "type": "node"
+            ]
         }
     },
     "scenes": {
         "defaultScene": {
-            "node": "root",
-            "type": "scene"
+            "node": "root"
         }
     },
     "shaders": {
         "lambert1Fs": {
-            "path": "lambert1Fs.glsl",
-            "type": "shader"
+            "path": "lambert1Fs.glsl"
         },
         "lambert1Vs": {
-            "path": "lambert1Vs.glsl",
-            "type": "shader"
+            "path": "lambert1Vs.glsl"
         }
     },
     "techniques": {
         "lambert1": {
-            "defaultPass": {
-                "inputs": {
-                    "diffuseColor": {
-                        "symbol": "u_diffuseColor"
-                    }
-                },
-                "states": {
-                    "BLEND": false
-                },
-                "type": "pass",
-                "x-shader/x-fragment": "lambert1Fs",
-                "x-shader/x-vertex": "lambert1Vs"
-            },
+            "parameters": {},
             "pass": "defaultPass",
-            "type": "technique"
+            "passes": {
+                "defaultPass": {
+                    "program": {
+                        "attributes": [
+                            {
+                                "semantic": "VERTEX",
+                                "symbol": "vert",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "normal",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "TEXCOORD",
+                                "symbol": "texcoord",
+                                "type": "FLOAT_VEC2"
+                            }
+                        ],
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_mvMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuseTexture",
+                                "symbol": "u_diffuseTexture",
+                                "type": "SAMPLER_2D"
+                            }
+                        ],
+                        "x-shader/x-fragment": "lambert1Fs",
+                        "x-shader/x-vertex": "lambert1Vs"
+                    },
+                    "states": {
+                        "BLEND": false
+                    },
+                    "type": "program"
+                }
+            }
         }
     },
     "version": "0.1"

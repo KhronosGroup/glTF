@@ -108,14 +108,17 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                         pass.id = entryID+"_"+rootPassID;
                         var vsShaderEntry = this.getEntry(program[GLSLProgram.VERTEX_SHADER]);
                         var fsShaderEntry = this.getEntry(program[GLSLProgram.FRAGMENT_SHADER]);
-                        var programs = {};
-                        programs[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
-                        programs[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
-                        pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", programs);
+
+                        var progInfo = {};
+                        progInfo[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
+                        progInfo[GLSLProgram.FRAGMENT_SHADER] = fsShaderEntry.entry;
+                        progInfo["uniforms"] = program.uniforms;
+                        progInfo["attributes"]= program.attributes;
+
+                        pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", progInfo);
                         pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
+
                         pass.states = passDescription.states;
-                        pass.uniforms = passDescription.uniforms;
-                        pass.attributes = passDescription.attributes;
                         passes[passName] = pass;
                     } else {
                         console.log("ERROR: A Pass with type=program must have a program property");

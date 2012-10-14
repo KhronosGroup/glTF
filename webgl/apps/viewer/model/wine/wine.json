@@ -11806,48 +11806,48 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": [
-                        {
-                            "semantic": "VERTEX",
-                            "symbol": "vert",
-                            "type": "FLOAT_VEC3"
-                        },
-                        {
-                            "semantic": "NORMAL",
-                            "symbol": "normal",
-                            "type": "FLOAT_VEC3"
-                        }
-                    ],
                     "program": {
+                        "attributes": [
+                            {
+                                "semantic": "VERTEX",
+                                "symbol": "vert",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "normal",
+                                "type": "FLOAT_VEC3"
+                            }
+                        ],
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_mvMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuseColor",
+                                "symbol": "u_diffuseColor",
+                                "type": "FLOAT_VEC4"
+                            }
+                        ],
                         "x-shader/x-fragment": "lambert0Fs",
                         "x-shader/x-vertex": "lambert0Vs"
                     },
                     "states": {
                         "BLEND": false
                     },
-                    "type": "program",
-                    "uniforms": [
-                        {
-                            "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix",
-                            "type": "FLOAT_MAT3"
-                        },
-                        {
-                            "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "parameter": "diffuseColor",
-                            "symbol": "u_diffuseColor",
-                            "type": "FLOAT_VEC4"
-                        }
-                    ]
+                    "type": "program"
                 }
             }
         },
@@ -11856,53 +11856,53 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": [
-                        {
-                            "semantic": "VERTEX",
-                            "symbol": "vert",
-                            "type": "FLOAT_VEC3"
-                        },
-                        {
-                            "semantic": "NORMAL",
-                            "symbol": "normal",
-                            "type": "FLOAT_VEC3"
-                        },
-                        {
-                            "semantic": "TEXCOORD",
-                            "symbol": "texcoord",
-                            "type": "FLOAT_VEC2"
-                        }
-                    ],
                     "program": {
+                        "attributes": [
+                            {
+                                "semantic": "VERTEX",
+                                "symbol": "vert",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "normal",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "TEXCOORD",
+                                "symbol": "texcoord",
+                                "type": "FLOAT_VEC2"
+                            }
+                        ],
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_mvMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuseTexture",
+                                "symbol": "u_diffuseTexture",
+                                "type": "SAMPLER_2D"
+                            }
+                        ],
                         "x-shader/x-fragment": "lambert1Fs",
                         "x-shader/x-vertex": "lambert1Vs"
                     },
                     "states": {
                         "BLEND": false
                     },
-                    "type": "program",
-                    "uniforms": [
-                        {
-                            "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix",
-                            "type": "FLOAT_MAT3"
-                        },
-                        {
-                            "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "parameter": "diffuseTexture",
-                            "symbol": "u_diffuseTexture",
-                            "type": "SAMPLER_2D"
-                        }
-                    ]
+                    "type": "program"
                 }
             }
         },
@@ -11917,53 +11917,53 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "attributes": [
-                        {
-                            "semantic": "VERTEX",
-                            "symbol": "vert",
-                            "type": "FLOAT_VEC3"
-                        },
-                        {
-                            "semantic": "NORMAL",
-                            "symbol": "normal",
-                            "type": "FLOAT_VEC3"
-                        }
-                    ],
                     "program": {
+                        "attributes": [
+                            {
+                                "semantic": "VERTEX",
+                                "symbol": "vert",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "normal",
+                                "type": "FLOAT_VEC3"
+                            }
+                        ],
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_mvMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuseColor",
+                                "symbol": "u_diffuseColor",
+                                "type": "FLOAT_VEC4"
+                            },
+                            {
+                                "parameter": "transparency",
+                                "symbol": "u_transparency",
+                                "type": "FLOAT"
+                            }
+                        ],
                         "x-shader/x-fragment": "lambert2Fs",
                         "x-shader/x-vertex": "lambert2Vs"
                     },
                     "states": {
                         "BLEND": true
                     },
-                    "type": "program",
-                    "uniforms": [
-                        {
-                            "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix",
-                            "type": "FLOAT_MAT3"
-                        },
-                        {
-                            "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix",
-                            "type": "FLOAT_MAT4"
-                        },
-                        {
-                            "parameter": "diffuseColor",
-                            "symbol": "u_diffuseColor",
-                            "type": "FLOAT_VEC4"
-                        },
-                        {
-                            "parameter": "transparency",
-                            "symbol": "u_transparency",
-                            "type": "FLOAT"
-                        }
-                    ]
+                    "type": "program"
                 }
             }
         }

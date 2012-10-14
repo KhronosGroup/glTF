@@ -501,11 +501,7 @@ namespace DAE2JSON
 
         this->_rootJSONObject->setValue("buffers", buffersObject);
         buffersObject->setValue(sharedBufferID, bufferObject);
-        
-        //---- write images
-
-//typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
-        
+                
         //--- 
         this->_rootJSONObject->write(&this->_writer);
                 
@@ -1137,7 +1133,7 @@ namespace DAE2JSON
             shared_ptr <JSONExport::JSONObject> parameters = createJSONObjectIfNeededForObject(techniqueObject, "parameters");
             
             shared_ptr <JSONExport::JSONArray> uniforms(new JSONExport::JSONArray());
-            pass->setValue("uniforms", uniforms);
+            program->setValue("uniforms", uniforms);
             for (unsigned int i = 0 ; i < allUniforms.size() ; i++) {
                 shared_ptr <JSONExport::JSONObject> uniform(new JSONExport::JSONObject());
                 std::string symbol = allUniforms[i];
@@ -1161,7 +1157,7 @@ namespace DAE2JSON
             }
             
             shared_ptr <JSONExport::JSONArray> attributes(new JSONExport::JSONArray());
-            pass->setValue("attributes", attributes);
+            program->setValue("attributes", attributes);
             for (unsigned int i = 0 ; i < allAttributes.size() ; i++) {
                 shared_ptr <JSONExport::JSONObject> attribute(new JSONExport::JSONObject());
                 std::string semantic;

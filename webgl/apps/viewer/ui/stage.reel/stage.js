@@ -173,7 +173,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
                 this.selectModel.content.push( { "name": "Buggy", "path":"model/rambler/Rambler.json"} );
                 this.selectModel.content.push( { "name": "SuperMurdoch", "path":"model/SuperMurdoch/SuperMurdoch.json"} );
                 this.selectModel.content.push( { "name": "Wine", "path":"model/wine/wine.json"} );
-                this.selectModel.content.push( { "name": "Chateau", "path":"model/Chateau-FH/models/warehouse_model.json"} );
+                this.selectModel.content.push( { "name": "duck", "path":"model/duck/duck.json"} );
                 this.selectModel.needsDraw = true;
                 this.model = this.selectModel.content[0].path;
             }

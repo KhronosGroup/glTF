@@ -319,7 +319,10 @@ exports.Renderer = Object.create(Object, {
             var pass = primitive.material.technique.rootPass;
             var i;
             var currentTexture = 0;
-            var uniforms = pass.uniforms;
+
+
+            //----- bind uniforms -----
+            var uniforms = pass.program.description.uniforms;
             var parameters = primitive.material.parameters;
             for (i = 0; i < uniforms.length ; i++) {
                 var uniform = uniforms[i];
@@ -357,8 +360,7 @@ exports.Renderer = Object.create(Object, {
 
 
             //----- bind attributes -----
-
-            var attributes = pass.attributes;
+            var attributes = pass.program.description.attributes;
 
             for (i = 0 ; i < attributes.length ; i++) {
                 var attribute = attributes[i];
