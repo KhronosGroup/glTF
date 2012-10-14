@@ -138,6 +138,7 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
         value: function(entryID, description, userInfo) {
             var material = Object.create(Material).init(entryID);
             this.storeEntry(entryID, material, description);
+
             //Simplification - Just take the selected technique
             material.name = description.name;
             var techniqueEntry = this.getEntry(description.technique);
@@ -157,10 +158,14 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                     parameters.forEach( function(parameter) {
                         if (parameter === "diffuseTexture") {
                             var param = technique.parameters.diffuseTexture;
-                            if (param.image) {
-                                //FIMXE: implement wrap & filter
-                                technique.parameters.diffuseTexture = this.getEntry(param.image).entry;               
-                            }  
+                            if (param) {
+                                var sampler2D = Object.create(ResourceDescription).init(entryID+sampler2D, param);
+                                sampler2D.type = "SAMPLER_2D"
+                                if (param.image) {
+                                    technique.parameters.diffuseTexture = sampler2D;
+                                    param.image = this.getEntry(param.image).entry;               
+                                }    
+                            }
                         }
                         material.parameters[parameter] = technique.parameters[parameter];
                     }, this)

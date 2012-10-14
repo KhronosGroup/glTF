@@ -87,7 +87,6 @@ var global = window;
                         this.requests.unshift(request);
                         this.range[0] = request.range[0];
                     } else {
-                        debugger;
                         console.log("ERROR: should not reach");
                     }
                 }
@@ -302,7 +301,6 @@ var global = window;
                         return treeNode;
                     }
                 } else {
-                    debugger;
                     console.log("ERROR: should not reach");
                 }
             }
@@ -356,7 +354,6 @@ var global = window;
         removeMin: {
             value: function() {
                 if (this.parent) {
-                    debugger;
                 }
 
                 var node = this;
@@ -499,7 +496,6 @@ var global = window;
             enumerable: false,
             value: function(resourceID, resource) {
                 if (!resourceID) {
-                    debugger;
                     console.log("ERROR: entry does not contain id, cannot store");
                     return;
                 }
@@ -776,7 +772,7 @@ var global = window;
         },
 
         _handleImageLoading: {
-            value: function(resource, delegate, ctx) {
+            value: function(resource, textureLoadedCallback, ctx) {
                 //TODO: unify with binaries
                 var resourceStatus = this._resourcesStatus[resource.id];
                 var status = null;
@@ -786,37 +782,45 @@ var global = window;
                 }
                 this._resourcesStatus[resource.id] = { status: "loading" };
                 var self = this;
-                function handleTextureLoaded(image, id, gl) { 
-
-                    var canvas = document.createElement("canvas");
-                    canvas.width = 512;//nextHighestPowerOfTwo(image.width);
-                    canvas.height = 512;//nextHighestPowerOfTwo(image.height);
-                    var graphicsContext = canvas.getContext("2d");
-                    graphicsContext.drawImage(image, 0, 0, parseInt(canvas.width), parseInt(canvas.height));
-                    canvas.id = image.id;
-                    image = canvas;
-
-                    var texture = gl.createTexture(); 
-                    gl.bindTexture(gl.TEXTURE_2D, texture);  
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
-                    gl.bindTexture(gl.TEXTURE_2D, null);  
-                    delete self._resourcesStatus[id];
-                    var convertedResource = delegate.convert(texture, gl);
-                    self._storeResource(id, convertedResource);
-                    delegate.resourceAvailable(convertedResource, gl);
-                    self.fireResourceAvailable.call(self, id);
-                }  
 
                 if (resource.description.path) {
                     var imageObject = new Image();  
-                    imageObject.onload = function() { handleTextureLoaded(imageObject, resource.id, ctx); }  
+                    imageObject.onload = function() { 
+                        delete self._resourcesStatus[resource.id];
+                        self._storeResource(resource.id, imageObject);
+                        textureLoadedCallback(imageObject, resource.id, ctx); 
+                    }  
                     imageObject.src = resource.description.path;  
                 } else if (resource.description.image) {
-                    handleTextureLoaded(resource.description.image, resource.id, ctx);                  
+                    textureLoadedCallback(resource.description.image, resource.id, ctx);                  
+                }
+            }
+        },
+
+        _handleSampler2DLoading: {
+            value: function(resource, delegate, ctx) {
+                //TODO: unify with binaries
+                var resourceStatus = this._resourcesStatus[resource.id];
+                var status = null;
+                if (resourceStatus) {
+                    if (resourceStatus.status === "loading" )
+                        return;
+                }
+                this._resourcesStatus[resource.id] = { status: "loading" };
+
+                var self = this;
+                if (resource.description.image) {
+                    this._handleImageLoading(resource.description.image, 
+                    function(image, id, ctx) {
+                        var gl = ctx;                            
+                        var convertedResource = delegate.convert(resource, image);
+
+                        delete self._resourcesStatus[resource.id];
+
+                        self._storeResource(resource.id, convertedResource);
+                        delegate.resourceAvailable(convertedResource, gl);
+                        self.fireResourceAvailable.call(self, resource.id);
+                    }, ctx);
                 }
             }
         },
@@ -843,8 +847,9 @@ var global = window;
                     this._handleShaderLoading(resource, delegate, ctx);
                 } else if (resource.type === "image") {
                     this._handleImageLoading(resource, delegate, ctx);
+                } else if (resource.type === "SAMPLER_2D") {
+                    this._handleSampler2DLoading(resource, delegate, ctx);
                 } else {
-
                     this._handleTypedArrayLoading(resource, delegate, ctx);
                 }
 

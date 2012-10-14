@@ -250,14 +250,38 @@ exports.Renderer = Object.create(Object, {
 
     textureDelegate: {
         value: {
-              handleError: function(errorCode, info) {
+            webGLContext:  {
+                value: null, writable: true
+            },
+
+            handleError: function(errorCode, info) {
                 // FIXME: report error
                 console.log("ERROR:textureDelegate:"+errorCode+" :"+info);
             },
-        
+
              //should be called only once
             convert: function (resource, ctx) {
-                return resource;
+                var image = ctx;
+                var gl = this.webGLContext;
+                var canvas = document.createElement("canvas");
+                
+                canvas.width = 512;//nextHighestPowerOfTwo(image.width);
+                canvas.height = 512;//nextHighestPowerOfTwo(image.height);
+                var graphicsContext = canvas.getContext("2d");
+                graphicsContext.drawImage(image, 0, 0, parseInt(canvas.width), parseInt(canvas.height));
+                canvas.id = image.id;
+                image = canvas;
+                        
+                var texture = gl.createTexture(); 
+                gl.bindTexture(gl.TEXTURE_2D, texture);  
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
+                gl.bindTexture(gl.TEXTURE_2D, null);  
+
+                return texture;
             },
         
             resourceAvailable: function (glResource, ctx) {
@@ -339,6 +363,7 @@ exports.Renderer = Object.create(Object, {
                 var uniformIsSampler2D = program.getTypeForSymbol(symbol) === gl.SAMPLER_2D;
                 if (uniformIsSampler2D) {
                     var image = value;
+                    this.textureDelegate.webGLContext = this.webGLContext;
                     var texture = this.resourceManager.getResource(image, this.textureDelegate, this.webGLContext);
                     if (texture) {
                         gl.activeTexture(gl.TEXTURE0 + currentTexture);
