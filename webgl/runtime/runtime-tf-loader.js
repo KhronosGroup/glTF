@@ -153,7 +153,7 @@ exports.RuntimeTFLoader = Object.create(WebGLTFLoader, {
                     var parameters = Object.keys(technique.parameters);
                     parameters.forEach( function(parameter) {
                         if (parameter === "diffuseTexture") {
-                            var param =  technique.parameters.diffuseTexture;
+                            var param = technique.parameters.diffuseTexture;
                             if (param.image) {
                                 //FIMXE: implement wrap & filter
                                 technique.parameters.diffuseTexture = this.getEntry(param.image).entry;               

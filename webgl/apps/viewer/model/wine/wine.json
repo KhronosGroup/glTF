@@ -11809,11 +11809,13 @@
                     "attributes": [
                         {
                             "semantic": "VERTEX",
-                            "symbol": "vert"
+                            "symbol": "vert",
+                            "type": "FLOAT_VEC3"
                         },
                         {
                             "semantic": "NORMAL",
-                            "symbol": "normal"
+                            "symbol": "normal",
+                            "type": "FLOAT_VEC3"
                         }
                     ],
                     "program": {
@@ -11827,19 +11829,23 @@
                     "uniforms": [
                         {
                             "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix"
+                            "symbol": "u_mvMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix"
+                            "symbol": "u_normalMatrix",
+                            "type": "FLOAT_MAT3"
                         },
                         {
                             "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix"
+                            "symbol": "u_projMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "parameter": "diffuseColor",
-                            "symbol": "u_diffuseColor"
+                            "symbol": "u_diffuseColor",
+                            "type": "FLOAT_VEC4"
                         }
                     ]
                 }
@@ -11853,15 +11859,18 @@
                     "attributes": [
                         {
                             "semantic": "VERTEX",
-                            "symbol": "vert"
+                            "symbol": "vert",
+                            "type": "FLOAT_VEC3"
                         },
                         {
                             "semantic": "NORMAL",
-                            "symbol": "normal"
+                            "symbol": "normal",
+                            "type": "FLOAT_VEC3"
                         },
                         {
                             "semantic": "TEXCOORD",
-                            "symbol": "texcoord"
+                            "symbol": "texcoord",
+                            "type": "FLOAT_VEC2"
                         }
                     ],
                     "program": {
@@ -11875,19 +11884,23 @@
                     "uniforms": [
                         {
                             "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix"
+                            "symbol": "u_mvMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix"
+                            "symbol": "u_normalMatrix",
+                            "type": "FLOAT_MAT3"
                         },
                         {
                             "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix"
+                            "symbol": "u_projMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "parameter": "diffuseTexture",
-                            "symbol": "u_diffuseTexture"
+                            "symbol": "u_diffuseTexture",
+                            "type": "SAMPLER_2D"
                         }
                     ]
                 }
@@ -11907,11 +11920,13 @@
                     "attributes": [
                         {
                             "semantic": "VERTEX",
-                            "symbol": "vert"
+                            "symbol": "vert",
+                            "type": "FLOAT_VEC3"
                         },
                         {
                             "semantic": "NORMAL",
-                            "symbol": "normal"
+                            "symbol": "normal",
+                            "type": "FLOAT_VEC3"
                         }
                     ],
                     "program": {
@@ -11925,23 +11940,28 @@
                     "uniforms": [
                         {
                             "semantic": "WORLDVIEW",
-                            "symbol": "u_mvMatrix"
+                            "symbol": "u_mvMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                            "symbol": "u_normalMatrix"
+                            "symbol": "u_normalMatrix",
+                            "type": "FLOAT_MAT3"
                         },
                         {
                             "semantic": "PROJECTION",
-                            "symbol": "u_projMatrix"
+                            "symbol": "u_projMatrix",
+                            "type": "FLOAT_MAT4"
                         },
                         {
                             "parameter": "diffuseColor",
-                            "symbol": "u_diffuseColor"
+                            "symbol": "u_diffuseColor",
+                            "type": "FLOAT_VEC4"
                         },
                         {
                             "parameter": "transparency",
-                            "symbol": "u_transparency"
+                            "symbol": "u_transparency",
+                            "type": "FLOAT"
                         }
                     ]
                 }

@@ -929,6 +929,65 @@ namespace DAE2JSON
     static std::string WORLDVIEWINVERSETRANSPOSE = "WORLDVIEWINVERSETRANSPOSE";
     static std::string PROJECTION = "PROJECTION";
     
+    /* uniform types, derived from
+     GL_FLOAT,
+     GL_FLOAT_VEC2
+     GL_FLOAT_VEC3
+     GL_FLOAT_VEC4
+     GL_INT
+     GL_INT_VEC2
+     GL_INT_VEC3
+     GL_INT_VEC4
+     GL_BOOL
+     GL_BOOL_VEC2
+     GL_BOOL_VEC3
+     GL_BOOL_VEC4
+     GL_FLOAT_MAT2
+     GL_FLOAT_MAT3
+     GL_FLOAT_MAT4
+     GL_SAMPLER_2D
+     GL_SAMPLER_CUBE
+    */
+
+    static std::string typeForUniform(const std::string& symbol) {
+        static std::map<std::string , std::string> typeForUniform;
+        if (typeForUniform.empty()) {
+            typeForUniform[kModelViewMatrixUniform] = "FLOAT_MAT4";
+            typeForUniform[kNormalMatrixUniform] = "FLOAT_MAT3";
+            typeForUniform[kProjectionMatrixUniform] = "FLOAT_MAT4";
+            typeForUniform[kDiffuseColorUniform] = "FLOAT_VEC4";
+            typeForUniform[kDiffuseTextureUniform] = "SAMPLER_2D";
+            typeForUniform[kTransparencyUniform] = "FLOAT";
+        }
+        return typeForUniform[symbol];
+    }
+    
+    /* attribute types derived from
+     GL_FLOAT
+     GL_FLOAT_VEC2
+     GL_FLOAT_VEC3
+     GL_FLOAT_VEC4
+     GL_FLOAT_MAT2
+     GL_FLOAT_MAT3
+     GL_FLOAT_MAT4
+     GL_FLOAT_MAT2x3
+     GL_FLOAT_MAT2x4
+     GL_FLOAT_MAT3x2
+     GL_FLOAT_MAT3x4
+     GL_FLOAT_MAT4x2
+     GL_FLOAT_MAT4x3
+     */
+
+    static std::string typeForAttribute(const std::string& symbol) {
+        static std::map<std::string , std::string> typeForAttribute;
+        if (typeForAttribute.empty()) {
+            typeForAttribute[kVertexAttribute] = "FLOAT_VEC3";
+            typeForAttribute[kNormalAttribute] = "FLOAT_VEC3";
+            typeForAttribute[kTexcoordAttribute] = "FLOAT_VEC2";
+        }
+        return typeForAttribute[symbol];
+    }
+
     static std::string parameterForUniform(const std::string& symbol) {
         static std::map<std::string , std::string> symbolToParameter;
         if (symbolToParameter.empty()) {
@@ -1097,6 +1156,8 @@ namespace DAE2JSON
                 } else {
                     uniform->setString("semantic", semanticForUniform(symbol));
                 }
+                
+                uniform->setString("type", typeForUniform(symbol));
             }
             
             shared_ptr <JSONExport::JSONArray> attributes(new JSONExport::JSONArray());
@@ -1119,6 +1180,7 @@ namespace DAE2JSON
                 
                 attribute->setString("semantic", semantic);
                 attribute->setString("symbol", symbol);
+                attribute->setString("type", typeForAttribute(symbol));
                 
                 //TODO: handle multiple sets => that would be
                 //vertexAttribute->setValue("set", set);
