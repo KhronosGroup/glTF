@@ -261,7 +261,16 @@ exports.Renderer = Object.create(Object, {
                     glFilter = gl.LINEAR;
                 } else if (filter === "NEAREST") {
                     glFilter = gl.NEAREST;
-                } 
+                } else if (filter === "NEAREST_MIPMAP_NEAREST") {
+                    glFilter = gl.NEAREST_MIPMAP_NEAREST;
+                } else if (filter === "LINEAR_MIPMAP_NEAREST") {
+                    glFilter = gl.LINEAR_MIPMAP_NEAREST;
+                } else if (filter === "NEAREST_MIPMAP_LINEAR") {
+                    glFilter = gl.NEAREST_MIPMAP_LINEAR;
+                } else if (filter === "LINEAR_MIPMAP_LINEAR") {
+                    glFilter = gl.LINEAR_MIPMAP_LINEAR;
+                }
+
                 return glFilter;
             },
 
@@ -271,9 +280,9 @@ exports.Renderer = Object.create(Object, {
                 if (wrapMode === "REPEAT") {
                     glWrapMode = gl.REPEAT;
                 } else if (wrapMode === "CLAMP_TO_EDGE") {
-                    glWrapMode = gl.NEAREST;
-                } else {
-                    glWrapMode = gl.LINEAR;
+                    glWrapMode = gl.CLAMP_TO_EDGE;
+                } else if (wrapMode === "MIRROR_REPEAT") {
+                    glWrapMode = gl.MIRROR_REPEAT;
                 }
                 return glWrapMode;
             },
@@ -302,7 +311,6 @@ exports.Renderer = Object.create(Object, {
                 var gl = this.webGLContext;
                 var canvas = document.createElement("canvas");
                 
-                //TODO: add mipmaps support
                 //TODO: add compressed textures
 
                 //set default values
@@ -341,6 +349,14 @@ exports.Renderer = Object.create(Object, {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, minFilter);  
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, maxFilter);  
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
+                if ((maxFilter === gl.NEAREST_MIPMAP_NEAREST) ||
+                    (maxFilter === gl.LINEAR_MIPMAP_NEAREST) ||
+                    (maxFilter === gl.NEAREST_MIPMAP_LINEAR) ||
+                    (maxFilter === gl.LINEAR_MIPMAP_LINEAR))
+                {
+                    gl.generateMipmap(gl.TEXTURE_2D);
+                }
+            
                 gl.bindTexture(gl.TEXTURE_2D, null);  
 
                 return texture;
