@@ -254,9 +254,46 @@ exports.Renderer = Object.create(Object, {
                 value: null, writable: true
             },
 
+            getGLFilter: function(filter) {
+                var gl = this.webGLContext;
+                var glFilter = gl.LINEAR;
+                if (filter === "LINEAR") {
+                    glFilter = gl.LINEAR;
+                } else if (filter === "NEAREST") {
+                    glFilter = gl.NEAREST;
+                } 
+                return glFilter;
+            },
+
+            getGLWrapMode: function(wrapMode) {
+                var gl = this.webGLContext;
+                var glWrapMode = gl.REPEAT;
+                if (wrapMode === "REPEAT") {
+                    glWrapMode = gl.REPEAT;
+                } else if (wrapMode === "CLAMP_TO_EDGE") {
+                    glWrapMode = gl.NEAREST;
+                } else {
+                    glWrapMode = gl.LINEAR;
+                }
+                return glWrapMode;
+            },
+
             handleError: function(errorCode, info) {
                 // FIXME: report error
                 console.log("ERROR:textureDelegate:"+errorCode+" :"+info);
+            },
+
+            //nextHighestPowerOfTwo && isPowerOfTwo borrowed from http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences
+            nextHighestPowerOfTwo: function (x) {
+                --x;
+                for (var i = 1; i < 32; i <<= 1) {
+                x = x | x >> i;
+                }
+                return x + 1;
+            },
+
+            isPowerOfTwo: function(x) {
+                return (x & (x - 1)) == 0;
             },
 
              //should be called only once
@@ -265,8 +302,33 @@ exports.Renderer = Object.create(Object, {
                 var gl = this.webGLContext;
                 var canvas = document.createElement("canvas");
                 
-                canvas.width = 512;//nextHighestPowerOfTwo(image.width);
-                canvas.height = 512;//nextHighestPowerOfTwo(image.height);
+                //TODO: add mipmaps support
+                //TODO: add compressed textures
+
+                //set default values
+                var minFilter = this.getGLFilter(resource.description.minFilter);
+                var maxFilter = this.getGLFilter(resource.description.maxFilter);
+                var wrapS = this.getGLWrapMode(resource.description.wrapS);
+                var wrapT = this.getGLWrapMode(resource.description.wrapT);
+
+                if ((wrapS === gl.REPEAT) || (wrapT === gl.REPEAT)) {
+                    var width = parseInt(image.width);
+                    var height = parseInt(image.height);
+
+                    if (!this.isPowerOfTwo(width)) {
+                        width = this.nextHighestPowerOfTwo(width);
+                    }
+                    if (!this.isPowerOfTwo(height)) {
+                        height = this.nextHighestPowerOfTwo(height);
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+
+                } else {
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                }
+
                 var graphicsContext = canvas.getContext("2d");
                 graphicsContext.drawImage(image, 0, 0, parseInt(canvas.width), parseInt(canvas.height));
                 canvas.id = image.id;
@@ -274,10 +336,10 @@ exports.Renderer = Object.create(Object, {
                         
                 var texture = gl.createTexture(); 
                 gl.bindTexture(gl.TEXTURE_2D, texture);  
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);  
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);  
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, minFilter);  
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, maxFilter);  
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
                 gl.bindTexture(gl.TEXTURE_2D, null);  
 
