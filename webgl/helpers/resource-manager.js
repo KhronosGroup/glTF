@@ -539,15 +539,19 @@ var global = window;
                 }
 
                 var xhr = new XMLHttpRequest();
-                 xhr.open('GET', path, true);
+//debugger;				
+                xhr.open('GET', path, true);
                 xhr.responseType = (type === this.ARRAY_BUFFER) ? "arraybuffer" : "text";
+
                 if (request.range) {
                     var header = "bytes=" + request.range[0] + "-" + (request.range[1] - 1);
                     xhr.setRequestHeader("Range", header);
                 }
                 //if this is not specified, 1 "big blob" scenes fails to load.
-                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+//                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
                 xhr.onload = function(e) {
+//debugger;				
+				
                     if ((this.status == 200) || (this.status == 206)) {
                         self._resourcesBeingProcessedCount--;
 
