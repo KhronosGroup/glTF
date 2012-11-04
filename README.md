@@ -1,5 +1,3 @@
-[Update: working on huge cleanup post Siggraph demos + make paper to describe format + use OpenCOLLADA as submodule to easy compile the whole tool...]
-
 ##COLLADA2JSON
 
 
@@ -54,7 +52,7 @@ It has been tested on OSX, but all the components involved are cross platform. T
 
 #### JSON Format description
 
-coming soon...
+in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 #### Converter build instructions
 
