@@ -1,5 +1,3 @@
-[Update: working on huge cleanup post Siggraph demos + make paper to describe format + use OpenCOLLADA as submodule to easy compile the whole tool...]
-
 ##COLLADA2JSON
 
 
@@ -56,7 +54,7 @@ Start a web server in `collada2json/webgl` which contains an `index.html` page l
 
 #### JSON Format description
 
-coming soon...
+in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 #### Converter build instructions
 
