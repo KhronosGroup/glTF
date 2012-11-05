@@ -32,6 +32,12 @@ var DummyLoader = Object.create(WebGLTFLoader, {
         }
     },
 
+    handleImage: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+	
     handleShader: {
         value: function(entryID, description, userInfo) {
             return true;
