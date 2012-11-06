@@ -546,7 +546,7 @@ var global = window;
                     xhr.setRequestHeader("Range", header);
                 }
                 //if this is not specified, 1 "big blob" scenes fails to load.
-//                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+                xhr.setRequestHeader("If-Modified-Since", "Sat, 01 Jan 1970 00:00:00 GMT");
                 xhr.onload = function(e) {
                     if ((this.status == 200) || (this.status == 206)) {
                         self._resourcesBeingProcessedCount--;
