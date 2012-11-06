@@ -52,6 +52,8 @@ It has been tested on OSX, but all the components involved are cross platform. T
 2. git submodule update --init --recursive
 3. git submodule foreach git pull origin master
 
+Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
+
 #### JSON Format description
 
 coming soon...
