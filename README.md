@@ -3,7 +3,9 @@
 
 COLLADA2JSON introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.  
 As an initiative from the COLLADA Working Group, this project stands in Khronos repository.  
-Everyone is welcomed to contribute and provide feedback.  
+Everyone is welcomed to contribute and provide feedback. 
+
+**This is a work in progress and not an official Khronos-ratified specification.**
 
 #### JSON Format
 
