@@ -63,7 +63,7 @@ namespace JSONExport
         
         vector <shared_ptr <JSONValue> > values = array->values();
         size_t count = values.size();
-        for (int i = 0 ; i < count ; i++) {
+        for (size_t i = 0 ; i < count ; i++) {
             values[i]->write(this, context);
         }
         
@@ -280,7 +280,7 @@ namespace JSONExport
         primitiveObject->setValue("vertexAttributes", vertexAttributesArray);
         
         size_t count = primitive->allIndices().size();
-        for (int j = 0 ; j < count ; j++) {
+        for (size_t j = 0 ; j < count ; j++) {
             shared_ptr <JSONExport::JSONObject> indicesObject(new JSONExport::JSONObject());
             shared_ptr <JSONExport::JSONIndices> indices = primitive->allIndices()[j];
             

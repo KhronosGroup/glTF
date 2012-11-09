@@ -84,7 +84,7 @@ namespace JSONExport
     {
         size_t count = allOriginalAccessors.size();
         AccessorsBufferInfos* allBufferInfos = (AccessorsBufferInfos*)malloc(count * sizeof(AccessorsBufferInfos));
-        for (int accessorIndex = 0 ; accessorIndex < count; accessorIndex++) {
+        for (size_t accessorIndex = 0 ; accessorIndex < count; accessorIndex++) {
             AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
 
             shared_ptr <JSONExport::JSONAccessor> remappedAccessor = allRemappedAccessors[accessorIndex];
@@ -135,7 +135,7 @@ namespace JSONExport
             unsigned int idx = indices[k];                
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (vertexAttributesCount + 1)];
             
-            for (int accessorIndex = 0 ; accessorIndex < allOriginalAccessors.size(); accessorIndex++) {
+            for (size_t accessorIndex = 0 ; accessorIndex < allOriginalAccessors.size(); accessorIndex++) {
                 AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
                                 
                 //uniqueIndexes
@@ -169,7 +169,7 @@ namespace JSONExport
         unsigned int* generatedIndices = (unsigned int*) malloc (indicesCount * sizeof(unsigned int)); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
         
-        for (int k = 0 ; k < indicesCount ; k++) {
+        for (size_t k = 0 ; k < indicesCount ; k++) {
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             
             remappedIndex[0] = vertexAttributesCount;

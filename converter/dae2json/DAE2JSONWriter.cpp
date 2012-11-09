@@ -179,7 +179,7 @@ namespace DAE2JSON
         if (unpatchedOpenCOLLADA)
             setCount = 1;
         
-        for (int indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
+        for (size_t indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
             
             if (!unpatchedOpenCOLLADA) {
                 name = vertexData.getName(indexOfSet);
@@ -316,7 +316,7 @@ namespace DAE2JSON
         if (openCOLLADAMeshPrimitive->hasColorIndices()) {
             IndexListArray& colorListArray = openCOLLADAMeshPrimitive->getColorIndicesArray();
             
-            for (int i = 0 ; i < colorListArray.getCount() ; i++) {
+            for (size_t i = 0 ; i < colorListArray.getCount() ; i++) {
                 IndexList* indexList = openCOLLADAMeshPrimitive->getColorIndices(i);
                 
                 UIntValuesArray& indices = indexList->getIndices();
@@ -336,7 +336,7 @@ namespace DAE2JSON
         if (openCOLLADAMeshPrimitive->hasUVCoordIndices()) {                        
             IndexListArray& uvListArray = openCOLLADAMeshPrimitive->getUVCoordIndicesArray();
             
-            for (int i = 0 ; i < uvListArray.getCount() ; i++) {
+            for (size_t i = 0 ; i < uvListArray.getCount() ; i++) {
                 IndexList* indexList = openCOLLADAMeshPrimitive->getUVCoordIndices(i);
                                 
                 UIntValuesArray& indices = indexList->getIndices();
@@ -376,7 +376,7 @@ namespace DAE2JSON
         size_t primitiveCount = primitives.getCount();
         
         // get all primitives
-        for (int i = 0 ; i < primitiveCount ; i++) {
+        for (size_t i = 0 ; i < primitiveCount ; i++) {
             
             shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i]);
             if (primitive->getType() == "TRIANGLES")
@@ -384,7 +384,7 @@ namespace DAE2JSON
 
             // once we got a primitive, keep track of its accessors
             std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = primitive->allIndices();
-            for (int k = 0 ; k < allIndices.size() ; k++) {
+            for (size_t k = 0 ; k < allIndices.size() ; k++) {
                 shared_ptr<JSONExport::JSONIndices> indices = allIndices[k];
                 JSONExport::Semantic semantic = indices->getSemantic();
                 JSONExport::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
@@ -456,7 +456,7 @@ namespace DAE2JSON
 		if (!root.loadDocument( this->_converterArgs.inputFile.toNativePath()))
 			return false;
         
-        shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, this->_fileOutputStream.tellp()));
+        shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, static_cast<size_t>(this->_fileOutputStream.tellp())));
         
         UniqueIDToMesh::const_iterator UniqueIDToMeshIterator;
 
@@ -564,7 +564,7 @@ namespace DAE2JSON
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
         }
-        float transparency = effectCommon->getOpacity().getColor().getAlpha();
+        float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
         
         return this->_converterArgs.invertTransparency ? 1 - transparency : transparency;
     }
@@ -663,12 +663,12 @@ namespace DAE2JSON
                 }
                 
                 std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
-                for (int j = 0 ; j < primitives.size() ; j++) {
+                for (size_t j = 0 ; j < primitives.size() ; j++) {
                     shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
                     
                     //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
                     int materialBindingIndex = -1;
-                    for (int k = 0; k < materialBindings.getCount() ; k++) {
+                    for (size_t k = 0; k < materialBindings.getCount() ; k++) {
                         if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
                             materialBindingIndex = k;
                         }
@@ -769,7 +769,7 @@ namespace DAE2JSON
         //first pass to output children name of our root node
         shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
         
-        for (int i = 0 ; i < nodeCount ; i++) { 
+        for (size_t i = 0 ; i < nodeCount ; i++) { 
             std::string id = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());
 
             shared_ptr <JSONExport::JSONString> nodeIDValue(new JSONExport::JSONString(id));            
@@ -778,7 +778,7 @@ namespace DAE2JSON
         
         rootObject->setValue("children", childrenArray);
         
-        for (int i = 0 ; i < nodeCount ; i++) {
+        for (size_t i = 0 ; i < nodeCount ; i++) {
             this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, &this->_sceneFlatteningInfo);
         }
         
@@ -799,7 +799,7 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_rootJSONObject->getValue("nodes"));
         
         size_t count = nodes.getCount();
-        for (int i = 0 ; i < count ; i++) {
+        for (size_t i = 0 ; i < count ; i++) {
             const COLLADAFW::Node *node = nodes[i];
 
             if (!this->writeNode(node,  nodesObject, COLLADABU::Math::Matrix4::IDENTITY, 0))
