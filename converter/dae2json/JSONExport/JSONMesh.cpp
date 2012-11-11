@@ -274,7 +274,7 @@ namespace JSONExport
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                 }
                     
-                uniqueIndices->setByteOffset(fileOutputStream.tellp());
+                uniqueIndices->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));
                 fileOutputStream.write((const char*)ushortIndices, indicesLength);
                 
                 //now that we wrote to the stream we can release the buffer.
@@ -298,7 +298,7 @@ namespace JSONExport
                 // for this, add a type to buffers , and check this type in setBuffer , then call compuateMinMax
                 accessor->computeMinMax();
                 
-                accessor->setByteOffset(fileOutputStream.tellp());
+                accessor->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));
                 fileOutputStream.write((const char*)(static_pointer_cast <JSONDataBuffer> (buffer)->getData()), buffer->getByteSize());
 
                 //now that we wrote to the stream we can release the buffer.

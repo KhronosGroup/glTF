@@ -32,6 +32,12 @@ var DummyLoader = Object.create(WebGLTFLoader, {
         }
     },
 
+    handleImage: {
+        value: function(entryID, description, userInfo) {
+            return true;
+        }
+    },
+	
     handleShader: {
         value: function(entryID, description, userInfo) {
             return true;
@@ -63,12 +69,6 @@ var DummyLoader = Object.create(WebGLTFLoader, {
     },
 
     handleCamera: {
-        value: function(entryID, description, userInfo) {
-            return true;
-        }
-    },
-
-    handleLight: {
         value: function(entryID, description, userInfo) {
             return true;
         }

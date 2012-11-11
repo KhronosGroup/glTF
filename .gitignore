@@ -1,0 +1,13 @@
+converter/dae2json/CMakeCache.txt
+converter/dae2json/CMakeFiles
+converter/dae2json/cmake_install.cmake
+converter/dae2json/*.vcxproj*
+converter/dae2json/*.sln
+converter/dae2json/COLLADA2JSON.opensdf
+converter/dae2json/COLLADA2JSON.sdf
+converter/dae2json/COLLADA2JSON.suo
+converter/dae2json/Win32/
+converter/dae2json/bin/
+converter/dae2json/collada2json.dir/
+converter/dae2json/ipch/
+converter/dae2json/lib/

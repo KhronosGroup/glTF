@@ -53,13 +53,19 @@ It has been tested on OSX, but all the components involved are cross platform. T
 2. git submodule update --init --recursive
 3. git submodule foreach git pull origin master
 
+Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
+
 #### JSON Format description
 
 in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 #### Converter build instructions
 
-coming soon...
+* Install [CMake](http://cmake.org/cmake/resources/software.html)
+* `cd collada2json/converter/dae2json`
+* `cmake CMakeLists.txt`
 
+On Windows, open `COLLADA2JSON.sln` and build.
 
+Other platforms coming soon...
 

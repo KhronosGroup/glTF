@@ -44,7 +44,7 @@ namespace JSONExport
             size_t hash = 0;
             size_t count = (size_t)remappedMeshIndexes[0];
             
-            for (int i = 0 ; i < count ; i++) {
+            for (size_t i = 0 ; i < count ; i++) {
                 hash += (size_t)remappedMeshIndexes[i + 1 /* skip count */];
             }
             
@@ -60,7 +60,7 @@ namespace JSONExport
             if (count != (size_t)k2[0])
                 return false;
             
-            for (int i = 0 ; i < count ; i++) {
+            for (size_t i = 0 ; i < count ; i++) {
                 if (k1[i + 1] != k2[i + 1])
                     return false;
             }
