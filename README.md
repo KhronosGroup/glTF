@@ -1,6 +1,5 @@
 ##OVERVIEW
 
-
 **COLLADA2JSON** introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.  
 As an initiative from the COLLADA Working Group, this project stands in Khronos repository.  
 Everyone is welcomed to contribute and provide feedback. 
@@ -28,6 +27,8 @@ Using an external binary blob has several advantages:
 - The JSON format references the buffers as opaque typed arrays.
 - The binary format provides opportunities for better data compression.
 
+More details about the format in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)  
+
 Watch the GitHub issues tracker for updates on the status of these features.
 
 #### What's provided in this repository:
@@ -43,21 +44,12 @@ COLLADA2JSON provides a reliable toolchain based on OpenCOLLADA.
 Starting from exporter plugins in major authoring tools to COLLADA parsing when converting to JSON, 
 OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
-#### Project status
-
-The project is currently in an early state to encourage community feedback.
-It has been tested on OSX, but all the components involved are cross platform. Testing will be extended to all major platforms in the near future.
-
 #### Viewer setup 
 1. git clone https://github.com/KhronosGroup/collada2json.git
 2. git submodule update --init --recursive
 3. git submodule foreach git pull origin master
 
 Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
-
-## JSON Format description
-
-in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 ## Converter build instructions
 
