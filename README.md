@@ -1,13 +1,13 @@
-##COLLADA2JSON
+##OVERVIEW
 
 
-COLLADA2JSON introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.  
+**COLLADA2JSON** introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.  
 As an initiative from the COLLADA Working Group, this project stands in Khronos repository.  
 Everyone is welcomed to contribute and provide feedback. 
 
 **This is a work in progress and not an official Khronos-ratified specification.**
 
-#### JSON Format
+## JSON Format
 
 The JSON format has been designed from the ground up with an eye towards the requirements of WebGL, and is intended to be the final step in a COLLADA to WebGL workflow.
 [COLLADA](https://www.khronos.org/collada/) is an interchange format created to allow information to easily be passed between authoring tools, but is not well suited for use in web or embedded device applications.
@@ -55,13 +55,13 @@ It has been tested on OSX, but all the components involved are cross platform. T
 
 Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
 
-#### JSON Format description
+## JSON Format description
 
 in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
-#### Converter build instructions
+## Converter build instructions
 
-### Windows
+##### Windows
 
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
 * `cd collada2json/converter/dae2json`
@@ -69,7 +69,7 @@ in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 open `COLLADA2JSON.sln` and build.
 
-### Mac OSX
+##### Mac OSX
 
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
 * `cd collada2json/converter/dae2json`
