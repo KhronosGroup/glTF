@@ -61,11 +61,19 @@ in the [wiki](https://github.com/KhronosGroup/collada2json/wiki/WebGLTF)
 
 #### Converter build instructions
 
+### Windows
+
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
 * `cd collada2json/converter/dae2json`
 * `cmake CMakeLists.txt`
 
-On Windows, open `COLLADA2JSON.sln` and build.
+open `COLLADA2JSON.sln` and build.
 
-Other platforms coming soon...
+### Mac OSX
+
+* Install [CMake](http://cmake.org/cmake/resources/software.html)
+* `cd collada2json/converter/dae2json`
+* `cmake -G Xcode`
+
+open `COLLADA2JSON.xcodeproj` and build, or if you installed xcode command line tools you can also build in the terminal: `xcodebuild -target collada2json`
 
