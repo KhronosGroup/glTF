@@ -23,8 +23,25 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-exports.Base = Object.create(Object.prototype, {
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+        module.exports = factory(global);
+        module.exports.WebGLTFLoader = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+  var Base = Object.create(Object.prototype, {
 
     _properties: { value: null, writable: true },
 
@@ -44,3 +61,10 @@ exports.Base = Object.create(Object.prototype, {
     }
 
 });
+      if(root) {
+        root.Base = Base;
+    }
+
+    return Base;
+
+}));
