@@ -24,13 +24,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 var global = window;
+
 (function (root, factory) {
     if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         module.exports = factory(global);
-        module.exports.WebGLTFLoader = module.exports;
+        module.exports.Base = module.exports;
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
@@ -41,26 +42,26 @@ var global = window;
         factory(root);
     }
 }(this, function (root) {
-  var Base = Object.create(Object.prototype, {
+      var Base = Object.create(Object.prototype, {
 
-    _properties: { value: null, writable: true },
+        _properties: { value: null, writable: true },
 
-    properties: {
-        get: function() {
-            return this._properties;
+        properties: {
+            get: function() {
+                return this._properties;
+            },
+            set: function(value) {
+                this._properties = value;
+            }
         },
-        set: function(value) {
-            this._properties = value;
-        }
-    },
 
-    __Base_init: {
-        value: function() {
-            this._properties = {};
+        __Base_init: {
+            value: function() {
+                this._properties = {};
+            }
         }
-    }
 
-});
+    });
       if(root) {
         root.Base = Base;
     }

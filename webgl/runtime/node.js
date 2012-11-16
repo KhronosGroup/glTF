@@ -23,233 +23,264 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.Node = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    var Base, Utilities;
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+        Base = require("base").Base;
+        Utilities = require("utilities").Utilities;
+    } else {
+        Base = global.Base;
+        Utilities = global.Utilities;
+    }
 
-require("dependencies/gl-matrix");
-var Base = require("base").Base;
-var Utilities = require("utilities").Utilities;
+    var Node = Object.create(Base, {
 
-exports.Node = Object.create(Base, {
+        _children: { value: null, writable: true },
 
-    _children: { value: null, writable: true },
-
-    children: {
-        get: function() {
-            return this._children;
+        children: {
+            get: function() {
+                return this._children;
+            },
+            set: function(value) {
+                this._children = value;
+            }
         },
-        set: function(value) {
-            this._children = value;
-        }
-    },
 
-    _id: { value: null, writable: true },
+        _id: { value: null, writable: true },
 
-    id: {
-        get: function() {
-            return this._id;
+        id: {
+            get: function() {
+                return this._id;
+            },
+            set: function(value) {
+                this._id = value;
+            }
         },
-        set: function(value) {
-            this._id = value;
-        }
-    },
 
-    _hidden: { value: null, writable: true },
+        _hidden: { value: null, writable: true },
 
-    hidden: {
-        get: function() {
-            return this._hidden;
+        hidden: {
+            get: function() {
+                return this._hidden;
+            },
+            set: function(value) {
+                this._hidden = value;
+            }
         },
-        set: function(value) {
-            this._hidden = value;
-        }
-    },
 
-    _computeBBOXIfNeeded: {
-        enumerable: false,
-        value: function() {
-            if (!this._boundingBox) {
+        _computeBBOXIfNeeded: {
+            enumerable: false,
+            value: function() {
+                if (!this._boundingBox) {
 
-                var meshes = this._properties["meshes"];
-                var count = this.meshes.length;
-                if (count > 0) {
-                    var bbox = this.meshes[0].boundingBox;
-                    if (bbox) {
-                        var i;
-                        for (i = 1 ; i <  count ; i++) {
-                            var aBBox = this.meshes[i].boundingBox;
-                            if (aBBox) { //it could be not here here as we are loading everything asynchronously
-                                bbox = Utilities.mergeBBox(bbox, aBBox);
+                    var meshes = this._properties["meshes"];
+                    var count = this.meshes.length;
+                    if (count > 0) {
+                        var bbox = this.meshes[0].boundingBox;
+                        if (bbox) {
+                            var i;
+                            for (i = 1 ; i <  count ; i++) {
+                                var aBBox = this.meshes[i].boundingBox;
+                                if (aBBox) { //it could be not here here as we are loading everything asynchronously
+                                    bbox = Utilities.mergeBBox(bbox, aBBox);
+                                }
                             }
+
+                            this._boundingBox = bbox;//Utilities.transformBBox(bbox, this.transform);
                         }
-
-                        this._boundingBox = bbox;//Utilities.transformBBox(bbox, this.transform);
                     }
                 }
             }
-        }
-    },
-
-    _boundingBox: {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
-
-    boundingBox: {
-        enumerable: true,
-        get: function() {
-            this._computeBBOXIfNeeded();
-            return this._boundingBox;
         },
-        // we let the possibility to override by hand the bounding volume.
-        set: function(value) {
-            this._boundingBox = value;
-        }
-    },
 
-    meshesDidChange: {
-        value: function(meshes) {
-            this._boundingBox = null; //invalidate bounding box
-        }
-    },
+        _boundingBox: {
+            enumerable: false,
+            value: null,
+            writable: true
+        },
 
-    init: {
-        value: function() {
-            this.__Base_init();
-            this._children = [];
-            this._transform = mat4.identity();
-            this._properties["meshes"] = [];
-
-            var self = this;
-            this._properties["meshes"].push = function(data) {
-                var result = Array.prototype.push.call(this, data);
-                self.meshesDidChange(this);
-                return result;
+        boundingBox: {
+            enumerable: true,
+            get: function() {
+                this._computeBBOXIfNeeded();
+                return this._boundingBox;
+            },
+            // we let the possibility to override by hand the bounding volume.
+            set: function(value) {
+                this._boundingBox = value;
             }
-
-            this._properties["cameras"] = [];
-            this._properties["lights"] = [];
-
-            return this;
-        }
-    },
-
-    getPropertyArrayNamed: {
-        value: function(name) {
-            return this._properties[name]
-        }
-    },
-
-    _transform: { value: null, writable: true },
-
-    transform: {
-        get: function() {
-            return this._transform;
         },
-        set: function(value) {
-            this._transform = value;
-        }
-    },
 
-    meshes: {
-        get: function() {
-            return this.getPropertyArrayNamed("meshes");
+        meshesDidChange: {
+            value: function(meshes) {
+                this._boundingBox = null; //invalidate bounding box
+            }
         },
-        set: function(value) {
-            this._properties["meshes"] = value;
-            this.meshesDidChange(value);
-        }
-    },
 
-    cameras: {
-        get: function() {
-            return this.getPropertyArrayNamed("cameras");
+        init: {
+            value: function() {
+                this.__Base_init();
+                this._children = [];
+                this._transform = mat4.identity();
+                this._properties["meshes"] = [];
+
+                var self = this;
+                this._properties["meshes"].push = function(data) {
+                    var result = Array.prototype.push.call(this, data);
+                    self.meshesDidChange(this);
+                    return result;
+                }
+
+                this._properties["cameras"] = [];
+                this._properties["lights"] = [];
+
+                return this;
+            }
         },
-        set: function(value) {
-            this._properties["cameras"] = value;
-        }
-    },
 
-    lights: {
-        get: function() {
-            return this.getPropertyArrayNamed("lights");
+        getPropertyArrayNamed: {
+            value: function(name) {
+                return this._properties[name]
+            }
         },
-        set: function(value) {
-            this._properties["lights"] = value;
-        }
-    },
 
-    _apply: {
-        value: function( callback, recurse, parent, ctx) {
+        _transform: { value: null, writable: true },
 
-            if (callback) {
-                ctx = callback(this, parent, ctx);
+        transform: {
+            get: function() {
+                return this._transform;
+            },
+            set: function(value) {
+                this._transform = value;
+            }
+        },
 
-                if (recurse) {
-                    this.children.forEach( function(node) {
-                        node._apply(callback, recurse, this, ctx);
-                    }, this);
+        meshes: {
+            get: function() {
+                return this.getPropertyArrayNamed("meshes");
+            },
+            set: function(value) {
+                this._properties["meshes"] = value;
+                this.meshesDidChange(value);
+            }
+        },
+
+        cameras: {
+            get: function() {
+                return this.getPropertyArrayNamed("cameras");
+            },
+            set: function(value) {
+                this._properties["cameras"] = value;
+            }
+        },
+
+        lights: {
+            get: function() {
+                return this.getPropertyArrayNamed("lights");
+            },
+            set: function(value) {
+                this._properties["lights"] = value;
+            }
+        },
+
+        _apply: {
+            value: function( callback, recurse, parent, ctx) {
+
+                if (callback) {
+                    ctx = callback(this, parent, ctx);
+
+                    if (recurse) {
+                        this.children.forEach( function(node) {
+                            node._apply(callback, recurse, this, ctx);
+                        }, this);
+                    }
                 }
             }
-        }
-    },
+        },
 
-    apply: {
-        value: function( callback, recurse, ctx) {
-            this._apply(callback, recurse, null, ctx);
-        }
-    },
+        apply: {
+            value: function( callback, recurse, ctx) {
+                this._apply(callback, recurse, null, ctx);
+            }
+        },
 
-    //TODO: generalize nodeWithName and apply
-    _nodeWithName: {
-        value: function( name) {
-            if (this.name === name) 
-                return this;
+        //TODO: generalize nodeWithName and apply
+        _nodeWithName: {
+            value: function( name) {
+                if (this.name === name) 
+                    return this;
 
-            if (this.children) {
-                for (var i = 0 ; i < this.children.length ; i++) {
-                    var node = this.children[i];
-                    var res = node._nodeWithName(name);
-                    if (res) {
-                        return res;
-                    }
-                }           
-            } 
+                if (this.children) {
+                    for (var i = 0 ; i < this.children.length ; i++) {
+                        var node = this.children[i];
+                        var res = node._nodeWithName(name);
+                        if (res) {
+                            return res;
+                        }
+                    }           
+                } 
 
-            return null;
-        }
-    },
+                return null;
+            }
+        },
 
-    nodeWithName: {
-        value: function(name) {
-            return this._nodeWithName(name);
-        }
-    },
+        nodeWithName: {
+            value: function(name) {
+                return this._nodeWithName(name);
+            }
+        },
 
-    _nodeWithID: {
-        value: function( id) {
-            if (this.id === id) 
-                return this;
+        _nodeWithID: {
+            value: function( id) {
+                if (this.id === id) 
+                    return this;
 
-            if (this.children) {
-                for (var i = 0 ; i < this.children.length ; i++) {
-                    var node = this.children[i];
-                    var res = node._nodeWithID(id);
-                    if (res) {
-                        return res;
-                    }
-                }           
-            } 
+                if (this.children) {
+                    for (var i = 0 ; i < this.children.length ; i++) {
+                        var node = this.children[i];
+                        var res = node._nodeWithID(id);
+                        if (res) {
+                            return res;
+                        }
+                    }           
+                } 
 
-            return null;
-        }
-    },
+                return null;
+            }
+        },
 
-    nodeWithID: {
-        value: function(id) {
-            return this._nodeWithID(id);
-        }
-    },
-
+        nodeWithID: {
+            value: function(id) {
+                return this._nodeWithID(id);
+            }
+        },
 
 
-});
+
+    });
+          if(root) {
+        root.Node = Node;
+    }
+
+    return Node;
+
+}));

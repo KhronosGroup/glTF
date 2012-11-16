@@ -23,56 +23,87 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-require("dependencies/gl-matrix");
-var Base = require("base").Base;
-var Node = require("node").Node;
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.Scene = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    var Base, Node;
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+        Base = require("base").Base;
+        Node = require("node").Node;
+    } else {
+        Base = global.Base;
+        Node = global.Node;
+    }
+    var Scene = Object.create(Base, {
 
-exports.Scene = Object.create(Base, {
+        _rootNode: { value : null, writable: true },
 
-    _rootNode: { value : null, writable: true },
-
-    rootNode: {
-        get: function() {
-            return this._rootNode;
+        rootNode: {
+            get: function() {
+                return this._rootNode;
+            },
+            set: function(value) {
+                this._rootNode = value;
+            }
         },
-        set: function(value) {
-            this._rootNode = value;
-        }
-    },
 
-    _id: { value: null, writable: true },
+        _id: { value: null, writable: true },
 
-    id: {
-        get: function() {
-            return this._id;
+        id: {
+            get: function() {
+                return this._id;
+            },
+            set: function(value) {
+                this._id = value;
+            }
         },
-        set: function(value) {
-            this._id = value;
-        }
-    },
 
-    init: {
-        value: function() {
-            this.__Base_init();
-            this.rootNode = Object.create(Node);
-            this.rootNode.init();
-            return this;
-        }
-    },
-
-    _name: {
-        value: null,
-        writable: true
-    },
-
-    name: {
-        enumerable: true,
-        get: function() {
-            return this._name;
+        init: {
+            value: function() {
+                this.__Base_init();
+                this.rootNode = Object.create(Node);
+                this.rootNode.init();
+                return this;
+            }
         },
-        set: function(value) {
-            this._name = value;
+
+        _name: {
+            value: null,
+            writable: true
+        },
+
+        name: {
+            enumerable: true,
+            get: function() {
+                return this._name;
+            },
+            set: function(value) {
+                this._name = value;
+            }
         }
+
+    });
+      if(root) {
+        root.Scene = Scene;
     }
 
-});
+    return Scene;
+
+}));
