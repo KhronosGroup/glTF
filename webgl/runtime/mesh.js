@@ -24,115 +24,149 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require("dependencies/gl-matrix");
-var Base = require("base").Base;
-var Utilities = require("utilities").Utilities;
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.Mesh = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    var Base , Utilities;
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+        Base = require("base").Base;
+        Utilities = require("utilities").Utilities;
+    } else {
+        Base = global.Base;
+        Utilities = global.Utilities;
+    }
 
-exports.Mesh = Object.create(Base, {
+    var Mesh = Object.create(Base, {
 
-    PRIMITIVES: { value: "primitives" },
+        PRIMITIVES: { value: "primitives" },
 
-    _primitives: {
-        value: null,
-        writable: true
-    },
-
-    primitives: {
-        enumerable: true,
-        get: function() {
-            return this._primitives;
+        _primitives: {
+            value: null,
+            writable: true
         },
-        set: function(value) {
-            this._primitives = value;
-        }
-    },
 
-    //theses 2 propreties are just for the demo...
-    step: { value: 0, writable:true },
-    loadedPrimitivesCount: { value: 0, writable:true },
-
-    loaded: {
-        get: function() {
-            return (this.loadedPrimitivesCount === this.primitives.length);
-        }
-    },
-
-    _id: {
-        value: null,
-        writable: true
-    },
-
-    id: {
-        enumerable: true,
-        get: function() {
-            return this._id;
+        primitives: {
+            enumerable: true,
+            get: function() {
+                return this._primitives;
+            },
+            set: function(value) {
+                this._primitives = value;
+            }
         },
-        set: function(value) {
-            this._id = value;
-        }
-    },
 
-    _name: {
-        value: null,
-        writable: true
-    },
+        //theses 2 propreties are just for the demo...
+        step: { value: 0, writable:true },
+        loadedPrimitivesCount: { value: 0, writable:true },
 
-    name: {
-        enumerable: true,
-        get: function() {
-            return this._name;
+        loaded: {
+            get: function() {
+                return (this.loadedPrimitivesCount === this.primitives.length);
+            }
         },
-        set: function(value) {
-            this._name = value;
-        }
-    },
 
-    _computeBBOXIfNeeded: {
-        enumerable: false,
-        value: function() {
-            if ( (!this._boundingBox) && this.primitives) {
+        _id: {
+            value: null,
+            writable: true
+        },
 
-                var count = this.primitives.length;
+        id: {
+            enumerable: true,
+            get: function() {
+                return this._id;
+            },
+            set: function(value) {
+                this._id = value;
+            }
+        },
 
-                if (count > 0) {
-                    var bbox = this.primitives[0].boundingBox;
-                    if (bbox) {
-                        var i;
-                        for (i = 1 ; i <  count ; i++) {
-                            if (this.primitives[i].boundingBox) { //it could be not here here as we are loading everything asynchronously
-                                bbox = Utilities.mergeBBox(bbox, this.primitives[i].boundingBox);
+        _name: {
+            value: null,
+            writable: true
+        },
+
+        name: {
+            enumerable: true,
+            get: function() {
+                return this._name;
+            },
+            set: function(value) {
+                this._name = value;
+            }
+        },
+
+        _computeBBOXIfNeeded: {
+            enumerable: false,
+            value: function() {
+                if ( (!this._boundingBox) && this.primitives) {
+
+                    var count = this.primitives.length;
+
+                    if (count > 0) {
+                        var bbox = this.primitives[0].boundingBox;
+                        if (bbox) {
+                            var i;
+                            for (i = 1 ; i <  count ; i++) {
+                                if (this.primitives[i].boundingBox) { //it could be not here here as we are loading everything asynchronously
+                                    bbox = Utilities.mergeBBox(bbox, this.primitives[i].boundingBox);
+                                }
                             }
+                            this._boundingBox = bbox;
                         }
-                        this._boundingBox = bbox;
                     }
                 }
             }
-        }
-    },
-
-    _boundingBox: {
-        value: null,
-        writable: true
-    },
-
-    boundingBox: {
-        enumerable: true,
-        get: function() {
-            this._computeBBOXIfNeeded();
-            return this._boundingBox;
         },
-        // we let the possibility to override by hand the bounding volume.
-        set: function(value) {
-            this._boundingBox = value;
-        }
-    },
 
-    init: {
-        value: function() {
-            this.__Base_init();
-            this._primitives = []; 
-            return this;
+        _boundingBox: {
+            value: null,
+            writable: true
+        },
+
+        boundingBox: {
+            enumerable: true,
+            get: function() {
+                this._computeBBOXIfNeeded();
+                return this._boundingBox;
+            },
+            // we let the possibility to override by hand the bounding volume.
+            set: function(value) {
+                this._boundingBox = value;
+            }
+        },
+
+        init: {
+            value: function() {
+                this.__Base_init();
+                this._primitives = []; 
+                return this;
+            }
         }
+
+    });
+
+
+    if(root) {
+        root.Mesh = Mesh;
     }
 
-});
+    return Mesh;
+
+}));

@@ -34,6 +34,8 @@ var global = window;
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         module.exports = factory(global);
+        module.exports.OrbitCamera = module.exports.OrbitCamera;
+        module.exports.FlyingCamera = module.exports.FlyingCamera;
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
@@ -470,6 +472,12 @@ var global = window;
         }
         
     };
+
+
+    if(root) {
+        root.OrbitCamera = OrbitCamera;
+        root.FlyingCamera = FlyingCamera;
+    }
 
     return {
         OrbitCamera: OrbitCamera,

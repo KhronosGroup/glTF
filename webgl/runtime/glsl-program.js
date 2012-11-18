@@ -27,494 +27,523 @@
 //FIXME: Delete shader if compile failed
 //FIXME: Delete program if LINK failed
 //NOTE: those 2 are typically garbage collected and then the gl resource is supposed to be released, but it shouldn't harm to release them as soon as possible without waiting for gc.
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.GLSLProgram = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+    } 
 
-require("dependencies/gl-matrix");
+    var GLSLProgram = Object.create(Object.prototype, {
 
-var GLSLProgram = exports.GLSLProgram = Object.create(Object.prototype, {
+        VERTEX_SHADER: { value: "x-shader/x-vertex" },
+        FRAGMENT_SHADER: { value: "x-shader/x-fragment" },
 
-    VERTEX_SHADER: { value: "x-shader/x-vertex" },
-    FRAGMENT_SHADER: { value: "x-shader/x-fragment" },
+        VERTEX: { value: "VERTEX" },
+        NORMAL: { value: "NORMAL" },
+        UV_0: {   value: "UV_0" },
+        MODELVIEW_MATRIX: { value: "MODELVIEW_MATRIX" },
+        PROJECTION_MATRIX: { value: "PROJECTION_MATRIX" },
+        MODELVIEW_PROJECTION_MATRIX: { value: "MODELVIEW_PROJECTION_MATRIX" },
 
-    VERTEX: { value: "VERTEX" },
-    NORMAL: { value: "NORMAL" },
-    UV_0: {   value: "UV_0" },
-    MODELVIEW_MATRIX: { value: "MODELVIEW_MATRIX" },
-    PROJECTION_MATRIX: { value: "PROJECTION_MATRIX" },
-    MODELVIEW_PROJECTION_MATRIX: { value: "MODELVIEW_PROJECTION_MATRIX" },
-
-    _GLTypes:
-    {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
-
-
-    //FIXME: shaders should be private
-    _shaders:
-    {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
-
-    shaders: {
-        enumerable: false,
-        get: function() {
-            return this._shaders;
+        _GLTypes:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
         },
-        set: function(value) {
-            this._shaders = value;
-        }
-    },
 
-    _errorLogs:
-    {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
 
-   errorLogs: {
-        enumerable: false,
-        get: function() {
-            return this._errorLogs;
+        //FIXME: shaders should be private
+        _shaders:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
         },
-        set: function(value) {
-            this._errorLogs = value;
-        }
-    },
 
-    _pendingCommits:
-    {
-        value: null,
-        writable: true
-    },
-
-    pendingCommits: {
-        get: function() {
-            return this._pendingCommits;
-        },
-        set: function(value) {
-            this._pendingCommits = value;
-        }
-    },
-
-    _symbolToLocation:
-    {
-        value: null,
-        writable: true
-    },
-
-    symbolToLocation: {
-        enumerable: false,
-        get: function() {
-            return this._symbolToLocation;
-        },
-        set: function(value) {
-            this._symbolToLocation = value;
-        }
-    },
-
-    _symbolToActiveInfo:
-    {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
-
-    symbolToActiveInfo: {
-        get: function() {
-            return this._symbolToActiveInfo;
-        },
-        set: function(value) {
-            this._symbolToActiveInfo = value;
-        }
-    },
-
-    _semanticToSymbol: {
-        value: null,
-        writable: true
-    },
-
-    semanticToSymbol: {
-        enumerable: false,
-        get: function() {
-            return this._semanticToSymbol;
-        },
-        set: function(value) {
-            this._semanticToSymbol = value;
-        }
-    },
-
-    _symbolToSemantic: {
-        value: null,
-        writable: true
-    },
-
-    symbolToSemantic: {
-        get: function() {
-            return this._symbolToSemantic;
-        },
-        set: function(value) {
-            this._symbolToSemantic = value;
-        }
-    },
-
-    _symbolToValue:
-    {
-        value: null,
-        writable: true
-    },
-
-    symbolToValue: {
-        get: function() {
-            return this._symbolToValue;
-        },
-        set: function(value) {
-            this._symbolToValue = value;
-        }
-    },
-
-    _uniformSymbols:
-    {
-        value: null,
-        writable: true
-    },
-
-    uniformSymbols: {
-        enumerable: false,
-        get: function() {
-            return this._uniformSymbols;
-        },
-        set: function(value) {
-            this._uniformSymbols = value;
-        }
-    },
-
-    _attributeSymbols:
-    {
-        value: null,
-       writable: true
-    },
-
-    attributeSymbols: {
-        enumerable: false,
-        get: function() {
-            return this._attributeSymbols;
-        },
-        set: function(value) {
-            this._attributeSymbols = value;
-        }
-    },
-
-
-    _GLProgram:
-    {
-        enumerable: false,
-        value: null,
-        writable: true
-    },
-
-    //API
-    GLProgram: {
-        enumerable: false,
-        get: function() {
-            return this._GLProgram;
-        },
-        set: function(value) {
-            this._GLProgram = value;
-        }
-    },
-
-    getTypeForSymbol: {
-        value: function(symbol) {
-            var type = null;
-            var activeInfo = this.symbolToActiveInfo[symbol];
-            if (activeInfo) {
-                type = activeInfo.type;
+        shaders: {
+            enumerable: false,
+            get: function() {
+                return this._shaders;
+            },
+            set: function(value) {
+                this._shaders = value;
             }
-            return type;
-        }
-    },
+        },
 
-    getLocationForSymbol: {
-        value: function(symbol) {
-            return this.symbolToLocation[symbol];
-        }
-    },
+        _errorLogs:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
+        },
 
-
-    getSymbolForSemantic: {
-        value: function(semantic) {
-            return this.semanticToSymbol[semantic];
-        }
-    },
-
-    //FIXME: argument order should be reversed
-    setSymbolForSemantic: {
-        value: function(symbol,semantic)  {
-            if (symbol === "none")
-              symbol = null;
-            if (semantic === "none")
-                semantic = null;
-
-            if (!this.symbolToActiveInfo[symbol]) {
-                return false;
+       errorLogs: {
+            enumerable: false,
+            get: function() {
+                return this._errorLogs;
+            },
+            set: function(value) {
+                this._errorLogs = value;
             }
+        },
 
-            //if the semantic is already taken bail out.
-            if (semantic) {
-                if (this.semanticToSymbol[semantic]) {
+        _pendingCommits:
+        {
+            value: null,
+            writable: true
+        },
+
+        pendingCommits: {
+            get: function() {
+                return this._pendingCommits;
+            },
+            set: function(value) {
+                this._pendingCommits = value;
+            }
+        },
+
+        _symbolToLocation:
+        {
+            value: null,
+            writable: true
+        },
+
+        symbolToLocation: {
+            enumerable: false,
+            get: function() {
+                return this._symbolToLocation;
+            },
+            set: function(value) {
+                this._symbolToLocation = value;
+            }
+        },
+
+        _symbolToActiveInfo:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
+        },
+
+        symbolToActiveInfo: {
+            get: function() {
+                return this._symbolToActiveInfo;
+            },
+            set: function(value) {
+                this._symbolToActiveInfo = value;
+            }
+        },
+
+        _semanticToSymbol: {
+            value: null,
+            writable: true
+        },
+
+        semanticToSymbol: {
+            enumerable: false,
+            get: function() {
+                return this._semanticToSymbol;
+            },
+            set: function(value) {
+                this._semanticToSymbol = value;
+            }
+        },
+
+        _symbolToSemantic: {
+            value: null,
+            writable: true
+        },
+
+        symbolToSemantic: {
+            get: function() {
+                return this._symbolToSemantic;
+            },
+            set: function(value) {
+                this._symbolToSemantic = value;
+            }
+        },
+
+        _symbolToValue:
+        {
+            value: null,
+            writable: true
+        },
+
+        symbolToValue: {
+            get: function() {
+                return this._symbolToValue;
+            },
+            set: function(value) {
+                this._symbolToValue = value;
+            }
+        },
+
+        _uniformSymbols:
+        {
+            value: null,
+            writable: true
+        },
+
+        uniformSymbols: {
+            enumerable: false,
+            get: function() {
+                return this._uniformSymbols;
+            },
+            set: function(value) {
+                this._uniformSymbols = value;
+            }
+        },
+
+        _attributeSymbols:
+        {
+            value: null,
+           writable: true
+        },
+
+        attributeSymbols: {
+            enumerable: false,
+            get: function() {
+                return this._attributeSymbols;
+            },
+            set: function(value) {
+                this._attributeSymbols = value;
+            }
+        },
+
+
+        _GLProgram:
+        {
+            enumerable: false,
+            value: null,
+            writable: true
+        },
+
+        //API
+        GLProgram: {
+            enumerable: false,
+            get: function() {
+                return this._GLProgram;
+            },
+            set: function(value) {
+                this._GLProgram = value;
+            }
+        },
+
+        getTypeForSymbol: {
+            value: function(symbol) {
+                var type = null;
+                var activeInfo = this.symbolToActiveInfo[symbol];
+                if (activeInfo) {
+                    type = activeInfo.type;
+                }
+                return type;
+            }
+        },
+
+        getLocationForSymbol: {
+            value: function(symbol) {
+                return this.symbolToLocation[symbol];
+            }
+        },
+
+
+        getSymbolForSemantic: {
+            value: function(semantic) {
+                return this.semanticToSymbol[semantic];
+            }
+        },
+
+        //FIXME: argument order should be reversed
+        setSymbolForSemantic: {
+            value: function(symbol,semantic)  {
+                if (symbol === "none")
+                  symbol = null;
+                if (semantic === "none")
+                    semantic = null;
+
+                if (!this.symbolToActiveInfo[symbol]) {
                     return false;
                 }
-            }
 
-            if (symbol) {
-                var previousSemantic = this.symbolToSemantic[symbol];
-                if ((previousSemantic) && (previousSemantic !== semantic)) {
-                    this.semanticToSymbol[previousSemantic] = null;
-                }
-
-                this.symbolToSemantic[symbol] = semantic;
-            }
-
-            if (semantic) {
-                this.semanticToSymbol[semantic] = symbol;
-            }
-
-            return true;
-        }
-    },
-
-    setSemanticForSymbol: {
-        value: function(symbol,semantic)  {
-            this.setSymbolForSemantic(symbol,semantic);
-        }
-    },
-
-    getSemanticForSymbol: {
-        value: function(symbol) {
-            return this.symbolToSemantic[symbol];
-        }
-    },
-
-    setValueForSymbol: {
-        value: function(symbol,value)  {
-            var existingValue = this.symbolToValue[symbol];
-            var type = this.getTypeForSymbol(symbol);
-            var GL = this._GLTypes;
-            if ((typeof existingValue !== "undefined") && (existingValue !== "null")) {
-                if (type === GL.FLOAT_MAT4) {
-                    if (mat4.equal(existingValue, value)) {
-                        return;
+                //if the semantic is already taken bail out.
+                if (semantic) {
+                    if (this.semanticToSymbol[semantic]) {
+                        return false;
                     }
                 }
-                if (type === GL.FLOAT_MAT3) {
-                    if (mat3.equal(existingValue, value)) {
-                        return;
+
+                if (symbol) {
+                    var previousSemantic = this.symbolToSemantic[symbol];
+                    if ((previousSemantic) && (previousSemantic !== semantic)) {
+                        this.semanticToSymbol[previousSemantic] = null;
                     }
+
+                    this.symbolToSemantic[symbol] = semantic;
                 }
-                if (type === GL.FLOAT_VEC3) {
-                    if (vec3.equal(existingValue, value)) {
-                        return;
-                    }
+
+                if (semantic) {
+                    this.semanticToSymbol[semantic] = symbol;
                 }
-                if (type === GL.FLOAT_VEC4) {
-                    if (vec4.equal(existingValue, value)) {
-                        return;
-                    }
-                }
+
+                return true;
             }
+        },
 
-            if (this.symbolToActiveInfo[symbol] !== null) {
-                if (this.pendingCommits.indexOf(symbol) === -1) {
-                    this.pendingCommits.push(symbol);
-                }
+        setSemanticForSymbol: {
+            value: function(symbol,semantic)  {
+                this.setSymbolForSemantic(symbol,semantic);
             }
+        },
 
-            if ((typeof value !== "undefined") && (value !== "null")) {
-                var temp;
-                if (type === GL.FLOAT_MAT4) {
-                    temp = mat4.create();
-                    value = mat4.set(value,temp);
-
-                }
-                if (type === GL.FLOAT_MAT3) {
-                    temp = mat3.create();
-                    value = mat3.set(value,temp);
-                }
-                if (type === GL.FLOAT_VEC3) {
-                    temp = vec3.create();
-                    value = vec3.set(value,temp);
-                }
-                if (type === GL.FLOAT_VEC4) {
-                    temp = vec4.create();
-                    value = vec4.set(value,temp);
-                }
+        getSemanticForSymbol: {
+            value: function(symbol) {
+                return this.symbolToSemantic[symbol];
             }
+        },
 
-            this.symbolToValue[symbol] = value;
-        }
-    },
-
-    getValueForSymbol: {
-        value: function(symbol) {
-            return this.symbolToValue[symbol];
-        }
-    },
-
-   //that should be private
-    commit: {
-        value: function(GL) {
-            var i = 0, count = this.pendingCommits.length;
-            for (i = 0 ; i < count ; i++) {
-                var symbol = this.pendingCommits[i];
+        setValueForSymbol: {
+            value: function(symbol,value)  {
+                var existingValue = this.symbolToValue[symbol];
                 var type = this.getTypeForSymbol(symbol);
-                var location = GL.getUniformLocation(this.GLProgram,symbol);
-                var value = this.getValueForSymbol(symbol);
-
-                switch (type) {
-                    case GL.FLOAT_MAT2:
-                        GL.uniformMatrix2fv(location , false, value);
-                        break;
-                    case GL.FLOAT_MAT3:
-                        GL.uniformMatrix3fv(location , false, value);
-                        break;
-                    case GL.FLOAT_MAT4:
-                        GL.uniformMatrix4fv(location , false, value);
-                        break;
-                    case GL.FLOAT:
-                        GL.uniform1f(location,value);
-                        break;
-                    case GL.FLOAT_VEC3:
-                        GL.uniform3fv(location,value);
-                        break;
-                    case GL.FLOAT_VEC4:
-                        GL.uniform4fv(location,value);
-                        break;
-                    case GL.INT:
-                    case GL.SAMPLER_2D:
-                        GL.uniform1i(location, value);
-                        break;
+                var GL = this._GLTypes;
+                if ((typeof existingValue !== "undefined") && (existingValue !== "null")) {
+                    if (type === GL.FLOAT_MAT4) {
+                        if (mat4.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_MAT3) {
+                        if (mat3.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_VEC3) {
+                        if (vec3.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
+                    if (type === GL.FLOAT_VEC4) {
+                        if (vec4.equal(existingValue, value)) {
+                            return;
+                        }
+                    }
                 }
+
+                if (this.symbolToActiveInfo[symbol] !== null) {
+                    if (this.pendingCommits.indexOf(symbol) === -1) {
+                        this.pendingCommits.push(symbol);
+                    }
+                }
+
+                if ((typeof value !== "undefined") && (value !== "null")) {
+                    var temp;
+                    if (type === GL.FLOAT_MAT4) {
+                        temp = mat4.create();
+                        value = mat4.set(value,temp);
+
+                    }
+                    if (type === GL.FLOAT_MAT3) {
+                        temp = mat3.create();
+                        value = mat3.set(value,temp);
+                    }
+                    if (type === GL.FLOAT_VEC3) {
+                        temp = vec3.create();
+                        value = vec3.set(value,temp);
+                    }
+                    if (type === GL.FLOAT_VEC4) {
+                        temp = vec4.create();
+                        value = vec4.set(value,temp);
+                    }
+                }
+
+                this.symbolToValue[symbol] = value;
             }
-            this.pendingCommits = [];
-        }
-    },
+        },
 
-    use: {
-        value: function(GL, commitValues) {
-            GL.useProgram(this.GLProgram);
-            if (commitValues) {
-                this.commit(GL);
+        getValueForSymbol: {
+            value: function(symbol) {
+                return this.symbolToValue[symbol];
             }
-        }
-    },
+        },
 
-   //that should be private
-    createShaderWithSourceAndType: {
-        value: function createShaderWithSourceAndType(GL,shaderSource,shaderType) {
-            var shader;
-            if (shaderType === "x-shader/x-fragment") {
-                shader = GL.createShader(GL.FRAGMENT_SHADER);
-            } else if (shaderType === "x-shader/x-vertex") {
-                shader = GL.createShader(GL.VERTEX_SHADER);
-            } else {
-                return null;
-            }
+       //that should be private
+        commit: {
+            value: function(GL) {
+                var i = 0, count = this.pendingCommits.length;
+                for (i = 0 ; i < count ; i++) {
+                    var symbol = this.pendingCommits[i];
+                    var type = this.getTypeForSymbol(symbol);
+                    var location = GL.getUniformLocation(this.GLProgram,symbol);
+                    var value = this.getValueForSymbol(symbol);
 
-            GL.shaderSource(shader, shaderSource);
-            GL.compileShader(shader);
-
-            if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-                this.errorLogs = GL.getShaderInfoLog(shader);
-                return null;
-            }
-
-            return shader;
-        }
-    },
-
-    build: {
-        value: function(GL) {
-            var i;
-            var vertexShaderSource = this.shaders[GLSLProgram.VERTEX_SHADER];
-            var fragmentShaderSource = this.shaders[GLSLProgram.FRAGMENT_SHADER];
-            var buildSuccess = false;
-            var activeInfo;
-
-            var vertexShader = this.createShaderWithSourceAndType(GL,vertexShaderSource,GLSLProgram.VERTEX_SHADER);
-            if (vertexShader === null)
-                return false;
-
-            var fragmentShader = this.createShaderWithSourceAndType(GL,fragmentShaderSource,GLSLProgram.FRAGMENT_SHADER);
-            if (fragmentShader === null)
-                return false;
-
-           this.GLProgram = GL.createProgram();
-
-            GL.attachShader(this.GLProgram, vertexShader);
-            GL.attachShader(this.GLProgram, fragmentShader);
-
-            GL.linkProgram(this.GLProgram);
-            if (GL.getProgramParameter(this.GLProgram, GL.LINK_STATUS)) {
-
+                    switch (type) {
+                        case GL.FLOAT_MAT2:
+                            GL.uniformMatrix2fv(location , false, value);
+                            break;
+                        case GL.FLOAT_MAT3:
+                            GL.uniformMatrix3fv(location , false, value);
+                            break;
+                        case GL.FLOAT_MAT4:
+                            GL.uniformMatrix4fv(location , false, value);
+                            break;
+                        case GL.FLOAT:
+                            GL.uniform1f(location,value);
+                            break;
+                        case GL.FLOAT_VEC3:
+                            GL.uniform3fv(location,value);
+                            break;
+                        case GL.FLOAT_VEC4:
+                            GL.uniform4fv(location,value);
+                            break;
+                        case GL.INT:
+                        case GL.SAMPLER_2D:
+                            GL.uniform1i(location, value);
+                            break;
+                    }
+                }
                 this.pendingCommits = [];
-                this.symbolToActiveInfo = {};
-                this.symbolToValue = {};
-                this.symbolToLocation = {};
-                this.uniformSymbols = [];
-                this.attributeSymbols = [];
-                this.symbolToSemantic = {};
-                this.semanticToSymbol = {};
-                this._GLTypes = {
-                    "FLOAT_MAT4" : GL.FLOAT_MAT4,
-                    "FLOAT_MAT3" : GL.FLOAT_MAT3,
-                    "FLOAT_VEC3" : GL.FLOAT_VEC3,
-                    "FLOAT_VEC4" : GL.FLOAT_VEC4
-                }
-
-                var currentProgram = GL.getParameter( GL.CURRENT_PROGRAM );
-                GL.useProgram(this.GLProgram);
-
-                var uniformsCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_UNIFORMS);
-                for (i = 0 ; i < uniformsCount ; i++) {
-                    activeInfo = GL.getActiveUniform(this.GLProgram, i);
-                    this.symbolToActiveInfo[activeInfo.name] = activeInfo;
-                    this.symbolToLocation[activeInfo.name] = GL.getUniformLocation(this.GLProgram,activeInfo.name);
-                    this.uniformSymbols.push(activeInfo.name);
-                }
-
-                var attributesCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_ATTRIBUTES);
-                for (i = 0 ; i < attributesCount ; i++) {
-                    activeInfo = GL.getActiveAttrib(this.GLProgram, i);
-                    this.symbolToActiveInfo[activeInfo.name] = activeInfo;
-                    this.symbolToLocation[activeInfo.name] = GL.getAttribLocation(this.GLProgram,activeInfo.name);
-                    this.attributeSymbols.push(activeInfo.name);
-                }
-
-                buildSuccess = true;
-                GL.useProgram(currentProgram);
             }
-            this.errorLogs = GL.getProgramInfoLog(this.GLProgram);
+        },
 
-          return buildSuccess;
-        }
-    },
+        use: {
+            value: function(GL, commitValues) {
+                GL.useProgram(this.GLProgram);
+                if (commitValues) {
+                    this.commit(GL);
+                }
+            }
+        },
 
-    initWithShaders: {
-        value: function(shaders) {
-            this.shaders = shaders;
-        }
-    },
+       //that should be private
+        createShaderWithSourceAndType: {
+            value: function createShaderWithSourceAndType(GL,shaderSource,shaderType) {
+                var shader;
+                if (shaderType === "x-shader/x-fragment") {
+                    shader = GL.createShader(GL.FRAGMENT_SHADER);
+                } else if (shaderType === "x-shader/x-vertex") {
+                    shader = GL.createShader(GL.VERTEX_SHADER);
+                } else {
+                    return null;
+                }
 
-    initWithProgram: {
-        value: function(program) {
-            this.shaders = program.shaders;
-            this.semanticToSymbol = program.semanticToSymbol;
-            this.symbolToSemantic = program.symbolToSemantic;
+                GL.shaderSource(shader, shaderSource);
+                GL.compileShader(shader);
+
+                if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
+                    this.errorLogs = GL.getShaderInfoLog(shader);
+                    return null;
+                }
+
+                return shader;
+            }
+        },
+
+        build: {
+            value: function(GL) {
+                var i;
+                var vertexShaderSource = this.shaders[GLSLProgram.VERTEX_SHADER];
+                var fragmentShaderSource = this.shaders[GLSLProgram.FRAGMENT_SHADER];
+                var buildSuccess = false;
+                var activeInfo;
+
+                var vertexShader = this.createShaderWithSourceAndType(GL,vertexShaderSource,GLSLProgram.VERTEX_SHADER);
+                if (vertexShader === null)
+                    return false;
+
+                var fragmentShader = this.createShaderWithSourceAndType(GL,fragmentShaderSource,GLSLProgram.FRAGMENT_SHADER);
+                if (fragmentShader === null)
+                    return false;
+
+               this.GLProgram = GL.createProgram();
+
+                GL.attachShader(this.GLProgram, vertexShader);
+                GL.attachShader(this.GLProgram, fragmentShader);
+
+                GL.linkProgram(this.GLProgram);
+                if (GL.getProgramParameter(this.GLProgram, GL.LINK_STATUS)) {
+
+                    this.pendingCommits = [];
+                    this.symbolToActiveInfo = {};
+                    this.symbolToValue = {};
+                    this.symbolToLocation = {};
+                    this.uniformSymbols = [];
+                    this.attributeSymbols = [];
+                    this.symbolToSemantic = {};
+                    this.semanticToSymbol = {};
+                    this._GLTypes = {
+                        "FLOAT_MAT4" : GL.FLOAT_MAT4,
+                        "FLOAT_MAT3" : GL.FLOAT_MAT3,
+                        "FLOAT_VEC3" : GL.FLOAT_VEC3,
+                        "FLOAT_VEC4" : GL.FLOAT_VEC4
+                    }
+
+                    var currentProgram = GL.getParameter( GL.CURRENT_PROGRAM );
+                    GL.useProgram(this.GLProgram);
+
+                    var uniformsCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_UNIFORMS);
+                    for (i = 0 ; i < uniformsCount ; i++) {
+                        activeInfo = GL.getActiveUniform(this.GLProgram, i);
+                        this.symbolToActiveInfo[activeInfo.name] = activeInfo;
+                        this.symbolToLocation[activeInfo.name] = GL.getUniformLocation(this.GLProgram,activeInfo.name);
+                        this.uniformSymbols.push(activeInfo.name);
+                    }
+
+                    var attributesCount = GL.getProgramParameter(this.GLProgram,GL.ACTIVE_ATTRIBUTES);
+                    for (i = 0 ; i < attributesCount ; i++) {
+                        activeInfo = GL.getActiveAttrib(this.GLProgram, i);
+                        this.symbolToActiveInfo[activeInfo.name] = activeInfo;
+                        this.symbolToLocation[activeInfo.name] = GL.getAttribLocation(this.GLProgram,activeInfo.name);
+                        this.attributeSymbols.push(activeInfo.name);
+                    }
+
+                    buildSuccess = true;
+                    GL.useProgram(currentProgram);
+                }
+                this.errorLogs = GL.getProgramInfoLog(this.GLProgram);
+
+              return buildSuccess;
+            }
+        },
+
+        initWithShaders: {
+            value: function(shaders) {
+                this.shaders = shaders;
+            }
+        },
+
+        initWithProgram: {
+            value: function(program) {
+                this.shaders = program.shaders;
+                this.semanticToSymbol = program.semanticToSymbol;
+                this.symbolToSemantic = program.symbolToSemantic;
+            }
         }
+
+    });
+
+    if(root) {
+        root.GLSLProgram = GLSLProgram;
     }
 
-});
+    return GLSLProgram;
+
+}));

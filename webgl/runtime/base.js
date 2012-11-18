@@ -62,7 +62,8 @@ var global = window;
         }
 
     });
-      if(root) {
+      
+    if(root) {
         root.Base = Base;
     }
 

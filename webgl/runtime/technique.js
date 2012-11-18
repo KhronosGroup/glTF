@@ -23,77 +23,109 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-require("dependencies/gl-matrix");
-var Base = require("base").Base;
-
-exports.Technique = Object.create(Base, {
-
-    _parameters: { value: null, writable: true },
-
-    _passName: { value: null, writable: true },
-
-    _passes: { value: null, writable: true },
-
-    init: {
-        value: function() {
-            this.__Base_init();
-            this.passes = {};
-            return this;
-        }
-    },
-
-    parameters: {
-        get: function() {
-            return this._parameters;
-        },
-        set: function(value) {
-            this._parameters = value;
-        }
-    },
-
-    passName: {
-        get: function() {
-            return this._passName;
-        },
-        set: function(value) {
-            if (this._passName != value) {
-                this._passName = value;
-            }
-        }
-    },
-
-    rootPass: {
-        get: function() {
-            return this._passes[this.passName];
-        }
-    },
-
-    passesDidChange: {
-        value: function() {
-            //update the @pass when passes is changed. 
-            //For convenience set to null if there are multiple passes or to the only pass contained when there is just a single one.
-            var passesNames = Object.keys(this.passes);
-            this.passName = (passesNames.length == 1) ? passesNames[0] : null;
-        }
-    },
-
-    passes: {
-        get: function() {
-            return this._passes;
-        },
-        set: function(value) {
-            if (this._passes != value) {
-                this._passes = value;
-                this.passesDidChange();
-            }
-        }
-    },
-
-    execute: {
-        value: function(renderer) {
-            renderer.resetStates();
-            this.rootPass.execute(renderer);
-        }
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.Technique = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    var Base;
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+        Base = require("base").Base;
+    } else {
+        Base = global.Base;
     }
 
-});
+    var Technique = Object.create(Base, {
+
+        _parameters: { value: null, writable: true },
+
+        _passName: { value: null, writable: true },
+
+        _passes: { value: null, writable: true },
+
+        init: {
+            value: function() {
+                this.__Base_init();
+                this.passes = {};
+                return this;
+            }
+        },
+
+        parameters: {
+            get: function() {
+                return this._parameters;
+            },
+            set: function(value) {
+                this._parameters = value;
+            }
+        },
+
+        passName: {
+            get: function() {
+                return this._passName;
+            },
+            set: function(value) {
+                if (this._passName != value) {
+                    this._passName = value;
+                }
+            }
+        },
+
+        rootPass: {
+            get: function() {
+                return this._passes[this.passName];
+            }
+        },
+
+        passesDidChange: {
+            value: function() {
+                //update the @pass when passes is changed. 
+                //For convenience set to null if there are multiple passes or to the only pass contained when there is just a single one.
+                var passesNames = Object.keys(this.passes);
+                this.passName = (passesNames.length == 1) ? passesNames[0] : null;
+            }
+        },
+
+        passes: {
+            get: function() {
+                return this._passes;
+            },
+            set: function(value) {
+                if (this._passes != value) {
+                    this._passes = value;
+                    this.passesDidChange();
+                }
+            }
+        },
+
+        execute: {
+            value: function(renderer) {
+                renderer.resetStates();
+                this.rootPass.execute(renderer);
+            }
+        }
+
+    });
+
+    if(root) {
+        root.Technique = Technique;
+    }
+
+    return Technique;
+
+}));

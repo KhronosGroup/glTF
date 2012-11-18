@@ -302,7 +302,16 @@ var global = window;
 
                 //FIXME: handle error
                 if (!this._json)  {
-                    var baseURL;
+                    var baseURL='.';
+                    var pathBase = this._path.split("/");
+                        if (pathBase.length > 1) {
+                            pathBase.pop();
+                            baseURL = pathBase.join("/") + "/";
+                        }
+                    /*
+					REMI -> find resources relative to json document
+                     TODO -> use path directly if absolute ?
+					var baseURL;
                     var parser = document.createElement("a");
 
                     parser.href = window.location.href;
@@ -318,7 +327,7 @@ var global = window;
                     } else {
                         baseURL += parser.pathname;
                     }
-
+                    
                     if (!this._isAbsolutePath(this._path)) {
                         //we don't want the last component of the path
                         var pathBase = this._path.split("/");
@@ -327,6 +336,7 @@ var global = window;
                             baseURL += pathBase.join("/") + "/";
                         }
                     }
+                    */
                     this.baseURL = baseURL;
 
                     var jsonfile = new XMLHttpRequest();

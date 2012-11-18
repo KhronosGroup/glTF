@@ -24,48 +24,75 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-exports.ResourceDescription = Object.create(Object.prototype, {
+var global = window;
 
-    _description: { value: null, writable: true },
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+        module.exports = factory(global);
+        module.exports.ResourceDescription = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+     var ResourceDescription = Object.create(Object.prototype, {
 
-    _id: { value: null, writable: true },
+        _description: { value: null, writable: true },
 
-    _type: { value: null, writable: true },
+        _id: { value: null, writable: true },
 
-    init: {
-        enumerable: true,
-        value: function(id, description) {
-            this._id = id;
-            this._description = description;
-            return this;
-        }
-    },
+        _type: { value: null, writable: true },
 
-    description: {
-        enumerable: true,
-        get: function() {
-            return this._description;
-        }
-    },
-
-    id: {
-        enumerable: true,
-        get: function() {
-            return this._id;
+        init: {
+            enumerable: true,
+            value: function(id, description) {
+                this._id = id;
+                this._description = description;
+                return this;
+            }
         },
-        set: function(value) {
-            this._id = value;
-        }
-    },
 
-    type: {
-        enumerable: true,
-        get: function() {
-            return this._type;
+        description: {
+            enumerable: true,
+            get: function() {
+                return this._description;
+            }
         },
-        set: function(value) {
-            this._type = value;
+
+        id: {
+            enumerable: true,
+            get: function() {
+                return this._id;
+            },
+            set: function(value) {
+                this._id = value;
+            }
+        },
+
+        type: {
+            enumerable: true,
+            get: function() {
+                return this._type;
+            },
+            set: function(value) {
+                this._type = value;
+            }
         }
+
+    });
+ 
+   if(root) {
+        root.ResourceDescription = ResourceDescription;
     }
 
-});
+    return ResourceDescription;
+
+}));

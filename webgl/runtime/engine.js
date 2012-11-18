@@ -23,76 +23,109 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-require("dependencies/gl-matrix");
-var Renderer = require("renderer").Renderer;
-var Technique = require("technique").Technique;
-var ScenePass = require("pass").ScenePass;
-
-exports.Engine = Object.create(Object.prototype, {
-
-    createTechniqueIfNeeded: {
-        value: function() {
-            if (!this._technique) {
-                this._technique = Object.create(Technique).init();
-                var pass = Object.create(ScenePass);
-                //there is just one pass, so passName will be automatically set to "defaultPass"
-                this._technique.passes = { "defaultPass": pass };
-            }
-        }
-    },
-
-    _renderer: { value: null, writable: true },
-    
-    _technique: { value: null, writable: true },
-
-    technique: {
-        get: function() {
-            this.createTechniqueIfNeeded();
-            return this._technique;
-        },
-        set: function(value) {
-            this.createTechniqueIfNeeded();
-            this._technique = value;
-        }
-    },
-
-    scene: {
-        get: function() {
-            return this._scene;
-        },
-        set: function(value) {
-            var scene = this.technique.rootPass.scene;
-            if (scene != value) {
-                scene = value;
-            }
-        }
-    },
-
-    renderer: {
-        get: function() {
-            return this._renderer;
-        },
-        set: function(value) {
-            this._renderer = value;
-        }
-    },
-
-    init: {
-        value: function( webGLContext, options) {
-            this.renderer = Object.create(Renderer).initWithWebGLContext(webGLContext);
-            return this;
-        }
-    },
-
-    render: {
-        value: function() {
-            if (this.technique) {
-                this.technique.execute(this.renderer);
-            } else {
-                console.log("WARNING render invoke in engine but no technique");
-            }   
-        }
+var global = window;
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+      
+        module.exports = factory(global);
+        module.exports.Engine = module.exports;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function () {
+            return factory(root);
+        });
+    } else {
+        // Browser globals
+        factory(root);
+    }
+}(this, function (root) {
+    var Renderer, Technique, ScenePass;
+    if (typeof exports === 'object') {
+        require("dependencies/gl-matrix");
+        Renderer = require("renderer").Renderer;
+        Technique = require("technique").Technique;
+        ScenePass = require("pass").ScenePass;
+    } else {
+        Renderer = global.Renderer;
+        Technique = global.Technique;
+        ScenePass = global.ScenePass;
     }
 
-});
+    var Engine = Object.create(Object.prototype, {
+
+        createTechniqueIfNeeded: {
+            value: function() {
+                if (!this._technique) {
+                    this._technique = Object.create(Technique).init();
+                    var pass = Object.create(ScenePass);
+                    //there is just one pass, so passName will be automatically set to "defaultPass"
+                    this._technique.passes = { "defaultPass": pass };
+                }
+            }
+        },
+
+        _renderer: { value: null, writable: true },
+        
+        _technique: { value: null, writable: true },
+
+        technique: {
+            get: function() {
+                this.createTechniqueIfNeeded();
+                return this._technique;
+            },
+            set: function(value) {
+                this.createTechniqueIfNeeded();
+                this._technique = value;
+            }
+        },
+
+        scene: {
+            get: function() {
+                return this._scene;
+            },
+            set: function(value) {
+                var scene = this.technique.rootPass.scene;
+                if (scene != value) {
+                    scene = value;
+                }
+            }
+        },
+
+        renderer: {
+            get: function() {
+                return this._renderer;
+            },
+            set: function(value) {
+                this._renderer = value;
+            }
+        },
+
+        init: {
+            value: function( webGLContext, options) {
+                this.renderer = Object.create(Renderer).initWithWebGLContext(webGLContext);
+                return this;
+            }
+        },
+
+        render: {
+            value: function() {
+                if (this.technique) {
+                    this.technique.execute(this.renderer);
+                } else {
+                    console.log("WARNING render invoke in engine but no technique");
+                }   
+            }
+        }
+
+    });
+
+    if(root) {
+        root.Engine = Engine;
+    }
+
+    return Engine;
+
+}));

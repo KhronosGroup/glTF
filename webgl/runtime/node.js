@@ -277,7 +277,8 @@ var global = window;
 
 
     });
-          if(root) {
+          
+    if(root) {
         root.Node = Node;
     }
 

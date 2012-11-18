@@ -57,11 +57,10 @@ var global = window;
         Pass=global.Pass;
         GLSLProgram =global.GLSLProgram;
         ResourceDescription=global.ResourceDescription;
-
     }
 
 
-        Material = Object.create(Base, {
+        var Material = Object.create(Base, {
 
         /*
         animationDuration: { value: 0.7, writable: false},
@@ -174,7 +173,8 @@ var global = window;
         },
 
     });
-          if(root) {
+
+    if(root) {
         root.Material = Material;
     }
 
