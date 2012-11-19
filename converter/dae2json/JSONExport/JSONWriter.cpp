@@ -228,7 +228,6 @@ namespace JSONExport
 
         accessorObject->setString("buffer", buffer->getID());
         
-        //FIXME: should not assume 3 components here
         const double* min = accessor->getMin();
         if (min) {         
             shared_ptr <JSONExport::JSONArray> minArray(new JSONExport::JSONArray());
@@ -238,7 +237,7 @@ namespace JSONExport
             }
         }
         
-        //FIXME: should not assume 3 components here
+
         const double* max = accessor->getMax();
         if (max) {
             shared_ptr <JSONExport::JSONArray> maxArray(new JSONExport::JSONArray());

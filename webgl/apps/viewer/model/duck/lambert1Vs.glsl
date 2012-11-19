@@ -10,6 +10,6 @@ precision highp float;
  
  void main(void) {
  v_normal = normalize(u_normalMatrix * normal);
- v_texcoord = vec2(texcoord.x, 1. - texcoord.y);
+ v_texcoord = vec2(texcoord.x, texcoord.y);
  gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0);
  }

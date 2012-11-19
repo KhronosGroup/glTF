@@ -43,7 +43,7 @@ const char* lambert1Vs = SHADER(
                                 \n
                                 void main(void) {\n
                                     v_normal = normalize(u_normalMatrix * normal);\n
-                                    v_texcoord = vec2(texcoord.x, 1. - texcoord.y);\n
+                                    v_texcoord = vec2(texcoord.x, texcoord.y);\n
                                     gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0);\n
                                 });
 
@@ -100,7 +100,7 @@ const char* lambert3Vs = SHADER(
                                 \n
                                 void main(void) {\n
                                     v_normal = normalize(u_normalMatrix * normal);\n
-                                    v_texcoord = vec2(texcoord.x, 1. - texcoord.y);\n
+                                    v_texcoord = vec2(texcoord.x, texcoord.y);\n
                                     gl_Position = u_projMatrix * u_mvMatrix * vec4(vert,1.0);\n
                                 });
 

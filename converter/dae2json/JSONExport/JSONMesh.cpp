@@ -295,7 +295,7 @@ namespace JSONExport
                         
             if (!IDToBuffer[buffer->getID().c_str()].get()) {
                 // FIXME: this should be internal to accessor when a Data buffer is set
-                // for this, add a type to buffers , and check this type in setBuffer , then call compuateMinMax
+                // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 accessor->computeMinMax();
                 
                 accessor->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));

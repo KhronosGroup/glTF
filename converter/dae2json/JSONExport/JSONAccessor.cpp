@@ -160,61 +160,82 @@ namespace JSONExport
         return 0;
     }
     
-    const double* JSONAccessor::getMin()
-    {
+    const double* JSONAccessor::getMin() {
         return this->_min;
     }
 
-    const double* JSONAccessor::getMax()
-    {
+    const double* JSONAccessor::getMax() {
         return this->_max;
     }
+    
+    typedef struct {
+        double *min, *max;
+    } __MinMaxApplierInfo;
+    
+    static void __ComputeMinMax(void *value,
+                               ElementType type,
+                               size_t elementsPerVertexAttribute,
+                               size_t index,
+                               void *context) {
+        __MinMaxApplierInfo *applierInfo = (__MinMaxApplierInfo*)context;
+        char* bufferData = (char*)value;
 
+        switch (type) {
+            case JSONExport::FLOAT: {
+                float* vector = (float*)bufferData;
+                for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
+                    float value = vector[j];
+                    if (value < applierInfo->min[j]) {
+                        applierInfo->min[j] = value;
+                    }
+                    if (value > applierInfo->max[j]) {
+                        applierInfo->max[j] = value;
+                    }
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    
     void JSONAccessor::computeMinMax() 
     {
-        size_t byteStride = this->getByteStride();
+        //size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-        
+
+        //realloc
         if (this->_min) {
             delete [] this->_min;
         }
         if (this->_max) {
             delete [] this->_max;
         }
-        
         this->_min = new double[elementsPerVertexAttribute];
         this->_max = new double[elementsPerVertexAttribute];
-        
-        ElementType type = this->getElementType();
-        switch (type) {
-            case JSONExport::FLOAT: {
 
-                shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
-                char* bufferData = ((char*)  ((JSONDataBuffer*)buffer.get())->getData() + this->getByteOffset());
-                float* vector = (float*)bufferData;
-                                
-                for (size_t i = 0 ; i < elementsPerVertexAttribute ; i++) {
-                    this->_min[i] = this->_max[i] = vector[i];
-                }
-                
-                size_t count = this->getCount();
-                for (size_t i = 0 ; i < count ; i++) {
-                    vector = (float*)(bufferData + (i * byteStride));
-                    
-                    for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
-                        if (vector[j] < this->_min[j]) {
-                            this->_min[j] = vector[j];
-                        }
-                        if (vector[j] > this->_max[j]) {
-                            this->_max[j] = vector[j];
-                        }
-                    }
-                }
-                
-            }
-                break;    
-            default:
-                break;
+        __MinMaxApplierInfo minMaxApplierInfo;
+        minMaxApplierInfo.min = this->_min;
+        minMaxApplierInfo.max = this->_max;
+        
+        for (size_t i = 0 ; i < elementsPerVertexAttribute ; i++) {
+            this->_min[i] = DBL_MAX;
+            this->_max[i] = -DBL_MAX;
+        }
+        
+        apply(__ComputeMinMax, &minMaxApplierInfo);
+    }
+    
+    void JSONAccessor::apply(JSONAccessorApplierFunc applierFunc, void* context)
+    {
+        size_t byteStride = this->getByteStride();
+        size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
+        shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
+        ElementType type = this->getElementType();
+        char* bufferData = ((char*)((JSONDataBuffer*)buffer.get())->getData() + this->getByteOffset());
+
+        for (size_t i = 0 ; i < _count ; i++) {
+            (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, context);
         }
     }
     

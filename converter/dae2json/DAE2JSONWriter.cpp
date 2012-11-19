@@ -362,6 +362,26 @@ namespace DAE2JSON
         return cvtPrimitive;
     }
     
+    static void __InvertV(void *value,
+                          JSONExport::ElementType type,
+                          size_t elementsPerVertexAttribute,
+                          size_t index,
+                          void *context) {
+        char* bufferData = (char*)value;
+        
+        if (elementsPerVertexAttribute > 1) {
+            switch (type) {
+                case JSONExport::FLOAT: {
+                    float* vector = (float*)bufferData;
+                    vector[1] = 1.0 - vector[1];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
     shared_ptr <JSONExport::JSONMesh> ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, std::string folder) 
     {
         shared_ptr <JSONExport::JSONMesh> cvtMesh(new JSONExport::JSONMesh());
@@ -412,6 +432,20 @@ namespace DAE2JSON
                     
                 cvtMesh->setAccessorsForSemantic(semantic, accessors);
             }
+        }
+        
+        //https://github.com/KhronosGroup/collada2json/issues/41
+        //Goes through all texcoord and invert V
+        JSONExport::IndexSetToAccessorHashmap& texcoordAccessors = cvtMesh->getAccessorsForSemantic(JSONExport::TEXCOORD);
+        JSONExport::IndexSetToAccessorHashmap::const_iterator accessorIterator;
+        
+        //FIXME: consider turn this search into a method for mesh
+        for (accessorIterator = texcoordAccessors.begin() ; accessorIterator != texcoordAccessors.end() ; accessorIterator++) {
+            //(*it).first;             // the key value (of type Key)
+            //(*it).second;            // the mapped value (of type T)
+            shared_ptr <JSONExport::JSONAccessor> accessor = (*accessorIterator).second;
+
+            accessor->apply(__InvertV, NULL);
         }
         
         return cvtMesh;
@@ -816,7 +850,6 @@ namespace DAE2JSON
             case Geometry::GEO_TYPE_MESH: 
             {
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
-                
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 shared_ptr <JSONExport::JSONMesh> cvtMesh = this->_uniqueIDToMesh[meshID];
                 

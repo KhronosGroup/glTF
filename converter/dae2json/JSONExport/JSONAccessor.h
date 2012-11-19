@@ -33,14 +33,19 @@
     Its design is very inspired by COLLADA (http://www.khronos.org/files/collada_spec_1_4.pdf )but was adapted for consistent naming and requirements (like byte sizes) to be consistent with typed arrays.
  
  */
-
 namespace JSONExport 
 {
+    typedef void (*JSONAccessorApplierFunc)(void* /* value */,
+        ElementType /* type */,
+        size_t /* elementsPerValue */,
+        size_t /* index */,
+        void* /* context */);
+    
     class JSONAccessor {
     private:
         void _generateID();
 
-    public:        
+    public:
         
         JSONAccessor();
         JSONAccessor(JSONAccessor *accessor);
@@ -64,6 +69,8 @@ namespace JSONExport
         
         void setCount(size_t length);
         size_t getCount();
+        
+        void apply(JSONAccessorApplierFunc applierFunc, void* context);
         
         const std::string& getID();
         
