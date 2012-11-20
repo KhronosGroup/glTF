@@ -138,11 +138,11 @@ var global = window;
             value: function(path) {
                 if (this._isAbsolutePath(path)) {
                     return path;
-                } else {
-                    var pathComponents = path.split("/");
-                    var lastPathComponent = pathComponents.pop();
-                    return this.baseURL + path;//lastPathComponent;
                 }
+
+                var pathComponents = path.split("/");
+                var lastPathComponent = pathComponents.pop();
+                return this.baseURL + path;//lastPathComponent;
             }
         },
 
@@ -174,7 +174,7 @@ var global = window;
             set: function(value) {
                 if (this._json !== value) {
                     this._json = value;
-                    this._resolvePathsForCategories(["buffers", "shaders"]);
+                    this._resolvePathsForCategories(["buffers", "shaders", "images"]);
                 }
             }
         },
@@ -186,13 +186,12 @@ var global = window;
 
         getEntryDescription: {
             value: function (entryID, entryType) {
-                var entryDescription = null;
                 var entries = null;
 
                 var category = categoryForType[entryType];
                 entries = this.rootDescription[category];
                 if (!entries) {
-                    console.log("ERROR:CANNOT find expected category named:"+category)
+                    console.log("ERROR:CANNOT find expected category named:"+category);
                     return null;
                 }
 
@@ -204,32 +203,30 @@ var global = window;
             value: function() {
                 this._state.categoryIndex = this.getNextCategoryIndex(this._state.categoryIndex + 1);
                 if (this._state.categoryIndex !== -1) {
-                    var category = categoriesDepsOrder[this._state.categoryIndex];
                     this._state.categoryState.index = 0;
                     return true;
-                } else {
-                    return false;
                 }
+
+                return false;
             }
         },
 
         _stepToNextDescription: {
             enumerable: false,
             value: function() {
-                var category = categoriesDepsOrder[this._state.categoryIndex];
                 var categoryState = this._state.categoryState;
                 var keys = categoryState.keys;
                 if (!keys) {
                     console.log("INCONSISTENCY ERROR");
                     return false;
-                } else {
-                    categoryState.index++;
-                    categoryState.keys = null;
-                    if (categoryState.index >= keys.length) {
-                        return this._stepToNextCategory();
-                    }
-                    return false;;
                 }
+
+                categoryState.index++;
+                categoryState.keys = null;
+                if (categoryState.index >= keys.length) {
+                    return this._stepToNextCategory();
+                }
+                return false;
             }
         },
 
@@ -255,7 +252,6 @@ var global = window;
                     "image" : this.handleImage
                 };
                 var success = true;
-                var self = this;
                 while (this._state.categoryIndex !== -1) {
                     var category = categoriesDepsOrder[this._state.categoryIndex];
                     var categoryState = this._state.categoryState;
@@ -302,45 +298,11 @@ var global = window;
 
                 //FIXME: handle error
                 if (!this._json)  {
-                    var baseURL='.';
-                    var pathBase = this._path.split("/");
-                        if (pathBase.length > 1) {
-                            pathBase.pop();
-                            baseURL = pathBase.join("/") + "/";
-                        }
-                    /*
-					REMI -> find resources relative to json document
-                     TODO -> use path directly if absolute ?
-					var baseURL;
-                    var parser = document.createElement("a");
-
-                    parser.href = window.location.href;
-                    var port = "";
-                    if (parser.port)
-                        port += ":"+parser.port;
-
-                    baseURL = parser.protocol+"//"+parser.hostname+ port;
-                    if (parser.pathname.charAt(parser.pathname.length - 1) !== '/') {
-                        var filebase = parser.pathname.split("/");
-                        filebase.pop();
-                        baseURL += filebase.join("/") + "/";
-                    } else {
-                        baseURL += parser.pathname;
-                    }
-                    
-                    if (!this._isAbsolutePath(this._path)) {
-                        //we don't want the last component of the path
-                        var pathBase = this._path.split("/");
-                        if (pathBase.length > 1) {
-                            pathBase.pop();
-                            baseURL += pathBase.join("/") + "/";
-                        }
-                    }
-                    */
-                    this.baseURL = baseURL;
-
+                    var jsonPath = this._path;
+                    var i = jsonPath.lastIndexOf("/");
+                    this.baseURL = (i !== 0) ? jsonPath.substring(0, i + 1) : '';
                     var jsonfile = new XMLHttpRequest();
-                    jsonfile.open("GET", this._path, true);
+                    jsonfile.open("GET", jsonPath, true);
                     jsonfile.onreadystatechange = function() {
                         if (jsonfile.readyState == 4) {
                             if (jsonfile.status == 200) {

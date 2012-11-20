@@ -45,9 +45,12 @@ Starting from exporter plugins in major authoring tools to COLLADA parsing when 
 OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
 #### Viewer setup 
-1. git clone https://github.com/KhronosGroup/collada2json.git
-2. git submodule update --init --recursive
-3. git submodule foreach git pull origin master
+```
+git clone https://github.com/KhronosGroup/collada2json.git
+cd collada2json
+git submodule update --init --recursive
+git submodule foreach git pull origin master
+```
 
 Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
 
