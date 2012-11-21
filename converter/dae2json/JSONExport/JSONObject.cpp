@@ -46,6 +46,16 @@ namespace JSONExport
     {
     }        
     
+    shared_ptr <JSONExport::JSONObject> JSONObject::createObjectIfNeeded(const std::string& key) {
+        shared_ptr <JSONExport::JSONObject> outObject;
+        if (!contains(key)) {
+            outObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            setValue(key, outObject);
+        } else {
+            outObject = static_pointer_cast <JSONExport::JSONObject> (getValue(key));
+        }
+        return outObject;
+    }
     
     void JSONObject::setValue(const std::string &key, shared_ptr <JSONValue> value)
     {

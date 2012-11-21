@@ -86,26 +86,16 @@ using namespace std::tr1;
 using namespace std;
 
 
-namespace DAE2JSON
+namespace JSONExport
 {
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONMesh> > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;    
-    typedef std::map<std::string  , std::string > ShaderIdToShaderString;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;        
     typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
     
     //-- BBOX helper class
-    
-    typedef struct 
-    {
-        COLLADABU::URI inputFile;
-        COLLADABU::URI outputFile;
-        bool invertTransparency;
         
-        //TODO: add options here
-    } COLLADA2JSONArgs;
-    
     class BBOX
     {
     public:
@@ -152,7 +142,7 @@ namespace DAE2JSON
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2JSONWriter( const COLLADA2JSONArgs &converterArgs,PrettyWriter <FileStream> *jsonWriter );
+		DAE2JSONWriter( const COLLADA2JSONContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -160,7 +150,6 @@ namespace DAE2JSON
         shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         const std::string writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon);
-        bool writeShaderIfNeeded(const std::string& shaderId);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
 
@@ -249,7 +238,7 @@ namespace DAE2JSON
         bool writeData(std::string filename, unsigned char* data, size_t length);
         
 	private:
-        COLLADA2JSONArgs _converterArgs;
+        COLLADA2JSONContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToEffect _uniqueIDToEffect;
@@ -257,10 +246,8 @@ namespace DAE2JSON
         MaterialUIDToName _materialUIDToName;
         ImageIdToImageURL _imageIdToImageURL;
         JSONExport::JSONWriter _writer;
-        shared_ptr <JSONExport::JSONObject> _rootJSONObject;
         ofstream _fileOutputStream;
         SceneFlatteningInfo _sceneFlatteningInfo;
-        ShaderIdToShaderString _shaderIdToShaderString;
 	};
 } 
 

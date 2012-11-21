@@ -49,6 +49,8 @@ add_executable(collada2json main.cpp
     JSONExport/JSONString.h
     JSONExport/JSONUtils.h
     JSONExport/JSONValue.h
-    JSONExport/JSONWriter.h)
+    JSONExport/JSONWriter.h
+    shaders/commonProfileShaders.h
+    shaders/commonProfileShaders.cpp)
 
 target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static $(LIBXML2_LIBRARIES))

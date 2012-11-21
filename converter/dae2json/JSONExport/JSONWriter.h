@@ -29,6 +29,14 @@
 
 namespace JSONExport 
 {
+    shared_ptr <JSONExport::JSONValue> serializeVec3(double x,double y, double z);
+    shared_ptr <JSONExport::JSONObject> serializeBuffer(JSONBuffer* buffer, void *context);
+    shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context);
+    shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context);
+    shared_ptr <JSONExport::JSONObject> serializeAccessor(JSONAccessor* accessor, void *context);
+    shared_ptr <JSONExport::JSONObject> serializeIndices(JSONIndices* indices, void *context);
+    shared_ptr <JSONExport::JSONObject> serializePrimitive(JSONPrimitive* primitive, void *context);
+    
     class JSONWriter {
     private:
         
@@ -45,15 +53,7 @@ namespace JSONExport
         void writeArray(JSONArray* array, void *context);
         void writeObject(JSONObject* object, void *context);
         void writeNumber(JSONNumber* number, void *context);
-        void writeString(JSONString* str, void *context);
-
-        shared_ptr <JSONExport::JSONObject> serializeBuffer(JSONBuffer* buffer, void *context);
-        shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context);
-        shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context);
-        shared_ptr <JSONExport::JSONObject> serializeAccessor(JSONAccessor* accessor, void *context);
-        shared_ptr <JSONExport::JSONObject> serializeIndices(JSONIndices* indices, void *context);
-        shared_ptr <JSONExport::JSONObject> serializePrimitive(JSONPrimitive* primitive, void *context);
-
+        void writeString(JSONString* str, void *context);        
         void write(JSONValue* value, void *context);
 
     private:

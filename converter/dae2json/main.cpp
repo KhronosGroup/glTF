@@ -46,8 +46,10 @@ void usage(char* prog)
 	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [JSON outputFile] [options] \n", prog);
 }
 
-static COLLADABU::URI __ReplacePathExtensionWithJSON(const COLLADABU::URI& inputFileURI)
+static COLLADABU::URI __ReplacePathExtensionWithJSON(const std::string& inputFile)
 {
+    COLLADABU::URI inputFileURI(inputFile.c_str());
+    
     std::string pathDir = inputFileURI.getPathDir();
     
     std::string fileBase = inputFileURI.getPathFileBase();
@@ -55,7 +57,7 @@ static COLLADABU::URI __ReplacePathExtensionWithJSON(const COLLADABU::URI& input
     return COLLADABU::URI(pathDir + fileBase + ".json");
 }
 
-static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], DAE2JSON::COLLADA2JSONArgs *converterArgs)
+static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport::COLLADA2JSONContext *converterArgs)
 {
     assert(converterArgs);
         
@@ -70,17 +72,17 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], DAE2JSON::COL
     for (int argIndex = 1, state = PARSE_INPUT_FILE_ARG ; argIndex < argc && state < PARSE_STATES_END ; state++) {
         switch (state) {
             case PARSE_INPUT_FILE_ARG:
-                converterArgs->inputFile = COLLADABU::URI(argv[argIndex++]); 
-                converterArgs->outputFile = __ReplacePathExtensionWithJSON(converterArgs->inputFile); 
+                converterArgs->inputFilePath = argv[argIndex++];
+                converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
                 break;
             case PARSE_OUTPUT_FILE_ARG:
                 if (argIndex == argc) {
-                    converterArgs->outputFile = __ReplacePathExtensionWithJSON(converterArgs->inputFile); 
+                    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
                 } else if (argv[argIndex][0] == '-') { //check if we have an option instead of a destination path
-                    converterArgs->outputFile = __ReplacePathExtensionWithJSON(converterArgs->inputFile); 
+                    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
                     argIndex++;
                 } else {
-                    converterArgs->outputFile = COLLADABU::URI(argv[argIndex++]); 
+                    converterArgs->outputFilePath = argv[argIndex++];
                 }
                 break;
             case PARSE_OPTIONS_ARG:
@@ -98,20 +100,20 @@ static bool __SetupCOLLADA2JSONArgs(int argc, char * const argv[], DAE2JSON::COL
 
 
 int main (int argc, char * const argv[]) {
-    DAE2JSON::COLLADA2JSONArgs converterArgs;
+    JSONExport::COLLADA2JSONContext converterArgs;
     
     printf("Collada2JSON [pre-alpha] 0.1\n");
-    if (__SetupCOLLADA2JSONArgs( argc, argv, &converterArgs)) {
+    if (__SetupCOLLADA2JSONContext( argc, argv, &converterArgs)) {
 #if !STDOUT_OUTPUT
-        FILE* fd = fopen(converterArgs.outputFile.getURIString().c_str(), "w");
+        FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");
         if (fd) {
             FileStream s(fd);
 #else
             FileStream s(stdout);
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
-            printf("converting:%s ...\n",converterArgs.inputFile.getPathFile().c_str());
-            DAE2JSON::DAE2JSONWriter* writer = new DAE2JSON::DAE2JSONWriter(converterArgs, &jsonWriter);        
+            printf("converting:%s ...\n",converterArgs.inputFilePath.c_str());
+            JSONExport::DAE2JSONWriter* writer = new JSONExport::DAE2JSONWriter(converterArgs, &jsonWriter);
             writer->write();
             printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT

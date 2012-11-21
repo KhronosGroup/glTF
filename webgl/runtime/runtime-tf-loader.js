@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+f// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -108,7 +108,7 @@ var global = window;
 
         handleImage: {
             value: function(entryID, description, userInfo) {
-                var imagePath = this.resolvePathIfNeeded(description.path);
+                var imagePath = description.path;
                 var imageResource = Object.create(ResourceDescription).init(imagePath, { "path": imagePath });
                 imageResource.type = "image";
                 this.storeEntry(entryID, imageResource, description);

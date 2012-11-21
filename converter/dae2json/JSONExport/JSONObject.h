@@ -39,7 +39,9 @@ namespace JSONExport
         
         JSONObject();
         virtual ~JSONObject();
-                
+      
+        shared_ptr <JSONExport::JSONObject> createObjectIfNeeded(const std::string& key);
+
         void setValue(const std::string &key, shared_ptr <JSONValue> value);
         shared_ptr <JSONValue> getValue(std::string);
         
