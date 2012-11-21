@@ -1,4 +1,4 @@
-f// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
