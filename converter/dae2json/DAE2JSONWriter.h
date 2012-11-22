@@ -44,7 +44,7 @@
 #include "COLLADAFWVisualScene.h"
 #include "COLLADAFWInstanceGeometry.h"
 #include "COLLADAFWInstanceCamera.h"
-#include "COLLADAFWLookAt.h"
+#include "COLLADAFWLookat.h"
 
 #include "COLLADAFWIWriter.h"
 #include "COLLADAFWUniqueId.h"
