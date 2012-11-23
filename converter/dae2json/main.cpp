@@ -46,7 +46,7 @@ void usage(char* prog)
 	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [JSON outputFile] [options] \n", prog);
 }
 
-static COLLADABU::URI __ReplacePathExtensionWithJSON(const std::string& inputFile)
+static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
 {
     COLLADABU::URI inputFileURI(inputFile.c_str());
     
@@ -54,7 +54,7 @@ static COLLADABU::URI __ReplacePathExtensionWithJSON(const std::string& inputFil
     
     std::string fileBase = inputFileURI.getPathFileBase();
     
-    return COLLADABU::URI(pathDir + fileBase + ".json");
+    return pathDir + fileBase + ".json";
 }
 
 static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport::COLLADA2JSONContext *converterArgs)
@@ -112,7 +112,7 @@ int main (int argc, char * const argv[]) {
             FileStream s(stdout);
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
-            printf("converting:%s ...\n",converterArgs.inputFilePath.c_str());
+            printf("converting:%s ... as %s \n",converterArgs.inputFilePath.c_str(), converterArgs.outputFilePath.c_str());
             JSONExport::DAE2JSONWriter* writer = new JSONExport::DAE2JSONWriter(converterArgs, &jsonWriter);
             writer->write();
             printf("[completed conversion]\n");
