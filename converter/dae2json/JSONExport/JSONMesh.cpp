@@ -136,7 +136,7 @@ namespace JSONExport
                 unsigned int indexSet = (*accessorIterator).first;
                 JSONExport::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);   
-                unsigned int size = _allOriginalAccessors.size();
+                unsigned int size = (unsigned int)_allOriginalAccessors.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;   
                 
                 //printf("set %d for key: %s\n",size, semanticIndexSetKey.c_str());
@@ -145,7 +145,7 @@ namespace JSONExport
             }
         }
         
-        maxVertexAttributes = _allOriginalAccessors.size();
+        maxVertexAttributes = (unsigned int)_allOriginalAccessors.size();
         
         vector <shared_ptr<JSONExport::JSONPrimitiveRemapInfos> > allPrimitiveRemapInfos;
         

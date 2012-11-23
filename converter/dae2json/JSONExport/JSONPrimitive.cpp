@@ -181,7 +181,7 @@ namespace JSONExport
             unsigned int index = remappedMeshIndexesMap[remappedIndex];
             if (index == 0) {
                 index = currentIndex++;
-                generatedIndices[generatedIndicesCount++] = k;
+                generatedIndices[generatedIndicesCount++] = (unsigned int)k;
                 remappedMeshIndexesMap[remappedIndex] = index;
             } 
             

@@ -212,7 +212,7 @@ namespace JSONExport
             cvtAccessor->setElementType(elementType);
             cvtAccessor->setCount(elementsCount);
             
-            accessors[indexOfSet] = cvtAccessor;
+            accessors[(unsigned int)indexOfSet] = cvtAccessor;
         }
         
         return (unsigned int)setCount;
@@ -349,7 +349,7 @@ namespace JSONExport
             switch (type) {
                 case JSONExport::FLOAT: {
                     float* vector = (float*)bufferData;
-                    vector[1] = 1.0 - vector[1];
+                    vector[1] = (float) (1.0 - vector[1]);
                 }
                     break;
                 default:
@@ -683,7 +683,7 @@ namespace JSONExport
                     int materialBindingIndex = -1;
                     for (size_t k = 0; k < materialBindings.getCount() ; k++) {
                         if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
-                            materialBindingIndex = k;
+                            materialBindingIndex = (unsigned int)k;
                         }
                     }
                     if (materialBindingIndex != -1) {
