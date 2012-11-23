@@ -16152,7 +16152,7 @@
                             {
                                 "parameter": "diffuseColor",
                                 "symbol": "u_diffuseColor",
-                                "type": "FLOAT_VEC4"
+                                "type": "FLOAT_VEC3"
                             }
                         ],
                         "x-shader/x-fragment": "lambert0Fs",
@@ -16208,7 +16208,7 @@
                             {
                                 "parameter": "diffuseColor",
                                 "symbol": "u_diffuseColor",
-                                "type": "FLOAT_VEC4"
+                                "type": "FLOAT_VEC3"
                             },
                             {
                                 "parameter": "transparency",
