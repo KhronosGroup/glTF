@@ -227,7 +227,7 @@ namespace JSONExport
             typeForUniform[kModelViewMatrixUniform] = "FLOAT_MAT4";
             typeForUniform[kNormalMatrixUniform] = "FLOAT_MAT3";
             typeForUniform[kProjectionMatrixUniform] = "FLOAT_MAT4";
-            typeForUniform[kDiffuseColorUniform] = "FLOAT_VEC4";
+            typeForUniform[kDiffuseColorUniform] = "FLOAT_VEC3";
             typeForUniform[kDiffuseTextureUniform] = "SAMPLER_2D";
             typeForUniform[kTransparencyUniform] = "FLOAT";
         }
