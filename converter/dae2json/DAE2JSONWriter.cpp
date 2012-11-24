@@ -35,7 +35,9 @@
 
 #include "JSONExport.h"
 #include "DAE2JSONWriter.h"
-#include "commonProfileShaders.h"
+#include "COLLADAFWPolygons.h"
+#include "shaders/commonProfileShaders.h"
+#include "helpers/geometryHelpers.h"
 
 namespace JSONExport
 {    
@@ -225,12 +227,17 @@ namespace JSONExport
         // We want to match OpenGL/ES mode , as WebGL spec points to OpenGL/ES spec...
         // "Symbolic constants GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, and GL_TRIANGLES are accepted."
         std::string type;
+        bool shouldTriangulate = false;
+        
         switch(openCOLLADAMeshPrimitive->getPrimitiveType()) {
                 //these 2 requires transforms
             case MeshPrimitive::POLYLIST:
             case MeshPrimitive::POLYGONS:
                 // FIXME: perform conversion, but until not done report error
-                //these mode are supported by WebGL                    
+                //these mode are supported by WebGL
+                shouldTriangulate = true;
+                //force triangles
+                type = "TRIANGLES";
                 break;
             case  MeshPrimitive::LINES:
                 type = "LINES";
@@ -257,8 +264,9 @@ namespace JSONExport
             default:
                 break;
         }
+
         
-        cvtPrimitive->setMaterialObjectID((unsigned int)openCOLLADAMeshPrimitive->getMaterialId());        
+        cvtPrimitive->setMaterialObjectID((unsigned int)openCOLLADAMeshPrimitive->getMaterialId());
         cvtPrimitive->setType(type);
         
         //count of indices , it must be the same for all kind of indices                
@@ -266,7 +274,27 @@ namespace JSONExport
         
         //vertex
         //IndexList &positionIndexList = openCOLLADAMeshPrimitive->getPositionIndices();
-        shared_ptr <JSONExport::JSONDataBuffer> positionBuffer(new JSONExport::JSONDataBuffer(openCOLLADAMeshPrimitive->getPositionIndices().getData(), count * sizeof(unsigned int), false)); 
+        unsigned int *indices = openCOLLADAMeshPrimitive->getPositionIndices().getData();
+        unsigned int *verticesCountArray = 0;
+        unsigned int vcount = 0;   //count of elements in the array containing the count of indices per polygon & polylist.
+        unsigned int triangulatedIndicesCount = 0;
+        
+        if (shouldTriangulate) {
+            //We have to upcast to polygon to retrieve the array of vertexCount
+            //OpenCOLLADA use polylist as polygon.
+            COLLADAFW::Polygons *polygon = (COLLADAFW::Polygons*)openCOLLADAMeshPrimitive;
+            const COLLADAFW::Polygons::VertexCountArray& vertexCountArray = polygon->getGroupedVerticesVertexCountArray();
+            vcount = (unsigned int)vertexCountArray.getCount();
+            verticesCountArray = (unsigned int*)malloc(sizeof(unsigned int) * vcount);
+            for (size_t i = 0; i < vcount; i++) {
+                verticesCountArray[i] = polygon->getGroupedVerticesVertexCount(i);;
+            }
+            indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+            count = triangulatedIndicesCount;
+        }
+        
+        shared_ptr <JSONExport::JSONDataBuffer> positionBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+        
         shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,
                                                                                         count,
                                                                                          JSONExport::VERTEX,
@@ -274,18 +302,18 @@ namespace JSONExport
         
         cvtPrimitive->appendIndices(positionIndices);
         
-        
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
-            if (count != openCOLLADAMeshPrimitive->getNormalIndices().getCount()) {
-                // FIXME: report error
+            indices = openCOLLADAMeshPrimitive->getNormalIndices().getData();
+            if (shouldTriangulate) {
+                indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+                count = triangulatedIndicesCount;
             }
             
-            shared_ptr <JSONExport::JSONDataBuffer> normalBuffer(new JSONExport::JSONDataBuffer(openCOLLADAMeshPrimitive->getNormalIndices().getData(), count * sizeof(unsigned int), false)); 
+            shared_ptr <JSONExport::JSONDataBuffer> normalBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
             shared_ptr <JSONExport::JSONIndices> normalIndices(new JSONExport::JSONIndices(normalBuffer,
                                                                                            count,
                                                                                            JSONExport::NORMAL,
                                                                                            0));
-            
             cvtPrimitive->appendIndices(normalIndices);
         }
         
@@ -295,11 +323,14 @@ namespace JSONExport
             for (size_t i = 0 ; i < colorListArray.getCount() ; i++) {
                 IndexList* indexList = openCOLLADAMeshPrimitive->getColorIndices(i);
                 
-                UIntValuesArray& indices = indexList->getIndices();
-                if (count != indices.getCount()) {
-                    // FIXME: report error
+                indices = indexList->getIndices().getData();
+                
+                if (shouldTriangulate) {
+                    indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+                    count = triangulatedIndicesCount;
                 }
-                shared_ptr <JSONExport::JSONDataBuffer> colorBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
+                
+                shared_ptr <JSONExport::JSONDataBuffer> colorBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
                 
                 shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
                                                                                               count,
@@ -315,12 +346,14 @@ namespace JSONExport
             for (size_t i = 0 ; i < uvListArray.getCount() ; i++) {
                 IndexList* indexList = openCOLLADAMeshPrimitive->getUVCoordIndices(i);
                                 
-                UIntValuesArray& indices = indexList->getIndices();
-                if (count != indices.getCount()) {
-                    // FIXME: report error
+                indices = indexList->getIndices().getData();
+                
+                if (shouldTriangulate) {
+                    indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+                    count = triangulatedIndicesCount;
                 }
                 
-                shared_ptr <JSONExport::JSONDataBuffer> uvBuffer(new JSONExport::JSONDataBuffer(indices.getData(), count * sizeof(unsigned int), false)); 
+                shared_ptr <JSONExport::JSONDataBuffer> uvBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
                 
                 //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
                 //for now forced to 0, to be fixed for multi texturing.
@@ -334,6 +367,12 @@ namespace JSONExport
                 cvtPrimitive->appendIndices(uvIndices);
             }
         }
+        
+        if (verticesCountArray) {
+            free(verticesCountArray);
+        }
+        
+        
         
         return cvtPrimitive;
     }
