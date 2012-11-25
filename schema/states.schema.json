@@ -189,14 +189,14 @@
             "type" : "object",
             "description" : "gl.sampleCoverage()",
             "properties" : {
-			    "value" : {
+                "value" : {
                     "type" : "number",
                     "description" : "gl.sampleCoverage()",
                     "default" : 1.0,
                     "minimum" : 0.0,
                     "maximum" : 1.0
                 },
-			    "invert" : {
+                "invert" : {
                     "type" : "boolean",
                     "description" : "gl.sampleCoverage()",
                     "default" : false
@@ -207,7 +207,7 @@
             "type" : "boolean",
             "description" : "gl.enable(gl.SAMPLE_COVERAGE) or gl.disable(gl.SAMPLE_COVERAGE)",
             "default" : false
-		},
+        },
         "scissor" : {
             "type" : "object",
             "description" : "gl.scissor()",
@@ -254,7 +254,7 @@
                     "description" : "gl.stencilFunc()",
                     "default" : 0,
                     "minimum" : 0,
-                }
+                },
                 "mask" : {
                     "type" : "integer",
                     "description" : "gl.stencilFunc()",
@@ -283,7 +283,7 @@
                     "description" : "gl.stencilFuncSeparate()",
                     "default" : 0,
                     "minimum" : 0,
-                }
+                },
                 "mask" : {
                     "type" : "integer",
                     "description" : "gl.stencilFuncSeparate()",

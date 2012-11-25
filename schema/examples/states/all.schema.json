@@ -39,7 +39,7 @@
         "value" : 1.0,
         "invert" : false
     },
-	"sample_coverage_enable" : false,
+    "sample_coverage_enable" : false,
     "scissor" : {
         "x" : 0,
         "y" : 0,
@@ -49,14 +49,14 @@
     "scissor_test_enable" : false,
     "stencil_func" : {
         "func" : "ALWAYS",
-	    "ref" : 0,
-	    "mask" : ~0
+        "ref" : 0,
+        "mask" : ~0
     },
     "stencil_func_separate" : {
         "front" : "ALWAYS",
         "back" : "ALWAYS",
-	    "ref" : 0,
-	    "mask" : ~0
+        "ref" : 0,
+        "mask" : ~0
     },
     "stencil_mask" : ~0,
     "stencil_mask_separate" : {
