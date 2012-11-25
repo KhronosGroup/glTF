@@ -44,35 +44,35 @@
         "x" : 0,
         "y" : 0,
         "width" : 0,
-        "height : 0	
+        "height" : 0	
     },
     "scissor_test_enable" : false,
     "stencil_func" : {
         "func" : "ALWAYS",
         "ref" : 0,
-        "mask" : ~0
+        "mask" : 0
     },
     "stencil_func_separate" : {
         "front" : "ALWAYS",
         "back" : "ALWAYS",
         "ref" : 0,
-        "mask" : ~0
+        "mask" : 0
     },
-    "stencil_mask" : ~0,
+    "stencil_mask" : 0,
     "stencil_mask_separate" : {
         "face" : "FRONT_AND_BACK",
-        "mask" : ~0
+        "mask" : 0
     },
     "stencil_op" : {
         "fail" : "KEEP",
         "zfail" : "KEEP",
-        "zpass" : "KEEP",
+        "zpass" : "KEEP"
     },
     "stencil_op_separate" : {
         "face" : "FRONT_AND_BACK",
         "fail" : "KEEP",
         "zfail" : "KEEP",
-        "zpass" : "KEEP",
+        "zpass" : "KEEP"
     },
     "stencil_test_enable" : false
 }

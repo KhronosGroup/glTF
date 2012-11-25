@@ -24,7 +24,7 @@
                     "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
                     "default" : "FUNC_ADD"
                 },
-                "alpha : {
+                "alpha" : {
                     "type" : "string",
                     "description" : "gl.blendEquationSeparate()",
                     "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
@@ -110,7 +110,7 @@
         "depth_mask" : {
             "type" : "boolean",
             "description" : "gl.depthMask()",
-            "default" : true,
+            "default" : true
         },
         "depth_range" : {
             "type" : "object",
@@ -215,22 +215,22 @@
                 "x" : {
                     "type" : "integer",
                     "description" : "gl.scissor()",
-                    "default" : 0,
+                    "default" : 0
                 },
                 "y" : {
                     "type" : "integer",
                     "description" : "gl.scissor()",
-                    "default" : 0,
+                    "default" : 0
                 },
                 "width" : {
                     "type" : "integer",
                     "description" : "gl.scissor()",
-                    "default" : 0,
+                    "default" : 0
                 },
                 "height" : {
                     "type" : "integer",
                     "description" : "gl.scissor()",
-                    "default" : 0,
+                    "default" : 0
                 }
             }			
         },
@@ -253,12 +253,11 @@
                     "type" : "integer",
                     "description" : "gl.stencilFunc()",
                     "default" : 0,
-                    "minimum" : 0,
+                    "minimum" : 0
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFunc()",
-                    "default" : ~0
+                    "description" : "gl.stencilFunc().  The default is all ones."
                 }
             }			
         },
@@ -282,19 +281,17 @@
                     "type" : "integer",
                     "description" : "gl.stencilFuncSeparate()",
                     "default" : 0,
-                    "minimum" : 0,
+                    "minimum" : 0
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFuncSeparate()",
-                    "default" : ~0
+                    "description" : "gl.stencilFuncSeparate().  The default is all ones."
                 }
             }			
         },
         "stencil_mask" : {
             "type" : "integer",
-            "description" : "gl.stencilMask()",
-            "default" : ~0,
+            "description" : "gl.stencilMask().  The default is all ones."
         },
         "stencil_mask_separate" : {
             "type" : "object",
@@ -308,8 +305,7 @@
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilMaskSeparate()",
-                    "default" : ~0
+                    "description" : "gl.stencilMaskSeparate().  The default is all ones."
                 }			
             }		
         },
