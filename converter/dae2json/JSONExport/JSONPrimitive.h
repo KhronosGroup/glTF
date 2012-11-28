@@ -83,6 +83,7 @@ namespace JSONExport
         unsigned int* _originalCountAndIndexes;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
         std::vector< shared_ptr<JSONExport::JSONIndices> > _allIndices;
+        unsigned long _originalCountAndIndexesSize;
     };
 
 }

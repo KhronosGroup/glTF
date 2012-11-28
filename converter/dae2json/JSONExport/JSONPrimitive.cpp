@@ -58,6 +58,7 @@ namespace JSONExport
     JSONPrimitive::JSONPrimitive()
     {
         this->_originalCountAndIndexes = 0;
+        this->_originalCountAndIndexesSize = 0;
     }
     
     JSONPrimitive::~JSONPrimitive()
@@ -135,16 +136,14 @@ namespace JSONExport
             unsigned int idx = indices[k];                
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (vertexAttributesCount + 1)];
             
-            for (size_t accessorIndex = 0 ; accessorIndex < allOriginalAccessors.size(); accessorIndex++) {
+            for (size_t accessorIndex = 0 ; accessorIndex < vertexAttributesCount; accessorIndex++) {
                 AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
-                                
+                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);
+                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (remappedIndex[1 /* skip count */ + accessorIndex] * bufferInfos->originalAccessorByteStride);
                 //uniqueIndexes
                 memcpy(/* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
-                       
                        //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
-                       bufferInfos->remappedBufferData /*+ bufferInfos->remappedAccessorByteOffset */+ (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride), 
-                        (unsigned char*)bufferInfos->originalBufferData /*+ bufferInfos->originalAccessorByteOffset */+ (remappedIndex[1 /* skip count */ + accessorIndex] * bufferInfos->originalAccessorByteStride),
-                       bufferInfos->elementByteLength);
+                       ptrDst, ptrSrc , bufferInfos->elementByteLength);
             }
         }
         
@@ -163,7 +162,10 @@ namespace JSONExport
         unsigned int generatedIndicesCount = 0;
         unsigned int vertexAttributesCount = (unsigned int)_allIndices.size();
         size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
+        
         this->_originalCountAndIndexes = (unsigned int*)calloc( (indicesCount * sizeOfRemappedIndex), sizeof(unsigned char));
+        //this is useful for debugging.
+        this->_originalCountAndIndexesSize = (indicesCount * sizeOfRemappedIndex);
         
         unsigned int *uniqueIndexes = (unsigned int*)malloc( indicesCount * sizeof(unsigned int));
         unsigned int* generatedIndices = (unsigned int*) malloc (indicesCount * sizeof(unsigned int)); //owned by PrimitiveRemapInfos
