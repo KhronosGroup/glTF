@@ -15,6 +15,8 @@ link_directories(${COLLADA2JSON_BINARY_DIR}/lib)
 
 if (WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-DWIN32)
+    add_definitions(-EHsc)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
