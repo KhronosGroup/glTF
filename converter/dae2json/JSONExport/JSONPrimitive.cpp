@@ -81,15 +81,14 @@ namespace JSONExport
         
     } AccessorsBufferInfos;
     
-    static AccessorsBufferInfos* createAccessorsBuffersInfos(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors)
+    static AccessorsBufferInfos* createAccessorsBuffersInfos(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int*indicesInRemapping, unsigned int count)
     {
-        size_t count = allOriginalAccessors.size();
         AccessorsBufferInfos* allBufferInfos = (AccessorsBufferInfos*)malloc(count * sizeof(AccessorsBufferInfos));
         for (size_t accessorIndex = 0 ; accessorIndex < count; accessorIndex++) {
             AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
 
-            shared_ptr <JSONExport::JSONAccessor> remappedAccessor = allRemappedAccessors[accessorIndex];
-            shared_ptr <JSONExport::JSONAccessor> originalAccessor = allOriginalAccessors[accessorIndex];
+            shared_ptr <JSONExport::JSONAccessor> remappedAccessor = allRemappedAccessors[indicesInRemapping[accessorIndex]];
+            shared_ptr <JSONExport::JSONAccessor> originalAccessor = allOriginalAccessors[indicesInRemapping[accessorIndex]];
 
             if (originalAccessor->getElementByteLength() != remappedAccessor->getElementByteLength()) {
                 // FIXME : report error
@@ -101,11 +100,9 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONBuffer> originalBuffer = originalAccessor->getBuffer();     
             
             bufferInfos->remappedBufferData = (unsigned char*)static_pointer_cast <JSONDataBuffer> (remappedBuffer)->getData() + remappedAccessor->getByteOffset();
-            //bufferInfos->remappedAccessorByteOffset = remappedAccessor->getByteOffset();
             bufferInfos->remappedAccessorByteStride = remappedAccessor->getByteStride();
 
             bufferInfos->originalBufferData = (unsigned char*)static_pointer_cast <JSONDataBuffer> (originalBuffer)->getData() + originalAccessor->getByteOffset();
-            //bufferInfos->originalAccessorByteOffset = originalAccessor->getByteOffset();
             bufferInfos->originalAccessorByteStride = originalAccessor->getByteStride();
         
             bufferInfos->elementByteLength = remappedAccessor->getElementByteLength();
@@ -114,12 +111,18 @@ namespace JSONExport
         return allBufferInfos;
     }
     
-    bool JSONPrimitive::_remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos)
+    bool JSONPrimitive::_remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int* indicesInRemapping, shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos)
     {
         if (!this->_originalCountAndIndexes) {
             // FIXME: report error
             return false;
         }
+        
+        if (allOriginalAccessors.size() < this->_allIndices.size()) {
+            //TODO: assert & inconsistency check
+            printf("aa");
+        }
+        
         
         //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count and remappedIndex)
         unsigned int vertexAttributesCount = (unsigned int)this->_allIndices.size();
@@ -128,22 +131,21 @@ namespace JSONExport
         unsigned int count = primitiveRemapInfos->generatedIndicesCount();
         unsigned int* indices = primitiveRemapInfos->generatedIndices();
 
-        AccessorsBufferInfos *allBufferInfos = createAccessorsBuffersInfos(allOriginalAccessors , allRemappedAccessors);
+        AccessorsBufferInfos *allBufferInfos = createAccessorsBuffersInfos(allOriginalAccessors , allRemappedAccessors, indicesInRemapping, vertexAttributesCount);
         
         unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONDataBuffer> (this->_uniqueIndices->getBuffer())->getData());
         
         for (unsigned int k = 0 ; k < count ; k++) { 
             unsigned int idx = indices[k];                
-            unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (vertexAttributesCount + 1)];
+            unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (allOriginalAccessors.size() + 1)];
             
-            for (size_t accessorIndex = 0 ; accessorIndex < vertexAttributesCount; accessorIndex++) {
+            for (size_t accessorIndex = 0 ; accessorIndex < vertexAttributesCount  ; accessorIndex++) {
                 AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
                 void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);
-                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (remappedIndex[1 /* skip count */ + accessorIndex] * bufferInfos->originalAccessorByteStride);
-                //uniqueIndexes
-                memcpy(/* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
-                       //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
-                       ptrDst, ptrSrc , bufferInfos->elementByteLength);
+                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (remappedIndex[1 /* skip count */ + indicesInRemapping[accessorIndex]] * bufferInfos->originalAccessorByteStride);
+                //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
+                /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
+                memcpy(ptrDst, ptrSrc , bufferInfos->elementByteLength);
             }
         }
         
@@ -153,33 +155,33 @@ namespace JSONExport
         return true;        
     }
     
-    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int &endIndex)
+    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int accessorsCount, unsigned int &endIndex)
     {
         //get indices[0] presumably the VERTEX
         size_t indicesCount = this->indicesCount();
-        
+                
         //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count)
         unsigned int generatedIndicesCount = 0;
-        unsigned int vertexAttributesCount = (unsigned int)_allIndices.size();
+        unsigned int vertexAttributesCount = accessorsCount;//(unsigned int)_allIndices.size();
         size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
         
         this->_originalCountAndIndexes = (unsigned int*)calloc( (indicesCount * sizeOfRemappedIndex), sizeof(unsigned char));
         //this is useful for debugging.
         this->_originalCountAndIndexesSize = (indicesCount * sizeOfRemappedIndex);
         
-        unsigned int *uniqueIndexes = (unsigned int*)malloc( indicesCount * sizeof(unsigned int));
-        unsigned int* generatedIndices = (unsigned int*) malloc (indicesCount * sizeof(unsigned int)); //owned by PrimitiveRemapInfos
+        unsigned int *uniqueIndexes = (unsigned int*)calloc( indicesCount * sizeof(unsigned int), 1);
+        unsigned int* generatedIndices = (unsigned int*) calloc (indicesCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
         
         for (size_t k = 0 ; k < indicesCount ; k++) {
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             
             remappedIndex[0] = vertexAttributesCount;
-            for (unsigned int i = 0 ; i < vertexAttributesCount ; i++) {
-                
-                remappedIndex[1 + indicesInRemapping[i]] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
+            for (unsigned int i = 0 ; i < _allIndices.size() ; i++) {
+                unsigned int idx = indicesInRemapping[i];                
+                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
             }
-            
+             
             unsigned int index = remappedMeshIndexesMap[remappedIndex];
             if (index == 0) {
                 index = currentIndex++;

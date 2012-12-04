@@ -149,43 +149,35 @@ namespace JSONExport
         
         vector <shared_ptr<JSONExport::JSONPrimitiveRemapInfos> > allPrimitiveRemapInfos;
         
-        if (primitiveCount > 0) {
-            //build a array that maps the accessors that the indices points to with the index of the indice.
+        //build a array that maps the accessors that the indices points to with the index of the indice.
+        
+        JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
+        for (unsigned int i = 0 ; i < primitiveCount ; i++) {
+            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = this->_primitives[i]->allIndices();
+            unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices.size());
             
-            JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
-            for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-                std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = this->_primitives[i]->allIndices();
-                unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices.size());
-                
-                for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
-                    JSONExport::Semantic semantic = allIndices[k]->getSemantic();
-                    unsigned int indexSet = allIndices[k]->getIndexOfSet();
-                    std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);   
-                    unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
-                    
-                    //printf("git %d for key: %s\n",idx, semanticIndexSetKey.c_str());
-
-                    indicesInRemapping[k] = idx;
-                }
-                
-                shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, indicesInRemapping, startIndex, endIndex);
-                
-                free(indicesInRemapping);
-                
-                if (primitiveRemapInfos.get()) {
-                    startIndex = endIndex;
-                    allPrimitiveRemapInfos.push_back(primitiveRemapInfos);               
-                } else {
-                    // FIXME: report error
-                    return false;
-                }
+            for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
+                JSONExport::Semantic semantic = allIndices[k]->getSemantic();
+                unsigned int indexSet = allIndices[k]->getIndexOfSet();
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
+                unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
+                indicesInRemapping[k] = idx;
             }
             
+            shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
             
-        } else {
+            free(indicesInRemapping);
             
-            return false;
+            if (primitiveRemapInfos.get()) {
+                startIndex = endIndex;
+                allPrimitiveRemapInfos.push_back(primitiveRemapInfos);
+            } else {
+                // FIXME: report error
+                return false;
+            }
         }
+        
+        
         
         // we are using WebGL for rendering, this involve OpenGL/ES where only float are supported.
         // now we got not only the uniqueIndexes but also the number of different indexes, i.e the number of vertex attributes count
@@ -224,11 +216,26 @@ namespace JSONExport
         }
         */
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-            if (!_primitives[i]->_remapVertexes(this->_allOriginalAccessors , this->_allRemappedAccessors, allPrimitiveRemapInfos[i])) {
+            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = this->_primitives[i]->allIndices();
+            unsigned int* indicesInRemapping = (unsigned int*)calloc(sizeof(unsigned int) * allIndices.size(), 1);
+
+            for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
+                JSONExport::Semantic semantic = allIndices[k]->getSemantic();
+                unsigned int indexSet = allIndices[k]->getIndexOfSet();
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
+                unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
+                indicesInRemapping[k] = idx;
+            }
+            
+            bool status = _primitives[i]->_remapVertexes(this->_allOriginalAccessors , this->_allRemappedAccessors, indicesInRemapping, allPrimitiveRemapInfos[i]);
+            free(indicesInRemapping);
+
+            if (!status) {
                 // FIXME: report error
                 return false;
             }
-        }
+            
+        } 
         
         if (endIndex > 65535) {
             //The mesh should be split but we do not handle this feature yet
@@ -269,7 +276,7 @@ namespace JSONExport
                 // FIXME: report error
             } else {
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                unsigned short* ushortIndices = (unsigned short*)malloc(indicesLength);
+                unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                 }
