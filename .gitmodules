@@ -7,3 +7,6 @@
 [submodule "converter/dae2json/dependencies/rapidjson"]
 	path = converter/dae2json/dependencies/rapidjson
 	url = git://github.com/kennytm/rapidjson.git
+[submodule "schema/JSV"]
+	path = schema/JSV
+	url = git://github.com/garycourt/JSV.git
