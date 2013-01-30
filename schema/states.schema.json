@@ -5,28 +5,28 @@
     "properties" : {
         "blend_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.BLEND) or gl.disable(gl.BLEND)",
+            "description" : "enable(BLEND) or disable(BLEND)",
             "default" : false
         },
         "blend_equation" : {
             "type" : "string",
-            "description" : "gl.blendEquation()",
+            "description" : "blendEquation()",
             "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
             "default" : "FUNC_ADD"
         },
         "blend_equation_separate" : {
             "type" : "object",
-            "description" : "gl.blendEquationSeparate()",
+            "description" : "blendEquationSeparate()",
             "properties" : {
                 "rgb" : {
                     "type" : "string",
-                    "description" : "gl.blendEquationSeparate()",
+                    "description" : "blendEquationSeparate()",
                     "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
                     "default" : "FUNC_ADD"
                 },
                 "alpha" : {
                     "type" : "string",
-                    "description" : "gl.blendEquationSeparate()",
+                    "description" : "blendEquationSeparate()",
                     "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
                     "default" : "FUNC_ADD"
                 }
@@ -34,17 +34,17 @@
         },
         "blend_func" : {
             "type" : "object",
-            "description" : "gl.blendFunc()",
+            "description" : "blendFunc()",
             "properties" : {
                 "sfactor" : {
                     "type" : "string",
-                    "description" : "gl.blendFunc()",
+                    "description" : "blendFunc()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ONE"
                 },
                 "dfactor" : {
                     "type" : "string",
-                    "description" : "gl.blendFunc()",
+                    "description" : "blendFunc()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ZERO"
                 }
@@ -52,29 +52,29 @@
         },		
         "blend_func_separate" : {
             "type" : "object",
-            "description" : "gl.blendFuncSeparate()",
+            "description" : "blendFuncSeparate()",
             "properties" : {
                 "srcRGB" : {
                     "type" : "string",
-                    "description" : "gl.blendFuncSeparate()",
+                    "description" : "blendFuncSeparate()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ONE"
                 },
                 "srcAlpha" : {
                     "type" : "string",
-                    "description" : "gl.blendFuncSeparate()",
+                    "description" : "blendFuncSeparate()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ONE"
                 },
                 "dstRGB" : {
                     "type" : "string",
-                    "description" : "gl.blendFuncSeparate()",
+                    "description" : "blendFuncSeparate()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ZERO"
                 },
                 "dstAlpha" : {
                     "type" : "string",
-                    "description" : "gl.blendFuncSeparate()",
+                    "description" : "blendFuncSeparate()",
                     "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
                     "default" : "ZERO"
                 }
@@ -82,7 +82,7 @@
         },
         "color_mask" : {
             "type" : "array",
-            "description" : "gl.colorMask()",
+            "description" : "colorMask()",
             "items" : {
                 "type" : "boolean"
             },
@@ -92,40 +92,40 @@
         },
         "cull_face" : {
             "type" : "string",
-            "description" : "gl.cullFace()",
+            "description" : "cullFace()",
             "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
             "default" : "BACK"
         },
         "cull_face_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.CULL_FACE) or gl.disable(gl.CULL_FACE)",
+            "description" : "enable(CULL_FACE) or disable(CULL_FACE)",
             "default" : false
         },
         "depth_func" : {
             "type" : "string",
-            "description" : "gl.depthFunc()",
+            "description" : "depthFunc()",
             "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
             "default" : "LESS"
         },
         "depth_mask" : {
             "type" : "boolean",
-            "description" : "gl.depthMask()",
+            "description" : "depthMask()",
             "default" : true
         },
         "depth_range" : {
             "type" : "object",
-            "description" : "gl.depthRange()",
+            "description" : "depthRange()",
             "properties" : {
                 "zNear" : {
                     "type" : "number",
-                    "description" : "gl.depthRange()",
+                    "description" : "depthRange()",
                     "default" : 0.0,
                     "minimum" : 0.0,
                     "maximum" : 1.0
                 },			
                 "zFar" : {
                     "type" : "number",
-                    "description" : "gl.depthRange()",
+                    "description" : "depthRange()",
                     "default" : 1.0,
                     "minimum" : 0.0,
                     "maximum" : 1.0
@@ -134,23 +134,23 @@
         },
         "depth_test_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.DEPTH_TEST) or gl.disable(gl.DEPTH_TEST)",
+            "description" : "enable(DEPTH_TEST) or disable(DEPTH_TEST)",
             "default" : false
         },
         "dither_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.DITHER) or gl.disable(gl.DITHER)",
+            "description" : "enable(DITHER) or disable(DITHER)",
             "default" : false
         },
         "front_face" : {
             "type" : "string",
-            "description" : "gl.frontFace()",
+            "description" : "frontFace()",
             "enum" : ["CW,", "CCW"],
             "default" : "CCW"
         },
         "line_width" : {
             "type" : "number",
-            "description" : "gl.lineWidth()",
+            "description" : "lineWidth()",
             "default" : 1.0,
             "minimum" : 0.0,
             "exclusiveMinimum" : true
@@ -161,173 +161,173 @@
         },
         "polygon_offset" : {
             "type" : "object",
-            "description" : "gl.polygonOffset()",
+            "description" : "polygonOffset()",
             "properties" : {
                 "factor" : {
                     "type" : "number",
-                    "description" : "gl.polygonOffset()",
+                    "description" : "polygonOffset()",
                     "default" : 0.0
                 },
                 "units" : {
                     "type" : "number",
-                    "description" : "gl.polygonOffset()",
+                    "description" : "polygonOffset()",
                     "default" : 0.0
                 }
             }
         },
         "polygon_offset_fill_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.POLYGON_OFFSET_FILL) or gl.disable(gl.POLYGON_OFFSET_FILL)",
+            "description" : "enable(POLYGON_OFFSET_FILL) or disable(POLYGON_OFFSET_FILL)",
             "default" : false
         },
         "sample_alpha_to_coverage_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.SAMPLE_ALPHA_TO_COVERAGE) or gl.disable(gl.SAMPLE_ALPHA_TO_COVERAGE)",
+            "description" : "enable(SAMPLE_ALPHA_TO_COVERAGE) or disable(SAMPLE_ALPHA_TO_COVERAGE)",
             "default" : false
         },
         "sample_coverage" : {
             "type" : "object",
-            "description" : "gl.sampleCoverage()",
+            "description" : "sampleCoverage()",
             "properties" : {
                 "value" : {
                     "type" : "number",
-                    "description" : "gl.sampleCoverage()",
+                    "description" : "sampleCoverage()",
                     "default" : 1.0,
                     "minimum" : 0.0,
                     "maximum" : 1.0
                 },
                 "invert" : {
                     "type" : "boolean",
-                    "description" : "gl.sampleCoverage()",
+                    "description" : "sampleCoverage()",
                     "default" : false
                 }
             }			
         },
         "sample_coverage_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.SAMPLE_COVERAGE) or gl.disable(gl.SAMPLE_COVERAGE)",
+            "description" : "enable(SAMPLE_COVERAGE) or disable(SAMPLE_COVERAGE)",
             "default" : false
         },
         "scissor" : {
             "type" : "object",
-            "description" : "gl.scissor()",
+            "description" : "scissor()",
             "properties" : {
                 "x" : {
                     "type" : "integer",
-                    "description" : "gl.scissor()",
+                    "description" : "scissor()",
                     "default" : 0
                 },
                 "y" : {
                     "type" : "integer",
-                    "description" : "gl.scissor()",
+                    "description" : "scissor()",
                     "default" : 0
                 },
                 "width" : {
                     "type" : "integer",
-                    "description" : "gl.scissor()",
+                    "description" : "scissor()",
                     "default" : 0
                 },
                 "height" : {
                     "type" : "integer",
-                    "description" : "gl.scissor()",
+                    "description" : "scissor()",
                     "default" : 0
                 }
             }			
         },
         "scissor_test_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.SCISSOR_TEST) or gl.disable(gl.SCISSOR_TEST)",
+            "description" : "enable(SCISSOR_TEST) or disable(SCISSOR_TEST)",
             "default" : false
         },
         "stencil_func" : {
             "type" : "object",
-            "description" : "gl.stencilFunc()",
+            "description" : "stencilFunc()",
             "properties" : {
                 "func" : {
                     "type" : "string",
-                    "description" : "gl.stencilFunc()",
+                    "description" : "stencilFunc()",
                     "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
                     "default" : "ALWAYS"
                 },
                 "ref" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFunc()",
+                    "description" : "stencilFunc()",
                     "default" : 0,
                     "minimum" : 0
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFunc().  The default is all ones."
+                    "description" : "stencilFunc().  The default is all ones."
                 }
             }			
         },
         "stencil_func_separate" : {
             "type" : "object",
-            "description" : "gl.stencilFuncSeparate()",
+            "description" : "stencilFuncSeparate()",
             "properties" : {
                 "front" : {
                     "type" : "string",
-                    "description" : "gl.stencilFuncSeparate()",
+                    "description" : "stencilFuncSeparate()",
                     "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
                     "default" : "ALWAYS"
                 },
                 "back" : {
                     "type" : "string",
-                    "description" : "gl.stencilFuncSeparate()",
+                    "description" : "stencilFuncSeparate()",
                     "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
                     "default" : "ALWAYS"
                 },
                 "ref" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFuncSeparate()",
+                    "description" : "stencilFuncSeparate()",
                     "default" : 0,
                     "minimum" : 0
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilFuncSeparate().  The default is all ones."
+                    "description" : "stencilFuncSeparate().  The default is all ones."
                 }
             }			
         },
         "stencil_mask" : {
             "type" : "integer",
-            "description" : "gl.stencilMask().  The default is all ones."
+            "description" : "stencilMask().  The default is all ones."
         },
         "stencil_mask_separate" : {
             "type" : "object",
-            "description" : "gl.stencilMaskSeparate()",
+            "description" : "stencilMaskSeparate()",
             "properties" : {
                 "face" : {
                     "type" : "string",
-                    "description" : "gl.stencilMaskSeparate()",
+                    "description" : "stencilMaskSeparate()",
                     "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
                     "default" : "FRONT_AND_BACK"
                 },
                 "mask" : {
                     "type" : "integer",
-                    "description" : "gl.stencilMaskSeparate().  The default is all ones."
+                    "description" : "stencilMaskSeparate().  The default is all ones."
                 }			
             }		
         },
         "stencil_op" : {
             "type" : "object",
-            "description" : "gl.stencilOp()",
+            "description" : "stencilOp()",
             "properties" : {
                 "fail" : {
                     "type" : "string",
-                    "description" : "gl.stencilOp()",
+                    "description" : "stencilOp()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 },
                 "zfail" : {
                     "type" : "string",
-                    "description" : "gl.stencilOp()",
+                    "description" : "stencilOp()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 },
                 "zpass" : {
                     "type" : "string",
-                    "description" : "gl.stencilOp()",
+                    "description" : "stencilOp()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 }
@@ -335,29 +335,29 @@
         },
         "stencil_op_separate" : {
             "type" : "object",
-            "description" : "gl.stencilOpSeparate()",
+            "description" : "stencilOpSeparate()",
             "properties" : {
                 "face" : {
                     "type" : "string",
-                    "description" : "gl.stencilOpSeparate()",
+                    "description" : "stencilOpSeparate()",
                     "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
                     "default" : "FRONT_AND_BACK"
                 },
                 "fail" : {
                     "type" : "string",
-                    "description" : "gl.stencilOpSeparate()",
+                    "description" : "stencilOpSeparate()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 },
                 "zfail" : {
                     "type" : "string",
-                    "description" : "gl.stencilOpSeparate()",
+                    "description" : "stencilOpSeparate()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 },
                 "zpass" : {
                     "type" : "string",
-                    "description" : "gl.stencilOpSeparate()",
+                    "description" : "stencilOpSeparate()",
                     "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
                     "default" : "KEEP"
                 }
@@ -365,7 +365,7 @@
         },
         "stencil_test_enable" : {
             "type" : "boolean",
-            "description" : "gl.enable(gl.STENCIL_TEST) or gl.disable(gl.STENCIL_TEST)",
+            "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
             "default" : false
 		}
 	}
