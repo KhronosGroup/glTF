@@ -1,0 +1,8 @@
+{
+    "title" : "pass",
+    "type" : "object",
+    "description" : "TODO",
+    "states" : {
+        "$ref" : "states.schema.json"
+    }
+}
