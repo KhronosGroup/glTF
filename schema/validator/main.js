@@ -4,6 +4,9 @@
     
     function validate(schemaUri, jsonUri) {
         try {
+            var json;
+            var schema;
+        
             try {
                 json = JSON.parse(document.getElementById('jsonText').value);
             } catch (e) {
