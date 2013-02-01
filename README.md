@@ -71,4 +71,3 @@ open `COLLADA2JSON.sln` and build.
 * `cmake -G Xcode`
 
 open `COLLADA2JSON.xcodeproj` and build, or if you installed xcode command line tools you can also build in the terminal: `xcodebuild -target collada2json`
-
