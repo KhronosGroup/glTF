@@ -1,0 +1,80 @@
+{
+    "states" : {
+        "blend_enable" : false,
+        "blend_equation" : "FUNC_ADD",
+        "blend_equation_separate" : {
+            "rgb" : "FUNC_ADD",
+            "alpha" : "FUNC_ADD"
+        },
+        "blend_func" : {
+            "sfactor" : "ONE",
+            "dfactor" : "ZERO"
+        },
+        "blend_func_separate" : {
+            "srcRGB" : "ONE",
+            "srcAlpha" : "ONE",
+            "dstRGB" : "ZERO",
+            "dstAlpha" : "ZERO"
+        },
+        "color_mask" : [true, true, true, true],
+        "cull_face" : "BACK",
+        "cull_face_enable" : false,
+        "depth_func" : "LESS",
+        "depth_mask" : true,
+        "depth_range" : {
+            "zNear" : 0.0,
+            "zFar" : 1.0
+        },
+        "depth_test_enable" : false,
+        "dither_enable" : false,
+        "front_face" : "CCW",
+        "line_width" : 1.0,
+        "point_size" : 1.0,
+        "polygon_offset" : {
+            "factor" : 0.0,
+            "units" : 0.0
+        },
+        "polygon_offset_fill_enable" : false,
+        "sample_alpha_to_coverage_enable" : false,
+        "sample_coverage" : {
+            "value" : 1.0,
+            "invert" : false
+        },
+        "sample_coverage_enable" : false,
+        "scissor" : {
+            "x" : 0,
+            "y" : 0,
+            "width" : 0,
+            "height" : 0	
+        },
+        "scissor_test_enable" : false,
+        "stencil_func" : {
+            "func" : "ALWAYS",
+            "ref" : 0,
+            "mask" : 0
+        },
+        "stencil_func_separate" : {
+            "front" : "ALWAYS",
+            "back" : "ALWAYS",
+            "ref" : 0,
+            "mask" : 0
+        },
+        "stencil_mask" : 0,
+        "stencil_mask_separate" : {
+            "face" : "FRONT_AND_BACK",
+            "mask" : 0
+        },
+        "stencil_op" : {
+            "fail" : "KEEP",
+            "zfail" : "KEEP",
+            "zpass" : "KEEP"
+        },
+        "stencil_op_separate" : {
+            "face" : "FRONT_AND_BACK",
+            "fail" : "KEEP",
+            "zfail" : "KEEP",
+            "zpass" : "KEEP"
+        },
+        "stencil_test_enable" : false
+    }
+}

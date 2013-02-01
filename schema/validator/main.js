@@ -1,7 +1,7 @@
 // Some code from https://github.com/garycourt/JSV/blob/master/examples/index.html
+// Some code from https://github.com/AnalyticalGraphicsInc/czml-writer/blob/master/Schema/Validator.html
 (function() {
     "use strict";
-    
     function validate(schemaUri, jsonUri) {
         try {
             var json;
@@ -19,7 +19,31 @@
                 throw new Error('Schema is not valid JSON');
             }
             
-            var environment = JSV.createEnvironment('json-schema-draft-03');
+            var environment = JSV.createEnvironment();
+            var originalFindSchema = environment.findSchema;
+            var loaded = {};
+
+            // Workaround to load schemas from $ref
+            environment.findSchema = function (uri) {
+                var foundSchema = originalFindSchema.call(this, uri);
+                if (!foundSchema) {
+                    if (loaded[uri]) {
+                        return foundSchema;
+                    }
+                    loaded[uri] = true;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', uri, false);
+                    xhr.send();
+                    try {
+                        environment.createSchema(JSON.parse(xhr.responseText), undefined, uri);
+                    } catch (e) {
+                        throw new Error("Error loading schema " + uri + ": " + e.message);
+                    }
+                    foundSchema = originalFindSchema.call(this, uri);
+                }
+                return foundSchema;
+            };
+
             var report = environment.validate(environment.createInstance(json), environment.createSchema(schema));
             var reportElement = document.getElementById('report');
             var output;

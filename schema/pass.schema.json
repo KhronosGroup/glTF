@@ -2,7 +2,9 @@
     "title" : "pass",
     "type" : "object",
     "description" : "TODO",
-    "states" : {
-        "$ref" : "states.schema.json"
+    "properties": {    
+        "states" : {
+            "$ref" : "states.schema.json"
+        }
     }
 }
