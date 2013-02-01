@@ -16,6 +16,7 @@ Use `json` to provide the json to validate:
 ```
 http://localhost/gltf/?json=examples/states/translucency.schema.json
 ```
+
 Use `validate` to immediately validate the json with the schema:
 ```
 http://localhost/gltf/?validate=true
