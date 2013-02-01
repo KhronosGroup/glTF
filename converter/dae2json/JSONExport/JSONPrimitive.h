@@ -54,7 +54,7 @@ namespace JSONExport
     
     public:
         // FIXME: make protected and mesh a friend
-        bool _remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, shared_ptr<JSONPrimitiveRemapInfos> primitiveRemapInfos);
+        bool _remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int* indicesInRemapping, shared_ptr<JSONPrimitiveRemapInfos> primitiveRemapInfos);
     public:
         JSONPrimitive();
         virtual ~JSONPrimitive();
@@ -64,7 +64,7 @@ namespace JSONExport
         std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices();
         size_t indicesCount();
 
-        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int &endIndex);
+        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int accessorsCount, unsigned int &endIndex);
         shared_ptr <JSONExport::JSONIndices> getUniqueIndices();
         
         std::string getType();
@@ -83,6 +83,7 @@ namespace JSONExport
         unsigned int* _originalCountAndIndexes;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
         std::vector< shared_ptr<JSONExport::JSONIndices> > _allIndices;
+        unsigned long _originalCountAndIndexesSize;
     };
 
 }
