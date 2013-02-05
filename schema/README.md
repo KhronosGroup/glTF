@@ -40,6 +40,14 @@ _TODO_
 
 ## Camera
 
+See
+* Schema: [camera.schema.json](camera.schema.json), [perspective.schema.json](perspective.schema.json), and [orthographic.schema.json](orthographic.schema.json).
+* Examples
+   * [cameras.json](examples/glTF/cameras.json) - Bare glTF model with two cameras.
+   * [orthographic_all.json](examples/camera/orthographic_all.json) - Orthographic camera using all properties.
+   * [perspective.json](examples/camera/perspective.json) - Perspective camera using required properties.
+   * [perspective_all.json](examples/camera/perspective_all.json) - Perspective camera using all properties.
+
 Cameras are based on [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 5-21 to 5-22, 5-102 to 5-103, and 5-108 to 5-109.
 
 In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
@@ -49,13 +57,13 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * No `optics`.  COLLADA Pages 5-100 to 5-101.  `orthographic` and `perspective` are directly part of the camera.
    * A glTF camera represents a single camera; it doesn't have techniques.  This can be negotiated via a REST API.
 * In COLLADA, both `orthographic` and `perspective` allow several different options for required properties.  glTF provides only one set of required properties for `orthographic` and `perspective` cameras, which map most commonly to computing orthographic and perspective projection matrices.  See below.
+
+For `orthographic`, the following properties are required:
+* `xmag` or `ymag`
    
 For `perspective`, the following properties are required:
 * `aspect_ratio`
 * `yfov`
-
-For `orthographic`, the following properties are required:
-* `xmag` or `ymag`
 
 TODO: interaction with `node`.
 
@@ -68,13 +76,13 @@ _TODO_
 ## Render states
 
 See
-   * Schema: [states.schema.json](states.schema.json)
-      * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
-   * Examples:
-      * [all.json](examples/states/all.json) - every state with its default value.
-      * [closed_opaque_object.json](examples/states/closed_opaque_object.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
-      * [depth_test.json](examples/states/depth_test.json) - state with depth testing enabled.
-      * [translucency.json](examples/states/translucency.json) - typical state for rendering a translucency object with alpha blending.
+* Schema: [states.schema.json](states.schema.json)
+   * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
+* Examples:
+   * [all.json](examples/states/all.json) - every state with its default value.
+   * [closed_opaque_object.json](examples/states/closed_opaque_object.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
+   * [depth_test.json](examples/states/depth_test.json) - state with depth testing enabled.
+   * [translucency.json](examples/states/translucency.json) - typical state for rendering a translucency object with alpha blending.
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
 
