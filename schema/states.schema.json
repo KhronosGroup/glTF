@@ -81,15 +81,31 @@
             }
         },
         "color_mask" : {
-            "type" : "array",
+            "type" : "object",
             "description" : "colorMask()",
-            "items" : {
-                "type" : "boolean"
-            },
-            "minItems" : 4,
-            "maxItems" : 4,
-            "default" : [true, true, true, true]
-        },
+            "properties" : {
+                "red" : {
+                    "type" : "boolean",
+                    "description" : "colorMask()",
+                    "default" : true
+                },
+                "green" : {
+                    "type" : "boolean",
+                    "description" : "colorMask()",
+                    "default" : true
+                },
+                "blue" : {
+                    "type" : "boolean",
+                    "description" : "colorMask()",
+                    "default" : true
+                },
+                "alpha" : {
+                    "type" : "boolean",
+                    "description" : "colorMask()",
+                    "default" : true
+                }
+            }
+        },    
         "cull_face" : {
             "type" : "string",
             "description" : "cullFace()",

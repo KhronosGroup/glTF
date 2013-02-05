@@ -16,7 +16,12 @@
             "dstRGB" : "ZERO",
             "dstAlpha" : "ZERO"
         },
-        "color_mask" : [true, true, true, true],
+        "color_mask" : {
+            "red" : true,
+            "green" : true,
+            "blue" : true,
+            "alpha" : true
+        },
         "cull_face" : "BACK",
         "cull_face_enable" : false,
         "depth_func" : "LESS",
