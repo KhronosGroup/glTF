@@ -14,7 +14,7 @@ http://localhost/gltf/?schema=states.schema.json
 
 Use `json` to provide the json to validate:
 ```
-http://localhost/gltf/?json=examples/states/translucency.schema.json
+http://localhost/gltf/?json=examples/states/translucency.json
 ```
 
 Use `validate` to immediately validate the json with the schema:
@@ -24,7 +24,7 @@ http://localhost/gltf/?validate=true
 
 The most common use is something like:
 ```
-http://localhost/gltf/?schema=states.schema.json&json=examples/states/translucency.schema.json&validate=true
+http://localhost/gltf/?schema=states.schema.json&json=examples/states/translucency.json&validate=true
 ```
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
@@ -71,10 +71,10 @@ See
    * Schema: [states.schema.json](states.schema.json)
       * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
    * Examples:
-      * [all.schema.json](examples/states/all.schema.json) - every state with its default value.
-      * [closed_opaque_object.schema.json](examples/states/closed_opaque_object.schema.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
-      * [depth_test.schema.json](examples/states/depth_test.schema.json) - state with depth testing enabled.
-      * [translucency.schema.json](examples/states/translucency.schema.json) - typical state for rendering a translucency object with alpha blending.
+      * [all.json](examples/states/all.json) - every state with its default value.
+      * [closed_opaque_object.json](examples/states/closed_opaque_object.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
+      * [depth_test.json](examples/states/depth_test.json) - state with depth testing enabled.
+      * [translucency.json](examples/states/translucency.json) - typical state for rendering a translucency object with alpha blending.
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
 
