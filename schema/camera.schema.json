@@ -4,11 +4,11 @@
     "type" : "object",
     "description" : "TODO",
     "properties" : {
-        "perspective" : {
-            "$ref" : "perspective.schema.json"
-        },
         "orthographic" : {
             "$ref" : "orthographic.schema.json"
+        },
+        "perspective" : {
+            "$ref" : "perspective.schema.json"
         }
     }
 }

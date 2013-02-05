@@ -70,7 +70,7 @@ TODO: interaction with `node`.
 _TODO_
 * _COLLADA2JSON: loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
 * _COLLADA2JSON: `yfov` is degrees; it should be radians since this is a final-stage format._
-* _Need to figure out `up_axis`, which is part of `asset` in COLLADA.
+* _Need to figure out_ `up_axis`_, which is part of `asset` in COLLADA._
 * _This does not support off-center perspective projections or infinite perspective projections.  I'm sure that is fine._
 
 ## Render states
