@@ -1,0 +1,31 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "perspective",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "aspect_ratio" : {
+            "type" : "number",
+            "description" : "TODO",
+            "required" : true,
+            "minimum" : 0.0
+        },
+        "yfov" : {
+            "type" : "number",
+            "description" : "TODO in radians",
+            "required" : true,
+            "minimum" : 0.0
+        },
+        "zfar" : {
+            "type" : "number",
+            "description" : "TODO",
+            "minimum" : 0.0
+        },
+        "znear" : {
+            "type" : "number",
+            "description" : "TODO",
+            "minimum" : 0.0,
+            "exclusiveMinimum" : true
+        }
+    }
+}

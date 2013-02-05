@@ -1,0 +1,29 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "orthographic",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "xmag" : {
+            "type" : "number",
+            "description" : "TODO",
+            "default" : 1.0
+        },
+        "ymag" : {
+            "type" : "number",
+            "description" : "TODO",
+            "default" : 1.0
+        },
+        "zfar" : {
+            "type" : "number",
+            "description" : "TODO",
+            "minimum" : 0.0
+        },
+        "znear" : {
+            "type" : "number",
+            "description" : "TODO",
+            "minimum" : 0.0,
+            "exclusiveMinimum" : true
+        }
+    }
+}

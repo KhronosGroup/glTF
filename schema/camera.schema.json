@@ -1,0 +1,14 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "camera",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "perspective" : {
+            "$ref" : "perspective.schema.json"
+        },
+        "orthographic" : {
+            "$ref" : "orthographic.schema.json"
+        }
+    }
+}

@@ -75,6 +75,10 @@ label {	display: block; font-weight: bold; }
 					<label for="schemaUri">Schemas</label>
 					<select id="schemaUri" name="schemaUri">
 						<option value="---">---</option>
+						<option value="glTF.schema.json">glTF.schema.json</option>
+						<option value="camera.schema.json">camera.schema.json</option>
+						<option value="perspective.schema.json">perspective.schema.json</option>
+						<option value="orthographic.schema.json">orthographic.schema.json</option>
 						<option value="pass.schema.json">pass.schema.json</option>
 						<option value="states.schema.json">states.schema.json</option>
 					</select>
@@ -87,6 +91,12 @@ label {	display: block; font-weight: bold; }
 					<label for="jsonUri">glTF JSON Examples</label>
 					<select id="jsonUri" name="jsonUri">
 						<option value="---">---</option>
+						<option value="examples/glTF/cameras.json">glTF/cameras.json</option>
+						<option value="examples/camera/perspective_all.json">camera/perspective_all.json</option>
+						<option value="examples/camera/perspective.json">camera/perspective.json</option>
+						<option value="examples/camera/orthographic_all.json">camera/orthographic_all.json</option>
+						<option value="examples/camera/orthographic.json">camera/orthographic.json</option>
+                        
 						<option value="examples/pass/all.schema.json">pass/all.schema.json</option>
 						<option value="examples/states/all.schema.json">states/all.schema.json</option>
 						<option value="examples/states/closed_opaque_object.schema.json">states/closed_opaque_object.schema.json</option>
@@ -127,6 +137,14 @@ label {	display: block; font-weight: bold; }
 	<div class="row">
 		<div id="report"></div>
 	</div>
+    
+	<div class="row">
+    Links
+    <ul>
+       <li><a href="http://jsonlint.com/" target="_blank">JSONLint</a></li>
+       <li><a href="http://tools.ietf.org/html/draft-zyp-json-schema-03" target="_blank">JSON Schema 03</a></li>
+    </ul>
+    </div>
 	
     <script src="validator/JSV/lib/uri/uri.js"></script>
     <script src="validator/JSV/lib/uri/schemes/urn.js"></script>

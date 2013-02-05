@@ -1,0 +1,15 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "glTF",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "cameras" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "camera.schema.json"
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "aspect_ratio" : 1.77,
+    "yfov" : 0.7854,
+    "zfar" : 1000,
+    "znear" : 1
+}

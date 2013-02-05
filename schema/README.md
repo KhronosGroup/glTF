@@ -33,6 +33,38 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 The following notes can be used to create the glTF spec.
 
+## General differences between COLLADA and glTF
+
+_TODO_
+* _No `extra`.  COLLADA Pages 5-35 to 5-36.  How exactly do we extend glTF?  Should be trivial, e.g., `extra : { whatever-custom-schema }`._
+
+## Camera
+
+Cameras are based on [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 5-21 to 5-22, 5-102 to 5-103, and 5-108 to 5-109.
+
+In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+
+* No `asset`.  COLLADA Pages 5-17 to 5-19.
+* No `imager`.  COLLADA Pages 5-45 to 5-46.
+* No `optics`.  COLLADA Pages 5-100 to 5-101.  `orthographic` and `perspective` are directly part of the camera.
+   * A glTF camera represents a single camera; it doesn't have techniques.  This can be negotiated via a REST API.
+* In COLLADA, both `orthographic` and `perspective` allow several different options for required properties.  glTF provides only one set of required properties for `orthographic` and `perspective` cameras, which map most commonly to computing orthographic and perspective projection matrices.  See below.
+   
+For `perspective`, the following properties are required:
+* `aspect_ratio`
+* `yfov`
+
+For `orthographic`, the following properties are required:
+* `xmag` or `ymag`
+
+TODO: interaction with `node`.
+
+_TODO_
+* _COLLADA2JSON: loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
+* _COLLADA2JSON: `yfov` is degrees; it should be radians since this is a final-stage format._
+* _Need to figure out `up_axis`, which is part of `asset` in COLLADA.
+* _This does not support off-center perspective projections or infinite perspective projections.  I'm sure that is fine._
+
 ## Render states
 
 See

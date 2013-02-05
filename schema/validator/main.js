@@ -10,7 +10,7 @@
             try {
                 json = JSON.parse(document.getElementById('jsonText').value);
             } catch (e) {
-                throw new Error('Input is not valid JSON');
+                throw new Error('glTF example is not valid JSON');
             }
             
             try {
