@@ -39,7 +39,7 @@ See
    * Schema: [states.schema.json](states.schema.json)
       * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
    * Examples:
-      * [all.schema.json](examples/states/all.schema.json) - every state with it's default value.
+      * [all.schema.json](examples/states/all.schema.json) - every state with its default value.
       * [closed_opaque_object.schema.json](examples/states/closed_opaque_object.schema.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
       * [depth_test.schema.json](examples/states/depth_test.schema.json) - state with depth testing enabled.
       * [translucency.schema.json](examples/states/translucency.schema.json) - typical state for rendering a translucency object with alpha blending.
