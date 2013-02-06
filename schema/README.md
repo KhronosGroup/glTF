@@ -35,8 +35,9 @@ The following notes can be used to create the glTF spec.
 
 ## General differences between COLLADA and glTF
 
+glTF allows application-specific in most places using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
+
 _TODO_
-* _No `extra`.  COLLADA Pages 5-35 to 5-36.  How exactly do we extend glTF?  Should be trivial, e.g., `extra : { whatever-custom-schema }`._
 * Explain `id` vs. `name`.
 * Contributor/copyright/etc. (COLLADA `asset`) just at root?
 

@@ -23,6 +23,11 @@
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
             "minimum" : 0.0
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
         }
-    }
+    },
+    "additionalProperties" : false
 }

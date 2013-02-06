@@ -384,6 +384,11 @@
             "type" : "boolean",
             "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
             "default" : false
-		}
-	}
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
+        }
+    },
+    "additionalProperties" : false
 }

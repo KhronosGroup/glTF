@@ -19,6 +19,11 @@
             "additionalProperties" : {
                 "$ref" : "node.schema.json"
             }
-        }        
-    }
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
+        }
+    },
+    "additionalProperties" : false
 }

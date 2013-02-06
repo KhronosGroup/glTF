@@ -79,5 +79,8 @@
         "zfail" : "KEEP",
         "zpass" : "KEEP"
     },
-    "stencil_test_enable" : false
+    "stencil_test_enable" : false,
+    "extra" : {
+       "example_meta_data" : "application_specific"
+    }    
 }

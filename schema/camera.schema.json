@@ -9,6 +9,11 @@
         },
         "perspective" : {
             "$ref" : "perspective.schema.json"
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
         }
-    }
+    },
+    "additionalProperties" : false
 }
