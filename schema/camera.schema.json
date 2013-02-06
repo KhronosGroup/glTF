@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "camera",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "A view into the scene.  The camera describes the projection, but not the camera's position and direction.",
     "properties" : {
         "orthographic" : {
             "$ref" : "orthographic.schema.json"

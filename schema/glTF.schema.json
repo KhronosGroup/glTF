@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "glTF",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "The cameras available to this model.",
     "properties" : {
         "cameras" : {
             "properties" : {

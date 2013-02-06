@@ -2,28 +2,27 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "orthographic",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "An orthographic camera.  These properties are used to create an orthographic projection matrix.",
     "properties" : {
         "xmag" : {
             "type" : "number",
-            "description" : "TODO",
+            "description" : "The floating-point horizontal magnification of the view.",
             "default" : 1.0
         },
         "ymag" : {
             "type" : "number",
-            "description" : "TODO",
+            "description" : "The floating-point vertical magnification of the view.",
             "default" : 1.0
         },
         "zfar" : {
             "type" : "number",
-            "description" : "TODO",
+            "description" : "The floating-point distance to the far clipping plane.",
             "minimum" : 0.0
         },
         "znear" : {
             "type" : "number",
-            "description" : "TODO",
-            "minimum" : 0.0,
-            "exclusiveMinimum" : true
+            "description" : "The floating-point distance to the near clipping plane.",
+            "minimum" : 0.0
         }
     }
 }
