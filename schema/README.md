@@ -37,6 +37,8 @@ The following notes can be used to create the glTF spec.
 
 _TODO_
 * _No `extra`.  COLLADA Pages 5-35 to 5-36.  How exactly do we extend glTF?  Should be trivial, e.g., `extra : { whatever-custom-schema }`._
+* Explain `id` vs. `name`.
+* Contributor/copyright/etc. (COLLADA `asset`) just at root?
 
 ## Camera
 
@@ -65,13 +67,29 @@ For `perspective`, the following properties are required:
 * `aspect_ratio`
 * `yfov`
 
-TODO: interaction with `node`.
+_TODO_
+* _Schema_
+   * _Need to figure out_ `up_axis`_, which is part of `asset` in COLLADA._
+* _COLLADA2JSON_
+   * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
+   * _`yfov` is degrees; it should be radians since this is a final-stage format._
+
+## Nodes
+
+Nodes are based on [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 5-98 to 5-99.
+
+In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+* Only a single transform is supported, and it must be a 4x4 matrix.  COLLADA transformation elements such as `lookat` and `rotate` must be converted to a 4x4 matrix.  If several COLLADA transformation elements are used, they must be concatenated into a single 4x4 matrix.
+* No `asset`.  COLLADA Pages 5-17 to 5-19.
 
 _TODO_
-* _COLLADA2JSON: loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
-* _COLLADA2JSON: `yfov` is degrees; it should be radians since this is a final-stage format._
-* _Need to figure out_ `up_axis`_, which is part of `asset` in COLLADA._
-* _This does not support off-center perspective projections or infinite perspective projections.  I'm sure that is fine._
+   * _Schema_
+      * _instance_camera_ - keep camera as a node in the scene graph?  What are the use cases?  Shadow mapping?_
+      * _instance_controller_
+      * _instance_light_
+      * Allow only one? _meshes_, _camera_, or _lights_.
+   * _COLLADA2JSON_
+      * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
 ## Render states
 
@@ -111,7 +129,10 @@ Like COLLADA, glTF includes:
 The separate version of a property takes precedence over its counterpart.  For example, if both `blend_equation` and `blend_equation_separate` are provided, `blend_equation_separate` takes precedence.
    
 _TODO_
+* _Schema_
    * _Do we agree about separate precedence above?_
    * _I don't know anyone who uses `dither_enable` nowadays.  Is this something we want to include?_
    * _Currently, only a `line_width` of `1.0` is supported on most browsers on Windows because that is all that ANGLE supports._
    * _Need to look at OpenGL and OpenGL ES, which I think still includes `point_size_enable`._
+* _COLLADA2JSON_
+   * _Add to loader and writer.  Writer needs to derive state from common profile._

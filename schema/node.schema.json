@@ -1,0 +1,37 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "perspective",
+    "type" : "object",
+    "description" : "A node in the model's scene graph.  Node can reference meshes, cameras, or lights.",
+    "properties" : {
+        "children" : {
+            "type" : "array",
+            "description" : "The node's children.  Each string in the array must match an existing id in this model's nodes.  Children are affected by the node's matrix.",
+            "items ": {
+                "type" : "string"
+            },
+            "uniqueItems" : true
+        },
+        "matrix" : {
+            "type" : "array",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  It is directly usable by uniformMatrix4fv with transpose equal to false.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16
+        },
+        "meshes" : {
+            "type" : "array",
+            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
+            "items ": {
+                "type" : "string"
+            },
+            "uniqueItems" : true
+        },
+        "name" : {
+            "type" : "string",
+            "description" : "The externally-referenceable globally-unique name of this node."
+        }
+    }
+}

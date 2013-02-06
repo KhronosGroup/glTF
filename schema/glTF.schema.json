@@ -2,14 +2,23 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "glTF",
     "type" : "object",
-    "description" : "The cameras available to this model.",
+    "description" : "The glTF model.",
     "properties" : {
         "cameras" : {
+            "description" : "The cameras available to this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "camera.schema.json"
             }
-        }
+        },
+        "nodes" : {
+            "description" : "The nodes that make up this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "node.schema.json"
+            }
+        }        
     }
 }
