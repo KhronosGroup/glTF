@@ -20,6 +20,10 @@
                 "$ref" : "node.schema.json"
             }
         },
+        "version" : {
+            "type" : "string",
+            "description" : "The glTF version.",
+        },
         "extra" : {
             "type" : "any",
             "description" : "Optional applicaiton-specific data."

@@ -33,13 +33,29 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 The following notes can be used to create the glTF spec.
 
-## General differences between COLLADA and glTF
+## Comparison between COLLADA and glTF
 
 glTF allows application-specific in most places using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
 
+COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the name property of an object, for example:
+```
+<node id="nodeId" name="nodeName"> 
+</node>
+``` 
+becomes
+```javascript
+"nodeId" : {
+    "name" : "nodeName"
+}
+```
+
+What's in COLLADA, but not in this version of glTF
+* No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
+
 _TODO_
-* Explain `id` vs. `name`.
 * Contributor/copyright/etc. (COLLADA `asset`) just at root?
+* Should `version` be required?
+* Does everything have a `name` property that needs one?
 
 ## Camera
 
@@ -89,6 +105,7 @@ _TODO_
       * _instance_controller_
       * _instance_light_
       * Allow only one? _meshes_, _camera_, or _lights_.
+      * _Animations for all COLLADA transformation elements is going to be hard.  Need to scope it right._
    * _COLLADA2JSON_
       * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
