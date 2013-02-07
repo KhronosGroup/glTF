@@ -1,0 +1,15 @@
+{
+    "images" : {
+        "example" : {
+            "path" : "example.png"
+        },
+        "another_example" : {
+            "path" : "another_example.png",
+            "generateMipmap" : false,
+            "extra" : {
+               "example_meta_data" : "application_specific"
+            }
+        }
+    },
+    "version" : "0.1"
+}

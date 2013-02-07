@@ -9,5 +9,6 @@
             "matrix" : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
             "meshes" : ["another_example_mesh"]
         }
-    }
+    },
+    "version" : "0.1"
 }

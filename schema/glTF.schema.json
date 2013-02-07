@@ -12,6 +12,14 @@
                 "$ref" : "camera.schema.json"
             }
         },
+        "images" : {
+            "description" : "The images used in this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "image.schema.json"
+            }
+        },
         "nodes" : {
             "description" : "The nodes that make up this model.",
             "properties" : {
@@ -23,10 +31,11 @@
         "version" : {
             "type" : "string",
             "description" : "The glTF version.",
+            "required" : true
         },
         "extra" : {
             "type" : "any",
-            "description" : "Optional applicaiton-specific data."
+            "description" : "Optional application-specific data."
         }
     },
     "additionalProperties" : false

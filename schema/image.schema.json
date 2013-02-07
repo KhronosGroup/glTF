@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "image",
+    "type" : "object",
+    "description" : "An image.",
+    "properties" : {
+        "path" : {
+            "type" : "string",
+            "description" : "The URL of the image.  Relative URLs are relative to the .json file that references the image.  Instead of referencing an external image, the URL can also be a data URI.",
+            "format" : "uri",
+            "required" : true
+        },
+        "generateMipmap" : {
+            "type" : "boolean",
+            "description" : "generateMipmap()",
+            "default" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

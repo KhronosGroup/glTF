@@ -1,0 +1,7 @@
+{
+    "path" : "example.png",
+    "generateMipmap" : false,
+    "extra" : {
+       "example_meta_data" : "application_specific"
+    }    
+}

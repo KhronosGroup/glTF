@@ -35,7 +35,11 @@ The following notes can be used to create the glTF spec.
 
 ## Comparison between COLLADA and glTF
 
+### extra
+
 glTF allows application-specific in most places using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
+
+### id and name
 
 COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the name property of an object, for example:
 ```
@@ -54,7 +58,6 @@ What's in COLLADA, but not in this version of glTF
 
 _TODO_
 * Contributor/copyright/etc. (COLLADA `asset`) just at root?
-* Should `version` be required?
 * Does everything have a `name` property that needs one?
 
 ## Camera
@@ -91,6 +94,32 @@ _TODO_
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
 
+## Images
+
+For compatibility with modern web browsers, the following image formats are supported: `.jpg`, `.png`, `.bmp`, and `.gif`.  The URL may be a [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.
+
+In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+* Renamed `mips_generate` to `generateMipmap`.
+
+glTF 1.0 does not support:
+* `image`: `renderable`, `create_2d`, `create_3d`, and `create_cube`.
+* `init_from`: `array_index`, `mip_index`, `depth`, and `face`.
+
+COLLADA References
+* `library_images`.  Page 8-75.
+* `image`.  Page 8-58 to 8-60.
+* `init_from`.  Pages 8-62 to 8-63.
+
+_TODO_
+* _Schema_
+   * _Rename to texture?_
+   * _Support precomputed mips?_
+   * _Allow blank texture as a render target and other ColladaFX features on 8-59?_
+* _COLLADA2JSON_
+   * _Add support for `generateMipmap`_
+   * _Image conversion optimization step_
+   * _Add option for data uri_
+   
 ## Nodes
 
 Nodes are based on [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 5-98 to 5-99.
