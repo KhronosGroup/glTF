@@ -60,6 +60,25 @@ _TODO_
 * Contributor/copyright/etc. (COLLADA `asset`) just at root?
 * Does everything have a `name` property that needs one?
 
+## Asset
+
+Differences from COLLADA:
+* `asset` is only defined on the root glTF property; in COLLADA, it is available as a child of many elements.
+* `asset` just contains `copyright` that can be used to credit the model author(s).
+
+[COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+* `asset`. Pages 5-17 to 5-19
+* `contributor`. Pages 5-27 to 5-28.
+
+TODO:  could use `geographic_location`
+
+_TODO_
+* _Schema_
+   * _Also need url for copyright image?_
+   * _Need to figure out_ `up_axis`.
+* _COLLADA2JSON_
+   * _Create copyright from COLLADA author and copyright?_
+   
 ## Camera
 
 See
@@ -88,8 +107,6 @@ For `perspective`, the following properties are required:
 * `yfov`
 
 _TODO_
-* _Schema_
-   * _Need to figure out_ `up_axis`_, which is part of `asset` in COLLADA._
 * _COLLADA2JSON_
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
@@ -112,7 +129,6 @@ COLLADA References
 
 _TODO_
 * _Schema_
-   * _Rename to texture?_
    * _Support precomputed mips?_
    * _Allow blank texture as a render target and other ColladaFX features on 8-59?_
 * _COLLADA2JSON_

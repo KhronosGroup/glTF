@@ -4,6 +4,9 @@
     "type" : "object",
     "description" : "The glTF model.",
     "properties" : {
+        "asset" : {
+            "$ref" : "asset.schema.json"
+        },
         "cameras" : {
             "description" : "The cameras available to this model.",
             "properties" : {

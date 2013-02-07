@@ -1,0 +1,17 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "asset",
+    "type" : "object",
+    "description" : "Asset-management information for this model.",
+    "properties" : {
+        "copyright" : {
+            "type" : "string",
+            "description" : "A copyright message suitable for display to credit the model author."
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional applicaiton-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
