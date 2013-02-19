@@ -8,6 +8,7 @@ This doc can be used to create the glTF spec.
    * <a href="#camera">Camera</a>
    * <a href="#image">Image</a>
    * <a href="#node">Node</a>
+   * <a href="#shader">shaders</a>
    * <a href="#states">States</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
@@ -227,6 +228,24 @@ _TODO_
       * _Animations for all COLLADA transformation elements is going to be hard.  Need to scope it right._
    * _COLLADA2JSON_
       * _Convert all transformation elements to 4x4 matrix.  Do we already?_
+
+<a name="shaders">
+## shaders
+
+See
+* Schema: [shader.schema.json](shader.schema.json)
+* Examples
+   * [shaders.json](examples/glTF/shaders.json) - Bare glTF model with two shaders.
+   * [all.json](examples/shader/all.json) - Every property with example values.
+   * [dataUri.json](examples/shader/dataUri.json) - Using a data URI for a shader source.
+
+GLSL source can be in external plain-text .glsl files.  The URL may also be a plain-text [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  Using a data URI reduces the number of requests for a single model.  However, if several models are loaded that use the same shader, using separate .glsl files may be better due to HTTP caching.
+   
+_TODO_
+   * _Schema_
+      * _Metadata, e.g., phong, etc._
+   * _COLLADA2JSON_
+      * _Option for data uri._
 
 <a name="states">
 ## States

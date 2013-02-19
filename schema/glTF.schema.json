@@ -31,6 +31,14 @@
                 "$ref" : "node.schema.json"
             }
         },
+        "shaders" : {
+            "description" : "The shaders used in this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "shader.schema.json"
+            }
+        },
         "version" : {
             "type" : "string",
             "description" : "The glTF version.",

@@ -1,0 +1,11 @@
+{
+    "shaders" : {
+        "lambertVS" : {
+            "path" : "lambertVS.glsl"
+        },
+        "lambertFS" : {
+            "path" : "lambertFS.glsl"
+        }
+    },
+    "version" : "0.1"
+}
