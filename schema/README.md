@@ -39,6 +39,10 @@ The following notes can be used to create the glTF spec.
 
 glTF allows application-specific in most places using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
 
+_TODO_
+* _Loader_
+   * _Needs to pass back `extra` objects_
+
 ### id and name
 
 COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the name property of an object, for example:
@@ -57,27 +61,34 @@ What's in COLLADA, but not in this version of glTF
 * No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
 
 _TODO_
-* Contributor/copyright/etc. (COLLADA `asset`) just at root?
 * Does everything have a `name` property that needs one?
+
+## Naming
+
+COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON.
+
+## Angles
+
+COLLADA uses degrees for angles.  To better match GLSL and most math libraries, glTF uses radians.
 
 ## Asset
 
 Differences from COLLADA:
 * `asset` is only defined on the root glTF property; in COLLADA, it is available as a child of many elements.
-* `asset` just contains `copyright` that can be used to credit the model author(s).
+* `asset` just contains `copyright` that can be used to credit the model author(s).  If an application needs more information, it can be stored in the `extra` property.
 
 [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 * `asset`. Pages 5-17 to 5-19
 * `contributor`. Pages 5-27 to 5-28.
-
-TODO:  could use `geographic_location`
 
 _TODO_
 * _Schema_
    * _Also need url for copyright image?_
    * _Need to figure out_ `up_axis`.
 * _COLLADA2JSON_
-   * _Create copyright from COLLADA author and copyright?_
+   * _Create asset.copyright from COLLADA author and copyright?_
+   * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
+   * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
    
 ## Camera
 
@@ -199,3 +210,13 @@ _TODO_
    * _Need to look at OpenGL and OpenGL ES, which I think still includes `point_size_enable`._
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
+   
+## References
+
+* [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
+* [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
+
+## Acknowledgments
+
+* Tom Fili, Analytical Graphics, Inc., answers all my COLLADA questions.
+
