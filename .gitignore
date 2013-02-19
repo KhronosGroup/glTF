@@ -11,3 +11,4 @@ converter/dae2json/bin/
 converter/dae2json/collada2json.dir/
 converter/dae2json/ipch/
 converter/dae2json/lib/
+schema/.project

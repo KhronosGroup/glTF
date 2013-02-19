@@ -2,6 +2,6 @@
     "path" : "example.png",
     "generateMipmap" : false,
     "extra" : {
-       "example_meta_data" : "application_specific"
+       "example_meta_data" : "application specific data.  This doesn't have to be a string; it could be an object, array, etc."
     }    
 }
