@@ -5,8 +5,10 @@ This doc can be used to create the glTF spec.
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#schema">Schema</a>
    * <a href="#asset">`asset`</a>
+   * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
    * <a href="#image">`image`</a>
+   * <a href="#mesh">`mesh`</a>
    * <a href="#node">`node`</a>
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
@@ -136,6 +138,45 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
    * _Create `asset.copyright` from COLLADA author and copyright?_
    * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
    * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
+
+<a name="buffer">
+## `buffer`
+
+* Schema: [buffer.schema.json](buffer.schema.json)
+* Examples:
+   * [buffer.json](examples/glTF/buffer.json) - Bare glTF model with a buffer.
+   * [all.json](examples/buffer/all.json) - Every property with example values.
+
+### Details
+
+Instead of referencing an external binary file, the URL may be a base64 [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.
+
+### Differences from COLLADA
+
+* Vertices and indices are stored in binary, not text/XML.
+* From the buffer's perspective, vertices and indices are untyped unlike `float_array`, etc. in COLLADA.  The `accessor` specifies the type later for the subset it references.
+* glTF does not support `float_array` attributes `digits` and `magnitude`.  In glTF, all floats are stored in IEEE-754 32-bit floating point.
+* glTF does not support `int_array` attributes `minInclusive` or `maxInclusive`.  The `accessor` specifies the type, e.g., unsigned short or unsigned int, later for the subset it references.
+* glTF does not support `IDREF_array` (5-44), `Name_array` (5-94 to 5-95), or `SIDREF_array` (5-130).
+* Also see <a href="#mesh">`mesh`</a>.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `geometry`.  Pages 5-42 to 5-43.
+* `mesh`. Pages 5-89 to 5-91.
+* `source`. Pages 5-137 to  5-138.
+* `bool_array`. Page 5-20.
+* `float_array`. Page 5-37.
+* `int_array`. Page 5-69.
+
+### _TODO_
+
+* _Schema_
+   * Why does current version include `type": "ArrayBuffer"`?
+   * Separate buffers for indices and vertices since WebGL treats them separately?
+* _COLLADA2JSON_
+   * Convert `bool_array` to `0.0` or `1.0`?
+   * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
    
 <a name="camera">
 ## `camera`
@@ -217,6 +258,32 @@ glTF 1.0 does not support:
    * _Image conversion to `.jpg` or `.png`_
    * _Add option for data uri_
 
+<a name="mesh">
+## `mesh`
+
+_TODO_
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+* glTF does not support `spline`, `convex_mesh` (physics), or `brep` (B-Rep).
+* No `technique_common` or `technique`.  Instead, this can be negotiated via a REST API.
+* Also see <a href="#buffer">`buffer`</a>.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### _TODO_
+
+* _Schema_
+   *
+* _COLLADA2JSON_
+   * Long term, we should convert `spline`.
+
 <a name="node">
 ## `node`
 
@@ -236,18 +303,19 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * Only a single transform is supported, and it must be a 4x4 matrix.  COLLADA transformation elements such as `lookat` and `rotate` must be converted to a 4x4 matrix.  If several COLLADA transformation elements are used, they must be concatenated into a single 4x4 matrix.
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
 * `node`.  Pages 5-98 to 5-99.
 
 ### _TODO_
 
-   * _Schema_
-      * _instance_camera_ - keep camera as a node in the scene graph?  What are the use cases?  Shadow mapping?_
-      * _instance_controller_
-      * _instance_light_
-      * Allow only one? _meshes_, _camera_, or _lights_.
-      * _Animations for all COLLADA transformation elements is going to be hard.  Need to scope it right._
-   * _COLLADA2JSON_
-      * _Convert all transformation elements to 4x4 matrix.  Do we already?_
+* _Schema_
+   * _instance_camera_ - keep camera as a node in the scene graph?  What are the use cases?  Shadow mapping?_
+   * _instance_controller_
+   * _instance_light_
+   * Allow only one? _meshes_, _camera_, or _lights_.
+   * _Animations for all COLLADA transformation elements is going to be hard.  Need to scope it right._
+* _COLLADA2JSON_
+   * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
 <a name="shader">
 ## `shader`
@@ -270,13 +338,12 @@ _TODO_
 
 _TODO_
 
-
 ### _TODO_
 
-   * _Schema_
-      * _Metadata, e.g., phong, etc._
-   * _COLLADA2JSON_
-      * _Option for data uri._
+* _Schema_
+   * _Metadata, e.g., phong, etc._
+* _COLLADA2JSON_
+   * _Option for data uri._
 
 <a name="states">
 ## `states`

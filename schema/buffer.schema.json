@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "buffer",
+    "type" : "object",
+    "description" : "A buffer with vertex or index data.",
+    "properties" : {
+        "path" : {
+            "type" : "string",
+            "description" : "The URL of the binary buffer.  Relative URLs are relative to the .json file that references the shader.  Instead of referencing an external shader, the URL can also be a base64 data URI.",
+            "format" : "uri",
+            "required" : true
+        },
+        "byteLength" : {
+            "type" : "number",
+            "description" : "The length of the buffer in bytes.",
+            "minimum" : 0,
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

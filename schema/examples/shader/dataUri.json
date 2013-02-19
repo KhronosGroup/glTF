@@ -1,3 +1,3 @@
 {
-    "path" : "data:,void%2C%20main(){gl_FragColor=vec4(1.0);}"
+    "path" : "data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B"
 }

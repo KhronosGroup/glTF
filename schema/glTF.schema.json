@@ -7,6 +7,14 @@
         "asset" : {
             "$ref" : "asset.schema.json"
         },
+        "buffers" : {
+            "description" : "The buffers used in this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "buffer.schema.json"
+            }
+        },
         "cameras" : {
             "description" : "The cameras available to this model.",
             "properties" : {

@@ -1,0 +1,9 @@
+{
+    "buffers" : {
+        "vertices.bin" : {
+		    "path" : "vertices.bin",
+		    "byteLength": 1024
+        }
+    },
+    "version" : "0.1"
+}
