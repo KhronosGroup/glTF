@@ -1,3 +1,20 @@
+This doc can be used to create the glTF spec.
+
+* <a href="#validation">Validation</a>
+* <a href="#guidingprinciples">Guiding Principles</a>
+* <a href="#comparison">Comparison between COLLADA and glTF</a>
+* <a href="#schema">Schema</a>
+   * <a href="#asset">Asset</a>
+   * <a href="#camera">Camera</a>
+   * <a href="#image">Image</a>
+   * <a href="#node">Node</a>
+   * <a href="#states">States</a>
+* <a href="#references">References</a>
+* <a href="#acknowledgments">Acknowledgments</a>
+
+<a name="validation">
+# Validation
+
 The glTF schema is written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03).
 
 An asset can be validated against the schema using the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  Setup a local webserver to point to the `schema` directory, and browse to index.html.  For example:
@@ -29,13 +46,25 @@ http://localhost/gltf/?schema=states.schema.json&json=examples/states/translucen
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
 
-# Schema Notes
+<a name="guidingprinciples">
+# Guiding Principles
 
-The following notes can be used to create the glTF spec.
+* Keep the client simple, negotiate via a REST API instead of on the client, e.g., for a `technique`.
+* When a tradeoff needs to be made, put pain on the converter, not the end user.
+* ...
 
-## Comparison between COLLADA and glTF
+<a name="comparison">
+# Comparison between COLLADA and glTF
 
-### extra
+## Naming
+
+COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON.
+
+## Angles
+
+COLLADA uses degrees for angles.  To better match GLSL and most math libraries, glTF uses radians.
+
+## extra
 
 glTF allows application-specific metadata in most places using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
 
@@ -47,7 +76,7 @@ _TODO_
 
 Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties not in the spec on any objects, except `extra`.
 
-### id and name
+## id and name
 
 COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the name property of an object, for example:
 ```
@@ -70,19 +99,10 @@ _TODO_
 * Does everything have a `name` property that needs one?
 * Support _sid_, especially for reusing animations.
 
-### Naming
+<a name="schema">
+# Schema
 
-COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON.
-
-### Angles
-
-COLLADA uses degrees for angles.  To better match GLSL and most math libraries, glTF uses radians.
-
-## Guiding Principles
-
-* Keep the client simple, negotiate via a REST API instead of on the client, e.g., for a `technique`.
-* When a tradeoff needs to be made, put pain on the converter, not the end user.
-
+<a name="asset">
 ## Asset
 
 See
@@ -112,6 +132,7 @@ _TODO_
    * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
    * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
    
+<a name="camera">
 ## Camera
 
 See
@@ -149,6 +170,7 @@ _TODO_
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
 
+<a name="image">
 ## Image
 
 See
@@ -179,7 +201,8 @@ _TODO_
    * _Add support for `generateMipmap`_
    * _Image conversion to `.jpg` or `.png`_
    * _Add option for data uri_
-   
+
+<a name="node">
 ## Node
 
 See
@@ -205,6 +228,7 @@ _TODO_
    * _COLLADA2JSON_
       * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
+<a name="states">
 ## States
 
 See
@@ -251,12 +275,14 @@ _TODO_
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
    
-## References
+<a name="references">
+# References
 
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
 * [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
 
-## Acknowledgments
+<a name="acknowledgments">
+# Acknowledgments
 
 * Tom Fili, Analytical Graphics, Inc., answers all of Patrick's COLLADA questions.
 
