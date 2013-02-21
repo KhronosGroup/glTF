@@ -29,7 +29,7 @@
         "zNear" : 0.0,
         "zFar" : 1.0
     },
-    "depth_TestEnable" : false,
+    "depthTestEnable" : false,
     "ditherEnable" : false,
     "frontFace" : "CCW",
     "lineWidth" : 1.0,
@@ -51,7 +51,7 @@
         "width" : 0,
         "height" : 0	
     },
-    "scissor_TestEnable" : false,
+    "scissorTestEnable" : false,
     "stencilFunc" : {
         "func" : "ALWAYS",
         "ref" : 0,
