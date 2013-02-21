@@ -1,0 +1,68 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "primitive",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "indices" : {
+		    "type" : "object",
+		    "description" : "drawElements()",
+            "properties" : {
+		        "buffer" : {
+		            "type" : "string",
+		            "description" : "The name of the buffer to reference for index data.",
+		            "required" : true
+		        },
+		        "byteOffset" : {
+		            "type" : "number",
+		            "description" : "The offset into the buffer in bytes.  Similar to drawElements() indices (ES) / offset (WebGL) parameter.",
+		            "minimum" : 0,
+		            "required" : true
+		        },
+		        "count" : {
+		            "type" : "number",
+		            "description" : "The number of indices referenced, not to be confused with the number of bytes.  The drawElements() count parameter.",
+		            "minimum" : 0,
+		            "required" : true
+		        },
+		        "type" : {
+		            "type" : "string",
+		            "description" : "drawElements() type parameter.  Corresponding typed array: Uint16Array.",
+		            "pattern" : "^UNSIGNED_SHORT$",
+		            "required" : true
+		        },
+		        "extra" : {
+		            "type" : "any",
+		            "description" : "Optional application-specific data."
+		        }
+            },
+		    "additionalProperties" : false,
+            "required" : true        
+        },
+        "material" : {
+	        "type" : "string",
+	        "description" : "Specifies the material to apply to this primitive when rendering.",
+            "required" : true        
+        },
+        "primitive" : {
+	        "type" : "string",
+	        "description" : "Specifies what kind of primitives to render.",
+	        "pattern" : "^POINTS$|^LINE_STRIP$|^LINE_LOOP$|^LINES$|^TRIANGLE_STRIP$|^TRIANGLE_FAN$|^TRIANGLES$",
+            "required" : true
+        },
+        "vertexAttributes" : {
+            "type" : "array",
+            "description" : "TODO",
+            "items ": {
+                "type" : "string"
+            },
+            "minItems" : 1,
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
