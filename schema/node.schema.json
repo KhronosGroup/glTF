@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "perspective",
+    "title" : "node",
     "type" : "object",
     "description" : "A node in the model's scene graph.  Node can reference meshes, cameras, or lights.",
     "properties" : {
