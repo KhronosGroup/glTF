@@ -4,7 +4,7 @@
     "type" : "object",
     "description" : "A perspective camera.  These properties are used to create a perspective projection matrix.",
     "properties" : {
-        "aspect_ratio" : {
+        "aspectRatio" : {
             "type" : "number",
             "description" : "The floating-point aspect ratio of the field of view.",
             "required" : true,

@@ -1,9 +1,9 @@
 {
-    "depth_test_enable" : true,
-    "depth_mask" : false,
-    "blend_enable" : true,
-    "blend_equation" : "FUNC_ADD",
-    "blend_func" : {
+    "depthTestEnable" : true,
+    "depthMask" : false,
+    "blendEnable" : true,
+    "blendEquation" : "FUNC_ADD",
+    "blendFunc" : {
         "sfactor" : "SRC_ALPHA",
         "dfactor" : "ONE_MINUS_SRC_ALPHA"
     }

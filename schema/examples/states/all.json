@@ -1,85 +1,85 @@
 {
-    "blend_enable" : false,
-    "blend_equation" : "FUNC_ADD",
-    "blend_equation_separate" : {
+    "blendEnable" : false,
+    "blendEquation" : "FUNC_ADD",
+    "blendEquationSeparate" : {
         "rgb" : "FUNC_ADD",
         "alpha" : "FUNC_ADD"
     },
-	"blend_func" : {
+	"blendFunc" : {
         "sfactor" : "ONE",
         "dfactor" : "ZERO"
     },
-    "blend_func_separate" : {
+    "blendFuncSeparate" : {
         "srcRGB" : "ONE",
         "srcAlpha" : "ONE",
         "dstRGB" : "ZERO",
         "dstAlpha" : "ZERO"
     },
-    "color_mask" : {
+    "colorMask" : {
         "red" : true,
         "green" : true,
         "blue" : true,
         "alpha" : true
     },
-    "cull_face" : "BACK",
-    "cull_face_enable" : false,
-    "depth_func" : "LESS",
-    "depth_mask" : true,
-    "depth_range" : {
+    "cullFace" : "BACK",
+    "cullFaceEnable" : false,
+    "depthFunc" : "LESS",
+    "depthMask" : true,
+    "depthRange" : {
         "zNear" : 0.0,
         "zFar" : 1.0
     },
-    "depth_test_enable" : false,
-    "dither_enable" : false,
-    "front_face" : "CCW",
-    "line_width" : 1.0,
-    "point_size" : 1.0,
-    "polygon_offset" : {
+    "depth_TestEnable" : false,
+    "ditherEnable" : false,
+    "frontFace" : "CCW",
+    "lineWidth" : 1.0,
+    "pointSize" : 1.0,
+    "polygonOffset" : {
         "factor" : 0.0,
         "units" : 0.0
     },
-    "polygon_offset_fill_enable" : false,
-    "sample_alpha_to_coverage_enable" : false,
-    "sample_coverage" : {
+    "polygonOffsetFillEnable" : false,
+    "sampleAlphaToCoverageEnable" : false,
+    "sampleCoverage" : {
         "value" : 1.0,
         "invert" : false
     },
-    "sample_coverage_enable" : false,
+    "sampleCoverageEnable" : false,
     "scissor" : {
         "x" : 0,
         "y" : 0,
         "width" : 0,
         "height" : 0	
     },
-    "scissor_test_enable" : false,
-    "stencil_func" : {
+    "scissor_TestEnable" : false,
+    "stencilFunc" : {
         "func" : "ALWAYS",
         "ref" : 0,
         "mask" : 0
     },
-    "stencil_func_separate" : {
+    "stencilFuncSeparate" : {
         "front" : "ALWAYS",
         "back" : "ALWAYS",
         "ref" : 0,
         "mask" : 0
     },
-    "stencil_mask" : 0,
-    "stencil_mask_separate" : {
+    "stencilMask" : 0,
+    "stencilMaskSeparate" : {
         "face" : "FRONT_AND_BACK",
         "mask" : 0
     },
-    "stencil_op" : {
+    "stencilOp" : {
         "fail" : "KEEP",
         "zfail" : "KEEP",
         "zpass" : "KEEP"
     },
-    "stencil_op_separate" : {
+    "stencilOpSeparate" : {
         "face" : "FRONT_AND_BACK",
         "fail" : "KEEP",
         "zfail" : "KEEP",
         "zpass" : "KEEP"
     },
-    "stencil_test_enable" : false,
+    "stencilTestEnable" : false,
     "extra" : {
        "example_meta_data" : "application specific data.  This doesn't have to be a string; it could be an object, array, etc."
     }    

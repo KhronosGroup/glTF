@@ -4,18 +4,18 @@
     "type" : "object",
     "description" : "Contains all rendering states to set up for the parent pass.",
     "properties" : {
-        "blend_enable" : {
+        "blendEnable" : {
             "type" : "boolean",
             "description" : "enable(BLEND) or disable(BLEND)",
             "default" : false
         },
-        "blend_equation" : {
+        "blendEquation" : {
             "type" : "string",
             "description" : "blendEquation()",
             "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
             "default" : "FUNC_ADD"
         },
-        "blend_equation_separate" : {
+        "blendEquationSeparate" : {
             "type" : "object",
             "description" : "blendEquationSeparate()",
             "properties" : {
@@ -33,7 +33,7 @@
                 }
             }
         },
-        "blend_func" : {
+        "blendFunc" : {
             "type" : "object",
             "description" : "blendFunc()",
             "properties" : {
@@ -51,7 +51,7 @@
                 }
             }
         },		
-        "blend_func_separate" : {
+        "blendFuncSeparate" : {
             "type" : "object",
             "description" : "blendFuncSeparate()",
             "properties" : {
@@ -81,7 +81,7 @@
                 }
             }
         },
-        "color_mask" : {
+        "colorMask" : {
             "type" : "object",
             "description" : "colorMask()",
             "properties" : {
@@ -107,29 +107,29 @@
                 }
             }
         },    
-        "cull_face" : {
+        "cullFace" : {
             "type" : "string",
             "description" : "cullFace()",
             "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
             "default" : "BACK"
         },
-        "cull_face_enable" : {
+        "cullFaceEnable" : {
             "type" : "boolean",
             "description" : "enable(CULL_FACE) or disable(CULL_FACE)",
             "default" : false
         },
-        "depth_func" : {
+        "depthFunc" : {
             "type" : "string",
             "description" : "depthFunc()",
             "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
             "default" : "LESS"
         },
-        "depth_mask" : {
+        "depthMask" : {
             "type" : "boolean",
             "description" : "depthMask()",
             "default" : true
         },
-        "depth_range" : {
+        "depthRange" : {
             "type" : "object",
             "description" : "depthRange()",
             "properties" : {
@@ -149,34 +149,34 @@
                 }		
             }		
         },
-        "depth_test_enable" : {
+        "depthTestEnable" : {
             "type" : "boolean",
             "description" : "enable(DEPTH_TEST) or disable(DEPTH_TEST)",
             "default" : false
         },
-        "dither_enable" : {
+        "ditherEnable" : {
             "type" : "boolean",
             "description" : "enable(DITHER) or disable(DITHER)",
             "default" : false
         },
-        "front_face" : {
+        "frontFace" : {
             "type" : "string",
             "description" : "frontFace()",
             "enum" : ["CW,", "CCW"],
             "default" : "CCW"
         },
-        "line_width" : {
+        "lineWidth" : {
             "type" : "number",
             "description" : "lineWidth()",
             "default" : 1.0,
             "minimum" : 0.0,
             "exclusiveMinimum" : true
         },
-        "point_size" : {
+        "pointSize" : {
             "type" : "number",
             "description" : "gl_PointSize"
         },
-        "polygon_offset" : {
+        "polygonOffset" : {
             "type" : "object",
             "description" : "polygonOffset()",
             "properties" : {
@@ -192,17 +192,17 @@
                 }
             }
         },
-        "polygon_offset_fill_enable" : {
+        "polygonOffsetFillEnable" : {
             "type" : "boolean",
             "description" : "enable(POLYGON_OFFSET_FILL) or disable(POLYGON_OFFSET_FILL)",
             "default" : false
         },
-        "sample_alpha_to_coverage_enable" : {
+        "sampleAlphaToCoverageEnable" : {
             "type" : "boolean",
             "description" : "enable(SAMPLE_ALPHA_TO_COVERAGE) or disable(SAMPLE_ALPHA_TO_COVERAGE)",
             "default" : false
         },
-        "sample_coverage" : {
+        "sampleCoverage" : {
             "type" : "object",
             "description" : "sampleCoverage()",
             "properties" : {
@@ -220,7 +220,7 @@
                 }
             }			
         },
-        "sample_coverage_enable" : {
+        "sampleCoverageEnable" : {
             "type" : "boolean",
             "description" : "enable(SAMPLE_COVERAGE) or disable(SAMPLE_COVERAGE)",
             "default" : false
@@ -251,12 +251,12 @@
                 }
             }			
         },
-        "scissor_test_enable" : {
+        "scissorTestEnable" : {
             "type" : "boolean",
             "description" : "enable(SCISSOR_TEST) or disable(SCISSOR_TEST)",
             "default" : false
         },
-        "stencil_func" : {
+        "stencilFunc" : {
             "type" : "object",
             "description" : "stencilFunc()",
             "properties" : {
@@ -278,7 +278,7 @@
                 }
             }			
         },
-        "stencil_func_separate" : {
+        "stencilFuncSeparate" : {
             "type" : "object",
             "description" : "stencilFuncSeparate()",
             "properties" : {
@@ -306,11 +306,11 @@
                 }
             }			
         },
-        "stencil_mask" : {
+        "stencilMask" : {
             "type" : "integer",
             "description" : "stencilMask().  The default is all ones."
         },
-        "stencil_mask_separate" : {
+        "stencilMaskSeparate" : {
             "type" : "object",
             "description" : "stencilMaskSeparate()",
             "properties" : {
@@ -326,7 +326,7 @@
                 }			
             }		
         },
-        "stencil_op" : {
+        "stencilOp" : {
             "type" : "object",
             "description" : "stencilOp()",
             "properties" : {
@@ -350,7 +350,7 @@
                 }
             }		
         },
-        "stencil_op_separate" : {
+        "stencilOpSeparate" : {
             "type" : "object",
             "description" : "stencilOpSeparate()",
             "properties" : {
@@ -380,7 +380,7 @@
                 }
             }		
         },
-        "stencil_test_enable" : {
+        "stencilTestEnable" : {
             "type" : "boolean",
             "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
             "default" : false

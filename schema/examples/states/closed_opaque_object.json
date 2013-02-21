@@ -1,4 +1,4 @@
 {
-    "cull_face_enable" : true,
-    "depth_test_enable" : true
+    "cullFaceEnable" : true,
+    "depthTestEnable" : true
 }

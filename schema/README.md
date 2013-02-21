@@ -61,7 +61,7 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 ## Naming
 
-COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON.
+COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON and WebGL.
 
 ## Angles
 
@@ -144,7 +144,7 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 
 * Schema: [buffer.schema.json](buffer.schema.json)
 * Examples:
-   * [buffer.json](examples/glTF/buffer.json) - Bare glTF model with a buffer.
+   * [buffers.json](examples/glTF/buffers.json) - Bare glTF model with a buffer.
    * [all.json](examples/buffer/all.json) - Every property with example values.
 
 ### Details
@@ -153,7 +153,7 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
 
 ### Differences from COLLADA
 
-* Vertices and indices are stored in binary, not text/XML.
+* Vertices and indices are stored in binary, not XML.
 * From the buffer's perspective, vertices and indices are untyped unlike `float_array`, etc. in COLLADA.  The `accessor` specifies the type later for the subset it references.
 * glTF does not support `float_array` attributes `digits` and `magnitude`.  In glTF, all floats are stored in IEEE-754 32-bit floating point.
 * glTF does not support `int_array` attributes `minInclusive` or `maxInclusive`.  The `accessor` specifies the type, e.g., unsigned short or unsigned int, later for the subset it references.
@@ -197,7 +197,7 @@ For `orthographic`, the following properties are required:
 * `xmag` or `ymag`
    
 For `perspective`, the following properties are required:
-* `aspect_ratio`
+* `aspectRatio`
 * `yfov`
 
 ### Differences from COLLADA
@@ -267,6 +267,9 @@ _TODO_
 
 _TODO_
 
+TODO: No `FIXED` (in ES though)
+TODO: Other WebGL requirements
+
 ### Differences from COLLADA
 
 * glTF does not support `spline`, `convex_mesh` (physics), or `brep` (B-Rep).
@@ -280,8 +283,12 @@ _TODO_
 ### _TODO_
 
 * _Schema_
-   *
+   * Is a `byteStride` of zero tightly packed like WebGL?  Yes?
 * _COLLADA2JSON_
+   * Rename `elementType` to `componentType` to better match WebGL.
+   * Rename `elementsPerValue` to `componentsPerAttribute`.
+   * Rename `componentType` `Float32` (and others?) to `FLOAT` to better match WebGL.
+   * Add support for `normalized`.
    * Long term, we should convert `spline`.
 
 <a name="node">
@@ -359,32 +366,32 @@ _TODO_
 ### Details
 
 Like COLLADA, glTF includes:
-* `blend_equation` and `blend_equation_separate`
-* `both blend_func` and `blend_func_separate`
-* `stencil_func` and `stencil_func_separate`
-* `stencil_mask` and `stencil_mask_separate`
-* `stencil_op` and `stencil_op_separate`
+* `blendEquation` and `blendEquationSeparate`
+* `both blendFunc` and `blendFuncSeparate`
+* `stencilFunc` and `stencilFuncSeparate`
+* `stencilMask` and `stencilMaskSeparate`
+* `stencilOp` and `stencilOpSeparate`
 
-The separate version of a property takes precedence over its counterpart.  For example, if both `blend_equation` and `blend_equation_separate` are provided, `blend_equation_separate` takes precedence.
+The separate version of a property takes precedence over its counterpart.  For example, if both `blendEquation` and `blendEquationSeparate` are provided, `blendEquationSeparate` takes precedence.
 
 ### Differences from COLLADA
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
 
-* `blend_func`, renamed
+* `blendFunc`, renamed
    * `src` to `sfactor`
    * `dst` to `dfactor`
-* `blend_func_separate`, renamed
+* `blendFuncSeparate`, renamed
    * `src_rgb` to `srcRGB`
    * `dest_rgb` to `dstRGB`
    * `src_alpha` to `srcAlpha`
    * `dest_alpha` to `dstAlpha`
-* Changed `color_mask` from an array of four booleans to an object with four properties: `red`, `green`, `blue`, and `alpha`.
-* Removed `point_size_enable`; instead, we just assign to `gl_PointSize` in WebGL based on `point_size`.
-* `polygon_offset`
-   * Replaced float2 array with `factor` and `units` properties.
+* Changed `colorMask` from an array of four booleans to an object with four properties: `red`, `green`, `blue`, and `alpha`.
+* Removed `point_size_enable`; instead, we just assign to `gl_PointSize` in WebGL based on `pointSize`.
+* `polygonOffset`
+   * Replaced `float2` array with `factor` and `units` properties.
 * `scissor` `width` and `height` default to zero, not "When a GL context is first attached to a window, width and height are set to the dimensions of that window."
-* Added `sample_coverage_enable`.
+* Added `sampleCoverageEnable`.
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
@@ -395,7 +402,7 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 * _Schema_
    * _Do we agree about separate precedence above?_
    * _I don't know anyone who uses `dither_enable` nowadays.  Is this something we want to include?_
-   * _Currently, only a `line_width` of `1.0` is supported on most browsers on Windows because that is all that ANGLE supports._
+   * _Currently, only a `lineWidth` of `1.0` is supported on most browsers on Windows because that is all that ANGLE supports._
    * _Need to look at OpenGL and OpenGL ES, which I think still includes `point_size_enable`._
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
