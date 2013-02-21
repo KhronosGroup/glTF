@@ -1,13 +1,9 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "material",
+    "title" : "technique",
     "type" : "object",
     "description" : "TODO",
     "properties": {    
-        "name" : {
-            "type" : "string",
-            "description" : "The externally-referenceable globally-unique name of this node."
-        },
         "parameters" : {
 		    "type" : "object",
 		    "description" : "TODO",
@@ -19,9 +15,9 @@
 		    },
 		    "additionalProperties" : false
         },
-        "technique" : {
+        "pass" : {
             "type" : "string",
-            "description" : "The name of the technique referenced by this material.",
+            "description" : "The name of the pass referenced by this material.",
             "required" : true
         },
         "extra" : {

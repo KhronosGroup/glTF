@@ -63,6 +63,14 @@
                 "$ref" : "shader.schema.json"
             }
         },
+        "techniques" : {
+            "description" : "The techniques used in this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.schema.json"
+            }
+        },
         "version" : {
             "type" : "string",
             "description" : "The glTF version.",

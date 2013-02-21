@@ -17,6 +17,7 @@ _TODO: order logically, not alphabetically._
    * <a href="#primitive">`primitive`</a>   
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
+   * <a href="#technique">`technique`</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 
@@ -61,7 +62,7 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 * Keep the client simple, negotiate via a REST API instead of on the client, e.g., for a `technique`.
 * When a tradeoff needs to be made, put pain on the converter, not the end user.
-* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.  Examples
+* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.  Examples:
    * All attributes must be backed by buffers, i.e., no [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
 * ...
 
@@ -220,7 +221,7 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
 * `float_array`. Page 5-37.
 * `int_array`. Page 5-69.
 
-### GL References
+### Related GL Functions
 
 * `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
 * `deleteBuffer` / [deleteBuffers](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
@@ -342,9 +343,13 @@ _TODO_
 
 _TODO_
 
-### GL References
+### Related GL Functions
 
-_TODO_
+* [`activeTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glActiveTexture.xml)
+* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
+* [`texParameterf`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
+* [`uniform*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniformMatrix*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
 ### _Open Questions_
 
@@ -438,7 +443,7 @@ TODO
 
 * 
 
-### GL References
+### Related GL Functions
 
 * [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
@@ -537,6 +542,42 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
    * _Need to look at OpenGL and OpenGL ES, which I think still includes `point_size_enable`._
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="technique">
+## `technique`
+
+* Schema: [technique.schema.json](technique.schema.json)
+* Examples
+   * [techniques.json](examples/glTF/techniques.json) - Bare glTF model with two images.
+   * [technique.json](examples/technique/technique.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+* [`activeTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glActiveTexture.xml)
+* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
+* [`texParameterf`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
+* [`uniform*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniformMatrix*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+
+### _Open Questions_
+
+* _Schema_
+   * 
+* _COLLADA2JSON_
+   * _Remove `passes` since we are only supporting a single pass to start?_
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">

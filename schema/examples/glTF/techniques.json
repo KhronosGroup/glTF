@@ -1,0 +1,8 @@
+{
+    "techniques" : {
+        "technique.0" : {
+		    "pass" : "examplePass"
+        }
+    },
+    "version" : "0.1"
+}
