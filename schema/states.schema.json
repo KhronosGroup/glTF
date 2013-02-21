@@ -310,22 +310,6 @@
             "type" : "integer",
             "description" : "stencilMask().  The default is all ones."
         },
-        "stencilMaskSeparate" : {
-            "type" : "object",
-            "description" : "stencilMaskSeparate()",
-            "properties" : {
-                "face" : {
-                    "type" : "string",
-                    "description" : "stencilMaskSeparate()",
-                    "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
-                    "default" : "FRONT_AND_BACK"
-                },
-                "mask" : {
-                    "type" : "integer",
-                    "description" : "stencilMaskSeparate().  The default is all ones."
-                }			
-            }		
-        },
         "stencilOp" : {
             "type" : "object",
             "description" : "stencilOp()",

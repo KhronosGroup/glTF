@@ -465,12 +465,11 @@ Like COLLADA, glTF includes:
 * `blendEquation` and `blendEquationSeparate`
 * `both blendFunc` and `blendFuncSeparate`
 * `stencilFunc` and `stencilFuncSeparate`
-* `stencilMask` and `stencilMaskSeparate`
 * `stencilOp` and `stencilOpSeparate`
 
 The separate version of a property takes precedence over its counterpart.  For example, if both `blendEquation` and `blendEquationSeparate` are provided, `blendEquationSeparate` takes precedence.
 
-To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, ...
+To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, when `stencilFuncSeparate` is used, `ref` and `mask` must be the same for front- and back-facing geometry.
 
 ### Differences from COLLADA
 
@@ -490,7 +489,8 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
    * Replaced `float2` array with `factor` and `units` properties.
 * `scissor` `width` and `height` default to zero, not "When a GL context is first attached to a window, width and height are set to the dimensions of that window."
 * Added `sampleCoverageEnable`.
-
+* To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, there is no `stencil_mask_separate`.
+   
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 * `states`. Pages 8-120 to 8-125.

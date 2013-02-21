@@ -64,10 +64,6 @@
         "mask" : 0
     },
     "stencilMask" : 0,
-    "stencilMaskSeparate" : {
-        "face" : "FRONT_AND_BACK",
-        "mask" : 0
-    },
     "stencilOp" : {
         "fail" : "KEEP",
         "zfail" : "KEEP",
