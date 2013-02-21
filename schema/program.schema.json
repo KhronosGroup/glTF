@@ -8,6 +8,7 @@
             "type" : "array",
             "description" : "TODO",
             "items ": {
+                "$ref" : "attribute.schema.json"
             },        
             "required" : true
         },
@@ -20,6 +21,7 @@
             "type" : "array",
             "description" : "TODO",
             "items ": {
+                "$ref" : "uniform.schema.json"
             }
         },
         "vertexShader" : {

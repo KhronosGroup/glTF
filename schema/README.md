@@ -20,6 +20,7 @@ _TODO: order logically, not alphabetically._
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
+   * <a href="#uniform">`uniform`</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 
@@ -642,6 +643,48 @@ _TODO_
    * _Do we need `type": "program"`?_
 * _COLLADA2JSON_
    * _Remove `passes` since we are only supporting a single pass to start?_
+
+
+
+
+
+
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="uniform">
+## `uniform`
+
+* Schema: [uniform.schema.json](uniform.schema.json)
+* Example: [uniform.json](examples/uniform/uniform.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+* _Schema_
+   * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
+   * Create list of allowed types.
+   * Rename VERTEX semantic to POSITION.
+   * Rename `FLOAT_VEC3` `type` to `vec3`, etc.
+* _COLLADA2JSON_
+   * 
+
+
+
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
