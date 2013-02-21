@@ -44,12 +44,11 @@ COLLADA2JSON provides a reliable toolchain based on OpenCOLLADA.
 Starting from exporter plugins in major authoring tools to COLLADA parsing when converting to JSON, 
 OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
-#### Viewer setup 
+#### Common setup 
 ```
 git clone https://github.com/KhronosGroup/collada2json.git
 cd collada2json
 git submodule update --init --recursive
-git submodule foreach git pull origin master
 ```
 
 Start a web server in `collada2json/webgl` which contains an `index.html` page linking to the demos.
