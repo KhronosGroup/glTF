@@ -1,0 +1,9 @@
+{
+    "name" : "exampleMaterial",
+    "parameters" : {
+    },
+    "technique" : "exampleTechnique",
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }     
+}

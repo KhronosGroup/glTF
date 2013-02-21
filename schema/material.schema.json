@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "material",
+    "type" : "object",
+    "description" : "TODO",
+    "properties": {    
+        "name" : {
+            "type" : "string",
+            "description" : "The externally-referenceable globally-unique name of this node."
+        },
+        "parameters" : {
+        
+        },
+        "technique" : {
+            "type" : "string",
+            "description" : "The name of the technique referenced by this material.",
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

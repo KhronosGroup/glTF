@@ -11,6 +11,7 @@ _TODO: order logically, not alphabetically._
    * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
    * <a href="#image">`image`</a>
+   * <a href="#material">`material`</a>
    * <a href="#mesh">`mesh`</a>
    * <a href="#node">`node`</a>
    * <a href="#primitive">`primitive`</a>   
@@ -128,7 +129,6 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
 * To satisfy Section 6.9 (Vertex Attribute Data Stride) of the WebGL 1.0 Spec, `byteStride` cannot exceed 255.
 
-
 ### Differences from COLLADA
 
 * Renamed `offset` to `byteOffset`.
@@ -144,7 +144,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * [`enableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 * [`disableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * I personally want a `center` and `radius`, not `min` and `max`.  However, `min` and `max` is more general.  Perhaps add `center` and `radius` to `primitive`?
@@ -178,7 +178,7 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 * `contributor`. Pages 5-27 to 5-28.
 * `geographic_location`. Pages 5-40 to 5-41.
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * _Need `unit` property?  Or always meters and apply a scale matrix to the root?_
@@ -228,7 +228,7 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
 * [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml)
 * [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml)
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * Why does current version include `type`: "ArrayBuffer"`?
@@ -275,7 +275,7 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * `orthographic`.  Pages 5-102 to 5-103.
 * `perspective`.  Pages 5-108 to 5-109.
 
-### _TODO_
+### _Open Questions_
 
 * _COLLADA2JSON_
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
@@ -309,7 +309,7 @@ glTF 1.0 does not support:
 * `image`.  Page 8-58 to 8-60.
 * `init_from`.  Pages 8-62 to 8-63.
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * _Support precomputed mips?_
@@ -322,17 +322,47 @@ glTF 1.0 does not support:
    * _Add option for data uri_
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="mesh">
-## `mesh`
+<a name="material">
+## `material`
 
-_TODO_
+* Schema: [material.schema.json](material.schema.json)
+* Examples
+   * [materials.json](examples/glTF/materials.json) - Bare glTF model with two images.
+   * [material.json](examples/material/material.json) - Every property with example values.
 
 ### Details
 
 _TODO_
 
-TODO: No `FIXED` (in ES though)
-TODO: Other WebGL requirements
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### GL References
+
+_TODO_
+
+### _Open Questions_
+
+* _Schema_
+   * 
+* _COLLADA2JSON_
+   * _Remove `techniques` since a material only has one.  Instead, this can be negotiated via a REST API._
+   
+<!-- ----------------------------------------------------------------------- -->
+<a name="mesh">
+## `mesh`
+
+* Schema: [mesh.schema.json](mesh.schema.json)
+* Example:  [mesh.json](examples/mesh/mesh.json) - Every property with example values.
+
+### Details
+
+_TODO_
 
 ### Differences from COLLADA
 
@@ -344,7 +374,7 @@ TODO: Other WebGL requirements
 
 _TODO_
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * Is a `byteStride` of zero tightly packed like WebGL?  Yes?
@@ -378,7 +408,7 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 
 * `node`.  Pages 5-98 to 5-99.
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * _instance_camera_ - keep camera as a node in the scene graph?  What are the use cases?  Shadow mapping?_
@@ -393,8 +423,8 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 <a name="primitive">
 ## `primitive`
 
-* Schema: 
-* Example: 
+* Schema: [primitive.schema.json](primitive.schema.json)
+* Example: [primitive.json](examples/mesh/primitive.json) - Every property with example values.
 
 ### Details
 
@@ -412,7 +442,7 @@ TODO
 
 * [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * `indices` `type` could also be `UNSIGNED_BYTE`, but I don't think anyone uses it.
@@ -442,7 +472,7 @@ _TODO_
 
 _TODO_
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * _Metadata, e.g., phong, etc._
@@ -474,8 +504,6 @@ The separate version of a property takes precedence over its counterpart.  For e
 To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, when `stencilFuncSeparate` is used, `ref` and `mask` must be the same for front- and back-facing geometry.
 To satisfy Section 6.10 (Viewport Depth Range) of the WebGL 1.0 Spec, `zNear` cannot be greater than `zFar`.
 
-
-                
 ### Differences from COLLADA
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
@@ -500,7 +528,7 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 
 * `states`. Pages 8-120 to 8-125.
 
-### _TODO_
+### _Open Questions_
 
 * _Schema_
    * _Do we agree about separate precedence above?_

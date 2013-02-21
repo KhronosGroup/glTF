@@ -1,0 +1,9 @@
+{
+    "materials" : {
+        "material.0" : {
+		    "name" : "exampleMaterial",
+		    "technique" : "exampleTechnique"
+        }
+    },
+    "version" : "0.1"
+}
