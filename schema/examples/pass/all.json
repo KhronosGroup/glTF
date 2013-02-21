@@ -1,84 +1,13 @@
 {
+    "program" : {
+		"attributes" : [],
+		"fragmentShader" : "fragmentShader.id",
+		"vertexShader" : "vertexShader.id"
+    },
     "states" : {
-        "blendEnable" : false,
-        "blendEquation" : "FUNC_ADD",
-        "blendEquationSeparate" : {
-            "rgb" : "FUNC_ADD",
-            "alpha" : "FUNC_ADD"
-        },
-        "blendFunc" : {
-            "sfactor" : "ONE",
-            "dfactor" : "ZERO"
-        },
-        "blendFuncSeparate" : {
-            "srcRGB" : "ONE",
-            "srcAlpha" : "ONE",
-            "dstRGB" : "ZERO",
-            "dstAlpha" : "ZERO"
-        },
-        "colorMask" : {
-            "red" : true,
-            "green" : true,
-            "blue" : true,
-            "alpha" : true
-        },
-        "cullFace" : "BACK",
-        "cullFaceEnable" : false,
-        "depthFunc" : "LESS",
-        "depthMask" : true,
-        "depthRange" : {
-            "zNear" : 0.0,
-            "zFar" : 1.0
-        },
-        "depth_TestEnable" : false,
-        "ditherEnable" : false,
-        "front_face" : "CCW",
-        "lineWidth" : 1.0,
-        "pointSize" : 1.0,
-        "polygon_offset" : {
-            "factor" : 0.0,
-            "units" : 0.0
-        },
-        "polygon_offsetFillEnable" : false,
-        "sampleAlphaToCoverageEnable" : false,
-        "sampleCoverage" : {
-            "value" : 1.0,
-            "invert" : false
-        },
-        "sampleCoverageEnable" : false,
-        "scissor" : {
-            "x" : 0,
-            "y" : 0,
-            "width" : 0,
-            "height" : 0	
-        },
-        "scissor_TestEnable" : false,
-        "stencilFunc" : {
-            "func" : "ALWAYS",
-            "ref" : 0,
-            "mask" : 0
-        },
-        "stencilFuncSeparate" : {
-            "front" : "ALWAYS",
-            "back" : "ALWAYS",
-            "ref" : 0,
-            "mask" : 0
-        },
-        "stencilMask" : 0,
-        "stencilOp" : {
-            "fail" : "KEEP",
-            "zfail" : "KEEP",
-            "zpass" : "KEEP"
-        },
-        "stencilOpSeparate" : {
-            "face" : "FRONT_AND_BACK",
-            "fail" : "KEEP",
-            "zfail" : "KEEP",
-            "zpass" : "KEEP"
-        },
-        "stencilTestEnable" : false,
-        "extra" : {
-            "Application specific" : "The extra object can contain any properties."
-        }        
-    }
+        "depthTestEnable" : true
+    },
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }    
 }

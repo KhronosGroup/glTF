@@ -3,7 +3,11 @@
     "title" : "pass",
     "type" : "object",
     "description" : "TODO",
-    "properties": {    
+    "properties": { 
+        "program" : {
+            "$ref" : "program.schema.json",
+            "required" : true
+        },   
         "states" : {
             "$ref" : "states.schema.json"
         },

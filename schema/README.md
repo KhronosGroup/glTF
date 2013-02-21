@@ -14,7 +14,9 @@ _TODO: order logically, not alphabetically._
    * <a href="#material">`material`</a>
    * <a href="#mesh">`mesh`</a>
    * <a href="#node">`node`</a>
+   * <a href="#pass">`pass`</a>   
    * <a href="#primitive">`primitive`</a>   
+   * <a href="#program">`program`</a>   
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
@@ -354,7 +356,7 @@ _TODO_
 ### _Open Questions_
 
 * _Schema_
-   * 
+   * _Write schema for `parameters`._
 * _COLLADA2JSON_
    * _Remove `techniques` since a material only has one.  Instead, this can be negotiated via a REST API._
    
@@ -425,6 +427,36 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
    * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
 <!-- ----------------------------------------------------------------------- -->
+<a name="pass">
+## `pass`
+
+* Schema: [pass.schema.json](pass.schema.json)
+* Examples: [pass.json](examples/pass/all.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO: lots_
+
+### _Open Questions_
+
+* _Schema_
+   * 
+* _COLLADA2JSON_
+   *
+   
+<!-- ----------------------------------------------------------------------- -->
 <a name="primitive">
 ## `primitive`
 
@@ -454,6 +486,37 @@ TODO
 * _COLLADA2JSON_
    * Renamed `length` to `count` to better match WebGL.
    * _Add checking for Section 6.3 above._
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="program">
+## `program`
+
+* Schema: [program.schema.json](program.schema.json)
+* Examples: [program.json](examples/program/program.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO: lots_
+
+### _Open Questions_
+
+* _Schema_
+   * 
+* _COLLADA2JSON_
+   * Renamed `x-shader/x-fragment` to `fragmentShader` to better match WebGL
+   * Renamed `x-shader/x-vertex` to `vertexShader` to better match WebGL
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="shader">
@@ -575,7 +638,8 @@ _TODO_
 ### _Open Questions_
 
 * _Schema_
-   * 
+   * _Write schema for `parameters`._
+   * _Do we need `type": "program"`?_
 * _COLLADA2JSON_
    * _Remove `passes` since we are only supporting a single pass to start?_
    

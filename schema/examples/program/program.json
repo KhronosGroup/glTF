@@ -1,0 +1,9 @@
+{
+	"attributes" : [],
+	"fragmentShader" : "fragmentShader.id",
+	"uniforms" : [],
+	"vertexShader" : "vertexShader.id",
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }     
+}
