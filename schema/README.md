@@ -60,7 +60,8 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 * Keep the client simple, negotiate via a REST API instead of on the client, e.g., for a `technique`.
 * When a tradeoff needs to be made, put pain on the converter, not the end user.
-* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.
+* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.  Examples
+   * All attributes must be backed by buffers, i.e., no [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
 * ...
 
 <!-- ----------------------------------------------------------------------- -->
@@ -124,7 +125,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 
 ### Details
 
-TODO
+* To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
 
 ### Differences from COLLADA
 
@@ -148,6 +149,7 @@ TODO
 * _COLLADA2JSON_
    * _Move `semantic` from `primitives` to `accessor`.  What is the benefit of decoupling them?_
    * _Rename `VERTEX` semantic to `POSITION`._
+   * _Add checking for Section 6.3 above._
    * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
    
 <!-- ----------------------------------------------------------------------- -->
@@ -215,6 +217,14 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
 * `bool_array`. Page 5-20.
 * `float_array`. Page 5-37.
 * `int_array`. Page 5-69.
+
+### GL References
+
+* `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
+* `deleteBuffer` / [deleteBuffers](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
+* [`bindBuffer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindBuffer.xml)
+* [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml)
+* [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml)
 
 ### _TODO_
 
@@ -302,6 +312,8 @@ glTF 1.0 does not support:
 * _Schema_
    * _Support precomputed mips?_
    * _Allow blank texture as a render target and other ColladaFX features on 8-59?_
+   * _Consider support for `UNPACK_FLIP_Y_WEBGL`, `UNPACK_PREMULTIPLY_ALPHA_WEBGL`, and `UNPACK_COLORSPACE_CONVERSION_WEBGL`._
+
 * _COLLADA2JSON_
    * _Add support for `generateMipmap`_
    * _Image conversion to `.jpg` or `.png`_
@@ -384,7 +396,7 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 
 ### Details
 
-TODO
+* To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` must be a multiple of the size of `type`.
 
 ### Differences from COLLADA
 
@@ -394,7 +406,7 @@ TODO
 
 * 
 
-### GL Reference
+### GL References
 
 * [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
@@ -404,6 +416,7 @@ TODO
    * `indices` `type` could also be `UNSIGNED_BYTE`, but I don't think anyone uses it.
 * _COLLADA2JSON_
    * Renamed `length` to `count` to better match WebGL.
+   * _Add checking for Section 6.3 above._
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="shader">
@@ -456,6 +469,8 @@ Like COLLADA, glTF includes:
 * `stencilOp` and `stencilOpSeparate`
 
 The separate version of a property takes precedence over its counterpart.  For example, if both `blendEquation` and `blendEquationSeparate` are provided, `blendEquationSeparate` takes precedence.
+
+To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, ...
 
 ### Differences from COLLADA
 
