@@ -1,6 +1,9 @@
 {
     "program" : {
-		"attributes" : [],
+		"attributes" : [{
+	    	"symbol" : "position",
+	    	"type" : "vec3"
+		}],
 		"fragmentShader" : "fragmentShader.id",
 		"vertexShader" : "vertexShader.id"
     },

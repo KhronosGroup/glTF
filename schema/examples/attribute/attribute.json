@@ -1,7 +1,7 @@
 {
-    "semantic" : "MODELVIEW",
-    "symbol" : "u_modelView",
-    "type" : "mat4",
+    "semantic" : "POSITION",
+    "symbol" : "position",
+    "type" : "vec3",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     

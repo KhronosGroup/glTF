@@ -9,7 +9,8 @@
             "description" : "TODO",
             "items ": {
                 "$ref" : "attribute.schema.json"
-            },        
+            },
+            "minItems" : 1,
             "required" : true
         },
         "fragmentShader" : {

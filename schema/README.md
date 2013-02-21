@@ -8,6 +8,7 @@ _TODO: order logically, not alphabetically._
 * <a href="#schema">Schema</a>
    * <a href="#accessor">`accessor`</a>
    * <a href="#asset">`asset`</a>
+   * <a href="#attribute">`attribute`</a>
    * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
    * <a href="#image">`image`</a>
@@ -192,6 +193,37 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
    * _Create `asset.copyright` from COLLADA author and copyright?_
    * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
    * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="attribute">
+## `attribute`
+
+* Schema: [attribute.schema.json](attribute.schema.json)
+* Example: [attribute.json](examples/attribute/attribute.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### Differences from COLLADA
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+* _Schema_
+   * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
+   * Create list of allowed types.
+* _COLLADA2JSON_
+   * 
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="buffer">
@@ -644,12 +676,6 @@ _TODO_
 * _COLLADA2JSON_
    * _Remove `passes` since we are only supporting a single pass to start?_
 
-
-
-
-
-
-
 <!-- ----------------------------------------------------------------------- -->
 <a name="uniform">
 ## `uniform`
@@ -682,9 +708,6 @@ _TODO_
    * Rename `FLOAT_VEC3` `type` to `vec3`, etc.
 * _COLLADA2JSON_
    * 
-
-
-
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">

@@ -1,5 +1,8 @@
 {
-	"attributes" : [],
+	"attributes" : [{
+    	"symbol" : "position",
+    	"type" : "vec3"
+	}],
 	"fragmentShader" : "fragmentShader.id",
 	"uniforms" : [],
 	"vertexShader" : "vertexShader.id",
