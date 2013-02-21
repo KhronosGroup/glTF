@@ -4,6 +4,6 @@
     "zfar" : 1000,
     "znear" : 1,
     "extra" : {
-       "example_meta_data" : "application specific data.  This doesn't have to be a string; it could be an object, array, etc."
+       "Application specific" : "The extra object can contain any properties."
     }
 }
