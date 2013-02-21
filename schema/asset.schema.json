@@ -30,7 +30,7 @@
 		        "altitudeMode" : {
 		            "type" : "string",
 		            "description" : "Altitude follows the Keyhole Markup Language (KML) standard rather than the WGS84 calculation of height. That is, it can be relative to terrain, or relative to sea level. This property indicates whether the altitude value should be interpreted as the distance in meters from sea level, \"absolute\", or from the altitude of the terrain at the latitude/longitude point, \"relativeToGround.\"",
-		            "pattern" : "absolute|relativeToGround",
+		            "pattern" : "^absolute$|^relativeToGround$",
 		            "default" : "relativeToGround"
 		        },
 		        "extra" : {

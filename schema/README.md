@@ -4,6 +4,7 @@ This doc can be used to create the glTF spec.
 * <a href="#guidingprinciples">Guiding Principles</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#schema">Schema</a>
+   * <a href="#accessor">`accessor`</a>
    * <a href="#asset">`asset`</a>
    * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
@@ -99,11 +100,35 @@ _TODO_
    * _Needs to output `extra` objects_.
 * _Loader_
    * _Needs to pass through `extra` objects_.
+   * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
 
 Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties not in the spec on any objects, except `extra`.
 
 <a name="schema">
 # Schema
+
+<a name="accessor">
+## `accessor`
+
+* Schema: [accessor.schema.json](accessor.schema.json)
+* Example: [accessor.json](examples/mesh/accessor.json) - Every property with example values.
+
+### Details
+
+TODO
+
+### Differences from COLLADA
+
+TODO
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+TODO
+
+### _TODO_
+
+* _Schema_
+   * I personally want a `center` and `radius`, not `min` and `max`.  However, `min` and `max` is more general.  Perhaps add `center` and `radius` to `primitive`?
 
 <a name="asset">
 ## `asset`
