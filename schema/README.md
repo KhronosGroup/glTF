@@ -126,6 +126,8 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 ### Details
 
 * To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
+* To satisfy Section 6.9 (Vertex Attribute Data Stride) of the WebGL 1.0 Spec, `byteStride` cannot exceed 255.
+
 
 ### Differences from COLLADA
 
@@ -149,7 +151,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * _COLLADA2JSON_
    * _Move `semantic` from `primitives` to `accessor`.  What is the benefit of decoupling them?_
    * _Rename `VERTEX` semantic to `POSITION`._
-   * _Add checking for Section 6.3 above._
+   * _Add checking for Sections 6.3 and 6.9 above._
    * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
    
 <!-- ----------------------------------------------------------------------- -->
@@ -470,7 +472,10 @@ Like COLLADA, glTF includes:
 The separate version of a property takes precedence over its counterpart.  For example, if both `blendEquation` and `blendEquationSeparate` are provided, `blendEquationSeparate` takes precedence.
 
 To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, when `stencilFuncSeparate` is used, `ref` and `mask` must be the same for front- and back-facing geometry.
+To satisfy Section 6.10 (Viewport Depth Range) of the WebGL 1.0 Spec, `zNear` cannot be greater than `zFar`.
 
+
+                
 ### Differences from COLLADA
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:

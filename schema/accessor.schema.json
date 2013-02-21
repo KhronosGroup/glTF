@@ -19,6 +19,7 @@
             "type" : "number",
             "description" : "The stride, in bytes, between attributes referenced by this accessor.  vertexAttribPointer() stride parameter.",
             "minimum" : 0,
+            "maximum" : 255,
             "required" : true
         },
         "count" : {
