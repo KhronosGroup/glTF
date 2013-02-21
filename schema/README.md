@@ -1,5 +1,7 @@
 This doc can be used to create the glTF spec.
 
+_TODO: order logically, not alphabetically._
+
 * <a href="#validation">Validation</a>
 * <a href="#guidingprinciples">Guiding Principles</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
@@ -11,11 +13,13 @@ This doc can be used to create the glTF spec.
    * <a href="#image">`image`</a>
    * <a href="#mesh">`mesh`</a>
    * <a href="#node">`node`</a>
+   * <a href="#primitive">`primitive`</a>   
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="validation">
 # Validation
 
@@ -50,13 +54,16 @@ http://localhost/gltf/?schema=states.schema.json&json=examples/states/translucen
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="guidingprinciples">
 # Guiding Principles
 
 * Keep the client simple, negotiate via a REST API instead of on the client, e.g., for a `technique`.
 * When a tradeoff needs to be made, put pain on the converter, not the end user.
+* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.
 * ...
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
 # Comparison between COLLADA and glTF
 
@@ -104,9 +111,11 @@ _TODO_
 
 Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties not in the spec on any objects, except `extra`.
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="schema">
 # Schema
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="accessor">
 ## `accessor`
 
@@ -119,17 +128,29 @@ TODO
 
 ### Differences from COLLADA
 
-TODO
-
+* Renamed `offset` to `byteOffset`.
+* Renamed `stride` to `byteStride`.
+   
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
-TODO
+* `accessor`. Pages 5-5 to 5-10.
+
+### GL Reference
+
+* [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml)
+* [`enableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
+* [`disableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 
 ### _TODO_
 
 * _Schema_
    * I personally want a `center` and `radius`, not `min` and `max`.  However, `min` and `max` is more general.  Perhaps add `center` and `radius` to `primitive`?
-
+* _COLLADA2JSON_
+   * _Move `semantic` from `primitives` to `accessor`.  What is the benefit of decoupling them?_
+   * _Rename `VERTEX` semantic to `POSITION`._
+   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
+   
+<!-- ----------------------------------------------------------------------- -->
 <a name="asset">
 ## `asset`
 
@@ -164,6 +185,7 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
    * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
    * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="buffer">
 ## `buffer`
 
@@ -197,12 +219,13 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
 ### _TODO_
 
 * _Schema_
-   * Why does current version include `type": "ArrayBuffer"`?
+   * Why does current version include `type`: "ArrayBuffer"`?
    * Separate buffers for indices and vertices since WebGL treats them separately?
 * _COLLADA2JSON_
    * Convert `bool_array` to `0.0` or `1.0`?
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
    
+<!-- ----------------------------------------------------------------------- -->
 <a name="camera">
 ## `camera`
 
@@ -246,6 +269,7 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="image">
 ## `image`
 
@@ -283,6 +307,7 @@ glTF 1.0 does not support:
    * _Image conversion to `.jpg` or `.png`_
    * _Add option for data uri_
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="mesh">
 ## `mesh`
 
@@ -316,6 +341,7 @@ _TODO_
    * Add support for `normalized`.
    * Long term, we should convert `spline`.
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="node">
 ## `node`
 
@@ -349,6 +375,37 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * _COLLADA2JSON_
    * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
+<!-- ----------------------------------------------------------------------- -->
+<a name="primitive">
+## `primitive`
+
+* Schema: 
+* Example: 
+
+### Details
+
+TODO
+
+### Differences from COLLADA
+
+TODO
+   
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* 
+
+### GL Reference
+
+* [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
+
+### _TODO_
+
+* _Schema_
+   * `indices` `type` could also be `UNSIGNED_BYTE`, but I don't think anyone uses it.
+* _COLLADA2JSON_
+   * Renamed `length` to `count` to better match WebGL.
+
+<!-- ----------------------------------------------------------------------- -->
 <a name="shader">
 ## `shader`
 
@@ -377,6 +434,7 @@ _TODO_
 * _COLLADA2JSON_
    * _Option for data uri._
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="states">
 ## `states`
 
@@ -432,12 +490,14 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
    
+<!-- ----------------------------------------------------------------------- -->
 <a name="references">
 # References
 
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
 * [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
 
+<!-- ----------------------------------------------------------------------- -->
 <a name="acknowledgments">
 # Acknowledgments
 

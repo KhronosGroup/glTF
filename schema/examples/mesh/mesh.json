@@ -1,0 +1,31 @@
+{
+    "accessors" : {
+	    "accessorPosition" : {
+		    "buffer" : "vertices.bin",
+		    "byteOffset" : 0,
+		    "byteStride" : 3,
+		    "count" : 1024,
+		    "componentType" : "FLOAT",
+		    "componentsPerAttribute" : 3,
+		    "normalized" : false,
+		    "max" : [-1.0, -1.0, -1.0],
+		    "min" : [1.0, 1.0, 1.0],
+		    "semantic" : "POSITION"
+		}
+    },
+    "name" : "exampleMesh",
+    "primitives" : [{
+	    "indices" : {
+	        "buffer" : "indices.bin",
+	        "byteOffset" : 0,
+	        "count" : 1024,
+	        "type" : "UNSIGNED_SHORT"
+	    },
+	    "material" : "exampleMaterial",
+	    "primitive" : "TRIANGLES",
+	    "vertexAttributes" : ["accessorPosition"]
+	}],
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "node",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "accessors" : {
+            "description" : "TODO",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "accessor.schema.json"
+            }        
+        },
+        "name" : {
+            "type" : "string",
+            "description" : "The externally-referenceable globally-unique name of this node."
+        },
+        "primitives" : {
+            "type" : "array",
+            "description" : "Primitives that form the geometry in this mesh.",
+            "items ": {
+                "$ref" : "primitive.schema.json"
+            }
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

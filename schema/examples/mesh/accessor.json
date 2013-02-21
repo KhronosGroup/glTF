@@ -8,6 +8,7 @@
     "normalized" : false,
     "max" : [-1.0, -1.0, -1.0],
     "min" : [1.0, 1.0, 1.0],
+    "semantic" : "POSITION",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     
