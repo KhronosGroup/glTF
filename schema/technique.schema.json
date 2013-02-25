@@ -5,15 +5,7 @@
     "description" : "TODO",
     "properties": {    
         "parameters" : {
-		    "type" : "object",
-		    "description" : "TODO",
-            "properties" : {
-		        "extra" : {
-		            "type" : "any",
-		            "description" : "Optional application-specific data."
-		        }
-		    },
-		    "additionalProperties" : false
+	        "$ref" : "parameters.schema.json"
         },
         "pass" : {
             "$ref" : "pass.schema.json",

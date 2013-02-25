@@ -1,0 +1,12 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "parameters",
+    "type" : "object",
+    "properties" : {
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
