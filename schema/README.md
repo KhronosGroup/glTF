@@ -1,4 +1,4 @@
-This doc can be used to create the glTF spec.
+This doc can be used to create the glTF spec.  Many things here have not been fully discussed and are subject to change.
 
 _TODO: order logically, not alphabetically._
 
@@ -127,7 +127,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 ## `accessor`
 
 * Schema: [accessor.schema.json](accessor.schema.json)
-* Example: [accessor.json](examples/mesh/accessor.json) - Every property with example values.
+* Example: [accessor.json](examples/accessor/accessor.json) - Every property with example values.
 
 ### Details
 
@@ -166,7 +166,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * Schema: [asset.schema.json](asset.schema.json)
 * Examples:
    * [asset.json](examples/glTF/asset.json) - Bare glTF model with an asset property.
-   * [all.json](examples/asset/all.json) - Every property with example values.
+   * [asset.json](examples/asset/asset.json) - Every property with example values.
 
 ### Details
 
@@ -232,11 +232,13 @@ _TODO_
 * Schema: [buffer.schema.json](buffer.schema.json)
 * Examples:
    * [buffers.json](examples/glTF/buffers.json) - Bare glTF model with a buffer.
-   * [all.json](examples/buffer/all.json) - Every property with example values.
+   * [buffer.json](examples/buffer/buffer.json) - Every property with example values.
 
 ### Details
 
-Instead of referencing an external binary file, the URL may be a base64 [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.
+Instead of referencing an external binary file, the URL may be a base64 [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  This can be negotiated via a REST API.
+
+_TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#data:-urls-and-http), they do not work with `XMLHttpRequest` in Chrome. We need to get this [bug](http://code.google.com/p/chromium/issues/detail?id=46806) fixed._
 
 ### Differences from COLLADA
 
@@ -283,9 +285,8 @@ Instead of referencing an external binary file, the URL may be a base64 [data UR
    * [orthographic.schema.json](orthographic.schema.json).
 * Examples
    * [cameras.json](examples/glTF/cameras.json) - Bare glTF model with two cameras.
-   * [orthographic_all.json](examples/camera/orthographic_all.json) - Orthographic camera using all properties.
-   * [perspective.json](examples/camera/perspective.json) - Perspective camera using required properties.
-   * [perspective_all.json](examples/camera/perspective_all.json) - Perspective camera using all properties.
+   * [orthographic.json](examples/camera/orthographic.json) - Orthographic camera using all properties.
+   * [perspective.json](examples/camera/perspective.json) - Perspective camera using all properties.
 
 ### Details
 
@@ -324,11 +325,11 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * Schema: [image.schema.json](image.schema.json)
 * Examples
    * [images.json](examples/glTF/images.json) - Bare glTF model with two images.
-   * [all.json](examples/image/all.json) - Every property with example values.
+   * [image.json](examples/image/image.json) - Every property with example values.
 
 ### Details
 
-For compatibility with modern web browsers, the following image formats are supported: `.jpg`, `.png`, `.bmp`, and `.gif`.  The URL may be a [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.
+For compatibility with modern web browsers, the following image formats are supported: `.jpg`, `.png`, `.bmp`, and `.gif`.  The URL may be a [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  This can be negotiated via a REST API.
 
 ### Differences from COLLADA
 
@@ -464,7 +465,7 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 ## `pass`
 
 * Schema: [pass.schema.json](pass.schema.json)
-* Examples: [pass.json](examples/pass/all.json) - Every property with example values.
+* Examples: [pass.json](examples/pass/pass.json) - Every property with example values.
 
 ### Details
 
@@ -494,7 +495,7 @@ _TODO: lots_
 ## `primitive`
 
 * Schema: [primitive.schema.json](primitive.schema.json)
-* Example: [primitive.json](examples/mesh/primitive.json) - Every property with example values.
+* Example: [primitive.json](examples/primitive/primitive.json) - Every property with example values.
 
 ### Details
 
@@ -558,12 +559,14 @@ _TODO: lots_
 * Schema: [shader.schema.json](shader.schema.json)
 * Examples
    * [shaders.json](examples/glTF/shaders.json) - Bare glTF model with two shaders.
-   * [all.json](examples/shader/all.json) - Every property with example values.
+   * [shader.json](examples/shader/shader.json) - Every property with example values.
    * [dataUri.json](examples/shader/dataUri.json) - Using a data URI for a shader source.
 
 ### Details
 
-GLSL source can be in external plain-text .glsl files.  The URL may also be a plain-text [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  Using a data URI reduces the number of requests for a single model.  However, if several models are loaded that use the same shader, using separate .glsl files may be better due to HTTP caching.
+GLSL source can be in external plain-text .glsl files.  The URL may also be a plain-text [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  Using a data URI reduces the number of requests for a single model.  However, if several models are loaded that use the same shader, using separate .glsl files may be better due to HTTP caching.  This can be negotiated via a REST API.
+
+_TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#data:-urls-and-http), they do not work with `XMLHttpRequest` in Chrome. We need to get this [bug](http://code.google.com/p/chromium/issues/detail?id=46806) fixed._
 
 ### Differences from COLLADA
 
@@ -587,7 +590,7 @@ _TODO_
 * Schema: [states.schema.json](states.schema.json)
    * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
 * Examples:
-   * [all.json](examples/states/all.json) - every state with its default value.
+   * [states.json](examples/states/states.json) - every state with its default value.
    * [closed_opaque_object.json](examples/states/closed_opaque_object.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
    * [depth_test.json](examples/states/depth_test.json) - state with depth testing enabled.
    * [translucency.json](examples/states/translucency.json) - typical state for rendering a translucency object with alpha blending.
