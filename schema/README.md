@@ -11,11 +11,16 @@ _TODO: order logically, not alphabetically._
    * <a href="#attribute">`attribute`</a>
    * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
+   * <a href="#geographicLocation">`geographicLocation`</a>
    * <a href="#image">`image`</a>
+   * <a href="#indices">`indices`</a>
    * <a href="#material">`material`</a>
    * <a href="#mesh">`mesh`</a>
    * <a href="#node">`node`</a>
-   * <a href="#pass">`pass`</a>   
+   * <a href="#orthographic">`orthographic`</a>
+   * <a href="#parameters">`parameters`</a>
+   * <a href="#pass">`pass`</a>
+   * <a href="#perspective">`perspective`</a>
    * <a href="#primitive">`primitive`</a>   
    * <a href="#program">`program`</a>   
    * <a href="#shader">`shader`</a>
@@ -285,8 +290,9 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
    * [orthographic.schema.json](orthographic.schema.json).
 * Examples
    * [cameras.json](examples/glTF/cameras.json) - Bare glTF model with two cameras.
-   * [orthographic.json](examples/camera/orthographic.json) - Orthographic camera using all properties.
-   * [perspective.json](examples/camera/perspective.json) - Perspective camera using all properties.
+   * [camera.json](examples/camera/camera.json) - Every property with example values.
+   * [orthographic.json](examples/orthographic/orthographic.json) - Orthographic camera using all properties.
+   * [perspective.json](examples/perspective/perspective.json) - Perspective camera using all properties.
 
 ### Details
 
@@ -317,6 +323,30 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * _COLLADA2JSON_
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
+
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="geographicLocation">
+## `geographicLocation`
+
+* Schema: [geographicLocation.schema.json](geographicLocation.schema.json)
+* Example: [geographicLocation.json](examples/geographicLocation/geographicLocation.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+_TODO_
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="image">
@@ -357,6 +387,29 @@ glTF 1.0 does not support:
    * _Add support for `generateMipmap`_
    * _Image conversion to `.jpg` or `.png`_
    * _Add option for data uri_
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="indices">
+## `indices`
+
+* Schema: [indices.schema.json](indices.schema.json)
+* Example: [indices.json](examples/indices/indices.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+_TODO_
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="material">
@@ -461,6 +514,52 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
    * _Convert all transformation elements to 4x4 matrix.  Do we already?_
 
 <!-- ----------------------------------------------------------------------- -->
+<a name="orthographic">
+## `orthographic`
+
+* Schema: [orthographic.schema.json](orthographic.schema.json)
+* Example: [orthographic.json](examples/orthographic/orthographic.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="parameters">
+## `parameters`
+
+* Schema: [parameters.schema.json](parameters.schema.json)
+* Example: [parameters.json](examples/parameters/parameters.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
 <a name="pass">
 ## `pass`
 
@@ -489,6 +588,29 @@ _TODO: lots_
    * 
 * _COLLADA2JSON_
    *
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="perspective">
+## `perspective`
+
+* Schema: [perspective.schema.json](perspective.schema.json)
+* Example: [perspective.json](examples/perspective/perspective.json) - Every property with example values.
+
+### Details
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+### Related GL Functions
+
+_TODO_
+
+### _Open Questions_
+
+_TODO_
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="primitive">

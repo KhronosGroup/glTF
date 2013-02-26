@@ -1,0 +1,9 @@
+{
+    "buffer" : "indices.bin",
+    "byteOffset" : 0,
+    "count" : 1024,
+    "type" : "UNSIGNED_SHORT",
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }
+}
