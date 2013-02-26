@@ -1,4 +1,5 @@
 {
+    "name" : "externally-referenceable globally-unique name",    
 	"perspective" : {
 	    "aspectRatio" : 1.77,
 	    "yfov" : 0.7854,

@@ -1,4 +1,5 @@
 {
+    "name" : "externally-referenceable globally-unique name",    
     "path" : "example.png",
     "generateMipmap" : false,
     "extra" : {

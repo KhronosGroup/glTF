@@ -1,4 +1,5 @@
 {
+    "name" : "externally-referenceable globally-unique name",    
     "path" : "vertexShader.glsl",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."

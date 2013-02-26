@@ -16,6 +16,10 @@
             "minimum" : 0,
             "required" : true
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The externally-referenceable globally-unique name of this node."
+        },        
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."

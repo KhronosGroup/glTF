@@ -1,6 +1,7 @@
 {
     "path" : "vertices.bin",
     "byteLength": 1024,
+    "name" : "externally-referenceable globally-unique name",    
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }    

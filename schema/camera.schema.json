@@ -4,6 +4,10 @@
     "type" : "object",
     "description" : "A view into the scene.  The camera describes the projection, but not the camera's position and direction.",
     "properties" : {
+        "name" : {
+            "type" : "string",
+            "description" : "The externally-referenceable globally-unique name of this node."
+        },    
         "orthographic" : {
             "$ref" : "orthographic.schema.json"
         },
