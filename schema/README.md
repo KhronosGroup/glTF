@@ -2,7 +2,7 @@ This doc can be used to create the glTF spec.  Many things here have not been fu
 
 * <a href="#guidingprinciples">Guiding Principles</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
-* <a href="#validation">Validation</a>
+* <a href="#assetvalidation">Asset Validation</a>
 * <a href="#schema">Schema</a> - by category
    * Camera
       * <a href="#camera">`camera`</a>
@@ -132,8 +132,8 @@ _TODO_
 Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility in future versions, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties on any objects, except `extra`.
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="validation">
-# Validation
+<a name="assetvalidation">
+# Asset Validation
 
 The glTF schema is written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03).
 
@@ -165,6 +165,8 @@ http://localhost/gltf/?schema=states.schema.json&json=examples/states/translucen
 ```
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
+
+_TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully validate an asset._
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="schema">
