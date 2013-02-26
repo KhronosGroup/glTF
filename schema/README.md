@@ -100,7 +100,7 @@ becomes
 
 The `name` property is the user-facing name that the engine uses to access parts of the asset, and the object name is used internally to link parts of the asset, e.g., reference a `mesh` from a `node`. 
 
-In glTF, objects that are commony accessed from an engine, including resource objects (buffers, textures, and shaders), have optional `name` properties.  These objects are:
+In glTF, objects that are commonly accessed from an engine, including resource objects (buffers, textures, and shaders), have optional `name` properties.  These objects are:
 
    * <a href="#buffer">`buffer`</a>
    * <a href="#camera">`camera`</a>
@@ -177,12 +177,18 @@ _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully vali
 ## `accessor`
 
 * Schema: [accessor.schema.json](accessor.schema.json)
-* Example: [accessor.json](examples/accessor/accessor.json) - Every property with example values.
+* Example: [accessor.json](examples/accessor/accessor.json) - every property with example values.
 
 ### Details
 
 * To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
 * To satisfy Section 6.9 (Vertex Attribute Data Stride) of the WebGL 1.0 Spec, `byteStride` cannot exceed 255.
+
+### Related GL Functions
+
+* [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml)
+* [`enableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
+* [`disableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 
 ### Differences from COLLADA
 
@@ -192,12 +198,6 @@ _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully vali
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 * `accessor`. Pages 5-5 to 5-10.
-
-### GL Reference
-
-* [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml)
-* [`enableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
-* [`disableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 
 ### _Open Questions_
 
@@ -215,12 +215,16 @@ _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully vali
 
 * Schema: [asset.schema.json](asset.schema.json)
 * Examples:
-   * [asset.json](examples/glTF/asset.json) - Bare glTF model with an asset property.
-   * [asset.json](examples/asset/asset.json) - Every property with example values.
+   * [asset.json](examples/glTF/asset.json) - bare glTF model with an asset property.
+   * [asset.json](examples/asset/asset.json) - every property with example values.
 
 ### Details
 
 The design of `asset` in COLLADA is focused on asset interchange for assets potentially authored by multiple artists.  In glTF, `asset` is used to credit all artists for display purposes.
+
+### Related GL Functions
+
+None.
 
 ### Differences from COLLADA
 
@@ -249,21 +253,23 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 ## `attribute`
 
 * Schema: [attribute.schema.json](attribute.schema.json)
-* Example: [attribute.json](examples/attribute/attribute.json) - Every property with example values.
+* Example: [attribute.json](examples/attribute/attribute.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+* [`bindAttribLocation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindAttribLocation.xml)
+* [`getAttribLocation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetAttribLocation.xml)
+* [`getProgramParameter`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetProgramiv.xml) with `ACTIVE_ATTRIBUTES`
 
 ### Differences from COLLADA
 
 _TODO_
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
-### Related GL Functions
 
 _TODO_
 
@@ -281,14 +287,22 @@ _TODO_
 
 * Schema: [buffer.schema.json](buffer.schema.json)
 * Examples:
-   * [buffers.json](examples/glTF/buffers.json) - Bare glTF model with a buffer.
-   * [buffer.json](examples/buffer/buffer.json) - Every property with example values.
+   * [buffers.json](examples/glTF/buffers.json) - bare glTF model with a buffer.
+   * [buffer.json](examples/buffer/buffer.json) - every property with example values.
 
 ### Details
 
 Instead of referencing an external binary file, the URL may be a base64 [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  This can be negotiated via a REST API.
 
 _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#data:-urls-and-http), they do not work with `XMLHttpRequest` in Chrome. We need to get this [bug](http://code.google.com/p/chromium/issues/detail?id=46806) fixed._
+
+### Related GL Functions
+
+* `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
+* `deleteBuffer` / [`deleteBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
+* [`bindBuffer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindBuffer.xml)
+* [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml)
+* [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml)
 
 ### Differences from COLLADA
 
@@ -308,14 +322,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * `float_array`. Page 5-37.
 * `int_array`. Page 5-69.
 
-### Related GL Functions
-
-* `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
-* `deleteBuffer` / [deleteBuffers](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
-* [`bindBuffer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindBuffer.xml)
-* [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml)
-* [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml)
-
 ### _Open Questions_
 
 * _Schema_
@@ -334,10 +340,10 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
    * [perspective.schema.json](perspective.schema.json)
    * [orthographic.schema.json](orthographic.schema.json).
 * Examples
-   * [cameras.json](examples/glTF/cameras.json) - Bare glTF model with two cameras.
-   * [camera.json](examples/camera/camera.json) - Every property with example values.
-   * [orthographic.json](examples/orthographic/orthographic.json) - Orthographic camera using all properties.
-   * [perspective.json](examples/perspective/perspective.json) - Perspective camera using all properties.
+   * [cameras.json](examples/glTF/cameras.json) - bare glTF model with two cameras.
+   * [camera.json](examples/camera/camera.json) - every property with example values.
+   * [orthographic.json](examples/orthographic/orthographic.json) - orthographic camera using all properties.
+   * [perspective.json](examples/perspective/perspective.json) - perspective camera using all properties.
 
 ### Details
 
@@ -347,6 +353,10 @@ For `orthographic`, the following properties are required:
 For `perspective`, the following properties are required:
 * `aspectRatio`
 * `yfov`
+
+### Related GL Functions
+
+See <a href="#orthographic">`orthographic`</a> and <a href="#perspective">`perspective`</a>.
 
 ### Differences from COLLADA
 
@@ -369,23 +379,22 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
 
-
 <!-- ----------------------------------------------------------------------- -->
 <a name="geographicLocation">
 ## `geographicLocation`
 
 * Schema: [geographicLocation.schema.json](geographicLocation.schema.json)
-* Example: [geographicLocation.json](examples/geographicLocation/geographicLocation.json) - Every property with example values.
+* Example: [geographicLocation.json](examples/geographicLocation/geographicLocation.json) - every property with example values.
+
+### Related GL Functions
+
+None.
 
 ### Details
 
 _TODO_
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
-### Related GL Functions
 
 _TODO_
 
@@ -399,12 +408,21 @@ _TODO_
 
 * Schema: [image.schema.json](image.schema.json)
 * Examples
-   * [images.json](examples/glTF/images.json) - Bare glTF model with two images.
-   * [image.json](examples/image/image.json) - Every property with example values.
+   * [images.json](examples/glTF/images.json) - bare glTF model with two images.
+   * [image.json](examples/image/image.json) - every property with example values.
 
 ### Details
 
 For compatibility with modern web browsers, the following image formats are supported: `.jpg`, `.png`, `.bmp`, and `.gif`.  The URL may be a [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  This can be negotiated via a REST API.
+
+### Related GL Functions
+
+* `createTexture` / [`genTextures`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenTextures.xml)
+* `deleteTexture` / [`deleteTextures`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteTextures.xml)
+* [`generateMipmap`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenerateMipmap.xml)
+* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
+* [`texImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml)
+* [`texSubImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexSubImage2D.xml)
 
 ### Differences from COLLADA
 
@@ -438,17 +456,21 @@ glTF 1.0 does not support:
 ## `indices`
 
 * Schema: [indices.schema.json](indices.schema.json)
-* Example: [indices.json](examples/indices/indices.json) - Every property with example values.
+* Example: [indices.json](examples/indices/indices.json) - every property with example values.
 
 ### Details
 
 _TODO_
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+### Related GL Functions
+
+* [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
+
+### Differences from COLLADA
 
 _TODO_
 
-### Related GL Functions
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
 
@@ -462,12 +484,16 @@ _TODO_
 
 * Schema: [material.schema.json](material.schema.json)
 * Examples
-   * [materials.json](examples/glTF/materials.json) - Bare glTF model with two images.
-   * [material.json](examples/material/material.json) - Every property with example values.
+   * [materials.json](examples/glTF/materials.json) - bare glTF model with two images.
+   * [material.json](examples/material/material.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+See <a name="parameters">`parameters`</a>.
 
 ### Differences from COLLADA
 
@@ -476,14 +502,6 @@ _TODO_
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
-
-### Related GL Functions
-
-* [`activeTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glActiveTexture.xml)
-* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
-* [`texParameterf`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
-* [`uniform*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
-* [`uniformMatrix*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
 ### _Open Questions_
 
@@ -497,11 +515,15 @@ _TODO_
 ## `mesh`
 
 * Schema: [mesh.schema.json](mesh.schema.json)
-* Example:  [mesh.json](examples/mesh/mesh.json) - Every property with example values.
+* Example:  [mesh.json](examples/mesh/mesh.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
 
 ### Differences from COLLADA
 
@@ -530,13 +552,19 @@ _TODO_
 
 * Schema: [node.schema.json](node.schema.json)
 * Examples
-   * [nodes.json](examples/glTF/nodes.json) - Bare glTF model with two nodes.
-   * [meshes.json](examples/node/meshes.json) - An interior node with a mesh (and children).
-   * [meshes_leaf.json](examples/node/meshes_leaf.json) - A leaf node with a mesh.
+   * [nodes.json](examples/glTF/nodes.json) - bare glTF model with two nodes.
+   * [meshes.json](examples/node/meshes.json) - an interior node with a mesh (and children).
+   * [meshes_leaf.json](examples/node/meshes_leaf.json) - a leaf node with a mesh.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+* [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+
+Also see <a href="#mesh">`accessors`</a> sub properties See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
 
 ### Differences from COLLADA
 
@@ -563,17 +591,17 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 ## `orthographic`
 
 * Schema: [orthographic.schema.json](orthographic.schema.json)
-* Example: [orthographic.json](examples/orthographic/orthographic.json) - Every property with example values.
+* Example: [orthographic.json](examples/orthographic/orthographic.json) - every property with example values.
 
 ### Details
 
 _TODO_
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### Related GL Functions
+
+* [`uniformMatrix4fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
 
@@ -586,17 +614,23 @@ _TODO_
 ## `parameters`
 
 * Schema: [parameters.schema.json](parameters.schema.json)
-* Example: [parameters.json](examples/parameters/parameters.json) - Every property with example values.
+* Example: [parameters.json](examples/parameters/parameters.json) - every property with example values.
 
 ### Details
 
 _TODO_
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### Related GL Functions
+
+* [`activeTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glActiveTexture.xml)
+* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
+* [`texParameterf`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
+* [`texParameteri`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
+* [`uniform[1234][fi]`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
 
@@ -609,11 +643,15 @@ _TODO_
 ## `pass`
 
 * Schema: [pass.schema.json](pass.schema.json)
-* Examples: [pass.json](examples/pass/pass.json) - Every property with example values.
+* Examples: [pass.json](examples/pass/pass.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+See <a href="#states">`states`</a> or <a href="#program">`program`</a>.
 
 ### Differences from COLLADA
 
@@ -622,10 +660,6 @@ _TODO_
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
-
-### Related GL Functions
-
-_TODO: lots_
 
 ### _Open Questions_
 
@@ -639,17 +673,21 @@ _TODO: lots_
 ## `perspective`
 
 * Schema: [perspective.schema.json](perspective.schema.json)
-* Example: [perspective.json](examples/perspective/perspective.json) - Every property with example values.
+* Example: [perspective.json](examples/perspective/perspective.json) - every property with example values.
 
 ### Details
 
 _TODO_
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+### Related GL Functions
+
+* [`uniformMatrix4fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+
+### Differences from COLLADA
 
 _TODO_
 
-### Related GL Functions
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
 
@@ -662,11 +700,17 @@ _TODO_
 ## `primitive`
 
 * Schema: [primitive.schema.json](primitive.schema.json)
-* Example: [primitive.json](examples/primitive/primitive.json) - Every property with example values.
+* Example: [primitive.json](examples/primitive/primitive.json) - every property with example values.
 
 ### Details
 
 * To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of the WebGL 1.0 Spec, `byteOffset` must be a multiple of the size of `type`.
+
+### Related GL Functions
+
+* [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
+
+Also see <a href="#material">`material`</a> and <a href="#technique">`technique`</a> subproperty <a href="#parameters">`parameters`</a>.
 
 ### Differences from COLLADA
 
@@ -675,10 +719,6 @@ TODO
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 * 
-
-### Related GL Functions
-
-* [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
 ### _Open Questions_
 
@@ -693,11 +733,22 @@ TODO
 ## `program`
 
 * Schema: [program.schema.json](program.schema.json)
-* Examples: [program.json](examples/program/program.json) - Every property with example values.
+* Examples: [program.json](examples/program/program.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+* [`createProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glCreateProgram.xml)
+* [`deleteProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteProgram.xml)
+* [`attachShader`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glAttachShader.xml)
+* [`linkProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glLinkProgram.xml)
+* [`useProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUseProgram.xml)
+* [`validateProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glValidateProgram.xml)
+
+Also see <a href="#shader">`shader`</a> and subproperties <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniforms`</a>.
 
 ### Differences from COLLADA
 
@@ -706,10 +757,6 @@ _TODO_
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
-
-### Related GL Functions
-
-_TODO: lots_
 
 ### _Open Questions_
 
@@ -725,15 +772,22 @@ _TODO: lots_
 
 * Schema: [shader.schema.json](shader.schema.json)
 * Examples
-   * [shaders.json](examples/glTF/shaders.json) - Bare glTF model with two shaders.
-   * [shader.json](examples/shader/shader.json) - Every property with example values.
-   * [dataUri.json](examples/shader/dataUri.json) - Using a data URI for a shader source.
+   * [shaders.json](examples/glTF/shaders.json) - bare glTF model with two shaders.
+   * [shader.json](examples/shader/shader.json) - every property with example values.
+   * [dataUri.json](examples/shader/dataUri.json) - using a data URI for a shader source.
 
 ### Details
 
 GLSL source can be in external plain-text .glsl files.  The URL may also be a plain-text [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  Using a data URI reduces the number of requests for a single model.  However, if several models are loaded that use the same shader, using separate .glsl files may be better due to HTTP caching.  This can be negotiated via a REST API.
 
 _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#data:-urls-and-http), they do not work with `XMLHttpRequest` in Chrome. We need to get this [bug](http://code.google.com/p/chromium/issues/detail?id=46806) fixed._
+
+### Related GL Functions
+
+* [`createShader`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glCreateShader.xml)
+* [`compileShader`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glCompileShader.xml)
+* [`deleteShader`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteShader.xml)
+* [`shaderSource`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glShaderSource.xml)
 
 ### Differences from COLLADA
 
@@ -799,6 +853,10 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 
 * `states`. Pages 8-120 to 8-125.
 
+### Related GL Functions
+
+_TODO_
+
 ### _Open Questions_
 
 * _Schema_
@@ -815,12 +873,16 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 
 * Schema: [technique.schema.json](technique.schema.json)
 * Examples
-   * [techniques.json](examples/glTF/techniques.json) - Bare glTF model with two images.
-   * [technique.json](examples/technique/technique.json) - Every property with example values.
+   * [techniques.json](examples/glTF/techniques.json) - bare glTF model with two images.
+   * [technique.json](examples/technique/technique.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+See <a name="parameters">`parameters`</a>.
 
 ### Differences from COLLADA
 
@@ -829,14 +891,6 @@ _TODO_
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
 _TODO_
-
-### Related GL Functions
-
-* [`activeTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glActiveTexture.xml)
-* [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
-* [`texParameterf`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml)
-* [`uniform*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
-* [`uniformMatrix*`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
 ### _Open Questions_
 
@@ -851,21 +905,26 @@ _TODO_
 ## `uniform`
 
 * Schema: [uniform.schema.json](uniform.schema.json)
-* Example: [uniform.json](examples/uniform/uniform.json) - Every property with example values.
+* Example: [uniform.json](examples/uniform/uniform.json) - every property with example values.
 
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+[`getActiveUniform`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetActiveUniform.xml)
+[`getUniformLocation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetUniformLocation.xml)
+[`getProgramParameter`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetProgramiv.xml) with `ACTIVE_UNIFORMS`
+* [`uniform[1234][fi]`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
+* [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
 ### Differences from COLLADA
 
 _TODO_
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
-### Related GL Functions
 
 _TODO_
 
