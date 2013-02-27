@@ -1,4 +1,4 @@
-This doc can be used to create the glTF spec.  Many things here have not been fully discussed and are subject to change.
+This doc can become the glTF spec.  Many things here have not been fully discussed and are subject to change.
 
 * <a href="#designprinciples">Design Principles</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
@@ -398,13 +398,13 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * Schema: [geographicLocation.schema.json](geographicLocation.schema.json)
 * Example: [geographicLocation.json](examples/geographicLocation/geographicLocation.json) - every property with example values.
 
-### Related GL Functions
-
-None.
-
 ### Details
 
 _TODO_
+
+### Related GL Functions
+
+None.
 
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
@@ -875,13 +875,13 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 * [`cullFace`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glCullFace.xml)
 * [`depthFunc`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthFunc.xml)
 * [`depthMask`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthMask.xml)
-* [`depthRange`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthRange.xml)
-* [`enable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnable.xml) and [`disable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDisable.xml) with `BLEND`, `CULL_FACE`, `DEPTH_TEST`, `DITHER`, `POLYGON_OFFSET_FILL`, `SAMPLE_ALPHA_TO_COVERAGE`, `SAMPLE_COVERAGE`, SCISSOR_TEST, or STENCIL_TEST
+* [`depthRange`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthRangef.xml)
+* [`enable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnable.xml) and [`disable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDisable.xml) with `BLEND`, `CULL_FACE`, `DEPTH_TEST`, `DITHER`, `POLYGON_OFFSET_FILL`, `SAMPLE_ALPHA_TO_COVERAGE`, `SAMPLE_COVERAGE`, `SCISSOR_TEST`, or `STENCIL_TEST`
 * [`frontFace`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glFrontFace.xml)
 * [`lineWidth`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glLineWidth.xml)
 * `gl_PointSize`
 * [`polygonOffset`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPolygonOffset.xml)
-* [`sampleCoverage`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glSampelCoverage.xml)
+* [`sampleCoverage`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glSampleCoverage.xml)
 * [`scissor`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glScissor.xml)
 * [`stencilFunc`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilFunc.xml)
 * [`stencilFuncSeparate`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilFuncSeparate.xml)
