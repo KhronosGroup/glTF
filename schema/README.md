@@ -1,6 +1,7 @@
 This doc can become the glTF spec.  Many things here have not been fully discussed and are subject to change.
 
 * <a href="#designprinciples">Design Principles</a>
+* <a href="#conventions">Conventions</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#assetvalidation">Asset Validation</a>
 * <a href="#schema">Schema</a> - by category
@@ -83,20 +84,70 @@ _TODO: Include great figures from [glTF Architecture and Schema](https://docs.go
 * glTF is not part of COLLADA, e.g., it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="comparison">
-# Comparison between COLLADA and glTF
-
-_TODO: Some of this info is generic and does not need to be in a comparasion with COLLADA.  The current organization will confuse users not familiar with COLLADA._
+<a name="conventions">
+# Conventions
 
 ## Naming
 
-COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a more common naming convention in JSON and WebGL.
+glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
 
 ## Angles
 
-COLLADA uses degrees for angles.  To better match GLSL and most math libraries, glTF uses radians.
+glTF uses radians uses degrees for angles to match GLSL and most math libraries.
 
-## id and name
+## `name` Properties
+
+An object's `name` property is the user-facing name that the application uses to access parts of the asset. 
+
+In glTF, objects that are commonly accessed from an application, including resource objects (buffers, textures, and shaders), have optional `name` properties.  These objects are:
+
+   * <a href="#buffer">`buffer`</a>
+   * <a href="#camera">`camera`</a>
+   * <a href="#image">`image`</a>
+   * <a href="#material">`material`</a>
+   * <a href="#mesh">`mesh`</a>
+   * <a href="#node">`node`</a>
+   * <a href="#shader">`shader`</a>
+
+## `extra` Properties
+
+glTF allows application-specific metadata on every object using the `extra` property.  For example:
+
+```javascript
+{
+    // ... object properties in glTF schema
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }    
+}
+```
+
+Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility in future versions, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties on any objects, except `extra`.
+
+_TODO_
+* _COLLADA2JSON_
+   * _Needs to output `extra` objects_.
+* _Loader_
+   * _Needs to pass through `extra` objects_.
+   * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="comparison">
+# Comparison between COLLADA and glTF
+
+See <a href="#designprinciples">Design Principles</a> and <a href="#conventions">Conventions</a> for the motivation for these differences.
+
+## Conventions
+
+### Naming
+
+COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  
+
+### Angles
+
+COLLADA uses degrees for angles; glTF uses radians.
+
+### id and name
 
 COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the `name` property of an object, for example:
 ```
@@ -110,38 +161,8 @@ becomes
 }
 ```
 
-The `name` property is the user-facing name that the engine uses to access parts of the asset, and the object name is used internally to link parts of the asset, e.g., reference a `mesh` from a `node`. 
-
-In glTF, objects that are commonly accessed from an engine, including resource objects (buffers, textures, and shaders), have optional `name` properties.  These objects are:
-
-   * <a href="#buffer">`buffer`</a>
-   * <a href="#camera">`camera`</a>
-   * <a href="#image">`image`</a>
-   * <a href="#material">`material`</a>
-   * <a href="#mesh">`mesh`</a>
-   * <a href="#node">`node`</a>
-   * <a href="#shader">`shader`</a>
-
-What's in COLLADA, but not in this version of glTF
+TODO: What's in COLLADA, but not in this version of glTF
 * No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
-
-_TODO_
-* _Does the converter preserve COLLADA `id` attributes?_
-* _Converter needs to preserve COLLADA `name` attributes for camera, etc. above._
-* _Support `sid`, especially for reusing animations._
-
-## extra
-
-glTF allows application-specific metadata on every object using an `extra` property.  This is similar to `extra` in COLLADA, Pages 5-35 to 5-36, except `technique` is not required.
-
-_TODO_
-* _COLLADA2JSON_
-   * _Needs to output `extra` objects_.
-* _Loader_
-   * _Needs to pass through `extra` objects_.
-   * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
-
-Alternatively, glTF could allow application-specific properties anywhere, but this has the potential to break backwards compatibility in future versions, e.g., if an asset uses a property name that is then used in a future version of glTF.  Therefore, glTF does not allow additional properties on any objects, except `extra`.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="assetvalidation">
