@@ -867,7 +867,27 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 
 ### Related GL Functions
 
-_TODO_
+* [`blendEquation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendEquation.xml)
+* [`blendEquationSeparate`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendEquationSeparate.xml)
+* [`blendFunc`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendFunc.xml)
+* [`blendFuncSeparate`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendFuncSeparate.xml)
+* [`colorMask`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glColorMask.xml)
+* [`cullFace`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glCullFace.xml)
+* [`depthFunc`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthFunc.xml)
+* [`depthMask`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthMask.xml)
+* [`depthRange`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDepthRange.xml)
+* [`enable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnable.xml) and [`disable`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDisable.xml) with `BLEND`, `CULL_FACE`, `DEPTH_TEST`, `DITHER`, `POLYGON_OFFSET_FILL`, `SAMPLE_ALPHA_TO_COVERAGE`, `SAMPLE_COVERAGE`, SCISSOR_TEST, or STENCIL_TEST
+* [`frontFace`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glFrontFace.xml)
+* [`lineWidth`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glLineWidth.xml)
+* `gl_PointSize`
+* [`polygonOffset`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPolygonOffset.xml)
+* [`sampleCoverage`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glSampelCoverage.xml)
+* [`scissor`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glScissor.xml)
+* [`stencilFunc`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilFunc.xml)
+* [`stencilFuncSeparate`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilFuncSeparate.xml)
+* [`stencilMask`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilMask.xml)
+* [`stencilOp`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilOp.xml)
+* [`stencilOpSeparate`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glStencilOpSeparate.xml)
 
 ### _Open Questions_
 
