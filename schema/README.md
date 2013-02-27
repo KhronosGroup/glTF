@@ -2,7 +2,6 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
 
 * <a href="#designprinciples">Design Principles</a>
 * <a href="#conventions">Conventions</a>
-* <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#assetvalidation">Asset Validation</a>
 * <a href="#schema">Schema</a> - by category
    * Camera
@@ -52,6 +51,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
+* <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 
@@ -132,39 +132,6 @@ _TODO_
    * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="comparison">
-# Comparison between COLLADA and glTF
-
-See <a href="#designprinciples">Design Principles</a> and <a href="#conventions">Conventions</a> for the motivation for these differences.
-
-## Conventions
-
-### Naming
-
-COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  
-
-### Angles
-
-COLLADA uses degrees for angles; glTF uses radians.
-
-### id and name
-
-COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the `name` property of an object, for example:
-```
-<node id="nodeId" name="nodeName"> 
-</node>
-``` 
-becomes
-```javascript
-"nodeId" : {
-    "name" : "nodeName"
-}
-```
-
-TODO: What's in COLLADA, but not in this version of glTF
-* No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
-
-<!-- ----------------------------------------------------------------------- -->
 <a name="assetvalidation">
 # Asset Validation
 
@@ -223,14 +190,6 @@ _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully vali
 * [`enableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 * [`disableVertexAttribArray`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml)
 
-### Differences from COLLADA
-
-Minor
-   
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `accessor`. Pages 5-5 to 5-10.
-
 ### _Open Questions_
 
 * _Schema_
@@ -257,17 +216,6 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 ### Related GL Functions
 
 None.
-
-### Differences from COLLADA
-
-* `asset` is only defined on the root glTF property; in COLLADA, it is available as a child of many elements.  In practice, it is usually only a child of the `COLLADA` root node.
-* `asset` just contains `copyright` that can be used to credit the model author(s), and `geographicLocation`.  If an application needs more information, it can be stored in the `extra` property.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `asset`. Pages 5-17 to 5-19
-* `contributor`. Pages 5-27 to 5-28.
-* `geographic_location`. Pages 5-40 to 5-41.
 
 ### _Open Questions_
 
@@ -296,14 +244,6 @@ _TODO_
 * [`bindAttribLocation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindAttribLocation.xml)
 * [`getAttribLocation`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetAttribLocation.xml)
 * [`getProgramParameter`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetProgramiv.xml) with `ACTIVE_ATTRIBUTES`
-
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -335,24 +275,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * [`bindBuffer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindBuffer.xml)
 * [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml)
 * [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml)
-
-### Differences from COLLADA
-
-* Vertices and indices are stored in binary, not XML.
-* From the buffer's perspective, vertices and indices are untyped unlike `float_array`, etc. in COLLADA.  The `accessor` specifies the type later for the subset it references.
-* glTF does not support `float_array` attributes `digits` and `magnitude`.  In glTF, all floats are stored in IEEE-754 32-bit floating point.
-* glTF does not support `int_array` attributes `minInclusive` or `maxInclusive`.  The `accessor` specifies the type, e.g., unsigned short or unsigned int, later for the subset it references.
-* glTF does not support `IDREF_array` (5-44), `Name_array` (5-94 to 5-95), or `SIDREF_array` (5-130).
-* Also see <a href="#mesh">`mesh`</a>.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `geometry`.  Pages 5-42 to 5-43.
-* `mesh`. Pages 5-89 to 5-91.
-* `source`. Pages 5-137 to  5-138.
-* `bool_array`. Page 5-20.
-* `float_array`. Page 5-37.
-* `int_array`. Page 5-69.
 
 ### _Open Questions_
 
@@ -390,21 +312,6 @@ For `perspective`, the following properties are required:
 
 See <a href="#orthographic">`orthographic`</a> and <a href="#perspective">`perspective`</a>.
 
-### Differences from COLLADA
-
-In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
-
-* No `imager`.  COLLADA Pages 5-45 to 5-46.
-* No `optics`.  COLLADA Pages 5-100 to 5-101.  `orthographic` and `perspective` are directly part of the camera.
-   * A glTF camera represents a single camera; it doesn't have techniques.  This can be negotiated via a REST API.
-* In COLLADA, both `orthographic` and `perspective` allow several different options for required properties.  glTF provides only one set of required properties for `orthographic` and `perspective` cameras, which map most commonly to computing orthographic and perspective projection matrices.  See above.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `camera`.  Pages 5-21 to 5-22.
-* `orthographic`.  Pages 5-102 to 5-103.
-* `perspective`.  Pages 5-108 to 5-109.
-
 ### _Open Questions_
 
 * _COLLADA2JSON_
@@ -425,10 +332,6 @@ _TODO_
 ### Related GL Functions
 
 None.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -455,18 +358,6 @@ For compatibility with modern web browsers, the following image formats are supp
 * [`bindTexture`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBindTexture.xml)
 * [`texImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml)
 * [`texSubImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexSubImage2D.xml)
-
-### Differences from COLLADA
-
-glTF 1.0 does not support:
-* `image`: `renderable`, `create_2d`, `create_3d`, and `create_cube`.
-* `init_from`: `array_index`, `mip_index`, `depth`, and `face`.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `library_images`.  Page 8-75.
-* `image`.  Page 8-58 to 8-60.
-* `init_from`.  Pages 8-62 to 8-63.
 
 ### _Open Questions_
 
@@ -495,14 +386,6 @@ _TODO_
 
 * [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 _TODO_
@@ -523,14 +406,6 @@ _TODO_
 ### Related GL Functions
 
 See <a name="parameters">`parameters`</a>.
-
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -553,16 +428,6 @@ _TODO_
 ### Related GL Functions
 
 See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
-
-### Differences from COLLADA
-
-* glTF does not support `spline`, `convex_mesh` (physics), or `brep` (B-Rep).
-* No `technique_common` or `technique`.  Instead, this can be negotiated via a REST API.
-* Also see <a href="#buffer">`buffer`</a>.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -595,15 +460,6 @@ _TODO_
 
 Also see <a href="#mesh">`accessors`</a> sub properties See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
 
-### Differences from COLLADA
-
-In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
-* Only a single transform is supported, and it must be a 4x4 matrix.  COLLADA transformation elements such as `lookat` and `rotate` must be converted to a 4x4 matrix.  If several COLLADA transformation elements are used, they must be concatenated into a single 4x4 matrix.
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `node`.  Pages 5-98 to 5-99.
-
 ### _Open Questions_
 
 * _Schema_
@@ -630,10 +486,6 @@ _TODO_
 
 * [`uniformMatrix4fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 _TODO_
@@ -659,10 +511,6 @@ _TODO_
 * [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 * [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 _TODO_
@@ -681,14 +529,6 @@ _TODO_
 ### Related GL Functions
 
 See <a href="#states">`states`</a> or <a href="#program">`program`</a>.
-
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -712,14 +552,6 @@ _TODO_
 
 * [`uniformMatrix4fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 _TODO_
@@ -740,14 +572,6 @@ _TODO_
 * [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml)
 
 Also see <a href="#material">`material`</a> and <a href="#technique">`technique`</a> subproperty <a href="#parameters">`parameters`</a>.
-
-### Differences from COLLADA
-
-TODO
-   
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* 
 
 ### _Open Questions_
 
@@ -778,14 +602,6 @@ _TODO_
 * [`validateProgram`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glValidateProgram.xml)
 
 Also see <a href="#shader">`shader`</a> and subproperties <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniforms`</a>.
-
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
 
 ### _Open Questions_
 
@@ -818,14 +634,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * [`deleteShader`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteShader.xml)
 * [`shaderSource`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glShaderSource.xml)
 
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 * _Schema_
@@ -857,19 +665,6 @@ The separate version of a property takes precedence over its counterpart.  For e
 
 To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, when `stencilFuncSeparate` is used, `ref` and `mask` must be the same for front- and back-facing geometry.
 To satisfy Section 6.10 (Viewport Depth Range) of the WebGL 1.0 Spec, `zNear` cannot be greater than `zFar`.
-
-### Differences from COLLADA
-
-Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
-
-* Removed `point_size_enable`; instead, we just assign to `gl_PointSize` in WebGL based on `pointSize`.
-* `scissor` `width` and `height` default to zero, not "When a GL context is first attached to a window, width and height are set to the dimensions of that window."
-* Added `sampleCoverageEnable`.
-* To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, there is no `stencil_mask_separate`.
-   
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-* `states`. Pages 8-120 to 8-125.
 
 ### Related GL Functions
 
@@ -922,14 +717,6 @@ _TODO_
 
 See <a name="parameters">`parameters`</a>.
 
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 * _Schema_
@@ -958,14 +745,6 @@ _TODO_
 * [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 * [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### Differences from COLLADA
-
-_TODO_
-
-### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
 ### _Open Questions_
 
 * _Schema_
@@ -975,7 +754,273 @@ _TODO_
    * Rename `FLOAT_VEC3` `type` to `vec3`, etc.
 * _COLLADA2JSON_
    * 
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="comparison">
+# Comparison between COLLADA and glTF
+
+This section describes important differences between COLLADA and glTF.
+
+See <a href="#designprinciples">Design Principles</a> and <a href="#conventions">Conventions</a> for the motivation for these differences.
+
+## Format
+
+COLLADA is XML; glTF uses JSON for its readability, conciseness, and built-in support in browsers.
+
+## Geometry
+
+COLLADA stores geometry in XML; glTF uses external binary blogs (or optionally embedded data URIs) for efficiency and better mapping to GL APIs.
+
+## Naming
+
+COLLADA uses underscores `like_this`; glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  
+
+## Angles
+
+COLLADA uses degrees for angles; glTF uses radians.
+
+## `id` and `name` attributes
+
+COLLADA `id` attributes map to the name of an object, and the COLLADA `name` attribute maps to the `name` property of an object, for example:
+```
+<node id="nodeId" name="nodeName"> 
+</node>
+``` 
+becomes
+```javascript
+"nodeId" : {
+    "name" : "nodeName"
+}
+```
+
+TODO: What's in COLLADA, but not in this version of glTF
+* No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
+
+<!-- ----------------------------------------------------------------------- -->
+# Schema
+
+<!-- ----------------------------------------------------------------------- -->
+## `accessor`
+
+Minor
    
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `accessor`. Pages 5-5 to 5-10.
+   
+<!-- ----------------------------------------------------------------------- -->
+## `asset`
+
+* `asset` is only defined on the root glTF property; in COLLADA, it is available as a child of many elements.  In practice, it is usually only a child of the `COLLADA` root node.
+* `asset` just contains `copyright` that can be used to credit the model author(s), and `geographicLocation`.  If an application needs more information, it can be stored in the `extra` property.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `asset`. Pages 5-17 to 5-19
+* `contributor`. Pages 5-27 to 5-28.
+* `geographic_location`. Pages 5-40 to 5-41.
+
+<!-- ----------------------------------------------------------------------- -->
+## `attribute`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+
+<!-- ----------------------------------------------------------------------- -->
+## `buffer`
+
+* Vertices and indices are stored in binary, not XML.
+* From the buffer's perspective, vertices and indices are untyped unlike `float_array`, etc. in COLLADA.  The `accessor` specifies the type later for the subset it references.
+* glTF does not support `float_array` attributes `digits` and `magnitude`.  In glTF, all floats are stored in IEEE-754 32-bit floating point.
+* glTF does not support `int_array` attributes `minInclusive` or `maxInclusive`.  The `accessor` specifies the type, e.g., unsigned short or unsigned int, later for the subset it references.
+* glTF does not support `IDREF_array` (5-44), `Name_array` (5-94 to 5-95), or `SIDREF_array` (5-130).
+* Also see <a href="#mesh">`mesh`</a>.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `geometry`.  Pages 5-42 to 5-43.
+* `mesh`. Pages 5-89 to 5-91.
+* `source`. Pages 5-137 to  5-138.
+* `bool_array`. Page 5-20.
+* `float_array`. Page 5-37.
+* `int_array`. Page 5-69.
+
+<!-- ----------------------------------------------------------------------- -->
+## `camera`
+
+In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+
+* No `imager`.  COLLADA Pages 5-45 to 5-46.
+* No `optics`.  COLLADA Pages 5-100 to 5-101.  `orthographic` and `perspective` are directly part of the camera.
+   * A glTF camera represents a single camera; it doesn't have techniques.  This can be negotiated via a REST API.
+* In COLLADA, both `orthographic` and `perspective` allow several different options for required properties.  glTF provides only one set of required properties for `orthographic` and `perspective` cameras, which map most commonly to computing orthographic and perspective projection matrices.  See above.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `camera`.  Pages 5-21 to 5-22.
+* `orthographic`.  Pages 5-102 to 5-103.
+* `perspective`.  Pages 5-108 to 5-109.
+
+<!-- ----------------------------------------------------------------------- -->
+## `geographicLocation`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `image`
+
+glTF 1.0 does not support:
+* `image`: `renderable`, `create_2d`, `create_3d`, and `create_cube`.
+* `init_from`: `array_index`, `mip_index`, `depth`, and `face`.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `library_images`.  Page 8-75.
+* `image`.  Page 8-58 to 8-60.
+* `init_from`.  Pages 8-62 to 8-63.
+
+<!-- ----------------------------------------------------------------------- -->
+## `indices`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `material`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `mesh`
+
+* glTF does not support `spline`, `convex_mesh` (physics), or `brep` (B-Rep).
+* No `technique_common` or `technique`.  Instead, this can be negotiated via a REST API.
+* Also see <a href="#buffer">`buffer`</a>.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `node`
+
+In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+* Only a single transform is supported, and it must be a 4x4 matrix.  COLLADA transformation elements such as `lookat` and `rotate` must be converted to a 4x4 matrix.  If several COLLADA transformation elements are used, they must be concatenated into a single 4x4 matrix.
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `node`.  Pages 5-98 to 5-99.
+
+<!-- ----------------------------------------------------------------------- -->
+## `orthographic`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `parameters`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `pass`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `perspective`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `primitive`
+
+TODO
+   
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* 
+
+<!-- ----------------------------------------------------------------------- -->
+## `program`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `shader`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `states`
+
+Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
+
+* Removed `point_size_enable`; instead, we just assign to `gl_PointSize` in WebGL based on `pointSize`.
+* `scissor` `width` and `height` default to zero, not "When a GL context is first attached to a window, width and height are set to the dimensions of that window."
+* Added `sampleCoverageEnable`.
+* To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, there is no `stencil_mask_separate`.
+   
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+* `states`. Pages 8-120 to 8-125.
+
+<!-- ----------------------------------------------------------------------- -->
+## `technique`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+## `uniform`
+
+_TODO_
+
+### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
 # References
