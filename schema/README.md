@@ -204,8 +204,7 @@ _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully vali
 
 ### Differences from COLLADA
 
-* Renamed `offset` to `byteOffset`.
-* Renamed `stride` to `byteStride`.
+Minor
    
 ### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
@@ -437,9 +436,6 @@ For compatibility with modern web browsers, the following image formats are supp
 * [`texSubImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexSubImage2D.xml)
 
 ### Differences from COLLADA
-
-In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
-* Renamed `mips_generate` to `generateMipmap`.
 
 glTF 1.0 does not support:
 * `image`: `renderable`, `create_2d`, `create_3d`, and `create_cube`.
@@ -845,18 +841,7 @@ To satisfy Section 6.10 (Viewport Depth Range) of the WebGL 1.0 Spec, `zNear` ca
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
 
-* `blendFunc`, renamed
-   * `src` to `sfactor`
-   * `dst` to `dfactor`
-* `blendFuncSeparate`, renamed
-   * `src_rgb` to `srcRGB`
-   * `dest_rgb` to `dstRGB`
-   * `src_alpha` to `srcAlpha`
-   * `dest_alpha` to `dstAlpha`
-* Changed `colorMask` from an array of four booleans to an object with four properties: `red`, `green`, `blue`, and `alpha`.
 * Removed `point_size_enable`; instead, we just assign to `gl_PointSize` in WebGL based on `pointSize`.
-* `polygonOffset`
-   * Replaced `float2` array with `factor` and `units` properties.
 * `scissor` `width` and `height` default to zero, not "When a GL context is first attached to a window, width and height are set to the dimensions of that window."
 * Added `sampleCoverageEnable`.
 * To satisfy Section 6.8 (Stencil Separate Mask and Reference Values) of the WebGL 1.0 Spec, there is no `stencil_mask_separate`.
