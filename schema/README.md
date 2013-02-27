@@ -1,6 +1,6 @@
 This doc can be used to create the glTF spec.  Many things here have not been fully discussed and are subject to change.
 
-* <a href="#guidingprinciples">Guiding Principles</a>
+* <a href="#designprinciples">Design Principles</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#assetvalidation">Asset Validation</a>
 * <a href="#schema">Schema</a> - by category
@@ -55,20 +55,32 @@ This doc can be used to create the glTF spec.  Many things here have not been fu
 * <a href="#acknowledgments">Acknowledgments</a>
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="guidingprinciples">
-# Guiding Principles
+<a name="designgprinciples">
+# Design Principles
 
-_TODO: Flush this out based on other glTF slides, wiki pages, etc._
+_TODO: This section was aggregated from glTF slides, wiki pages, etc.  It still needs more details found in those places and to be flushed out._
+_TODO: Include great figures from [glTF Architecture and Schema](https://docs.google.com/file/d/0B4owFPtY81iUeUtVT3ZteThJYnM/edit?usp=sharing) and [glTF Ecosystem](https://docs.google.com/file/d/0B4owFPtY81iUT2pDdWR2Q0I2QTQ/edit?usp=sharing) slides._
 
-* glTF is for rendering; not interchange.
-* Keep the client simple, negotiate via a REST API instead of on the client, e.g., instead of storing multiple `technique` objects in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.
-* When a tradeoff needs to be made, put pain on the asset pipeline, e.g., the COLLADA to glTF converter, not the engine.  Examples:
+* glTF is a runtime format; not an interchange.  Its primary use case is rendering.
+* glTF strives to map well to OpenGL, OpenGL ES, and WebGL.  To make it useful, glTF has abstractions beyond the GL APIs such as a node hierarchy, materials, and animations.
+* To ease adoption, glTF strives to be easy and efficient to load and render.
+   * glTF uses JSON for the scene graph, minimizes complicated indirection, and is supported by a JavaScript loader library.
+   * glTF uses binary blobs for geometry and textures map directly to GL buffers and textures with no or a minimum amount of application processing, e.g., if geometry compression is used.
+   * An open-source asset pipeline converts existing COLLADA assets to glTF and does the heavy lifting (code in progress):
+      * Triangulates polygons into triangles.
+      * Unifies indices, creating one index per vertex, not per attribute.
+      * Splits meshes so indices fit within `UNSIGNED_INT`.
+      * Generates shaders and metadata from the COLLADA Common Profile.  Applications can use the glTF shaders or build their own from the metadata.
+      * Images are converted to a format supported by browsers, e.g., .jpg or .png.
+   * TODO: optimization pipeline.
+* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing multiple `technique` objects in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.
+* When a tradeoff needs to be made, pain is put on the asset pipeline, e.g., the COLLADA to glTF converter, not the application.  Examples:
    * glTF does not support polygons.  Polygons are triangulated as part of the pipeline.
-   * glTF only contains one <a href="#asset">`asset`</a> property.  If a COLLADA asset has several `asset` elements, the convert must handle it, so the engine does not have to.
+   * glTF only contains one <a href="#asset">`asset`</a> property.  If a COLLADA asset has several `asset` elements, the convert must handle it, so the applicatio does not have to.
 * Just because COLLADA or WebGL has a feature, doesn't mean glTF does.  Examples:
    * All attributes must be backed by buffers, i.e., no [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
    * COLLADA has physics, glTF does not.
-* ...
+* glTF is not part of COLLADA, e.g., it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
