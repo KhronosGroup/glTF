@@ -35,9 +35,11 @@ using namespace std::tr1;
 namespace JSONExport 
 {
     class JSONObject;
+    class JSONIndices;
     //-- Args & Options
     
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
+    typedef std::vector < shared_ptr<JSONExport::JSONIndices> > IndicesVector;
     
     typedef struct
     {

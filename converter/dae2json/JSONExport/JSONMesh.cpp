@@ -108,7 +108,7 @@ namespace JSONExport
         this->_name = name;
     }
     
-    bool JSONMesh::buildUniqueIndexes()
+    bool JSONMesh::buildUniqueIndexes(std::vector< IndicesVector > &vectorOfIndicesVector)
     {
         unsigned int startIndex = 1; // begin at 1 because the hashtable will return 0 when the element is not present
         unsigned int endIndex = 0;
@@ -153,7 +153,7 @@ namespace JSONExport
         
         JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = this->_primitives[i]->allIndices();
+            IndicesVector allIndices = vectorOfIndicesVector[i];
             unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices.size());
             
             for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
@@ -164,7 +164,7 @@ namespace JSONExport
                 indicesInRemapping[k] = idx;
             }
             
-            shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
+            shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
             
             free(indicesInRemapping);
             
@@ -216,7 +216,7 @@ namespace JSONExport
         }
         */
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = this->_primitives[i]->allIndices();
+            IndicesVector allIndices = vectorOfIndicesVector[i];
             unsigned int* indicesInRemapping = (unsigned int*)calloc(sizeof(unsigned int) * allIndices.size(), 1);
 
             for (unsigned int k = 0 ; k < allIndices.size() ; k++) {
@@ -227,7 +227,11 @@ namespace JSONExport
                 indicesInRemapping[k] = idx;
             }
             
-            bool status = _primitives[i]->_remapVertexes(this->_allOriginalAccessors , this->_allRemappedAccessors, indicesInRemapping, allPrimitiveRemapInfos[i]);
+            bool status = _primitives[i]->_remapVertexes(allIndices,
+                                                         this->_allOriginalAccessors ,
+                                                         this->_allRemappedAccessors,
+                                                         indicesInRemapping,
+                                                         allPrimitiveRemapInfos[i]);
             free(indicesInRemapping);
 
             if (!status) {

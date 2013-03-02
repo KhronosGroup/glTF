@@ -51,7 +51,6 @@ namespace JSONExport
     private:
         std::string _ID;
         std::string _name;
-        unsigned char* _data;
         std::string _techniqueID;
         shared_ptr <JSONExport::JSONObject> _techniques;
     };

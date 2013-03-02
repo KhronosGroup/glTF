@@ -29,6 +29,7 @@
 
 namespace JSONExport 
 {
+    class JSONPrimitiveIndicesInfos;
     class JSONMesh;
     
     typedef unordered_map<unsigned int* ,unsigned int /* index of existing n-uplet of indices */, RemappedMeshIndexesHash, RemappedMeshIndexesEq> RemappedMeshIndexesHashmap;       
@@ -51,20 +52,25 @@ namespace JSONExport
     
     class JSONPrimitive
     {
-    
     public:
         // FIXME: make protected and mesh a friend
-        bool _remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int* indicesInRemapping, shared_ptr<JSONPrimitiveRemapInfos> primitiveRemapInfos);
+        bool _remapVertexes(std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+                            AccessorVector allOriginalAccessors ,
+                            AccessorVector allRemappedAccessors,
+                            unsigned int* indicesInRemapping,
+                            shared_ptr<JSONPrimitiveRemapInfos> primitiveRemapInfos);
     public:
         JSONPrimitive();
         virtual ~JSONPrimitive();
         
         void appendIndices(shared_ptr <JSONExport::JSONIndices> indices);
- 
-        std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices();
-        size_t indicesCount();
 
-        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int accessorsCount, unsigned int &endIndex);
+        shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+            RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
+            unsigned int* indicesInRemapping,
+            unsigned int startIndex,
+            unsigned int accessorsCount,
+            unsigned int &endIndex);
         shared_ptr <JSONExport::JSONIndices> getUniqueIndices();
         
         std::string getType();
@@ -76,14 +82,18 @@ namespace JSONExport
         unsigned int getMaterialObjectID();
         void setMaterialObjectID(unsigned int materialID);
 
+        JSONExport::Semantic getSemanticAtIndex(unsigned int index);
+        unsigned int getIndexOfSetAtIndex(unsigned int index);
+        unsigned int getIndicesInfosCount();
+        
     private:                
         std::string _type;
         std::string _materialID;
         unsigned int _materialObjectID;
         unsigned int* _originalCountAndIndexes;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
-        std::vector< shared_ptr<JSONExport::JSONIndices> > _allIndices;
         unsigned long _originalCountAndIndexesSize;
+        std::vector <shared_ptr<JSONExport::JSONPrimitiveIndicesInfos> >_allIndicesInfos;
     };
 
 }

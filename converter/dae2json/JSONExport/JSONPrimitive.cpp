@@ -30,7 +30,27 @@ using namespace rapidjson;
 
 namespace JSONExport 
 {
-    //---- JSONPrimitiveRemapInfos ------------------------------------------------------------------------------------------
+    
+    //---- JSONPrimitiveIndicesInfos -------------------------------------------------------------
+    class JSONPrimitiveIndicesInfos
+    {
+    public:
+        JSONPrimitiveIndicesInfos(JSONExport::Semantic semantic, unsigned int indexOfSet):
+        _semantic(semantic),
+        _indexOfSet(indexOfSet) {
+        }
+        JSONExport::Semantic getSemantic() {
+            return _semantic;
+        }
+        unsigned int const getIndexOfSet() {
+            return _indexOfSet;
+        }
+    private:
+        JSONExport::Semantic _semantic;
+        unsigned int _indexOfSet;
+    };
+    
+    //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
     JSONPrimitiveRemapInfos::JSONPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount):
     _generatedIndicesCount(generatedIndicesCount),
     _generatedIndices(generatedIndices)
@@ -67,7 +87,22 @@ namespace JSONExport
             free(this->_originalCountAndIndexes);
         }        
     }
+
+    JSONExport::Semantic JSONPrimitive::getSemanticAtIndex(unsigned int index)
+    {
+        return this->_allIndicesInfos[index]->getSemantic();
+    }
     
+    unsigned int JSONPrimitive::getIndexOfSetAtIndex(unsigned int index)
+    {
+        return this->_allIndicesInfos[index]->getIndexOfSet();
+    }
+
+    unsigned int JSONPrimitive::getIndicesInfosCount()
+    {
+        return this->_allIndicesInfos.size();
+    }
+
     typedef struct {
         unsigned char* remappedBufferData;
         //size_t remappedAccessorByteOffset;
@@ -111,21 +146,23 @@ namespace JSONExport
         return allBufferInfos;
     }
     
-    bool JSONPrimitive::_remapVertexes(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int* indicesInRemapping, shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos)
+    bool JSONPrimitive::_remapVertexes(std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+                                       AccessorVector allOriginalAccessors,
+                                       AccessorVector allRemappedAccessors,
+                                       unsigned int* indicesInRemapping,
+                                       shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos)
     {
         if (!this->_originalCountAndIndexes) {
             // FIXME: report error
             return false;
         }
         
-        if (allOriginalAccessors.size() < this->_allIndices.size()) {
+        size_t indicesSize = allIndices.size();
+        if (allOriginalAccessors.size() < indicesSize) {
             //TODO: assert & inconsistency check
-            printf("aa");
         }
         
-        
-        //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count and remappedIndex)
-        unsigned int vertexAttributesCount = (unsigned int)this->_allIndices.size();
+        unsigned int vertexAttributesCount = (unsigned int)indicesSize;
         
         //get the primitive infos to know where we need to "go" for remap 
         unsigned int count = primitiveRemapInfos->generatedIndicesCount();
@@ -155,31 +192,40 @@ namespace JSONExport
         return true;        
     }
     
-    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(RemappedMeshIndexesHashmap& remappedMeshIndexesMap, unsigned int* indicesInRemapping, unsigned int startIndex, unsigned int accessorsCount, unsigned int &endIndex)
+    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> JSONPrimitive::buildUniqueIndexes(std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+        RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
+        unsigned int* indicesInRemapping,
+        unsigned int startIndex,
+        unsigned int accessorsCount,
+        unsigned int &endIndex)
     {
-        //get indices[0] presumably the VERTEX
-        size_t indicesCount = this->indicesCount();
+        size_t vertexAttributeCount = allIndices[0]->getCount();
+
                 
-        //we reserve vertexCount * slices of [_allIndices.size() + 1] (for count)
         unsigned int generatedIndicesCount = 0;
-        unsigned int vertexAttributesCount = accessorsCount;//(unsigned int)_allIndices.size();
+        unsigned int vertexAttributesCount = accessorsCount;
         size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
         
-        this->_originalCountAndIndexes = (unsigned int*)calloc( (indicesCount * sizeOfRemappedIndex), sizeof(unsigned char));
+        this->_originalCountAndIndexes = (unsigned int*)calloc( (vertexAttributeCount * sizeOfRemappedIndex), sizeof(unsigned char));
         //this is useful for debugging.
-        this->_originalCountAndIndexesSize = (indicesCount * sizeOfRemappedIndex);
+        this->_originalCountAndIndexesSize = (vertexAttributeCount * sizeOfRemappedIndex);
         
-        unsigned int *uniqueIndexes = (unsigned int*)calloc( indicesCount * sizeof(unsigned int), 1);
-        unsigned int* generatedIndices = (unsigned int*) calloc (indicesCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
+        unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexAttributeCount * sizeof(unsigned int), 1);
+        unsigned int* generatedIndices = (unsigned int*) calloc (vertexAttributeCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
+ 
+        for (size_t i = 0 ; i < allIndices.size() ; i++) {
+            shared_ptr <JSONExport::JSONPrimitiveIndicesInfos> indicesInfos(new JSONExport::JSONPrimitiveIndicesInfos(allIndices[i]->getSemantic(),allIndices[i]->getIndexOfSet()));
+            _allIndicesInfos.push_back(indicesInfos);
+        }
         
-        for (size_t k = 0 ; k < indicesCount ; k++) {
+        for (size_t k = 0 ; k < vertexAttributeCount ; k++) {
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             
             remappedIndex[0] = vertexAttributesCount;
-            for (unsigned int i = 0 ; i < _allIndices.size() ; i++) {
+            for (unsigned int i = 0 ; i < allIndices.size() ; i++) {
                 unsigned int idx = indicesInRemapping[i];                
-                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (_allIndices[i]->getBuffer())->getData()))[k];
+                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (allIndices[i]->getBuffer())->getData()))[k];
             }
              
             unsigned int index = remappedMeshIndexesMap[remappedIndex];
@@ -194,28 +240,11 @@ namespace JSONExport
         
         endIndex = currentIndex;
         shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount));                        
-        shared_ptr <JSONExport::JSONDataBuffer> indicesBuffer(new JSONExport::JSONDataBuffer(uniqueIndexes, indicesCount * sizeof(unsigned int), true));
+        shared_ptr <JSONExport::JSONDataBuffer> indicesBuffer(new JSONExport::JSONDataBuffer(uniqueIndexes, vertexAttributeCount * sizeof(unsigned int), true));
         
-        this->_uniqueIndices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, indicesCount, JSONExport::VERTEX, 0));
+        this->_uniqueIndices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, vertexAttributeCount, JSONExport::VERTEX, 0));
         
         return primitiveRemapInfos;
-    }
-    
-    void JSONPrimitive::appendIndices(shared_ptr <JSONExport::JSONIndices> indices)
-    {
-        this->_allIndices.push_back(indices);
-    }
-    
-    std::vector< shared_ptr<JSONExport::JSONIndices> > JSONPrimitive::allIndices()
-    {
-        return this->_allIndices;
-    }
-    
-    size_t JSONPrimitive::indicesCount()
-    {
-        //JSONExport::Semantic semantic = this->_allIndices[0]->getSemantic();
-        //TODO: assert semantic == VERTEX
-        return this->_allIndices[0].get()->getCount();
     }
     
     shared_ptr <JSONExport::JSONIndices> JSONPrimitive::getUniqueIndices()

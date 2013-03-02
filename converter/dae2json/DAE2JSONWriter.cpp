@@ -220,7 +220,9 @@ namespace JSONExport
         return (unsigned int)setCount;
     }
     
-    static shared_ptr <JSONExport::JSONPrimitive> ConvertOpenCOLLADAMeshPrimitive(COLLADAFW::MeshPrimitive* openCOLLADAMeshPrimitive) 
+    static shared_ptr <JSONExport::JSONPrimitive> ConvertOpenCOLLADAMeshPrimitive(
+        COLLADAFW::MeshPrimitive *openCOLLADAMeshPrimitive,
+        IndicesVector &primitiveIndicesVector)
     {
         shared_ptr <JSONExport::JSONPrimitive> cvtPrimitive(new JSONExport::JSONPrimitive());
         
@@ -300,7 +302,7 @@ namespace JSONExport
                                                                                          JSONExport::VERTEX,
                                                                                          0));
         
-        cvtPrimitive->appendIndices(positionIndices);
+        primitiveIndicesVector.push_back(positionIndices);
         
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
             indices = openCOLLADAMeshPrimitive->getNormalIndices().getData();
@@ -314,7 +316,7 @@ namespace JSONExport
                                                                                            count,
                                                                                            JSONExport::NORMAL,
                                                                                            0));
-            cvtPrimitive->appendIndices(normalIndices);
+            primitiveIndicesVector.push_back(normalIndices);
         }
         
         if (openCOLLADAMeshPrimitive->hasColorIndices()) {
@@ -336,7 +338,7 @@ namespace JSONExport
                                                                                               count,
                                                                                               JSONExport::COLOR,
                                                                                               (unsigned int)indexList->getSetIndex()));
-                cvtPrimitive->appendIndices(colorIndices);
+                primitiveIndicesVector.push_back(colorIndices);
             }
         }
         
@@ -364,7 +366,7 @@ namespace JSONExport
                                                                                            JSONExport::TEXCOORD,
                                                                                            idx));
                         
-                cvtPrimitive->appendIndices(uvIndices);
+                primitiveIndicesVector.push_back(uvIndices);
             }
         }
         
@@ -397,7 +399,8 @@ namespace JSONExport
         }
     }
     
-    shared_ptr <JSONExport::JSONMesh> ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, std::string folder) 
+    shared_ptr <JSONExport::JSONMesh> ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh,
+                                                             std::string folder)
     {
         shared_ptr <JSONExport::JSONMesh> cvtMesh(new JSONExport::JSONMesh());
                 
@@ -410,15 +413,24 @@ namespace JSONExport
         const MeshPrimitiveArray& primitives =  openCOLLADAMesh->getMeshPrimitives();
         size_t primitiveCount = primitives.getCount();
         
+        std::vector< IndicesVector > allPrimitiveIndicesVectors;
+        
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             
-            shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i]);
-            if (primitive->getType() == "TRIANGLES")
-                cvtMesh->appendPrimitive(primitive);
+            IndicesVector *primitiveIndicesVector = new IndicesVector();
+            allPrimitiveIndicesVectors.push_back(*primitiveIndicesVector);
 
+            shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
+            if (primitive->getType() == "TRIANGLES") {
+                cvtMesh->appendPrimitive(primitive);
+            } else {
+                //TODO: support lines...
+                continue;
+            }
+            
             // once we got a primitive, keep track of its accessors
-            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = primitive->allIndices();
+            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
                 shared_ptr<JSONExport::JSONIndices> indices = allIndices[k];
                 JSONExport::Semantic semantic = indices->getSemantic();
@@ -462,6 +474,8 @@ namespace JSONExport
 
             accessor->apply(__InvertV, NULL);
         }
+        
+        cvtMesh->buildUniqueIndexes(allPrimitiveIndicesVectors);
         
         return cvtMesh;
     }
@@ -873,11 +887,9 @@ namespace JSONExport
                 
                 if (!cvtMesh) {
                     COLLADABU::URI outputURI(this->_converterContext.outputFilePath);
-                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh,  outputURI.getPathDir());
+                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, outputURI.getPathDir());
                     if (cvtMesh->getPrimitives().size() > 0) {
-                        cvtMesh->buildUniqueIndexes();
-                        cvtMesh->writeAllBuffers(this->_fileOutputStream);               
-
+                        cvtMesh->writeAllBuffers(this->_fileOutputStream);
                         this->_uniqueIDToMesh[meshID] = cvtMesh;
                     }
                 } 
