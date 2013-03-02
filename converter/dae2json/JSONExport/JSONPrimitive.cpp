@@ -199,6 +199,7 @@ namespace JSONExport
         unsigned int accessorsCount,
         unsigned int &endIndex)
     {
+        size_t allIndicesSize = allIndices.size();
         size_t vertexAttributeCount = allIndices[0]->getCount();
 
                 
@@ -214,7 +215,7 @@ namespace JSONExport
         unsigned int* generatedIndices = (unsigned int*) calloc (vertexAttributeCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
  
-        for (size_t i = 0 ; i < allIndices.size() ; i++) {
+        for (size_t i = 0 ; i < allIndicesSize ; i++) {
             shared_ptr <JSONExport::JSONPrimitiveIndicesInfos> indicesInfos(new JSONExport::JSONPrimitiveIndicesInfos(allIndices[i]->getSemantic(),allIndices[i]->getIndexOfSet()));
             _allIndicesInfos.push_back(indicesInfos);
         }
@@ -223,7 +224,7 @@ namespace JSONExport
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             
             remappedIndex[0] = vertexAttributesCount;
-            for (unsigned int i = 0 ; i < allIndices.size() ; i++) {
+            for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];                
                 remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (allIndices[i]->getBuffer())->getData()))[k];
             }

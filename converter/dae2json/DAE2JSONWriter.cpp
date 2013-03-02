@@ -413,13 +413,14 @@ namespace JSONExport
         const MeshPrimitiveArray& primitives =  openCOLLADAMesh->getMeshPrimitives();
         size_t primitiveCount = primitives.getCount();
         
-        std::vector< IndicesVector > allPrimitiveIndicesVectors;
+        std::vector< shared_ptr<IndicesVector> > allPrimitiveIndicesVectors;
         
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             
-            IndicesVector *primitiveIndicesVector = new IndicesVector();
-            allPrimitiveIndicesVectors.push_back(*primitiveIndicesVector);
+            
+            shared_ptr <JSONExport::IndicesVector> primitiveIndicesVector(new JSONExport::IndicesVector());
+            allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
 
             shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
             if (primitive->getType() == "TRIANGLES") {
@@ -428,6 +429,8 @@ namespace JSONExport
                 //TODO: support lines...
                 continue;
             }
+            
+            primitiveIndicesVector = allPrimitiveIndicesVectors[i];
             
             // once we got a primitive, keep track of its accessors
             std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = *primitiveIndicesVector;

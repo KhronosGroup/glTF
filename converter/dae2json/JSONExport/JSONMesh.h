@@ -52,7 +52,7 @@ namespace JSONExport
         std::string getName();
         void setName(std::string name);
         
-        bool buildUniqueIndexes(std::vector< IndicesVector> &vectorOfIndicesVector);
+        bool buildUniqueIndexes(std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
 
         std::vector< shared_ptr<JSONExport::JSONPrimitive> > getPrimitives();
 
