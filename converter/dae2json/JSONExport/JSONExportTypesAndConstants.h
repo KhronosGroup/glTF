@@ -36,11 +36,16 @@ namespace JSONExport
 {
     class JSONObject;
     class JSONIndices;
+    class JSONPrimitive;
+    class JSONAccessor;
+    class JSONPrimitiveIndicesInfos;
     //-- Args & Options
     
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::vector < shared_ptr<JSONExport::JSONIndices> > IndicesVector;
-    
+    typedef std::vector< shared_ptr<JSONExport::JSONPrimitive> > PrimitiveVector;
+    typedef std::vector< shared_ptr<JSONExport::JSONAccessor> > AccessorVector;
+    typedef std::vector <shared_ptr<JSONExport::JSONPrimitiveIndicesInfos> > PrimitiveIndicesInfosVector;
     typedef struct
     {
         std::string inputFilePath;

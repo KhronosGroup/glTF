@@ -54,12 +54,12 @@ namespace JSONExport
         
         bool buildUniqueIndexes(std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
 
-        std::vector< shared_ptr<JSONExport::JSONPrimitive> > getPrimitives();
+        PrimitiveVector getPrimitives();
 
         bool const writeAllBuffers(std::ofstream& fileOutputStream);
                 
     private:        
-        std::vector< shared_ptr<JSONExport::JSONPrimitive> > _primitives;
+        PrimitiveVector _primitives;
         SemanticToAccessorHashmap _semanticToAccessors;
         
         JSONExport::AccessorVector _allOriginalAccessors;

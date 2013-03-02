@@ -76,7 +76,7 @@ namespace JSONExport
         
         vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = mesh->remappedAccessors();
         
-        std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
+        PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             

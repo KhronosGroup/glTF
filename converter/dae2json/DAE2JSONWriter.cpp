@@ -220,6 +220,12 @@ namespace JSONExport
         return (unsigned int)setCount;
     }
     
+    static void __AppendIndices(shared_ptr <JSONExport::JSONPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <JSONExport::JSONIndices> &indices)
+    {
+        primitive->appendPrimitiveIndicesInfos(shared_ptr <JSONExport::JSONPrimitiveIndicesInfos>( new JSONExport::JSONPrimitiveIndicesInfos(indices->getSemantic(),indices->getIndexOfSet())));
+        primitiveIndicesVector.push_back(indices);
+    }
+    
     static shared_ptr <JSONExport::JSONPrimitive> ConvertOpenCOLLADAMeshPrimitive(
         COLLADAFW::MeshPrimitive *openCOLLADAMeshPrimitive,
         IndicesVector &primitiveIndicesVector)
@@ -302,7 +308,7 @@ namespace JSONExport
                                                                                          JSONExport::VERTEX,
                                                                                          0));
         
-        primitiveIndicesVector.push_back(positionIndices);
+        __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices);
         
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
             indices = openCOLLADAMeshPrimitive->getNormalIndices().getData();
@@ -316,7 +322,7 @@ namespace JSONExport
                                                                                            count,
                                                                                            JSONExport::NORMAL,
                                                                                            0));
-            primitiveIndicesVector.push_back(normalIndices);
+            __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices);
         }
         
         if (openCOLLADAMeshPrimitive->hasColorIndices()) {
@@ -338,7 +344,7 @@ namespace JSONExport
                                                                                               count,
                                                                                               JSONExport::COLOR,
                                                                                               (unsigned int)indexList->getSetIndex()));
-                primitiveIndicesVector.push_back(colorIndices);
+                __AppendIndices(cvtPrimitive, primitiveIndicesVector, colorIndices);
             }
         }
         
@@ -366,7 +372,7 @@ namespace JSONExport
                                                                                            JSONExport::TEXCOORD,
                                                                                            idx));
                         
-                primitiveIndicesVector.push_back(uvIndices);
+                __AppendIndices(cvtPrimitive, primitiveIndicesVector, uvIndices);
             }
         }
         
@@ -731,7 +737,7 @@ namespace JSONExport
                     sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
                 }
                 
-                std::vector< shared_ptr<JSONExport::JSONPrimitive> > primitives = mesh->getPrimitives();
+                PrimitiveVector primitives = mesh->getPrimitives();
                 for (size_t j = 0 ; j < primitives.size() ; j++) {
                     shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
                     

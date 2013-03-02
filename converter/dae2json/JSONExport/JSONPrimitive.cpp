@@ -30,26 +30,6 @@ using namespace rapidjson;
 
 namespace JSONExport 
 {
-    
-    //---- JSONPrimitiveIndicesInfos -------------------------------------------------------------
-    class JSONPrimitiveIndicesInfos
-    {
-    public:
-        JSONPrimitiveIndicesInfos(JSONExport::Semantic semantic, unsigned int indexOfSet):
-        _semantic(semantic),
-        _indexOfSet(indexOfSet) {
-        }
-        JSONExport::Semantic getSemantic() {
-            return _semantic;
-        }
-        unsigned int const getIndexOfSet() {
-            return _indexOfSet;
-        }
-    private:
-        JSONExport::Semantic _semantic;
-        unsigned int _indexOfSet;
-    };
-    
     //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
     JSONPrimitiveRemapInfos::JSONPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount):
     _generatedIndicesCount(generatedIndicesCount),
@@ -101,6 +81,16 @@ namespace JSONExport
     unsigned int JSONPrimitive::getIndicesInfosCount()
     {
         return this->_allIndicesInfos.size();
+    }
+    
+    PrimitiveIndicesInfosVector JSONPrimitive::getPrimitiveIndicesInfos()
+    {
+        return this->_allIndicesInfos;
+    }
+    
+    void JSONPrimitive::appendPrimitiveIndicesInfos(shared_ptr <JSONPrimitiveIndicesInfos> primitiveIndicesInfos)
+    {
+        this->_allIndicesInfos.push_back(primitiveIndicesInfos);
     }
 
     typedef struct {
@@ -202,7 +192,6 @@ namespace JSONExport
         size_t allIndicesSize = allIndices.size();
         size_t vertexAttributeCount = allIndices[0]->getCount();
 
-                
         unsigned int generatedIndicesCount = 0;
         unsigned int vertexAttributesCount = accessorsCount;
         size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
@@ -214,12 +203,7 @@ namespace JSONExport
         unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexAttributeCount * sizeof(unsigned int), 1);
         unsigned int* generatedIndices = (unsigned int*) calloc (vertexAttributeCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
- 
-        for (size_t i = 0 ; i < allIndicesSize ; i++) {
-            shared_ptr <JSONExport::JSONPrimitiveIndicesInfos> indicesInfos(new JSONExport::JSONPrimitiveIndicesInfos(allIndices[i]->getSemantic(),allIndices[i]->getIndexOfSet()));
-            _allIndicesInfos.push_back(indicesInfos);
-        }
-        
+         
         for (size_t k = 0 ; k < vertexAttributeCount ; k++) {
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[k * (vertexAttributesCount + 1)];
             

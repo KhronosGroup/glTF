@@ -32,8 +32,29 @@ namespace JSONExport
     class JSONPrimitiveIndicesInfos;
     class JSONMesh;
     
-    typedef unordered_map<unsigned int* ,unsigned int /* index of existing n-uplet of indices */, RemappedMeshIndexesHash, RemappedMeshIndexesEq> RemappedMeshIndexesHashmap;       
-    typedef std::vector< shared_ptr<JSONExport::JSONAccessor> > AccessorVector;
+    
+    //---- JSONPrimitiveIndicesInfos -------------------------------------------------------------
+    class JSONPrimitiveIndicesInfos
+    {
+    public:
+        JSONPrimitiveIndicesInfos(JSONExport::Semantic semantic, unsigned int indexOfSet):
+        _semantic(semantic),
+        _indexOfSet(indexOfSet) {
+        }
+        JSONExport::Semantic getSemantic() {
+            return _semantic;
+        }
+        unsigned int const getIndexOfSet() {
+            return _indexOfSet;
+        }
+    private:
+        JSONExport::Semantic _semantic;
+        unsigned int _indexOfSet;
+    };
+    
+    //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
+
+    typedef unordered_map<unsigned int* ,unsigned int /* index of existing n-uplet of indices */, RemappedMeshIndexesHash, RemappedMeshIndexesEq> RemappedMeshIndexesHashmap;
     
     //FIXME: this could be just an intermediate anonymous(no id) JSONBuffer
     class JSONPrimitiveRemapInfos
@@ -63,8 +84,6 @@ namespace JSONExport
         JSONPrimitive();
         virtual ~JSONPrimitive();
         
-        void appendIndices(shared_ptr <JSONExport::JSONIndices> indices);
-
         shared_ptr<JSONPrimitiveRemapInfos> buildUniqueIndexes(std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
             RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
             unsigned int* indicesInRemapping,
@@ -86,6 +105,9 @@ namespace JSONExport
         unsigned int getIndexOfSetAtIndex(unsigned int index);
         unsigned int getIndicesInfosCount();
         
+        PrimitiveIndicesInfosVector getPrimitiveIndicesInfos();
+        void appendPrimitiveIndicesInfos(shared_ptr <JSONPrimitiveIndicesInfos> primitiveIndicesInfos);
+        
     private:                
         std::string _type;
         std::string _materialID;
@@ -93,7 +115,7 @@ namespace JSONExport
         unsigned int* _originalCountAndIndexes;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
         unsigned long _originalCountAndIndexesSize;
-        std::vector <shared_ptr<JSONExport::JSONPrimitiveIndicesInfos> >_allIndicesInfos;
+        PrimitiveIndicesInfosVector _allIndicesInfos;
     };
 
 }
