@@ -483,10 +483,11 @@ namespace JSONExport
 
             accessor->apply(__InvertV, NULL);
         }
-        
-        cvtMesh->buildUniqueIndexes(allPrimitiveIndicesVectors);
-        
-        return cvtMesh;
+
+        //After this point cvtMesh should be referenced anymore and will be deallocated
+        shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
+                
+        return unifiedMesh;
     }
         
     //--------------------------------------------------------------------
@@ -817,7 +818,7 @@ namespace JSONExport
         for (size_t i = 0 ; i < count ; i++) {
             shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
             shared_ptr <JSONExport::JSONMesh>  mesh = this->_uniqueIDToMesh[meshInfo->getUID()];
-            std::vector <shared_ptr< JSONExport::JSONAccessor> > accessors = mesh->remappedAccessors();
+            shared_ptr <AccessorVector> accessors = mesh->accessors();
 
             //_uniqueIDToMesh
         }

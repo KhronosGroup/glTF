@@ -74,7 +74,7 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONObject> accessorsObject(new JSONExport::JSONObject());
         meshObject->setValue("accessors", accessorsObject);
         
-        vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = mesh->remappedAccessors();
+        shared_ptr <AccessorVector> allAccessors = mesh->accessors();
         
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();

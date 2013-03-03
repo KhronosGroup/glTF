@@ -40,7 +40,6 @@ namespace JSONExport
     class JSONAccessor;
     class JSONPrimitiveIndicesInfos;
     //-- Args & Options
-    
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::vector < shared_ptr<JSONExport::JSONIndices> > IndicesVector;
     typedef std::vector< shared_ptr<JSONExport::JSONPrimitive> > PrimitiveVector;

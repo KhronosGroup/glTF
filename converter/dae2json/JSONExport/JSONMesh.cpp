@@ -43,11 +43,14 @@ namespace JSONExport
         return semanticIndexSetKey;
     }
 
-    JSONMesh* CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
+    shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
     {
         AccessorVector originalAccessors;
         AccessorVector remappedAccessors;
-        JSONMesh *targetMesh = new JSONMesh();
+        shared_ptr <JSONMesh> targetMesh(new JSONMesh(*sourceMesh));
+        
+        //targetMesh->setID(sourceMesh->getID());
+        //targetMesh->setName(sourceMesh->getName());
         
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
         PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
@@ -59,7 +62,7 @@ namespace JSONExport
         
         if (primitiveCount == 0) {
             // FIXME: report error
-            return false;
+            //return 0;
         }
         
         //in originalAccessors we'll get the flattened list of all the accessors as a vector.
@@ -112,7 +115,7 @@ namespace JSONExport
                 allPrimitiveRemapInfos.push_back(primitiveRemapInfos);
             } else {
                 // FIXME: report error
-                return false;
+                //return NULL;
             }
         }
         
@@ -175,7 +178,7 @@ namespace JSONExport
             
             if (!status) {
                 // FIXME: report error
-                return false;
+                //return NULL;
             }
             
         }
@@ -183,13 +186,11 @@ namespace JSONExport
         if (endIndex > 65535) {
             //The mesh should be split but we do not handle this feature yet
             printf("WARNING: unsupported (yet) feature - mesh has more than 65535 vertex, splitting has to be done for GL/ES \n");
-            delete targetMesh;
-            return NULL; //for now return false as splitting is not implemented
+            //delete targetMesh;
+            //return 0; //for now return false as splitting is not implemented
         } 
         
         return targetMesh;
-        
-    
     }
     
     JSONMesh::JSONMesh()
@@ -200,9 +201,37 @@ namespace JSONExport
     {
     }
 
-    vector <shared_ptr< JSONExport::JSONAccessor> > JSONMesh::remappedAccessors()
+    JSONMesh::JSONMesh(const JSONMesh &mesh)
     {
-        return _allRemappedAccessors;
+        this->_primitives = mesh._primitives;
+        this->_semanticToAccessors = mesh._semanticToAccessors;
+        this->_ID = mesh._ID;
+        this->_name = mesh._name;
+    }
+    
+    shared_ptr <AccessorVector> JSONMesh::accessors()
+    {
+        shared_ptr <AccessorVector> accessors(new AccessorVector());
+        vector <JSONExport::Semantic> allSemantics = this->allSemantics();
+        std::map<string, unsigned int> semanticAndSetToIndex;
+        
+        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
+            IndexSetToAccessorHashmap& indexSetToAccessor = this->getAccessorsForSemantic(allSemantics[i]);
+            IndexSetToAccessorHashmap::const_iterator accessorIterator;
+            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+                //(*it).first;             // the key value (of type Key)
+                //(*it).second;            // the mapped value (of type T)
+                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                unsigned int indexSet = (*accessorIterator).first;
+                JSONExport::Semantic semantic = allSemantics[i];
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
+                unsigned int size = (unsigned int)accessors->size();
+                semanticAndSetToIndex[semanticIndexSetKey] = size;
+                
+                accessors->push_back(selectedAccessor);
+            }
+        }
+        return accessors;
     }
     
     bool JSONMesh::appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive)
@@ -257,147 +286,8 @@ namespace JSONExport
         this->_name = name;
     }
     
-    bool JSONMesh::buildUniqueIndexes(std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
-    {
-        unsigned int startIndex = 1; // begin at 1 because the hashtable will return 0 when the element is not present
-        unsigned int endIndex = 0;
-        unsigned int primitiveCount = (unsigned int)_primitives.size();
-        unsigned int maxVertexAttributes = 0;
-        
-        if (primitiveCount == 0) {
-            // FIXME: report error
-            return false;
-        }
-        
-        //in _allOriginalAccessors we'll get the flattened list of all the accessors as a vector.
-        //fill semanticAndSetToIndex with key: (semantic, indexSet) value: index in _allOriginalAccessors vector.
-        _allOriginalAccessors.clear();
-        vector <JSONExport::Semantic> allSemantics = this->allSemantics();
-        std::map<string, unsigned int> semanticAndSetToIndex;
-
-        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = this->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
-                unsigned int indexSet = (*accessorIterator).first;
-                JSONExport::Semantic semantic = allSemantics[i];
-                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);   
-                unsigned int size = (unsigned int)_allOriginalAccessors.size();
-                semanticAndSetToIndex[semanticIndexSetKey] = size;   
-                
-                _allOriginalAccessors.push_back(selectedAccessor);
-            }
-        }
-        
-        maxVertexAttributes = (unsigned int)_allOriginalAccessors.size();
-        
-        vector <shared_ptr<JSONExport::JSONPrimitiveRemapInfos> > allPrimitiveRemapInfos;
-        
-        //build a array that maps the accessors that the indices points to with the index of the indice.
-        
-        JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
-        for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-            shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
-            IndicesVector *allIndices = allIndicesSharedPtr.get();
-            unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices->size());
-            
-            for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
-                JSONExport::Semantic semantic = (*allIndices)[k]->getSemantic();
-                unsigned int indexSet = (*allIndices)[k]->getIndexOfSet();
-                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
-                unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
-                indicesInRemapping[k] = idx;
-            }
-            
-            shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = this->_primitives[i]->buildUniqueIndexes(*allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
-            
-            free(indicesInRemapping);
-            
-            if (primitiveRemapInfos.get()) {
-                startIndex = endIndex;
-                allPrimitiveRemapInfos.push_back(primitiveRemapInfos);
-            } else {
-                // FIXME: report error
-                return false;
-            }
-        }
-        
-        // we are using WebGL for rendering, this involve OpenGL/ES where only float are supported.
-        // now we got not only the uniqueIndexes but also the number of different indexes, i.e the number of vertex attributes count
-        // we can allocate the buffer to hold vertex attributes
-        unsigned int vertexCount = endIndex - 1;
-
-        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = this->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
-
-            //FIXME: consider turn this search into a method for mesh
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
-                
-                size_t sourceSize = vertexCount * selectedAccessor->getElementByteLength();
-                void* sourceData = malloc(sourceSize);
-                
-                shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
-                shared_ptr <JSONExport::JSONDataBuffer> remappedBuffer(new JSONExport::JSONDataBuffer(referenceBuffer->getID(), sourceData, sourceSize, true));                
-                shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
-                remappedAccessor->setBuffer(remappedBuffer);
-                remappedAccessor->setCount(vertexCount);
-                
-                indexSetToAccessor[(*accessorIterator).first] = remappedAccessor;
-                
-                _allRemappedAccessors.push_back(remappedAccessor);                            
-            }
-        }
-        
-        /*
-        if (_allOriginalAccessors.size() != allIndices.size()) {
-            // FIXME: report error
-            return false;
-        }
-        */
-        for (unsigned int i = 0 ; i < primitiveCount ; i++) {
-            shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
-            IndicesVector *allIndices = allIndicesSharedPtr.get();
-            unsigned int* indicesInRemapping = (unsigned int*)calloc(sizeof(unsigned int) * (*allIndices).size(), 1);
-
-            for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
-                JSONExport::Semantic semantic = (*allIndices)[k]->getSemantic();
-                unsigned int indexSet = (*allIndices)[k]->getIndexOfSet();
-                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
-                unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
-                indicesInRemapping[k] = idx;
-            }
-            
-            bool status = _primitives[i]->_remapVertexes((*allIndices),
-                                                         this->_allOriginalAccessors ,
-                                                         this->_allRemappedAccessors,
-                                                         indicesInRemapping,
-                                                         allPrimitiveRemapInfos[i]);
-            free(indicesInRemapping);
-
-            if (!status) {
-                // FIXME: report error
-                return false;
-            }
-            
-        } 
-        
-        if (endIndex > 65535) {
-            //The mesh should be split but we do not handle this feature yet
-            printf("WARNING: mesh has more than 65535 vertex, splitting has to be done for GL/ES \n");
-            return false; //for now return false as splitting is not implemented
-        } 
-        
-        return true;
-    }
     
-    PrimitiveVector JSONMesh::getPrimitives()
+    PrimitiveVector const JSONMesh::getPrimitives()
     {
         return this->_primitives;
     }
@@ -407,7 +297,7 @@ namespace JSONExport
         typedef map<std::string , shared_ptr<JSONExport::JSONBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
-        vector <shared_ptr< JSONExport::JSONAccessor> > allAccessors = this->remappedAccessors();
+        shared_ptr <AccessorVector> allAccessors = this->accessors();
         
         shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0));
         
@@ -442,8 +332,8 @@ namespace JSONExport
             }
         }
         
-        for (unsigned int j = 0 ; j < allAccessors.size() ; j++) {
-            shared_ptr <JSONExport::JSONAccessor> accessor = allAccessors[j];
+        for (unsigned int j = 0 ; j < allAccessors->size() ; j++) {
+            shared_ptr <JSONExport::JSONAccessor> accessor = (*allAccessors)[j];
             shared_ptr <JSONExport::JSONBuffer> buffer = accessor->getBuffer();
             
             if (!buffer.get()) {

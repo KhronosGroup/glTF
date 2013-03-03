@@ -7,6 +7,7 @@ namespace JSONExport
                                               unsigned int *polylist /* array containing the indices of a face */,
                                               unsigned int count /* count of entries within the verticesCount array */,
                                               unsigned int *triangulatedIndicesCount /* number of indices in returned array */);
+
 }
 
 #endif

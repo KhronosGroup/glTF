@@ -162,6 +162,7 @@ namespace JSONExport
         
         unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONDataBuffer> (this->_uniqueIndices->getBuffer())->getData());
         
+        
         for (unsigned int k = 0 ; k < count ; k++) { 
             unsigned int idx = indices[k];                
             unsigned int* remappedIndex = &this->_originalCountAndIndexes[idx * (allOriginalAccessors.size() + 1)];

@@ -29,15 +29,19 @@
 
 namespace JSONExport 
 {
+    shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
+    
     typedef std::map<unsigned int /* IndexSet */, shared_ptr<JSONExport::JSONAccessor> > IndexSetToAccessorHashmap;
     typedef std::map<JSONExport::Semantic , IndexSetToAccessorHashmap > SemanticToAccessorHashmap;
     
     class JSONMesh {
     public:
         JSONMesh();
+        JSONMesh(const JSONMesh &mesh);
+        
         virtual ~JSONMesh();
         
-        std::vector <shared_ptr< JSONExport::JSONAccessor> > remappedAccessors();
+        shared_ptr <AccessorVector> accessors();
         
         bool appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive);
         
@@ -52,18 +56,13 @@ namespace JSONExport
         std::string getName();
         void setName(std::string name);
         
-        bool buildUniqueIndexes(std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
-
-        PrimitiveVector getPrimitives();
+        PrimitiveVector const getPrimitives();
 
         bool const writeAllBuffers(std::ofstream& fileOutputStream);
                 
-    private:        
+    private:
         PrimitiveVector _primitives;
         SemanticToAccessorHashmap _semanticToAccessors;
-        
-        JSONExport::AccessorVector _allOriginalAccessors;
-        JSONExport::AccessorVector _allRemappedAccessors;
         std::string _ID, _name;
     };    
 
