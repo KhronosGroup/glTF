@@ -23,7 +23,7 @@
             "type" : "array",
             "description" : "TODO",
             "items ": {
-                "type" : "string"
+                "$ref" : "vertexAttribute.schema.json"
             },
             "minItems" : 1,
             "required" : true

@@ -10,7 +10,14 @@
     },
     "material" : "exampleMaterial",
     "primitive" : "TRIANGLES",
-    "vertexAttributes" : ["accessorPosition", "accessorNormal"],
+    "vertexAttributes" : [{    
+            "accessor" : "accessorPosition",
+            "semantic" : "POSITION"
+        }, { 
+            "accessor" : "accessorNormal",
+            "semantic" : "NORMAL"
+        }
+    ],
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     

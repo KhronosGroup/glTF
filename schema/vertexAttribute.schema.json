@@ -1,0 +1,22 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "vertexAttribute",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "accessor" : {
+            "type" : "string",
+            "description" : "TODO",
+            "required" : true        
+        },    
+        "semantic" : {
+            "type" : "string",
+            "description" : "Semantic meaning of this attribute."
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

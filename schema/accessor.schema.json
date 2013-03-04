@@ -62,10 +62,6 @@
             },
             "required" : true
         },
-        "semantic" : {
-            "type" : "string",
-            "description" : "Semantic meaning of this attribute."
-        },
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."

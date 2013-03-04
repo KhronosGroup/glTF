@@ -74,7 +74,7 @@ _TODO: Include figures from [glTF Architecture and Schema](https://docs.google.c
       * Generates shaders and metadata from the COLLADA Common Profile.  Applications can use the glTF shaders or build their own from the metadata.
       * Images are converted to a format supported by browsers, e.g., .jpg or .png.
    * TODO: optimization pipeline.
-* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing multiple `technique` objects in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.
+* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing multiple `technique` objects in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
 * When a tradeoff needs to be made, pain is put on the asset pipeline, e.g., the COLLADA to glTF converter, not the application.  Examples:
    * glTF does not support polygons.  Polygons are triangulated as part of the pipeline.
    * glTF only contains one <a href="#asset">`asset`</a> property.  If a COLLADA asset has several `asset` elements, the convert must handle it, so the applicatio does not have to.
@@ -186,6 +186,7 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 * To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of [WebGL 1.0](https://www.khronos.org/registry/webgl/specs/1.0/), `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
 * To satisfy Section 6.9 (Vertex Attribute Data Stride) of [WebGL 1.0](https://www.khronos.org/registry/webgl/specs/1.0/), `byteStride` cannot exceed 255.
+* `min` and `max` properties are useful for creating bounding box or bounding sphere, and client-side compression/quantization.
 
 ### Related GL Functions
 
@@ -193,13 +194,8 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 
 ### _Open Questions_
 
-* _Schema_
-   * I personally want a `center` and `radius`, not `min` and `max`.  However, `min` and `max` is more general.  Perhaps add `center` and `radius` to `primitive`?
 * _COLLADA2JSON_
-   * _Move `semantic` from `primitives` to `accessor`.  What is the benefit of decoupling them?_
-   * _Rename `VERTEX` semantic to `POSITION`._
    * _Add checking for Sections 6.3 and 6.9 above._
-   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="asset">
@@ -764,6 +760,28 @@ _TODO_
    * 
 
 <!-- ----------------------------------------------------------------------- -->
+<a name="vertexAttribute">
+## `vertexAttribute`
+
+* Schema: [vertexAttribute.schema.json](vertexAttribute.schema.json)
+* Example: [vertexAttribute.json](examples/vertexAttribute/vertexAttribute.json) - every property with example values.
+
+### Details
+
+_TODO_
+
+### Related GL Functions
+
+None.
+
+### _Open Questions_
+
+* _COLLADA2JSON_
+   * _Rename `VERTEX` semantic to `POSITION`._
+   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
+
+   
+<!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
 # Comparison between COLLADA and glTF
 
@@ -1021,6 +1039,16 @@ _TODO_
 
 <!-- ----------------------------------------------------------------------- -->
 ### `uniform`
+
+_TODO_
+
+#### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="vertexAttribute">
+## `vertexAttribute`
 
 _TODO_
 
