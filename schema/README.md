@@ -74,7 +74,7 @@ _TODO: Include figures from [glTF Architecture and Schema](https://docs.google.c
       * Generates shaders and metadata from the COLLADA Common Profile.  Applications can use the glTF shaders or build their own from the metadata.
       * Images are converted to a format supported by browsers, e.g., .jpg or .png.
    * TODO: optimization pipeline.
-* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing multiple `technique` objects in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
+* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing `technique` objects for various platforms in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
 * When a tradeoff needs to be made, pain is put on the asset pipeline, e.g., the COLLADA to glTF converter, not the application.  Examples:
    * glTF does not support polygons.  Polygons are triangulated as part of the pipeline.
    * glTF only contains one <a href="#asset">`asset`</a> property.  If a COLLADA asset has several `asset` elements, the convert must handle it, so the applicatio does not have to.
@@ -400,7 +400,7 @@ _TODO_
 
 ### Details
 
-_TODO_
+* A material can have multiple techniques to support shader LOD, i.e., use simpler shaders for distant objects.  Traditionally, techniques are also used to support multiple platforms, e.g., high-end vs. low-end GPUs.  We recommend negotiating via a REST API, instead of streaming multiple techniques.
 
 ### Related GL Functions
 
@@ -410,8 +410,6 @@ See <a name="parameters">`parameters`</a>.
 
 * _Schema_
    * _Write schema for `parameters`._
-* _COLLADA2JSON_
-   * _Remove `techniques` since a material only has one.  Instead, this can be negotiated via a REST API._
    
 <!-- ----------------------------------------------------------------------- -->
 <a name="mesh">
@@ -726,8 +724,6 @@ See <a name="parameters">`parameters`</a>.
 * _Schema_
    * _Write schema for `parameters`._
    * _Do we need `type": "program"`?_
-* _COLLADA2JSON_
-   * _Remove `passes` since we are only supporting a single pass to start?_
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="uniform">
@@ -848,7 +844,7 @@ becomes
 ```
 
 TODO: What's in COLLADA, but not in this version of glTF
-* No `profile` or `technique`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
+* No `profile`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
 
 <!-- ----------------------------------------------------------------------- -->
 ## Schema

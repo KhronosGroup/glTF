@@ -13,7 +13,16 @@
         },
         "technique" : {
             "type" : "string",
-            "description" : "The name of the technique referenced by this material.",
+            "description" : "The name of the default technique referenced by this material.",
+            "required" : true
+        },
+        "techniques" : {
+            "description" : "The techniques available to this material.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.schema.json"
+            },
             "required" : true
         },
         "extra" : {

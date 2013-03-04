@@ -3,6 +3,20 @@
     "parameters" : {
     },
     "technique" : "exampleTechnique",
+    "techniques" : {
+		"exampleTechnique" : {
+		    "pass" : {
+			    "program" : {
+					"attributes" : [{
+				    	"symbol" : "position",
+				    	"type" : "vec3"
+					}],
+					"fragmentShader" : "fragmentShader.id",
+					"vertexShader" : "vertexShader.id"
+			    }
+			}
+		}
+    },
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     

@@ -2,7 +2,21 @@
     "materials" : {
         "material.0" : {
 		    "name" : "exampleMaterial",
-		    "technique" : "exampleTechnique"
+		    "technique" : "exampleTechnique",
+		    "techniques" : {
+				"exampleTechnique" : {
+				    "pass" : {
+					    "program" : {
+							"attributes" : [{
+						    	"symbol" : "position",
+						    	"type" : "vec3"
+							}],
+							"fragmentShader" : "fragmentShader.id",
+							"vertexShader" : "vertexShader.id"
+					    }
+					}
+				}
+		    }
         }
     },
     "version" : "0.1"
