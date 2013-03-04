@@ -770,17 +770,45 @@ _TODO_
 
 _TODO_
 
+#### Semantics
+
+General and Tangent Space
+
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `POSITION` | `vec3` | Geometric coordinate vector. |
+| `NORMAL` | `vec3` | Normal vector. |
+| `BINORMAL` | `vec3` | Geometric binormal (bitangent) vector. |
+| `TANGENT` | `vec3` | Geometric tangent vector. |
+| `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
+| `COLOR` | `vec3` and `vec4` | Color.  RGB or RGBA. |
+
+_TODO: Flush out semantics below._
+
+Skinning and Morph Targets
+
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `INV_BIND_MATRIX` |  | Inverse of local-to-world matrix. |
+| `JOINT` |  | Skin influence identifier. |
+| `WEIGHT` |  | Skin influence weighting value. |
+| `MORPH_TARGET` |  | Morph targets for mesh morphing. |
+| `MORPH_WEIGHT` |  | Weights for mesh morphing. |
+
 ### Related GL Functions
 
 None.
 
 ### _Open Questions_
 
+* _Schema_
+   * Do we need these semantics:
+      * `TEXBINORMAL`- Texture binormal (bitangent) vector 
+      * `TEXTANGENT` - Texture tangent vector 
 * _COLLADA2JSON_
-   * _Rename `VERTEX` semantic to `POSITION`._
+   * _Rename `VERTEX` semantic to `POSITION`.  Both COLLADA `VERTEX` and `POSITION` map to `POSITION`?_
    * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
 
-   
 <!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
 # Comparison between COLLADA and glTF
@@ -1050,11 +1078,12 @@ _TODO_
 <a name="vertexAttribute">
 ## `vertexAttribute`
 
-_TODO_
+* glTF does not include semantics for `CONTINUITY`, `IMAGE`, `INPUT`, `IN_TANGENT`, `INTERPOLATION`, `LINEAR_STEPS`, `OUTPUT`, `OUT_TANGENT`, `TEXBINORMAL`, `TEXTANGENT`, `UV`, and `VERTEX`.
 
 #### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
-_TODO_
+* `input`. Pages 5-47 to 5-49.
+
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
