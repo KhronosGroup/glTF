@@ -78,9 +78,12 @@ _TODO: Include figures from [glTF Architecture and Schema](https://docs.google.c
 * When a tradeoff needs to be made, pain is put on the asset pipeline, e.g., the COLLADA to glTF converter, not the application.  Examples:
    * glTF does not support polygons.  Polygons are triangulated as part of the pipeline.
    * glTF only contains one <a href="#asset">`asset`</a> property.  If a COLLADA asset has several `asset` elements, the convert must handle it, so the applicatio does not have to.
-* Just because COLLADA or WebGL has a feature, doesn't mean glTF does.  Examples:
+* Just because WebGL has a feature, doesn't mean glTF does.  Examples:
    * All attributes must be backed by buffers, i.e., no [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
+   * Geometry is defined with indices, implying [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.
+* Just because COLLADA has a feature, doesn't mean glTF does.  Examples:
    * COLLADA has physics, glTF does not.
+   * COLLADA has splines and polygons, glTF only has variations of points, lines, and triangles.
 * glTF is not part of COLLADA, e.g., it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 
 <!-- ----------------------------------------------------------------------- -->
@@ -377,7 +380,7 @@ For compatibility with modern web browsers, the following image formats are supp
 
 ### Details
 
-_TODO_
+* Since `indices` is a required property of [`primitive`](#primitive), indices are always used to describe geometry, which implies than [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.
 
 ### Related GL Functions
 
@@ -387,7 +390,8 @@ Also see <a href="#buffer">buffer</a>.
 
 ### _Open Questions_
 
-_TODO_
+* COLLADA2JSON
+   * Do all COLLADA models have indices or do we need to adjust the statement about `drawArrays` above?  Or make changes to the converter?
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="material">
