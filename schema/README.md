@@ -57,6 +57,12 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="designgprinciples">
+
+# TODO: Introduction
+
+The WIKI from COLLADA2JSON written by Fabrice and reworked by Tony could be reused here.
+The section should give an high level overview. could be called, Introduction, Motivation...
+
 # Design Principles
 
 _TODO: This section was aggregated from glTF slides, wiki pages, etc.  It still needs more details found in those places and to be flushed out._
@@ -66,11 +72,13 @@ _TODO: Include figures from [glTF Architecture and Schema](https://docs.google.c
 * glTF strives to map well to OpenGL, OpenGL ES, and WebGL.  To make it useful, glTF has abstractions beyond the GL APIs such as a node hierarchy, materials, and animations.
 * To ease adoption, glTF strives to be easy and efficient to load and render.
    * glTF uses JSON for the scene graph, minimizes complicated indirection, and is supported by a JavaScript loader library.
+   * glTF adopts the Typed Array SPEC to describe buffers. 
    * glTF uses binary blobs for geometry and textures map directly to GL buffers and textures with no or a minimum amount of application processing, e.g., if geometry compression is used.
    * An open-source asset pipeline converts existing COLLADA assets to glTF and does the heavy lifting (code in progress):
       * Triangulates polygons into triangles.
       * Unifies indices, creating one index per vertex, not per attribute.
-      * Splits meshes so indices fit within `UNSIGNED_INT`.
+      * Splits meshes so indices fit within `UNSIGNED_SHORT`.
+      * convert assets axis-up to Y-UP.
       * Generates shaders and metadata from the COLLADA Common Profile.  Applications can use the glTF shaders or build their own from the metadata.
       * Images are converted to a format supported by browsers, e.g., .jpg or .png.
    * TODO: optimization pipeline.
@@ -222,9 +230,9 @@ None.
 * _Schema_
    * _Need `unit` property?  Or always meters and apply a scale matrix to the root?_
    * _Also need url for copyright image?_
-   * _Need to figure out_ `up_axis`.
+   * _Need to figure out_ `up_axis`. (Fabrice:assets need to convert to WebGL up axis (Y-UP) upfront. -> added in design principles
 * _COLLADA2JSON_
-   * _Create `asset.copyright` from COLLADA author and copyright?_
+   * _Create `asset.copyright` from COLLADA author and copyright?_. <Fabrice +1 for that>
    * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
    * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
 
@@ -257,6 +265,7 @@ _TODO_
 <a name="buffer">
 ## `buffer`
 
+* Fabrice: under discussions
 * Schema: [buffer.schema.json](buffer.schema.json)
 * Examples:
    * [buffers.json](examples/glTF/buffers.json) - bare glTF model with a buffer.
@@ -281,6 +290,7 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * _Schema_
    * Why does current version include `type`: "ArrayBuffer"`?
    * Separate buffers for indices and vertices since WebGL treats them separately?
+      * Fabrice: at the buffer level, both are handled in ArrayBuffer. This separation would be redundant as the "views" in the buffers are defined by accessors and indices. This is being discussed. 
 * _COLLADA2JSON_
    * Convert `bool_array` to `0.0` or `1.0`?
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
