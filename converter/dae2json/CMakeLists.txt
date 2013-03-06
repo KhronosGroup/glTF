@@ -14,7 +14,7 @@ include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAS
 link_directories(${COLLADA2JSON_BINARY_DIR}/lib)
 
 if (WIN32)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DWIN32)
     add_definitions(-EHsc)
 endif()
@@ -57,4 +57,4 @@ add_executable(collada2json main.cpp
     helpers/geometryHelpers.h
     helpers/geometryHelpers.cpp)
 
-target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static $(LIBXML2_LIBRARIES))
+target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
