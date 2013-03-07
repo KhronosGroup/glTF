@@ -41,30 +41,21 @@ namespace JSONExport
     public:
 
         JSONBuffer(std::string ID, size_t byteSize);
-        JSONBuffer(size_t byteSize);
+        JSONBuffer(std::string ID, void *data, size_t size, bool ownData);
+        JSONBuffer(void *data, size_t size, bool ownData);
         
         virtual ~JSONBuffer();
         
         size_t const getByteSize();
         std::string const getID();
-                
+        const void* const getData();
+        
     protected:
         std::string  _ID;
         size_t _byteSize;
-    };
-    
-    class JSONDataBuffer : public JSONBuffer {        
-    public:
-        JSONDataBuffer(std::string ID, void *data, size_t size, bool ownData);
-        JSONDataBuffer(void *data, size_t size, bool ownData);
-
-        const void* const getData();
-
-        virtual ~JSONDataBuffer();
-                            
-    private:
         unsigned char* _data;
         bool    _ownData;
+        
     };
 }
 

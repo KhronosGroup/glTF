@@ -63,7 +63,42 @@ namespace JSONExport
     
     //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
     
+    // FIXME: put better comment here
+    //RemappedMeshIndexes[0] = count ;  RemappedMeshIndexes[1+] original indexes (used for hash code)
+    struct RemappedMeshIndexesHash {
+        inline size_t operator()(unsigned int* remappedMeshIndexes) const
+        {
+            size_t hash = 0;
+            size_t count = (size_t)remappedMeshIndexes[0];
+            
+            for (size_t i = 0 ; i < count ; i++) {
+                hash += (size_t)remappedMeshIndexes[i + 1 /* skip count */];
+            }
+            
+            return hash;
+        }
+    };
+    
+    struct RemappedMeshIndexesEq {
+        inline bool operator()(unsigned int* k1, unsigned int* k2) const {
+            
+            size_t count = (size_t)k1[0];
+            
+            if (count != (size_t)k2[0])
+                return false;
+            
+            for (size_t i = 0 ; i < count ; i++) {
+                if (k1[i + 1] != k2[i + 1])
+                    return false;
+            }
+            
+            return true;
+        }
+    };
+    
     typedef unordered_map<unsigned int* ,unsigned int /* index of existing n-uplet of indices */, RemappedMeshIndexesHash, RemappedMeshIndexesEq> RemappedMeshIndexesHashmap;
+
+    typedef unordered_map<unsigned int ,unsigned int> IndicesMap;
     
     //FIXME: this could be just an intermediate anonymous(no id) JSONBuffer
     class JSONPrimitiveRemapInfos
@@ -144,10 +179,10 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONBuffer> remappedBuffer = remappedAccessor->getBuffer();
             shared_ptr <JSONExport::JSONBuffer> originalBuffer = originalAccessor->getBuffer();
             
-            bufferInfos->remappedBufferData = (unsigned char*)static_pointer_cast <JSONDataBuffer> (remappedBuffer)->getData() + remappedAccessor->getByteOffset();
+            bufferInfos->remappedBufferData = (unsigned char*)static_pointer_cast <JSONBuffer> (remappedBuffer)->getData() + remappedAccessor->getByteOffset();
             bufferInfos->remappedAccessorByteStride = remappedAccessor->getByteStride();
             
-            bufferInfos->originalBufferData = (unsigned char*)static_pointer_cast <JSONDataBuffer> (originalBuffer)->getData() + originalAccessor->getByteOffset();
+            bufferInfos->originalBufferData = (unsigned char*)static_pointer_cast <JSONBuffer> (originalBuffer)->getData() + originalAccessor->getByteOffset();
             bufferInfos->originalAccessorByteStride = originalAccessor->getByteStride();
             
             bufferInfos->elementByteLength = remappedAccessor->getElementByteLength();
@@ -176,7 +211,7 @@ namespace JSONExport
         
         AccessorsBufferInfos *allBufferInfos = createAccessorsBuffersInfos(allOriginalAccessors , allRemappedAccessors, indicesInRemapping, vertexAttributesCount);
         
-        unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONDataBuffer> (primitive->getIndices()->getBuffer())->getData());
+        unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONBuffer> (primitive->getIndices()->getBuffer())->getData());
         
         unsigned int *originalCountAndIndexes = primitiveRemapInfos->originalCountAndIndexes();
         
@@ -230,7 +265,7 @@ namespace JSONExport
             remappedIndex[0] = vertexAttributesCount;
             for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];
-                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONDataBuffer> (allIndices[i]->getBuffer())->getData()))[k];
+                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONBuffer> (allIndices[i]->getBuffer())->getData()))[k];
             }
             
             unsigned int index = remappedMeshIndexesMap[remappedIndex];
@@ -245,7 +280,7 @@ namespace JSONExport
         
         endIndex = currentIndex;
         shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
-        shared_ptr <JSONExport::JSONDataBuffer> indicesBuffer(new JSONExport::JSONDataBuffer(uniqueIndexes, vertexAttributeCount * sizeof(unsigned int), true));
+        shared_ptr <JSONExport::JSONBuffer> indicesBuffer(new JSONExport::JSONBuffer(uniqueIndexes, vertexAttributeCount * sizeof(unsigned int), true));
         
         shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, vertexAttributeCount, JSONExport::VERTEX, 0));
         
@@ -351,7 +386,7 @@ namespace JSONExport
                 void* sourceData = malloc(sourceSize);
                 
                 shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
-                shared_ptr <JSONExport::JSONDataBuffer> remappedBuffer(new JSONExport::JSONDataBuffer(referenceBuffer->getID(), sourceData, sourceSize, true));
+                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), sourceData, sourceSize, true));
                 shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
                 remappedAccessor->setBuffer(remappedBuffer);
                 remappedAccessor->setCount(vertexCount);
@@ -393,18 +428,73 @@ namespace JSONExport
                 // FIXME: report error
                 //return NULL;
             }
-            
-        }
-        
-        if (endIndex > 65535) {
-            //The mesh should be split but we do not handle this feature yet
-            printf("WARNING: unsupported (yet) feature - mesh has more than 65535 vertex, splitting has to be done for GL/ES \n");
-            //delete targetMesh;
-            //return 0; //for now return false as splitting is not implemented
         }
         
         return targetMesh;
     }
+        
+    //------ Mesh splitting ----
     
+    //ON-GOING work
+    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, std::vector <shared_ptr <JSONMesh> > &meshes)
+    {
+        bool splitNeeded = false;
+        
+        //First, check every primitive indices count to figure out if we really need to split anything at all.
+        //TODO: what about making a sanity check, to ensure we don't have points not referenced by any primitive. (I wonder if that's would be considered compliant with the SPEC. need to check.
+        PrimitiveVector primitives = sourceMesh->getPrimitives();
+        
+        for (size_t i = 0 ; i < primitives.size() ; i++) {
+            if (primitives[i]->getIndices()->getCount() >= maxiumIndicesCount) {
+                splitNeeded = true;
+                break;
+            }
+        }
+        
+        if (!splitNeeded)
+            return false;
+        
+        //create sub mesh
+        shared_ptr <JSONMesh> targetMesh = shared_ptr <JSONMesh> (new JSONMesh());
+        meshes.push_back(targetMesh);
+        //For each sub mesh being built, maintain 2 maps,
+        //with key:indice value: remapped indice
+        //with key:remapped indice value:indice
+        IndicesMap indexToRemappedIndex;
+        IndicesMap remappedIndexToIndex;
+
+        for (size_t i = 0 ; i < primitives.size() ; i++) {
+
+            shared_ptr<JSONPrimitive> &primitive = primitives[i];
+            shared_ptr<JSONIndices> indices = primitive->getIndices();
+            
+            unsigned int* indicesPtr = (unsigned int*)( (unsigned char*)indices->getBuffer()->getData() + indices->getByteOffset());
+            
+            unsigned int nextPrimitiveIndex = 0;
+            
+            //Different iterators type will be needed for these types
+            /*
+             type = "TRIANGLES";
+             type = "LINES";
+             type = "LINE_STRIP";
+             type = "TRIANGLES";
+             type = "TRIANGLE_FANS";
+             type = "TRIANGLE_STRIPS";
+             type = "POINTS";
+             */
+                        
+            unsigned int primitiveCount = indices->getCount() / 3;
+            
+            if (primitive->getType() == "TRIANGLES") {
+                for (size_t j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
+                    
+                }
+            }
+            
+        }
+
+        
+        return true;
+    }
 
 }

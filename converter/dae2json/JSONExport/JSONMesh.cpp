@@ -139,7 +139,7 @@ namespace JSONExport
         
         shared_ptr <AccessorVector> allAccessors = this->accessors();
         
-        shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0));
+        shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0,0,false));
         
         PrimitiveVector primitives = this->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -152,7 +152,7 @@ namespace JSONExport
              */
             
             unsigned int indicesCount = (unsigned int)uniqueIndices->getCount();
-            unsigned int* uniqueIndicesBuffer = (unsigned int*) static_pointer_cast <JSONDataBuffer> (uniqueIndices->getBuffer())->getData();
+            unsigned int* uniqueIndicesBuffer = (unsigned int*) static_pointer_cast <JSONBuffer> (uniqueIndices->getBuffer())->getData();
             if (indicesCount <= 0) {
                 // FIXME: report error
             } else {
@@ -187,7 +187,7 @@ namespace JSONExport
                 accessor->computeMinMax();
                 
                 accessor->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));
-                fileOutputStream.write((const char*)(static_pointer_cast <JSONDataBuffer> (buffer)->getData()), buffer->getByteSize());
+                fileOutputStream.write((const char*)(static_pointer_cast <JSONBuffer> (buffer)->getData()), buffer->getByteSize());
 
                 //now that we wrote to the stream we can release the buffer.
                 accessor->setBuffer(dummyBuffer);

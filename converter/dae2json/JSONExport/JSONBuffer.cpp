@@ -33,19 +33,34 @@ namespace JSONExport
     JSONBuffer::JSONBuffer() {}     //private
 
     JSONBuffer::~JSONBuffer() {
-        
+        if (this->_ownData && this->_data)
+            free(this->_data);
     }    
 
-    JSONBuffer::JSONBuffer(size_t byteSize):
-    _byteSize(byteSize)
-    {
-    }     //protected
-
+    //FIXME:This one just should be removed, but some code depends on it.
     JSONBuffer::JSONBuffer(std::string ID, size_t byteSize):
     _ID(ID),
-    _byteSize(byteSize)
+    _byteSize(byteSize),
+    _data(0),
+    _ownData(false)
     {
-    }     //protected
+    }
+    
+    JSONBuffer::JSONBuffer(void *data, size_t byteSize, bool ownData):
+    _byteSize(byteSize),
+    _data((unsigned char*)data),
+    _ownData(ownData)
+    {
+        this->_ID = JSONUtils::generateIDForType("buffer");
+    }
+    
+    JSONBuffer::JSONBuffer(std::string ID,void *data, size_t byteSize, bool ownData):
+    _ID(ID),
+    _byteSize(byteSize),
+    _data((unsigned char*)data),
+    _ownData(ownData)
+    {
+    }
 
     size_t const JSONBuffer::getByteSize()
     {
@@ -57,32 +72,9 @@ namespace JSONExport
         return this->_ID;
     }
     
-    //--------------------------------------------------------------------------------------------------------------------------------    
-    
-    JSONDataBuffer::JSONDataBuffer(void *data, size_t byteSize, bool ownData): 
-    JSONBuffer(byteSize),
-    _data((unsigned char*)data),
-    _ownData(ownData)
-    {
-        this->_ID = JSONUtils::generateIDForType("buffer");
-    }
-    
-    JSONDataBuffer::JSONDataBuffer(std::string ID,void *data, size_t byteSize, bool ownData): 
-    JSONBuffer(ID, byteSize),
-    _data((unsigned char*)data),
-    _ownData(ownData)
-    {
-    }
-
-    JSONDataBuffer::~JSONDataBuffer()
-    {
-        if (this->_ownData && this->_data) 
-            free(this->_data);
-    }
-
-    const void* const JSONDataBuffer::getData()
+    const void* const JSONBuffer::getData()
     {
         return this->_data;
-    }   
+    }
     
 }

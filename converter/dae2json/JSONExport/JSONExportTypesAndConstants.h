@@ -58,38 +58,6 @@ namespace JSONExport
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
     
-    // FIXME: put better comment here
-    //RemappedMeshIndexes[0] = count ;  RemappedMeshIndexes[1+] original indexes (used for hash code)
-    struct RemappedMeshIndexesHash {
-        inline size_t operator()(unsigned int* remappedMeshIndexes) const
-        {
-            size_t hash = 0;
-            size_t count = (size_t)remappedMeshIndexes[0];
-            
-            for (size_t i = 0 ; i < count ; i++) {
-                hash += (size_t)remappedMeshIndexes[i + 1 /* skip count */];
-            }
-            
-            return hash;
-        }
-    };
-    
-    struct RemappedMeshIndexesEq {
-        inline bool operator()(unsigned int* k1, unsigned int* k2) const {
-            
-            size_t count = (size_t)k1[0];
-            
-            if (count != (size_t)k2[0])
-                return false;
-            
-            for (size_t i = 0 ; i < count ; i++) {
-                if (k1[i + 1] != k2[i + 1])
-                    return false;
-            }
-            
-            return true;
-        }
-    };
         
     typedef enum {
         VERTEX = 1,

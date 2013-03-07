@@ -232,7 +232,7 @@ namespace JSONExport
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
         ElementType type = this->getElementType();
-        char* bufferData = ((char*)((JSONDataBuffer*)buffer.get())->getData() + this->getByteOffset());
+        char* bufferData = ((char*)((JSONBuffer*)buffer.get())->getData() + this->getByteOffset());
 
         for (size_t i = 0 ; i < _count ; i++) {
             (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, context);

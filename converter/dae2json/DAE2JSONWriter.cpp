@@ -205,7 +205,7 @@ namespace JSONExport
             }
         
             // FIXME: the source could be shared, store / retrieve it here
-            shared_ptr <JSONExport::JSONDataBuffer> cvtBuffer(new JSONExport::JSONDataBuffer(name, sourceData, sourceSize, false));
+            shared_ptr <JSONExport::JSONBuffer> cvtBuffer(new JSONExport::JSONBuffer(name, sourceData, sourceSize, false));
             shared_ptr <JSONExport::JSONAccessor> cvtAccessor(new JSONExport::JSONAccessor());
         
             cvtAccessor->setBuffer(cvtBuffer);
@@ -301,7 +301,7 @@ namespace JSONExport
             count = triangulatedIndicesCount;
         }
         
-        shared_ptr <JSONExport::JSONDataBuffer> positionBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+        shared_ptr <JSONExport::JSONBuffer> positionBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
         
         shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,
                                                                                         count,
@@ -317,7 +317,7 @@ namespace JSONExport
                 count = triangulatedIndicesCount;
             }
             
-            shared_ptr <JSONExport::JSONDataBuffer> normalBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+            shared_ptr <JSONExport::JSONBuffer> normalBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
             shared_ptr <JSONExport::JSONIndices> normalIndices(new JSONExport::JSONIndices(normalBuffer,
                                                                                            count,
                                                                                            JSONExport::NORMAL,
@@ -338,7 +338,7 @@ namespace JSONExport
                     count = triangulatedIndicesCount;
                 }
                 
-                shared_ptr <JSONExport::JSONDataBuffer> colorBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
+                shared_ptr <JSONExport::JSONBuffer> colorBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
                 
                 shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
                                                                                               count,
@@ -361,7 +361,7 @@ namespace JSONExport
                     count = triangulatedIndicesCount;
                 }
                 
-                shared_ptr <JSONExport::JSONDataBuffer> uvBuffer(new JSONExport::JSONDataBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
+                shared_ptr <JSONExport::JSONBuffer> uvBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
                 
                 //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
                 //for now forced to 0, to be fixed for multi texturing.

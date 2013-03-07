@@ -34,15 +34,10 @@ namespace JSONExport
 
     JSONPrimitive::JSONPrimitive()
     {
-        this->_originalCountAndIndexes = 0;
-        this->_originalCountAndIndexesSize = 0;
     }
     
     JSONPrimitive::~JSONPrimitive()
     {
-        if (this->_originalCountAndIndexes) {
-            free(this->_originalCountAndIndexes);
-        }        
     }
 
     JSONExport::Semantic JSONPrimitive::getSemanticAtIndex(unsigned int index)

@@ -85,9 +85,7 @@ namespace JSONExport
         std::string _type;
         std::string _materialID;
         unsigned int _materialObjectID;
-        unsigned int* _originalCountAndIndexes;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
-        unsigned long _originalCountAndIndexesSize;
         PrimitiveIndicesInfosVector _allIndicesInfos;
     };
 
