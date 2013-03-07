@@ -165,7 +165,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             geometry.uvs = [];
             floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
             for(i = 0, l = floatArray.length; i < l; i += 2) {
-                geometry.uvs.push( new THREE.UV( floatArray[i], 1.0 - floatArray[i+1] ) );
+                geometry.uvs.push( new THREE.UV( floatArray[i], floatArray[i+1] ) );
             }
         }
         geometry.loadedAttributes++;
@@ -278,7 +278,9 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         },
 
         threeResources: {
-            value: null
+            value: null,
+            writable: true
+
         },
 
         // Implement WebGLTFLoader handlers
@@ -304,20 +306,38 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             }
         },
 
+        handleImage: {
+            value: function(entryID, description, userInfo) {
+                this.threeResources.setEntry(entryID, null, description);
+                return true;
+            }
+        },
+
         handleMaterial: {
             value: function(entryID, description, userInfo) {
-                if(description.inputs.diffuseTexture) {
-                    description.inputs.diffuseTexture = this.resolvePathIfNeeded(description.inputs.diffuseTexture);
+                //this should be rewritten using the meta datas that actually create the shader.
+                //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
+                var texturePath = null;
+                var technique = description.techniques[description.technique];
+                var texture = technique.parameters.diffuseTexture;
+                if (texture) {
+                    var imageEntry = this.threeResources.getEntry(texture.image);
+                    if (imageEntry) {
+                        texturePath = imageEntry.description.path;
+                    }
                 }
+
+                var diffuseColor = technique.parameters.diffuseColor;
+                var transparency = technique.parameters.transparency;
+
                 var material = new THREE.MeshLambertMaterial({
-                    color: RgbArraytoHex(description.inputs.diffuseColor),
-                    opacity: 'transparency' in description.inputs ? description.inputs.transparency : 1.0,
-                    map: LoadTexture(description.inputs.diffuseTexture)
+                    color: RgbArraytoHex(diffuseColor),
+                    opacity: 1.0,
+                    map: LoadTexture(texturePath)
                 });
 
                 this.threeResources.setEntry(entryID, material, description);
 
-                // TODO: Need more robust material support, currently only accepts flat colors
                 return true;
             }
         },
@@ -378,7 +398,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                             var accessorEntry = this.threeResources.getEntry(accessorID);
                             if (!accessorEntry) {
                                 //let's just use an anonymous object for the accessor
-                                accessor = description[accessorID];
+                                accessor = description.accessors[accessorID];
                                 accessor.id = accessorID;
                                 this.threeResources.setEntry(accessorID, accessor, accessor);
             
@@ -389,9 +409,10 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                             } else {
                                 accessor = accessorEntry.object;
                             }
-
+                            accessor.type = "accessor";
                             var attribContext = new VertexAttributeContext(vertexAttribute, accessor, geometry);
-                            var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(accessorEntry.object, vertexAttributeDelegate, attribContext);
+
+                            var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(accessor, vertexAttributeDelegate, attribContext);
                             /*if(alreadyProcessedAttribute) {
                                 vertexAttributeDelegate.resourceAvailable(alreadyProcessedAttribute, attribContext);
                             }*/
