@@ -273,7 +273,6 @@ namespace JSONExport
                 break;
         }
 
-        
         cvtPrimitive->setMaterialObjectID((unsigned int)openCOLLADAMeshPrimitive->getMaterialId());
         cvtPrimitive->setType(type);
         
@@ -389,6 +388,7 @@ namespace JSONExport
                           JSONExport::ElementType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
+                          size_t vertexAttributeByteSize,
                           void *context) {
         char* bufferData = (char*)value;
         
@@ -484,9 +484,15 @@ namespace JSONExport
             accessor->apply(__InvertV, NULL);
         }
 
-        //After this point cvtMesh should be referenced anymore and will be deallocated
+         //After this point cvtMesh should be referenced anymore and will be deallocated
         shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
-                
+        
+        /*
+        std::vector <shared_ptr <JSONMesh> > meshes;
+        if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes)) {
+            
+        }
+        */
         return unifiedMesh;
     }
         

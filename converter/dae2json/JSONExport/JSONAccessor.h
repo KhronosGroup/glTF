@@ -39,6 +39,7 @@ namespace JSONExport
         ElementType /* type */,
         size_t /* elementsPerValue */,
         size_t /* index */,
+        size_t /* vertexAttributeByteSize*/,
         void* /* context */);
     
     class JSONAccessor {
@@ -76,7 +77,7 @@ namespace JSONExport
         
         void computeMinMax();
         
-        size_t getElementByteLength();
+        size_t getVertexAttributeByteLength();
         
         const double* getMin();
         const double* getMax();

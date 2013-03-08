@@ -7,6 +7,8 @@ namespace JSONExport
 
     shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
     
+    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, std::vector <shared_ptr <JSONMesh> > &meshes);
+    
     unsigned int* createTrianglesFromPolylist(unsigned int *verticesCount /* array containing the count for each array of indices per face */,
                                               unsigned int *polylist /* array containing the indices of a face */,
                                               unsigned int count /* count of entries within the verticesCount array */,

@@ -29,11 +29,6 @@
 
 namespace JSONExport 
 {
-    class JSONPrimitiveIndicesInfos;
-    class JSONMesh;
-    
-    
-    //---- JSONPrimitiveIndicesInfos -------------------------------------------------------------
     class JSONPrimitiveIndicesInfos
     {
     public:
@@ -55,8 +50,6 @@ namespace JSONExport
     class JSONPrimitive
     {
     public:
-        // FIXME: make protected and mesh a friend
-    public:
         JSONPrimitive();
         virtual ~JSONPrimitive();
         
@@ -68,6 +61,8 @@ namespace JSONExport
         std::string getMaterialID();
         void setMaterialID(std::string materialID);
         
+        //TODO: These 2 methods should be out of JSONPrimitive.
+        //A map like: primitive [->] objectID, could handle that within DAE2JSONWriter.cpp
         unsigned int getMaterialObjectID();
         void setMaterialObjectID(unsigned int materialID);
 

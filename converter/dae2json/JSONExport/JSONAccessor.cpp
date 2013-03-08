@@ -135,7 +135,7 @@ namespace JSONExport
         return this->_ID;
     }
         
-    size_t JSONAccessor::getElementByteLength()
+    size_t JSONAccessor::getVertexAttributeByteLength()
     {
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         ElementType type = this->getElementType();
@@ -176,6 +176,7 @@ namespace JSONExport
                                ElementType type,
                                size_t elementsPerVertexAttribute,
                                size_t index,
+                               size_t vertexAttributeByteSize,
                                void *context) {
         __MinMaxApplierInfo *applierInfo = (__MinMaxApplierInfo*)context;
         char* bufferData = (char*)value;
@@ -230,12 +231,13 @@ namespace JSONExport
     {
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
+        size_t vertexAttributeByteSize = this->getVertexAttributeByteLength();
         shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
         ElementType type = this->getElementType();
         char* bufferData = ((char*)((JSONBuffer*)buffer.get())->getData() + this->getByteOffset());
 
         for (size_t i = 0 ; i < _count ; i++) {
-            (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, context);
+            (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, vertexAttributeByteSize, context);
         }
     }
     
@@ -246,7 +248,7 @@ namespace JSONExport
         return ((accessor->getElementsPerVertexAttribute() == this->getElementsPerVertexAttribute()) &&
                 (accessor->getByteStride() == this->getByteStride()) &&
                 (accessor->getElementType() == this->getElementType()) &&
-                (accessor->getElementByteLength() == this->getElementByteLength()));
+                (accessor->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
     }
                     
 }

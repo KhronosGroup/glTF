@@ -29,6 +29,8 @@
 
 namespace JSONExport 
 {
+    class JSONMesh;
+    
     shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
     
     typedef std::map<unsigned int /* IndexSet */, shared_ptr<JSONExport::JSONAccessor> > IndexSetToAccessorHashmap;

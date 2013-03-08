@@ -170,7 +170,7 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONAccessor> remappedAccessor = allRemappedAccessors[indicesInRemapping[accessorIndex]];
             shared_ptr <JSONExport::JSONAccessor> originalAccessor = allOriginalAccessors[indicesInRemapping[accessorIndex]];
             
-            if (originalAccessor->getElementByteLength() != remappedAccessor->getElementByteLength()) {
+            if (originalAccessor->getVertexAttributeByteLength() != remappedAccessor->getVertexAttributeByteLength()) {
                 // FIXME : report error
                 free(allBufferInfos);
                 return 0;
@@ -185,7 +185,7 @@ namespace JSONExport
             bufferInfos->originalBufferData = (unsigned char*)static_pointer_cast <JSONBuffer> (originalBuffer)->getData() + originalAccessor->getByteOffset();
             bufferInfos->originalAccessorByteStride = originalAccessor->getByteStride();
             
-            bufferInfos->elementByteLength = remappedAccessor->getElementByteLength();
+            bufferInfos->elementByteLength = remappedAccessor->getVertexAttributeByteLength();
         }
         
         return allBufferInfos;
@@ -382,7 +382,7 @@ namespace JSONExport
                 //(*it).second;            // the mapped value (of type T)
                 shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
                 
-                size_t sourceSize = vertexCount * selectedAccessor->getElementByteLength();
+                size_t sourceSize = vertexCount * selectedAccessor->getVertexAttributeByteLength();
                 void* sourceData = malloc(sourceSize);
                 
                 shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
@@ -435,6 +435,106 @@ namespace JSONExport
         
     //------ Mesh splitting ----
     
+    class SubMeshContext {
+    public:
+        shared_ptr <JSONMesh> targetMesh;
+        //For each sub mesh being built, maintain 2 maps,
+        //with key:indice value: remapped indice
+        //with key:remapped indice value:indice
+        IndicesMap indexToRemappedIndex;
+        IndicesMap remappedIndexToIndex;
+    } ;
+
+    SubMeshContext* __CreateSubMeshContext()
+    {
+        SubMeshContext *subMesh = new SubMeshContext();
+        shared_ptr <JSONMesh> targetMesh = shared_ptr <JSONMesh> (new JSONMesh());
+        subMesh->targetMesh = targetMesh;
+        
+        return subMesh;
+    }
+    
+    void __PushAndRemapIndicesInSubMesh(SubMeshContext *subMesh, unsigned int* indices, int count)
+    {
+        for (unsigned int i = 0 ; i < count ; i++) {
+            unsigned int index = indices[i];
+            bool shouldRemap = false;
+            
+            //avoid divide by 0 that occurs when calling .count(index) 
+            size_t size = subMesh->indexToRemappedIndex.size();
+            if (size == 0) {
+                shouldRemap = true;
+            } else {
+                shouldRemap = subMesh->indexToRemappedIndex.count(index) == 0;
+            }
+            
+            if (shouldRemap) {
+                unsigned int remappedIndex = subMesh->indexToRemappedIndex.size();
+                
+                IndicesMap indexToRemappedIndex;
+
+                subMesh->indexToRemappedIndex[index] = remappedIndex;
+                subMesh->remappedIndexToIndex[remappedIndex] = index;
+            }
+        }
+    }
+    
+    static void __RemapAccessor(void *value,
+                          JSONExport::ElementType type,
+                          size_t elementsPerVertexAttribute,
+                          size_t index,
+                          size_t vertexAttributeByteSize,
+                          void *context) {
+        
+        void **remapContext = (void**)context;
+        unsigned char *targetBufferPtr = (unsigned char*)remapContext[0];
+        SubMeshContext *subMesh = (SubMeshContext*)remapContext[1];
+        if (subMesh->indexToRemappedIndex.count(index) > 0) {
+            size_t remappedIndex = subMesh->indexToRemappedIndex[index];
+            memcpy(&targetBufferPtr[vertexAttributeByteSize * remappedIndex], value, vertexAttributeByteSize);
+        }
+    }
+    
+    //FIXME: add suport for interleaved arrays
+    void __RemapSubMesh(SubMeshContext *subMesh, JSONMesh *sourceMesh)
+    {
+        //remap the subMesh using the original mesh
+        //we walk through all accessors
+        vector <JSONExport::Semantic> allSemantics = sourceMesh->allSemantics();
+        std::map<string, unsigned int> semanticAndSetToIndex;
+        
+        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
+            IndexSetToAccessorHashmap& indexSetToAccessor = sourceMesh->getAccessorsForSemantic(allSemantics[i]);
+            IndexSetToAccessorHashmap& targetIndexSetToAccessor = subMesh->targetMesh->getAccessorsForSemantic(allSemantics[i]);
+            IndexSetToAccessorHashmap::const_iterator accessorIterator;
+            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+                //(*it).first;             // the key value (of type Key)
+                //(*it).second;            // the mapped value (of type T)
+                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                unsigned int indexSet = (*accessorIterator).first;
+                
+                shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
+                
+                unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
+                
+                //FIXME: this won't work with interleaved
+                unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount);
+                
+                void *context[2];
+                context[0] = targetBufferPtr;
+                context[1] = subMesh;
+                selectedAccessor->apply(__RemapAccessor, (void*)context);
+                                        
+                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), targetBufferPtr, vertexAttributeCount, true));
+                shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
+                remappedAccessor->setBuffer(remappedBuffer);
+                remappedAccessor->setCount(vertexAttributeCount);
+                
+                targetIndexSetToAccessor[indexSet] = remappedAccessor;
+            }
+        }
+    }
+    
     //ON-GOING work
     bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, std::vector <shared_ptr <JSONMesh> > &meshes)
     {
@@ -454,23 +554,44 @@ namespace JSONExport
         if (!splitNeeded)
             return false;
         
-        //create sub mesh
-        shared_ptr <JSONMesh> targetMesh = shared_ptr <JSONMesh> (new JSONMesh());
-        meshes.push_back(targetMesh);
-        //For each sub mesh being built, maintain 2 maps,
-        //with key:indice value: remapped indice
-        //with key:remapped indice value:indice
-        IndicesMap indexToRemappedIndex;
-        IndicesMap remappedIndexToIndex;
+        SubMeshContext *subMesh = NULL;
 
-        for (size_t i = 0 ; i < primitives.size() ; i++) {
+        bool stillHavePrimitivesElementsToBeProcessed = false;
+        
+        int *allNextPrimitiveIndices = (int*)calloc(primitives.size(), sizeof(int));
+                                                                      
+        for (int i = 0 ; i < primitives.size() ; i++) {
+            if (subMesh == 0) {
+                subMesh = __CreateSubMeshContext();
+                meshes.push_back(subMesh->targetMesh);
+                stillHavePrimitivesElementsToBeProcessed = false;
+            }
+            
+            shared_ptr <JSONPrimitive> targetPrimitive;
+            //when we are done with a primitive we mark its nextIndice with a -1
+            if (allNextPrimitiveIndices[i] != -1) {
+                targetPrimitive = shared_ptr <JSONPrimitive> (new JSONPrimitive());
+            } else {
+                continue;
+            }
 
+            unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
+
+            
+            
             shared_ptr<JSONPrimitive> &primitive = primitives[i];
             shared_ptr<JSONIndices> indices = primitive->getIndices();
             
             unsigned int* indicesPtr = (unsigned int*)( (unsigned char*)indices->getBuffer()->getData() + indices->getByteOffset());
+            unsigned int* targetIndicesPtr = (unsigned int*)malloc(indices->getBuffer()->getByteSize());
             
-            unsigned int nextPrimitiveIndex = 0;
+            //sub meshes are built this way [ and it is not optimal yet (*)]:
+            //each primitive is iterated through all its triangles/lines/...
+            //When the indices count in indexToRemappedIndex is >= maxiumIndicesCount then we try the next primitive.
+            /* 
+                we could continue walking through a primitive even if the of maximum indices has been reached, because, for instance the next say, triangles could be within the already remapped indices. That said, not doing so should produce meshes that have more chances to have adjacent triangles. Need more experimentation about this. Having 2 modes would ideal.
+             */
+            
             
             //Different iterators type will be needed for these types
             /*
@@ -482,17 +603,63 @@ namespace JSONExport
              type = "TRIANGLE_STRIPS";
              type = "POINTS";
              */
-                        
-            unsigned int primitiveCount = indices->getCount() / 3;
-            
+            size_t j = 0;
+            unsigned int primitiveCount = 0;
+            unsigned int targetIndicesCount = 0;
             if (primitive->getType() == "TRIANGLES") {
-                for (size_t j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
+                unsigned int indicesPerElementCount = 3;
+                primitiveCount = indices->getCount() / indicesPerElementCount;
+                for (j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
+                    unsigned int *indicesPtrAtPrimitiveIndex = indicesPtr + (j * indicesPerElementCount);
+                    //will we still have room to store coming indices from this mesh ?
+                    //note: this is tied to the policy described above in (*)
+                    size_t currentSize = subMesh->indexToRemappedIndex.size();
+                    if ((currentSize + indicesPerElementCount) < maxiumIndicesCount) {
+                        __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+                        //build the indices for the primitive to be added to the subMesh
+                       memcpy(targetIndicesPtr + targetIndicesCount, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+                        targetIndicesCount += indicesPerElementCount;
                     
+                        nextPrimitiveIndex++;
+                    } else {
+                        allNextPrimitiveIndices[i] = -1; //we are done with this primitive, for that mesh
+
+                        break;
+                    }
                 }
             }
             
+            if (targetIndicesCount > 0) {
+                //FIXME: here targetIndices takes too much memory
+                //To avoid this we would need to make a smaller copy.
+                //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
+                shared_ptr <JSONBuffer> targetBuffer(new JSONBuffer(targetIndicesPtr, targetIndicesCount * sizeof(unsigned int), true));
+                
+                subMesh->targetMesh->appendPrimitive(targetPrimitive);
+            } else {
+                if (targetIndicesPtr)
+                    free(targetIndicesPtr);
+            }
+            
+            allNextPrimitiveIndices[i] = nextPrimitiveIndex;
+            
+            if (j < primitiveCount)
+                stillHavePrimitivesElementsToBeProcessed = true;
+            
+            //did we process the last primitive ?
+            if (((i + 1) == primitives.size())) {
+                __RemapSubMesh(subMesh, sourceMesh);
+                
+                if (stillHavePrimitivesElementsToBeProcessed) {
+                    //loop again and build new mesh
+                    i = -1;
+                    delete subMesh;
+                    subMesh = 0;
+                }
+            }
         }
-
+        
+        free(allNextPrimitiveIndices);
         
         return true;
     }
