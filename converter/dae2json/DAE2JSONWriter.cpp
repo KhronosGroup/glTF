@@ -379,8 +379,6 @@ namespace JSONExport
             free(verticesCountArray);
         }
         
-        
-        
         return cvtPrimitive;
     }
     
@@ -405,16 +403,13 @@ namespace JSONExport
         }
     }
     
-    shared_ptr <JSONExport::JSONMesh> ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh,
-                                                             std::string folder)
+    void ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh,
+                                MeshVector &meshes)
     {
         shared_ptr <JSONExport::JSONMesh> cvtMesh(new JSONExport::JSONMesh());
                 
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
         cvtMesh->setName(openCOLLADAMesh->getName());
-
-        URI dataURL(folder);
-        std::string dataURLString = dataURL.getURIString();        
         
         const MeshPrimitiveArray& primitives =  openCOLLADAMesh->getMeshPrimitives();
         size_t primitiveCount = primitives.getCount();
@@ -423,8 +418,6 @@ namespace JSONExport
         
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
-            
-            
             shared_ptr <JSONExport::IndicesVector> primitiveIndicesVector(new JSONExport::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
 
@@ -480,20 +473,16 @@ namespace JSONExport
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONAccessor> accessor = (*accessorIterator).second;
-
+            
             accessor->apply(__InvertV, NULL);
         }
-
+        
          //After this point cvtMesh should be referenced anymore and will be deallocated
         shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
         
-        /*
-        std::vector <shared_ptr <JSONMesh> > meshes;
-        if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes)) {
-            
+        if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes) == false) {
+            meshes.push_back(unifiedMesh);
         }
-        */
-        return unifiedMesh;
     }
         
     //--------------------------------------------------------------------
@@ -518,7 +507,7 @@ namespace JSONExport
 	bool DAE2JSONWriter::write()
 	{
         this->_converterContext.shaderIdToShaderString.clear();
-        this->_uniqueIDToMesh.clear();   
+        this->_uniqueIDToMeshes.clear();
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
@@ -540,22 +529,25 @@ namespace JSONExport
         
         shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, static_cast<size_t>(this->_fileOutputStream.tellp())));
         
-        UniqueIDToMesh::const_iterator UniqueIDToMeshIterator;
+        UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
 
         // ----
         shared_ptr <JSONExport::JSONObject> meshesObject(new JSONExport::JSONObject());
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
-        for (UniqueIDToMeshIterator = this->_uniqueIDToMesh.begin() ; UniqueIDToMeshIterator != this->_uniqueIDToMesh.end() ; UniqueIDToMeshIterator++) {
+        for (UniqueIDToMeshesIterator = this->_uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
-            shared_ptr <JSONExport::JSONMesh> mesh = (*UniqueIDToMeshIterator).second;
+            MeshVectorSharedPtr meshes = (*UniqueIDToMeshesIterator).second;
             
-            if (mesh) {
-                shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)sharedBuffer.get());
-            
-                meshesObject->setValue(mesh->getID(), meshObject);
+            for (size_t j = 0 ; j < meshes->size() ; j++) {
+                shared_ptr<JSONMesh> mesh = (*meshes)[j];
+                if (mesh) {
+                    shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)sharedBuffer.get());
+                    
+                    meshesObject->setValue(mesh->getID(), meshObject);
+                }
             }
         }
         
@@ -587,7 +579,7 @@ namespace JSONExport
         //--- 
         this->_converterContext.root->write(&this->_writer);
                 
-        bool sceneFlatteningEnabled = true;
+        bool sceneFlatteningEnabled = false;
         if (sceneFlatteningEnabled) {
             //second pass to actually output the JSON of the node themselves (and for all sub nodes)
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
@@ -727,51 +719,53 @@ namespace JSONExport
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 
                 unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
-                shared_ptr <JSONExport::JSONMesh> mesh = this->_uniqueIDToMesh[meshUID];
-                
-                if (!mesh) {
-                    continue;
-                }
-                
-                if (sceneFlatteningInfo) {
-                    JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::VERTEX); 
-                    shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
+                MeshVectorSharedPtr meshes = this->_uniqueIDToMeshes[meshUID];
+
+                for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
+                    shared_ptr <JSONMesh> mesh = (*meshes)[meshIndex];
                     
-                    BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()), 
-                                    COLLADABU::Math::Vector3(vertexAccessor->getMax()));
-                    vertexBBOX.transform(worldMatrix);
+                    if (!mesh) {
+                        continue;
+                    }
                     
-                    sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
-                }
-                
-                PrimitiveVector primitives = mesh->getPrimitives();
-                for (size_t j = 0 ; j < primitives.size() ; j++) {
-                    shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
+                    if (sceneFlatteningInfo) {
+                        JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::VERTEX);
+                        shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
+                        
+                        BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()),
+                                        COLLADABU::Math::Vector3(vertexAccessor->getMax()));
+                        vertexBBOX.transform(worldMatrix);
+                        
+                        sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
+                    }
                     
-                    //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
-                    int materialBindingIndex = -1;
-                    for (size_t k = 0; k < materialBindings.getCount() ; k++) {
-                        if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
-                            materialBindingIndex = (unsigned int)k;
+                    PrimitiveVector primitives = mesh->getPrimitives();
+                    for (size_t j = 0 ; j < primitives.size() ; j++) {
+                        shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
+                        
+                        //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
+                        int materialBindingIndex = -1;
+                        for (size_t k = 0; k < materialBindings.getCount() ; k++) {
+                            if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
+                                materialBindingIndex = (unsigned int)k;
+                            }
+                        }
+                        if (materialBindingIndex != -1) {
+                            unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
+                            
+                            unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
+                            std::string materialName = this->_materialUIDToName[referencedMaterialID];
+                            shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
+                            effect->setName(materialName);
+                            primitive->setMaterialID(effect->getID());
                         }
                     }
-                    if (materialBindingIndex != -1) {
-                        unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
-                        
-                        unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
-                        std::string materialName = this->_materialUIDToName[referencedMaterialID];
-                        shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
-                        effect->setName(materialName);
-                        primitive->setMaterialID(effect->getID());                    
+                    
+                    meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(mesh->getID())));
+                    if (sceneFlatteningInfo) {
+                        shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
+                        sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo); 
                     }
-                }
-                
-                meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(mesh->getID())));
-                //meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(1 + /* HACK: skip first # character" */ instanceGeometry->getURI().getURIString().c_str())));
-                
-                if (sceneFlatteningInfo) {
-                    shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
-                    sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo); 
                 }
 
             }
@@ -818,17 +812,16 @@ namespace JSONExport
     //   -> transforms & write vtx attributes
     bool DAE2JSONWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
     {
+        /*
         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
         //First collect all kind of accessors available
         size_t count = allMeshes.size();
         for (size_t i = 0 ; i < count ; i++) {
             shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
-            shared_ptr <JSONExport::JSONMesh>  mesh = this->_uniqueIDToMesh[meshInfo->getUID()];
-            shared_ptr <AccessorVector> accessors = mesh->accessors();
-
-            //_uniqueIDToMesh
+            MeshVectorSharedPtr *meshes = this->_uniqueIDToMeshes[meshInfo->getUID()];
+           // shared_ptr <AccessorVector> accessors = mesh->accessors();
         }
-        
+        */
         return true;
     }
     
@@ -861,7 +854,8 @@ namespace JSONExport
         rootObject->setValue("children", childrenArray);
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
-            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, &this->_sceneFlatteningInfo);
+            //FIXME: &this->_sceneFlatteningInfo to be readded but with a flag to check if flattened is enabled
+            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, NULL);
         }
         
 		return true;
@@ -895,20 +889,25 @@ namespace JSONExport
     bool DAE2JSONWriter::writeGeometry( const COLLADAFW::Geometry* geometry )
 	{
         switch (geometry->getType()) {
-            case Geometry::GEO_TYPE_MESH: 
+            case Geometry::GEO_TYPE_MESH:
             {
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
-                shared_ptr <JSONExport::JSONMesh> cvtMesh = this->_uniqueIDToMesh[meshID];
+                MeshVectorSharedPtr meshes;
                 
-                if (!cvtMesh) {
-                    COLLADABU::URI outputURI(this->_converterContext.outputFilePath);
-                    cvtMesh = ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, outputURI.getPathDir());
-                    if (cvtMesh->getPrimitives().size() > 0) {
-                        cvtMesh->writeAllBuffers(this->_fileOutputStream);
-                        this->_uniqueIDToMesh[meshID] = cvtMesh;
+                if (this->_uniqueIDToMeshes.count(meshID) > 0)
+                    meshes = this->_uniqueIDToMeshes[meshID];
+                else {
+                    meshes =  shared_ptr<MeshVector> (new MeshVector);
+                    ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, (*meshes));
+                    for (size_t i = 0 ; i < meshes->size() ; i++) {
+                        if ((*meshes)[i]->getPrimitives().size() > 0) {
+                            (*meshes)[i]->writeAllBuffers(this->_fileOutputStream);
+                        }
                     }
-                } 
+                    
+                    this->_uniqueIDToMeshes[meshID] = meshes;
+                }
             }
                 break;
             case Geometry::GEO_TYPE_SPLINE:

@@ -39,6 +39,15 @@ namespace JSONExport
     JSONPrimitive::~JSONPrimitive()
     {
     }
+    
+    JSONPrimitive::JSONPrimitive(const JSONPrimitive &primitive)
+    {
+        this->_allIndicesInfos = primitive._allIndicesInfos;
+        this->_type = primitive._type;
+        this->_materialID = primitive._materialID;
+        this->_materialObjectID = primitive._materialObjectID;
+        this->_uniqueIndices = primitive._uniqueIndices;
+    }
 
     JSONExport::Semantic JSONPrimitive::getSemanticAtIndex(unsigned int index)
     {

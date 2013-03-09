@@ -88,7 +88,8 @@ using namespace std;
 
 namespace JSONExport
 {
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONMesh> > UniqueIDToMesh;
+    typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;        
@@ -240,7 +241,7 @@ namespace JSONExport
 	private:
         COLLADA2JSONContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
-        UniqueIDToMesh _uniqueIDToMesh;
+        UniqueIDToMeshes _uniqueIDToMeshes;
         UniqueIDToEffect _uniqueIDToEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;

@@ -440,9 +440,7 @@ namespace JSONExport
         shared_ptr <JSONMesh> targetMesh;
         //For each sub mesh being built, maintain 2 maps,
         //with key:indice value: remapped indice
-        //with key:remapped indice value:indice
         IndicesMap indexToRemappedIndex;
-        IndicesMap remappedIndexToIndex;
     } ;
 
     SubMeshContext* __CreateSubMeshContext()
@@ -458,24 +456,13 @@ namespace JSONExport
     {
         for (unsigned int i = 0 ; i < count ; i++) {
             unsigned int index = indices[i];
-            bool shouldRemap = false;
             
-            //avoid divide by 0 that occurs when calling .count(index) 
-            size_t size = subMesh->indexToRemappedIndex.size();
-            if (size == 0) {
-                shouldRemap = true;
-            } else {
-                shouldRemap = subMesh->indexToRemappedIndex.count(index) == 0;
-            }
-            
+            bool shouldRemap = subMesh->indexToRemappedIndex.count(index) == 0;
             if (shouldRemap) {
                 unsigned int remappedIndex = subMesh->indexToRemappedIndex.size();
                 
-                IndicesMap indexToRemappedIndex;
-
                 subMesh->indexToRemappedIndex[index] = remappedIndex;
-                subMesh->remappedIndexToIndex[remappedIndex] = index;
-            }
+            } 
         }
     }
     
@@ -525,7 +512,7 @@ namespace JSONExport
                 context[1] = subMesh;
                 selectedAccessor->apply(__RemapAccessor, (void*)context);
                                         
-                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), targetBufferPtr, vertexAttributeCount, true));
+                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), targetBufferPtr, selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount, true));
                 shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
                 remappedAccessor->setBuffer(remappedBuffer);
                 remappedAccessor->setCount(vertexAttributeCount);
@@ -536,7 +523,7 @@ namespace JSONExport
     }
     
     //ON-GOING work
-    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, std::vector <shared_ptr <JSONMesh> > &meshes)
+    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
     {
         bool splitNeeded = false;
         
@@ -557,27 +544,41 @@ namespace JSONExport
         SubMeshContext *subMesh = NULL;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
+        bool primitiveCompleted = false;
         
         int *allNextPrimitiveIndices = (int*)calloc(primitives.size(), sizeof(int));
-                                                                      
+        unsigned int meshIndex = 0;
         for (int i = 0 ; i < primitives.size() ; i++) {
+            if (allNextPrimitiveIndices[i] == -1)
+                continue;
+            
             if (subMesh == 0) {
                 subMesh = __CreateSubMeshContext();
                 meshes.push_back(subMesh->targetMesh);
+                std::string meshID = "";
+                std::string meshName = "";
+                
+                meshID += sourceMesh->getID();
+                meshName += sourceMesh->getName();
+                if (meshIndex) {
+                    meshID += "-"+ JSONUtils::toString(meshIndex);
+                    meshName += "-"+ JSONUtils::toString(meshIndex);
+                }
+                subMesh->targetMesh->setID(meshID);
+                subMesh->targetMesh->setName(meshName);
+                
                 stillHavePrimitivesElementsToBeProcessed = false;
+                meshIndex++;
             }
             
             shared_ptr <JSONPrimitive> targetPrimitive;
             //when we are done with a primitive we mark its nextIndice with a -1
-            if (allNextPrimitiveIndices[i] != -1) {
-                targetPrimitive = shared_ptr <JSONPrimitive> (new JSONPrimitive());
-            } else {
-                continue;
-            }
 
-            unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
-
+            targetPrimitive = shared_ptr <JSONPrimitive> (new JSONPrimitive((*primitives[i])));
             
+            unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
+            
+            unsigned int offsetIndex = nextPrimitiveIndex;
             
             shared_ptr<JSONPrimitive> &primitive = primitives[i];
             shared_ptr<JSONIndices> indices = primitive->getIndices();
@@ -616,24 +617,32 @@ namespace JSONExport
                     size_t currentSize = subMesh->indexToRemappedIndex.size();
                     if ((currentSize + indicesPerElementCount) < maxiumIndicesCount) {
                         __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+
                         //build the indices for the primitive to be added to the subMesh
-                       memcpy(targetIndicesPtr + targetIndicesCount, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+                        targetIndicesPtr[targetIndicesCount] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[0]];
+                        targetIndicesPtr[targetIndicesCount + 1] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[1]];
+                        targetIndicesPtr[targetIndicesCount + 2] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[2]];
+                        
                         targetIndicesCount += indicesPerElementCount;
                     
                         nextPrimitiveIndex++;
                     } else {
-                        allNextPrimitiveIndices[i] = -1; //we are done with this primitive, for that mesh
-
+                        allNextPrimitiveIndices[i] = -1;
+                        primitiveCompleted = true;
                         break;
                     }
                 }
             }
             
+            allNextPrimitiveIndices[i] = nextPrimitiveIndex;
+
             if (targetIndicesCount > 0) {
                 //FIXME: here targetIndices takes too much memory
                 //To avoid this we would need to make a smaller copy.
                 //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
                 shared_ptr <JSONBuffer> targetBuffer(new JSONBuffer(targetIndicesPtr, targetIndicesCount * sizeof(unsigned int), true));
+                shared_ptr <JSONIndices> indices(new JSONIndices(targetBuffer, targetIndicesCount, VERTEX, 0));
+                targetPrimitive->setIndices(indices);
                 
                 subMesh->targetMesh->appendPrimitive(targetPrimitive);
             } else {
@@ -641,15 +650,12 @@ namespace JSONExport
                     free(targetIndicesPtr);
             }
             
-            allNextPrimitiveIndices[i] = nextPrimitiveIndex;
-            
             if (j < primitiveCount)
                 stillHavePrimitivesElementsToBeProcessed = true;
             
             //did we process the last primitive ?
-            if (((i + 1) == primitives.size())) {
+            if (primitiveCompleted || (((i + 1) == primitives.size()))) {
                 __RemapSubMesh(subMesh, sourceMesh);
-                
                 if (stillHavePrimitivesElementsToBeProcessed) {
                     //loop again and build new mesh
                     i = -1;

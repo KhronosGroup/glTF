@@ -126,7 +126,6 @@ namespace JSONExport
         this->_name = name;
     }
     
-    
     PrimitiveVector const JSONMesh::getPrimitives()
     {
         return this->_primitives;

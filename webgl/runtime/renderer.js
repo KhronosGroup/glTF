@@ -440,10 +440,10 @@ var global = window;
                 var renderVertices = false;
                 //var worldMatrix = primitiveDescription.worldViewMatrix;
                 //var projectionMatrix = this.projectionMatrix;
-                var primitive = primitiveDescription.primitive;
+                  var primitive = primitiveDescription.primitive;
                 var newMaxEnabledArray = -1;
                 var gl = this.webGLContext;
-                var program =  renderVertices ? this.debugProgram : this.bindedProgram;
+                var program =  this.bindedProgram;
                 var pass = primitive.material.technique.rootPass;
                 var i;
                 var currentTexture = 0;
@@ -521,7 +521,7 @@ var global = window;
                             gl.enableVertexAttribArray(attributeLocation);
                             //} 
                             gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
-                            if ( renderVertices && (vertexAttribute.semantic == "VERTEX")) {
+                            if ( renderVertices && (semantic == "VERTEX")) {
                                 gl.drawArrays(gl.POINTS, 0, accessor.count);
                             }
                         }

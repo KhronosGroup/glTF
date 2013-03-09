@@ -40,7 +40,10 @@ namespace JSONExport
     // this constructor is private and typically won't be called
     JSONIndices::JSONIndices() {}
     
-    JSONIndices::JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet):
+    JSONIndices::JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer,
+                             size_t count,
+                             JSONExport::Semantic semantic,
+                             unsigned int indexOfSet):
     _count(count),
     _byteOffset(0),
     _semantic(semantic),

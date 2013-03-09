@@ -51,6 +51,7 @@ namespace JSONExport
     {
     public:
         JSONPrimitive();
+        JSONPrimitive(const JSONPrimitive& primitive);
         virtual ~JSONPrimitive();
         
         shared_ptr <JSONExport::JSONIndices> getUniqueIndices();
