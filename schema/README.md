@@ -786,7 +786,7 @@ General and Tangent Space
 
 | Semantic Name | Typical datatypes | Description |
 |:-----------|:-----------|:------------|
-| `POSITION` | `vec3` | Geometric coordinate vector. |
+| `POSITION` | `vec2` or `vec3` | Geometric coordinate vector. |
 | `NORMAL` | `vec3` | Normal vector. |
 | `BINORMAL` | `vec3` | Geometric binormal (bitangent) vector. |
 | `TANGENT` | `vec3` | Geometric tangent vector. |
