@@ -778,7 +778,8 @@ _TODO_
 
 ### Details
 
-_TODO_
+Associates a `semantic` and a `set` index to an accessor.
+This association is used when a `program` matching the `set` and `semantic` from `attributes` entries with the ones from the `primitive` to be rendered.
 
 #### Semantics
 
