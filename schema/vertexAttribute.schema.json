@@ -8,10 +8,16 @@
             "type" : "string",
             "description" : "TODO",
             "required" : true        
+        },
+        "set": {
+            "type" : "number",
+            "description" : "Index of the set to be used for the associated semantic.",
+            "required" : false
         },    
         "semantic" : {
             "type" : "string",
-            "description" : "Semantic meaning of this attribute."
+            "description" : "Semantic meaning of this attribute.",
+            "required" : true
         },
         "extra" : {
             "type" : "any",
