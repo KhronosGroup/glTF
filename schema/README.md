@@ -779,7 +779,7 @@ _TODO_
 ### Details
 
 Associates a `semantic` and a `set` index to an accessor.
-This association is used when a `program` matching the `set` and `semantic` from `attributes` entries with the ones from the `primitive` to be rendered.
+This association is used to match `attributes` in `program` with the ones from the `primitive` to be rendered.
 
 #### Semantics
 
