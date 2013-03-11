@@ -220,9 +220,9 @@ namespace JSONExport
         return (unsigned int)setCount;
     }
     
-    static void __AppendIndices(shared_ptr <JSONExport::JSONPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <JSONExport::JSONIndices> &indices)
+    static void __AppendIndices(shared_ptr <JSONExport::JSONPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <JSONExport::JSONIndices> &indices, JSONExport::Semantic semantic, unsigned int indexOfSet)
     {
-        primitive->appendPrimitiveIndicesInfos(shared_ptr <JSONExport::JSONPrimitiveIndicesInfos>( new JSONExport::JSONPrimitiveIndicesInfos(indices->getSemantic(),indices->getIndexOfSet())));
+        primitive->appendVertexAttribute(shared_ptr <JSONExport::JSONVertexAttribute>( new JSONExport::JSONVertexAttribute(semantic,indexOfSet)));
         primitiveIndicesVector.push_back(indices);
     }
     
@@ -302,12 +302,9 @@ namespace JSONExport
         
         shared_ptr <JSONExport::JSONBuffer> positionBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
         
-        shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,
-                                                                                        count,
-                                                                                         JSONExport::VERTEX,
-                                                                                         0));
+        shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,count));
         
-        __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices);
+        __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, VERTEX, 0);
         
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
             indices = openCOLLADAMeshPrimitive->getNormalIndices().getData();
@@ -318,10 +315,8 @@ namespace JSONExport
             
             shared_ptr <JSONExport::JSONBuffer> normalBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
             shared_ptr <JSONExport::JSONIndices> normalIndices(new JSONExport::JSONIndices(normalBuffer,
-                                                                                           count,
-                                                                                           JSONExport::NORMAL,
-                                                                                           0));
-            __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices);
+                                                                                           count));
+            __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices, NORMAL, 0);
         }
         
         if (openCOLLADAMeshPrimitive->hasColorIndices()) {
@@ -340,10 +335,8 @@ namespace JSONExport
                 shared_ptr <JSONExport::JSONBuffer> colorBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
                 
                 shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
-                                                                                              count,
-                                                                                              JSONExport::COLOR,
-                                                                                              (unsigned int)indexList->getSetIndex()));
-                __AppendIndices(cvtPrimitive, primitiveIndicesVector, colorIndices);
+                                                                                              count));
+                __AppendIndices(cvtPrimitive, primitiveIndicesVector, colorIndices, COLOR, indexList->getSetIndex());
             }
         }
         
@@ -366,12 +359,9 @@ namespace JSONExport
                 //for now forced to 0, to be fixed for multi texturing.
                 unsigned int idx = 0; //(unsigned int)indexList->getSetIndex();                
                 
-                shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(uvBuffer,
-                                                                                           count,
-                                                                                           JSONExport::TEXCOORD,
-                                                                                           idx));
+                shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(uvBuffer, count));
                         
-                __AppendIndices(cvtPrimitive, primitiveIndicesVector, uvIndices);
+                __AppendIndices(cvtPrimitive, primitiveIndicesVector, uvIndices, TEXCOORD, idx);
             }
         }
         
@@ -415,7 +405,7 @@ namespace JSONExport
         size_t primitiveCount = primitives.getCount();
         
         std::vector< shared_ptr<IndicesVector> > allPrimitiveIndicesVectors;
-        
+
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             shared_ptr <JSONExport::IndicesVector> primitiveIndicesVector(new JSONExport::IndicesVector());
@@ -429,13 +419,14 @@ namespace JSONExport
                 continue;
             }
             
+            VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
             primitiveIndicesVector = allPrimitiveIndicesVectors[i];
             
             // once we got a primitive, keep track of its accessors
             std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
                 shared_ptr<JSONExport::JSONIndices> indices = allIndices[k];
-                JSONExport::Semantic semantic = indices->getSemantic();
+                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
                 JSONExport::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
                     
                 switch (semantic) {
@@ -854,7 +845,7 @@ namespace JSONExport
         rootObject->setValue("children", childrenArray);
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
-            //FIXME: &this->_sceneFlatteningInfo to be readded but with a flag to check if flattened is enabled
+            //FIXME: &this->_sceneFlatteningInfo
             this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, NULL);
         }
         

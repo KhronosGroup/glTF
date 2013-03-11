@@ -29,10 +29,10 @@
 
 namespace JSONExport 
 {
-    class JSONPrimitiveIndicesInfos
+    class JSONVertexAttribute
     {
     public:
-        JSONPrimitiveIndicesInfos(JSONExport::Semantic semantic, unsigned int indexOfSet):
+        JSONVertexAttribute(JSONExport::Semantic semantic, unsigned int indexOfSet):
         _semantic(semantic),
         _indexOfSet(indexOfSet) {
         }
@@ -71,8 +71,8 @@ namespace JSONExport
         unsigned int getIndexOfSetAtIndex(unsigned int index);
         unsigned int getIndicesInfosCount();
         
-        PrimitiveIndicesInfosVector getPrimitiveIndicesInfos();
-        void appendPrimitiveIndicesInfos(shared_ptr <JSONPrimitiveIndicesInfos> primitiveIndicesInfos);
+        VertexAttributeVector getVertexAttributes();
+        void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);
         
         shared_ptr <JSONExport::JSONIndices>  getIndices();
         void setIndices(shared_ptr <JSONExport::JSONIndices> indices);
@@ -82,7 +82,7 @@ namespace JSONExport
         std::string _materialID;
         unsigned int _materialObjectID;
         shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
-        PrimitiveIndicesInfosVector _allIndicesInfos;
+        VertexAttributeVector _allVertexAttributes;
     };
 
 }

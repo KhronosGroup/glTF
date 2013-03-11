@@ -39,13 +39,13 @@ namespace JSONExport
     class JSONPrimitive;
     class JSONAccessor;
     class JSONMesh;
-    class JSONPrimitiveIndicesInfos;
+    class JSONVertexAttribute;
     //-- Args & Options
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::vector <shared_ptr<JSONExport::JSONIndices> > IndicesVector;
     typedef std::vector <shared_ptr<JSONExport::JSONPrimitive> > PrimitiveVector;
     typedef std::vector <shared_ptr<JSONExport::JSONAccessor> > AccessorVector;
-    typedef std::vector <shared_ptr<JSONExport::JSONPrimitiveIndicesInfos> > PrimitiveIndicesInfosVector;
+    typedef std::vector <shared_ptr<JSONExport::JSONVertexAttribute> > VertexAttributeVector;
     typedef std::vector <shared_ptr<JSONExport::JSONMesh> > MeshVector;
     typedef struct
     {

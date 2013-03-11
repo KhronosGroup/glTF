@@ -282,7 +282,7 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
         shared_ptr <JSONExport::JSONBuffer> indicesBuffer(new JSONExport::JSONBuffer(uniqueIndexes, vertexAttributeCount * sizeof(unsigned int), true));
         
-        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, vertexAttributeCount, JSONExport::VERTEX, 0));
+        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, vertexAttributeCount));
         
         primitive->setIndices(indices);
         
@@ -295,9 +295,6 @@ namespace JSONExport
         AccessorVector originalAccessors;
         AccessorVector remappedAccessors;
         shared_ptr <JSONMesh> targetMesh(new JSONMesh(*sourceMesh));
-        
-        //targetMesh->setID(sourceMesh->getID());
-        //targetMesh->setName(sourceMesh->getName());
         
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
         PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
@@ -345,9 +342,11 @@ namespace JSONExport
             IndicesVector *allIndices = allIndicesSharedPtr.get();
             unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices->size());
             
+            
+            VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
-                JSONExport::Semantic semantic = (*allIndices)[k]->getSemantic();
-                unsigned int indexSet = (*allIndices)[k]->getIndexOfSet();
+                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
+                unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
@@ -407,10 +406,11 @@ namespace JSONExport
             shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
             IndicesVector *allIndices = allIndicesSharedPtr.get();
             unsigned int* indicesInRemapping = (unsigned int*)calloc(sizeof(unsigned int) * (*allIndices).size(), 1);
+            VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
             
             for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
-                JSONExport::Semantic semantic = (*allIndices)[k]->getSemantic();
-                unsigned int indexSet = (*allIndices)[k]->getIndexOfSet();
+                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
+                unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
@@ -522,7 +522,6 @@ namespace JSONExport
         }
     }
     
-    //ON-GOING work
     bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
     {
         bool splitNeeded = false;
@@ -577,8 +576,6 @@ namespace JSONExport
             targetPrimitive = shared_ptr <JSONPrimitive> (new JSONPrimitive((*primitives[i])));
             
             unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
-            
-            unsigned int offsetIndex = nextPrimitiveIndex;
             
             shared_ptr<JSONPrimitive> &primitive = primitives[i];
             shared_ptr<JSONIndices> indices = primitive->getIndices();
@@ -641,7 +638,7 @@ namespace JSONExport
                 //To avoid this we would need to make a smaller copy.
                 //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
                 shared_ptr <JSONBuffer> targetBuffer(new JSONBuffer(targetIndicesPtr, targetIndicesCount * sizeof(unsigned int), true));
-                shared_ptr <JSONIndices> indices(new JSONIndices(targetBuffer, targetIndicesCount, VERTEX, 0));
+                shared_ptr <JSONIndices> indices(new JSONIndices(targetBuffer, targetIndicesCount));
                 targetPrimitive->setIndices(indices);
                 
                 subMesh->targetMesh->appendPrimitive(targetPrimitive);

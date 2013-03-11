@@ -29,17 +29,16 @@
 
 namespace JSONExport 
 {
+    //we should specify in indices the type. SHORT or BYTE
     class JSONIndices {
     private:
         JSONIndices();
         void _indicesCommonInit();
     public:
-        JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count, JSONExport::Semantic semantic, unsigned int indexOfSet);         
+        JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count);         
         virtual ~JSONIndices();
         
         size_t const getCount();
-        JSONExport::Semantic const getSemantic();
-        unsigned int const getIndexOfSet();
 
         shared_ptr <JSONBuffer> const getBuffer();
         const void setBuffer(shared_ptr <JSONBuffer>);
@@ -49,11 +48,8 @@ namespace JSONExport
     private:
         size_t _count;
         size_t _byteOffset;
-        JSONExport::Semantic _semantic;
-        unsigned int _indexOfSet;
         shared_ptr <JSONExport::JSONBuffer> _buffer;
     };
-
 }
 
 

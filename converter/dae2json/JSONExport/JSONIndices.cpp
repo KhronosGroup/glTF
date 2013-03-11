@@ -41,13 +41,9 @@ namespace JSONExport
     JSONIndices::JSONIndices() {}
     
     JSONIndices::JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer,
-                             size_t count,
-                             JSONExport::Semantic semantic,
-                             unsigned int indexOfSet):
+                             size_t count):
     _count(count),
     _byteOffset(0),
-    _semantic(semantic),
-    _indexOfSet(indexOfSet),
     _buffer(buffer)
     {
         this->_indicesCommonInit();
@@ -61,17 +57,7 @@ namespace JSONExport
     {
         return this->_count;
     }
-    
-    JSONExport::Semantic const JSONIndices::getSemantic()
-    {
-        return this->_semantic;
-    }
-    
-    unsigned int const JSONIndices::getIndexOfSet()
-    {
-        return this->_indexOfSet;
-    }
-            
+                
     shared_ptr <JSONExport::JSONBuffer>  const JSONIndices::getBuffer()
     {
         return this->_buffer;

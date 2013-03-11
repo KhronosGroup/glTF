@@ -42,7 +42,7 @@ namespace JSONExport
     
     JSONPrimitive::JSONPrimitive(const JSONPrimitive &primitive)
     {
-        this->_allIndicesInfos = primitive._allIndicesInfos;
+        this->_allVertexAttributes = primitive._allVertexAttributes;
         this->_type = primitive._type;
         this->_materialID = primitive._materialID;
         this->_materialObjectID = primitive._materialObjectID;
@@ -51,27 +51,27 @@ namespace JSONExport
 
     JSONExport::Semantic JSONPrimitive::getSemanticAtIndex(unsigned int index)
     {
-        return this->_allIndicesInfos[index]->getSemantic();
+        return this->_allVertexAttributes[index]->getSemantic();
     }
     
     unsigned int JSONPrimitive::getIndexOfSetAtIndex(unsigned int index)
     {
-        return this->_allIndicesInfos[index]->getIndexOfSet();
+        return this->_allVertexAttributes[index]->getIndexOfSet();
     }
 
     unsigned int JSONPrimitive::getIndicesInfosCount()
     {
-        return this->_allIndicesInfos.size();
+        return this->_allVertexAttributes.size();
     }
     
-    PrimitiveIndicesInfosVector JSONPrimitive::getPrimitiveIndicesInfos()
+    VertexAttributeVector JSONPrimitive::getVertexAttributes()
     {
-        return this->_allIndicesInfos;
+        return this->_allVertexAttributes;
     }
     
-    void JSONPrimitive::appendPrimitiveIndicesInfos(shared_ptr <JSONPrimitiveIndicesInfos> primitiveIndicesInfos)
+    void JSONPrimitive::appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute)
     {
-        this->_allIndicesInfos.push_back(primitiveIndicesInfos);
+        this->_allVertexAttributes.push_back(VertexAttribute);
     }    
     
     shared_ptr <JSONExport::JSONIndices> JSONPrimitive::getUniqueIndices()
