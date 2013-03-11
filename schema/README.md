@@ -390,7 +390,7 @@ For compatibility with modern web browsers, the following image formats are supp
 
 ### Details
 
-* Since `indices` is a required property of [`primitive`](#primitive), indices are always used to describe geometry, which implies than [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.
+* Since `indices` is a required property of [`primitive`](#primitive), indices are always used to describe geometry, which implies that [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.
 
 ### Related GL Functions
 
