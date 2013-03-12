@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "bufferView",
+    "type" : "object",
+    "description" : "Represents a view of a buffer for indexing and manipulation",
+    "properties" : {
+        "buffer" : {
+            "type" : "string",
+            "description" : "The name of the buffer referenced by this accessor.",
+            "required" : true
+        },
+        "byteOffset" : {
+            "type" : "number",
+            "description" : "The offset into the buffer in bytes.",
+            "minimum" : 0,
+            "required" : true
+        },
+        "byteLength" : {
+            "type" : "number",
+            "description" : "The length of the buffer view in bytes",
+            "minimum" : 0,
+            "required" : true
+        },
+        "target" : {
+            "type" : "string",
+            "description" : "Required target type for bindBuffer, must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

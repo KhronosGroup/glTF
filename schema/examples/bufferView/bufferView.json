@@ -1,6 +1,8 @@
 {
-    "path" : "vertices.bin",
+    "buffer" : "sharedBufferToHoldIndices",
+    "byteOffset": 20000,
     "byteLength": 1024,
+    "target": "ELEMENT_ARRAY_BUFFER",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }    

@@ -4,20 +4,20 @@
     "type" : "object",
     "description" : "drawElements()",
     "properties" : {
-        "buffer" : {
+        "bufferView" : {
             "type" : "string",
-            "description" : "The name of the buffer to reference for index data.",
+            "description" : "The name of the bufferView to reference for index data.",
             "required" : true
         },
         "byteOffset" : {
             "type" : "number",
-            "description" : "The offset into the buffer in bytes.  Similar to drawElements() indices (ES) / offset (WebGL) parameter.",
+            "description" : "The offset relative to the bufferView in bytes. Similar to drawElements indices (ES) / offset (WebGL) parameter.",
             "minimum" : 0,
             "required" : true
         },
         "count" : {
             "type" : "number",
-            "description" : "The number of indices referenced, not to be confused with the number of bytes.  The drawElements() count parameter.",
+            "description" : "The number of indices referenced, not to be confused with the number of bytes.  The drawElements count parameter.",
             "minimum" : 0,
             "required" : true
         },

@@ -15,10 +15,6 @@
             "description" : "The length of the buffer in bytes.",
             "minimum" : 0,
             "required" : true
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The externally-referenceable globally-unique name of this node."
         },        
         "extra" : {
             "type" : "any",
