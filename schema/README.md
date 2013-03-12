@@ -265,7 +265,6 @@ _TODO_
 <a name="buffer">
 ## `buffer`
 
-* Fabrice: under discussions
 * Schema: [buffer.schema.json](buffer.schema.json)
 * Examples:
    * [buffers.json](examples/glTF/buffers.json) - bare glTF model with a buffer.
@@ -276,6 +275,10 @@ _TODO_
 Instead of referencing an external binary file, the URL may be a base64 [data URI](https://developer.mozilla.org/en/data_URIs) to facilitate storing all model assets in a single .json for easy deployment, drag and drop, etc.  This can be negotiated via a REST API.
 
 _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#data:-urls-and-http), they do not work with `XMLHttpRequest` in Chrome. We need to get this [bug](http://code.google.com/p/chromium/issues/detail?id=46806) fixed._
+
+### Related Typed Array Functions
+
+* [`ArrayBuffer`](http://www.khronos.org/registry/typedarray/specs/latest/#5)
 
 ### Related GL Functions
 
@@ -288,13 +291,39 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 ### _Open Questions_
 
 * _Schema_
+   * Why does current version include `type`: "ArrayBuffer"`? -> Fabrice:To refer to Typed Array SPEC. Should it be default ?
+   * Separate buffers for indices and vertices since WebGL treats them separately?
+      * Using now bufferViews with an extra `target` property. 
+* _COLLADA2JSON_
+   * Convert `bool_array` to `0.0` or `1.0`?
+   * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
+   
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="bufferView">
+## `bufferView`
+
+* Schema: [bufferView.schema.json](bufferView.schema.json)
+* Examples:
+   * [buffers.json](examples/glTF/buffers.json) - bare glTF model with a bufferView.
+   * [bufferView.json](examples/bufferView/bufferView.json) - every property with example values.
+
+### Details
+
+### Related Typed Array Functions
+
+* [`ArrayBufferView`](http://www.khronos.org/registry/typedarray/specs/latest/#6)
+
+### _Open Questions_
+
+* _Schema_
    * Why does current version include `type`: "ArrayBuffer"`?
    * Separate buffers for indices and vertices since WebGL treats them separately?
       * Fabrice: at the buffer level, both are handled in ArrayBuffer. This separation would be redundant as the "views" in the buffers are defined by accessors and indices. This is being discussed. 
 * _COLLADA2JSON_
    * Convert `bool_array` to `0.0` or `1.0`?
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
-   
+
 <!-- ----------------------------------------------------------------------- -->
 <a name="camera">
 ## `camera`
