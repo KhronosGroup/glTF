@@ -34,6 +34,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#asset">`asset`</a>
    * <a href="#attribute">`attribute`</a>
    * <a href="#buffer">`buffer`</a>
+   * <a href="#bufferView">`bufferView`</a>
    * <a href="#camera">`camera`</a>
    * <a href="#geographicLocation">`geographicLocation`</a>
    * <a href="#image">`image`</a>
@@ -313,16 +314,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 ### Related Typed Array Functions
 
 * [`ArrayBufferView`](http://www.khronos.org/registry/typedarray/specs/latest/#6)
-
-### _Open Questions_
-
-* _Schema_
-   * Why does current version include `type`: "ArrayBuffer"`?
-   * Separate buffers for indices and vertices since WebGL treats them separately?
-      * Fabrice: at the buffer level, both are handled in ArrayBuffer. This separation would be redundant as the "views" in the buffers are defined by accessors and indices. This is being discussed. 
-* _COLLADA2JSON_
-   * Convert `bool_array` to `0.0` or `1.0`?
-   * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="camera">
