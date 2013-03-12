@@ -685,8 +685,8 @@ Also see <a href="#program">`program`</a>.
    * All properties are optional and default to values from the [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/).
 * Examples:
    * [states.json](examples/states/states.json) - every state with its default value.
-   * [closed_opaque_object.json](examples/states/closed_opaque_object.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
-   * [depth_test.json](examples/states/depth_test.json) - state with depth testing enabled.
+   * [closedOpaqueObject.json](examples/states/closedOpaqueObject.json) - typical state for rendering a closed, opaque object: depth testing and backface culling.
+   * [depthTest.json](examples/states/depthTest.json) - state with depth testing enabled.
    * [translucency.json](examples/states/translucency.json) - typical state for rendering a translucency object with alpha blending.
 
 ### Details
