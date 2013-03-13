@@ -52,6 +52,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
+* <a href="#about_shaders">Note about shaders</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
@@ -839,6 +840,61 @@ None.
 * _COLLADA2JSON_
    * _Rename `VERTEX` semantic to `POSITION`.  Both COLLADA `VERTEX` and `POSITION` map to `POSITION`?_
    * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="about_shaders">
+# Note about About shaders 
+
+Within glTF assets, shaders are always provided.
+This said, shader implementation is up to the glTF adopter.
+Consequently, none of the techniques, semantic (*), attributes are strictly imposed by glTF.
+
+However, for heavier clients and especially the ones relying on deferred lighting, provided shaders might not be always usable.
+By supporting a given set of parameters and semantics, a client can re-generate the shaders to fit a specific architecture.
+
+The following parameters are typically used by the common lighting models, like Lambert, Phong and Blinn-Phong.
+By gathering the set of parameter names going through uniforms and attributes of a program.
+An engine  should be able to re-generate a lighting model shader.
+Additionally, to get more guidance, the following technique names can be provided: 
+
+| name |
+|:-----------|
+| `Lambert` | 
+| `Phong` |
+| `Blinn-Phong` |
+
+Since the same lighting model may still lead to different shaders. names can be especially handy when shader re-generation is needed.
+For instance, the diffuse component of the lighting might be a color or a texture,  then, resulting shaders and techniqueID might differ.
+
+| parameter | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `ambientColor` | `vec3`  | ambient color |
+| `ambientTexture ` | `SAMPLER_2D` | ambient texture. |
+| `diffuseColor` | `vec3`  | diffuse color |
+| `diffuseTexture` | `SAMPLER_2D` | diffuse texture. |
+| `emissionColor` | `vec3`  | emission color |
+| `emissionTexture` | `SAMPLER_2D` | emission texture. |
+| `specularColor` | `vec3`  | specular color |
+| `specularTexture ` | `SAMPLER_2D` | specular texture. |
+| `transparentColor` | `vec3`  | transparent color |
+| `transparentTexture ` | `SAMPLER_2D` | transparent texture. |
+| `shininess ` | `float` | shininess. |
+| `indexOfRefraction ` | `float` |  |
+| `reflectivity ` | `float` |  |
+
+[Open question] Should just put the parameter or both versions with color and texture  ? like just diffuse vs diffuseColor and diffuseTexture.
+Specifying both versionslet people specify a diffuseColor and diffuseTexture… not sure how much useful this is.
+
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `POSITION` | `vec2` or `vec3` | Position vector |
+| `NORMAL` | `vec3` | Normal vector. |
+| `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
+
+example:
+
+(*) POSITION might need specific consideration.
+
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
