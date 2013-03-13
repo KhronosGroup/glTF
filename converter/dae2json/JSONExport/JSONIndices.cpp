@@ -26,7 +26,6 @@
 
 #include "JSONExport.h"
 
-using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
@@ -40,11 +39,11 @@ namespace JSONExport
     // this constructor is private and typically won't be called
     JSONIndices::JSONIndices() {}
     
-    JSONIndices::JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer,
+    JSONIndices::JSONIndices(shared_ptr <JSONBufferView> bufferView,
                              size_t count):
     _count(count),
     _byteOffset(0),
-    _buffer(buffer)
+    _bufferView(bufferView)
     {
         this->_indicesCommonInit();
     }
@@ -58,14 +57,14 @@ namespace JSONExport
         return this->_count;
     }
                 
-    shared_ptr <JSONExport::JSONBuffer>  const JSONIndices::getBuffer()
+    shared_ptr <JSONBufferView>  const JSONIndices::getBufferView()
     {
-        return this->_buffer;
+        return this->_bufferView;
     }
     
-    const void JSONIndices::setBuffer(shared_ptr <JSONBuffer> buffer)
+    const void JSONIndices::setBufferView(shared_ptr <JSONBufferView> bufferView)
     {
-        this->_buffer = buffer;
+        this->_bufferView = bufferView;
     }
 
     void JSONIndices::setByteOffset(size_t byteOffset)

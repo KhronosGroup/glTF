@@ -31,6 +31,7 @@ namespace JSONExport
 {
     shared_ptr <JSONExport::JSONValue> serializeVec3(double x,double y, double z);
     shared_ptr <JSONExport::JSONObject> serializeBuffer(JSONBuffer* buffer, void *context);
+    shared_ptr <JSONExport::JSONObject> serializeBufferView(JSONBufferView* bufferView, void *context);
     shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context);
     shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context);
     shared_ptr <JSONExport::JSONObject> serializeAccessor(JSONAccessor* accessor, void *context);

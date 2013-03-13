@@ -131,14 +131,14 @@ namespace JSONExport
         return this->_primitives;
     }
         
-    bool const JSONMesh::writeAllBuffers(std::ofstream& fileOutputStream) 
+    bool const JSONMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
         typedef map<std::string , shared_ptr<JSONExport::JSONBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
         shared_ptr <AccessorVector> allAccessors = this->accessors();
         
-        shared_ptr <JSONBuffer> dummyBuffer(new JSONBuffer(0,0,false));
+        shared_ptr <JSONBufferView> dummyBuffer(new JSONBufferView());
         
         PrimitiveVector primitives = this->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -147,11 +147,15 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
             
             /*
-             Convert the indices to unsigned short and write the blob 
+                Convert the indices to unsigned short and write the blob 
              */
-            
             unsigned int indicesCount = (unsigned int)uniqueIndices->getCount();
-            unsigned int* uniqueIndicesBuffer = (unsigned int*) static_pointer_cast <JSONBuffer> (uniqueIndices->getBuffer())->getData();
+            
+            shared_ptr <JSONBufferView> indicesBufferView = uniqueIndices->getBufferView();
+            unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
+            uniqueIndicesBufferPtr += indicesBufferView->getByteOffset();
+            
+            unsigned int* uniqueIndicesBuffer = (unsigned int*) uniqueIndicesBufferPtr;
             if (indicesCount <= 0) {
                 // FIXME: report error
             } else {
@@ -161,16 +165,18 @@ namespace JSONExport
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                 }
                     
-                uniqueIndices->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));
-                fileOutputStream.write((const char*)ushortIndices, indicesLength);
+                uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
+                indicesOutputStream.write((const char*)ushortIndices, indicesLength);
                 
                 //now that we wrote to the stream we can release the buffer.
-                uniqueIndices->setBuffer(dummyBuffer);
+                uniqueIndices->setBufferView(dummyBuffer);
                 
                 free(ushortIndices);
             }
         }
         
+        shared_ptr <JSONBuffer> dummyVertexBuffer(new JSONBuffer(0, 0, true));
+
         for (unsigned int j = 0 ; j < allAccessors->size() ; j++) {
             shared_ptr <JSONExport::JSONAccessor> accessor = (*allAccessors)[j];
             shared_ptr <JSONExport::JSONBuffer> buffer = accessor->getBuffer();
@@ -185,11 +191,11 @@ namespace JSONExport
                 // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 accessor->computeMinMax();
                 
-                accessor->setByteOffset(static_cast<size_t>(fileOutputStream.tellp()));
-                fileOutputStream.write((const char*)(static_pointer_cast <JSONBuffer> (buffer)->getData()), buffer->getByteSize());
+                accessor->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
+                verticesOutputStream.write((const char*)(static_pointer_cast <JSONBuffer> (buffer)->getData()), buffer->getByteLength());
 
                 //now that we wrote to the stream we can release the buffer.
-                accessor->setBuffer(dummyBuffer);
+                accessor->setBuffer(dummyVertexBuffer);
                 
                 IDToBuffer[buffer->getID()] = buffer;
             } 

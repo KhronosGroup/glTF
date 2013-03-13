@@ -137,6 +137,7 @@ var global = window;
             }
         },
 
+        //FIXME:needs to be updated to reflect latest changes
         debugProgram: {
             get: function() {            
                 if (!this._debugProgram) {
@@ -162,7 +163,8 @@ var global = window;
                 return this._debugProgram;
             }
         },
-        
+
+        //FIXME:needs to be updated to reflect latest changes
         lambertProgram: {
             get: function() {            
                 if (!this._lambertProgram) {
@@ -448,7 +450,6 @@ var global = window;
                 var i;
                 var currentTexture = 0;
 
-
                 //----- bind uniforms -----
                 var uniforms = pass.program.description.uniforms;
                 var parameters = primitive.material.parameters;
@@ -519,7 +520,7 @@ var global = window;
                             //FIXME: find root cause why it is needed to disable this optimization as it works well 99% of the time
                             //if (this._lastMaxEnabledArray < attributeLocation) {
                             gl.enableVertexAttribArray(attributeLocation);
-                            //} 
+                            //}
                             gl.vertexAttribPointer(attributeLocation, accessor.elementsPerValue, gl.FLOAT, false, accessor.byteStride, 0);
                             if ( renderVertices && (semantic == "VERTEX")) {
                                 gl.drawArrays(gl.POINTS, 0, accessor.count);

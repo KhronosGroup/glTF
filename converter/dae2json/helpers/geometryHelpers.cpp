@@ -211,7 +211,7 @@ namespace JSONExport
         
         AccessorsBufferInfos *allBufferInfos = createAccessorsBuffersInfos(allOriginalAccessors , allRemappedAccessors, indicesInRemapping, vertexAttributesCount);
         
-        unsigned int* uniqueIndicesBuffer = (unsigned int*) (static_pointer_cast <JSONBuffer> (primitive->getIndices()->getBuffer())->getData());
+        unsigned int* uniqueIndicesBuffer = (unsigned int*)primitive->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
         
         unsigned int *originalCountAndIndexes = primitiveRemapInfos->originalCountAndIndexes();
         
@@ -265,7 +265,8 @@ namespace JSONExport
             remappedIndex[0] = vertexAttributesCount;
             for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];
-                remappedIndex[1 + idx] = ((unsigned int*)(static_pointer_cast <JSONBuffer> (allIndices[i]->getBuffer())->getData()))[k];
+                unsigned int* indicesPtr = (unsigned int*)allIndices[i]->getBufferView()->getBufferDataByApplyingOffset();
+                remappedIndex[1 + idx] = indicesPtr[k];
             }
             
             unsigned int index = remappedMeshIndexesMap[remappedIndex];
@@ -280,9 +281,9 @@ namespace JSONExport
         
         endIndex = currentIndex;
         shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
-        shared_ptr <JSONExport::JSONBuffer> indicesBuffer(new JSONExport::JSONBuffer(uniqueIndexes, vertexAttributeCount * sizeof(unsigned int), true));
+        shared_ptr <JSONExport::JSONBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexAttributeCount * sizeof(unsigned int), true);
         
-        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBuffer, vertexAttributeCount));
+        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBufferView, vertexAttributeCount));
         
         primitive->setIndices(indices);
         
@@ -580,8 +581,8 @@ namespace JSONExport
             shared_ptr<JSONPrimitive> &primitive = primitives[i];
             shared_ptr<JSONIndices> indices = primitive->getIndices();
             
-            unsigned int* indicesPtr = (unsigned int*)( (unsigned char*)indices->getBuffer()->getData() + indices->getByteOffset());
-            unsigned int* targetIndicesPtr = (unsigned int*)malloc(indices->getBuffer()->getByteSize());
+            unsigned int* indicesPtr = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
+            unsigned int* targetIndicesPtr = (unsigned int*)malloc(indices->getBufferView()->getBuffer()->getByteLength());
             
             //sub meshes are built this way [ and it is not optimal yet (*)]:
             //each primitive is iterated through all its triangles/lines/...
@@ -637,8 +638,10 @@ namespace JSONExport
                 //FIXME: here targetIndices takes too much memory
                 //To avoid this we would need to make a smaller copy.
                 //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
-                shared_ptr <JSONBuffer> targetBuffer(new JSONBuffer(targetIndicesPtr, targetIndicesCount * sizeof(unsigned int), true));
-                shared_ptr <JSONIndices> indices(new JSONIndices(targetBuffer, targetIndicesCount));
+                
+                shared_ptr <JSONBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
+                
+                shared_ptr <JSONIndices> indices(new JSONIndices(targetBufferView, targetIndicesCount));
                 targetPrimitive->setIndices(indices);
                 
                 subMesh->targetMesh->appendPrimitive(targetPrimitive);

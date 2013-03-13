@@ -300,7 +300,7 @@ namespace JSONExport
             count = triangulatedIndicesCount;
         }
         
-        shared_ptr <JSONExport::JSONBuffer> positionBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+        shared_ptr <JSONBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
         
         shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,count));
         
@@ -313,7 +313,7 @@ namespace JSONExport
                 count = triangulatedIndicesCount;
             }
             
-            shared_ptr <JSONExport::JSONBuffer> normalBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+            shared_ptr <JSONExport::JSONBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
             shared_ptr <JSONExport::JSONIndices> normalIndices(new JSONExport::JSONIndices(normalBuffer,
                                                                                            count));
             __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices, NORMAL, 0);
@@ -332,7 +332,7 @@ namespace JSONExport
                     count = triangulatedIndicesCount;
                 }
                 
-                shared_ptr <JSONExport::JSONBuffer> colorBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false));
+                shared_ptr <JSONExport::JSONBufferView> colorBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
                 
                 shared_ptr <JSONExport::JSONIndices> colorIndices(new JSONExport::JSONIndices(colorBuffer,
                                                                                               count));
@@ -353,7 +353,7 @@ namespace JSONExport
                     count = triangulatedIndicesCount;
                 }
                 
-                shared_ptr <JSONExport::JSONBuffer> uvBuffer(new JSONExport::JSONBuffer(indices, count * sizeof(unsigned int), shouldTriangulate ? true : false)); 
+                shared_ptr <JSONExport::JSONBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
                 
                 //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
                 //for now forced to 0, to be fixed for multi texturing.
@@ -468,11 +468,12 @@ namespace JSONExport
             accessor->apply(__InvertV, NULL);
         }
         
-         //After this point cvtMesh should be referenced anymore and will be deallocated
-        shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
-        
-        if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes) == false) {
-            meshes.push_back(unifiedMesh);
+        if (cvtMesh->getPrimitives().size() > 0) {
+            //After this point cvtMesh should be referenced anymore and will be deallocated
+            shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
+            if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes) == false) {
+                meshes.push_back(unifiedMesh);
+            }
         }
     }
         
@@ -497,19 +498,25 @@ namespace JSONExport
 	//--------------------------------------------------------------------
 	bool DAE2JSONWriter::write()
 	{
+        /* 
+            We output vertices and indices separatly in 2 different files
+            TODO: make them in a single file again.
+         */
         this->_converterContext.shaderIdToShaderString.clear();
         this->_uniqueIDToMeshes.clear();
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
-        std::string sharedBufferID = inputURI.getPathFileBase() + ".bin";
-        std::string outputFilePath = outputURI.getPathDir() + sharedBufferID;
+        std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
+        std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
+        std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
+        std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
         
-        this->_fileOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);        
-        //this->_fileOutputStream.seekp(-this->_fileOutputStream.tellp());
+        this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         
         this->_converterContext.root = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-        this->_converterContext.root->setString("version", "0.1");
+        this->_converterContext.root->setString("version", "0.2");
         this->_converterContext.root->setValue("nodes", shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject()));
                                 
         COLLADASaxFWL::Loader loader;
@@ -518,7 +525,11 @@ namespace JSONExport
 		if (!root.loadDocument( this->_converterContext.inputFilePath))
 			return false;
         
-        shared_ptr <JSONExport::JSONBuffer> sharedBuffer(new JSONExport::JSONBuffer(sharedBufferID, static_cast<size_t>(this->_fileOutputStream.tellp())));
+        shared_ptr <JSONExport::JSONBuffer> sharedVerticesBuffer(new JSONExport::JSONBuffer(sharedVerticesBufferID, static_cast<size_t>(this->_verticesOutputStream.tellp())));
+        shared_ptr <JSONExport::JSONBuffer> sharedIndicesBuffer(new JSONExport::JSONBuffer(sharedIndicesBufferID, static_cast<size_t>(this->_indicesOutputStream.tellp())));
+        
+        shared_ptr <JSONBufferView> verticesBufferView(new JSONBufferView(sharedVerticesBuffer, 0, sharedVerticesBuffer->getByteLength()));
+        shared_ptr <JSONBufferView> indicesBufferView(new JSONBufferView(sharedIndicesBuffer, 0, sharedIndicesBuffer->getByteLength()));
         
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
 
@@ -535,7 +546,11 @@ namespace JSONExport
             for (size_t j = 0 ; j < meshes->size() ; j++) {
                 shared_ptr<JSONMesh> mesh = (*meshes)[j];
                 if (mesh) {
-                    shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)sharedBuffer.get());
+                    void *buffers[2];
+                    buffers[0] = (void*)sharedVerticesBuffer.get();
+                    buffers[1] = (void*)indicesBufferView.get();
+                    
+                    shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
                     
                     meshesObject->setValue(mesh->getID(), meshObject);
                 }
@@ -543,6 +558,7 @@ namespace JSONExport
         }
         
         // ----
+        
         shared_ptr <JSONExport::JSONObject> materialsObject(new JSONExport::JSONObject());
 
         this->_converterContext.root->setValue("materials", materialsObject);
@@ -560,14 +576,28 @@ namespace JSONExport
 
         // ----
         
-        
-        shared_ptr <JSONExport::JSONObject> buffersObject(new JSONExport::JSONObject());
-        shared_ptr <JSONExport::JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
+        shared_ptr <JSONObject> buffersObject(new JSONObject());
+        shared_ptr <JSONObject> bufferIndicesObject = serializeBuffer(sharedIndicesBuffer.get(), 0);
+        shared_ptr <JSONObject> bufferVerticesObject = serializeBuffer(sharedVerticesBuffer.get(), 0);
 
         this->_converterContext.root->setValue("buffers", buffersObject);
-        buffersObject->setValue(sharedBufferID, bufferObject);
-                
-        //--- 
+        buffersObject->setValue(sharedIndicesBufferID, bufferIndicesObject);
+        buffersObject->setValue(sharedVerticesBufferID, bufferVerticesObject);
+        
+        //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
+        //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
+        shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
+        this->_converterContext.root->setValue("bufferViews", bufferViewsObject);
+        
+        shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
+        shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
+        bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
+        bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
+        bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
+        bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
+        
+        //---
+        
         this->_converterContext.root->write(&this->_writer);
                 
         bool sceneFlatteningEnabled = false;
@@ -576,8 +606,10 @@ namespace JSONExport
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
         }
         
-        this->_fileOutputStream.flush();
-        this->_fileOutputStream.close();
+        this->_verticesOutputStream.flush();
+        this->_verticesOutputStream.close();
+        this->_indicesOutputStream.flush();
+        this->_indicesOutputStream.close();
         
 		return true;
 	}
@@ -886,14 +918,16 @@ namespace JSONExport
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 MeshVectorSharedPtr meshes;
                 
-                if (this->_uniqueIDToMeshes.count(meshID) > 0)
-                    meshes = this->_uniqueIDToMeshes[meshID];
-                else {
+                if (this->_uniqueIDToMeshes.count(meshID) == 0) {
                     meshes =  shared_ptr<MeshVector> (new MeshVector);
+                    
                     ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, (*meshes));
-                    for (size_t i = 0 ; i < meshes->size() ; i++) {
-                        if ((*meshes)[i]->getPrimitives().size() > 0) {
-                            (*meshes)[i]->writeAllBuffers(this->_fileOutputStream);
+                    
+                    if (meshes->size()) {
+                        for (size_t i = 0 ; i < meshes->size() ; i++) {
+                            if ((*meshes)[i]->getPrimitives().size() > 0) {
+                                (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream);
+                            }
                         }
                     }
                     

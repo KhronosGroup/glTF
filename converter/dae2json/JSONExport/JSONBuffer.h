@@ -37,27 +37,55 @@ namespace JSONExport
     class JSONBuffer {
     private:
         JSONBuffer();
-    protected:
     public:
-
-        JSONBuffer(std::string ID, size_t byteSize);
-        JSONBuffer(std::string ID, void *data, size_t size, bool ownData);
-        JSONBuffer(void *data, size_t size, bool ownData);
+        JSONBuffer(std::string ID, size_t byteLength);
+        JSONBuffer(std::string ID, void *data, size_t byteLength, bool ownData);
+        JSONBuffer(void *data, size_t byteLength, bool ownData);
         
         virtual ~JSONBuffer();
         
-        size_t const getByteSize();
+        size_t const getByteLength();
         std::string const getID();
         const void* const getData();
         
-    protected:
+    private:
         std::string  _ID;
-        size_t _byteSize;
+        size_t _byteLength;
         unsigned char* _data;
-        bool    _ownData;
-        
+        bool _ownData;
     };
-}
+    
+    class JSONBufferView {
+    public:
+        JSONBufferView();
+        JSONBufferView(shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength);
+        JSONBufferView(std::string ID, shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength);
+        
+        virtual ~JSONBufferView();
+        
+        void const setByteLength(size_t byteLength);
+        size_t const getByteLength();
+        
+        void const setByteOffset(size_t byteOffset);
+        size_t const getByteOffset();
+        
+        shared_ptr <JSONBuffer> getBuffer();
 
+        std::string const getID();
+    
+        void* getBufferDataByApplyingOffset();
+
+    private:
+        std::string  _ID;
+        size_t _byteLength;
+        size_t _byteOffset;
+        shared_ptr<JSONBuffer> _buffer;
+    };
+    
+    //conveniences functions
+    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData);
+    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData);
+
+}
 
 #endif

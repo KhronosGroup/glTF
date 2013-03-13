@@ -393,7 +393,7 @@ var global = window;
                             this._updateParentWithNode(null);
                         }
                     } else {
-                        debugger;
+                        //FIXME: report error
                     }
                 }
             }
@@ -710,12 +710,14 @@ var global = window;
             value: function(typedArrayDescr, delegate, ctx) {
                 //FIXME: extend testing to UInt8, 32, float and so on ...
                 if (typedArrayDescr.type === "Uint16Array") {
-                    var range = [typedArrayDescr.byteOffset, typedArrayDescr.byteOffset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
-
+                    var bufferView = typedArrayDescr.bufferView;
+                    var buffer = bufferView.buffer;
+                    var offset = typedArrayDescr.byteOffset + bufferView.description.byteOffset;
+                    var range = [offset, offset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
                     this._handleRequest({   "id":typedArrayDescr.id,
                                             "range" : range,
-                                            "type" : typedArrayDescr.buffer.description.type,
-                                            "path" : typedArrayDescr.buffer.description.path,
+                                            "type" : buffer.description.type,
+                                            "path" : buffer.description.path,
                                             "delegate" : delegate,
                                             "ctx" : ctx,
                                             "kind" : "single-part" }, null);

@@ -247,8 +247,10 @@ namespace JSONExport
         MaterialUIDToName _materialUIDToName;
         ImageIdToImageURL _imageIdToImageURL;
         JSONExport::JSONWriter _writer;
-        ofstream _fileOutputStream;
         SceneFlatteningInfo _sceneFlatteningInfo;
+
+        ofstream _verticesOutputStream;
+        ofstream _indicesOutputStream;
 	};
 } 
 

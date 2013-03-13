@@ -60,8 +60,8 @@ namespace JSONExport
         
         PrimitiveVector const getPrimitives();
 
-        bool const writeAllBuffers(std::ofstream& fileOutputStream);
-                
+        bool const writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
+        
     private:
         PrimitiveVector _primitives;
         SemanticToAccessorHashmap _semanticToAccessors;

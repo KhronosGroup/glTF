@@ -35,20 +35,23 @@ namespace JSONExport
         JSONIndices();
         void _indicesCommonInit();
     public:
-        JSONIndices(shared_ptr <JSONExport::JSONBuffer> buffer, size_t count);         
+        JSONIndices(shared_ptr <JSONBufferView> bufferView, size_t count);
+        
         virtual ~JSONIndices();
         
         size_t const getCount();
 
-        shared_ptr <JSONBuffer> const getBuffer();
-        const void setBuffer(shared_ptr <JSONBuffer>);
+        shared_ptr <JSONBufferView> const getBufferView();
+        const void setBufferView(shared_ptr <JSONBufferView>);
+
         void setByteOffset(size_t byteOffset);
         size_t getByteOffset();
-                
+
+
     private:
         size_t _count;
         size_t _byteOffset;
-        shared_ptr <JSONExport::JSONBuffer> _buffer;
+        shared_ptr <JSONBufferView> _bufferView;
     };
 }
 

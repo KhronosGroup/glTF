@@ -96,6 +96,21 @@ var global = window;
             }
         },
 
+        handleBufferView: {
+            value: function(entryID, description, userInfo) {
+
+                var bufferView = Object.create(ResourceDescription).init(entryID, description);
+                bufferView.id = entryID;
+
+                var buffer = this.getEntry(bufferView.description.buffer);
+
+                bufferView.buffer = buffer;
+                this.storeEntry(entryID, bufferView, description);
+
+                return true;
+            }
+        },
+
         handleShader: {
             value: function(entryID, description, userInfo) {
                 var shader = Object.create(ResourceDescription).init(entryID, description);
@@ -281,8 +296,8 @@ var global = window;
                         if (!indicesEntry) {
                             indices = primitiveDescription.indices;
                             indices.id = indicesID;
-                            var bufferEntry = this.getEntry(indices.buffer);
-                            indices.buffer = bufferEntry.entry;
+                            var bufferEntry = this.getEntry(indices.bufferView);
+                            indices.bufferView = bufferEntry.entry;
                             this.storeEntry(indicesID, indices, indices);
                             indicesEntry = this.getEntry(indicesID);
                         }

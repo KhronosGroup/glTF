@@ -39,11 +39,24 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
         
         bufferObject->setString("type", "ArrayBuffer");
-        bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteSize());
+        bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
         bufferObject->setString("path", buffer->getID());
         
         return bufferObject;
     }
+    
+    shared_ptr <JSONExport::JSONObject> serializeBufferView(JSONBufferView* bufferView, void *context)
+    {
+        shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
+        
+        bufferObject->setString("type", "ArrayBufferView");
+        bufferObject->setUnsignedInt32("byteLength", (unsigned int)bufferView->getByteLength());
+        bufferObject->setUnsignedInt32("byteOffset", (unsigned int)bufferView->getByteOffset());
+        bufferObject->setString("buffer", bufferView->getBuffer()->getID());
+        
+        return bufferObject;
+    }
+
     
     shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context)
     {
@@ -59,9 +72,6 @@ namespace JSONExport
     
     shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context)
     {
-        typedef map<std::string , shared_ptr<JSONExport::JSONBuffer> > IDToBufferDef;
-        IDToBufferDef IDToBuffer;
-        
         shared_ptr <JSONExport::JSONObject> meshObject(new JSONExport::JSONObject());
         
         meshObject->setString("name", mesh->getName());
@@ -91,17 +101,6 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONObject> primitiveObject = serializePrimitive(primitive.get(), primitiveContext);
             
             primitivesArray->appendValue(primitiveObject);
-            
-            //FIXME: check to remove that code
-            unsigned int indicesCount = (unsigned int)primitive->getUniqueIndices()->getCount();
-            if (indicesCount <= 0) {
-                // FIXME: report error
-            } else {
-                size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                shared_ptr <JSONExport::JSONBuffer> indiceBuffer(new JSONExport::JSONBuffer(uniqueIndices->getBuffer()->getID(), indicesLength));
-                IDToBuffer[indiceBuffer->getID()] = indiceBuffer;
-            }
-            
         }
         
         vector <JSONExport::Semantic> allSemantics = mesh->allSemantics();
@@ -136,8 +135,9 @@ namespace JSONExport
         accessorObject->setUnsignedInt32("count", (unsigned int)accessor->getCount());
         accessorObject->setString("elementType", JSONUtils::getStringForType(accessor->getElementType()));
         
-        JSONBuffer* buffer = context ? (JSONBuffer*)context : accessor->getBuffer().get();
-        
+        void** buffers = (void**)context;
+        JSONBuffer *buffer = context ? (JSONBuffer*)buffers[0] : accessor->getBuffer().get();
+
         accessorObject->setString("buffer", buffer->getID());
         
         const double* min = accessor->getMin();
@@ -148,7 +148,6 @@ namespace JSONExport
                 minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[i])));
             }
         }
-        
         
         const double* max = accessor->getMax();
         if (max) {
@@ -166,11 +165,12 @@ namespace JSONExport
     shared_ptr <JSONExport::JSONObject> serializeIndices(JSONIndices* indices, void *context)
     {
         shared_ptr <JSONExport::JSONObject> indicesObject(new JSONExport::JSONObject());
+        void** buffers = (void**)context;
         
-        JSONBuffer* buffer = context ? (JSONBuffer*)context : indices->getBuffer().get();
+        JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[1] : indices->getBufferView().get();
         
         indicesObject->setString("type", JSONUtils::getStringForTypedArray(JSONExport::UNSIGNED_SHORT));
-        indicesObject->setString("buffer", buffer->getID());
+        indicesObject->setString("bufferView", bufferView->getID());
         indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
         indicesObject->setUnsignedInt32("length", (unsigned int)indices->getCount());
         
