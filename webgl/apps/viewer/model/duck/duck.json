@@ -1,4 +1,20 @@
 {
+    "bufferViews": {
+        "bufferView.24": {
+            "buffer": "duck.bin",
+            "byteLength": 76768,
+            "byteOffset": 0,
+            "target": "ARRAY_BUFFER",
+            "type": "ArrayBufferView"
+        },
+        "bufferView.25": {
+            "buffer": "duck.bin",
+            "byteLength": 25272,
+            "byteOffset": 76768,
+            "target": "ELEMENT_ARRAY_BUFFER",
+            "type": "ArrayBufferView"
+        }
+    },
     "buffers": {
         "duck.bin": {
             "byteLength": 102040,
@@ -42,9 +58,9 @@
     "meshes": {
         "LOD3spShape-lib": {
             "accessors": {
-                "accessor.10": {
-                    "buffer": "duck.bin",
-                    "byteOffset": 25272,
+                "accessor.18": {
+                    "bufferView": "bufferView.24",
+                    "byteOffset": 0,
                     "byteStride": 12,
                     "count": 2399,
                     "elementType": "Float32",
@@ -60,9 +76,9 @@
                         -61.3282
                     ]
                 },
-                "accessor.11": {
-                    "buffer": "duck.bin",
-                    "byteOffset": 54060,
+                "accessor.20": {
+                    "bufferView": "bufferView.24",
+                    "byteOffset": 28788,
                     "byteStride": 12,
                     "count": 2399,
                     "elementType": "Float32",
@@ -78,9 +94,9 @@
                         -0.999832
                     ]
                 },
-                "accessor.12": {
-                    "buffer": "duck.bin",
-                    "byteOffset": 82848,
+                "accessor.22": {
+                    "bufferView": "bufferView.24",
+                    "byteOffset": 57576,
                     "byteStride": 8,
                     "count": 2399,
                     "elementType": "Float32",
@@ -99,7 +115,7 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "duck.bin",
+                        "bufferView": "bufferView.25",
                         "byteOffset": 0,
                         "length": 12636,
                         "type": "Uint16Array"
@@ -108,15 +124,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.10",
+                            "accessor": "accessor.18",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.11",
+                            "accessor": "accessor.20",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.12",
+                            "accessor": "accessor.22",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -273,5 +289,5 @@
             }
         }
     },
-    "version": "0.1"
+    "version": "0.2"
 }

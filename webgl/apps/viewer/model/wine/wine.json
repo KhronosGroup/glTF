@@ -1,4 +1,20 @@
 {
+    "bufferViews": {
+        "bufferView.337": {
+            "buffer": "wine.bin",
+            "byteLength": 284064,
+            "byteOffset": 0,
+            "target": "ARRAY_BUFFER",
+            "type": "ArrayBufferView"
+        },
+        "bufferView.338": {
+            "buffer": "wine.bin",
+            "byteLength": 44940,
+            "byteOffset": 284064,
+            "target": "ELEMENT_ARRAY_BUFFER",
+            "type": "ArrayBufferView"
+        }
+    },
     "buffers": {
         "wine.bin": {
             "byteLength": 329004,
@@ -142,9 +158,9 @@
     "meshes": {
         "geometry16": {
             "accessors": {
-                "accessor.19": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 336,
+                "accessor.24": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 0,
                     "byteStride": 12,
                     "count": 96,
                     "elementType": "Float32",
@@ -160,9 +176,9 @@
                         5.5
                     ]
                 },
-                "accessor.20": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 1488,
+                "accessor.26": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 1152,
                     "byteStride": 12,
                     "count": 96,
                     "elementType": "Float32",
@@ -178,9 +194,9 @@
                         -1
                     ]
                 },
-                "accessor.21": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 2640,
+                "accessor.28": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 2304,
                     "byteStride": 8,
                     "count": 96,
                     "elementType": "Float32",
@@ -199,7 +215,7 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
+                        "bufferView": "bufferView.338",
                         "byteOffset": 0,
                         "length": 168,
                         "type": "Uint16Array"
@@ -208,15 +224,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.19",
+                            "accessor": "accessor.24",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.20",
+                            "accessor": "accessor.26",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.21",
+                            "accessor": "accessor.28",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -225,9 +241,9 @@
         },
         "geometry24": {
             "accessors": {
-                "accessor.29": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 7296,
+                "accessor.43": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 3072,
                     "byteStride": 12,
                     "count": 720,
                     "elementType": "Float32",
@@ -243,9 +259,9 @@
                         0
                     ]
                 },
-                "accessor.30": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 15936,
+                "accessor.45": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 11712,
                     "byteStride": 12,
                     "count": 720,
                     "elementType": "Float32",
@@ -266,8 +282,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 3408,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 336,
                         "length": 1944,
                         "type": "Uint16Array"
                     },
@@ -275,11 +291,11 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.29",
+                            "accessor": "accessor.43",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.30",
+                            "accessor": "accessor.45",
                             "semantic": "NORMAL"
                         }
                     ]
@@ -288,9 +304,9 @@
         },
         "geometry29": {
             "accessors": {
-                "accessor.38": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 28464,
+                "accessor.60": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 20352,
                     "byteStride": 12,
                     "count": 720,
                     "elementType": "Float32",
@@ -306,9 +322,9 @@
                         0
                     ]
                 },
-                "accessor.39": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 37104,
+                "accessor.62": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 28992,
                     "byteStride": 12,
                     "count": 720,
                     "elementType": "Float32",
@@ -329,8 +345,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 24576,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 4224,
                         "length": 1944,
                         "type": "Uint16Array"
                     },
@@ -338,11 +354,11 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.38",
+                            "accessor": "accessor.60",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.39",
+                            "accessor": "accessor.62",
                             "semantic": "NORMAL"
                         }
                     ]
@@ -351,9 +367,9 @@
         },
         "geometry35": {
             "accessors": {
-                "accessor.49": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 45840,
+                "accessor.81": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 37632,
                     "byteStride": 12,
                     "count": 30,
                     "elementType": "Float32",
@@ -369,9 +385,9 @@
                         2.5
                     ]
                 },
-                "accessor.50": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 46200,
+                "accessor.83": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 37992,
                     "byteStride": 12,
                     "count": 30,
                     "elementType": "Float32",
@@ -387,9 +403,9 @@
                         -1
                     ]
                 },
-                "accessor.51": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 46560,
+                "accessor.85": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 38352,
                     "byteStride": 8,
                     "count": 30,
                     "elementType": "Float32",
@@ -408,8 +424,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 45744,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 8112,
                         "length": 48,
                         "type": "Uint16Array"
                     },
@@ -417,15 +433,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.49",
+                            "accessor": "accessor.81",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.50",
+                            "accessor": "accessor.83",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.51",
+                            "accessor": "accessor.85",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -434,9 +450,9 @@
         },
         "geometry40": {
             "accessors": {
-                "accessor.61": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 47520,
+                "accessor.104": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 38592,
                     "byteStride": 12,
                     "count": 176,
                     "elementType": "Float32",
@@ -452,9 +468,9 @@
                         0
                     ]
                 },
-                "accessor.62": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 49632,
+                "accessor.106": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 40704,
                     "byteStride": 12,
                     "count": 176,
                     "elementType": "Float32",
@@ -470,9 +486,9 @@
                         -1
                     ]
                 },
-                "accessor.63": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 51744,
+                "accessor.108": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 42816,
                     "byteStride": 8,
                     "count": 176,
                     "elementType": "Float32",
@@ -491,8 +507,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 46800,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 8208,
                         "length": 360,
                         "type": "Uint16Array"
                     },
@@ -500,15 +516,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.61",
+                            "accessor": "accessor.104",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.62",
+                            "accessor": "accessor.106",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.63",
+                            "accessor": "accessor.108",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -517,9 +533,9 @@
         },
         "geometry45": {
             "accessors": {
-                "accessor.73": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 53488,
+                "accessor.127": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 44224,
                     "byteStride": 12,
                     "count": 96,
                     "elementType": "Float32",
@@ -535,9 +551,9 @@
                         5.5
                     ]
                 },
-                "accessor.74": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 54640,
+                "accessor.129": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 45376,
                     "byteStride": 12,
                     "count": 96,
                     "elementType": "Float32",
@@ -553,9 +569,9 @@
                         -1
                     ]
                 },
-                "accessor.75": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 55792,
+                "accessor.131": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 46528,
                     "byteStride": 8,
                     "count": 96,
                     "elementType": "Float32",
@@ -574,8 +590,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 53152,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 8928,
                         "length": 168,
                         "type": "Uint16Array"
                     },
@@ -583,15 +599,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.73",
+                            "accessor": "accessor.127",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.74",
+                            "accessor": "accessor.129",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.75",
+                            "accessor": "accessor.131",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -600,9 +616,9 @@
         },
         "geometry51": {
             "accessors": {
-                "accessor.85": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 66040,
+                "accessor.150": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 47296,
                     "byteStride": 12,
                     "count": 1968,
                     "elementType": "Float32",
@@ -618,9 +634,9 @@
                         0
                     ]
                 },
-                "accessor.86": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 89656,
+                "accessor.152": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 70912,
                     "byteStride": 12,
                     "count": 1968,
                     "elementType": "Float32",
@@ -636,9 +652,9 @@
                         -0.962469
                     ]
                 },
-                "accessor.87": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 113272,
+                "accessor.154": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 94528,
                     "byteStride": 8,
                     "count": 1968,
                     "elementType": "Float32",
@@ -657,8 +673,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 56560,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 9264,
                         "length": 4740,
                         "type": "Uint16Array"
                     },
@@ -666,15 +682,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.85",
+                            "accessor": "accessor.150",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.86",
+                            "accessor": "accessor.152",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.87",
+                            "accessor": "accessor.154",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -683,9 +699,9 @@
         },
         "geometry58": {
             "accessors": {
-                "accessor.106": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 129280,
+                "accessor.189": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 110272,
                     "byteStride": 12,
                     "count": 48,
                     "elementType": "Float32",
@@ -701,9 +717,9 @@
                         0
                     ]
                 },
-                "accessor.107": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 129856,
+                "accessor.191": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 110848,
                     "byteStride": 12,
                     "count": 48,
                     "elementType": "Float32",
@@ -719,9 +735,9 @@
                         -1
                     ]
                 },
-                "accessor.108": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 130432,
+                "accessor.193": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 111424,
                     "byteStride": 8,
                     "count": 48,
                     "elementType": "Float32",
@@ -740,8 +756,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 129016,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 18744,
                         "length": 66,
                         "type": "Uint16Array"
                     },
@@ -749,23 +765,23 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.106",
+                            "accessor": "accessor.189",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.107",
+                            "accessor": "accessor.191",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.108",
+                            "accessor": "accessor.193",
                             "semantic": "TEXCOORD"
                         }
                     ]
                 },
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 129148,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 18876,
                         "length": 66,
                         "type": "Uint16Array"
                     },
@@ -773,15 +789,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.106",
+                            "accessor": "accessor.189",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.107",
+                            "accessor": "accessor.191",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.108",
+                            "accessor": "accessor.193",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -790,9 +806,9 @@
         },
         "geometry64": {
             "accessors": {
-                "accessor.118": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 131536,
+                "accessor.212": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 111808,
                     "byteStride": 12,
                     "count": 176,
                     "elementType": "Float32",
@@ -808,9 +824,9 @@
                         0
                     ]
                 },
-                "accessor.119": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 133648,
+                "accessor.214": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 113920,
                     "byteStride": 12,
                     "count": 176,
                     "elementType": "Float32",
@@ -826,9 +842,9 @@
                         -1
                     ]
                 },
-                "accessor.120": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 135760,
+                "accessor.216": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 116032,
                     "byteStride": 8,
                     "count": 176,
                     "elementType": "Float32",
@@ -847,8 +863,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 130816,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 19008,
                         "length": 360,
                         "type": "Uint16Array"
                     },
@@ -856,15 +872,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.118",
+                            "accessor": "accessor.212",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.119",
+                            "accessor": "accessor.214",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.120",
+                            "accessor": "accessor.216",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -873,9 +889,9 @@
         },
         "geometry71": {
             "accessors": {
-                "accessor.128": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 138368,
+                "accessor.231": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 117440,
                     "byteStride": 12,
                     "count": 224,
                     "elementType": "Float32",
@@ -891,9 +907,9 @@
                         0
                     ]
                 },
-                "accessor.129": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 141056,
+                "accessor.233": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 120128,
                     "byteStride": 12,
                     "count": 224,
                     "elementType": "Float32",
@@ -914,8 +930,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 137168,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 19728,
                         "length": 600,
                         "type": "Uint16Array"
                     },
@@ -923,11 +939,11 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.128",
+                            "accessor": "accessor.231",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.129",
+                            "accessor": "accessor.233",
                             "semantic": "NORMAL"
                         }
                     ]
@@ -936,9 +952,9 @@
         },
         "geometry75": {
             "accessors": {
-                "accessor.139": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 157580,
+                "accessor.252": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 122816,
                     "byteStride": 12,
                     "count": 2933,
                     "elementType": "Float32",
@@ -954,9 +970,9 @@
                         0
                     ]
                 },
-                "accessor.140": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 192776,
+                "accessor.254": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 158012,
                     "byteStride": 12,
                     "count": 2933,
                     "elementType": "Float32",
@@ -972,9 +988,9 @@
                         -1
                     ]
                 },
-                "accessor.141": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 227972,
+                "accessor.256": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 193208,
                     "byteStride": 8,
                     "count": 2933,
                     "elementType": "Float32",
@@ -993,8 +1009,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 143744,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 20928,
                         "length": 6918,
                         "type": "Uint16Array"
                     },
@@ -1002,15 +1018,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.139",
+                            "accessor": "accessor.252",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.140",
+                            "accessor": "accessor.254",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.141",
+                            "accessor": "accessor.256",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -1019,9 +1035,9 @@
         },
         "geometry85": {
             "accessors": {
-                "accessor.149": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 251868,
+                "accessor.271": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 216672,
                     "byteStride": 12,
                     "count": 120,
                     "elementType": "Float32",
@@ -1037,9 +1053,9 @@
                         0
                     ]
                 },
-                "accessor.150": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 253308,
+                "accessor.273": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 218112,
                     "byteStride": 12,
                     "count": 120,
                     "elementType": "Float32",
@@ -1060,8 +1076,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 251436,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 34764,
                         "length": 216,
                         "type": "Uint16Array"
                     },
@@ -1069,11 +1085,11 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.149",
+                            "accessor": "accessor.271",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.150",
+                            "accessor": "accessor.273",
                             "semantic": "NORMAL"
                         }
                     ]
@@ -1082,9 +1098,9 @@
         },
         "geometry89": {
             "accessors": {
-                "accessor.160": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 264228,
+                "accessor.292": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 219552,
                     "byteStride": 12,
                     "count": 1968,
                     "elementType": "Float32",
@@ -1100,9 +1116,9 @@
                         0
                     ]
                 },
-                "accessor.161": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 287844,
+                "accessor.294": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 243168,
                     "byteStride": 12,
                     "count": 1968,
                     "elementType": "Float32",
@@ -1118,9 +1134,9 @@
                         -0.962469
                     ]
                 },
-                "accessor.162": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 311460,
+                "accessor.296": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 266784,
                     "byteStride": 8,
                     "count": 1968,
                     "elementType": "Float32",
@@ -1139,8 +1155,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 254748,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 35196,
                         "length": 4740,
                         "type": "Uint16Array"
                     },
@@ -1148,15 +1164,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.160",
+                            "accessor": "accessor.292",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.161",
+                            "accessor": "accessor.294",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.162",
+                            "accessor": "accessor.296",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -1165,9 +1181,9 @@
         },
         "geometry98": {
             "accessors": {
-                "accessor.181": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 327468,
+                "accessor.331": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 282528,
                     "byteStride": 12,
                     "count": 48,
                     "elementType": "Float32",
@@ -1183,9 +1199,9 @@
                         0
                     ]
                 },
-                "accessor.182": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 328044,
+                "accessor.333": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 283104,
                     "byteStride": 12,
                     "count": 48,
                     "elementType": "Float32",
@@ -1201,9 +1217,9 @@
                         -1
                     ]
                 },
-                "accessor.183": {
-                    "buffer": "wine.bin",
-                    "byteOffset": 328620,
+                "accessor.335": {
+                    "bufferView": "bufferView.337",
+                    "byteOffset": 283680,
                     "byteStride": 8,
                     "count": 48,
                     "elementType": "Float32",
@@ -1222,8 +1238,8 @@
             "primitives": [
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 327204,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 44676,
                         "length": 66,
                         "type": "Uint16Array"
                     },
@@ -1231,23 +1247,23 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.181",
+                            "accessor": "accessor.331",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.182",
+                            "accessor": "accessor.333",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.183",
+                            "accessor": "accessor.335",
                             "semantic": "TEXCOORD"
                         }
                     ]
                 },
                 {
                     "indices": {
-                        "buffer": "wine.bin",
-                        "byteOffset": 327336,
+                        "bufferView": "bufferView.338",
+                        "byteOffset": 44808,
                         "length": 66,
                         "type": "Uint16Array"
                     },
@@ -1255,15 +1271,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.181",
+                            "accessor": "accessor.331",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.182",
+                            "accessor": "accessor.333",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.183",
+                            "accessor": "accessor.335",
                             "semantic": "TEXCOORD"
                         }
                     ]
@@ -11968,5 +11984,5 @@
             }
         }
     },
-    "version": "0.1"
+    "version": "0.2"
 }

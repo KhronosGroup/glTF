@@ -553,6 +553,9 @@ namespace JSONExport
         this->_verticesAndIndicesOutputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
         
+        remove(outputIndicesFilePath.c_str());
+        remove(outputVerticesFilePath.c_str());
+        
         //---
         
         shared_ptr <JSONBuffer> sharedBuffer(new JSONBuffer(sharedVerticesAndIndicesBufferID, verticesLength + indicesLength));
