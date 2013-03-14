@@ -28,7 +28,8 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#indices">`indices`</a>
       * <a href="#mesh">`mesh`</a>
       * <a href="#node">`node`</a>
-      * <a href="#primitive">`primitive`</a>   
+      * <a href="#primitive">`primitive`</a>  
+      * <a href="#vertexAttribute">`vertexAttribute`</a>  
 * <a href="#schema">Schema</a> - alphabetical
    * <a href="#accessor">`accessor`</a>
    * <a href="#asset">`asset`</a>
@@ -52,6 +53,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
+   * <a href="#vertexAttribute">`vertexAttribute`</a>
 * <a href="#about_shaders">Note about shaders</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#references">References</a>
