@@ -414,7 +414,13 @@ var global = window;
 
         _resources: { value: null, writable: true },
 
-        _requestTree: { value: null, writable: true },
+        _requestTrees: { value: null, writable: true },
+
+        requestTrees : {
+           get: function() {
+               return this._requestTrees;
+           }
+        },
 
         _resourcesStatus: { value: null, writable: true },
 
@@ -456,7 +462,7 @@ var global = window;
                 }
 
                 this._resources = {};
-                this._requestTree = null;
+                this._requestTrees = {};
                 this._resourcesStatus = {};
                 this._resourcesBeingProcessedCount = 0;
             }
@@ -485,7 +491,7 @@ var global = window;
 
         init: {
             value: function() {
-                this._requestTree = null;
+                this._requestTrees = {};
                 this._resources = {};
                 this._resourcesStatus = {};
                 this._observers = [];
@@ -555,14 +561,14 @@ var global = window;
                         if (request.kind === "multi-parts") {
                             request.requests.forEach( function(req_) {
                                 var subArray = this.response.slice(req_.range[0] - request.range[0], req_.range[1] - request.range[0]);
-                                delegate.resourceAvailable(req_, subArray);
+                                delegate.resourceAvailable(self, req_, subArray);
                             }, this);
                         } else {
-                            delegate.resourceAvailable(request, this.response);
+                            delegate.resourceAvailable(self, request, this.response);
                         }
 
                     } else {
-                        setdelegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
+                        delegate.handleError(WebGLTFResourceManager.XMLHTTPREQUEST_STATUS_ERROR, this.status);
                     }
                 };
                 xhr.send(null);
@@ -574,18 +580,18 @@ var global = window;
         },
 
         _processNextResource: {
-            value: function() {
-                if (this._requestTree) {
-                    var rootIsLeaf = !this._requestTree.left && !this._requestTree.right;
+            value: function(requestTree) {
+                if (requestTree) {
+                    var rootIsLeaf = !requestTree.left && !requestTree.right;
                     if (rootIsLeaf) {
-                        this._handleRequest(this._requestTree.content);
-                        this._requestTree = null;
+                        this._handleRequest(requestTree.content);
+                        return false;
                     } else {
-                        var min = this._requestTree.removeMin();
+                        var min = requestTree.removeMin();
                         this._handleRequest(min.content);
                     }
-
                 }
+                return true;
             }
         },
 
@@ -609,6 +615,7 @@ var global = window;
                 var resourceStatus = this._resourcesStatus[request.id];
                 var node = null;
                 var status = null;
+                var requestTree = this.requestTrees ? this.requestTrees[request.path] : null;
                 if (resourceStatus) {
                     if (resourceStatus.status === "loading" )
                         return;
@@ -627,13 +634,14 @@ var global = window;
                              contRequests = Object.create(ContiguousRequests).initWithRequests([request]);
                         }
 
-                        if (!this._requestTree) {
+                        if (!requestTree) {
                             var rootTreeNode = Object.create(RequestTreeNode);
                             rootTreeNode.content = contRequests;
-                            this._requestTree = rootTreeNode;
+                            this._requestTrees[request.path] = rootTreeNode;
+                            requestTree = rootTreeNode;
                             trNode = rootTreeNode;
                         } else {
-                            trNode = this._requestTree.insert(contRequests, this.bytesLimit);
+                            trNode = requestTree.insert(contRequests, this.bytesLimit);
                         }
 
                         if (request.kind ==="multi-parts") {
@@ -659,27 +667,25 @@ var global = window;
                     this._resourcesStatus[request.id] =  { "status": "loading"};
                 }
 
-                processResourceDelegate.resourceAvailable = function(req_, res_) {
+                processResourceDelegate.resourceAvailable = function(resourceManager, req_, res_) {
                     // ask the delegate to convert the resource, typically here, the delegate is the renderer and will produce a webGL array buffer
-                    // this could get more general and flexbile by make an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
-                    //, but as of now, this flexibily does not seem necessary.
+                    // this could get more general and flexible by making an unique key with the id from the resource + the converted type (day "ARRAY_BUFFER" or "TEXTURE"..)
+                    //, but as of now, this fexibility does not seem necessary.
                     var convertedResource = req_.delegate.convert(res_, req_.ctx);
                     self._storeResource(req_.id, convertedResource);
                     req_.delegate.resourceAvailable(convertedResource, req_.ctx);
 
-                    /*
-                    if (req_.id.search("indices") !== -1) {
-                        self.send++;
-                        console.log("nb:"+self.send);
-                    }
-                    */
-                    //console.log("delete:"+req_.id)
                     delete self._resourcesStatus[req_.id];
 
                     self.fireResourceAvailable.call(self, req_);
 
                     if (self._resourcesBeingProcessedCount < self.maxConcurrentRequests) {
-                        self._processNextResource();
+                        var requestTree  = resourceManager.requestTrees ? resourceManager.requestTrees[req_.path] : null;
+                        if (!self._processNextResource(requestTree)) {
+                            if (requestTree) {
+                                delete resourceManager.requestTrees[req_.path];
+                            }
+                        };
                     } 
 
                 };
