@@ -175,18 +175,17 @@ namespace JSONExport
             }
         }
         
-        shared_ptr <JSONBuffer> dummyVertexBuffer(new JSONBuffer(0, 0, true));
-
         for (unsigned int j = 0 ; j < allAccessors->size() ; j++) {
-            shared_ptr <JSONExport::JSONAccessor> accessor = (*allAccessors)[j];
-            shared_ptr <JSONExport::JSONBuffer> buffer = accessor->getBuffer();
+            shared_ptr <JSONAccessor> accessor = (*allAccessors)[j];
+            shared_ptr <JSONBufferView> bufferView = accessor->getBufferView();
+            shared_ptr <JSONBuffer> buffer = bufferView->getBuffer();
             
-            if (!buffer.get()) {
+            if (!bufferView.get()) {
                 // FIXME: report error
                 return false;
             }
                         
-            if (!IDToBuffer[buffer->getID().c_str()].get()) {
+            if (!IDToBuffer[bufferView->getBuffer()->getID().c_str()].get()) {
                 // FIXME: this should be internal to accessor when a Data buffer is set
                 // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 accessor->computeMinMax();
@@ -195,9 +194,9 @@ namespace JSONExport
                 verticesOutputStream.write((const char*)(static_pointer_cast <JSONBuffer> (buffer)->getData()), buffer->getByteLength());
 
                 //now that we wrote to the stream we can release the buffer.
-                accessor->setBuffer(dummyVertexBuffer);
+                accessor->setBufferView(dummyBuffer);
                 
-                IDToBuffer[buffer->getID()] = buffer;
+                IDToBuffer[bufferView->getBuffer()->getID().c_str()] = buffer;
             } 
         }
                 

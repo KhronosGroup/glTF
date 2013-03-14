@@ -85,7 +85,7 @@ namespace JSONExport
     
     JSONBufferView::JSONBufferView(shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength)
     {
-        this->_ID = JSONUtils::generateIDForType("buffer");
+        this->_ID = JSONUtils::generateIDForType("bufferView");
         this->_buffer = buffer;
         this->_byteLength = byteLength;
         this->_byteOffset = byteOffset;
@@ -100,7 +100,7 @@ namespace JSONExport
         
     JSONBufferView::JSONBufferView()
     {
-        this->_ID = JSONUtils::generateIDForType("buffer");
+        this->_ID = JSONUtils::generateIDForType("bufferView");
         this->_byteLength = 0;
         this->_byteOffset = 0;
     }

@@ -701,11 +701,14 @@ var global = window;
 
         _handleAccessorResourceLoading: {
             value: function(accessor, delegate, ctx) {
-                var range = [accessor.byteOffset ? accessor.byteOffset : 0 , (accessor.byteStride * accessor.count) + accessor.byteOffset];
+                var bufferView = accessor.bufferView;
+                var buffer = bufferView.buffer;
+                var byteOffset = accessor.byteOffset + bufferView.description.byteOffset;
+                var range = [byteOffset , (accessor.byteStride * accessor.count) + byteOffset];
                 this._handleRequest({   "id" : accessor.id,
                                         "range" : range,
-                                        "type" : accessor.buffer.description.type,
-                                        "path" : accessor.buffer.description.path,
+                                        "type" : buffer.description.type,
+                                        "path" : buffer.description.path,
                                         "delegate" : delegate,
                                         "ctx" : ctx,
                                         "kind" : "single-part" }, null);

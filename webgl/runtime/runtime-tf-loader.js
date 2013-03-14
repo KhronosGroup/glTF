@@ -277,9 +277,11 @@ var global = window;
                                 accessor.id = accessorID;
                                 this.storeEntry(accessorID, accessor, accessor);
 
-                                var bufferEntry = this.getEntry(accessor.buffer);
-                                accessor.buffer = bufferEntry.entry;
+                                var bufferEntry = this.getEntry(accessor.bufferView);
+                                accessor.bufferView = bufferEntry.entry;
                                 accessorEntry = this.getEntry(accessorID);
+                                if (!accessor.byteOffset)
+                                    accessor.byteOffset = 0;
                                 //this is a set ID, it has to stay a string
                             }
                             var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";

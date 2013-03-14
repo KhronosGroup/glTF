@@ -205,10 +205,10 @@ namespace JSONExport
             }
         
             // FIXME: the source could be shared, store / retrieve it here
-            shared_ptr <JSONExport::JSONBuffer> cvtBuffer(new JSONExport::JSONBuffer(name, sourceData, sourceSize, false));
-            shared_ptr <JSONExport::JSONAccessor> cvtAccessor(new JSONExport::JSONAccessor());
+            shared_ptr <JSONBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(name, sourceData, 0, sourceSize, false);
+            shared_ptr <JSONAccessor> cvtAccessor(new JSONAccessor());
         
-            cvtAccessor->setBuffer(cvtBuffer);
+            cvtAccessor->setBufferView(cvtBufferView);
             cvtAccessor->setElementsPerVertexAttribute(size);
             cvtAccessor->setByteStride(stride);
             cvtAccessor->setElementType(elementType);
@@ -547,7 +547,7 @@ namespace JSONExport
                 shared_ptr<JSONMesh> mesh = (*meshes)[j];
                 if (mesh) {
                     void *buffers[2];
-                    buffers[0] = (void*)sharedVerticesBuffer.get();
+                    buffers[0] = (void*)verticesBufferView.get();
                     buffers[1] = (void*)indicesBufferView.get();
                     
                     shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);

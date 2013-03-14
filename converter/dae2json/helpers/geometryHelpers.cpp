@@ -176,13 +176,10 @@ namespace JSONExport
                 return 0;
             }
             
-            shared_ptr <JSONExport::JSONBuffer> remappedBuffer = remappedAccessor->getBuffer();
-            shared_ptr <JSONExport::JSONBuffer> originalBuffer = originalAccessor->getBuffer();
-            
-            bufferInfos->remappedBufferData = (unsigned char*)static_pointer_cast <JSONBuffer> (remappedBuffer)->getData() + remappedAccessor->getByteOffset();
+            bufferInfos->remappedBufferData = (unsigned char*)remappedAccessor->getBufferView()->getBufferDataByApplyingOffset();
             bufferInfos->remappedAccessorByteStride = remappedAccessor->getByteStride();
             
-            bufferInfos->originalBufferData = (unsigned char*)static_pointer_cast <JSONBuffer> (originalBuffer)->getData() + originalAccessor->getByteOffset();
+            bufferInfos->originalBufferData = (unsigned char*)originalAccessor->getBufferView()->getBufferDataByApplyingOffset();;
             bufferInfos->originalAccessorByteStride = originalAccessor->getByteStride();
             
             bufferInfos->elementByteLength = remappedAccessor->getVertexAttributeByteLength();
@@ -385,10 +382,11 @@ namespace JSONExport
                 size_t sourceSize = vertexCount * selectedAccessor->getVertexAttributeByteLength();
                 void* sourceData = malloc(sourceSize);
                 
-                shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
-                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), sourceData, sourceSize, true));
-                shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
-                remappedAccessor->setBuffer(remappedBuffer);
+                shared_ptr <JSONBufferView> referenceBufferView = selectedAccessor->getBufferView();
+                shared_ptr <JSONBufferView> remappedBufferView = createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), sourceData, 0, sourceSize, true);
+
+                shared_ptr <JSONAccessor> remappedAccessor(new JSONAccessor(selectedAccessor.get()));
+                remappedAccessor->setBufferView(remappedBufferView);
                 remappedAccessor->setCount(vertexCount);
                 
                 destinationIndexSetToAccessor[(*accessorIterator).first] = remappedAccessor;
@@ -498,10 +496,10 @@ namespace JSONExport
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <JSONAccessor> selectedAccessor = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
                 
-                shared_ptr <JSONExport::JSONBuffer> referenceBuffer = selectedAccessor->getBuffer();
+                shared_ptr <JSONBufferView> referenceBufferView = selectedAccessor->getBufferView();
                 
                 unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
                 
@@ -513,9 +511,11 @@ namespace JSONExport
                 context[1] = subMesh;
                 selectedAccessor->apply(__RemapAccessor, (void*)context);
                                         
-                shared_ptr <JSONExport::JSONBuffer> remappedBuffer(new JSONExport::JSONBuffer(referenceBuffer->getID(), targetBufferPtr, selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount, true));
-                shared_ptr <JSONExport::JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
-                remappedAccessor->setBuffer(remappedBuffer);
+                shared_ptr <JSONBufferView> remappedBufferView =
+                createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount, true);
+                
+                shared_ptr <JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
+                remappedAccessor->setBufferView(remappedBufferView);
                 remappedAccessor->setCount(vertexAttributeCount);
                 
                 targetIndexSetToAccessor[indexSet] = remappedAccessor;

@@ -48,7 +48,7 @@ namespace JSONExport
     }
         
     JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
-    _buffer(accessor->getBuffer()), _min(0), _max(0)
+    _bufferView(accessor->getBufferView()), _min(0), _max(0)
     {
         assert(accessor);
         
@@ -70,14 +70,14 @@ namespace JSONExport
         }
     }
         
-    void JSONAccessor::setBuffer(shared_ptr <JSONExport::JSONBuffer> buffer)
+    void JSONAccessor::setBufferView(shared_ptr <JSONBufferView> bufferView)
     {
-        this->_buffer = buffer;
+        this->_bufferView = bufferView;
     }
         
-    shared_ptr <JSONExport::JSONBuffer> JSONAccessor::getBuffer()
+    shared_ptr <JSONBufferView> JSONAccessor::getBufferView()
     {
-        return this->_buffer;
+        return this->_bufferView;
     }
         
     void JSONAccessor::setElementsPerVertexAttribute(size_t elementsPerVertexAttribute)
@@ -232,9 +232,9 @@ namespace JSONExport
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         size_t vertexAttributeByteSize = this->getVertexAttributeByteLength();
-        shared_ptr <JSONExport::JSONBuffer> buffer = this->getBuffer();
+        shared_ptr <JSONExport::JSONBufferView> bufferView = this->getBufferView();
         ElementType type = this->getElementType();
-        char* bufferData = ((char*)((JSONBuffer*)buffer.get())->getData() + this->getByteOffset());
+        unsigned char* bufferData = (unsigned char*)bufferView->getBufferDataByApplyingOffset();
 
         for (size_t i = 0 ; i < _count ; i++) {
             (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, vertexAttributeByteSize, context);

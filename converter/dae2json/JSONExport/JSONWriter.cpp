@@ -136,9 +136,9 @@ namespace JSONExport
         accessorObject->setString("elementType", JSONUtils::getStringForType(accessor->getElementType()));
         
         void** buffers = (void**)context;
-        JSONBuffer *buffer = context ? (JSONBuffer*)buffers[0] : accessor->getBuffer().get();
+        JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[0] : accessor->getBufferView().get();
 
-        accessorObject->setString("buffer", buffer->getID());
+        accessorObject->setString("bufferView", bufferView->getID());
         
         const double* min = accessor->getMin();
         if (min) {

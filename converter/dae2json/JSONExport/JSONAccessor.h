@@ -53,8 +53,8 @@ namespace JSONExport
         
         virtual ~JSONAccessor();
         
-        void setBuffer(shared_ptr <JSONExport::JSONBuffer> buffer);
-        shared_ptr <JSONExport::JSONBuffer> getBuffer();
+        void setBufferView(shared_ptr <JSONBufferView> buffer);
+        shared_ptr <JSONBufferView> getBufferView();
         
         void setElementsPerVertexAttribute(size_t elementsPerVertexAttribute);         
         size_t getElementsPerVertexAttribute();
@@ -85,7 +85,7 @@ namespace JSONExport
         bool matchesLayout(JSONAccessor* accessor);
 
     private:
-        shared_ptr <JSONExport::JSONBuffer> _buffer;
+        shared_ptr <JSONBufferView> _bufferView;
         size_t              _elementsPerVertexAttribute;
         size_t              _count;
         size_t              _byteStride;
