@@ -170,6 +170,7 @@ exports.Stage = Montage.create(Component, /** @lends module:"montage/ui/stage.re
     prepareForDraw: {
         value: function() {
             if (this.selectModel) {
+                this.selectModel.content.push( { "name": "duck", "path":"model/duck/duck.json"} );
                 this.selectModel.content.push( { "name": "Buggy", "path":"model/rambler/Rambler.json"} );
                 this.selectModel.content.push( { "name": "SuperMurdoch", "path":"model/SuperMurdoch/SuperMurdoch.json"} );
                 this.selectModel.content.push( { "name": "Wine", "path":"model/wine/wine.json"} );

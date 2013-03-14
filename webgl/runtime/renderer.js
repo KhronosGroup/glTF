@@ -227,6 +227,8 @@ var global = window;
 
                 handleError: function(errorCode, info) {
                     // FIXME: report error
+                    debugger;
+
                     console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
                 },
             
@@ -256,6 +258,8 @@ var global = window;
                 },
 
                 handleError: function(errorCode, info) {
+                    debugger;
+
                     console.log("ERROR:vertexAttributeBufferDelegate:"+errorCode+" :"+info);
                 },
             
@@ -563,7 +567,8 @@ var global = window;
         programDelegate: {
             value: {
                 handleError: function(errorCode, info) {
-                    // FIXME: report error
+                    debugger;
+                    // FIXME: report
                      console.log("ERROR:programDelegate:"+errorCode+" :"+info);
                 },
             

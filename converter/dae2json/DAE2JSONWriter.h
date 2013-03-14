@@ -251,6 +251,7 @@ namespace JSONExport
 
         ofstream _verticesOutputStream;
         ofstream _indicesOutputStream;
+        ofstream _verticesAndIndicesOutputStream;
 	};
 } 
 

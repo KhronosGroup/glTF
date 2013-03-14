@@ -498,6 +498,9 @@ namespace JSONExport
 	//--------------------------------------------------------------------
 	bool DAE2JSONWriter::write()
 	{
+        ifstream inputVertices;
+        ifstream inputIndices;
+        
         /* 
             We output vertices and indices separatly in 2 different files
             TODO: make them in a single file again.
@@ -509,12 +512,15 @@ namespace JSONExport
         
         std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
         std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
+        std::string sharedVerticesAndIndicesBufferID = inputURI.getPathFileBase() + ".bin";
         std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
         std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
+        std::string outputVerticesAndIndicesFilePath = outputURI.getPathDir() + sharedVerticesAndIndicesBufferID;
         
         this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        
+        this->_verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
+                
         this->_converterContext.root = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
         this->_converterContext.root->setString("version", "0.2");
         this->_converterContext.root->setValue("nodes", shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject()));
@@ -524,12 +530,35 @@ namespace JSONExport
          
 		if (!root.loadDocument( this->_converterContext.inputFilePath))
 			return false;
+
         
-        shared_ptr <JSONExport::JSONBuffer> sharedVerticesBuffer(new JSONExport::JSONBuffer(sharedVerticesBufferID, static_cast<size_t>(this->_verticesOutputStream.tellp())));
-        shared_ptr <JSONExport::JSONBuffer> sharedIndicesBuffer(new JSONExport::JSONBuffer(sharedIndicesBufferID, static_cast<size_t>(this->_indicesOutputStream.tellp())));
+        //reopen .bin files for vertices and indices
+        size_t verticesLength = this->_verticesOutputStream.tellp();
+        size_t indicesLength = this->_indicesOutputStream.tellp();
+
+        this->_verticesOutputStream.flush();
+        this->_verticesOutputStream.close();
+        this->_indicesOutputStream.flush();
+        this->_indicesOutputStream.close();
         
-        shared_ptr <JSONBufferView> verticesBufferView(new JSONBufferView(sharedVerticesBuffer, 0, sharedVerticesBuffer->getByteLength()));
-        shared_ptr <JSONBufferView> indicesBufferView(new JSONBufferView(sharedIndicesBuffer, 0, sharedIndicesBuffer->getByteLength()));
+        inputVertices.open(outputVerticesFilePath.c_str(), ios::in | ios::binary);
+        inputIndices.open(outputIndicesFilePath.c_str(), ios::in | ios::binary);
+        
+        char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
+        inputVertices.read(bufferIOStream, verticesLength);
+        this->_verticesAndIndicesOutputStream.write(bufferIOStream, verticesLength);
+        free(bufferIOStream);
+        bufferIOStream = (char*)malloc(sizeof(char) * indicesLength);
+        inputIndices.read(bufferIOStream, indicesLength);
+        this->_verticesAndIndicesOutputStream.write(bufferIOStream, indicesLength);
+        free(bufferIOStream);
+        
+        //---
+        
+        shared_ptr <JSONBuffer> sharedBuffer(new JSONBuffer(sharedVerticesAndIndicesBufferID, verticesLength + indicesLength));
+        
+        shared_ptr <JSONBufferView> verticesBufferView(new JSONBufferView(sharedBuffer, 0, verticesLength));
+        shared_ptr <JSONBufferView> indicesBufferView(new JSONBufferView(sharedBuffer, verticesLength, indicesLength));
         
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
 
@@ -577,12 +606,10 @@ namespace JSONExport
         // ----
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
-        shared_ptr <JSONObject> bufferIndicesObject = serializeBuffer(sharedIndicesBuffer.get(), 0);
-        shared_ptr <JSONObject> bufferVerticesObject = serializeBuffer(sharedVerticesBuffer.get(), 0);
+        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
 
         this->_converterContext.root->setValue("buffers", buffersObject);
-        buffersObject->setValue(sharedIndicesBufferID, bufferIndicesObject);
-        buffersObject->setValue(sharedVerticesBufferID, bufferVerticesObject);
+        buffersObject->setValue(sharedVerticesAndIndicesBufferID, bufferObject);
         
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
@@ -606,10 +633,8 @@ namespace JSONExport
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
         }
         
-        this->_verticesOutputStream.flush();
-        this->_verticesOutputStream.close();
-        this->_indicesOutputStream.flush();
-        this->_indicesOutputStream.close();
+        this->_verticesAndIndicesOutputStream.flush();
+        this->_verticesAndIndicesOutputStream.close();
         
 		return true;
 	}
