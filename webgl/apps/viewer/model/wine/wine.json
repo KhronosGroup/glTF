@@ -221,8 +221,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_26",
-                        "TEXCOORD": "attribute_28",
-                        "VERTEX": "attribute_24"
+                        "POSITION": "attribute_24",
+                        "TEXCOORD": "attribute_28"
                     }
                 }
             ]
@@ -279,7 +279,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_45",
-                        "VERTEX": "attribute_43"
+                        "POSITION": "attribute_43"
                     }
                 }
             ]
@@ -336,7 +336,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_62",
-                        "VERTEX": "attribute_60"
+                        "POSITION": "attribute_60"
                     }
                 }
             ]
@@ -409,8 +409,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_83",
-                        "TEXCOORD": "attribute_85",
-                        "VERTEX": "attribute_81"
+                        "POSITION": "attribute_81",
+                        "TEXCOORD": "attribute_85"
                     }
                 }
             ]
@@ -483,8 +483,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_106",
-                        "TEXCOORD": "attribute_108",
-                        "VERTEX": "attribute_104"
+                        "POSITION": "attribute_104",
+                        "TEXCOORD": "attribute_108"
                     }
                 }
             ]
@@ -557,8 +557,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_129",
-                        "TEXCOORD": "attribute_131",
-                        "VERTEX": "attribute_127"
+                        "POSITION": "attribute_127",
+                        "TEXCOORD": "attribute_131"
                     }
                 }
             ]
@@ -631,8 +631,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_152",
-                        "TEXCOORD": "attribute_154",
-                        "VERTEX": "attribute_150"
+                        "POSITION": "attribute_150",
+                        "TEXCOORD": "attribute_154"
                     }
                 }
             ]
@@ -705,8 +705,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_191",
-                        "TEXCOORD": "attribute_193",
-                        "VERTEX": "attribute_189"
+                        "POSITION": "attribute_189",
+                        "TEXCOORD": "attribute_193"
                     }
                 },
                 {
@@ -720,8 +720,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_191",
-                        "TEXCOORD": "attribute_193",
-                        "VERTEX": "attribute_189"
+                        "POSITION": "attribute_189",
+                        "TEXCOORD": "attribute_193"
                     }
                 }
             ]
@@ -794,8 +794,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_214",
-                        "TEXCOORD": "attribute_216",
-                        "VERTEX": "attribute_212"
+                        "POSITION": "attribute_212",
+                        "TEXCOORD": "attribute_216"
                     }
                 }
             ]
@@ -852,7 +852,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_233",
-                        "VERTEX": "attribute_231"
+                        "POSITION": "attribute_231"
                     }
                 }
             ]
@@ -925,8 +925,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_254",
-                        "TEXCOORD": "attribute_256",
-                        "VERTEX": "attribute_252"
+                        "POSITION": "attribute_252",
+                        "TEXCOORD": "attribute_256"
                     }
                 }
             ]
@@ -983,7 +983,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_273",
-                        "VERTEX": "attribute_271"
+                        "POSITION": "attribute_271"
                     }
                 }
             ]
@@ -1056,8 +1056,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_294",
-                        "TEXCOORD": "attribute_296",
-                        "VERTEX": "attribute_292"
+                        "POSITION": "attribute_292",
+                        "TEXCOORD": "attribute_296"
                     }
                 }
             ]
@@ -1130,8 +1130,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_333",
-                        "TEXCOORD": "attribute_335",
-                        "VERTEX": "attribute_331"
+                        "POSITION": "attribute_331",
+                        "TEXCOORD": "attribute_335"
                     }
                 },
                 {
@@ -1145,8 +1145,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_333",
-                        "TEXCOORD": "attribute_335",
-                        "VERTEX": "attribute_331"
+                        "POSITION": "attribute_331",
+                        "TEXCOORD": "attribute_335"
                     }
                 }
             ]
@@ -11690,7 +11690,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },
@@ -11740,7 +11740,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },
@@ -11801,7 +11801,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },

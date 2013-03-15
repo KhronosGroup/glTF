@@ -94,7 +94,7 @@ var global = window;
         addVertexAttribute: {
             enumerable: false,
             value: function(vertexAttribute) {
-                if ((vertexAttribute.semantic === "VERTEX") || (vertexAttribute.semantic === "POSITION")) {
+                if (vertexAttribute.semantic === "POSITION") {
                     var bbox = null;
                     var accessor = vertexAttribute.attribute;
                     if (accessor.min && accessor.max) {

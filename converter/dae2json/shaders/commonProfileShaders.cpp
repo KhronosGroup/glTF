@@ -463,7 +463,7 @@ namespace JSONExport
             
             std::string symbol = allAttributes[i];
             if (symbol == kVertexAttribute) {
-                semantic = "VERTEX";
+                semantic = "POSITION";
             } else if (symbol == kNormalAttribute) {
                 semantic = "NORMAL";
             } else if (symbol == kTexcoordAttribute) {

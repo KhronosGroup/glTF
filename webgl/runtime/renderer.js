@@ -524,7 +524,7 @@ var global = window;
                             gl.enableVertexAttribArray(attributeLocation);
                             //}
                             gl.vertexAttribPointer(attributeLocation, accessor.componentsPerAttribute, gl.FLOAT, false, accessor.byteStride, 0);
-                            if ( renderVertices && (semantic == "VERTEX")) {
+                            if ( renderVertices && (semantic == "POSITION")) {
                                 gl.drawArrays(gl.POINTS, 0, accessor.count);
                             }
                         }

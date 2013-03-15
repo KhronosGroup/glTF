@@ -121,8 +121,8 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_20",
-                        "TEXCOORD": "attribute_22",
-                        "VERTEX": "attribute_18"
+                        "POSITION": "attribute_18",
+                        "TEXCOORD": "attribute_22"
                     }
                 }
             ]
@@ -229,7 +229,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },

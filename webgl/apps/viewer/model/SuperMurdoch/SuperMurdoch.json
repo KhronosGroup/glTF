@@ -361,7 +361,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_254",
-                        "VERTEX": "attribute_252"
+                        "POSITION": "attribute_252"
                     }
                 }
             ]
@@ -418,7 +418,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2614",
-                        "VERTEX": "attribute_2612"
+                        "POSITION": "attribute_2612"
                     }
                 }
             ]
@@ -475,7 +475,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2631",
-                        "VERTEX": "attribute_2629"
+                        "POSITION": "attribute_2629"
                     }
                 }
             ]
@@ -532,7 +532,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2648",
-                        "VERTEX": "attribute_2646"
+                        "POSITION": "attribute_2646"
                     }
                 }
             ]
@@ -589,7 +589,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2665",
-                        "VERTEX": "attribute_2663"
+                        "POSITION": "attribute_2663"
                     }
                 }
             ]
@@ -646,7 +646,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2682",
-                        "VERTEX": "attribute_2680"
+                        "POSITION": "attribute_2680"
                     }
                 }
             ]
@@ -703,7 +703,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2699",
-                        "VERTEX": "attribute_2697"
+                        "POSITION": "attribute_2697"
                     }
                 }
             ]
@@ -760,7 +760,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2716",
-                        "VERTEX": "attribute_2714"
+                        "POSITION": "attribute_2714"
                     }
                 }
             ]
@@ -817,7 +817,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2733",
-                        "VERTEX": "attribute_2731"
+                        "POSITION": "attribute_2731"
                     }
                 }
             ]
@@ -874,7 +874,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2750",
-                        "VERTEX": "attribute_2748"
+                        "POSITION": "attribute_2748"
                     }
                 }
             ]
@@ -931,7 +931,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2767",
-                        "VERTEX": "attribute_2765"
+                        "POSITION": "attribute_2765"
                     }
                 }
             ]
@@ -988,7 +988,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2784",
-                        "VERTEX": "attribute_2782"
+                        "POSITION": "attribute_2782"
                     }
                 }
             ]
@@ -1045,7 +1045,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_271",
-                        "VERTEX": "attribute_269"
+                        "POSITION": "attribute_269"
                     }
                 }
             ]
@@ -1102,7 +1102,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2801",
-                        "VERTEX": "attribute_2799"
+                        "POSITION": "attribute_2799"
                     }
                 }
             ]
@@ -1159,7 +1159,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2818",
-                        "VERTEX": "attribute_2816"
+                        "POSITION": "attribute_2816"
                     }
                 }
             ]
@@ -1216,7 +1216,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2835",
-                        "VERTEX": "attribute_2833"
+                        "POSITION": "attribute_2833"
                     }
                 }
             ]
@@ -1273,7 +1273,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2852",
-                        "VERTEX": "attribute_2850"
+                        "POSITION": "attribute_2850"
                     }
                 }
             ]
@@ -1330,7 +1330,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2869",
-                        "VERTEX": "attribute_2867"
+                        "POSITION": "attribute_2867"
                     }
                 }
             ]
@@ -1387,7 +1387,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_33",
-                        "VERTEX": "attribute_31"
+                        "POSITION": "attribute_31"
                     }
                 }
             ]
@@ -1444,7 +1444,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2886",
-                        "VERTEX": "attribute_2884"
+                        "POSITION": "attribute_2884"
                     }
                 }
             ]
@@ -1501,7 +1501,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2903",
-                        "VERTEX": "attribute_2901"
+                        "POSITION": "attribute_2901"
                     }
                 }
             ]
@@ -1558,7 +1558,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2920",
-                        "VERTEX": "attribute_2918"
+                        "POSITION": "attribute_2918"
                     }
                 }
             ]
@@ -1615,7 +1615,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2937",
-                        "VERTEX": "attribute_2935"
+                        "POSITION": "attribute_2935"
                     }
                 }
             ]
@@ -1672,7 +1672,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2954",
-                        "VERTEX": "attribute_2952"
+                        "POSITION": "attribute_2952"
                     }
                 }
             ]
@@ -1729,7 +1729,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_288",
-                        "VERTEX": "attribute_286"
+                        "POSITION": "attribute_286"
                     }
                 }
             ]
@@ -1786,7 +1786,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2971",
-                        "VERTEX": "attribute_2969"
+                        "POSITION": "attribute_2969"
                     }
                 }
             ]
@@ -1843,7 +1843,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2988",
-                        "VERTEX": "attribute_2986"
+                        "POSITION": "attribute_2986"
                     }
                 }
             ]
@@ -1900,7 +1900,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3005",
-                        "VERTEX": "attribute_3003"
+                        "POSITION": "attribute_3003"
                     }
                 }
             ]
@@ -1957,7 +1957,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3022",
-                        "VERTEX": "attribute_3020"
+                        "POSITION": "attribute_3020"
                     }
                 }
             ]
@@ -2014,7 +2014,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3039",
-                        "VERTEX": "attribute_3037"
+                        "POSITION": "attribute_3037"
                     }
                 }
             ]
@@ -2071,7 +2071,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3056",
-                        "VERTEX": "attribute_3054"
+                        "POSITION": "attribute_3054"
                     }
                 }
             ]
@@ -2128,7 +2128,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3073",
-                        "VERTEX": "attribute_3071"
+                        "POSITION": "attribute_3071"
                     }
                 }
             ]
@@ -2185,7 +2185,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3090",
-                        "VERTEX": "attribute_3088"
+                        "POSITION": "attribute_3088"
                     }
                 }
             ]
@@ -2242,7 +2242,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3107",
-                        "VERTEX": "attribute_3105"
+                        "POSITION": "attribute_3105"
                     }
                 }
             ]
@@ -2299,7 +2299,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3124",
-                        "VERTEX": "attribute_3122"
+                        "POSITION": "attribute_3122"
                     }
                 }
             ]
@@ -2356,7 +2356,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_305",
-                        "VERTEX": "attribute_303"
+                        "POSITION": "attribute_303"
                     }
                 }
             ]
@@ -2413,7 +2413,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3141",
-                        "VERTEX": "attribute_3139"
+                        "POSITION": "attribute_3139"
                     }
                 }
             ]
@@ -2470,7 +2470,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3158",
-                        "VERTEX": "attribute_3156"
+                        "POSITION": "attribute_3156"
                     }
                 }
             ]
@@ -2527,7 +2527,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3175",
-                        "VERTEX": "attribute_3173"
+                        "POSITION": "attribute_3173"
                     }
                 }
             ]
@@ -2584,7 +2584,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3192",
-                        "VERTEX": "attribute_3190"
+                        "POSITION": "attribute_3190"
                     }
                 }
             ]
@@ -2641,7 +2641,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3209",
-                        "VERTEX": "attribute_3207"
+                        "POSITION": "attribute_3207"
                     }
                 }
             ]
@@ -2698,7 +2698,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3226",
-                        "VERTEX": "attribute_3224"
+                        "POSITION": "attribute_3224"
                     }
                 }
             ]
@@ -2755,7 +2755,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3243",
-                        "VERTEX": "attribute_3241"
+                        "POSITION": "attribute_3241"
                     }
                 }
             ]
@@ -2812,7 +2812,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3260",
-                        "VERTEX": "attribute_3258"
+                        "POSITION": "attribute_3258"
                     }
                 }
             ]
@@ -2869,7 +2869,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3277",
-                        "VERTEX": "attribute_3275"
+                        "POSITION": "attribute_3275"
                     }
                 }
             ]
@@ -2926,7 +2926,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3294",
-                        "VERTEX": "attribute_3292"
+                        "POSITION": "attribute_3292"
                     }
                 }
             ]
@@ -2983,7 +2983,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3311",
-                        "VERTEX": "attribute_3309"
+                        "POSITION": "attribute_3309"
                     }
                 }
             ]
@@ -3040,7 +3040,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3328",
-                        "VERTEX": "attribute_3326"
+                        "POSITION": "attribute_3326"
                     }
                 }
             ]
@@ -3097,7 +3097,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_322",
-                        "VERTEX": "attribute_320"
+                        "POSITION": "attribute_320"
                     }
                 }
             ]
@@ -3154,7 +3154,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3345",
-                        "VERTEX": "attribute_3343"
+                        "POSITION": "attribute_3343"
                     }
                 }
             ]
@@ -3211,7 +3211,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3362",
-                        "VERTEX": "attribute_3360"
+                        "POSITION": "attribute_3360"
                     }
                 }
             ]
@@ -3268,7 +3268,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3379",
-                        "VERTEX": "attribute_3377"
+                        "POSITION": "attribute_3377"
                     }
                 }
             ]
@@ -3325,7 +3325,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3396",
-                        "VERTEX": "attribute_3394"
+                        "POSITION": "attribute_3394"
                     }
                 }
             ]
@@ -3382,7 +3382,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3413",
-                        "VERTEX": "attribute_3411"
+                        "POSITION": "attribute_3411"
                     }
                 }
             ]
@@ -3439,7 +3439,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3430",
-                        "VERTEX": "attribute_3428"
+                        "POSITION": "attribute_3428"
                     }
                 }
             ]
@@ -3496,7 +3496,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3447",
-                        "VERTEX": "attribute_3445"
+                        "POSITION": "attribute_3445"
                     }
                 }
             ]
@@ -3553,7 +3553,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3464",
-                        "VERTEX": "attribute_3462"
+                        "POSITION": "attribute_3462"
                     }
                 }
             ]
@@ -3610,7 +3610,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3481",
-                        "VERTEX": "attribute_3479"
+                        "POSITION": "attribute_3479"
                     }
                 }
             ]
@@ -3667,7 +3667,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3498",
-                        "VERTEX": "attribute_3496"
+                        "POSITION": "attribute_3496"
                     }
                 }
             ]
@@ -3724,7 +3724,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_339",
-                        "VERTEX": "attribute_337"
+                        "POSITION": "attribute_337"
                     }
                 }
             ]
@@ -3781,7 +3781,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3515",
-                        "VERTEX": "attribute_3513"
+                        "POSITION": "attribute_3513"
                     }
                 }
             ]
@@ -3838,7 +3838,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3532",
-                        "VERTEX": "attribute_3530"
+                        "POSITION": "attribute_3530"
                     }
                 }
             ]
@@ -3895,7 +3895,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3549",
-                        "VERTEX": "attribute_3547"
+                        "POSITION": "attribute_3547"
                     }
                 }
             ]
@@ -3952,7 +3952,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3566",
-                        "VERTEX": "attribute_3564"
+                        "POSITION": "attribute_3564"
                     }
                 }
             ]
@@ -4009,7 +4009,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3583",
-                        "VERTEX": "attribute_3581"
+                        "POSITION": "attribute_3581"
                     }
                 }
             ]
@@ -4066,7 +4066,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3600",
-                        "VERTEX": "attribute_3598"
+                        "POSITION": "attribute_3598"
                     }
                 }
             ]
@@ -4123,7 +4123,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3617",
-                        "VERTEX": "attribute_3615"
+                        "POSITION": "attribute_3615"
                     }
                 }
             ]
@@ -4180,7 +4180,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3634",
-                        "VERTEX": "attribute_3632"
+                        "POSITION": "attribute_3632"
                     }
                 }
             ]
@@ -4237,7 +4237,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3651",
-                        "VERTEX": "attribute_3649"
+                        "POSITION": "attribute_3649"
                     }
                 }
             ]
@@ -4294,7 +4294,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3668",
-                        "VERTEX": "attribute_3666"
+                        "POSITION": "attribute_3666"
                     }
                 }
             ]
@@ -4351,7 +4351,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3685",
-                        "VERTEX": "attribute_3683"
+                        "POSITION": "attribute_3683"
                     }
                 }
             ]
@@ -4408,7 +4408,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3702",
-                        "VERTEX": "attribute_3700"
+                        "POSITION": "attribute_3700"
                     }
                 }
             ]
@@ -4465,7 +4465,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3719",
-                        "VERTEX": "attribute_3717"
+                        "POSITION": "attribute_3717"
                     }
                 }
             ]
@@ -4522,7 +4522,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_356",
-                        "VERTEX": "attribute_354"
+                        "POSITION": "attribute_354"
                     }
                 }
             ]
@@ -4579,7 +4579,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3736",
-                        "VERTEX": "attribute_3734"
+                        "POSITION": "attribute_3734"
                     }
                 }
             ]
@@ -4636,7 +4636,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3753",
-                        "VERTEX": "attribute_3751"
+                        "POSITION": "attribute_3751"
                     }
                 }
             ]
@@ -4693,7 +4693,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3770",
-                        "VERTEX": "attribute_3768"
+                        "POSITION": "attribute_3768"
                     }
                 }
             ]
@@ -4750,7 +4750,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3787",
-                        "VERTEX": "attribute_3785"
+                        "POSITION": "attribute_3785"
                     }
                 }
             ]
@@ -4807,7 +4807,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3804",
-                        "VERTEX": "attribute_3802"
+                        "POSITION": "attribute_3802"
                     }
                 }
             ]
@@ -4864,7 +4864,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3821",
-                        "VERTEX": "attribute_3819"
+                        "POSITION": "attribute_3819"
                     }
                 }
             ]
@@ -4921,7 +4921,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3838",
-                        "VERTEX": "attribute_3836"
+                        "POSITION": "attribute_3836"
                     }
                 }
             ]
@@ -4978,7 +4978,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3855",
-                        "VERTEX": "attribute_3853"
+                        "POSITION": "attribute_3853"
                     }
                 }
             ]
@@ -5035,7 +5035,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3872",
-                        "VERTEX": "attribute_3870"
+                        "POSITION": "attribute_3870"
                     }
                 }
             ]
@@ -5092,7 +5092,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3889",
-                        "VERTEX": "attribute_3887"
+                        "POSITION": "attribute_3887"
                     }
                 }
             ]
@@ -5149,7 +5149,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3906",
-                        "VERTEX": "attribute_3904"
+                        "POSITION": "attribute_3904"
                     }
                 }
             ]
@@ -5206,7 +5206,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3923",
-                        "VERTEX": "attribute_3921"
+                        "POSITION": "attribute_3921"
                     }
                 }
             ]
@@ -5263,7 +5263,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3940",
-                        "VERTEX": "attribute_3938"
+                        "POSITION": "attribute_3938"
                     }
                 }
             ]
@@ -5320,7 +5320,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3957",
-                        "VERTEX": "attribute_3955"
+                        "POSITION": "attribute_3955"
                     }
                 }
             ]
@@ -5377,7 +5377,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_373",
-                        "VERTEX": "attribute_371"
+                        "POSITION": "attribute_371"
                     }
                 }
             ]
@@ -5434,7 +5434,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3974",
-                        "VERTEX": "attribute_3972"
+                        "POSITION": "attribute_3972"
                     }
                 }
             ]
@@ -5491,7 +5491,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_3991",
-                        "VERTEX": "attribute_3989"
+                        "POSITION": "attribute_3989"
                     }
                 }
             ]
@@ -5548,7 +5548,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4008",
-                        "VERTEX": "attribute_4006"
+                        "POSITION": "attribute_4006"
                     }
                 }
             ]
@@ -5605,7 +5605,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4025",
-                        "VERTEX": "attribute_4023"
+                        "POSITION": "attribute_4023"
                     }
                 }
             ]
@@ -5662,7 +5662,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4042",
-                        "VERTEX": "attribute_4040"
+                        "POSITION": "attribute_4040"
                     }
                 }
             ]
@@ -5719,7 +5719,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4059",
-                        "VERTEX": "attribute_4057"
+                        "POSITION": "attribute_4057"
                     }
                 }
             ]
@@ -5776,7 +5776,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4076",
-                        "VERTEX": "attribute_4074"
+                        "POSITION": "attribute_4074"
                     }
                 }
             ]
@@ -5833,7 +5833,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4093",
-                        "VERTEX": "attribute_4091"
+                        "POSITION": "attribute_4091"
                     }
                 }
             ]
@@ -5890,7 +5890,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_4110",
-                        "VERTEX": "attribute_4108"
+                        "POSITION": "attribute_4108"
                     }
                 }
             ]
@@ -5947,7 +5947,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_390",
-                        "VERTEX": "attribute_388"
+                        "POSITION": "attribute_388"
                     }
                 }
             ]
@@ -6004,7 +6004,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_407",
-                        "VERTEX": "attribute_405"
+                        "POSITION": "attribute_405"
                     }
                 }
             ]
@@ -6061,7 +6061,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_424",
-                        "VERTEX": "attribute_422"
+                        "POSITION": "attribute_422"
                     }
                 }
             ]
@@ -6118,7 +6118,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_441",
-                        "VERTEX": "attribute_439"
+                        "POSITION": "attribute_439"
                     }
                 }
             ]
@@ -6175,7 +6175,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_458",
-                        "VERTEX": "attribute_456"
+                        "POSITION": "attribute_456"
                     }
                 }
             ]
@@ -6232,7 +6232,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_50",
-                        "VERTEX": "attribute_48"
+                        "POSITION": "attribute_48"
                     }
                 }
             ]
@@ -6289,7 +6289,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_475",
-                        "VERTEX": "attribute_473"
+                        "POSITION": "attribute_473"
                     }
                 }
             ]
@@ -6346,7 +6346,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_492",
-                        "VERTEX": "attribute_490"
+                        "POSITION": "attribute_490"
                     }
                 }
             ]
@@ -6403,7 +6403,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_509",
-                        "VERTEX": "attribute_507"
+                        "POSITION": "attribute_507"
                     }
                 }
             ]
@@ -6460,7 +6460,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_526",
-                        "VERTEX": "attribute_524"
+                        "POSITION": "attribute_524"
                     }
                 }
             ]
@@ -6517,7 +6517,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_543",
-                        "VERTEX": "attribute_541"
+                        "POSITION": "attribute_541"
                     }
                 }
             ]
@@ -6574,7 +6574,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_560",
-                        "VERTEX": "attribute_558"
+                        "POSITION": "attribute_558"
                     }
                 }
             ]
@@ -6631,7 +6631,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_577",
-                        "VERTEX": "attribute_575"
+                        "POSITION": "attribute_575"
                     }
                 }
             ]
@@ -6688,7 +6688,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_594",
-                        "VERTEX": "attribute_592"
+                        "POSITION": "attribute_592"
                     }
                 }
             ]
@@ -6745,7 +6745,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_611",
-                        "VERTEX": "attribute_609"
+                        "POSITION": "attribute_609"
                     }
                 }
             ]
@@ -6802,7 +6802,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_628",
-                        "VERTEX": "attribute_626"
+                        "POSITION": "attribute_626"
                     }
                 }
             ]
@@ -6859,7 +6859,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_645",
-                        "VERTEX": "attribute_643"
+                        "POSITION": "attribute_643"
                     }
                 }
             ]
@@ -6916,7 +6916,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_662",
-                        "VERTEX": "attribute_660"
+                        "POSITION": "attribute_660"
                     }
                 }
             ]
@@ -6973,7 +6973,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_679",
-                        "VERTEX": "attribute_677"
+                        "POSITION": "attribute_677"
                     }
                 }
             ]
@@ -7030,7 +7030,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_696",
-                        "VERTEX": "attribute_694"
+                        "POSITION": "attribute_694"
                     }
                 }
             ]
@@ -7087,7 +7087,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_713",
-                        "VERTEX": "attribute_711"
+                        "POSITION": "attribute_711"
                     }
                 }
             ]
@@ -7144,7 +7144,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_67",
-                        "VERTEX": "attribute_65"
+                        "POSITION": "attribute_65"
                     }
                 }
             ]
@@ -7201,7 +7201,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_730",
-                        "VERTEX": "attribute_728"
+                        "POSITION": "attribute_728"
                     }
                 }
             ]
@@ -7258,7 +7258,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_747",
-                        "VERTEX": "attribute_745"
+                        "POSITION": "attribute_745"
                     }
                 }
             ]
@@ -7315,7 +7315,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_764",
-                        "VERTEX": "attribute_762"
+                        "POSITION": "attribute_762"
                     }
                 }
             ]
@@ -7372,7 +7372,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_16",
-                        "VERTEX": "attribute_14"
+                        "POSITION": "attribute_14"
                     }
                 }
             ]
@@ -7429,7 +7429,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_781",
-                        "VERTEX": "attribute_779"
+                        "POSITION": "attribute_779"
                     }
                 }
             ]
@@ -7486,7 +7486,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_798",
-                        "VERTEX": "attribute_796"
+                        "POSITION": "attribute_796"
                     }
                 }
             ]
@@ -7543,7 +7543,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_815",
-                        "VERTEX": "attribute_813"
+                        "POSITION": "attribute_813"
                     }
                 }
             ]
@@ -7600,7 +7600,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_832",
-                        "VERTEX": "attribute_830"
+                        "POSITION": "attribute_830"
                     }
                 }
             ]
@@ -7657,7 +7657,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_849",
-                        "VERTEX": "attribute_847"
+                        "POSITION": "attribute_847"
                     }
                 }
             ]
@@ -7714,7 +7714,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_866",
-                        "VERTEX": "attribute_864"
+                        "POSITION": "attribute_864"
                     }
                 }
             ]
@@ -7771,7 +7771,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_84",
-                        "VERTEX": "attribute_82"
+                        "POSITION": "attribute_82"
                     }
                 }
             ]
@@ -7828,7 +7828,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_883",
-                        "VERTEX": "attribute_881"
+                        "POSITION": "attribute_881"
                     }
                 }
             ]
@@ -7885,7 +7885,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_900",
-                        "VERTEX": "attribute_898"
+                        "POSITION": "attribute_898"
                     }
                 }
             ]
@@ -7942,7 +7942,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_929",
-                        "VERTEX": "attribute_927"
+                        "POSITION": "attribute_927"
                     }
                 }
             ]
@@ -7999,7 +7999,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_946",
-                        "VERTEX": "attribute_944"
+                        "POSITION": "attribute_944"
                     }
                 }
             ]
@@ -8056,7 +8056,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_963",
-                        "VERTEX": "attribute_961"
+                        "POSITION": "attribute_961"
                     }
                 }
             ]
@@ -8113,7 +8113,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_101",
-                        "VERTEX": "attribute_99"
+                        "POSITION": "attribute_99"
                     }
                 }
             ]
@@ -8170,7 +8170,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_980",
-                        "VERTEX": "attribute_978"
+                        "POSITION": "attribute_978"
                     }
                 }
             ]
@@ -8227,7 +8227,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_997",
-                        "VERTEX": "attribute_995"
+                        "POSITION": "attribute_995"
                     }
                 }
             ]
@@ -8284,7 +8284,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1014",
-                        "VERTEX": "attribute_1012"
+                        "POSITION": "attribute_1012"
                     }
                 }
             ]
@@ -8341,7 +8341,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1031",
-                        "VERTEX": "attribute_1029"
+                        "POSITION": "attribute_1029"
                     }
                 }
             ]
@@ -8398,7 +8398,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1048",
-                        "VERTEX": "attribute_1046"
+                        "POSITION": "attribute_1046"
                     }
                 }
             ]
@@ -8455,7 +8455,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1065",
-                        "VERTEX": "attribute_1063"
+                        "POSITION": "attribute_1063"
                     }
                 }
             ]
@@ -8512,7 +8512,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1082",
-                        "VERTEX": "attribute_1080"
+                        "POSITION": "attribute_1080"
                     }
                 }
             ]
@@ -8569,7 +8569,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1099",
-                        "VERTEX": "attribute_1097"
+                        "POSITION": "attribute_1097"
                     }
                 }
             ]
@@ -8626,7 +8626,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1116",
-                        "VERTEX": "attribute_1114"
+                        "POSITION": "attribute_1114"
                     }
                 }
             ]
@@ -8683,7 +8683,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1133",
-                        "VERTEX": "attribute_1131"
+                        "POSITION": "attribute_1131"
                     }
                 }
             ]
@@ -8740,7 +8740,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1150",
-                        "VERTEX": "attribute_1148"
+                        "POSITION": "attribute_1148"
                     }
                 }
             ]
@@ -8797,7 +8797,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_118",
-                        "VERTEX": "attribute_116"
+                        "POSITION": "attribute_116"
                     }
                 }
             ]
@@ -8854,7 +8854,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1167",
-                        "VERTEX": "attribute_1165"
+                        "POSITION": "attribute_1165"
                     }
                 }
             ]
@@ -8911,7 +8911,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1196",
-                        "VERTEX": "attribute_1194"
+                        "POSITION": "attribute_1194"
                     }
                 }
             ]
@@ -8968,7 +8968,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1213",
-                        "VERTEX": "attribute_1211"
+                        "POSITION": "attribute_1211"
                     }
                 }
             ]
@@ -9025,7 +9025,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1230",
-                        "VERTEX": "attribute_1228"
+                        "POSITION": "attribute_1228"
                     }
                 }
             ]
@@ -9082,7 +9082,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1247",
-                        "VERTEX": "attribute_1245"
+                        "POSITION": "attribute_1245"
                     }
                 }
             ]
@@ -9139,7 +9139,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1264",
-                        "VERTEX": "attribute_1262"
+                        "POSITION": "attribute_1262"
                     }
                 }
             ]
@@ -9196,7 +9196,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_135",
-                        "VERTEX": "attribute_133"
+                        "POSITION": "attribute_133"
                     }
                 }
             ]
@@ -9253,7 +9253,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1281",
-                        "VERTEX": "attribute_1279"
+                        "POSITION": "attribute_1279"
                     }
                 }
             ]
@@ -9310,7 +9310,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1298",
-                        "VERTEX": "attribute_1296"
+                        "POSITION": "attribute_1296"
                     }
                 }
             ]
@@ -9367,7 +9367,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1315",
-                        "VERTEX": "attribute_1313"
+                        "POSITION": "attribute_1313"
                     }
                 }
             ]
@@ -9424,7 +9424,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1332",
-                        "VERTEX": "attribute_1330"
+                        "POSITION": "attribute_1330"
                     }
                 }
             ]
@@ -9481,7 +9481,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1349",
-                        "VERTEX": "attribute_1347"
+                        "POSITION": "attribute_1347"
                     }
                 }
             ]
@@ -9538,7 +9538,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1366",
-                        "VERTEX": "attribute_1364"
+                        "POSITION": "attribute_1364"
                     }
                 }
             ]
@@ -9595,7 +9595,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1383",
-                        "VERTEX": "attribute_1381"
+                        "POSITION": "attribute_1381"
                     }
                 }
             ]
@@ -9652,7 +9652,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1400",
-                        "VERTEX": "attribute_1398"
+                        "POSITION": "attribute_1398"
                     }
                 }
             ]
@@ -9709,7 +9709,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1417",
-                        "VERTEX": "attribute_1415"
+                        "POSITION": "attribute_1415"
                     }
                 }
             ]
@@ -9766,7 +9766,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1434",
-                        "VERTEX": "attribute_1432"
+                        "POSITION": "attribute_1432"
                     }
                 }
             ]
@@ -9823,7 +9823,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_152",
-                        "VERTEX": "attribute_150"
+                        "POSITION": "attribute_150"
                     }
                 }
             ]
@@ -9880,7 +9880,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1451",
-                        "VERTEX": "attribute_1449"
+                        "POSITION": "attribute_1449"
                     }
                 }
             ]
@@ -9937,7 +9937,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1468",
-                        "VERTEX": "attribute_1466"
+                        "POSITION": "attribute_1466"
                     }
                 }
             ]
@@ -9994,7 +9994,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1485",
-                        "VERTEX": "attribute_1483"
+                        "POSITION": "attribute_1483"
                     }
                 }
             ]
@@ -10051,7 +10051,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1502",
-                        "VERTEX": "attribute_1500"
+                        "POSITION": "attribute_1500"
                     }
                 }
             ]
@@ -10108,7 +10108,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1519",
-                        "VERTEX": "attribute_1517"
+                        "POSITION": "attribute_1517"
                     }
                 }
             ]
@@ -10165,7 +10165,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1536",
-                        "VERTEX": "attribute_1534"
+                        "POSITION": "attribute_1534"
                     }
                 }
             ]
@@ -10222,7 +10222,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1553",
-                        "VERTEX": "attribute_1551"
+                        "POSITION": "attribute_1551"
                     }
                 }
             ]
@@ -10279,7 +10279,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1570",
-                        "VERTEX": "attribute_1568"
+                        "POSITION": "attribute_1568"
                     }
                 }
             ]
@@ -10336,7 +10336,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1587",
-                        "VERTEX": "attribute_1585"
+                        "POSITION": "attribute_1585"
                     }
                 }
             ]
@@ -10393,7 +10393,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1604",
-                        "VERTEX": "attribute_1602"
+                        "POSITION": "attribute_1602"
                     }
                 }
             ]
@@ -10450,7 +10450,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1633",
-                        "VERTEX": "attribute_1631"
+                        "POSITION": "attribute_1631"
                     }
                 },
                 {
@@ -10464,7 +10464,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1633",
-                        "VERTEX": "attribute_1631"
+                        "POSITION": "attribute_1631"
                     }
                 }
             ]
@@ -10521,7 +10521,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_169",
-                        "VERTEX": "attribute_167"
+                        "POSITION": "attribute_167"
                     }
                 }
             ]
@@ -10578,7 +10578,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1650",
-                        "VERTEX": "attribute_1648"
+                        "POSITION": "attribute_1648"
                     }
                 }
             ]
@@ -10635,7 +10635,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1667",
-                        "VERTEX": "attribute_1665"
+                        "POSITION": "attribute_1665"
                     }
                 }
             ]
@@ -10692,7 +10692,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1696",
-                        "VERTEX": "attribute_1694"
+                        "POSITION": "attribute_1694"
                     }
                 },
                 {
@@ -10706,7 +10706,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1696",
-                        "VERTEX": "attribute_1694"
+                        "POSITION": "attribute_1694"
                     }
                 }
             ]
@@ -10763,7 +10763,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1713",
-                        "VERTEX": "attribute_1711"
+                        "POSITION": "attribute_1711"
                     }
                 }
             ]
@@ -10820,7 +10820,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1730",
-                        "VERTEX": "attribute_1728"
+                        "POSITION": "attribute_1728"
                     }
                 }
             ]
@@ -10877,7 +10877,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1747",
-                        "VERTEX": "attribute_1745"
+                        "POSITION": "attribute_1745"
                     }
                 }
             ]
@@ -10934,7 +10934,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1764",
-                        "VERTEX": "attribute_1762"
+                        "POSITION": "attribute_1762"
                     }
                 }
             ]
@@ -10991,7 +10991,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1781",
-                        "VERTEX": "attribute_1779"
+                        "POSITION": "attribute_1779"
                     }
                 }
             ]
@@ -11048,7 +11048,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1798",
-                        "VERTEX": "attribute_1796"
+                        "POSITION": "attribute_1796"
                     }
                 }
             ]
@@ -11105,7 +11105,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1815",
-                        "VERTEX": "attribute_1813"
+                        "POSITION": "attribute_1813"
                     }
                 }
             ]
@@ -11162,7 +11162,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_186",
-                        "VERTEX": "attribute_184"
+                        "POSITION": "attribute_184"
                     }
                 }
             ]
@@ -11219,7 +11219,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1832",
-                        "VERTEX": "attribute_1830"
+                        "POSITION": "attribute_1830"
                     }
                 }
             ]
@@ -11276,7 +11276,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1849",
-                        "VERTEX": "attribute_1847"
+                        "POSITION": "attribute_1847"
                     }
                 }
             ]
@@ -11333,7 +11333,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1866",
-                        "VERTEX": "attribute_1864"
+                        "POSITION": "attribute_1864"
                     }
                 }
             ]
@@ -11390,7 +11390,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1883",
-                        "VERTEX": "attribute_1881"
+                        "POSITION": "attribute_1881"
                     }
                 }
             ]
@@ -11447,7 +11447,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1900",
-                        "VERTEX": "attribute_1898"
+                        "POSITION": "attribute_1898"
                     }
                 }
             ]
@@ -11504,7 +11504,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1917",
-                        "VERTEX": "attribute_1915"
+                        "POSITION": "attribute_1915"
                     }
                 }
             ]
@@ -11561,7 +11561,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1934",
-                        "VERTEX": "attribute_1932"
+                        "POSITION": "attribute_1932"
                     }
                 }
             ]
@@ -11618,7 +11618,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1951",
-                        "VERTEX": "attribute_1949"
+                        "POSITION": "attribute_1949"
                     }
                 }
             ]
@@ -11675,7 +11675,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1968",
-                        "VERTEX": "attribute_1966"
+                        "POSITION": "attribute_1966"
                     }
                 }
             ]
@@ -11732,7 +11732,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_1985",
-                        "VERTEX": "attribute_1983"
+                        "POSITION": "attribute_1983"
                     }
                 }
             ]
@@ -11789,7 +11789,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_203",
-                        "VERTEX": "attribute_201"
+                        "POSITION": "attribute_201"
                     }
                 }
             ]
@@ -11846,7 +11846,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2002",
-                        "VERTEX": "attribute_2000"
+                        "POSITION": "attribute_2000"
                     }
                 }
             ]
@@ -11903,7 +11903,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2019",
-                        "VERTEX": "attribute_2017"
+                        "POSITION": "attribute_2017"
                     }
                 }
             ]
@@ -11960,7 +11960,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2036",
-                        "VERTEX": "attribute_2034"
+                        "POSITION": "attribute_2034"
                     }
                 }
             ]
@@ -12017,7 +12017,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2053",
-                        "VERTEX": "attribute_2051"
+                        "POSITION": "attribute_2051"
                     }
                 }
             ]
@@ -12074,7 +12074,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2070",
-                        "VERTEX": "attribute_2068"
+                        "POSITION": "attribute_2068"
                     }
                 }
             ]
@@ -12131,7 +12131,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2087",
-                        "VERTEX": "attribute_2085"
+                        "POSITION": "attribute_2085"
                     }
                 }
             ]
@@ -12188,7 +12188,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2104",
-                        "VERTEX": "attribute_2102"
+                        "POSITION": "attribute_2102"
                     }
                 }
             ]
@@ -12245,7 +12245,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2121",
-                        "VERTEX": "attribute_2119"
+                        "POSITION": "attribute_2119"
                     }
                 }
             ]
@@ -12302,7 +12302,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2138",
-                        "VERTEX": "attribute_2136"
+                        "POSITION": "attribute_2136"
                     }
                 }
             ]
@@ -12359,7 +12359,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2155",
-                        "VERTEX": "attribute_2153"
+                        "POSITION": "attribute_2153"
                     }
                 }
             ]
@@ -12416,7 +12416,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2172",
-                        "VERTEX": "attribute_2170"
+                        "POSITION": "attribute_2170"
                     }
                 }
             ]
@@ -12473,7 +12473,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2189",
-                        "VERTEX": "attribute_2187"
+                        "POSITION": "attribute_2187"
                     }
                 }
             ]
@@ -12530,7 +12530,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2206",
-                        "VERTEX": "attribute_2204"
+                        "POSITION": "attribute_2204"
                     }
                 }
             ]
@@ -12587,7 +12587,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_220",
-                        "VERTEX": "attribute_218"
+                        "POSITION": "attribute_218"
                     }
                 }
             ]
@@ -12644,7 +12644,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2223",
-                        "VERTEX": "attribute_2221"
+                        "POSITION": "attribute_2221"
                     }
                 }
             ]
@@ -12701,7 +12701,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2240",
-                        "VERTEX": "attribute_2238"
+                        "POSITION": "attribute_2238"
                     }
                 }
             ]
@@ -12758,7 +12758,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2257",
-                        "VERTEX": "attribute_2255"
+                        "POSITION": "attribute_2255"
                     }
                 }
             ]
@@ -12815,7 +12815,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2274",
-                        "VERTEX": "attribute_2272"
+                        "POSITION": "attribute_2272"
                     }
                 }
             ]
@@ -12872,7 +12872,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2291",
-                        "VERTEX": "attribute_2289"
+                        "POSITION": "attribute_2289"
                     }
                 }
             ]
@@ -12929,7 +12929,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2308",
-                        "VERTEX": "attribute_2306"
+                        "POSITION": "attribute_2306"
                     }
                 }
             ]
@@ -12986,7 +12986,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2325",
-                        "VERTEX": "attribute_2323"
+                        "POSITION": "attribute_2323"
                     }
                 }
             ]
@@ -13043,7 +13043,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2342",
-                        "VERTEX": "attribute_2340"
+                        "POSITION": "attribute_2340"
                     }
                 }
             ]
@@ -13100,7 +13100,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2359",
-                        "VERTEX": "attribute_2357"
+                        "POSITION": "attribute_2357"
                     }
                 }
             ]
@@ -13157,7 +13157,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2376",
-                        "VERTEX": "attribute_2374"
+                        "POSITION": "attribute_2374"
                     }
                 }
             ]
@@ -13214,7 +13214,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2393",
-                        "VERTEX": "attribute_2391"
+                        "POSITION": "attribute_2391"
                     }
                 }
             ]
@@ -13271,7 +13271,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2410",
-                        "VERTEX": "attribute_2408"
+                        "POSITION": "attribute_2408"
                     }
                 }
             ]
@@ -13328,7 +13328,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2427",
-                        "VERTEX": "attribute_2425"
+                        "POSITION": "attribute_2425"
                     }
                 }
             ]
@@ -13385,7 +13385,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_237",
-                        "VERTEX": "attribute_235"
+                        "POSITION": "attribute_235"
                     }
                 }
             ]
@@ -13442,7 +13442,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2444",
-                        "VERTEX": "attribute_2442"
+                        "POSITION": "attribute_2442"
                     }
                 }
             ]
@@ -13499,7 +13499,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2461",
-                        "VERTEX": "attribute_2459"
+                        "POSITION": "attribute_2459"
                     }
                 }
             ]
@@ -13556,7 +13556,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2478",
-                        "VERTEX": "attribute_2476"
+                        "POSITION": "attribute_2476"
                     }
                 }
             ]
@@ -13613,7 +13613,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2495",
-                        "VERTEX": "attribute_2493"
+                        "POSITION": "attribute_2493"
                     }
                 }
             ]
@@ -13670,7 +13670,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2512",
-                        "VERTEX": "attribute_2510"
+                        "POSITION": "attribute_2510"
                     }
                 }
             ]
@@ -13727,7 +13727,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2529",
-                        "VERTEX": "attribute_2527"
+                        "POSITION": "attribute_2527"
                     }
                 }
             ]
@@ -13784,7 +13784,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2546",
-                        "VERTEX": "attribute_2544"
+                        "POSITION": "attribute_2544"
                     }
                 }
             ]
@@ -13841,7 +13841,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2563",
-                        "VERTEX": "attribute_2561"
+                        "POSITION": "attribute_2561"
                     }
                 }
             ]
@@ -13898,7 +13898,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2580",
-                        "VERTEX": "attribute_2578"
+                        "POSITION": "attribute_2578"
                     }
                 }
             ]
@@ -13955,7 +13955,7 @@
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_2597",
-                        "VERTEX": "attribute_2595"
+                        "POSITION": "attribute_2595"
                     }
                 }
             ]
@@ -14690,7 +14690,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },
@@ -14746,7 +14746,7 @@
                     "program": {
                         "attributes": [
                             {
-                                "semantic": "VERTEX",
+                                "semantic": "POSITION",
                                 "symbol": "vert",
                                 "type": "FLOAT_VEC3"
                             },

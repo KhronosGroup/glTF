@@ -62,7 +62,7 @@ namespace JSONExport
     
         
     typedef enum {
-        VERTEX = 1,
+        POSITION = 1,
         NORMAL = 2,
         TEXCOORD = 3,
         COLOR = 4

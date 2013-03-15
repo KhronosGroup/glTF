@@ -304,7 +304,7 @@ namespace JSONExport
         
         shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,count));
         
-        __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, VERTEX, 0);
+        __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, POSITION, 0);
         
         if (openCOLLADAMeshPrimitive->hasNormalIndices()) {
             indices = openCOLLADAMeshPrimitive->getNormalIndices().getData();
@@ -430,7 +430,7 @@ namespace JSONExport
                 JSONExport::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
                     
                 switch (semantic) {
-                    case JSONExport::VERTEX: 
+                    case JSONExport::POSITION:
                         ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(openCOLLADAMesh->getPositions(), accessors);
                         break;
                         
@@ -780,7 +780,7 @@ namespace JSONExport
                     }
                     
                     if (sceneFlatteningInfo) {
-                        JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::VERTEX);
+                        JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::POSITION);
                         shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
                         
                         BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()),

@@ -95,8 +95,8 @@ namespace JSONExport
         static std::string getStringForSemantic(JSONExport::Semantic semantic) 
         {
             switch (semantic) {
-                case JSONExport::VERTEX:
-                    return "VERTEX";
+                case JSONExport::POSITION:
+                    return "POSITION";
                 case JSONExport::NORMAL:
                     return "NORMAL";
                 case JSONExport::TEXCOORD:
