@@ -113,7 +113,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
     };
 
     IndicesDelegate.prototype.convert = function(resource, ctx) {
-        return new Uint16Array(resource, 0, ctx.indices.length);
+        return new Uint16Array(resource, 0, ctx.indices.count);
     };
 
     IndicesDelegate.prototype.resourceAvailable = function(glResource, ctx) {
@@ -151,19 +151,19 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
 
         if(attribute.semantic == "VERTEX") {
             // TODO: Should be easy to take strides into account here
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.vertices.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
         } else if(attribute.semantic == "NORMAL") {
             geometry.normals = [];
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
         } else if(attribute.semantic == "TEXCOORD") {
             geometry.uvs = [];
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.elementsPerValue);
+            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 2) {
                 geometry.uvs.push( new THREE.UV( floatArray[i], floatArray[i+1] ) );
             }
@@ -288,6 +288,21 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
         handleBuffer: {
             value: function(entryID, description, userInfo) {
                 this.threeResources.setEntry(entryID, null, description);
+                description.type = "ArrayBuffer";
+                return true;
+            }
+        },
+
+        handleBufferView: {
+            value: function(entryID, description, userInfo) {
+                this.threeResources.setEntry(entryID, null, description);
+
+                var buffer =  this.threeResources.getEntry(description.buffer);
+                description.type = "ArrayBufferView";
+
+
+                var bufferViewEntry = this.threeResources.getEntry(entryID);
+                bufferViewEntry.buffer = buffer;
                 return true;
             }
         },
@@ -376,8 +391,8 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                         if (!indicesEntry) {
                             indices = primitiveDescription.indices;
                             indices.id = indicesID;
-                            var bufferEntry = this.threeResources.getEntry(indices.buffer);
-                            indices.buffer = bufferEntry;
+                            var bufferEntry = this.threeResources.getEntry(indices.bufferView);
+                            indices.bufferView = bufferEntry;
                             this.threeResources.setEntry(indicesID, indices, indices);
                             indicesEntry = this.threeResources.getEntry(indicesID);
                         }
@@ -402,8 +417,8 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                                 accessor.id = accessorID;
                                 this.threeResources.setEntry(accessorID, accessor, accessor);
             
-                                var bufferEntry = this.threeResources.getEntry(accessor.buffer);
-                                accessor.buffer = bufferEntry;
+                                var bufferEntry = this.threeResources.getEntry(accessor.bufferView);
+                                accessor.bufferView = bufferEntry;
                                 accessorEntry = this.threeResources.getEntry(accessorID);
                                 //this is a set ID, it has to stay a string
                             } else {
