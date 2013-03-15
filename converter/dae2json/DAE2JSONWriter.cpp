@@ -522,6 +522,7 @@ namespace JSONExport
         this->_verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
                 
         this->_converterContext.root = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+        this->_converterContext.root->setString("profile", "WebGL 1.0");
         this->_converterContext.root->setString("version", "0.2");
         this->_converterContext.root->setValue("nodes", shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject()));
                                 
