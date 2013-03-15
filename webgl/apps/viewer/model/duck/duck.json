@@ -1,12 +1,12 @@
 {
     "bufferViews": {
-        "bufferView.24": {
+        "bufferView_24": {
             "buffer": "duck.bin",
             "byteLength": 76768,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
-        "bufferView.25": {
+        "bufferView_25": {
             "buffer": "duck.bin",
             "byteLength": 25272,
             "byteOffset": 76768,
@@ -55,8 +55,8 @@
     "meshes": {
         "LOD3spShape-lib": {
             "accessors": {
-                "accessor.18": {
-                    "bufferView": "bufferView.24",
+                "accessor_18": {
+                    "bufferView": "bufferView_24",
                     "byteOffset": 0,
                     "byteStride": 12,
                     "componentType": "FLOAT",
@@ -73,8 +73,8 @@
                         -61.3282
                     ]
                 },
-                "accessor.20": {
-                    "bufferView": "bufferView.24",
+                "accessor_20": {
+                    "bufferView": "bufferView_24",
                     "byteOffset": 28788,
                     "byteStride": 12,
                     "componentType": "FLOAT",
@@ -91,8 +91,8 @@
                         -0.999832
                     ]
                 },
-                "accessor.22": {
-                    "bufferView": "bufferView.24",
+                "accessor_22": {
+                    "bufferView": "bufferView_24",
                     "byteOffset": 57576,
                     "byteStride": 8,
                     "componentType": "FLOAT",
@@ -112,7 +112,7 @@
             "primitives": [
                 {
                     "indices": {
-                        "bufferView": "bufferView.25",
+                        "bufferView": "bufferView_25",
                         "byteOffset": 0,
                         "count": 12636,
                         "type": "UNSIGNED_SHORT"
@@ -121,15 +121,15 @@
                     "primitive": "TRIANGLES",
                     "vertexAttributes": [
                         {
-                            "accessor": "accessor.18",
+                            "accessor": "accessor_18",
                             "semantic": "VERTEX"
                         },
                         {
-                            "accessor": "accessor.20",
+                            "accessor": "accessor_20",
                             "semantic": "NORMAL"
                         },
                         {
-                            "accessor": "accessor.22",
+                            "accessor": "accessor_22",
                             "semantic": "TEXCOORD"
                         }
                     ]

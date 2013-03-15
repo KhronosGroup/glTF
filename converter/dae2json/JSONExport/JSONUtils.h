@@ -59,12 +59,13 @@ namespace JSONExport
         static std::string generateIDForType(const char* typeCStr, const char* suffix = 0)
         {   
             static unsigned int generatedIDCount = 1;
+            char separator = '_';
             
             std::string type(typeCStr);
-            type +=  "."; // FIXME: should probably not generate a "-" for a JSON output
+            type +=  separator; // FIXME: should probably not generate a "-" for a JSON output
             type += JSONUtils::toString(generatedIDCount++);
             if (suffix) {
-                type +=  "."; // FIXME: should probably not generate a "-" for a JSON output
+                type +=  separator;
                 type += suffix;
             }
             
