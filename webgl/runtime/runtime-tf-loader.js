@@ -267,30 +267,27 @@ var global = window;
 
                         mesh.primitives.push(primitive);
 
-                        var vertexAttributesDescription = primitiveDescription.vertexAttributes;
+                        var semantics = primitiveDescription.semantics;
+                        var allSemantics = Object.keys(semantics);
 
-                        vertexAttributesDescription.forEach( function(vertexAttributeDescription) {
-                            var accessorID = vertexAttributeDescription.accessor;
-                            var accessorEntry = this.getEntry(accessorID);
-                            if (!accessorEntry) {
-                                //let's just use an anonymous object for the accessor
-                                var accessor = description.accessors[accessorID];
-                                accessor.type = "accessor";
-                                accessor.id = accessorID;
-                                this.storeEntry(accessorID, accessor, accessor);
+                        allSemantics.forEach( function(semantic) {
+                            var attributeID = semantics[semantic];
+                            var attributeEntry = this.getEntry(attributeID);
+                            if (!attributeEntry) {
+                                //let's just use an anonymous object for the attribute
+                                var attribute = description.attributes[attributeID];
+                                attribute.type = "attribute";
+                                attribute.id = attributeID;
+                                this.storeEntry(attributeID, attribute, attribute);
 
-                                var bufferEntry = this.getEntry(accessor.bufferView);
-                                accessor.bufferView = bufferEntry.entry;
-                                accessorEntry = this.getEntry(accessorID);
-                                if (!accessor.byteOffset)
-                                    accessor.byteOffset = 0;
-                                //this is a set ID, it has to stay a string
+                                var bufferEntry = this.getEntry(attribute.bufferView);
+                                attribute.bufferView = bufferEntry.entry;
+                                attributeEntry = this.getEntry(attributeID);
+                                if (!attribute.byteOffset)
+                                    attribute.byteOffset = 0;
                             }
-                            var set = vertexAttributeDescription.set ? vertexAttributeDescription.set : "0";
-
-                            primitive.addVertexAttribute( { "semantic" :  vertexAttributeDescription.semantic,
-                                                            "set" : set,
-                                                            "accessor" : accessorEntry.entry });
+                            primitive.addVertexAttribute( { "semantic" :  semantic,
+                                                            "attribute" : attributeEntry.entry });
 
                         }, this);
 

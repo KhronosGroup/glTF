@@ -154,8 +154,8 @@
     },
     "meshes": {
         "geometry16": {
-            "accessors": {
-                "accessor_24": {
+            "attributes": {
+                "attribute_24": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 0,
                     "byteStride": 12,
@@ -173,7 +173,7 @@
                         5.5
                     ]
                 },
-                "accessor_26": {
+                "attribute_26": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 1152,
                     "byteStride": 12,
@@ -191,7 +191,7 @@
                         -1
                     ]
                 },
-                "accessor_28": {
+                "attribute_28": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 2304,
                     "byteStride": 8,
@@ -219,26 +219,17 @@
                     },
                     "material": "material.2",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_24",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_26",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_28",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_26",
+                        "TEXCOORD": "attribute_28",
+                        "VERTEX": "attribute_24"
+                    }
                 }
             ]
         },
         "geometry24": {
-            "accessors": {
-                "accessor_43": {
+            "attributes": {
+                "attribute_43": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 3072,
                     "byteStride": 12,
@@ -256,7 +247,7 @@
                         0
                     ]
                 },
-                "accessor_45": {
+                "attribute_45": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 11712,
                     "byteStride": 12,
@@ -286,22 +277,16 @@
                     },
                     "material": "material.3",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_43",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_45",
-                            "semantic": "NORMAL"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_45",
+                        "VERTEX": "attribute_43"
+                    }
                 }
             ]
         },
         "geometry29": {
-            "accessors": {
-                "accessor_60": {
+            "attributes": {
+                "attribute_60": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 20352,
                     "byteStride": 12,
@@ -319,7 +304,7 @@
                         0
                     ]
                 },
-                "accessor_62": {
+                "attribute_62": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 28992,
                     "byteStride": 12,
@@ -349,22 +334,16 @@
                     },
                     "material": "material.3",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_60",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_62",
-                            "semantic": "NORMAL"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_62",
+                        "VERTEX": "attribute_60"
+                    }
                 }
             ]
         },
         "geometry35": {
-            "accessors": {
-                "accessor_81": {
+            "attributes": {
+                "attribute_81": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 37632,
                     "byteStride": 12,
@@ -382,7 +361,7 @@
                         2.5
                     ]
                 },
-                "accessor_83": {
+                "attribute_83": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 37992,
                     "byteStride": 12,
@@ -400,7 +379,7 @@
                         -1
                     ]
                 },
-                "accessor_85": {
+                "attribute_85": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 38352,
                     "byteStride": 8,
@@ -428,26 +407,17 @@
                     },
                     "material": "material.2",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_81",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_83",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_85",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_83",
+                        "TEXCOORD": "attribute_85",
+                        "VERTEX": "attribute_81"
+                    }
                 }
             ]
         },
         "geometry40": {
-            "accessors": {
-                "accessor_104": {
+            "attributes": {
+                "attribute_104": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 38592,
                     "byteStride": 12,
@@ -465,7 +435,7 @@
                         0
                     ]
                 },
-                "accessor_106": {
+                "attribute_106": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 40704,
                     "byteStride": 12,
@@ -483,7 +453,7 @@
                         -1
                     ]
                 },
-                "accessor_108": {
+                "attribute_108": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 42816,
                     "byteStride": 8,
@@ -511,26 +481,17 @@
                     },
                     "material": "material.2",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_104",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_106",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_108",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_106",
+                        "TEXCOORD": "attribute_108",
+                        "VERTEX": "attribute_104"
+                    }
                 }
             ]
         },
         "geometry45": {
-            "accessors": {
-                "accessor_127": {
+            "attributes": {
+                "attribute_127": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 44224,
                     "byteStride": 12,
@@ -548,7 +509,7 @@
                         5.5
                     ]
                 },
-                "accessor_129": {
+                "attribute_129": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 45376,
                     "byteStride": 12,
@@ -566,7 +527,7 @@
                         -1
                     ]
                 },
-                "accessor_131": {
+                "attribute_131": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 46528,
                     "byteStride": 8,
@@ -594,26 +555,17 @@
                     },
                     "material": "material.2",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_127",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_129",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_131",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_129",
+                        "TEXCOORD": "attribute_131",
+                        "VERTEX": "attribute_127"
+                    }
                 }
             ]
         },
         "geometry51": {
-            "accessors": {
-                "accessor_150": {
+            "attributes": {
+                "attribute_150": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 47296,
                     "byteStride": 12,
@@ -631,7 +583,7 @@
                         0
                     ]
                 },
-                "accessor_152": {
+                "attribute_152": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 70912,
                     "byteStride": 12,
@@ -649,7 +601,7 @@
                         -0.962469
                     ]
                 },
-                "accessor_154": {
+                "attribute_154": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 94528,
                     "byteStride": 8,
@@ -677,26 +629,17 @@
                     },
                     "material": "material.4",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_150",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_152",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_154",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_152",
+                        "TEXCOORD": "attribute_154",
+                        "VERTEX": "attribute_150"
+                    }
                 }
             ]
         },
         "geometry58": {
-            "accessors": {
-                "accessor_189": {
+            "attributes": {
+                "attribute_189": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 110272,
                     "byteStride": 12,
@@ -714,7 +657,7 @@
                         0
                     ]
                 },
-                "accessor_191": {
+                "attribute_191": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 110848,
                     "byteStride": 12,
@@ -732,7 +675,7 @@
                         -1
                     ]
                 },
-                "accessor_193": {
+                "attribute_193": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 111424,
                     "byteStride": 8,
@@ -760,20 +703,11 @@
                     },
                     "material": "material.5",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_189",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_191",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_193",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_191",
+                        "TEXCOORD": "attribute_193",
+                        "VERTEX": "attribute_189"
+                    }
                 },
                 {
                     "indices": {
@@ -784,26 +718,17 @@
                     },
                     "material": "material.4",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_189",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_191",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_193",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_191",
+                        "TEXCOORD": "attribute_193",
+                        "VERTEX": "attribute_189"
+                    }
                 }
             ]
         },
         "geometry64": {
-            "accessors": {
-                "accessor_212": {
+            "attributes": {
+                "attribute_212": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 111808,
                     "byteStride": 12,
@@ -821,7 +746,7 @@
                         0
                     ]
                 },
-                "accessor_214": {
+                "attribute_214": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 113920,
                     "byteStride": 12,
@@ -839,7 +764,7 @@
                         -1
                     ]
                 },
-                "accessor_216": {
+                "attribute_216": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 116032,
                     "byteStride": 8,
@@ -867,26 +792,17 @@
                     },
                     "material": "material.2",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_212",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_214",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_216",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_214",
+                        "TEXCOORD": "attribute_216",
+                        "VERTEX": "attribute_212"
+                    }
                 }
             ]
         },
         "geometry71": {
-            "accessors": {
-                "accessor_231": {
+            "attributes": {
+                "attribute_231": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 117440,
                     "byteStride": 12,
@@ -904,7 +820,7 @@
                         0
                     ]
                 },
-                "accessor_233": {
+                "attribute_233": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 120128,
                     "byteStride": 12,
@@ -934,22 +850,16 @@
                     },
                     "material": "material.3",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_231",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_233",
-                            "semantic": "NORMAL"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_233",
+                        "VERTEX": "attribute_231"
+                    }
                 }
             ]
         },
         "geometry75": {
-            "accessors": {
-                "accessor_252": {
+            "attributes": {
+                "attribute_252": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 122816,
                     "byteStride": 12,
@@ -967,7 +877,7 @@
                         0
                     ]
                 },
-                "accessor_254": {
+                "attribute_254": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 158012,
                     "byteStride": 12,
@@ -985,7 +895,7 @@
                         -1
                     ]
                 },
-                "accessor_256": {
+                "attribute_256": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 193208,
                     "byteStride": 8,
@@ -1013,26 +923,17 @@
                     },
                     "material": "material.6",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_252",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_254",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_256",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_254",
+                        "TEXCOORD": "attribute_256",
+                        "VERTEX": "attribute_252"
+                    }
                 }
             ]
         },
         "geometry85": {
-            "accessors": {
-                "accessor_271": {
+            "attributes": {
+                "attribute_271": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 216672,
                     "byteStride": 12,
@@ -1050,7 +951,7 @@
                         0
                     ]
                 },
-                "accessor_273": {
+                "attribute_273": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 218112,
                     "byteStride": 12,
@@ -1080,22 +981,16 @@
                     },
                     "material": "material.3",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_271",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_273",
-                            "semantic": "NORMAL"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_273",
+                        "VERTEX": "attribute_271"
+                    }
                 }
             ]
         },
         "geometry89": {
-            "accessors": {
-                "accessor_292": {
+            "attributes": {
+                "attribute_292": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 219552,
                     "byteStride": 12,
@@ -1113,7 +1008,7 @@
                         0
                     ]
                 },
-                "accessor_294": {
+                "attribute_294": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 243168,
                     "byteStride": 12,
@@ -1131,7 +1026,7 @@
                         -0.962469
                     ]
                 },
-                "accessor_296": {
+                "attribute_296": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 266784,
                     "byteStride": 8,
@@ -1159,26 +1054,17 @@
                     },
                     "material": "material.4",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_292",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_294",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_296",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_294",
+                        "TEXCOORD": "attribute_296",
+                        "VERTEX": "attribute_292"
+                    }
                 }
             ]
         },
         "geometry98": {
-            "accessors": {
-                "accessor_331": {
+            "attributes": {
+                "attribute_331": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 282528,
                     "byteStride": 12,
@@ -1196,7 +1082,7 @@
                         0
                     ]
                 },
-                "accessor_333": {
+                "attribute_333": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 283104,
                     "byteStride": 12,
@@ -1214,7 +1100,7 @@
                         -1
                     ]
                 },
-                "accessor_335": {
+                "attribute_335": {
                     "bufferView": "bufferView_337",
                     "byteOffset": 283680,
                     "byteStride": 8,
@@ -1242,20 +1128,11 @@
                     },
                     "material": "material.5",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_331",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_333",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_335",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_333",
+                        "TEXCOORD": "attribute_335",
+                        "VERTEX": "attribute_331"
+                    }
                 },
                 {
                     "indices": {
@@ -1266,20 +1143,11 @@
                     },
                     "material": "material.4",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_331",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_333",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_335",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_333",
+                        "TEXCOORD": "attribute_335",
+                        "VERTEX": "attribute_331"
+                    }
                 }
             ]
         }

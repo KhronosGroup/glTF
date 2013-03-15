@@ -54,8 +54,8 @@
     },
     "meshes": {
         "LOD3spShape-lib": {
-            "accessors": {
-                "accessor_18": {
+            "attributes": {
+                "attribute_18": {
                     "bufferView": "bufferView_24",
                     "byteOffset": 0,
                     "byteStride": 12,
@@ -73,7 +73,7 @@
                         -61.3282
                     ]
                 },
-                "accessor_20": {
+                "attribute_20": {
                     "bufferView": "bufferView_24",
                     "byteOffset": 28788,
                     "byteStride": 12,
@@ -91,7 +91,7 @@
                         -0.999832
                     ]
                 },
-                "accessor_22": {
+                "attribute_22": {
                     "bufferView": "bufferView_24",
                     "byteOffset": 57576,
                     "byteStride": 8,
@@ -119,20 +119,11 @@
                     },
                     "material": "material.0",
                     "primitive": "TRIANGLES",
-                    "vertexAttributes": [
-                        {
-                            "accessor": "accessor_18",
-                            "semantic": "VERTEX"
-                        },
-                        {
-                            "accessor": "accessor_20",
-                            "semantic": "NORMAL"
-                        },
-                        {
-                            "accessor": "accessor_22",
-                            "semantic": "TEXCOORD"
-                        }
-                    ]
+                    "semantics": {
+                        "NORMAL": "attribute_20",
+                        "TEXCOORD": "attribute_22",
+                        "VERTEX": "attribute_18"
+                    }
                 }
             ]
         }

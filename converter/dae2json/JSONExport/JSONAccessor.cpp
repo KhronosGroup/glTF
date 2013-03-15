@@ -34,7 +34,7 @@ namespace JSONExport
 {
     void JSONAccessor::_generateID() 
     {
-        this->_ID = JSONUtils::generateIDForType("accessor");
+        this->_ID = JSONUtils::generateIDForType("attribute");
     }
     
     JSONAccessor::JSONAccessor(): _min(0), _max(0) 

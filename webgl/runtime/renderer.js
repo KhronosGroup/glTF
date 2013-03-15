@@ -501,9 +501,7 @@ var global = window;
                         
                     var symbol = attribute.symbol;
                     var semantic = attribute.semantic;
-                    var set = attribute.set ? attribute.set : "0";
-
-                    var accessor = primitive.getAccessorAssociatedWithSemanticAndSet(semantic, set);
+                    var accessor = primitive.semantics[semantic];
 
                     this.vertexAttributeBufferDelegate.webGLContext = this.webGLContext;
                     var glResource = this.resourceManager.getResource(  accessor, 
@@ -538,7 +536,8 @@ var global = window;
 
                 //-----
 
-                var available = (availableCount === primitive.vertexAttributes.length);
+
+                var available = availableCount === primitive.attributesCount;
                 if (!renderVertices)  { 
                     //Just disable what is not required here…
                     if (available) {
@@ -602,7 +601,8 @@ var global = window;
                             if (pass.states.BLEND) {
                                 blending = true;
                             } 
-                        } 
+                        }
+
                         this.setState(gl.BLEND, blending);
 
                         this.bindedProgram = glProgram;

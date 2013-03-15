@@ -53,56 +53,59 @@ var global = window;
 
     var Primitive = Object.create(Object.prototype, {
 
+        _attributesCount: {
+            enumerable: false,
+            value: 0,
+            writable: true
+        },
+
+        attributesCount : {
+            enumerable: false,
+            get: function() {
+                return this._attributesCount;
+            }
+        },
+
         init: {
             value: function() {
                 this.step = 0;
-                this.vertexAttributes = null;
+                this.semantics = {};
                 return this;
             }
         },
 
-        _vertexAttributes: {
+        _semantics: {
             enumerable: false,
             value: null,
             writable: true
         },
 
-        vertexAttributes: {
+        semantics: {
             enumerable: true,
             get: function() {
-                if (!this._vertexAttributes)
-                    this._vertexAttributes = [];
-                return this._vertexAttributes;
+                return this._semantics;
             },
-           set: function(value) {
-                this._vertexAttributes = value;
+            set: function(value) {
+                this._semantics = value;
             }
         },
 
+        //since semantics/set got simplified we should get rid of this eventually
         addVertexAttribute: {
             enumerable: false,
             value: function(vertexAttribute) {
-                if (vertexAttribute.semantic === "VERTEX") {
+                if ((vertexAttribute.semantic === "VERTEX") || (vertexAttribute.semantic === "POSITION")) {
                     var bbox = null;
-                    var accessor = vertexAttribute.accessor;
+                    var accessor = vertexAttribute.attribute;
                     if (accessor.min && accessor.max) {
                         bbox = [ accessor.min, accessor.max];
                     }
                     this.boundingBox = bbox;
                 }
-                this.vertexAttributes.push(vertexAttribute);
-            }
-        },
 
-        getAccessorAssociatedWithSemanticAndSet: {
-            enumerable: false,
-            value: function(semantic, set) {
-                // not efficient but typically not called at runtime
-                for (var i = 0 ; i < this.vertexAttributes.length ; i++) {
-                    var vertexAttribute = this.vertexAttributes[i];
-                    if ((vertexAttribute.semantic === semantic) && (vertexAttribute.set === set)) {
-                        return vertexAttribute.accessor;
-                    }
+                if (!this.semantics[vertexAttribute.semantics]) {
+                    this.semantics[vertexAttribute.semantic] = vertexAttribute.attribute;
+                    this._attributesCount++;
                 }
             }
         },

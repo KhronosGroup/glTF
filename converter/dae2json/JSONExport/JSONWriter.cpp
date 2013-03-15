@@ -80,7 +80,7 @@ namespace JSONExport
         
         //accessors
         shared_ptr <JSONExport::JSONObject> accessorsObject(new JSONExport::JSONObject());
-        meshObject->setValue("accessors", accessorsObject);
+        meshObject->setValue("attributes", accessorsObject);
         
         shared_ptr <AccessorVector> allAccessors = mesh->accessors();
         
@@ -185,22 +185,21 @@ namespace JSONExport
         primitiveObject->setString("primitive", primitive->getType());
         primitiveObject->setString("material", primitive->getMaterialID());
         
-        shared_ptr <JSONExport::JSONArray> vertexAttributesArray(new JSONExport::JSONArray());
-        primitiveObject->setValue("vertexAttributes", vertexAttributesArray);
+        shared_ptr <JSONExport::JSONObject> semantics(new JSONExport::JSONObject());
+        primitiveObject->setValue("semantics", semantics);
         
         size_t count = primitive->getIndicesInfosCount();
         for (size_t j = 0 ; j < count ; j++) {
-            shared_ptr <JSONExport::JSONObject> indicesObject(new JSONExport::JSONObject());
-            
             JSONExport::Semantic semantic = primitive->getSemanticAtIndex(j);
-            vertexAttributesArray->appendValue(indicesObject);
-            indicesObject->setString("semantic", JSONUtils::getStringForSemantic(semantic));
+            
+            std::string semanticAndSet = JSONUtils::getStringForSemantic(semantic);
+            
             unsigned int indexOfSet = 0;
             if (mesh->getAccessorsForSemantic(semantic).size() > 1) {
                 indexOfSet = primitive->getIndexOfSetAtIndex(j);
-                indicesObject->setString("set", JSONUtils::toString(indexOfSet));
+                semanticAndSet += "_" + JSONUtils::toString(indexOfSet);
             }
-            indicesObject->setString("accessor",
+            semantics->setString(semanticAndSet,
                                      mesh->getAccessorsForSemantic(semantic)[indexOfSet]->getID());
         }
         

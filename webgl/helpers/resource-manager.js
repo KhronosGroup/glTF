@@ -699,13 +699,13 @@ var global = window;
             }
         },
 
-        _handleAccessorResourceLoading: {
-            value: function(accessor, delegate, ctx) {
-                var bufferView = accessor.bufferView;
+        _handleAttributeResourceLoading: {
+            value: function(attribute, delegate, ctx) {
+                var bufferView = attribute.bufferView;
                 var buffer = bufferView.buffer;
-                var byteOffset = accessor.byteOffset + bufferView.description.byteOffset;
-                var range = [byteOffset , (accessor.byteStride * accessor.count) + byteOffset];
-                this._handleRequest({   "id" : accessor.id,
+                var byteOffset = attribute.byteOffset + bufferView.description.byteOffset;
+                var range = [byteOffset , (attribute.byteStride * attribute.count) + byteOffset];
+                this._handleRequest({   "id" : attribute.id,
                                         "range" : range,
                                         "type" : buffer.description.type,
                                         "path" : buffer.description.path,
@@ -851,8 +851,8 @@ var global = window;
                     return managedResource;
                 }
 
-                if (resource.type === "accessor") {
-                    this._handleAccessorResourceLoading(resource, delegate, ctx);
+                if (resource.type === "attribute") {
+                    this._handleAttributeResourceLoading(resource, delegate, ctx);
                 } else if (resource.type === "program") {
                     this._handleProgramLoading(resource, delegate, ctx);
                 } else if (resource.type === "shader") {

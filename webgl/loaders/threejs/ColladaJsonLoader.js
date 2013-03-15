@@ -300,7 +300,6 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                 var buffer =  this.threeResources.getEntry(description.buffer);
                 description.type = "ArrayBufferView";
 
-
                 var bufferViewEntry = this.threeResources.getEntry(entryID);
                 bufferViewEntry.buffer = buffer;
                 return true;
