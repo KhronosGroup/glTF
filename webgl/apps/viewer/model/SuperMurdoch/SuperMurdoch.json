@@ -4,22 +4,19 @@
             "buffer": "SuperMurdoch.bin",
             "byteLength": 390864,
             "byteOffset": 0,
-            "target": "ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ARRAY_BUFFER"
         },
         "bufferView.4159": {
             "buffer": "SuperMurdoch.bin",
             "byteLength": 81816,
             "byteOffset": 390864,
-            "target": "ELEMENT_ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ELEMENT_ARRAY_BUFFER"
         }
     },
     "buffers": {
         "SuperMurdoch.bin": {
             "byteLength": 472680,
-            "path": "SuperMurdoch.bin",
-            "type": "ArrayBuffer"
+            "path": "SuperMurdoch.bin"
         }
     },
     "materials": {

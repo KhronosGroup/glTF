@@ -92,6 +92,7 @@ var global = window;
                 buffer.id = entryID;
                 this.storeEntry(entryID, buffer, description);
                 this.totalBufferSize += description.byteLength;
+                description.type = "ArrayBuffer";
                 return true;
             }
         },
@@ -103,6 +104,7 @@ var global = window;
                 bufferView.id = entryID;
 
                 var buffer = this.getEntry(bufferView.description.buffer);
+                description.type = "ArrayBufferView";
 
                 bufferView.buffer = buffer;
                 this.storeEntry(entryID, bufferView, description);

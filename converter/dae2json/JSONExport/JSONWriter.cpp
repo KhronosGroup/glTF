@@ -38,7 +38,6 @@ namespace JSONExport
     {
         shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
         
-        bufferObject->setString("type", "ArrayBuffer");
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
         bufferObject->setString("path", buffer->getID());
         
@@ -49,7 +48,6 @@ namespace JSONExport
     {
         shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
         
-        bufferObject->setString("type", "ArrayBufferView");
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)bufferView->getByteLength());
         bufferObject->setUnsignedInt32("byteOffset", (unsigned int)bufferView->getByteOffset());
         bufferObject->setString("buffer", bufferView->getBuffer()->getID());

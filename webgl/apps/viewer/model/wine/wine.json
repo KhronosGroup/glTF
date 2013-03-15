@@ -4,22 +4,19 @@
             "buffer": "wine.bin",
             "byteLength": 284064,
             "byteOffset": 0,
-            "target": "ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ARRAY_BUFFER"
         },
         "bufferView.338": {
             "buffer": "wine.bin",
             "byteLength": 44940,
             "byteOffset": 284064,
-            "target": "ELEMENT_ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ELEMENT_ARRAY_BUFFER"
         }
     },
     "buffers": {
         "wine.bin": {
             "byteLength": 329004,
-            "path": "wine.bin",
-            "type": "ArrayBuffer"
+            "path": "wine.bin"
         }
     },
     "cameras": {

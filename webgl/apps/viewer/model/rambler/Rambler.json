@@ -4,22 +4,19 @@
             "buffer": "Rambler.bin",
             "byteLength": 10344480,
             "byteOffset": 0,
-            "target": "ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ARRAY_BUFFER"
         },
         "bufferView.13026": {
             "buffer": "Rambler.bin",
             "byteLength": 1197492,
             "byteOffset": 10344480,
-            "target": "ELEMENT_ARRAY_BUFFER",
-            "type": "ArrayBufferView"
+            "target": "ELEMENT_ARRAY_BUFFER"
         }
     },
     "buffers": {
         "Rambler.bin": {
             "byteLength": 11541972,
-            "path": "Rambler.bin",
-            "type": "ArrayBuffer"
+            "path": "Rambler.bin"
         }
     },
     "materials": {
