@@ -718,11 +718,11 @@ var global = window;
         _handleTypedArrayLoading: {
             value: function(typedArrayDescr, delegate, ctx) {
                 //FIXME: extend testing to UInt8, 32, float and so on ...
-                if (typedArrayDescr.type === "Uint16Array") {
+                if (typedArrayDescr.type === "UNSIGNED_SHORT") {
                     var bufferView = typedArrayDescr.bufferView;
                     var buffer = bufferView.buffer;
                     var offset = typedArrayDescr.byteOffset + bufferView.description.byteOffset;
-                    var range = [offset, offset + ( typedArrayDescr.length * Uint16Array.BYTES_PER_ELEMENT)];
+                    var range = [offset, offset + ( typedArrayDescr.count * Uint16Array.BYTES_PER_ELEMENT)];
                     this._handleRequest({   "id":typedArrayDescr.id,
                                             "range" : range,
                                             "type" : buffer.description.type,

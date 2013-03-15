@@ -169,10 +169,10 @@ namespace JSONExport
         
         JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[1] : indices->getBufferView().get();
         
-        indicesObject->setString("type", JSONUtils::getStringForTypedArray(JSONExport::UNSIGNED_SHORT));
+        indicesObject->setString("type", JSONUtils::getStringForGLType(JSONExport::UNSIGNED_SHORT));
         indicesObject->setString("bufferView", bufferView->getID());
         indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
-        indicesObject->setUnsignedInt32("length", (unsigned int)indices->getCount());
+        indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
         
         return indicesObject;
     }

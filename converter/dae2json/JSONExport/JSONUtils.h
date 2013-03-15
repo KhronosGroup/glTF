@@ -91,21 +91,17 @@ namespace JSONExport
             }
         }
         
-        static std::string getStringForTypedArray(int elementType) 
+        static std::string getStringForGLType(int elementType)
         {
             switch (elementType) {
-                case JSONExport::BYTE:
-                    return "Int8Array";
                 case JSONExport::UNSIGNED_BYTE:
-                    return "Uint8Array";
-                case JSONExport::SHORT:
-                    return "Int16Array";
+                    return "UNSIGNED_BYTE";
                 case JSONExport::UNSIGNED_SHORT:
-                    return "Uint16Array";
+                    return "UNSIGNED_SHORT";
                 case JSONExport::FIXED:
-                    return "Uint32Array";
+                    return "UNSIGNED_INT";
                 case JSONExport::FLOAT: 
-                    return "Float32Array";
+                    return "FLOAT";
                 default:
                     return "UNKNOWN";
             }

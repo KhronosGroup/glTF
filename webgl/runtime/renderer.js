@@ -556,7 +556,7 @@ var global = window;
                          //    primitiveDescription.mesh.loadedPrimitivesCount++;
                             //}
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glIndices);
-                        gl.drawElements(gl.TRIANGLES, primitive.indices.length, gl.UNSIGNED_SHORT, 0);                            
+                        gl.drawElements(gl.TRIANGLES, primitive.indices.count, gl.UNSIGNED_SHORT, 0);
                     }
                 }
                 this._lastMaxEnabledArray = newMaxEnabledArray;
