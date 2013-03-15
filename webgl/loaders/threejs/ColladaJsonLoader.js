@@ -145,25 +145,25 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
     VertexAttributeDelegate.prototype.resourceAvailable = function(glResource, ctx) {
         var geometry = ctx.geometry;
         var attribute = ctx.attribute;
-        var accessor = ctx.accessor;
+        var semantic = ctx.semantic;
         var floatArray;
         var i, l;
 
-        if(attribute.semantic == "VERTEX") {
+        if(semantic == "POSITION") {
             // TODO: Should be easy to take strides into account here
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.vertices.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
-        } else if(attribute.semantic == "NORMAL") {
+        } else if(semantic == "NORMAL") {
             geometry.normals = [];
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
-        } else if(attribute.semantic == "TEXCOORD") {
+        } else if(semantic == "TEXCOORD") {
             geometry.uvs = [];
-            floatArray = new Float32Array(glResource, 0, accessor.count * accessor.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 2) {
                 geometry.uvs.push( new THREE.UV( floatArray[i], floatArray[i+1] ) );
             }
@@ -175,9 +175,9 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
 
     var vertexAttributeDelegate = new VertexAttributeDelegate();
 
-    var VertexAttributeContext = function(attribute, accessor, geometry) {
+    var VertexAttributeContext = function(attribute, semantic, geometry) {
         this.attribute = attribute;
-        this.accessor = accessor;
+        this.semantic = semantic;
         this.geometry = geometry;
     };
 
@@ -404,29 +404,30 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                         }*/
 
                         // Load Vertex Attributes
-                        primitiveDescription.vertexAttributes.forEach( function(vertexAttribute) {
+                        var allSemantics = Object.keys(primitiveDescription.semantics);
+                        allSemantics.forEach( function(semantic) {
                             geometry.totalAttributes++;
 
-                            var accessor;
-                            var accessorID = vertexAttribute.accessor;
-                            var accessorEntry = this.threeResources.getEntry(accessorID);
-                            if (!accessorEntry) {
-                                //let's just use an anonymous object for the accessor
-                                accessor = description.accessors[accessorID];
-                                accessor.id = accessorID;
-                                this.threeResources.setEntry(accessorID, accessor, accessor);
+                            var attribute;
+                            var attributeID = primitiveDescription.semantics[semantic];
+                            var attributeEntry = this.threeResources.getEntry(attributeID);
+                            if (!attributeEntry) {
+                                //let's just use an anonymous object for the attribute
+                                attribute = description.attributes[attributeID];
+                                attribute.id = attributeID;
+                                this.threeResources.setEntry(attributeID, attribute, attribute);
             
-                                var bufferEntry = this.threeResources.getEntry(accessor.bufferView);
-                                accessor.bufferView = bufferEntry;
-                                accessorEntry = this.threeResources.getEntry(accessorID);
+                                var bufferEntry = this.threeResources.getEntry(attribute.bufferView);
+                                attribute.bufferView = bufferEntry;
+                                attributeEntry = this.threeResources.getEntry(attributeID);
                                 //this is a set ID, it has to stay a string
                             } else {
-                                accessor = accessorEntry.object;
+                                attribute = attributeEntry.object;
                             }
-                            accessor.type = "accessor";
-                            var attribContext = new VertexAttributeContext(vertexAttribute, accessor, geometry);
+                            attribute.type = "attribute";
+                            var attribContext = new VertexAttributeContext(attribute, semantic, geometry);
 
-                            var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(accessor, vertexAttributeDelegate, attribContext);
+                            var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(attribute, vertexAttributeDelegate, attribContext);
                             /*if(alreadyProcessedAttribute) {
                                 vertexAttributeDelegate.resourceAvailable(alreadyProcessedAttribute, attribContext);
                             }*/
