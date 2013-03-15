@@ -466,7 +466,7 @@ namespace JSONExport
     }
     
     static void __RemapAccessor(void *value,
-                          JSONExport::ElementType type,
+                          JSONExport::ComponentType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,

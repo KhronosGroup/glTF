@@ -131,9 +131,9 @@ namespace JSONExport
         
         accessorObject->setUnsignedInt32("byteStride", (unsigned int)accessor->getByteStride());
         accessorObject->setUnsignedInt32("byteOffset", (unsigned int)accessor->getByteOffset());
-        accessorObject->setUnsignedInt32("elementsPerValue", (unsigned int)accessor->getElementsPerVertexAttribute());
+        accessorObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)accessor->getElementsPerVertexAttribute());
         accessorObject->setUnsignedInt32("count", (unsigned int)accessor->getCount());
-        accessorObject->setString("elementType", JSONUtils::getStringForType(accessor->getElementType()));
+        accessorObject->setString("componentType", JSONUtils::getStringForGLType(accessor->getComponentType()));
         
         void** buffers = (void**)context;
         JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[0] : accessor->getBufferView().get();

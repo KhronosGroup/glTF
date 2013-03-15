@@ -36,7 +36,7 @@
 namespace JSONExport 
 {
     typedef void (*JSONAccessorApplierFunc)(void* /* value */,
-        ElementType /* type */,
+        ComponentType /* type */,
         size_t /* elementsPerValue */,
         size_t /* index */,
         size_t /* vertexAttributeByteSize*/,
@@ -62,8 +62,8 @@ namespace JSONExport
         void setByteStride(size_t stride);
         size_t getByteStride();
         
-        void setElementType(ElementType type);
-        ElementType getElementType();
+        void setComponentType(ComponentType type);
+        ComponentType getComponentType();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
@@ -90,7 +90,7 @@ namespace JSONExport
         size_t              _count;
         size_t              _byteStride;
         size_t              _byteOffset;
-        ElementType         _elementType;
+        ComponentType         _componentType;
         std::string         _ID;
         double              *_min;
         double              *_max;

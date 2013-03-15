@@ -39,7 +39,7 @@ namespace JSONExport
     
     JSONAccessor::JSONAccessor(): _min(0), _max(0) 
     {
-        this->setElementType(NOT_AN_ELEMENT_TYPE);
+        this->setComponentType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
         this->_byteOffset = 0;
         this->_generateID();
@@ -52,7 +52,7 @@ namespace JSONExport
     {
         assert(accessor);
         
-        this->setElementType(accessor->getElementType());
+        this->setComponentType(accessor->getComponentType());
         this->setByteStride(accessor->getByteStride());
         this->_byteOffset = accessor->getByteOffset();
         this->_generateID();
@@ -100,14 +100,14 @@ namespace JSONExport
         return this->_byteStride;
     }
         
-    void JSONAccessor::setElementType(ElementType elementType)
+    void JSONAccessor::setComponentType(ComponentType componentType)
     {
-        this->_elementType = elementType;
+        this->_componentType = componentType;
     }
         
-    ElementType JSONAccessor::getElementType()
+    ComponentType JSONAccessor::getComponentType()
     {
-        return this->_elementType;
+        return this->_componentType;
     }
         
     void JSONAccessor::setByteOffset(size_t byteOffset)
@@ -138,7 +138,7 @@ namespace JSONExport
     size_t JSONAccessor::getVertexAttributeByteLength()
     {
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
-        ElementType type = this->getElementType();
+        ComponentType type = this->getComponentType();
         switch (type) {
             case JSONExport::BYTE:
             case JSONExport::UNSIGNED_BYTE:
@@ -173,7 +173,7 @@ namespace JSONExport
     } __MinMaxApplierInfo;
     
     static void __ComputeMinMax(void *value,
-                               ElementType type,
+                               ComponentType type,
                                size_t elementsPerVertexAttribute,
                                size_t index,
                                size_t vertexAttributeByteSize,
@@ -233,7 +233,7 @@ namespace JSONExport
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         size_t vertexAttributeByteSize = this->getVertexAttributeByteLength();
         shared_ptr <JSONExport::JSONBufferView> bufferView = this->getBufferView();
-        ElementType type = this->getElementType();
+        ComponentType type = this->getComponentType();
         unsigned char* bufferData = (unsigned char*)bufferView->getBufferDataByApplyingOffset();
 
         for (size_t i = 0 ; i < _count ; i++) {
@@ -247,7 +247,7 @@ namespace JSONExport
         
         return ((accessor->getElementsPerVertexAttribute() == this->getElementsPerVertexAttribute()) &&
                 (accessor->getByteStride() == this->getByteStride()) &&
-                (accessor->getElementType() == this->getElementType()) &&
+                (accessor->getComponentType() == this->getComponentType()) &&
                 (accessor->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
     }
                     

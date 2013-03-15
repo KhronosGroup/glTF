@@ -90,8 +90,10 @@ namespace JSONExport
         SHORT = 3,
         UNSIGNED_SHORT = 4,
         FIXED = 5,
-        FLOAT = 6
-    } ElementType;
+        FLOAT = 6,
+        INT = 7,
+        UNSIGNED_INT = 8
+    } ComponentType;
     
 };
 

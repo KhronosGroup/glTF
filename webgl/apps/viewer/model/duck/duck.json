@@ -62,9 +62,9 @@
                     "bufferView": "bufferView.24",
                     "byteOffset": 0,
                     "byteStride": 12,
+                    "componentType": "FLOAT",
+                    "componentsPerAttribute": 3,
                     "count": 2399,
-                    "elementType": "Float32",
-                    "elementsPerValue": 3,
                     "max": [
                         96.1799,
                         163.97,
@@ -80,9 +80,9 @@
                     "bufferView": "bufferView.24",
                     "byteOffset": 28788,
                     "byteStride": 12,
+                    "componentType": "FLOAT",
+                    "componentsPerAttribute": 3,
                     "count": 2399,
-                    "elementType": "Float32",
-                    "elementsPerValue": 3,
                     "max": [
                         0.999599,
                         0.999581,
@@ -98,9 +98,9 @@
                     "bufferView": "bufferView.24",
                     "byteOffset": 57576,
                     "byteStride": 8,
+                    "componentType": "FLOAT",
+                    "componentsPerAttribute": 2,
                     "count": 2399,
-                    "elementType": "Float32",
-                    "elementsPerValue": 2,
                     "max": [
                         0.983346,
                         0.980037
@@ -117,8 +117,8 @@
                     "indices": {
                         "bufferView": "bufferView.25",
                         "byteOffset": 0,
-                        "length": 12636,
-                        "type": "Uint16Array"
+                        "count": 12636,
+                        "type": "UNSIGNED_SHORT"
                     },
                     "material": "material.0",
                     "primitive": "TRIANGLES",

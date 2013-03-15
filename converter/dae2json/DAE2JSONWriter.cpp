@@ -174,10 +174,10 @@ namespace JSONExport
             void *sourceData = 0;
             size_t sourceSize = 0;
         
-            JSONExport::ElementType elementType = JSONExport::NOT_AN_ELEMENT_TYPE;
+            JSONExport::ComponentType componentType = JSONExport::NOT_AN_ELEMENT_TYPE;
             switch (vertexData.getType()) {
                 case MeshVertexData::DATA_TYPE_FLOAT: {
-                    elementType = JSONExport::FLOAT;
+                    componentType = JSONExport::FLOAT;
                     stride = sizeof(float) * size;
                     const FloatArray& array = vertexData.getFloatValues()[indexOfSet];
                     const size_t count = array.getCount();
@@ -211,7 +211,7 @@ namespace JSONExport
             cvtAccessor->setBufferView(cvtBufferView);
             cvtAccessor->setElementsPerVertexAttribute(size);
             cvtAccessor->setByteStride(stride);
-            cvtAccessor->setElementType(elementType);
+            cvtAccessor->setComponentType(componentType);
             cvtAccessor->setCount(elementsCount);
             
             accessors[(unsigned int)indexOfSet] = cvtAccessor;
@@ -373,7 +373,7 @@ namespace JSONExport
     }
     
     static void __InvertV(void *value,
-                          JSONExport::ElementType type,
+                          JSONExport::ComponentType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,

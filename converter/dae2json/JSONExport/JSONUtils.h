@@ -70,34 +70,18 @@ namespace JSONExport
             
             return type;
         }
-        
-        static std::string getStringForType(int elementType) 
+                
+        static std::string getStringForGLType(int componentType)
         {
-            switch (elementType) {
-                case JSONExport::BYTE:
-                    return "Int8";
-                case JSONExport::UNSIGNED_BYTE:
-                    return "Uint8";
-                case JSONExport::SHORT:
-                    return "Int16";
-                case JSONExport::UNSIGNED_SHORT:
-                    return "Uint16";
-                case JSONExport::FIXED:
-                    return "Uint32";
-                case JSONExport::FLOAT: 
-                    return "Float32";
-                default:
-                    return "UNKNOWN";
-            }
-        }
-        
-        static std::string getStringForGLType(int elementType)
-        {
-            switch (elementType) {
+            switch (componentType) {
                 case JSONExport::UNSIGNED_BYTE:
                     return "UNSIGNED_BYTE";
+                case JSONExport::SHORT:
+                    return "SHORT";
                 case JSONExport::UNSIGNED_SHORT:
                     return "UNSIGNED_SHORT";
+                case JSONExport::UNSIGNED_INT:
+                    return "UNSIGNED_INT";
                 case JSONExport::FIXED:
                     return "UNSIGNED_INT";
                 case JSONExport::FLOAT: 
