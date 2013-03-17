@@ -453,7 +453,7 @@ namespace JSONExport
     
     void __PushAndRemapIndicesInSubMesh(SubMeshContext *subMesh, unsigned int* indices, int count)
     {
-        for (unsigned int i = 0 ; i < count ; i++) {
+        for (int i = 0 ; i < count ; i++) {
             unsigned int index = indices[i];
             
             bool shouldRemap = subMesh->indexToRemappedIndex.count(index) == 0;
@@ -548,7 +548,7 @@ namespace JSONExport
         
         int *allNextPrimitiveIndices = (int*)calloc(primitives.size(), sizeof(int));
         unsigned int meshIndex = 0;
-        for (int i = 0 ; i < primitives.size() ; i++) {
+        for (size_t i = 0 ; i < primitives.size() ; i++) {
             if (allNextPrimitiveIndices[i] == -1)
                 continue;
             
