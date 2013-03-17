@@ -56,6 +56,8 @@
 #include "COLLADABUURI.h"
 #include "Math/COLLADABUMathMatrix4.h"
 
+#include "GLTFConverterContext.h"
+
 #include "prettywriter.h"	
 #include "filestream.h"
 
@@ -88,12 +90,6 @@ using namespace std;
 
 namespace JSONExport
 {
-    typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONExport::JSONEffect> > UniqueIDToEffect;        
-    typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
     
     //-- BBOX helper class
         
@@ -143,7 +139,7 @@ namespace JSONExport
 	class DAE2JSONWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2JSONWriter( const COLLADA2JSONContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
+		DAE2JSONWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
 		virtual ~DAE2JSONWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -239,19 +235,13 @@ namespace JSONExport
         bool writeData(std::string filename, unsigned char* data, size_t length);
         
 	private:
-        COLLADA2JSONContext _converterContext;
+        GLTFConverterContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
-        UniqueIDToMeshes _uniqueIDToMeshes;
-        UniqueIDToEffect _uniqueIDToEffect;
-        MaterialUIDToEffectUID _materialUIDToEffectUID;
-        MaterialUIDToName _materialUIDToName;
-        ImageIdToImageURL _imageIdToImageURL;
         JSONExport::JSONWriter _writer;
         SceneFlatteningInfo _sceneFlatteningInfo;
 
         ofstream _verticesOutputStream;
         ofstream _indicesOutputStream;
-        ofstream _verticesAndIndicesOutputStream;
 	};
 } 
 

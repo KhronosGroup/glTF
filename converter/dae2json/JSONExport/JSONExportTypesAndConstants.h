@@ -39,28 +39,17 @@ namespace JSONExport
     class JSONPrimitive;
     class JSONAccessor;
     class JSONMesh;
+    class JSONEffect;
     class JSONVertexAttribute;
     //-- Args & Options
-    typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::vector <shared_ptr<JSONExport::JSONIndices> > IndicesVector;
     typedef std::vector <shared_ptr<JSONExport::JSONPrimitive> > PrimitiveVector;
     typedef std::vector <shared_ptr<JSONExport::JSONAccessor> > AccessorVector;
     typedef std::vector <shared_ptr<JSONExport::JSONVertexAttribute> > VertexAttributeVector;
     typedef std::vector <shared_ptr<JSONExport::JSONMesh> > MeshVector;
-    typedef struct
-    {
-        std::string inputFilePath;
-        std::string outputFilePath;
-        bool invertTransparency;
-        
-        ShaderIdToShaderString shaderIdToShaderString;
-        //TODO: add options here
-        shared_ptr <JSONExport::JSONObject> root;
-    } COLLADA2JSONContext;
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
     
-        
     typedef enum {
         POSITION = 1,
         NORMAL = 2,

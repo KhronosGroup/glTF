@@ -271,7 +271,9 @@
                         "x-shader/x-vertex": "lambert1Vs"
                     },
                     "states": {
-                        "BLEND": false
+                        "blendEnable": false,
+                        "depthMask": true,
+                        "depthTestEnable": true
                     },
                     "type": "program"
                 }

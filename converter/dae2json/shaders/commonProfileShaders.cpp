@@ -25,11 +25,71 @@
 
 #include "JSONExport.h"
 
+#include "../GLTFConverterContext.h"
 #include "commonProfileShaders.h"
+
+#include "png.h"
+
+using namespace std;
 
 namespace JSONExport
 {
-    //lambert0 -> just a diffuse color
+    
+#define PNGSIGSIZE 8
+    
+    void userReadData(png_structp pngPtr, png_bytep data, png_size_t length) {
+        ((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
+    }
+    
+    //thanks to piko3d.com libpng tutorial here
+    static bool imageHasAlpha(const char *path)
+    {
+        bool hasAlpha = false;
+        std::ifstream source;
+        
+        source.open(path, ios::in | ios::binary);
+        
+        png_byte pngsig[PNGSIGSIZE];
+        int isPNG = 0;
+        source.read((char*)pngsig, PNGSIGSIZE);
+        if (!source.good())
+            return false;
+        isPNG = png_sig_cmp(pngsig, 0, PNGSIGSIZE) == 0;
+        if (isPNG) {
+            png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+            if (pngPtr) {
+                png_infop infoPtr = png_create_info_struct(pngPtr);
+                if (infoPtr) {
+                    png_set_read_fn(pngPtr,(png_voidp)&source, userReadData);
+                    png_set_sig_bytes(pngPtr, PNGSIGSIZE);
+                    png_read_info(pngPtr, infoPtr);
+                    png_uint_32 color_type = png_get_color_type(pngPtr, infoPtr);
+                    switch (color_type) {
+                        case PNG_COLOR_TYPE_RGB_ALPHA:
+                            hasAlpha =  true;
+                            break;
+                        case PNG_COLOR_TYPE_GRAY_ALPHA:
+                            hasAlpha = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    png_destroy_read_struct(&pngPtr, (png_infopp)0, (png_infopp)0);
+                }
+            }
+        }
+        
+        source.close();
+        
+        return hasAlpha;
+    }
+    
+    //lambert0:
+    //lighting model: lambert
+    //light0: hardcoded
+    //diffuse: color
+    //transparency: no
     const char* lambert0Vs = SHADER(
                                     precision highp float;\n
                                     attribute vec3 vert;\n
@@ -55,6 +115,11 @@ namespace JSONExport
                                         gl_FragColor = vec4(u_diffuseColor.xyz *lambert, 1.); \n
                                     });
     
+    //lambert1:
+    //lighting model: lambert
+    //light0: hardcoded
+    //diffuse: texture
+    //transparency: no
     const char* lambert1Vs = SHADER(
                                     precision highp float;\n
                                     attribute vec3 vert;\n
@@ -82,7 +147,7 @@ namespace JSONExport
                                         vec3 normal = normalize(v_normal);\n
                                         float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n
                                         vec4 color = texture2D(u_diffuseTexture, v_texcoord);\n
-                                        gl_FragColor = vec4(color.rgb * lambert, 1.); \n
+                                        gl_FragColor = vec4(color.rgb * color.a * lambert, color.a); \n
                                     });
     
     
@@ -140,10 +205,10 @@ namespace JSONExport
                                         vec3 normal = normalize(v_normal);\n
                                         float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n
                                         vec4 color = texture2D(u_diffuseTexture, v_texcoord);\n
-                                        gl_FragColor = vec4(color.rgb * lambert, color.a * u_transparency); \n
+                                        gl_FragColor = vec4(color.rgb * color.a *lambert, color.a * u_transparency); \n
                                     });
     
-    static float getTransparency(const COLLADAFW::EffectCommon* effectCommon, const JSONExport::COLLADA2JSONContext& context) {
+    static float getTransparency(const COLLADAFW::EffectCommon* effectCommon, const GLTFConverterContext& context) {
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
@@ -153,8 +218,33 @@ namespace JSONExport
         return context.invertTransparency ? 1 - transparency : transparency;
     }
     
-    static float isOpaque(const COLLADAFW::EffectCommon* effectCommon, const JSONExport::COLLADA2JSONContext& context) {
-        return getTransparency(effectCommon, context)  >= 1;
+    static bool hasTransparency(const COLLADAFW::EffectCommon* effectCommon,
+                         GLTFConverterContext& context) {
+        return getTransparency(effectCommon, context)  < 1;
+    }
+    
+    static bool isOpaque(const COLLADAFW::EffectCommon* effectCommon,
+                          GLTFConverterContext& context) {
+
+        const COLLADAFW::ColorOrTexture& diffuse = effectCommon->getDiffuse ();
+
+        if (diffuse.isTexture()) {
+            const COLLADAFW::Texture&  diffuseTexture = diffuse.getTexture();
+            const COLLADAFW::SamplerPointerArray& samplers = effectCommon->getSamplerPointerArray();
+            const COLLADAFW::Sampler* sampler = samplers[diffuseTexture.getSamplerId()];
+            if (sampler) {
+                const COLLADAFW::UniqueId& imageUID = sampler->getSourceImage();
+                COLLADABU::URI &uri = context._imageIdToImageURL[uniqueIdWithType("image",imageUID)];
+                COLLADABU::URI inputURI(context.inputFilePath.c_str());
+                std::string imageFullPath = inputURI.getPathDir() +
+                                            uri.getPathDir() + /* FIXME here assume rel path*/ 
+                                            uri.getPathFile();
+                if (imageHasAlpha(imageFullPath.c_str()))
+                    return false;
+            }
+        }
+        
+        return !hasTransparency(effectCommon, context);
     }
     
     static std::string kVertexAttribute = "vert";
@@ -294,7 +384,7 @@ namespace JSONExport
         if ((shaderID == "lambert0Vs") || (shaderID == "lambert2Vs"))  {
             symbols.push_back(kVertexAttribute);
             symbols.push_back(kNormalAttribute);
-        } else if ((shaderID == "lambert1Vs") || (shaderID == "lambert3Vs")) {
+        } else if ((shaderID == "lambert1BlendOnVs") || (shaderID == "lambert1Vs") || (shaderID == "lambert3Vs")) {
             symbols.push_back(kVertexAttribute);
             symbols.push_back(kNormalAttribute);
             symbols.push_back(kTexcoordAttribute);
@@ -309,13 +399,14 @@ namespace JSONExport
         if ((shaderID == "lambert0Vs") ||
             (shaderID == "lambert2Vs") ||
             (shaderID == "lambert1Vs") ||
+            (shaderID == "lambert1BlendOnVs") ||
             (shaderID == "lambert3Vs"))  {
             symbols.push_back(kModelViewMatrixUniform);
             symbols.push_back(kNormalMatrixUniform);
             symbols.push_back(kProjectionMatrixUniform);
         } else if (shaderID == "lambert0Fs") {
             symbols.push_back(kDiffuseColorUniform);
-        } else if (shaderID == "lambert1Fs") {
+        } else if ((shaderID == "lambert1Fs") || (shaderID == "lambert1BlendOnFs")) {
             symbols.push_back(kDiffuseTextureUniform);
         } else if (shaderID == "lambert2Fs") {
             symbols.push_back(kDiffuseColorUniform);
@@ -328,16 +419,19 @@ namespace JSONExport
         }
     }
     
-    std::string getTechniqueNameForProfile(const COLLADAFW::EffectCommon* effectCommon, JSONExport::COLLADA2JSONContext& context) {
+    std::string getTechniqueNameForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context) {
         std::string techniqueName;
         if (effectCommon->getDiffuse().isTexture()) {
-            if (!isOpaque(effectCommon, context)) {
+            if (hasTransparency(effectCommon, context)) {
                 techniqueName = "lambert3";
             } else {
-                techniqueName = "lambert1";
+                if (isOpaque(effectCommon, context))
+                    techniqueName = "lambert1";
+                else
+                    techniqueName = "lambert1BlendOn";
             }
         } else {
-            if (!isOpaque(effectCommon, context)) {
+            if (hasTransparency(effectCommon, context)) {
                 techniqueName = "lambert2";
             } else {
                 techniqueName = "lambert0";
@@ -347,7 +441,7 @@ namespace JSONExport
         return techniqueName;
     }
     
-    bool writeShaderIfNeeded(const std::string& shaderId,  JSONExport::COLLADA2JSONContext& context)
+    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& context)
     {
         shared_ptr <JSONExport::JSONObject> shadersObject = context.root->createObjectIfNeeded("shaders");
         
@@ -374,7 +468,29 @@ namespace JSONExport
         return true;
     }
     
-    shared_ptr <JSONExport::JSONObject> createTechniqueForProfile(const COLLADAFW::EffectCommon* effectCommon, JSONExport::COLLADA2JSONContext& context) {
+    shared_ptr <JSONObject> createStatesForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context)
+    {
+        shared_ptr <JSONObject> states(new JSONExport::JSONObject());
+        
+        if (isOpaque(effectCommon, context)) {
+            states->setBool("depthTestEnable", true);
+            states->setBool("depthMask", true);
+            states->setBool("blendEnable", false);            
+        } else {
+            states->setBool("blendEnable", true);
+            states->setBool("depthTestEnable", true);
+            states->setBool("depthMask", false);
+            states->setString("blendEquation", "FUNC_ADD");
+            shared_ptr <JSONObject> blendFunc(new JSONExport::JSONObject());
+            blendFunc->setString("sfactor", "SRC_ALPHA");
+            blendFunc->setString("dfactor", "ONE_MINUS_SRC_ALPHA");
+            states->setValue("blendFunc", blendFunc) ;
+        }
+        
+        return states;
+    }
+
+    shared_ptr <JSONObject> createTechniqueForProfile(const COLLADAFW::EffectCommon* effectCommon,GLTFConverterContext& context) {
         
         std::vector <std::string> allAttributes;
         std::vector <std::string> allUniforms;
@@ -390,6 +506,11 @@ namespace JSONExport
         }
         
         if (shaderName == "lambert1") {
+            context.shaderIdToShaderString[vs] = lambert1Vs;
+            context.shaderIdToShaderString[fs] = lambert1Fs;
+        }
+
+        if (shaderName == "lambert1BlendOn") {
             context.shaderIdToShaderString[vs] = lambert1Vs;
             context.shaderIdToShaderString[fs] = lambert1Fs;
         }
@@ -412,9 +533,8 @@ namespace JSONExport
         //if the technique has not been serialized, first thing create the default pass for this technique
         shared_ptr <JSONExport::JSONObject> pass(new JSONExport::JSONObject());
         
-        shared_ptr <JSONExport::JSONObject> states(new JSONExport::JSONObject());
+        shared_ptr <JSONExport::JSONObject> states = createStatesForProfile(effectCommon, context);
         pass->setValue("states", states);
-        states->setValue("BLEND", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((bool)!isOpaque(effectCommon, context))));
         
         writeShaderIfNeeded(vs, context);
         writeShaderIfNeeded(fs, context);

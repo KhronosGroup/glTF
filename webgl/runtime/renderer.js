@@ -101,6 +101,201 @@ var global = window;
 
         specularColor: { value: [1, 1, 1], writable: true },
 
+        _GLEnumFromString: {
+            value: null, writable: true
+        },
+
+        GLContextDidChange: {
+            value: function(value) {
+                this._GLEnumFromString = [];
+                var GL = this.webGLContext;
+
+                /* BeginMode */
+                this._GLEnumFromString["POINTS"] = GL.POINTS;
+                this._GLEnumFromString["LINES"] = GL.LINES;
+                this._GLEnumFromString["LINE_LOOP"] = GL.LINE_LOOP;
+                this._GLEnumFromString["LINE_STRIP"] = GL.LINE_STRIP;
+                this._GLEnumFromString["TRIANGLES"] = GL.TRIANGLES;
+                this._GLEnumFromString["TRIANGLES"] = GL.TRIANGLES;
+                this._GLEnumFromString["TRIANGLE_STRIP"] = GL.TRIANGLE_STRIP;
+                this._GLEnumFromString["TRIANGLE_FAN"] = GL.TRIANGLE_FAN;
+
+                /* BlendingFactorDest */
+                this._GLEnumFromString["ZERO"] = GL.ZERO;
+                this._GLEnumFromString["ONE"] = GL.ONE;
+                this._GLEnumFromString["SRC_COLOR"] = GL.SRC_COLOR;
+                this._GLEnumFromString["ONE_MINUS_SRC_COLOR"] = GL.ONE_MINUS_SRC_COLOR;
+                this._GLEnumFromString["SRC_ALPHA"] = GL.SRC_ALPHA;
+                this._GLEnumFromString["ONE_MINUS_SRC_ALPHA"] = GL.ONE_MINUS_SRC_ALPHA;
+                this._GLEnumFromString["DST_ALPHA"] = GL.DST_ALPHA;
+                this._GLEnumFromString["ONE_MINUS_DST_ALPHA"] = GL.ONE_MINUS_DST_ALPHA;
+
+                /* BlendingFactorSrc */
+                this._GLEnumFromString["DST_COLOR"] = GL.DST_COLOR;
+                this._GLEnumFromString["ONE_MINUS_DST_COLOR"] = GL.ONE_MINUS_DST_COLOR;
+                this._GLEnumFromString["SRC_ALPHA_SATURATE"] = GL.SRC_ALPHA_SATURATE;
+
+                /* BlendEquationSeparate */
+                this._GLEnumFromString["FUNC_ADD"] = GL.FUNC_ADD;
+                this._GLEnumFromString["BLEND_EQUATION"] = GL.BLEND_EQUATION;
+                this._GLEnumFromString["BLEND_EQUATION_RGB"] = GL.BLEND_EQUATION_RGB;
+                this._GLEnumFromString["BLEND_EQUATION_ALPHA"] = GL.BLEND_EQUATION_ALPHA;
+
+                /* BlendSubtract */
+                this._GLEnumFromString["FUNC_SUBTRACT"] = GL.FUNC_SUBTRACT;
+                this._GLEnumFromString["FUNC_REVERSE_SUBTRACT"] = GL.FUNC_REVERSE_SUBTRACT;
+
+                /* Separate Blend Functions */
+                this._GLEnumFromString["BLEND_DST_RGB"] = GL.BLEND_DST_RGB;
+                this._GLEnumFromString["BLEND_SRC_RGB"] = GL.BLEND_SRC_RGB;
+                this._GLEnumFromString["BLEND_DST_ALPHA"] = GL.BLEND_DST_ALPHA;
+                this._GLEnumFromString["BLEND_SRC_ALPHA"] = GL.BLEND_SRC_ALPHA;
+                this._GLEnumFromString["CONSTANT_COLOR"] = GL.CONSTANT_COLOR;
+                this._GLEnumFromString["ONE_MINUS_CONSTANT_COLOR"] = GL.ONE_MINUS_CONSTANT_COLOR;
+                this._GLEnumFromString["CONSTANT_ALPHA"] = GL.CONSTANT_ALPHA;
+                this._GLEnumFromString["ONE_MINUS_CONSTANT_ALPHA"] = GL.ONE_MINUS_CONSTANT_ALPHA;
+                this._GLEnumFromString["BLEND_COLOR"] = GL.BLEND_COLOR;
+
+                /* Buffer Objects */
+                this._GLEnumFromString["ARRAY_BUFFER"] = GL.ARRAY_BUFFER;
+                this._GLEnumFromString["ELEMENT_ARRAY_BUFFER"] = GL.ELEMENT_ARRAY_BUFFER;
+                this._GLEnumFromString["ARRAY_BUFFER_BINDING"] = GL.ARRAY_BUFFER_BINDING;
+                this._GLEnumFromString["ELEMENT_ARRAY_BUFFER_BINDING"] = GL.ELEMENT_ARRAY_BUFFER_BINDING;
+
+                this._GLEnumFromString["STREAM_DRAW"] = GL.STREAM_DRAW;
+                this._GLEnumFromString["STATIC_DRAW"] = GL.STATIC_DRAW;
+                this._GLEnumFromString["DYNAMIC_DRAW"] = GL.DYNAMIC_DRAW;
+
+                this._GLEnumFromString["BUFFER_SIZE"] = GL.BUFFER_SIZE;
+                this._GLEnumFromString["BUFFER_USAGE"] = GL.BUFFER_USAGE;
+
+                this._GLEnumFromString["CURRENT_VERTEX_ATTRIB"] = GL.CURRENT_VERTEX_ATTRIB;
+
+                /* CullFaceMode */
+                this._GLEnumFromString["FRONT"] = GL.FRONT;
+                this._GLEnumFromString["BACK"] = GL.BACK;
+                this._GLEnumFromString["FRONT_AND_BACK"] = GL.FRONT_AND_BACK;
+
+                /* EnableCap */
+                this._GLEnumFromString["CULL_FACE"] = GL.CULL_FACE;
+                this._GLEnumFromString["BLEND"] = GL.BLEND;
+                this._GLEnumFromString["STENCIL_TEST"] = GL.STENCIL_TEST;
+                this._GLEnumFromString["DEPTH_TEST"] = GL.DEPTH_TEST;
+                this._GLEnumFromString["SCISSOR_TEST"] = GL.SCISSOR_TEST;
+                this._GLEnumFromString["POLYGON_OFFSET_FILL"] = GL.POLYGON_OFFSET_FILL;
+                this._GLEnumFromString["SAMPLE_ALPHA_TO_COVERAGE"] = GL.SAMPLE_ALPHA_TO_COVERAGE;
+                this._GLEnumFromString["SAMPLE_COVERAGE"] = GL.SAMPLE_COVERAGE;
+
+                /* FrontFaceDirection */
+                this._GLEnumFromString["CW"] = GL.CW;
+                this._GLEnumFromString["CCW"] = GL.CCW;
+
+                /* DataType */
+                this._GLEnumFromString["BYTE"] = GL.BYTE;
+                this._GLEnumFromString["UNSIGNED_BYTE"] = GL.UNSIGNED_BYTE;
+                this._GLEnumFromString["SHORT"] = GL.SHORT;
+                this._GLEnumFromString["UNSIGNED_SHORT"] = GL.UNSIGNED_SHORT;
+                this._GLEnumFromString["INT"] = GL.INT;
+                this._GLEnumFromString["UNSIGNED_INT"] = GL.UNSIGNED_INT;
+                this._GLEnumFromString["FLOAT"] = GL.FLOAT;
+
+                /* PixelFormat */
+                this._GLEnumFromString["DEPTH_COMPONENT"] = GL.DEPTH_COMPONENT;
+                this._GLEnumFromString["ALPHA"] = GL.ALPHA;
+                this._GLEnumFromString["RGB"] = GL.RGB;
+                this._GLEnumFromString["RGBA"] = GL.RGBA;
+                this._GLEnumFromString["LUMINANCE"] = GL.LUMINANCE;
+                this._GLEnumFromString["LUMINANCE_ALPHA"] = GL.LUMINANCE_ALPHA;
+
+                /* PixelType */
+                /*      UNSIGNED_BYTE */
+                this._GLEnumFromString["UNSIGNED_SHORT_4_4_4_4"] = GL.UNSIGNED_SHORT_4_4_4_4;
+                this._GLEnumFromString["UNSIGNED_SHORT_5_5_5_1"] = GL.UNSIGNED_SHORT_5_5_5_1;
+                this._GLEnumFromString["UNSIGNED_SHORT_5_6_5"] = GL.UNSIGNED_SHORT_5_6_5;
+
+                /* StencilFunction */
+                this._GLEnumFromString["NEVER"] = GL.NEVER;
+                this._GLEnumFromString["LESS"] = GL.LESS;
+                this._GLEnumFromString["EQUAL"] = GL.EQUAL;
+                this._GLEnumFromString["LEQUAL"] = GL.LEQUAL;
+                this._GLEnumFromString["GREATER"] = GL.GREATER;
+                this._GLEnumFromString["NOTEQUAL"] = GL.NOTEQUAL;
+                this._GLEnumFromString["GEQUAL"] = GL.GEQUAL;
+                this._GLEnumFromString["ALWAYS"] = GL.ALWAYS;
+
+                /* StencilOp */
+                this._GLEnumFromString["KEEP"] = GL.KEEP;
+                this._GLEnumFromString["REPLACE"] = GL.REPLACE;
+                this._GLEnumFromString["INCR"] = GL.INCR;
+                this._GLEnumFromString["DECR"] = GL.DECR;
+                this._GLEnumFromString["INVERT"] = GL.INVERT;
+                this._GLEnumFromString["INCR_WRAP"] = GL.INCR_WRAP;
+                this._GLEnumFromString["DECR_WRAP"] = GL.DECR_WRAP;
+
+                /* TextureMagFilter */
+                this._GLEnumFromString["NEAREST"] = GL.NEAREST;
+                this._GLEnumFromString["LINEAR"] = GL.LINEAR;
+
+                /* TextureMinFilter */
+                this._GLEnumFromString["NEAREST_MIPMAP_NEAREST"] = GL.NEAREST_MIPMAP_NEAREST;
+                this._GLEnumFromString["LINEAR_MIPMAP_NEAREST"] = GL.LINEAR_MIPMAP_NEAREST;
+                this._GLEnumFromString["NEAREST_MIPMAP_LINEAR"] = GL.NEAREST_MIPMAP_LINEAR;
+                this._GLEnumFromString["LINEAR_MIPMAP_LINEAR"] = GL.LINEAR_MIPMAP_LINEAR;
+
+                /* TextureParameterName */
+                this._GLEnumFromString["TEXTURE_MAG_FILTER"] = GL.TEXTURE_MAG_FILTER;
+                this._GLEnumFromString["TEXTURE_MIN_FILTER"] = GL.TEXTURE_MIN_FILTER;
+                this._GLEnumFromString["TEXTURE_WRAP_S"] = GL.TEXTURE_WRAP_S;
+                this._GLEnumFromString["TEXTURE_WRAP_T"] = GL.TEXTURE_WRAP_T;
+
+                /* TextureTarget */
+                this._GLEnumFromString["TEXTURE_CUBE_MAP"] = GL.TEXTURE_CUBE_MAP;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_POSITIVE_X"] = GL.TEXTURE_CUBE_MAP_POSITIVE_X;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_NEGATIVE_X"] = GL.TEXTURE_CUBE_MAP_NEGATIVE_X;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_POSITIVE_Y"] = GL.TEXTURE_CUBE_MAP_POSITIVE_Y;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_NEGATIVE_Y"] = GL.TEXTURE_CUBE_MAP_NEGATIVE_Y;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_POSITIVE_Z"] = GL.TEXTURE_CUBE_MAP_POSITIVE_Z;
+                this._GLEnumFromString["TEXTURE_CUBE_MAP_NEGATIVE_Z"] = GL.TEXTURE_CUBE_MAP_NEGATIVE_Z;
+                this._GLEnumFromString["MAX_CUBE_MAP_TEXTURE_SIZE"] = GL.MAX_CUBE_MAP_TEXTURE_SIZE;
+
+                /* TextureWrapMode */
+                this._GLEnumFromString["REPEAT"] = GL.REPEAT;
+                this._GLEnumFromString["CLAMP_TO_EDGE"] = GL.CLAMP_TO_EDGE;
+                this._GLEnumFromString["MIRRORED_REPEAT"] = GL.MIRRORED_REPEAT;
+
+                /* Uniform Types */
+                this._GLEnumFromString["FLOAT_VEC2"] = GL.FLOAT_VEC2;
+                this._GLEnumFromString["FLOAT_VEC3"] = GL.FLOAT_VEC3;
+                this._GLEnumFromString["FLOAT_VEC4"] = GL.FLOAT_VEC4;
+                this._GLEnumFromString["INT_VEC2"] = GL.INT_VEC2;
+                this._GLEnumFromString["INT_VEC3"] = GL.INT_VEC3;
+                this._GLEnumFromString["INT_VEC4"] = GL.INT_VEC4;
+                this._GLEnumFromString["BOOL"] = GL.BOOL;
+                this._GLEnumFromString["BOOL_VEC2"] = GL.BOOL_VEC2;
+                this._GLEnumFromString["BOOL_VEC3"] = GL.BOOL_VEC3;
+                this._GLEnumFromString["BOOL_VEC3"] = GL.BOOL_VEC3;
+                this._GLEnumFromString["BOOL_VEC4"] = GL.BOOL_VEC4;
+                this._GLEnumFromString["FLOAT_VEC2"] = GL.FLOAT_VEC2;
+                this._GLEnumFromString["FLOAT_VEC3"] = GL.FLOAT_VEC3;
+                this._GLEnumFromString["FLOAT_VEC4"] = GL.FLOAT_VEC4;
+                this._GLEnumFromString["INT_VEC2"] = GL.INT_VEC2;
+                this._GLEnumFromString["INT_VEC3"] = GL.INT_VEC3;
+                this._GLEnumFromString["INT_VEC4"] = GL.INT_VEC4;
+                this._GLEnumFromString["FLOAT_MAT2"] = GL.FLOAT_MAT2;
+                this._GLEnumFromString["FLOAT_MAT3"] = GL.FLOAT_MAT3;
+                this._GLEnumFromString["FLOAT_MAT4"] = GL.FLOAT_MAT4;
+
+                /* Framebuffer Object. */
+                this._GLEnumFromString["RGBA4"] = GL.RGBA4;
+                this._GLEnumFromString["RGB5_A1"] = GL.RGB5_A1;
+                this._GLEnumFromString["RGB565"] = GL.RGB565;
+                this._GLEnumFromString["DEPTH_COMPONENT16"] = GL.DEPTH_COMPONENT16;
+                this._GLEnumFromString["STENCIL_INDEX"] = GL.STENCIL_INDEX;
+                this._GLEnumFromString["STENCIL_INDEX8"] = GL.STENCIL_INDEX8;
+                this._GLEnumFromString["DEPTH_STENCIL"] = GL.DEPTH_STENCIL;
+            }
+        },
+
         initWithWebGLContext: {
             value: function(value) {
                 this.webGLContext = value;
@@ -204,6 +399,7 @@ var global = window;
             },
             set: function(value) {
                 this._webGLContext = value;
+                this.GLContextDidChange();
             }
         },
 
@@ -597,13 +793,37 @@ var global = window;
                     var glProgram = this.resourceManager.getResource(pass.program, this.programDelegate, gl);
                     if (glProgram) {
                         var blending = false;
-                        if (pass.states) {  
-                            if (pass.states.BLEND) {
+                        var depthTest = true;
+                        var depthMask = true;
+                        var states = pass.states;
+                        var blendEquation = gl.FUNC_ADD;
+                        var sfactor = gl.SRC_ALPHA;
+                        var dfactor = gl.ONE_MINUS_SRC_ALPHA;
+
+                        //FIXME: make a clever handling of states, For now this is incomplete and inefficient.(but robust)
+                        if (states) {
+                            if (states.blendEnable)
                                 blending = true;
-                            } 
+                            if (!states.depthTestEnable)
+                                depthTest = false;
+                            if (!states.depthMask)
+                                depthMask = false;
+                            if(states.blendEquation) {
+                                var blendFunc = states.blendFunc;
+                                if (blendFunc) {
+                                    if (blendFunc.sfactor)
+                                        sfactor = this._GLEnumFromString[blendFunc.sfactor];
+                                    if (blendFunc.dfactor)
+                                        dfactor = this._GLEnumFromString[blendFunc.dfactor];
+                                }
+                            }
                         }
 
                         this.setState(gl.BLEND, blending);
+                        this.setState(gl.DEPTH_TEST, depthTest);
+                        gl.depthMask(depthMask);
+                        gl.blendEquation(blendEquation);
+                        gl.blendFunc(sfactor, dfactor);
 
                         this.bindedProgram = glProgram;
                         for (var i = 0 ; i < count ; i++) {

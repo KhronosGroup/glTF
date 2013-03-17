@@ -29,6 +29,7 @@
 #include <iostream>
 
 #include "DAE2JSONWriter.h"
+#include "GLTFConverterContext.h"
 #include "assert.h"
 
 #define STDOUT_OUTPUT 0
@@ -57,7 +58,7 @@ static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
     return pathDir + fileBase + ".json";
 }
 
-static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport::COLLADA2JSONContext *converterArgs)
+static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport::GLTFConverterContext *converterArgs)
 {
     assert(converterArgs);
         
@@ -100,7 +101,7 @@ static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport
 
 
 int main (int argc, char * const argv[]) {
-    JSONExport::COLLADA2JSONContext converterArgs;
+    JSONExport::GLTFConverterContext converterArgs;
     
     printf("Collada2JSON [pre-alpha] 0.1\n");
     if (__SetupCOLLADA2JSONContext( argc, argv, &converterArgs)) {

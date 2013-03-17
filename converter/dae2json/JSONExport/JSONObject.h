@@ -56,6 +56,9 @@ namespace JSONExport
         void setDouble(const std::string &key, double value);
         double getDouble(const std::string &key);
         
+        void setBool(const std::string &key, bool value);
+        bool getBool(const std::string &key);
+        
         void setString(const std::string &key, const std::string &value);
         const std::string& getString(const std::string &key);
         

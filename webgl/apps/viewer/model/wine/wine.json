@@ -11727,7 +11727,9 @@
                         "x-shader/x-vertex": "lambert0Vs"
                     },
                     "states": {
-                        "BLEND": false
+                        "blendEnable": false,
+                        "depthMask": true,
+                        "depthTestEnable": true
                     },
                     "type": "program"
                 }
@@ -11782,7 +11784,9 @@
                         "x-shader/x-vertex": "lambert1Vs"
                     },
                     "states": {
-                        "BLEND": false
+                        "blendEnable": false,
+                        "depthMask": true,
+                        "depthTestEnable": true
                     },
                     "type": "program"
                 }
@@ -11843,7 +11847,14 @@
                         "x-shader/x-vertex": "lambert2Vs"
                     },
                     "states": {
-                        "BLEND": true
+                        "blendEnable": true,
+                        "blendEquation": "FUNC_ADD",
+                        "blendFunc": {
+                            "dfactor": "ONE_MINUS_SRC_ALPHA",
+                            "sfactor": "SRC_ALPHA"
+                        },
+                        "depthMask": false,
+                        "depthTestEnable": true
                     },
                     "type": "program"
                 }

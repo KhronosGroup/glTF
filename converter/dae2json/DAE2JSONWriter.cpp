@@ -24,7 +24,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// TODO: check for '-' in JSON keys
 // TODO: consider LOD
 // TODO: normal generation when needed
 // DESIGN: justification generation shader. geometry may need regeneration if lambert
@@ -40,14 +39,8 @@
 #include "helpers/geometryHelpers.h"
 
 namespace JSONExport
-{    
-    std::string uniqueIdWithType(std::string type, const UniqueId& uniqueId) 
-    {
-        std::string id = "";        
-        id += type + "_" + JSONExport::JSONUtils::toString(uniqueId.getObjectId());
-        return id;
-    }
-    
+{
+        
     //converted to C++ from gl-matrix by Brandon Jones ( https://github.com/toji/gl-matrix )
     void buildLookAtMatrix(Lookat *lookat, COLLADABU::Math::Matrix4& matrix)
     {
@@ -478,7 +471,7 @@ namespace JSONExport
     }
         
     //--------------------------------------------------------------------
-	DAE2JSONWriter::DAE2JSONWriter( const COLLADA2JSONContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
+	DAE2JSONWriter::DAE2JSONWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
     _converterContext(converterArgs),
      _visualScene(0)
 	{
@@ -500,13 +493,14 @@ namespace JSONExport
 	{
         ifstream inputVertices;
         ifstream inputIndices;
-        
-        /* 
+        ofstream verticesAndIndicesOutputStream;
+
+        /*
             We output vertices and indices separatly in 2 different files
             TODO: make them in a single file again.
          */
         this->_converterContext.shaderIdToShaderString.clear();
-        this->_uniqueIDToMeshes.clear();
+        this->_converterContext._uniqueIDToMeshes.clear();
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
@@ -519,7 +513,7 @@ namespace JSONExport
         
         this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        this->_verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
                 
         this->_converterContext.root = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
@@ -547,12 +541,15 @@ namespace JSONExport
         
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
-        this->_verticesAndIndicesOutputStream.write(bufferIOStream, verticesLength);
+        verticesAndIndicesOutputStream.write(bufferIOStream, verticesLength);
         free(bufferIOStream);
         bufferIOStream = (char*)malloc(sizeof(char) * indicesLength);
         inputIndices.read(bufferIOStream, indicesLength);
-        this->_verticesAndIndicesOutputStream.write(bufferIOStream, indicesLength);
+        verticesAndIndicesOutputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
+        
+        inputVertices.close();
+        inputIndices.close();
         
         remove(outputIndicesFilePath.c_str());
         remove(outputVerticesFilePath.c_str());
@@ -571,7 +568,7 @@ namespace JSONExport
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
-        for (UniqueIDToMeshesIterator = this->_uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
+        for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             MeshVectorSharedPtr meshes = (*UniqueIDToMeshesIterator).second;
@@ -598,7 +595,7 @@ namespace JSONExport
 
         UniqueIDToEffect::const_iterator UniqueIDToEffectIterator;
         
-        for (UniqueIDToEffectIterator = this->_uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
+        for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <JSONExport::JSONEffect> effect = (*UniqueIDToEffectIterator).second;
@@ -637,8 +634,8 @@ namespace JSONExport
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
         }
         
-        this->_verticesAndIndicesOutputStream.flush();
-        this->_verticesAndIndicesOutputStream.close();
+        verticesAndIndicesOutputStream.flush();
+        verticesAndIndicesOutputStream.close();
         
 		return true;
 	}
@@ -771,7 +768,7 @@ namespace JSONExport
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 
                 unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
-                MeshVectorSharedPtr meshes = this->_uniqueIDToMeshes[meshUID];
+                MeshVectorSharedPtr meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
 
                 for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
                     shared_ptr <JSONMesh> mesh = (*meshes)[meshIndex];
@@ -805,9 +802,9 @@ namespace JSONExport
                         if (materialBindingIndex != -1) {
                             unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                             
-                            unsigned int effectID = this->_materialUIDToEffectUID[referencedMaterialID];
-                            std::string materialName = this->_materialUIDToName[referencedMaterialID];
-                            shared_ptr <JSONExport::JSONEffect> effect = this->_uniqueIDToEffect[effectID];
+                            unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
+                            std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
+                            shared_ptr <JSONExport::JSONEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
                             effect->setName(materialName);
                             primitive->setMaterialID(effect->getID());
                         }
@@ -947,7 +944,7 @@ namespace JSONExport
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 MeshVectorSharedPtr meshes;
                 
-                if (this->_uniqueIDToMeshes.count(meshID) == 0) {
+                if (this->_converterContext._uniqueIDToMeshes.count(meshID) == 0) {
                     meshes =  shared_ptr<MeshVector> (new MeshVector);
                     
                     ConvertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, (*meshes));
@@ -960,7 +957,7 @@ namespace JSONExport
                         }
                     }
                     
-                    this->_uniqueIDToMeshes[meshID] = meshes;
+                    this->_converterContext._uniqueIDToMeshes[meshID] = meshes;
                 }
             }
                 break;
@@ -980,8 +977,8 @@ namespace JSONExport
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
 		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
-        this->_materialUIDToName[materialID] = material->getName();
-        this->_materialUIDToEffectUID[materialID] = (unsigned int)effectUID.getObjectId();
+        this->_converterContext._materialUIDToName[materialID] = material->getName();
+        this->_converterContext._materialUIDToEffectUID[materialID] = (unsigned int)effectUID.getObjectId();
 		return true;
 	}
             
@@ -1025,7 +1022,6 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONObject> techniques(new JSONExport::JSONObject());
             shared_ptr <JSONExport::JSONObject> technique(new JSONExport::JSONObject());
             shared_ptr <JSONExport::JSONObject> parameters(new JSONExport::JSONObject());
-            //shared_ptr <JSONExport::JSONObject> parameter(new JSONExport::JSONObject());
 
             techniques->setValue(techniqueID.c_str(), technique);
             technique->setValue("parameters", parameters);
@@ -1048,22 +1044,8 @@ namespace JSONExport
                 const SamplerPointerArray& samplers = effectCommon->getSamplerPointerArray();
                 const Sampler* sampler = samplers[diffuseTexture.getSamplerId()]; 
                 const UniqueId& imageUID = sampler->getSourceImage();
-                
-                //TODO: remove this from here
-                COLLADABU::URI imageURI = this->_imageIdToImageURL[uniqueIdWithType("image",imageUID)];               
-                
-                std::string pathDir = imageURI.getPathDir();
-                bool relativePath = true;
-                if (pathDir.size() > 0) {
-                    if ((pathDir[0] != '.') || (pathDir[0] == '/')) {
-                        relativePath = false;
-                    }
-                }
-                //FIXME: handle absolute path case
-                //FIXME: right now this is a short-cut, should point to a texture object that has sampler info
-                
-                //parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
-                shared_ptr <JSONExport::JSONObject> sampler2D(new JSONExport::JSONObject());
+                                
+                shared_ptr <JSONObject> sampler2D(new JSONObject());
                 
                 sampler2D->setString("wrapS", "REPEAT");
                 sampler2D->setString("wrapT", "REPEAT");
@@ -1075,12 +1057,12 @@ namespace JSONExport
             }
             
             if (!isOpaque(effectCommon)) {
-                parameters->setValue("transparency", shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber((double)getTransparency(effectCommon))));
+                parameters->setValue("transparency", shared_ptr <JSONNumber> (new JSONNumber((double)getTransparency(effectCommon))));
             }
             
             cvtEffect->setTechniques(techniques);
             cvtEffect->setTechniqueID(techniqueID);
-            this->_uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;            
+            this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;            
             
         }
 		return true;                
@@ -1179,11 +1161,6 @@ namespace JSONExport
         shared_ptr <JSONExport::JSONObject> image(new JSONExport::JSONObject());
 
         images->setValue(uniqueIdWithType("image",openCOLLADAImage->getUniqueId()), image);
-        
-        std::string pathDir = openCOLLADAImage->getImageURI().getPathDir();
-        std::string imagePath = pathDir + openCOLLADAImage->getImageURI().getPathFile();
-        //parameters->setString("diffuseTexture",imageURI.getPathDir() + imageURI.getPathFile());
-        
         /*
         bool relativePath = true;
         if (pathDir.size() > 0) {
@@ -1192,9 +1169,9 @@ namespace JSONExport
             }
         }*/
         
-        image->setString("path", imagePath);
+        image->setString("path", openCOLLADAImage->getImageURI().getPathDir() + openCOLLADAImage->getImageURI().getPathFile());
         
-        this->_imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = openCOLLADAImage->getImageURI();       
+       this->_converterContext._imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = openCOLLADAImage->getImageURI();
         return true;        
 	}
     

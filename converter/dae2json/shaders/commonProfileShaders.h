@@ -7,9 +7,9 @@
 namespace JSONExport
 {
 
-std::string getTechniqueNameForProfile(const COLLADAFW::EffectCommon* effectCommon, JSONExport::COLLADA2JSONContext& context);
+std::string getTechniqueNameForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context);
 
-shared_ptr <JSONExport::JSONObject> createTechniqueForProfile(const COLLADAFW::EffectCommon* effectCommon, JSONExport::COLLADA2JSONContext& context);
+shared_ptr <JSONObject> createTechniqueForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context);
 };
 
 #endif

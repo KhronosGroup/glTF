@@ -79,6 +79,18 @@ namespace JSONExport
         return number->getUnsignedInt32();
     }
     
+    void JSONObject::setBool(const std::string &key, bool value)
+    {
+        this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber(value)));
+    }
+    
+    bool JSONObject::getBool(const std::string &key)
+    {
+        shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+        
+        return number->getBool();
+    }
+    
     void JSONObject::setInt32(const std::string &key, int value)
     {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber((int)value)));
