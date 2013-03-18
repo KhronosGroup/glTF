@@ -40,10 +40,11 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": {
+                        "diffuse": {
                             "image": "image_0",
                             "maxFilter": "LINEAR",
                             "minFilter": "LINEAR",
+                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
@@ -262,7 +263,7 @@
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuseTexture",
+                                "parameter": "diffuse",
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
                             }

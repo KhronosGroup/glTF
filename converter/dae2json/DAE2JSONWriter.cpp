@@ -1037,7 +1037,11 @@ namespace JSONExport
                     green = color.getGreen();
                     blue = color.getBlue();
                 }
-                parameters->setValue("diffuseColor", serializeVec3(red,green,blue));
+                shared_ptr <JSONObject> diffuse(new JSONObject());
+                diffuse->setValue("value", serializeVec3(red,green,blue));
+                diffuse->setString("type", "FLOAT_VEC3");
+
+                parameters->setValue("diffuse", diffuse);
                 
             } else {
                 const Texture&  diffuseTexture = diffuse.getTexture();
@@ -1052,12 +1056,16 @@ namespace JSONExport
                 sampler2D->setString("minFilter", "LINEAR");
                 sampler2D->setString("maxFilter", "LINEAR");
                 sampler2D->setString("image", uniqueIdWithType("image",imageUID));
-                
-                parameters->setValue("diffuseTexture", sampler2D);
+                sampler2D->setString("type", "SAMPLER_2D");
+                parameters->setValue("diffuse", sampler2D);
             }
             
             if (!isOpaque(effectCommon)) {
-                parameters->setValue("transparency", shared_ptr <JSONNumber> (new JSONNumber((double)getTransparency(effectCommon))));
+                shared_ptr <JSONObject> transparency(new JSONObject());
+                transparency->setValue("value", shared_ptr <JSONNumber> (new JSONNumber((double)getTransparency(effectCommon))));
+                transparency->setString("type", "FLOAT");
+
+                parameters->setValue("transparency", transparency);
             }
             
             cvtEffect->setTechniques(techniques);

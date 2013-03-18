@@ -26,11 +26,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            0.776471,
-                            0.776471,
-                            0.776471
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.776471,
+                                0.776471,
+                                0.776471
+                            ]
+                        }
                     }
                 }
             }
@@ -41,11 +44,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -56,11 +62,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            0.227451,
-                            0.227451,
-                            0.227451
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.227451,
+                                0.227451,
+                                0.227451
+                            ]
+                        }
                     }
                 }
             }
@@ -71,11 +80,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -86,11 +98,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            0.196078
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                0.196078
+                            ]
+                        }
                     }
                 }
             }
@@ -101,11 +116,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -116,11 +134,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            0.117647,
-                            0.117647,
-                            0.117647
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.117647,
+                                0.117647,
+                                0.117647
+                            ]
+                        }
                     }
                 }
             }
@@ -131,11 +152,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -146,11 +170,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -161,11 +188,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -45468,13 +45498,7 @@
     },
     "techniques": {
         "lambert0": {
-            "parameters": {
-                "diffuseColor": [
-                    1,
-                    1,
-                    1
-                ]
-            },
+            "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
@@ -45508,7 +45532,7 @@
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuseColor",
+                                "parameter": "diffuse",
                                 "symbol": "u_diffuseColor",
                                 "type": "FLOAT_VEC3"
                             }

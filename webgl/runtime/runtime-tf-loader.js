@@ -211,15 +211,22 @@ var global = window;
                     if (technique) {
                         var parameters = Object.keys(technique.parameters);
                         parameters.forEach( function(parameter) {
-                            if (parameter === "diffuseTexture") {
-                                var param = technique.parameters.diffuseTexture;
-                                if (param) {
-                                    var sampler2D = Object.create(ResourceDescription).init(entryID+sampler2D, param);
-                                    sampler2D.type = "SAMPLER_2D"
-                                    if (param.image) {
-                                        technique.parameters.diffuseTexture = sampler2D;
-                                        param.image = this.getEntry(param.image).entry;               
-                                    }    
+                            var param = technique.parameters[parameter];
+                            if (param) {
+                                //TODO: handle with switch all types
+                                switch (param.type) {
+                                    case "SAMPLER_2D": {
+                                        var sampler2D = Object.create(ResourceDescription).init(entryID+sampler2D, param);
+                                        sampler2D.type = param.type;
+                                        if (param.image) {
+                                            param.image = this.getEntry(param.image).entry;
+                                            technique.parameters[parameter] = sampler2D;
+                                        }
+                                    }
+                                        break;
+                                    default:
+                                        technique.parameters[parameter] = param.value;
+                                        break;
                                 }
                             }
                             material.parameters[parameter] = technique.parameters[parameter];

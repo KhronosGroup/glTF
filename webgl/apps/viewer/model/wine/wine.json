@@ -45,11 +45,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -60,11 +63,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -75,10 +81,11 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": {
+                        "diffuse": {
                             "image": "image_1",
                             "maxFilter": "LINEAR",
                             "minFilter": "LINEAR",
+                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
@@ -92,12 +99,18 @@
             "techniques": {
                 "lambert2": {
                     "parameters": {
-                        "diffuseColor": [
-                            0.564706,
-                            0.972549,
-                            0.835294
-                        ],
-                        "transparency": 0.14902
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.564706,
+                                0.972549,
+                                0.835294
+                            ]
+                        },
+                        "transparency": {
+                            "type": "FLOAT",
+                            "value": 0.14902
+                        }
                     }
                 }
             }
@@ -108,10 +121,11 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": {
+                        "diffuse": {
                             "image": "image_2",
                             "maxFilter": "LINEAR",
                             "minFilter": "LINEAR",
+                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
@@ -125,11 +139,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
-                        "diffuseColor": [
-                            1,
-                            1,
-                            1
-                        ]
+                        "diffuse": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
                     }
                 }
             }
@@ -140,10 +157,11 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
-                        "diffuseTexture": {
+                        "diffuse": {
                             "image": "image_0",
                             "maxFilter": "LINEAR",
                             "minFilter": "LINEAR",
+                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
@@ -11678,13 +11696,7 @@
     },
     "techniques": {
         "lambert0": {
-            "parameters": {
-                "diffuseColor": [
-                    1,
-                    1,
-                    1
-                ]
-            },
+            "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
@@ -11718,7 +11730,7 @@
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuseColor",
+                                "parameter": "diffuse",
                                 "symbol": "u_diffuseColor",
                                 "type": "FLOAT_VEC3"
                             }
@@ -11775,7 +11787,7 @@
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuseTexture",
+                                "parameter": "diffuse",
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
                             }
@@ -11793,13 +11805,7 @@
             }
         },
         "lambert2": {
-            "parameters": {
-                "diffuseColor": [
-                    1,
-                    1,
-                    1
-                ]
-            },
+            "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
@@ -11833,7 +11839,7 @@
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuseColor",
+                                "parameter": "diffuse",
                                 "symbol": "u_diffuseColor",
                                 "type": "FLOAT_VEC3"
                             },

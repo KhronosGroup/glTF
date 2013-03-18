@@ -353,8 +353,8 @@ namespace JSONExport
     static std::string parameterForUniform(const std::string& symbol) {
         static std::map<std::string , std::string> symbolToParameter;
         if (symbolToParameter.empty()) {
-            symbolToParameter[kDiffuseColorUniform] = "diffuseColor";
-            symbolToParameter[kDiffuseTextureUniform] = "diffuseTexture";
+            symbolToParameter[kDiffuseColorUniform] = "diffuse";
+            symbolToParameter[kDiffuseTextureUniform] = "diffuse";
             symbolToParameter[kTransparencyUniform] = "transparency";
         }
         return symbolToParameter[symbol];
@@ -563,11 +563,6 @@ namespace JSONExport
             if (symbolIsAUniformParameter(symbol)) {
                 std::string parameterName = parameterForUniform(symbol);
                 uniform->setString("parameter",parameterName);                   //if we want to set default values...
-                if (!parameters->contains("parameter")) {
-                    //just set white for diffuseColor
-                    if (parameterName == "diffuseColor")
-                        parameters->setValue(parameterName, serializeVec3(1,1,1));
-                }
             } else {
                 uniform->setString("semantic", semanticForUniform(symbol));
             }
@@ -602,12 +597,6 @@ namespace JSONExport
             
             attributes->appendValue(attribute);
         }
-        
-        /*
-         shared_ptr <JSONExport::JSONObject> diffuseColorObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
-         diffuseColorObject->setString("symbol", "u_diffuseColor");
-         inputs->setValue("diffuseColor", diffuseColorObject);
-         */
         
         shared_ptr <JSONExport::JSONObject> passes = techniqueObject->createObjectIfNeeded("passes");
         
