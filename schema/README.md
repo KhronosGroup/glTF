@@ -29,7 +29,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#mesh">`mesh`</a>
       * <a href="#node">`node`</a>
       * <a href="#primitive">`primitive`</a>  
-      * <a href="#vertexAttribute">`vertexAttribute`</a>  
+      * <a href="#semantic">`semantic`</a>  
 * <a href="#schema">Schema</a> - alphabetical
    * <a href="#accessor">`accessor`</a>
    * <a href="#asset">`asset`</a>
@@ -49,11 +49,11 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#perspective">`perspective`</a>
    * <a href="#primitive">`primitive`</a>   
    * <a href="#program">`program`</a>   
+   * <a href="#semantic">`semantic`</a>
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
-   * <a href="#vertexAttribute">`vertexAttribute`</a>
 * <a href="#about_shaders">Note about shaders</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#references">References</a>
@@ -649,6 +649,58 @@ Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniform
    * Renamed `x-shader/x-vertex` to `vertexShader` to better match WebGL
 
 <!-- ----------------------------------------------------------------------- -->
+<a name="semantic">
+## `semantic`
+
+* Schema: [semantic.schema.json](semantic.schema.json)
+* Example: [semantic.json](examples/semantic/semantic.json) - every property with example values.
+
+### Details
+
+Within the scope of a primitive a semantic points to a mesh attribute.
+When multiple sets are available for a given 'semantic', by convention both are concatenated as `semantic`_`set`.
+Specifying the set for index 0 is optional.
+
+#### Semantics
+
+General and Tangent Space
+
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `POSITION` | `vec2` or `vec3` | Geometric coordinate vector. |
+| `NORMAL` | `vec3` | Normal vector. |
+| `BINORMAL` | `vec3` | Geometric binormal (bitangent) vector. |
+| `TANGENT` | `vec3` | Geometric tangent vector. |
+| `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
+| `COLOR` | `vec3` and `vec4` | Color.  RGB or RGBA. |
+
+_TODO: Flush out semantics below._
+
+Skinning and Morph Targets
+
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `INV_BIND_MATRIX` |  | Inverse of local-to-world matrix. |
+| `JOINT` |  | Skin influence identifier. |
+| `WEIGHT` |  | Skin influence weighting value. |
+| `MORPH_TARGET` |  | Morph targets for mesh morphing. |
+| `MORPH_WEIGHT` |  | Weights for mesh morphing. |
+
+### Related GL Functions
+
+None.
+
+### _Open Questions_
+
+* _Schema_
+   * Do we need these semantics:
+      * `TEXBINORMAL`- Texture binormal (bitangent) vector 
+      * `TEXTANGENT` - Texture tangent vector 
+* _COLLADA2JSON_
+   * _Rename `VERTEX` semantic to `POSITION`.  Both COLLADA `VERTEX` and `POSITION` map to `POSITION`?_
+   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
+
+<!-- ----------------------------------------------------------------------- -->
 <a name="shader">
 ## `shader`
 
@@ -789,59 +841,6 @@ _TODO_
    * Create list of allowed types.
    * Rename VERTEX semantic to POSITION.
    * Rename `FLOAT_VEC3` `type` to `vec3`, etc.
-* _COLLADA2JSON_
-   * 
-
-<!-- ----------------------------------------------------------------------- -->
-<a name="vertexAttribute">
-## `vertexAttribute`
-
-* Schema: [vertexAttribute.schema.json](vertexAttribute.schema.json)
-* Example: [vertexAttribute.json](examples/vertexAttribute/vertexAttribute.json) - every property with example values.
-
-### Details
-
-Associates a `semantic` and a `set` index to an accessor.
-This association is used to match `attributes` in `program` with the ones from the `primitive` to be rendered.
-
-#### Semantics
-
-General and Tangent Space
-
-| Semantic Name | Typical datatypes | Description |
-|:-----------|:-----------|:------------|
-| `POSITION` | `vec2` or `vec3` | Geometric coordinate vector. |
-| `NORMAL` | `vec3` | Normal vector. |
-| `BINORMAL` | `vec3` | Geometric binormal (bitangent) vector. |
-| `TANGENT` | `vec3` | Geometric tangent vector. |
-| `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
-| `COLOR` | `vec3` and `vec4` | Color.  RGB or RGBA. |
-
-_TODO: Flush out semantics below._
-
-Skinning and Morph Targets
-
-| Semantic Name | Typical datatypes | Description |
-|:-----------|:-----------|:------------|
-| `INV_BIND_MATRIX` |  | Inverse of local-to-world matrix. |
-| `JOINT` |  | Skin influence identifier. |
-| `WEIGHT` |  | Skin influence weighting value. |
-| `MORPH_TARGET` |  | Morph targets for mesh morphing. |
-| `MORPH_WEIGHT` |  | Weights for mesh morphing. |
-
-### Related GL Functions
-
-None.
-
-### _Open Questions_
-
-* _Schema_
-   * Do we need these semantics:
-      * `TEXBINORMAL`- Texture binormal (bitangent) vector 
-      * `TEXTANGENT` - Texture tangent vector 
-* _COLLADA2JSON_
-   * _Rename `VERTEX` semantic to `POSITION`.  Both COLLADA `VERTEX` and `POSITION` map to `POSITION`?_
-   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="about_shaders">
