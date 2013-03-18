@@ -15,6 +15,14 @@
                 "$ref" : "buffer.schema.json"
             }
         },
+        "bufferViews" : {
+            "description" : "The buffer views used in this model.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "bufferView.schema.json"
+            }
+        },
         "cameras" : {
             "description" : "The cameras available to this model.",
             "properties" : {
