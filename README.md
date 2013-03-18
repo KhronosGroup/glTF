@@ -46,12 +46,12 @@ OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 
 #### Common setup 
 ```
-git clone https://github.com/KhronosGroup/gltf.git
+git clone https://github.com/KhronosGroup/glTF.git
 cd collada2json
 git submodule update --init --recursive
 ```
 
-Start a web server in `gltf/webgl` which contains an `index.html` page linking to the demos.
+Start a web server in `glTF/webgl` which contains an `index.html` page linking to the demos.
 
 ## Converter build instructions
 
