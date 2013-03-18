@@ -155,29 +155,29 @@ The glTF schema is written using [JSON Schema 03](http://tools.ietf.org/html/dra
 
 An asset can be validated against the schema using the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  Setup a local webserver to point the root of your local copy of this repo, and browse to index.html.  For example:
 ```
-http://localhost/gltf/schema/
+http://localhost/gltf/specification/
 ```
 
 There are a few query parameters.
 
 Use `schema` to provide the schema to validate against:
 ```
-http://localhost/gltf/schema/?schema=states.schema.json
+http://localhost/gltf/specification/?schema=states.schema.json
 ```
 
 Use `json` to provide the asset's JSON to validate:
 ```
-http://localhost/gltf/schema/?json=examples/states/translucency.json
+http://localhost/gltf/specification/?json=examples/states/translucency.json
 ```
 
 Use `validate` to immediately validate the json with the schema:
 ```
-http://localhost/gltf/schema/?validate=true
+http://localhost/gltf/specification/?validate=true
 ```
 
 The most common use is something like:
 ```
-http://localhost/gltf/schema/?schema=states.schema.json&json=examples/states/translucency.json&validate=true
+http://localhost/gltf/specification/?schema=states.schema.json&json=examples/states/translucency.json&validate=true
 ```
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
