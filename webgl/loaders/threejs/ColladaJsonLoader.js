@@ -333,7 +333,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                 //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
                 var texturePath = null;
                 var technique = description.techniques[description.technique];
-                var texture = technique.parameters.diffuseTexture;
+                var texture = technique.parameters.diffuse;
                 if (texture) {
                     var imageEntry = this.threeResources.getEntry(texture.image);
                     if (imageEntry) {
@@ -341,12 +341,12 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
                     }
                 }
 
-                var diffuseColor = technique.parameters.diffuseColor;
-                var transparency = technique.parameters.transparency;
+                var diffuseColor = !texturePath ? technique.parameters.diffuse.value : null;
+                var transparency = technique.parameters.transparency ? technique.parameters.transparency.value : 1.0;
 
                 var material = new THREE.MeshLambertMaterial({
                     color: RgbArraytoHex(diffuseColor),
-                    opacity: 1.0,
+                    opacity: transparency,
                     map: LoadTexture(texturePath)
                 });
 
