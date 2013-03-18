@@ -22,8 +22,8 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#technique">`technique`</a>
       * <a href="#uniform">`uniform`</a>
    * Geometry
-      * <a href="#accessor">`accessor`</a>
-      * <a href="#attribute">`attribute`</a>
+      * <a href="#mesh_attribute">`attribute (mesh)`</a>
+      * <a href="#attribute">`attribute (program)`</a>
       * <a href="#buffer">`buffer`</a>
       * <a href="#indices">`indices`</a>
       * <a href="#mesh">`mesh`</a>
@@ -31,9 +31,9 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#primitive">`primitive`</a>  
       * <a href="#semantics">`semantics`</a>  
 * <a href="#schema">Schema</a> - alphabetical
-   * <a href="#accessor">`accessor`</a>
+   * <a href="#mesh_attribute">`attribute (mesh)`</a>
    * <a href="#asset">`asset`</a>
-   * <a href="#attribute">`attribute`</a>
+   * <a href="#attribute">`attribute (program)`</a>
    * <a href="#buffer">`buffer`</a>
    * <a href="#bufferView">`bufferView`</a>
    * <a href="#camera">`camera`</a>
@@ -191,11 +191,11 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 # Schema
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="accessor">
-## `accessor`
+<a name="mesh_attribute">
+## `attribute (mesh)`
 
-* Schema: [accessor.schema.json](accessor.schema.json)
-* Example: [accessor.json](examples/accessor/accessor.json) - every property with example values.
+* Schema: [mesh_attribute.schema.json](mesh_attribute.schema.json)
+* Example: [mesh_attribute.json](examples/mesh_attribute/mesh_attribute.json) - every property with example values.
 
 ### Details
 
@@ -461,7 +461,7 @@ _TODO_
 
 ### Related GL Functions
 
-See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
+See <a href="#mesh_attribute">`attributes (mesh)`</a> and <a href="#primitives">`primitives`</a>.
 
 ### _Open Questions_
 
@@ -1035,17 +1035,6 @@ _TODO_
 ### `material`
 
 _TODO_
-
-#### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
-
-_TODO_
-
-<!-- ----------------------------------------------------------------------- -->
-### `mesh`
-
-* glTF does not support `spline`, `convex_mesh` (physics), or `brep` (B-Rep).
-* No `technique_common` or `technique`.  Instead, this can be negotiated via a REST API.
-* Also see <a href="#buffer">`buffer`</a>.
 
 #### [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf) References
 
