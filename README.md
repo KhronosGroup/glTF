@@ -47,7 +47,7 @@ OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
 #### Common setup 
 ```
 git clone https://github.com/KhronosGroup/glTF.git
-cd collada2json
+cd glTF
 git submodule update --init --recursive
 ```
 
@@ -58,7 +58,7 @@ Start a web server in `glTF/webgl` which contains an `index.html` page linking t
 ##### Windows
 
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
-* `cd collada2json/converter/dae2json`
+* `cd glTF/converter/dae2json`
 * `cmake CMakeLists.txt`
 
 open `COLLADA2JSON.sln` and build.
@@ -66,7 +66,7 @@ open `COLLADA2JSON.sln` and build.
 ##### Mac OSX
 
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
-* `cd collada2json/converter/dae2json`
+* `cd glTF/converter/dae2json`
 * `cmake -G Xcode`
 
 open `COLLADA2JSON.xcodeproj` and build, or if you installed xcode command line tools you can also build in the terminal: `xcodebuild -target collada2json`
