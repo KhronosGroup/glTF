@@ -1,0 +1,9 @@
+{
+    "POSITION" : "positions",
+    "NORMAL" : "normals",
+    "TEXCOORD_0" : "uvLightmap",
+    "TEXCOORD_1" : "uvDiffuse",
+    "extra" : {
+       "Application specific" : "The extra object can contain any properties."
+    }     
+}

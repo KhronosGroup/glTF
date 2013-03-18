@@ -1,8 +1,0 @@
-{
-    "accessor" : "accessorPosition",
-    "semantic" : "POSITION",
-    "set" : 0,
-    "extra" : {
-       "Application specific" : "The extra object can contain any properties."
-    }     
-}

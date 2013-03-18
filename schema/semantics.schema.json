@@ -1,0 +1,13 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "semantics",
+    "type" : "object",
+    "description" : "TODO",
+    "properties" : {
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : true
+}
