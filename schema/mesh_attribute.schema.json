@@ -1,8 +1,8 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "accessor",
+    "title" : "attribute",
     "type" : "object",
-    "description" : "vertexAttribPointer()",
+    "description" : "compliant with vertexAttribPointer() API",
     "properties" : {
         "bufferView" : {
             "type" : "string",
