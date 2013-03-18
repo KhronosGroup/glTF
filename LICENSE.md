@@ -1,4 +1,6 @@
-Copyright (c) 2012, Motorola Mobility, Inc
+This license is for the example glTF code, not the [specification](specification/README.md) and [schema](specification).
+
+Original work Copyright (c) 2012, Motorola Mobility, Inc.
 All Rights Reserved.
 BSD License.
 
@@ -26,8 +28,15 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
+Additional contributions copyright their respective contributors (also BSD License):
+   * Fabrice Robinet
+   * Analytical Graphics, Inc.
+
+Third-Party Libraries
+=====================
+
 Montage
-========
+-------
 
 Copyright (c) 2012, Motorola Mobility, Inc
 All Rights Reserved.
@@ -58,7 +67,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 OpenCOLLADA
-===========
+-----------
 
 Copyright (c) 2008-2009 NetAllied Systems GmbH
 
@@ -76,7 +85,7 @@ for details please see LICENSE file or the website
 http://www.opensource.org/licenses/mit-license.php
 
 RapidJSON
-=========
+---------
 
 Copyright (C) 2011 Milo Yip
 
@@ -99,7 +108,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 gl-matrix
-=========
+---------
 
   Copyright (c) 2012 Brandon Jones, Colin MacKenzie IV
  
