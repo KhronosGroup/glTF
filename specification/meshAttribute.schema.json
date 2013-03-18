@@ -49,7 +49,7 @@
         "max" : {
             "type" : "array",
             "description" : "Maximum value of each component in this attribute.",
-            "items ": {
+            "items" : {
                 "type" : "number"
             },
             "required" : true
@@ -57,7 +57,7 @@
         "min" : {
             "type" : "array",
             "description" : "Minimum value of each component in this attribute.",
-            "items ": {
+            "items" : {
                 "type" : "number"
             },
             "required" : true

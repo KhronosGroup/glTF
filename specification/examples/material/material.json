@@ -2,9 +2,9 @@
     "name" : "application-visible globally-unique name",
     "parameters" : {
     },
-    "technique" : "exampleTechnique",
+    "technique" : "technique_id",
     "techniques" : {
-		"exampleTechnique" : {
+		"technique_id" : {
 		    "pass" : {
 			    "program" : {
 					"attributes" : [{

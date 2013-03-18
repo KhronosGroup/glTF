@@ -1,6 +1,6 @@
 {
     "buffers" : {
-        "vertices.bin" : {
+        "verticesBuffer_id" : {
 		    "path" : "vertices.bin",
 		    "byteLength": 1024
         }

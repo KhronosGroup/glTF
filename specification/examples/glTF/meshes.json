@@ -17,7 +17,7 @@
 		    "name" : "application-visible globally-unique name",
 		    "primitives" : [{
 			    "indices" : {
-			        "bufferView" : "indices_id",
+			        "bufferView" : "bufferViewWithIndices_id",
 			        "byteOffset" : 0,
 			        "count" : 1024,
 			        "type" : "UNSIGNED_SHORT"

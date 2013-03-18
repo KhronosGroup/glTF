@@ -1,9 +1,9 @@
 {
     "shaders" : {
-        "lambertVS" : {
+        "lambertVS_id" : {
             "path" : "lambertVS.glsl"
         },
-        "lambertFS" : {
+        "lambertFS_id" : {
             "path" : "lambertFS.glsl"
         }
     },

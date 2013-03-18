@@ -15,12 +15,12 @@
     "name" : "application-visible globally-unique name",
     "primitives" : [{
 	    "indices" : {
-	        "buffer" : "indices.bin",
+	        "bufferView" : "bufferViewWithIndices_id",
 	        "byteOffset" : 0,
 	        "count" : 1024,
 	        "type" : "UNSIGNED_SHORT"
 	    },
-	    "material" : "exampleMaterial",
+	    "material" : "material_id",
 	    "primitive" : "TRIANGLES",
 	    "semantics" : {    
 	        "POSITION" : "attribute_id"

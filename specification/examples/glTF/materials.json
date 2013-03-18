@@ -2,9 +2,9 @@
     "materials" : {
         "material_id" : {
 		    "name" : "application-visible globally-unique name",
-		    "technique" : "exampleTechnique",
+		    "technique" : "technique_id",
 		    "techniques" : {
-				"exampleTechnique" : {
+				"technique_id" : {
 				    "pass" : {
 					    "program" : {
 							"attributes" : [{

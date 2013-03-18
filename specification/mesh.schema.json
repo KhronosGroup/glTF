@@ -19,7 +19,7 @@
         "primitives" : {
             "type" : "array",
             "description" : "Primitives that form the geometry in this mesh.",
-            "items ": {
+            "items" : {
                 "$ref" : "primitive.schema.json"
             }
         },
