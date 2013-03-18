@@ -1,7 +1,7 @@
 {
-    "accessors" : {
-	    "accessorPosition" : {
-		    "buffer" : "vertices.bin",
+    "attributes" : {
+	    "attribute_id" : {
+		    "bufferView" : "bufferViewWithVertices_id",
 		    "byteOffset" : 0,
 		    "byteStride" : 3,
 		    "count" : 1024,
@@ -9,8 +9,7 @@
 		    "componentsPerAttribute" : 3,
 		    "normalized" : false,
 		    "max" : [-1.0, -1.0, -1.0],
-		    "min" : [1.0, 1.0, 1.0],
-		    "semantic" : "POSITION"
+		    "min" : [1.0, 1.0, 1.0]
 		}
     },
     "name" : "application-visible globally-unique name",
