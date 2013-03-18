@@ -5,8 +5,8 @@
 	    	"symbol" : "position",
 	    	"type" : "vec3"
 		}],
-		"fragmentShader" : "fragmentShader.id",
-		"vertexShader" : "vertexShader.id"
+		"fragmentShader" : "fragmentShader_id",
+		"vertexShader" : "vertexShader_id"
     },
     "states" : {
         "depthTestEnable" : true

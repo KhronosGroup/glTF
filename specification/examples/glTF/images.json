@@ -3,11 +3,11 @@
         "example" : {
             "path" : "example.png"
         },
-        "another_example" : {
-            "path" : "another_example.png",
+        "anotherExample" : {
+            "path" : "anotherExample.png",
             "generateMipmap" : false,
             "extra" : {
-               "example_meta_data" : "application_specific"
+               "example_meta_data" : "application specific"
             }
         }
     },

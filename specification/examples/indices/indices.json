@@ -1,5 +1,5 @@
 {
-    "bufferView" : "aBufferViewHoldingMyIndices",
+    "bufferView" : "bufferViewWithIndices_id",
     "byteOffset" : 0,
     "count" : 1024,
     "type" : "UNSIGNED_SHORT",

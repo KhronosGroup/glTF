@@ -19,13 +19,8 @@
 	        "pattern" : "^POINTS$|^LINE_STRIP$|^LINE_LOOP$|^LINES$|^TRIANGLE_STRIP$|^TRIANGLE_FAN$|^TRIANGLES$",
             "required" : true
         },
-        "vertexAttributes" : {
-            "type" : "array",
-            "description" : "TODO",
-            "items" : {
-                "$ref" : "vertexAttribute.schema.json"
-            },
-            "minItems" : 1,
+        "semantics" : {
+            "$ref" : "semantics.schema.json",
             "required" : true
         },
         "extra" : {
