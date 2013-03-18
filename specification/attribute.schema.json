@@ -6,7 +6,8 @@
     "properties": {
         "semantic" : {
             "type" : "string",
-            "description" : "TODO"
+            "description" : "TODO",
+            "required" : true
         },    
         "symbol" : {
             "type" : "string",

@@ -1,6 +1,7 @@
 {
     "program" : {
 		"attributes" : [{
+            "semantic" : "POSITION",
 	    	"symbol" : "position",
 	    	"type" : "vec3"
 		}],

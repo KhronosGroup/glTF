@@ -22,7 +22,7 @@
         "vertexAttributes" : {
             "type" : "array",
             "description" : "TODO",
-            "items ": {
+            "items" : {
                 "$ref" : "vertexAttribute.schema.json"
             },
             "minItems" : 1,

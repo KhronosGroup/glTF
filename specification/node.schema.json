@@ -7,7 +7,7 @@
         "children" : {
             "type" : "array",
             "description" : "The node's children.  Each string in the array must match an existing id in this model's nodes.  Children are affected by the node's matrix.",
-            "items ": {
+            "items" : {
                 "type" : "string"
             },
             "uniqueItems" : true
@@ -24,7 +24,7 @@
         "meshes" : {
             "type" : "array",
             "description" : "The meshes that are part of this node.  Each string in the array must match an existing id in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
-            "items ": {
+            "items" : {
                 "type" : "string"
             },
             "uniqueItems" : true

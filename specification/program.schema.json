@@ -7,7 +7,7 @@
         "attributes" : {
             "type" : "array",
             "description" : "TODO",
-            "items ": {
+            "items" : {
                 "$ref" : "attribute.schema.json"
             },
             "minItems" : 1,
@@ -21,7 +21,7 @@
         "uniforms" : {
             "type" : "array",
             "description" : "TODO",
-            "items ": {
+            "items" : {
                 "$ref" : "uniform.schema.json"
             }
         },
