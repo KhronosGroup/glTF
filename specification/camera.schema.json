@@ -6,7 +6,7 @@
     "properties" : {
         "name" : {
             "type" : "string",
-            "description" : "The externally-referenceable globally-unique name of this node."
+            "description" : "The application-visible globally-unique name of this node."
         },    
         "orthographic" : {
             "$ref" : "orthographic.schema.json"

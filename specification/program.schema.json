@@ -15,7 +15,7 @@
         },
         "fragmentShader" : {
             "type" : "string",
-            "description" : "The name of the fragment shader referenced by this program.",
+            "description" : "The id (JSON property name) of the fragment shader referenced by this program.",
             "required" : true
         },
         "uniforms" : {
@@ -27,7 +27,7 @@
         },
         "vertexShader" : {
             "type" : "string",
-            "description" : "The name of the vertex shader referenced by this program.",
+            "description" : "The id (JSON property name) of the vertex shader referenced by this program.",
             "required" : true
         },
         "extra" : {

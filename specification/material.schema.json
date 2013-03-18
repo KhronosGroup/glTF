@@ -6,14 +6,14 @@
     "properties": {    
         "name" : {
             "type" : "string",
-            "description" : "The externally-referenceable globally-unique name of this node."
+            "description" : "The application-visible globally-unique name of this node."
         },
         "parameters" : {
 	        "$ref" : "parameters.schema.json"
         },
         "technique" : {
             "type" : "string",
-            "description" : "The name of the default technique referenced by this material.",
+            "description" : "The id (JSON property name) of the default technique referenced by this material.",
             "required" : true
         },
         "techniques" : {

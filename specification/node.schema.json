@@ -6,7 +6,7 @@
     "properties" : {
         "children" : {
             "type" : "array",
-            "description" : "The node's children.  Each string in the array must match an existing id in this model's nodes.  Children are affected by the node's matrix.",
+            "description" : "The node's children.  Each string in the array must match an existing id (JSON property name) in this model's nodes.  Children are affected by the node's matrix.",
             "items" : {
                 "type" : "string"
             },
@@ -23,7 +23,7 @@
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
+            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id (JSON property name) in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
             "items" : {
                 "type" : "string"
             },
@@ -31,7 +31,7 @@
         },
         "name" : {
             "type" : "string",
-            "description" : "The externally-referenceable globally-unique name of this node."
+            "description" : "The application-visible globally-unique name of this node."
         },
         "extra" : {
             "type" : "any",

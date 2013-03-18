@@ -6,7 +6,7 @@
     "properties" : {
         "bufferView" : {
             "type" : "string",
-            "description" : "The name of the bufferView to reference for index data.",
+            "description" : "The id (JSON property name) of the bufferView to reference for index data.",
             "required" : true
         },
         "byteOffset" : {
