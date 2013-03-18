@@ -852,7 +852,7 @@ This said, shader implementation is up to the glTF adopter.
 Consequently, none of the techniques, semantic (*), attributes are strictly imposed by glTF.
 
 However, for heavier clients and especially the ones relying on deferred lighting, provided shaders might not be always usable.
-By supporting a given set of parameters and semantics, a client can re-generate the shaders to fit a specific architecture.
+By supporting the following set of parameters and semantics, a client can re-generate the shaders to fit a specific architecture.
 
 The following parameters are typically used by the common lighting models, like Lambert, Phong and Blinn-Phong.
 By gathering the set of parameter names going through uniforms and attributes of a program.
@@ -870,22 +870,16 @@ For instance, the diffuse component of the lighting might be a color or a textur
 
 | parameter | Typical datatypes | Description |
 |:-----------|:-----------|:------------|
-| `ambientColor` | `vec3`  | ambient color |
-| `ambientTexture ` | `SAMPLER_2D` | ambient texture. |
-| `diffuseColor` | `vec3`  | diffuse color |
-| `diffuseTexture` | `SAMPLER_2D` | diffuse texture. |
-| `emissionColor` | `vec3`  | emission color |
-| `emissionTexture` | `SAMPLER_2D` | emission texture. |
-| `specularColor` | `vec3`  | specular color |
-| `specularTexture ` | `SAMPLER_2D` | specular texture. |
-| `transparentColor` | `vec3`  | transparent color |
-| `transparentTexture ` | `SAMPLER_2D` | transparent texture. |
+| `ambient` | `vec3` or `SAMPLER_2D`  | ambient color or texture |
+| `diffuse` | `vec3` or `SAMPLER_2D`   | diffuse color or texture |
+| `emission` | `vec3` or `SAMPLER_2D`   | emission color or texture |
+| `specular` | `vec3` or `SAMPLER_2D`   | specular color or texture |
+| `transparent` | `vec3` or `SAMPLER_2D`   | transparent color or texture |
 | `shininess ` | `float` | shininess. |
 | `indexOfRefraction ` | `float` |  |
 | `reflectivity ` | `float` |  |
 
-[Open question] Should just put the parameter or both versions with color and texture  ? like just diffuse vs diffuseColor and diffuseTexture.
-Specifying both versionslet people specify a diffuseColor and diffuseTexture… not sure how much useful this is.
+[TODO] add normal map
 
 | Semantic Name | Typical datatypes | Description |
 |:-----------|:-----------|:------------|
@@ -893,7 +887,7 @@ Specifying both versionslet people specify a diffuseColor and diffuseTexture… 
 | `NORMAL` | `vec3` | Normal vector. |
 | `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
 
-example:
+[TODO]example:
 
 (*) POSITION might need specific consideration.
 
