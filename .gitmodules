@@ -7,9 +7,6 @@
 [submodule "converter/dae2json/dependencies/rapidjson"]
 	path = converter/dae2json/dependencies/rapidjson
 	url = git://github.com/kennytm/rapidjson.git
-[submodule "schema/validator/JSV"]
-	path = schema/validator/JSV
-	url = git://github.com/garycourt/JSV.git
 [submodule "converter/dae2json/dependencies/libpng"]
 	path = converter/dae2json/dependencies/libpng
 	url = git://github.com/jbowler/libpng.git
