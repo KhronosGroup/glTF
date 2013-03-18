@@ -7,10 +7,12 @@ set(COLLADA2JSON_BINARY_DIR, COLLADA2JSON_SOURCE_DIR)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/JSONExport)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/rapidjson/include/rapidjson)
-include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/libpng)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
+
+find_package(PNG REQUIRED)
+include_directories(${PNG_INCLUDE_DIR})
 
 link_directories(${COLLADA2JSON_BINARY_DIR}/lib)
 
@@ -21,7 +23,6 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
-add_subdirectory(dependencies/libpng)
 
 add_executable(collada2json main.cpp 
     DAE2JSONWriter.cpp
@@ -61,4 +62,4 @@ add_executable(collada2json main.cpp
     helpers/geometryHelpers.h
     helpers/geometryHelpers.cpp)
 
-target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static png15_static)
+target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY})
