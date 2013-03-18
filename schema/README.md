@@ -1179,5 +1179,6 @@ _TODO_
 <a name="acknowledgments">
 # Acknowledgments
 
+* Brandon Jones, for the Three.js loader and all his support in the early days of this project.
 * Tom Fili, Analytical Graphics, Inc., answers all of Patrick's COLLADA questions.
 
