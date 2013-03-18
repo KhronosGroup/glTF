@@ -9,5 +9,7 @@
             "description" : "Optional application-specific data."
         }
     },
-    "additionalProperties" : true
+    "additionalProperties" : {
+        "type" : "string"
+    }
 }
