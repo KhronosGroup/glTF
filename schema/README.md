@@ -29,7 +29,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#mesh">`mesh`</a>
       * <a href="#node">`node`</a>
       * <a href="#primitive">`primitive`</a>  
-      * <a href="#semantic">`semantic`</a>  
+      * <a href="#semantics">`semantics`</a>  
 * <a href="#schema">Schema</a> - alphabetical
    * <a href="#accessor">`accessor`</a>
    * <a href="#asset">`asset`</a>
@@ -49,7 +49,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#perspective">`perspective`</a>
    * <a href="#primitive">`primitive`</a>   
    * <a href="#program">`program`</a>   
-   * <a href="#semantic">`semantic`</a>
+   * <a href="#semantics">`semantics`</a>
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
@@ -649,11 +649,11 @@ Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniform
    * Renamed `x-shader/x-vertex` to `vertexShader` to better match WebGL
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="semantic">
-## `semantic`
+<a name="semantics">
+## `semantics`
 
-* Schema: [semantic.schema.json](semantic.schema.json)
-* Example: [semantic.json](examples/semantic/semantic.json) - every property with example values.
+* Schema: [semantics.schema.json](semantics.schema.json)
+* Example: [semantics.json](examples/semantics/semantics.json) - every property with example values.
 
 ### Details
 
