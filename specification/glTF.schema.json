@@ -84,6 +84,11 @@
             "description" : "The glTF version.",
             "required" : true
         },
+        "profile" : {
+            "type" : "string",
+            "description" : "The glTF profile used for this asset.",
+            "required" : true
+        },        
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."
