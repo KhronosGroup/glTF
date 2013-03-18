@@ -10,3 +10,6 @@
 [submodule "converter/dae2json/dependencies/libpng"]
 	path = converter/dae2json/dependencies/libpng
 	url = git://github.com/jbowler/libpng.git
+[submodule "specification/validator/JSV"]
+	path = specification/validator/JSV
+	url = git://github.com/garycourt/JSV.git
