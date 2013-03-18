@@ -22,7 +22,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#technique">`technique`</a>
       * <a href="#uniform">`uniform`</a>
    * Geometry
-      * <a href="#mesh_attribute">`attribute (mesh)`</a>
+      * <a href="#meshAttribute">`attribute (mesh)`</a>
       * <a href="#attribute">`attribute (program)`</a>
       * <a href="#buffer">`buffer`</a>
       * <a href="#indices">`indices`</a>
@@ -31,7 +31,7 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
       * <a href="#primitive">`primitive`</a>  
       * <a href="#semantics">`semantics`</a>  
 * <a href="#schema">Schema</a> - alphabetical
-   * <a href="#mesh_attribute">`attribute (mesh)`</a>
+   * <a href="#meshAttribute">`attribute (mesh)`</a>
    * <a href="#asset">`asset`</a>
    * <a href="#attribute">`attribute (program)`</a>
    * <a href="#buffer">`buffer`</a>
@@ -191,11 +191,11 @@ Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), wh
 # Schema
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="mesh_attribute">
+<a name="meshAttribute">
 ## `attribute (mesh)`
 
-* Schema: [mesh_attribute.schema.json](mesh_attribute.schema.json)
-* Example: [mesh_attribute.json](examples/mesh_attribute/mesh_attribute.json) - every property with example values.
+* Schema: [meshAttribute.schema.json](meshAttribute.schema.json)
+* Example: [meshAttribute.json](examples/meshAttribute/meshAttribute.json) - every property with example values.
 
 ### Details
 
@@ -461,7 +461,7 @@ _TODO_
 
 ### Related GL Functions
 
-See <a href="#mesh_attribute">`attributes (mesh)`</a> and <a href="#primitives">`primitives`</a>.
+See <a href="#meshAttribute">`attributes (mesh)`</a> and <a href="#primitives">`primitives`</a>.
 
 ### _Open Questions_
 
