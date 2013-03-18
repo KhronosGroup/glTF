@@ -6,24 +6,25 @@
     "properties" : {
         "buffer" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the buffer referenced by this accessor.",
+            "description" : "The id (JSON property name) of the buffer referenced by this view.",
             "required" : true
         },
         "byteOffset" : {
             "type" : "number",
-            "description" : "The offset into the buffer in bytes.",
+            "description" : "The offset into the buffer, in bytes.",
             "minimum" : 0,
-            "required" : true
+            "default" : 0
         },
         "byteLength" : {
             "type" : "number",
-            "description" : "The length of the buffer view in bytes",
+            "description" : "The length of the buffer view, in bytes.",
             "minimum" : 0,
             "required" : true
         },
         "target" : {
             "type" : "string",
-            "description" : "Required target type for bindBuffer, must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
+            "description" : "Required target type for bindBuffer(), must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
+	        "pattern" : "^ARRAY_BUFFER$|^ELEMENT_ARRAY_BUFFER$",
             "required" : true
         },
         "extra" : {
