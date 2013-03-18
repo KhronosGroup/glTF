@@ -7,7 +7,7 @@
             "path" : "anotherExample.png",
             "generateMipmap" : false,
             "extra" : {
-               "example_meta_data" : "application specific"
+                "Application specific" : "The extra object can contain any properties."
             }
         }
     },

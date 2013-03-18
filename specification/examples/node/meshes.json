@@ -1,8 +1,8 @@
 {
-    "children" : ["example_child_1", "example_child_2"],
+    "children" : ["child_id", "anotherChild_id"],
     "matrix" : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    "meshes" : ["example_mesh"],
-    "name" : "example_node_name",
+    "meshes" : ["mesh_id"],
+    "name" : "Node name visible to application",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }    

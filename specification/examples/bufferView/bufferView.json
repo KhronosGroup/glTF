@@ -1,5 +1,5 @@
 {
-    "buffer" : "sharedBufferToHoldIndices",
+    "buffer" : "buffer_id",
     "byteOffset": 20000,
     "byteLength": 1024,
     "target": "ELEMENT_ARRAY_BUFFER",

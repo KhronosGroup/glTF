@@ -1,4 +1,4 @@
 {
     "matrix" : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    "meshes" : ["example_mesh"]
+    "meshes" : ["mesh_id"]
 }

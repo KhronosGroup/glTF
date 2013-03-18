@@ -13,7 +13,7 @@
 		    "semantic" : "POSITION"
 		}
     },
-    "name" : "exampleMesh",
+    "name" : "application-visible globally-unique name",
     "primitives" : [{
 	    "indices" : {
 	        "buffer" : "indices.bin",

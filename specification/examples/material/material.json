@@ -1,5 +1,5 @@
 {
-    "name" : "exampleMaterial",
+    "name" : "application-visible globally-unique name",
     "parameters" : {
     },
     "technique" : "exampleTechnique",

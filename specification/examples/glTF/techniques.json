@@ -1,6 +1,6 @@
 {
     "techniques" : {
-        "technique.0" : {
+        "technique_id" : {
 		    "pass" : {
 			    "program" : {
 					"attributes" : [{

@@ -1,5 +1,5 @@
 {
-    "bufferView" : "aBufferViewToHoldVertices",
+    "bufferView" : "bufferViewWithVertices_id",
     "byteOffset" : 0,
     "byteStride" : 3,
     "count" : 1024,

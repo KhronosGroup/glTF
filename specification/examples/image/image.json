@@ -1,5 +1,5 @@
 {
-    "name" : "externally-referenceable globally-unique name",    
+    "name" : "application-visible globally-unique name",    
     "path" : "example.png",
     "generateMipmap" : false,
     "extra" : {
