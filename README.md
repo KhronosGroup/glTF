@@ -15,13 +15,8 @@ _In particular, the definition of materials are in flux, and work on animations 
 
 A [converter](https://github.com/KhronosGroup/glTF/wiki/converter) can be used to produce glTF assets out of COLLADA.
 
-#### Workflow
+## Viewer
 
-this project provides a reliable toolchain based on OpenCOLLADA.
-Starting from exporter plugins in major authoring tools to COLLADA parsing when converting to JSON, 
-OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
-
-#### Common setup 
 ```
 git clone https://github.com/KhronosGroup/glTF.git
 cd glTF
@@ -30,25 +25,8 @@ git submodule update --init --recursive
 
 Start a web server in `glTF/webgl` which contains an `index.html` page linking to the demos.
 
-## Converter build instructions
+#### Workflow
 
-##### Windows
-
-* Install [CMake](http://cmake.org/cmake/resources/software.html)
-* `cd glTF/converter/dae2json`
-* `cmake CMakeLists.txt`
-
-open `COLLADA2JSON.sln` and build.
-
-##### Mac OSX
-
-* some packages are required.They can be easily installed using a terminal with [brew](http://mxcl.github.com/homebrew/) type:
- * ruby <(curl -fsSkL raw.github.com/mxcl/homebrew/go)
- * brew install cmake
- * brew install pkgconfig
- * brew install pcre
- * brew install libpng
-* `cd glTF/converter/dae2json`
-* `cmake -G Xcode`
-
-open `COLLADA2JSON.xcodeproj` and build, or if you installed xcode command line tools you can also build in the terminal: `xcodebuild -target collada2json`
+this project provides a reliable toolchain based on OpenCOLLADA.
+Starting from exporter plugins in major authoring tools to COLLADA parsing when converting to JSON, 
+OpenCOLLADA is where all efforts to import/export COLLADA files are centralized.
