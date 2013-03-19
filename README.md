@@ -57,8 +57,6 @@ Start a web server in `glTF/webgl` which contains an `index.html` page linking t
 
 ##### Windows
 
-[Note: windows build is currently being re-worked - it might fail with dependencies error - to be fixed soon]
-
 * Install [CMake](http://cmake.org/cmake/resources/software.html)
 * `cd glTF/converter/dae2json`
 * `cmake CMakeLists.txt`
