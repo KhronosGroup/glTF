@@ -116,17 +116,17 @@ _TODO_: write intro and order these based on importance
 glTF is a runtime asset format; not an interchange format.  Its primary use case is rendering; therefore it is designed for runtime efficiency with consideration for:
 * Size
 * Speed
-* Ease of rendering implementation
+* Ease of runtime application development, i.e., easy to render
 
 To achieve this:
-* glTF uses [JavaScript Object Notation](http://www.json.org/) (JSON) for the scene graph, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON also parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
-* Binary geometry allows efficient creation of GL buffers (as opposed to COLLADA for example, where geometry is stored in XML).  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
-* The content pipeline does as much preprocessing work as possible so the runtime application can efficiently load and render the asset.  In particular:
-   * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling tool formats like polygons and splines.  Instead, higher level primitives are converted to triangles in the content pipeline.
+* glTF uses [JavaScript Object Notation](http://www.json.org/) (JSON) for the scene graph, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
+* glTF stores geometry using binary, which allows efficient creation of GL buffers - as opposed to COLLADA, for example, where geometry is stored in XML).  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
+* glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing work as possible so the runtime application can efficiently load and render assets.  In particular:
+   * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
    * glTF only supports one index per vertex, which is what the GL APIs support.  Modeling tool formats commonly use one index per attribute, which can reduce the total amount of vertex data, but requires processing before rendering.  For glTF, this "deindexing" happens as part of the content pipeline.
    * glTF only supports `UNSIGNED_SHORT` indices.  Modeling tool formats commonly use `UNSIGNED_INT` indices, which are not supported by OpenGL ES or WebGL without an extension.  In glTF, meshes are split so indices fit within `UNSIGNED_SHORT` as part of the content pipeline.
-   * The modern GL APIs require vertex and fragment shaders.  glTF includes GLSL shaders (as well as potential metadata describing the shaders) that can be be used directly.  Modeling tool formats commonly define higher-level material properties only, which the application then needs to generate shaders for.  In glTF, this generate is part of the content pipeline.
-   * For easy use with WebGL applications, glTF only support image formats natively supported by modern web browsers: `.jpg`, `.png`, `.bmp`, and `.gif`.  Some modeling tool formats allow any image format making it difficult to write a renderer that is likely to work for all assets.  In glTF, images are converted as part of the content pipeline.
+   * The modern GL APIs require vertex and fragment shaders.  glTF includes GLSL shaders (as well as potential metadata describing the shaders) that can be used directly.  Modeling tool formats commonly define higher-level material properties only, which the application then needs to generate shaders for.  In glTF, this generation is part of the content pipeline.
+   * For easy use with WebGL applications, glTF only support image formats natively supported by modern web browsers: `.jpg`, `.png`, `.bmp`, and `.gif`.  Some modeling tool formats allow any image format making it difficult to write a renderer that is likely to work for all assets.  In glTF, images are converted to a known format as part of the content pipeline.
 
 _TODO: the above discussion does not account for compressed textures yet, which will require additional formats._
 _TODO: add discussion for `Normalize the "Up" axis of all scenes to allow easy resource sharing.`_
@@ -137,7 +137,7 @@ _TODO: pipeline diagram and opitonal optimization diagram._
 
 JSON is cross-platform
 
-TODO: profile
+TODO: glTF profiles
 
 ## Allows Conformance Testing
 
@@ -157,17 +157,17 @@ TODO
 
 glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF strives for the simplicity of the runtime application over the simplicity of the tool generating glTF, e.g., the content pipeline.  For example:
    * glTF does not support polygons.  Polygons are triangulated when glTF is written.
-   * glTF only contains one <a href="#asset">`asset`</a> property.  When creating a glTF asset from an COLLADA asset, If the asset has several `asset` elements, the convert must handle it, so the applicatio does not have to.
+   * glTF only contains one <a href="#asset">`asset`</a> property.  When creating a glTF asset from an COLLADA asset, If the asset has several `asset` elements, the tool must handle it, so the application does not have to.
 
-To relieve the burden on the content pipeline, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) provides an open-source COLLADA to glTF pipeline for integrating into existing pipelines or as a reference implementation for other glTF generation tools.  COLLADA was chosen because of it's widespread use as an interchange format.
+To relieve the burden on the content pipeline, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
 
 ## Map Well to the GL APIs
 
 glTF is designed with the GL APIs in mind; in particular, the limitations of WebGL.  To make it easy for applications to implement, glTF strives to map well to the GL APIs.
 
-glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a scene graph, materials, and animations.  Leaving out the scene graph would hinder interaction with individual model nodes. Likewise leaving out materials and animations would make leave out key functionality common to most applications.
+glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a scene graph, materials, and animations.  Leaving out the scene graph would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
 
-To help mapping between glTF and GL APIs:
+To help mapping between glTF and GL:
 * glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#meshAttribute">`attribute (mesh)`</a> glTF property maps closely to the [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml) GL function, and the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
 * This specification contains cross-references to the OpenGL ES SDK (which WebGL also references).  For example, see the <a href="#shader">`shader`</a> glTF property.
 
