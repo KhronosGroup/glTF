@@ -8,7 +8,7 @@ Editors
 
 * Fabrice Robinet
 * Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
-* Rémi Arnaud, AMD
+* Rï¿½mi Arnaud, AMD
 * Tony Parisi, SkyBox Networks
 
 # Contents
@@ -86,9 +86,8 @@ TODO: content diagram here
 
 Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity and variety of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
 
-```
-Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the scene graph, materials, animations, and geometry, and will reference the external compression specs. 
-``` 
+> Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the scene graph, materials, animations, and geometry, and will reference the external compression specs. 
+
 
 Concretely, a glTF asset is represented by:
 * JSON file (`.json`) containing the scene graph, materials, and cameras
@@ -98,8 +97,7 @@ Concretely, a glTF asset is represented by:
 
 Binary, image, and text files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
 
-![](assetLayout.png)
-
+![](figures/assetLayout.png)
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="designgprinciples">
