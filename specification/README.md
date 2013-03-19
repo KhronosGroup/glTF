@@ -78,7 +78,7 @@ Editors
 
 # Introduction
 
-glTF, the *GL* *T*ransmission *F*ormat, is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
+glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
 
 COLLADA is an industry-standard interchange format that allows sharing assets between modeling tools and within the content pipeline in general.  However, COLLADA is not optimized for size or runtime use.  At runtime, an application wishing to render a COLLADA asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
 
