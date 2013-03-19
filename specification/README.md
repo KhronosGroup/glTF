@@ -1,5 +1,19 @@
-This doc can become the glTF spec.  Many things here have not been fully discussed and are subject to change.
+# glTF - the runtime asset format for OpenGL, OpenGL ES, and WebGL
 
+_This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please submit [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
+
+_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  The related open-source tools are also not 100% compatible with this spec yet._
+
+Editors
+
+* Fabrice Robinet
+* Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
+* Rémi Arnaud, AMD
+* Tony Parisi, SkyBox Networks
+
+# Contents
+
+* <a href="#introduction">Introduction</a>
 * <a href="#designprinciples">Design Principles</a>
 * <a href="#conventions">Conventions</a>
 * <a href="#assetvalidation">Asset Validation</a>
@@ -56,16 +70,39 @@ This doc can become the glTF spec.  Many things here have not been fully discuss
    * <a href="#uniform">`uniform`</a>
 * <a href="#about_shaders">Note about shaders</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
-* <a href="#references">References</a>
 * <a href="#acknowledgments">Acknowledgments</a>
+* <a href="#references">References</a>
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="introduction">
+
+# Introduction
+
+glTF is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
+
+COLLADA is an industry-standard interchange format that allows sharing assets between modeling tools and within the content pipeline in general.  However, COLLADA is not optimized for size or runtime use.  At runtime, an application wishing to render a COLLADA asset needs to do a significant amount of processing after loading to transform the asset's content into data appropriate for the GL APIs.  Applications seeking high-performance, such as games, rarely load COLLADA or modeling-tool-specific formats directly; instead, they process the model offline as part of their content pipeline to create an asset in a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format, along with open-source pipeline tools, e.g., a COLLADA to glTF reference implementation, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.
+
+TODO: content diagram here
+
+Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity and variety of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
+
+```
+Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the scene graph, materials, animations, and geometry, and will reference the external compression specs. 
+``` 
+
+Concretely, a glTF asset is represented by:
+* JSON file (`.json`) containing the scene graph, materials, and cameras
+* Binary file or files (`.bin`) containing geometry and animations
+* Image files (`.jpg`, `.png`, etc.) for textures
+* GLSL text files (`.glsl`) for GLSL source code for individual stages
+
+Binary, image, and text files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
+
+![](assetLayout.png)
+
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="designgprinciples">
-
-# TODO: Introduction
-
-The WIKI from COLLADA2JSON written by Fabrice and reworked by Tony could be reused here.
-The section should give an high level overview. could be called, Introduction, Motivation...
 
 # Design Principles
 
@@ -1155,6 +1192,12 @@ _TODO_
 
 * `input`. Pages 5-47 to 5-49.
 
+<!-- ----------------------------------------------------------------------- -->
+<a name="acknowledgments">
+# Acknowledgments
+
+* Brandon Jones, for the Three.js loader and all his support in the early days of this project.
+* Tom Fili, Analytical Graphics, Inc.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
@@ -1162,11 +1205,3 @@ _TODO_
 
 * [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
-
-<!-- ----------------------------------------------------------------------- -->
-<a name="acknowledgments">
-# Acknowledgments
-
-* Brandon Jones, for the Three.js loader and all his support in the early days of this project.
-* Tom Fili, Analytical Graphics, Inc., answers all of Patrick's COLLADA questions.
-
