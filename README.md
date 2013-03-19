@@ -1,15 +1,17 @@
 ##OVERVIEW
 
-**COLLADA2JSON** introduces a JSON format that aims to bridge the gap between COLLADA and WebGL.  
+**glTF is a work in progress and not an official Khronos-ratified specification** 
 As an initiative from the COLLADA Working Group, this project stands in Khronos repository.  
 Everyone is welcomed to contribute and provide feedback. 
 
-**This is a work in progress and not an official Khronos-ratified specification.**
+## Specification
 
-## JSON Format
+Can be found [here](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md)
+_This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
-The JSON format has been designed from the ground up with an eye towards the requirements of WebGL, and is intended to be the final step in a COLLADA to WebGL workflow.
-[COLLADA](https://www.khronos.org/collada/) is an interchange format created to allow information to easily be passed between authoring tools, but is not well suited for use in web or embedded device applications.
+_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL, OpenGL and OpenGL ES need additional considerations.  The related open-source tools are also not 100% compatible with this spec yet._
+
+## Converter
 
 The JSON format is actually a hybrid format consisting of two files:
 - A JSON document describing the scene graph and its entities.
