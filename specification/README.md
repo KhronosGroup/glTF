@@ -515,17 +515,12 @@ For compatibility with modern web browsers, the following image formats are supp
 * [`texImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml)
 * [`texSubImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexSubImage2D.xml)
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * _Support precomputed mips?_
-   * _Allow blank texture as a render target and other ColladaFX features on 8-59?_
-   * _Consider support for `UNPACK_FLIP_Y_WEBGL`, `UNPACK_PREMULTIPLY_ALPHA_WEBGL`, and `UNPACK_COLORSPACE_CONVERSION_WEBGL`._
-
-* _COLLADA2JSON_
-   * _Add support for `generateMipmap`_
-   * _Image conversion to `.jpg` or `.png`_
-   * _Add option for data uri_
+* https://github.com/KhronosGroup/glTF/issues/15
+* https://github.com/KhronosGroup/glTF/issues/16
+* https://github.com/KhronosGroup/glTF/issues/17
+* https://github.com/KhronosGroup/glTF/issues/18
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="indices">
@@ -544,10 +539,9 @@ For compatibility with modern web browsers, the following image formats are supp
 
 Also see <a href="#buffer">buffer</a>.
 
-### _Open Questions_
+### Related issues
 
-* COLLADA2JSON
-   * Do all COLLADA models have indices or do we need to adjust the statement about `drawArrays` above?  Or make changes to the converter?
+* https://github.com/KhronosGroup/glTF/issues/14
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="material">
@@ -586,16 +580,9 @@ _TODO_
 
 See <a href="#meshAttribute">`attributes (mesh)`</a> and <a href="#primitives">`primitives`</a>.
 
-### _Open Questions_
+### Related Issues
 
-* _Schema_
-   * Is a `byteStride` of zero tightly packed like WebGL?  Yes?
-* _COLLADA2JSON_
-   * Rename `elementType` to `componentType` to better match WebGL.
-   * Rename `elementsPerValue` to `componentsPerAttribute`.
-   * Rename `componentType` `Float32` (and others?) to `FLOAT` to better match WebGL.
-   * Add support for `normalized`.
-   * Long term, we should convert `spline`.
+   * https://github.com/KhronosGroup/glTF/issues/11
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="node">
@@ -617,16 +604,10 @@ _TODO_
 
 Also see <a href="#mesh">`mesh`</a> subproperties See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * _instance_camera_ - keep camera as a node in the scene graph?  What are the use cases?  Shadow mapping?_
-   * _instance_controller_
-   * _instance_light_
-   * Allow only one? _meshes_, _camera_, or _lights_.
-   * _Animations for all COLLADA transformation elements is going to be hard.  Need to scope it right._
-* _COLLADA2JSON_
-   * _Convert all transformation elements to 4x4 matrix.  Do we already?_
+* https://github.com/KhronosGroup/glTF/issues/12
+* https://github.com/KhronosGroup/glTF/issues/13
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="orthographic">
@@ -848,13 +829,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 
 Also see <a href="#program">`program`</a>.
 
-### _Open Questions_
-
-* _Schema_
-   * _Metadata, e.g., phong, etc._
-* _COLLADA2JSON_
-   * _Option for data uri._
-
 <!-- ----------------------------------------------------------------------- -->
 <a name="states">
 ## `states`
@@ -931,11 +905,10 @@ _TODO_
 
 See <a name="parameters">`parameters`</a>.
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * _Write schema for `parameters`._
-   * _Do we need `type": "program"`?_
+* https://github.com/KhronosGroup/glTF/issues/7
+
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="uniform">
@@ -957,13 +930,9 @@ _TODO_
 * [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 * [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
-   * Create list of allowed types.
-   * Rename VERTEX semantic to POSITION.
-   * Rename `FLOAT_VEC3` `type` to `vec3`, etc.
+* Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="about_shaders">
