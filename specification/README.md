@@ -8,7 +8,7 @@ Editors
 
 * Fabrice Robinet
 * Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
-* R�mi Arnaud, AMD
+* Remi Arnaud, AMD
 * Tony Parisi, SkyBox Networks
 
 # Contents
@@ -82,12 +82,11 @@ glTF is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL. 
 
 COLLADA is an industry-standard interchange format that allows sharing assets between modeling tools and within the content pipeline in general.  However, COLLADA is not optimized for size or runtime use.  At runtime, an application wishing to render a COLLADA asset needs to do a significant amount of processing after loading to transform the asset's content into data appropriate for the GL APIs.  Applications seeking high-performance, such as games, rarely load COLLADA or modeling-tool-specific formats directly; instead, they process the model offline as part of their content pipeline to create an asset in a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format, along with open-source pipeline tools, e.g., a COLLADA to glTF reference implementation, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.
 
-TODO: content diagram here
+![](figures/dae2json.png)
 
 Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity and variety of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
 
 > Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the scene graph, materials, animations, and geometry, and will reference the external compression specs. 
-
 
 Concretely, a glTF asset is represented by:
 * JSON file (`.json`) containing the scene graph, materials, and cameras
@@ -98,6 +97,8 @@ Concretely, a glTF asset is represented by:
 Binary, image, and text files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
 
 ![](figures/assetLayout.png)
+
+For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/webgl/apps/viewer/model/duck).
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="designgprinciples">
