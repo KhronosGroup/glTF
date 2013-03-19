@@ -1238,8 +1238,8 @@ _TODO_
 _TODO_
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="vertexAttribute">
-## `vertexAttribute`
+<a name="attribute">
+## `attribute`
 
 * glTF does not include semantics for `CONTINUITY`, `IMAGE`, `INPUT`, `IN_TANGENT`, `INTERPOLATION`, `LINEAR_STEPS`, `OUTPUT`, `OUT_TANGENT`, `TEXBINORMAL`, `TEXTANGENT`, `UV`, and `VERTEX`.
 
