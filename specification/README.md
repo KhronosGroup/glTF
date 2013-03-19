@@ -1,8 +1,8 @@
 # glTF - the runtime asset format for OpenGL, OpenGL ES, and WebGL
 
-_This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please submit [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
+_This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
-_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  The related open-source tools are also not 100% compatible with this spec yet._
+_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL, OpenGL and OpenGL ES need additional considerations.  The related open-source tools are also not 100% compatible with this spec yet._
 
 Editors
 
@@ -78,9 +78,11 @@ Editors
 
 # Introduction
 
-glTF is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
+glTF, the *GL* *T*ransmission *F*ormat, is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
 
-COLLADA is an industry-standard interchange format that allows sharing assets between modeling tools and within the content pipeline in general.  However, COLLADA is not optimized for size or runtime use.  At runtime, an application wishing to render a COLLADA asset needs to do a significant amount of processing after loading to transform the asset's content into data appropriate for the GL APIs.  Applications seeking high-performance, such as games, rarely load COLLADA or modeling-tool-specific formats directly; instead, they process the model offline as part of their content pipeline to create an asset in a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format, along with open-source pipeline tools, e.g., a COLLADA to glTF reference implementation, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.
+COLLADA is an industry-standard interchange format that allows sharing assets between modeling tools and within the content pipeline in general.  However, COLLADA is not optimized for size or runtime use.  At runtime, an application wishing to render a COLLADA asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
+
+Applications seeking high-performance, such as games, rarely load COLLADA or modeling-tool-specific formats directly; instead, they process the model offline as part of a content pipeline to convert the asset to a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format that can be rendered with minimal processing, along with open-source pipeline tools, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.  In particular, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) converts COLLADA assets to glTF.
 
 ![](figures/dae2json.png)
 
@@ -94,7 +96,7 @@ Concretely, a glTF asset is represented by:
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL source code for individual stages
 
-Binary, image, and text files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
+Binary, image, and GLSL files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
 
 ![](figures/assetLayout.png)
 
