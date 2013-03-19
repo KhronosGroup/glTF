@@ -11,8 +11,10 @@ include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2JSON_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 
-find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIR})
+if (NOT WIN32)
+    find_package(PNG REQUIRED)
+    include_directories(${PNG_INCLUDE_DIR})
+endif()
 
 link_directories(${COLLADA2JSON_BINARY_DIR}/lib)
 
@@ -62,4 +64,8 @@ add_executable(collada2json main.cpp
     helpers/geometryHelpers.h
     helpers/geometryHelpers.cpp)
 
+if (WIN32)
+target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static )
+else ()
 target_link_libraries (collada2json GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY})
+endif()

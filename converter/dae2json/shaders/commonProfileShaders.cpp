@@ -27,23 +27,24 @@
 
 #include "../GLTFConverterContext.h"
 #include "commonProfileShaders.h"
-
+#ifndef WIN32
 #include "png.h"
-
+#endif
 using namespace std;
 
 namespace JSONExport
 {
     
 #define PNGSIGSIZE 8
-    
+    #ifndef WIN32
     void userReadData(png_structp pngPtr, png_bytep data, png_size_t length) {
         ((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
     }
-    
+#endif
     //thanks to piko3d.com libpng tutorial here
     static bool imageHasAlpha(const char *path)
     {
+#ifndef WIN32
         bool hasAlpha = false;
         std::ifstream source;
         
@@ -83,6 +84,9 @@ namespace JSONExport
         source.close();
         
         return hasAlpha;
+#else
+		return false;
+#endif
     }
     
     //lambert0:
