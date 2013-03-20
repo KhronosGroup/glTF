@@ -92,10 +92,10 @@ Applications seeking high-performance, such as games, rarely load COLLADA or mod
 
 Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity and variety of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
 
-> Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the scene graph, materials, animations, and geometry, and will reference the external compression specs. 
+> Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs. 
 
 Concretely, a glTF asset is represented by:
-* JSON file (`.json`) containing the scene graph, materials, and cameras
+* JSON file (`.json`) containing the node hierarchy, materials, and cameras
 * Binary files (`.bin`) containing geometry and animations
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL source code for individual stages
@@ -123,7 +123,7 @@ glTF is a runtime asset format; not an interchange format.  Its primary use case
 * Ease of runtime application development, i.e., easy to render
 
 To achieve this:
-* glTF uses [JSON](http://www.json.org/) for the scene graph, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
+* glTF uses [JSON](http://www.json.org/) for the node hierarchy, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
 * glTF stores geometry using binary, which allows efficient creation of GL buffers - as opposed to COLLADA, for example, where geometry is stored in XML).  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
 * glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing as possible so the runtime application can efficiently load and render assets.  In particular:
    * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling-tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
@@ -142,7 +142,7 @@ _TODO: pipeline diagram and opitonal optimization diagram._
 
 To make it easy for applications to implement, glTF is designed with the GL APIs in mind; in particular, the limitations of WebGL.
 
-glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a scene graph, materials, and animations.  Leaving out the scene graph would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
+glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a node hierarchy, materials, and animations.  Leaving out the node hierarchy would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
 
 To help map between glTF and GL:
 * glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#meshAttribute">`attribute (mesh)`</a> glTF property maps closely to the [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml) GL function, and the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
@@ -179,7 +179,7 @@ glTF is streamlined for rendering so it doesn't have as many options or as much 
 
 ## Extensibility
 
-glTF is streamlined for rendering so it does not include features tightly coupled with a particular application or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - a scene graph, materials, animations, and geometry - and provides extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
+glTF is streamlined for rendering so it does not include features tightly coupled with a particular application or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - a node hierarchy, materials, animations, and geometry - and provides extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
 
 ## Allows Conformance Testing
 
