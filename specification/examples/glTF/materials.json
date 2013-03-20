@@ -12,8 +12,8 @@
 						    	"symbol" : "position",
 						    	"type" : "vec3"
 							}],
-							"fragmentShader" : "fragmentShader_id",
-							"vertexShader" : "vertexShader_id"
+							"FRAGMENT_SHADER" : "fragmentShader_id",
+							"VERTEX_SHADER" : "vertexShader_id"
 					    }
 					}
 				}

@@ -4,9 +4,9 @@
     	"symbol" : "position",
     	"type" : "vec3"
 	}],
-	"fragmentShader" : "fragmentShader_id",
+	"FRAGMENT_SHADER" : "fragmentShader_id",
 	"uniforms" : [],
-	"vertexShader" : "vertexShader_id",
+	"VERTEX_SHADER" : "vertexShader_id",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     
