@@ -410,13 +410,8 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
 * `deleteBuffer` / [`deleteBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * Why does current version include `type`: "ArrayBuffer"`? -> Fabrice:To refer to Typed Array SPEC. Should it be default ?
-   * Separate buffers for indices and vertices since WebGL treats them separately?
-      * Using now bufferViews with an extra `target` property. 
-* _COLLADA2JSON_
    * Convert `bool_array` to `0.0` or `1.0`?
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
    
@@ -712,9 +707,8 @@ Also see:
 ### _Open Questions_
 
 * _Schema_
-   * `indices` `type` could also be `UNSIGNED_BYTE`, but I don't think anyone uses it.
+   * `indices` `type` could also be `UNSIGNED_BYTE`, but it's rarely used.
 * _COLLADA2JSON_
-   * Renamed `length` to `count` to better match WebGL.
    * _Add checking for Section 6.3 above._
 
 <!-- ----------------------------------------------------------------------- -->
@@ -739,17 +733,18 @@ _TODO_
 
 Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniforms`</a> subproperties of <a href="#shader">`shader`</a>.
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * 
-* _COLLADA2JSON_
-   * Renamed `x-shader/x-fragment` to `fragmentShader` to better match WebGL
-   * Renamed `x-shader/x-vertex` to `vertexShader` to better match WebGL
+* https://github.com/KhronosGroup/glTF/issues/25
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="semantics">
 ## `semantics`
+
+The following set of semantic is not exhaustive.  
+An asset could be created with custom semantic.  
+It is fine as long as the semantic from the mesh attribute is consistent with one from the program attribute.  
+In some situations implementing the following set can be mandatory to be able to generate shaders, see <a href="#about_shaders">Note about shaders</a> for more details.
 
 * Schema: [semantics.schema.json](semantics.schema.json)
 * Example: [semantics.json](examples/semantics/semantics.json) - every property with example values.
@@ -784,20 +779,15 @@ Skinning and Morph Targets
 | `WEIGHT` |  | Skin influence weighting value. |
 | `MORPH_TARGET` |  | Morph targets for mesh morphing. |
 | `MORPH_WEIGHT` |  | Weights for mesh morphing. |
+| `TEXBINORMAL` |  | Texture binormal (bitangent) vector. |
+| `TEXTANGENT` |  | Texture tangent vector  |
 
-### Related GL Functions
+Other  
 
-None.
-
-### _Open Questions_
-
-* _Schema_
-   * Do we need these semantics:
-      * `TEXBINORMAL`- Texture binormal (bitangent) vector 
-      * `TEXTANGENT` - Texture tangent vector 
-* _COLLADA2JSON_
-   * _Rename `VERTEX` semantic to `POSITION`.  Both COLLADA `VERTEX` and `POSITION` map to `POSITION`?_
-   * _What other well-known semantics should there be?  App-specific semantics are allowed, of course._
+| Semantic Name | Typical datatypes | Description |
+|:-----------|:-----------|:------------|
+| `TEXBINORMAL` |  | Texture binormal (bitangent) vector. |
+| `TEXTANGENT` |  | Texture tangent vector  |
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="shader">
