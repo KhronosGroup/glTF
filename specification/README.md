@@ -741,19 +741,24 @@ Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniform
 <a name="semantics">
 ## `semantics`
 
-The following set of semantic is not exhaustive.  
-An asset could be created with custom semantic.  
-It is fine as long as the semantic from the mesh attribute is consistent with one from the program attribute.  
-In some situations implementing the following set can be mandatory to be able to generate shaders, see <a href="#about_shaders">Note about shaders</a> for more details.
-
 * Schema: [semantics.schema.json](semantics.schema.json)
 * Example: [semantics.json](examples/semantics/semantics.json) - every property with example values.
 
 ### Details
 
+The following set of semantic is not exhaustive.  
+An asset could be created with custom semantic.  
+It is fine as long as the semantic from the mesh attribute is consistent with one from the program attribute.  
+In some situations implementing the following set can be mandatory to be able to generate shaders, see <a href="#about_shaders">Note about shaders</a> for more details.
+
 Within the scope of a primitive a semantic points to a mesh attribute.
 When multiple sets are available for a given 'semantic', by convention both are concatenated as `semantic`_`set`.
-Specifying the set for index 0 is optional.
+Specifying the set for index 0 is optional.  
+
+### Related issues
+
+* https://github.com/KhronosGroup/glTF/issues/26
+
 
 #### Semantics
 
