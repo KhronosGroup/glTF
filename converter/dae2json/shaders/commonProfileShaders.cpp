@@ -238,11 +238,9 @@ namespace JSONExport
             const COLLADAFW::Sampler* sampler = samplers[diffuseTexture.getSamplerId()];
             if (sampler) {
                 const COLLADAFW::UniqueId& imageUID = sampler->getSourceImage();
-                COLLADABU::URI &uri = context._imageIdToImageURL[uniqueIdWithType("image",imageUID)];
+                std::string imagePath = context._imageIdToImagePath[uniqueIdWithType("image",imageUID)];
                 COLLADABU::URI inputURI(context.inputFilePath.c_str());
-                std::string imageFullPath = inputURI.getPathDir() +
-                                            uri.getPathDir() + /* FIXME here assume rel path*/ 
-                                            uri.getPathFile();
+                std::string imageFullPath = inputURI.getPathDir() + imagePath;
                 if (imageHasAlpha(imageFullPath.c_str()))
                     return false;
             }

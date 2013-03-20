@@ -1176,10 +1176,16 @@ namespace JSONExport
                 relativePath = false;
             }
         }*/
+        const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
+        std::string relPathFile = imageURI.getPathFile();
+        if (imageURI.getPathDir() != "./") {
+            relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
+        } else {
+            relPathFile = imageURI.getPathFile();
+        }
+        image->setString("path", relPathFile);
         
-        image->setString("path", openCOLLADAImage->getImageURI().getPathDir() + openCOLLADAImage->getImageURI().getPathFile());
-        
-       this->_converterContext._imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = openCOLLADAImage->getImageURI();
+       this->_converterContext._imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = imageURI;
         return true;        
 	}
     

@@ -11,7 +11,7 @@ namespace JSONExport
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<JSONEffect> > UniqueIDToEffect;
-    typedef std::map<std::string  , COLLADABU::URI > ImageIdToImageURL;
+    typedef std::map<std::string  , std::string > ImageIdToImagePath;
     
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
@@ -28,7 +28,7 @@ namespace JSONExport
         UniqueIDToEffect _uniqueIDToEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
-        ImageIdToImageURL _imageIdToImageURL;
+        ImageIdToImagePath _imageIdToImagePath;
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
