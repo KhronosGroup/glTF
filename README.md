@@ -1,7 +1,6 @@
 ## glTF - the runtime asset format for OpenGL, OpenGL ES, and WebGL  
 
 _glTF is a work in progress and **not an official Khronos-ratified specification** yet_  
-As an initiative from the COLLADA Working Group, this project stands in Khronos repository.  
 Everyone is welcomed to contribute to the code and provide feedback about the specification. 
 
 ## Specification  
