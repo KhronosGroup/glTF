@@ -92,7 +92,7 @@ Another perspective that motivates glTF is that 3D is the last media type withou
 
 Concretely, a glTF asset is represented by:
 * JSON file (`.json`) containing the scene graph, materials, and cameras
-* Binary file or files (`.bin`) containing geometry and animations
+* Binary files (`.bin`) containing geometry and animations
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL source code for individual stages
 
@@ -119,19 +119,41 @@ glTF is a runtime asset format; not an interchange format.  Its primary use case
 * Ease of runtime application development, i.e., easy to render
 
 To achieve this:
-* glTF uses [JavaScript Object Notation](http://www.json.org/) (JSON) for the scene graph, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
+* glTF uses [JSON](http://www.json.org/) for the scene graph, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
 * glTF stores geometry using binary, which allows efficient creation of GL buffers - as opposed to COLLADA, for example, where geometry is stored in XML).  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
-* glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing work as possible so the runtime application can efficiently load and render assets.  In particular:
-   * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
-   * glTF only supports one index per vertex, which is what the GL APIs support.  Modeling tool formats commonly use one index per attribute, which can reduce the total amount of vertex data, but requires processing before rendering.  For glTF, this "deindexing" happens as part of the content pipeline.
-   * glTF only supports `UNSIGNED_SHORT` indices.  Modeling tool formats commonly use `UNSIGNED_INT` indices, which are not supported by OpenGL ES or WebGL without an extension.  In glTF, meshes are split so indices fit within `UNSIGNED_SHORT` as part of the content pipeline.
-   * The modern GL APIs require vertex and fragment shaders.  glTF includes GLSL shaders (as well as potential metadata describing the shaders) that can be used directly.  Modeling tool formats commonly define higher-level material properties only, which the application then needs to generate shaders for.  In glTF, this generation is part of the content pipeline.
-   * For easy use with WebGL applications, glTF only support image formats natively supported by modern web browsers: `.jpg`, `.png`, `.bmp`, and `.gif`.  Some modeling tool formats allow any image format making it difficult to write a renderer that is likely to work for all assets.  In glTF, images are converted to a known format as part of the content pipeline.
+* glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing as possible so the runtime application can efficiently load and render assets.  In particular:
+   * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling-tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
+   * glTF only supports one index per vertex, which is what the GL APIs support.  Modeling-tool formats commonly use one index per attribute, which can reduce the total amount of vertex data, but requires processing before rendering.  For glTF, this "deindexing" happens as part of the content pipeline.
+   * glTF only supports `UNSIGNED_SHORT` indices.  Modeling-tool formats commonly use `UNSIGNED_INT` indices, which are not supported by OpenGL ES or WebGL without an extension.  In glTF, meshes are split so indices fit within `UNSIGNED_SHORT` as part of the content pipeline.
+   * The modern GL APIs require vertex and fragment shaders.  glTF includes GLSL shaders (as well as potential metadata describing the shaders) that can be used directly.  Modeling-tool formats commonly define higher-level material properties only, which the application then needs to generate shaders for.  In glTF, this generation is part of the content pipeline.
+   * For easy use with WebGL applications, glTF only support image formats natively supported by modern web browsers: `.jpg`, `.png`, `.bmp`, and `.gif`.  Some modeling-tool formats allow any image format making it difficult to write a renderer that is likely to work for all assets.  In glTF, images are converted to a known format as part of the content pipeline.
 
 _TODO: the above discussion does not account for compressed textures yet, which will require additional formats._
+
 _TODO: add discussion for `Normalize the "Up" axis of all scenes to allow easy resource sharing.`_
 
 _TODO: pipeline diagram and opitonal optimization diagram._
+
+## Map Well to the GL APIs
+
+To make it easy for applications to implement, glTF is designed with the GL APIs in mind; in particular, the limitations of WebGL.
+
+glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a scene graph, materials, and animations.  Leaving out the scene graph would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
+
+To help map between glTF and GL:
+* glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#meshAttribute">`attribute (mesh)`</a> glTF property maps closely to the [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml) GL function, and the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
+* This specification contains cross-references to the OpenGL ES SDK (which WebGL also references).  For example, see the <a href="#shader">`shader`</a> glTF property.
+* To reduce the burden on the application developer, glTF does not include all the flexibility of the GL APIs.  Features not relavant to assets or in widespread use are not included, especially if they can be supported in the content pipeline.  For example, in glTF:
+   * All attributes must be backed by buffers, i.e., nothing maps to [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
+   * Geometry is defined with indices, implying [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.  This is because most assets are defined with indexed triangle lists.  Triangle soup, strips, and fans can be converted to indexed triangle lists in the content pipeline.
+
+## Easier to Render than to Author
+
+glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF strives for the simplicity of the runtime application over the simplicity of the tool generating glTF, e.g., the content pipeline.  For example:
+   * glTF does not support polygons.  Polygons are triangulated when glTF is written.
+   * glTF only contains one <a href="#asset">`asset`</a> property for the asset's metadata, e.g., copyright.  When creating a glTF asset from an COLLADA asset, If the asset has several `asset` elements, the tool must handle it, so the application does not have to.
+
+To relieve the burden on the content pipeline, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
 
 ## Cross-Platform and Cross-Device
 
@@ -153,44 +175,23 @@ TODO
 
 TODO
 
-## Easier to Render than to Author
-
-glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF strives for the simplicity of the runtime application over the simplicity of the tool generating glTF, e.g., the content pipeline.  For example:
-   * glTF does not support polygons.  Polygons are triangulated when glTF is written.
-   * glTF only contains one <a href="#asset">`asset`</a> property.  When creating a glTF asset from an COLLADA asset, If the asset has several `asset` elements, the tool must handle it, so the application does not have to.
-
-To relieve the burden on the content pipeline, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
-
-## Map Well to the GL APIs
-
-glTF is designed with the GL APIs in mind; in particular, the limitations of WebGL.  To make it easy for applications to implement, glTF strives to map well to the GL APIs.
-
-glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a scene graph, materials, and animations.  Leaving out the scene graph would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
-
-To help mapping between glTF and GL:
-* glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#meshAttribute">`attribute (mesh)`</a> glTF property maps closely to the [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml) GL function, and the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
-* This specification contains cross-references to the OpenGL ES SDK (which WebGL also references).  For example, see the <a href="#shader">`shader`</a> glTF property.
-
 ## Reasonable Flexibility
 
-glTF is streamlined for rendering so it doesn't have as many options or as much metadata as a format for modeling tools.  However, different applications still have different needs within the rendering use case.  glTF strives to be flexible in areas where flexibility is needed, but at the same time does not allow so much flexibility to significantly burden application developers.  For example:
+glTF is streamlined for rendering so it doesn't have as many options or as much metadata as a modeling-tool format.  However, different applications still have different needs within the rendering use case.  glTF strives to be flexible in areas where flexibility is needed, but at the same time does not allow too much flexibility that would significantly burden application developers.  For example:
 
-* glTF allows any number of binary files to store geometry and animations.  A user could store everything in one file to reduce the number of requests for a single asset or could store data common to several assets in a common binary file to reduce the number of requests depending on the use case.  
-* glTF allows binary, image, and GLSL files to be separate from the main JSON file or embedded into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).  From an web application's perspective using `XMLHTTPRequest`, the code to load binary, image, or GLSL data is the same regardless of if the URL is an external file or embedded data URI.  Therefore, allowing this flexibility does not burden the application developer (in the case of WebGL), but it allows the application to decide what the best approach is.  If assets share many of the same geometry, animation, textures, or shaders, separate files may be preferred to reduce the total amount of data requested.  If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding.
-* glTF includes GLSL shaders and potential metadata describing the shaders, e.g., if it was generated from the COLLADA Common Profile.  Applications are free to use the provided shader directly or use the metadata to better integrate the asset into their engine, e.g., use the same light sources or deferred rendering.
-* To reduce burden on the application developer, glTF does not include all the flexibility of the GL APIs.  Features not relavant to assets or in widespread use are not included, especially if they can be supported in the content pipeline.  For example, in glTF:
-   * All attributes must be backed by buffers, i.e., nothing maps to [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
-   * Geometry is defined with indices, implying [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.  This is because most assets are defined with indexed triangle lists and triangle soup, strips, and fans can be converted to indexed triangle lists in the content pipeline.
+* glTF allows any number of binary files to store geometry and animations.  A user could store everything in one file to reduce the number of requests for a single asset or could store data common to several assets in a common binary file to reduce the amount of data requested for across several models.  This flexibility allows applications to optimize for their use case, which glTF can't predict, but does not make glTF significantly more difficult to render.  
+* glTF allows binary, image, and GLSL files to be separate from the main JSON file or embedded into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).  For WebGL developers using `XMLHTTPRequest`, the code to load binary, image, or GLSL data is the same regardless of if the URL is an external file or embedded data URI.  Therefore, allowing this flexibility does not burden the application developer, but it allows the application to decide what the best approach.  If assets share many of the same geometry, animation, textures, or shaders, separate files may be preferred to reduce the total amount of data requested.  If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding.
+* glTF includes GLSL shaders and potential metadata describing the shaders, e.g., if it was generated from the COLLADA Common Profile.  Applications are free to use the provided shader directly or use the metadata to better integrate the asset into their application, e.g., model viewers may use the shaders where as deferred shading engines may use the metadata.
 
 ## Extensibility
 
-glTF is streamlined for rendering so it does not include features tightly coupled with a particular engine or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - scene graph, materials, animations, and geometry - and provides an extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
+glTF is streamlined for rendering so it does not include features tightly coupled with a particular application or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - a scene graph, materials, animations, and geometry - and provides extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
 
 ## Other
 
 These are observations; not necessarily design principles.
 
-### Readable
+### Readability
 
 glTF is often human-readable, but doesn't strive to be.  Without minification and compression, JSON is even easier to read than XML since it is less cluttered.  Likewise, without optimization, minification, and compression, separate GLSL files are readable.
 
@@ -213,8 +214,6 @@ _TODO: Include figures from [glTF Architecture and Schema](https://docs.google.c
 * To ease adoption, glTF strives to be easy and efficient to load and render.
    * glTF uses JSON for the scene graph, minimizes complicated indirection, and is supported by a JavaScript loader library.
    * glTF adopts the Typed Array SPEC to describe buffers. 
-   * An open-source asset pipeline converts existing COLLADA assets to glTF and does the heavy lifting (code in progress):
-   * TODO: optimization pipeline.
 * glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing `technique` objects for various platforms in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
 * Just because COLLADA has a feature, doesn't mean glTF does.  Examples:
    * COLLADA has physics, glTF does not.
