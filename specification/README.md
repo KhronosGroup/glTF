@@ -25,6 +25,8 @@ Editors
    * Metadata
       * <a href="#asset">`asset`</a>
       * <a href="#geographicLocation">`geographicLocation`</a>
+      * <a href="#profile">`profile`</a>   
+      * <a href="#version">`version`</a>   
    * Shading
       * <a href="#image">`image`</a>
       * <a href="#material">`material`</a>
@@ -62,12 +64,14 @@ Editors
    * <a href="#pass">`pass`</a>
    * <a href="#perspective">`perspective`</a>
    * <a href="#primitive">`primitive`</a>   
-   * <a href="#program">`program`</a>   
+   * <a href="#profile">`profile`</a>   
+   * <a href="#program">`program`</a>
    * <a href="#semantics">`semantics`</a>
    * <a href="#shader">`shader`</a>
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
+   * <a href="#version">`version`</a>   
 * <a href="#about_shaders">Note about shaders</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#acknowledgments">Acknowledgments</a>
@@ -109,7 +113,7 @@ Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It 
 
 # Design Principles
 
-_TODO_: write intro and order these based on importance
+glTF strives to live up to the following design principles. 
 
 ## Streamlined for Rendering
 
@@ -155,25 +159,15 @@ glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF striv
 
 To relieve the burden on the content pipeline, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
 
-## Cross-Platform and Cross-Device
-
-JSON is cross-platform
-
-TODO: glTF profiles
-
-## Allows Conformance Testing
-
-TODO
-
-JSON allows validation
-
 ## Minimal Representation
 
 TODO
 
 ## Code Not Just Spec
 
-TODO
+Formally, glTF is this specification.  However, a specification alone is not enough to drive adoption.  An open ecosystem of tools is needed to bridge the gap between specification and implementation.
+
+In particlar, [dae2json](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  For runtime applications, there is an open-source [JavaScript loader, WebGL renderer, and Three.js renderer](https://github.com/KhronosGroup/glTF/tree/master/webgl). 
 
 ## Reasonable Flexibility
 
@@ -186,6 +180,22 @@ glTF is streamlined for rendering so it doesn't have as many options or as much 
 ## Extensibility
 
 glTF is streamlined for rendering so it does not include features tightly coupled with a particular application or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - a scene graph, materials, animations, and geometry - and provides extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
+
+## Allows Conformance Testing
+
+To ensure compatibility of glTF content among content pipelines and applications, glTF allows for validation.  A schema, written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03), describing the JSON for glTF is part of this specification.
+
+This allows validating an asset against the glTF schema using a tool like the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  See <a href="#assetvalidation">Asset Validation</a>.
+
+_TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully validate an asset._
+
+## Cross-Platform and Cross-Device
+
+Like the GL APIs, glTF strives to be cross-platform and cross-device. JSON is platform-agnostic.  Libraries that load the glTF referenced image formats are readily avilable on all platforms.
+
+glTF assets also have a <a href="#profile">`profile`</a> that indicates what GL API it targets, e.g., `WebGL 1.0`.
+
+_TODO: need deeper discussion here, e.g., endianness._
 
 ## Other
 
@@ -208,16 +218,8 @@ However, glTF assets aren't allows readable.  For example, a simple shader embed
 
 _TODO: still need to cleanup below here_
 
-_TODO: This section was aggregated from glTF slides, wiki pages, etc.  It still needs more details found in those places and to be flushed out._
-_TODO: Include figures from [glTF Architecture and Schema](https://docs.google.com/file/d/0B4owFPtY81iUeUtVT3ZteThJYnM/edit?usp=sharing) and [glTF Ecosystem](https://docs.google.com/file/d/0B4owFPtY81iUT2pDdWR2Q0I2QTQ/edit?usp=sharing) slides._
-
-* To ease adoption, glTF strives to be easy and efficient to load and render.
-   * glTF uses JSON for the scene graph, minimizes complicated indirection, and is supported by a JavaScript loader library.
-   * glTF adopts the Typed Array SPEC to describe buffers. 
+* glTF adopts the Typed Array SPEC to describe buffers. 
 * glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing `technique` objects for various platforms in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
-* Just because COLLADA has a feature, doesn't mean glTF does.  Examples:
-   * COLLADA has physics, glTF does not.
-   * COLLADA has splines and polygons, glTF only has variations of points, lines, and triangles.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="conventions">
@@ -303,10 +305,6 @@ http://localhost/gltf/specification/?schema=states.schema.json&json=examples/sta
 ```
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
-
-### _Open Questions_
-
-* _TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully validate an asset._
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="schema">
@@ -711,6 +709,12 @@ Also see:
    * _Add checking for Section 6.3 above._
 
 <!-- ----------------------------------------------------------------------- -->
+<a name="profile">
+## `profile`
+
+_TODO_
+
+<!-- ----------------------------------------------------------------------- -->
 <a name="program">
 ## `program`
 
@@ -922,6 +926,12 @@ _TODO_
 ### Related issues
 
 * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
+
+<!-- ----------------------------------------------------------------------- -->
+<a name="version">
+## `version`
+
+_TODO_
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="about_shaders">
