@@ -352,16 +352,11 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 
 None.
 
-### _Open Questions_
+### Related issues
 
-* _Schema_
-   * _Need `unit` property?  Or always meters and apply a scale matrix to the root?_
-   * _Also need url for copyright image?_
-   * _Need to figure out_ `up_axis`. (Fabrice:assets need to convert to WebGL up axis (Y-UP) upfront. -> added in design principles
-* _COLLADA2JSON_
-   * _Create `asset.copyright` from COLLADA author and copyright?_. <Fabrice +1 for that>
-   * _Convert COLLADA geographic_location.  glTF uses radians, not degrees._
-   * _Convert kml/kmz location to geographic_location.  Convert kml/kmz orientation and scale to a transform._
+*  https://github.com/KhronosGroup/glTF/issues/22
+*  https://github.com/KhronosGroup/glTF/issues/23
+*  https://github.com/KhronosGroup/glTF/issues/24
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="attribute">
