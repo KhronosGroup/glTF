@@ -1185,7 +1185,7 @@ namespace JSONExport
         }
         image->setString("path", relPathFile);
         
-       this->_converterContext._imageIdToImageURL[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = imageURI;
+       this->_converterContext._imageIdToImagePath[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = relPathFile;
         return true;        
 	}
     
