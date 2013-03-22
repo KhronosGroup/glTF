@@ -218,10 +218,13 @@ namespace JSONExport
             
             for (size_t accessorIndex = 0 ; accessorIndex < vertexAttributesCount  ; accessorIndex++) {
                 AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
-                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);
+                unsigned int indiceInRemap = indicesInRemapping[accessorIndex];
+                unsigned int rindex = remappedIndex[1 /* skip count */ + indiceInRemap];
                 void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (remappedIndex[1 /* skip count */ + indicesInRemapping[accessorIndex]] * bufferInfos->originalAccessorByteStride);
                 //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
                 /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
+                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);
+
                 memcpy(ptrDst, ptrSrc , bufferInfos->elementByteLength);
             }
         }
@@ -242,24 +245,23 @@ namespace JSONExport
                                                                                   unsigned int accessorsCount,
                                                                                   unsigned int &endIndex)
     {
-        size_t allIndicesSize = allIndices.size();
-        size_t vertexAttributeCount = allIndices[0]->getCount();
-        
         unsigned int generatedIndicesCount = 0;
-        unsigned int vertexAttributesCount = accessorsCount;
-        size_t sizeOfRemappedIndex = (vertexAttributesCount + 1) * sizeof(unsigned int);
+
+        size_t allIndicesSize = allIndices.size();
+        size_t vertexIndicesCount = allIndices[0]->getCount();
+        size_t sizeOfRemappedIndex = (accessorsCount + 1) * sizeof(unsigned int);
         
-        unsigned int* originalCountAndIndexes = (unsigned int*)calloc( (vertexAttributeCount * sizeOfRemappedIndex), sizeof(unsigned char));
+        unsigned int* originalCountAndIndexes = (unsigned int*)calloc( (vertexIndicesCount * sizeOfRemappedIndex), sizeof(unsigned char));
         //this is useful for debugging.
         
-        unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexAttributeCount * sizeof(unsigned int), 1);
-        unsigned int *generatedIndices = (unsigned int*) calloc (vertexAttributeCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
+        unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexIndicesCount * sizeof(unsigned int), 1);
+        unsigned int *generatedIndices = (unsigned int*) calloc (vertexIndicesCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
         
-        for (size_t k = 0 ; k < vertexAttributeCount ; k++) {
-            unsigned int* remappedIndex = &originalCountAndIndexes[k * (vertexAttributesCount + 1)];
-            
-            remappedIndex[0] = vertexAttributesCount;
+        for (size_t k = 0 ; k < vertexIndicesCount ; k++) {
+            unsigned int* remappedIndex = &originalCountAndIndexes[k * (accessorsCount + 1)];
+                        
+            remappedIndex[0] = accessorsCount;
             for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];
                 unsigned int* indicesPtr = (unsigned int*)allIndices[i]->getBufferView()->getBufferDataByApplyingOffset();
@@ -278,9 +280,9 @@ namespace JSONExport
         
         endIndex = currentIndex;
         shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
-        shared_ptr <JSONExport::JSONBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexAttributeCount * sizeof(unsigned int), true);
+        shared_ptr <JSONExport::JSONBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexIndicesCount * sizeof(unsigned int), true);
         
-        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBufferView, vertexAttributeCount));
+        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBufferView, vertexIndicesCount));
         
         primitive->setIndices(indices);
         

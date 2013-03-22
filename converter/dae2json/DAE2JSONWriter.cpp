@@ -143,6 +143,8 @@ namespace JSONExport
         size_t length, elementsCount;
         size_t stride = 0;
         size_t size = 0;
+        size_t byteOffset = 0;
+        size_t inputLength = 0;
         
         size_t setCount = vertexData.getNumInputInfos();    
         bool unpatchedOpenCOLLADA = (setCount == 0); // reliable heuristic to know if the input have not been set
@@ -155,16 +157,20 @@ namespace JSONExport
             if (!unpatchedOpenCOLLADA) {
                 name = vertexData.getName(indexOfSet);
                 size = vertexData.getStride(indexOfSet);
+                inputLength = vertexData.getLength(indexOfSet);
             } else {
                 // for unpatched version of OpenCOLLADA we need this work-around.
                 name = JSONExport::JSONUtils::generateIDForType("buffer").c_str();
                 size = 3; //only normal and positions should reach this code
+                inputLength = vertexData.getLength(0);
             }
+            
+            //printf("name %s\n", name.c_str());
                     
             //name is the id
-            length = vertexData.getValuesCount();
+            length = inputLength ? inputLength : vertexData.getValuesCount();
             elementsCount = length / size;
-            void *sourceData = 0;
+            unsigned char *sourceData = 0;
             size_t sourceSize = 0;
         
             JSONExport::ComponentType componentType = JSONExport::NOT_AN_ELEMENT_TYPE;
@@ -172,10 +178,12 @@ namespace JSONExport
                 case MeshVertexData::DATA_TYPE_FLOAT: {
                     componentType = JSONExport::FLOAT;
                     stride = sizeof(float) * size;
-                    const FloatArray& array = vertexData.getFloatValues()[indexOfSet];
-                    const size_t count = array.getCount();
-                    sourceData = (void*)array.getData();
-                    sourceSize = count * sizeof(float);           
+                    const FloatArray* array = vertexData.getFloatValues();
+
+                    sourceData = (unsigned char*)array->getData() + byteOffset;
+                    
+                    sourceSize = length * sizeof(float);
+                    byteOffset += sourceSize;               //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                 break;
                 case MeshVertexData::DATA_TYPE_DOUBLE: {
@@ -350,7 +358,7 @@ namespace JSONExport
                 
                 //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
                 //for now forced to 0, to be fixed for multi texturing.
-                unsigned int idx = 0; //(unsigned int)indexList->getSetIndex();                
+                unsigned int idx = 0;//(unsigned int)indexList->getSetIndex();
                 
                 shared_ptr <JSONExport::JSONIndices> uvIndices(new JSONExport::JSONIndices(uvBuffer, count));
                         
