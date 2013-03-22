@@ -251,11 +251,11 @@ namespace JSONExport
         size_t vertexIndicesCount = allIndices[0]->getCount();
         size_t sizeOfRemappedIndex = (accessorsCount + 1) * sizeof(unsigned int);
         
-        unsigned int* originalCountAndIndexes = (unsigned int*)calloc( (vertexIndicesCount * sizeOfRemappedIndex), sizeof(unsigned char));
+        unsigned int* originalCountAndIndexes = (unsigned int*)calloc( vertexIndicesCount, sizeOfRemappedIndex);
         //this is useful for debugging.
         
-        unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexIndicesCount * sizeof(unsigned int), 1);
-        unsigned int *generatedIndices = (unsigned int*) calloc (vertexIndicesCount * sizeof(unsigned int) , 1); //owned by PrimitiveRemapInfos
+        unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexIndicesCount , sizeof(unsigned int));
+        unsigned int *generatedIndices = (unsigned int*) calloc (vertexIndicesCount , sizeof(unsigned int)); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
         
         for (size_t k = 0 ; k < vertexIndicesCount ; k++) {
@@ -274,7 +274,6 @@ namespace JSONExport
                 generatedIndices[generatedIndicesCount++] = (unsigned int)k;
                 remappedMeshIndexesMap[remappedIndex] = index;
             }
-            
             uniqueIndexes[k] = index - 1;
         }
         
