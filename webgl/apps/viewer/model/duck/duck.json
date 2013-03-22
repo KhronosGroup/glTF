@@ -229,6 +229,8 @@
             "passes": {
                 "defaultPass": {
                     "program": {
+                        "FRAGMENT_SHADER": "lambert1Fs",
+                        "VERTEX_SHADER": "lambert1Vs",
                         "attributes": [
                             {
                                 "semantic": "POSITION",
@@ -267,9 +269,7 @@
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
                             }
-                        ],
-                        "x-shader/x-fragment": "lambert1Fs",
-                        "x-shader/x-vertex": "lambert1Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": false,

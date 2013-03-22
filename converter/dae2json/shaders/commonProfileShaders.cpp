@@ -546,8 +546,8 @@ namespace JSONExport
         pass->setString("type", "program");
         pass->setValue("program", program);
         
-        program->setString("x-shader/x-vertex", vs);
-        program->setString("x-shader/x-fragment", fs);
+        program->setString("VERTEX_SHADER", vs);
+        program->setString("FRAGMENT_SHADER", fs);
         
         techniqueObject->setString("pass", passName);
         

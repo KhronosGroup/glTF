@@ -14746,6 +14746,8 @@
             "passes": {
                 "defaultPass": {
                     "program": {
+                        "FRAGMENT_SHADER": "lambert0Fs",
+                        "VERTEX_SHADER": "lambert0Vs",
                         "attributes": [
                             {
                                 "semantic": "POSITION",
@@ -14779,9 +14781,7 @@
                                 "symbol": "u_diffuseColor",
                                 "type": "FLOAT_VEC3"
                             }
-                        ],
-                        "x-shader/x-fragment": "lambert0Fs",
-                        "x-shader/x-vertex": "lambert0Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": false,
@@ -14798,6 +14798,8 @@
             "passes": {
                 "defaultPass": {
                     "program": {
+                        "FRAGMENT_SHADER": "lambert2Fs",
+                        "VERTEX_SHADER": "lambert2Vs",
                         "attributes": [
                             {
                                 "semantic": "POSITION",
@@ -14836,9 +14838,7 @@
                                 "symbol": "u_transparency",
                                 "type": "FLOAT"
                             }
-                        ],
-                        "x-shader/x-fragment": "lambert2Fs",
-                        "x-shader/x-vertex": "lambert2Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": true,
