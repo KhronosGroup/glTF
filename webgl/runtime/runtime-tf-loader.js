@@ -161,8 +161,8 @@ var global = window;
                             //it is necessary to add an id that is composited using the techniqueID for pass, 
                             //so that we can uniquely identify them when adding primitives per passes.
                             pass.id = entryID+"_"+rootPassID;
-                            var vsShaderEntry = this.getEntry(program[GLSLProgram.VERTEX_SHADER]);
-                            var fsShaderEntry = this.getEntry(program[GLSLProgram.FRAGMENT_SHADER]);
+                            var vsShaderEntry = this.getEntry(program["VERTEX_SHADER"]);
+                            var fsShaderEntry = this.getEntry(program["FRAGMENT_SHADER"]);
 
                             var progInfo = {};
                             progInfo[GLSLProgram.VERTEX_SHADER] = vsShaderEntry.entry;
