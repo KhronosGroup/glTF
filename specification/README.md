@@ -161,7 +161,11 @@ To relieve the burden on the content pipeline, [COLLADA2GLTF](https://github.com
 
 ## Minimal Representation
 
-TODO
+glTF strives to keep the asset representation minimal.  That is, a glTF asset should only include data needed to render the model.
+
+For example, it is common for a modeling-tool format to store several `technique` objects for a particular `material`.  Then at runtime, the application selects the `technique` based on the capabilities of the current platform.  glTF supports using multiple techniques for material LOD, that is, switching techniques based on the view parameters, occlusion, or other common LOD select criteria.  Although technique selection could also be based on the platform, the preferred method is to determine the technique as part of the content pipeline in advance or negotiate it via a REST API.  In the case of the REST API, when requesting the glTF asset, the client would include information about the current platform, which the server would use to return an asset with an appropriate `technique` perhaps from a static database of glTF assets or by generating the asset on the fly.
+
+_TODO: More info on glTF and REST APIs.  Perhaps an image._
 
 ## Code Not Just Spec
 
@@ -206,20 +210,6 @@ These are observations; not necessarily design principles.
 glTF is often human-readable, but doesn't strive to be.  Without minification and compression, JSON is even easier to read than XML since it is less cluttered.  Likewise, without optimization, minification, and compression, separate GLSL files are readable.
 
 However, glTF assets aren't allows readable.  For example, a simple shader embedded in JSON with a data URI becomes hard to read: `"data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B"`.  Once minification occurs, the JSON and GLSL become unreadable.
-
-  
-.
-.
-.
-.
-.
-.
-
-
-_TODO: still need to cleanup below here_
-
-* glTF adopts the Typed Array SPEC to describe buffers. 
-* glTF strives to keep the asset simple, e.g., negotiate via a REST API instead of in the application, e.g., instead of storing `technique` objects for various platforms in a glTF asset, the asset only stores one, which can be selected as part of a HTTP request.  Other examples negotiated via a REST API include mesh quantization and compression, texture compression, etc. 
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="conventions">
