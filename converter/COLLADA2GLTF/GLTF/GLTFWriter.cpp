@@ -195,7 +195,7 @@ namespace GLTF
             std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
             
             unsigned int indexOfSet = 0;
-            if (mesh->getAccessorsForSemantic(semantic).size() > 1) {
+            if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL)) {
                 indexOfSet = primitive->getIndexOfSetAtIndex(j);
                 semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
             }

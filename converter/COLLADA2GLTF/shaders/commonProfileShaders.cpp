@@ -591,7 +591,7 @@ namespace GLTF
             } else if (symbol == kNormalAttribute) {
                 semantic = "NORMAL";
             } else if (symbol == kTexcoordAttribute) {
-                semantic = "TEXCOORD";
+                semantic = "TEXCOORD_0";
             } else {
                 printf("WARNING:symbol not handled %s\n", symbol.c_str());
                 continue;

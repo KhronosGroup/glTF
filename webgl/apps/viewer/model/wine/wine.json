@@ -240,7 +240,7 @@
                     "semantics": {
                         "NORMAL": "attribute_26",
                         "POSITION": "attribute_24",
-                        "TEXCOORD": "attribute_28"
+                        "TEXCOORD_0": "attribute_28"
                     }
                 }
             ]
@@ -428,7 +428,7 @@
                     "semantics": {
                         "NORMAL": "attribute_83",
                         "POSITION": "attribute_81",
-                        "TEXCOORD": "attribute_85"
+                        "TEXCOORD_0": "attribute_85"
                     }
                 }
             ]
@@ -502,7 +502,7 @@
                     "semantics": {
                         "NORMAL": "attribute_106",
                         "POSITION": "attribute_104",
-                        "TEXCOORD": "attribute_108"
+                        "TEXCOORD_0": "attribute_108"
                     }
                 }
             ]
@@ -576,7 +576,7 @@
                     "semantics": {
                         "NORMAL": "attribute_129",
                         "POSITION": "attribute_127",
-                        "TEXCOORD": "attribute_131"
+                        "TEXCOORD_0": "attribute_131"
                     }
                 }
             ]
@@ -650,7 +650,7 @@
                     "semantics": {
                         "NORMAL": "attribute_152",
                         "POSITION": "attribute_150",
-                        "TEXCOORD": "attribute_154"
+                        "TEXCOORD_0": "attribute_154"
                     }
                 }
             ]
@@ -724,7 +724,7 @@
                     "semantics": {
                         "NORMAL": "attribute_191",
                         "POSITION": "attribute_189",
-                        "TEXCOORD": "attribute_193"
+                        "TEXCOORD_0": "attribute_193"
                     }
                 },
                 {
@@ -739,7 +739,7 @@
                     "semantics": {
                         "NORMAL": "attribute_191",
                         "POSITION": "attribute_189",
-                        "TEXCOORD": "attribute_193"
+                        "TEXCOORD_0": "attribute_193"
                     }
                 }
             ]
@@ -813,7 +813,7 @@
                     "semantics": {
                         "NORMAL": "attribute_214",
                         "POSITION": "attribute_212",
-                        "TEXCOORD": "attribute_216"
+                        "TEXCOORD_0": "attribute_216"
                     }
                 }
             ]
@@ -944,7 +944,7 @@
                     "semantics": {
                         "NORMAL": "attribute_254",
                         "POSITION": "attribute_252",
-                        "TEXCOORD": "attribute_256"
+                        "TEXCOORD_0": "attribute_256"
                     }
                 }
             ]
@@ -1075,7 +1075,7 @@
                     "semantics": {
                         "NORMAL": "attribute_294",
                         "POSITION": "attribute_292",
-                        "TEXCOORD": "attribute_296"
+                        "TEXCOORD_0": "attribute_296"
                     }
                 }
             ]
@@ -1149,7 +1149,7 @@
                     "semantics": {
                         "NORMAL": "attribute_333",
                         "POSITION": "attribute_331",
-                        "TEXCOORD": "attribute_335"
+                        "TEXCOORD_0": "attribute_335"
                     }
                 },
                 {
@@ -1164,7 +1164,7 @@
                     "semantics": {
                         "NORMAL": "attribute_333",
                         "POSITION": "attribute_331",
-                        "TEXCOORD": "attribute_335"
+                        "TEXCOORD_0": "attribute_335"
                     }
                 }
             ]

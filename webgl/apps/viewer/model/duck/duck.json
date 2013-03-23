@@ -123,7 +123,7 @@
                     "semantics": {
                         "NORMAL": "attribute_20",
                         "POSITION": "attribute_18",
-                        "TEXCOORD": "attribute_22"
+                        "TEXCOORD_0": "attribute_22"
                     }
                 }
             ]
