@@ -86,7 +86,7 @@ glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for th
 
 There are industry-standard interchange formats, namely COLLADA, that allows sharing assets between modeling tools and within the content pipeline in general.  However, these formats are not optimized for size or runtime use nor are modeling-tool-specific formats.  At runtime, an application wishing to render an asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
 
-Applications seeking high-performance, such as games, rarely load interchange or modeling-tool-specific formats directly; instead, they process the model offline as part of a content pipeline to convert the asset to a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format that can be rendered with minimal processing, along with open-source pipeline tools, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.  In particular, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) converts COLLADA assets to glTF.
+Applications seeking high-performance, such as games, rarely load interchange or modeling-tool-specific formats directly; instead, they process the model offline as part of a content pipeline to convert the asset to a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format that can be rendered with minimal processing, along with open-source pipeline tools, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.  In particular, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) converts COLLADA assets to glTF.
 
 ![](figures/COLLADA2GLTF.png)
 
@@ -157,7 +157,7 @@ glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF striv
    * glTF does not support polygons.  Polygons are triangulated when glTF is written.
    * glTF only contains one <a href="#asset">`asset`</a> property for the asset's metadata, e.g., copyright.  When creating a glTF asset from an COLLADA asset, If the asset has several `asset` elements, the tool must handle it, so the application does not have to.
 
-To relieve the burden on the content pipeline, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
+To relieve the burden on the content pipeline, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
 
 ## Minimal Representation
 
@@ -171,7 +171,7 @@ _TODO: More info on glTF and REST APIs.  Perhaps an image._
 
 Formally, glTF is this specification.  However, a specification alone is not enough to drive adoption.  An open ecosystem of tools is needed to bridge the gap between specification and implementation.
 
-In particlar, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/dae2json) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  For runtime applications, there is an open-source [JavaScript loader, WebGL renderer, and Three.js renderer](https://github.com/KhronosGroup/glTF/tree/master/webgl). 
+In particlar, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  For runtime applications, there is an open-source [JavaScript loader, WebGL renderer, and Three.js renderer](https://github.com/KhronosGroup/glTF/tree/master/webgl). 
 
 ## Reasonable Flexibility
 
