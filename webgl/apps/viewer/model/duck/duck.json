@@ -42,8 +42,8 @@
                     "parameters": {
                         "diffuse": {
                             "image": "image_0",
-                            "maxFilter": "LINEAR",
-                            "minFilter": "LINEAR",
+                            "magFilter": "LINEAR",
+                            "minFilter": "LINEAR_MIPMAP_LINEAR",
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
@@ -243,7 +243,7 @@
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "TEXCOORD",
+                                "semantic": "TEXCOORD_0",
                                 "symbol": "texcoord",
                                 "type": "FLOAT_VEC2"
                             }

@@ -1049,7 +1049,46 @@ namespace GLTF
     }
     
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
+    //FIXME: should be different depending on profiles. now assuming WebGL
+	static std::string __GetGLWrapMode(COLLADAFW::Sampler::WrapMode wrapMode) {
+        switch (wrapMode) {
+            case COLLADAFW::Sampler::WRAP_MODE_UNSPECIFIED:
+            case COLLADAFW::Sampler::WRAP_MODE_NONE:
+            case COLLADAFW::Sampler::WRAP_MODE_WRAP:
+                return "REPEAT";
+            case COLLADAFW::Sampler::WRAP_MODE_MIRROR:
+                return "MIRRORED_REPEAT";
+            case COLLADAFW::Sampler::WRAP_MODE_CLAMP:
+                return "CLAMP_TO_EDGE";
+            default:
+                break;
+        }
+        return "REPEAT";
+    }
+    
+    static std::string __GetFilterMode(COLLADAFW::Sampler::SamplerFilter wrapMode) {
+        switch (wrapMode) {
+            case COLLADAFW::Sampler::SAMPLER_FILTER_UNSPECIFIED:
+            case COLLADAFW::Sampler::SAMPLER_FILTER_NONE:
+            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR:
+                return "LINEAR";
+            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST:
+                return "NEAREST";
+            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_NEAREST:
+                return "NEAREST_MIPMAP_NEAREST";
+            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_NEAREST:
+                return "LINEAR_MIPMAP_NEAREST";
+            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_LINEAR:
+                return "NEAREST_MIPMAP_LINEAR";
+            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_LINEAR:
+                return "LINEAR_MIPMAP_LINEAR";
+            default:
+                break;
+        }
+        return "LINEAR";
+    }
+
+    bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
@@ -1070,7 +1109,7 @@ namespace GLTF
             shared_ptr <GLTF::JSONObject> technique(new GLTF::JSONObject());
             shared_ptr <GLTF::JSONObject> parameters(new GLTF::JSONObject());
             
-            //retrive the type, parameterName -> symbol -> type
+            //retrieve the type, parameterName -> symbol -> type
             
             double red = 1, green = 1, blue = 1;
             bool hasDiffuseTexture = diffuse.isTexture();
@@ -1095,14 +1134,14 @@ namespace GLTF
                                 
                 shared_ptr <JSONObject> sampler2D(new JSONObject());
                 
-                sampler2D->setString("wrapS", "REPEAT");
-                sampler2D->setString("wrapT", "REPEAT");
-                sampler2D->setString("minFilter", "LINEAR");
-                sampler2D->setString("maxFilter", "LINEAR");
+                //FIXME: this is assume SAMPLER_2D
+                sampler2D->setString("wrapS", __GetGLWrapMode(sampler->getWrapS()));
+                sampler2D->setString("wrapT", __GetGLWrapMode(sampler->getWrapT()));
+                sampler2D->setString("minFilter", __GetFilterMode(sampler->getMinFilter()));
+                sampler2D->setString("magFilter", __GetFilterMode(sampler->getMagFilter()));
                 sampler2D->setString("image", uniqueIdWithType("image",imageUID));
                 sampler2D->setString("type", "SAMPLER_2D");
                 parameters->setValue("diffuse", sampler2D);
-                
             }
             
             if (!isOpaque(effectCommon)) {

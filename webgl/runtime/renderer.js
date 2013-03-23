@@ -543,10 +543,9 @@ var global = window;
 
                     //set default values
                     var minFilter = this.getGLFilter(resource.description.minFilter);
-                    var maxFilter = this.getGLFilter(resource.description.maxFilter);
+                    var magFilter = this.getGLFilter(resource.description.magFilter);
                     var wrapS = this.getGLWrapMode(resource.description.wrapS);
                     var wrapT = this.getGLWrapMode(resource.description.wrapT);
-
                     if ((wrapS === gl.REPEAT) || (wrapT === gl.REPEAT)) {
                         var width = parseInt(image.width);
                         var height = parseInt(image.height);
@@ -574,13 +573,13 @@ var global = window;
                     gl.bindTexture(gl.TEXTURE_2D, texture);  
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, minFilter);  
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, maxFilter);  
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);  
-                    if ((maxFilter === gl.NEAREST_MIPMAP_NEAREST) ||
-                        (maxFilter === gl.LINEAR_MIPMAP_NEAREST) ||
-                        (maxFilter === gl.NEAREST_MIPMAP_LINEAR) ||
-                        (maxFilter === gl.LINEAR_MIPMAP_LINEAR))
+                    if ((minFilter === gl.NEAREST_MIPMAP_NEAREST) ||
+                        (minFilter === gl.LINEAR_MIPMAP_NEAREST) ||
+                        (minFilter === gl.NEAREST_MIPMAP_LINEAR) ||
+                        (minFilter === gl.LINEAR_MIPMAP_LINEAR))
                     {
                         gl.generateMipmap(gl.TEXTURE_2D);
                     }

@@ -83,7 +83,7 @@
                     "parameters": {
                         "diffuse": {
                             "image": "image_1",
-                            "maxFilter": "LINEAR",
+                            "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
@@ -123,7 +123,7 @@
                     "parameters": {
                         "diffuse": {
                             "image": "image_2",
-                            "maxFilter": "LINEAR",
+                            "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
@@ -159,7 +159,7 @@
                     "parameters": {
                         "diffuse": {
                             "image": "image_0",
-                            "maxFilter": "LINEAR",
+                            "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
@@ -11767,7 +11767,7 @@
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "TEXCOORD",
+                                "semantic": "TEXCOORD_0",
                                 "symbol": "texcoord",
                                 "type": "FLOAT_VEC2"
                             }
