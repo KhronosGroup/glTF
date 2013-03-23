@@ -220,7 +220,7 @@ namespace JSONExport
                 AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
                 unsigned int indiceInRemap = indicesInRemapping[accessorIndex];
                 unsigned int rindex = remappedIndex[1 /* skip count */ + indiceInRemap];
-                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (remappedIndex[1 /* skip count */ + indicesInRemapping[accessorIndex]] * bufferInfos->originalAccessorByteStride);
+                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalAccessorByteStride);
                 //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
                 /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
                 void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);

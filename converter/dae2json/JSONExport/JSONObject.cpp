@@ -67,6 +67,12 @@ namespace JSONExport
         return this->_keyToJSONValue[key];
     }
     
+    shared_ptr <JSONObject> JSONObject::getObject(std::string key)
+    {
+        shared_ptr <JSONValue> value = this->_keyToJSONValue[key];
+        return static_pointer_cast <JSONObject> (value);
+    }
+
     void JSONObject::setUnsignedInt32(const std::string &key, unsigned int value)
     {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber((unsigned int)value)));
@@ -111,6 +117,7 @@ namespace JSONExport
     double JSONObject::getDouble(const std::string &key)
     {
         shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+        
         
         return number->getDouble();
     }

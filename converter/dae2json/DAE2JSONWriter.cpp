@@ -880,7 +880,7 @@ namespace JSONExport
             childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
         }
         
-        nodesObject->setValue(originalID, static_pointer_cast <JSONExport::JSONValue> (nodeObject));
+        nodesObject->setValue(originalID, static_pointer_cast <JSONValue> (nodeObject));
         
         for (unsigned int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
@@ -1032,17 +1032,17 @@ namespace JSONExport
 		return true;
 	}
             
-    const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(const COLLADAFW::EffectCommon* effectCommon) {
-        std::string techniqueName = getTechniqueNameForProfile(effectCommon, this->_converterContext);
+    const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
+        std::string techniqueName = inferTechniqueName(technique, this->_converterContext);
         
-        shared_ptr <JSONExport::JSONObject> techniquesObject;
+        shared_ptr <JSONObject> techniquesObject;
         
         //get or create if necessary the techniques object
         techniquesObject = this->_converterContext.root->createObjectIfNeeded("techniques");
         
         if (!techniquesObject->contains(techniqueName)) {
-            shared_ptr <JSONExport::JSONObject> techniqueObject = createTechniqueForProfile(effectCommon, this->_converterContext);
-            techniquesObject->setValue(techniqueName, techniqueObject);
+            shared_ptr <JSONObject> referenceTechnique = createReferenceTechniqueBasedOnTechnique(technique, this->_converterContext);
+            techniquesObject->setValue(techniqueName, referenceTechnique);
         }
         
         return techniqueName;
@@ -1055,7 +1055,6 @@ namespace JSONExport
         
         if (commonEffects.getCount() > 0) {
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
-            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(effectCommon);
             const ColorOrTexture& diffuse = effectCommon->getDiffuse ();
             
             std::string uniqueId = "";
@@ -1070,9 +1069,6 @@ namespace JSONExport
             shared_ptr <JSONExport::JSONObject> techniques(new JSONExport::JSONObject());
             shared_ptr <JSONExport::JSONObject> technique(new JSONExport::JSONObject());
             shared_ptr <JSONExport::JSONObject> parameters(new JSONExport::JSONObject());
-
-            techniques->setValue(techniqueID.c_str(), technique);
-            technique->setValue("parameters", parameters);
             
             //retrive the type, parameterName -> symbol -> type
             
@@ -1106,15 +1102,22 @@ namespace JSONExport
                 sampler2D->setString("image", uniqueIdWithType("image",imageUID));
                 sampler2D->setString("type", "SAMPLER_2D");
                 parameters->setValue("diffuse", sampler2D);
+                
             }
             
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
-                transparency->setValue("value", shared_ptr <JSONNumber> (new JSONNumber((double)getTransparency(effectCommon))));
+                double transparencyValue = effectCommon->getOpacity().getColor().getAlpha();
+
+                transparency->setDouble("value", transparencyValue);
                 transparency->setString("type", "FLOAT");
 
                 parameters->setValue("transparency", transparency);
             }
+            
+            technique->setValue("parameters", parameters);
+            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(technique);
+            techniques->setValue(techniqueID.c_str(), technique);
             
             cvtEffect->setTechniques(techniques);
             cvtEffect->setTechniqueID(techniqueID);

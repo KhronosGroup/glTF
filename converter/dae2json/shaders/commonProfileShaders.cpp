@@ -212,41 +212,37 @@ namespace JSONExport
                                         gl_FragColor = vec4(color.rgb * color.a *lambert, color.a * u_transparency); \n
                                     });
     
-    static float getTransparency(const COLLADAFW::EffectCommon* effectCommon, const GLTFConverterContext& context) {
+    static double getTransparency(shared_ptr<JSONObject> parameters, const GLTFConverterContext& context) {
         //super naive for now, also need to check sketchup work-around
-        if (effectCommon->getOpacity().isTexture()) {
-            return 1;
-        }
-        float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+        //if (effectCommon->getOpacity().isTexture()) {
+        //    return 1;
+        //}
+        
+        double transparency = parameters->contains("transparency") ? parameters->getDouble("transparency") : 1;
         
         return context.invertTransparency ? 1 - transparency : transparency;
     }
     
-    static bool hasTransparency(const COLLADAFW::EffectCommon* effectCommon,
+    static bool hasTransparency(shared_ptr<JSONObject> parameters,
                          GLTFConverterContext& context) {
-        return getTransparency(effectCommon, context)  < 1;
+        return getTransparency(parameters, context)  < 1;
     }
     
-    static bool isOpaque(const COLLADAFW::EffectCommon* effectCommon,
-                          GLTFConverterContext& context) {
+    static bool isOpaque(shared_ptr <JSONObject> parameters, GLTFConverterContext& context) {
 
-        const COLLADAFW::ColorOrTexture& diffuse = effectCommon->getDiffuse ();
-
-        if (diffuse.isTexture()) {
-            const COLLADAFW::Texture&  diffuseTexture = diffuse.getTexture();
-            const COLLADAFW::SamplerPointerArray& samplers = effectCommon->getSamplerPointerArray();
-            const COLLADAFW::Sampler* sampler = samplers[diffuseTexture.getSamplerId()];
-            if (sampler) {
-                const COLLADAFW::UniqueId& imageUID = sampler->getSourceImage();
-                std::string imagePath = context._imageIdToImagePath[uniqueIdWithType("image",imageUID)];
+        if (parameters->contains("diffuse")) {
+            shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
+            
+            if (diffuse->getString("type") == "SAMPLER_2D") {
+                std::string imagePath = context._imageIdToImagePath[diffuse->getString("image")];
+                
                 COLLADABU::URI inputURI(context.inputFilePath.c_str());
                 std::string imageFullPath = inputURI.getPathDir() + imagePath;
                 if (imageHasAlpha(imageFullPath.c_str()))
                     return false;
             }
         }
-        
-        return !hasTransparency(effectCommon, context);
+        return !hasTransparency(parameters, context);
     }
     
     static std::string kVertexAttribute = "vert";
@@ -421,19 +417,28 @@ namespace JSONExport
         }
     }
     
-    std::string getTechniqueNameForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context) {
+    std::string inferTechniqueName(shared_ptr<JSONObject> technique, GLTFConverterContext& context) {
         std::string techniqueName;
-        if (effectCommon->getDiffuse().isTexture()) {
-            if (hasTransparency(effectCommon, context)) {
+        
+        shared_ptr<JSONObject> parameters = technique->getObject("parameters");
+        
+        //FIXME:now assume we always have diffuse specified
+        shared_ptr<JSONObject> parameter = parameters->getObject("diffuse");
+        
+        bool hasDiffuseTexture = parameter->getString("type") == "SAMPLER_2D";
+        //bool hasDiffuseColor = parameter->getString("type") == "FLOAT_VEC3";
+        
+        if (hasDiffuseTexture) {
+            if (hasTransparency(parameters, context)) {
                 techniqueName = "lambert3";
             } else {
-                if (isOpaque(effectCommon, context))
+                if (isOpaque(parameters, context))
                     techniqueName = "lambert1";
                 else
                     techniqueName = "lambert1BlendOn";
             }
         } else {
-            if (hasTransparency(effectCommon, context)) {
+            if (hasTransparency(parameters, context)) {
                 techniqueName = "lambert2";
             } else {
                 techniqueName = "lambert0";
@@ -445,9 +450,9 @@ namespace JSONExport
     
     bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& context)
     {
-        shared_ptr <JSONExport::JSONObject> shadersObject = context.root->createObjectIfNeeded("shaders");
+        shared_ptr <JSONObject> shadersObject = context.root->createObjectIfNeeded("shaders");
         
-        shared_ptr <JSONExport::JSONObject> shaderObject  = static_pointer_cast <JSONExport::JSONObject> (shadersObject->getValue(shaderId));
+        shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
         
         if (!shaderObject) {
             shaderObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
@@ -470,11 +475,13 @@ namespace JSONExport
         return true;
     }
     
-    shared_ptr <JSONObject> createStatesForProfile(const COLLADAFW::EffectCommon* effectCommon, GLTFConverterContext& context)
+    static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context)
     {
         shared_ptr <JSONObject> states(new JSONExport::JSONObject());
         
-        if (isOpaque(effectCommon, context)) {
+        shared_ptr <JSONExport::JSONObject> parameters = technique->createObjectIfNeeded("parameters");
+
+        if (isOpaque(parameters, context)) {
             states->setBool("depthTestEnable", true);
             states->setBool("depthMask", true);
             states->setBool("blendEnable", false);            
@@ -492,15 +499,15 @@ namespace JSONExport
         return states;
     }
 
-    shared_ptr <JSONObject> createTechniqueForProfile(const COLLADAFW::EffectCommon* effectCommon,GLTFConverterContext& context) {
+    shared_ptr<JSONObject> createReferenceTechniqueBasedOnTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context) {
         
+        shared_ptr<JSONObject> referenceTechnique(new JSONObject());
         std::vector <std::string> allAttributes;
         std::vector <std::string> allUniforms;
-        std::string techniqueName = getTechniqueNameForProfile(effectCommon, context);
+        std::string techniqueName = inferTechniqueName(technique, context);
         std::string shaderName = techniqueName; //simplification
         std::string vs =  shaderName + "Vs";
         std::string fs =  shaderName + "Fs";
-        shared_ptr <JSONExport::JSONObject> techniqueObject(new JSONExport::JSONObject());
         
         if (shaderName == "lambert0") {
             context.shaderIdToShaderString[vs] = lambert0Vs;
@@ -535,7 +542,7 @@ namespace JSONExport
         //if the technique has not been serialized, first thing create the default pass for this technique
         shared_ptr <JSONExport::JSONObject> pass(new JSONExport::JSONObject());
         
-        shared_ptr <JSONExport::JSONObject> states = createStatesForProfile(effectCommon, context);
+        shared_ptr <JSONExport::JSONObject> states = createStatesForTechnique(technique, context);
         pass->setValue("states", states);
         
         writeShaderIfNeeded(vs, context);
@@ -549,9 +556,9 @@ namespace JSONExport
         program->setString("VERTEX_SHADER", vs);
         program->setString("FRAGMENT_SHADER", fs);
         
-        techniqueObject->setString("pass", passName);
+        referenceTechnique->setString("pass", passName);
         
-        shared_ptr <JSONExport::JSONObject> parameters = techniqueObject->createObjectIfNeeded("parameters");
+        shared_ptr <JSONExport::JSONObject> parameters = referenceTechnique->createObjectIfNeeded("parameters");
         
         shared_ptr <JSONExport::JSONArray> uniforms(new JSONExport::JSONArray());
         program->setValue("uniforms", uniforms);
@@ -600,10 +607,11 @@ namespace JSONExport
             attributes->appendValue(attribute);
         }
         
-        shared_ptr <JSONExport::JSONObject> passes = techniqueObject->createObjectIfNeeded("passes");
+        shared_ptr <JSONExport::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
         
         passes->setValue(passName, pass);
-        return techniqueObject;
+        
+        return referenceTechnique;
     }
 
 
