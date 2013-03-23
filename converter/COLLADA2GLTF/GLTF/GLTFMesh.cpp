@@ -24,24 +24,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 #include "../helpers/geometryHelpers.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport
+namespace GLTF
 {
-    JSONMesh::JSONMesh()
+    GLTFMesh::GLTFMesh()
     {
     }
     
-    JSONMesh::~JSONMesh()
+    GLTFMesh::~GLTFMesh()
     {
     }
 
-    JSONMesh::JSONMesh(const JSONMesh &mesh)
+    GLTFMesh::GLTFMesh(const GLTFMesh &mesh)
     {
         this->_primitives = mesh._primitives;
         this->_semanticToAccessors = mesh._semanticToAccessors;
@@ -49,10 +49,10 @@ namespace JSONExport
         this->_name = mesh._name;
     }
     
-    shared_ptr <AccessorVector> JSONMesh::accessors()
+    shared_ptr <AccessorVector> GLTFMesh::accessors()
     {
         shared_ptr <AccessorVector> accessors(new AccessorVector());
-        vector <JSONExport::Semantic> allSemantics = this->allSemantics();
+        vector <GLTF::Semantic> allSemantics = this->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
@@ -61,9 +61,9 @@ namespace JSONExport
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
-                JSONExport::Semantic semantic = allSemantics[i];
+                GLTF::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)accessors->size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
@@ -74,25 +74,25 @@ namespace JSONExport
         return accessors;
     }
     
-    bool JSONMesh::appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive)
+    bool GLTFMesh::appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive)
     {
         this->_primitives.push_back(primitive);
         return true;
     }
     
-    void JSONMesh::setAccessorsForSemantic(JSONExport::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap)
+    void GLTFMesh::setAccessorsForSemantic(GLTF::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap)
     {
         this->_semanticToAccessors[semantic] = indexSetToAccessorHashmap;
     }
     
-    IndexSetToAccessorHashmap& JSONMesh::getAccessorsForSemantic(Semantic semantic)
+    IndexSetToAccessorHashmap& GLTFMesh::getAccessorsForSemantic(Semantic semantic)
     {
         return this->_semanticToAccessors[semantic];
     }
     
-    vector <JSONExport::Semantic> JSONMesh::allSemantics()
+    vector <GLTF::Semantic> GLTFMesh::allSemantics()
     {
-        vector <JSONExport::Semantic> allSemantics;
+        vector <GLTF::Semantic> allSemantics;
         
         SemanticToAccessorHashmap::const_iterator accessorIterator;
         
@@ -106,52 +106,52 @@ namespace JSONExport
         return allSemantics;
     }
     
-    std::string JSONMesh::getID()
+    std::string GLTFMesh::getID()
     {
         return _ID;
     }
     
-    void JSONMesh::setID(std::string ID)
+    void GLTFMesh::setID(std::string ID)
     {
         this->_ID = ID;
     }
     
-    std::string JSONMesh::getName()
+    std::string GLTFMesh::getName()
     {        
         return _name;
     }
 
-    void JSONMesh::setName(std::string name)
+    void GLTFMesh::setName(std::string name)
     {
         this->_name = name;
     }
     
-    PrimitiveVector const JSONMesh::getPrimitives()
+    PrimitiveVector const GLTFMesh::getPrimitives()
     {
         return this->_primitives;
     }
         
-    bool const JSONMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
+    bool const GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
-        typedef map<std::string , shared_ptr<JSONExport::JSONBuffer> > IDToBufferDef;
+        typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
         shared_ptr <AccessorVector> allAccessors = this->accessors();
         
-        shared_ptr <JSONBufferView> dummyBuffer(new JSONBufferView());
+        shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
         
         PrimitiveVector primitives = this->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
-            shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];            
-            shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];            
+            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
             
             /*
                 Convert the indices to unsigned short and write the blob 
              */
             unsigned int indicesCount = (unsigned int)uniqueIndices->getCount();
             
-            shared_ptr <JSONBufferView> indicesBufferView = uniqueIndices->getBufferView();
+            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
             uniqueIndicesBufferPtr += indicesBufferView->getByteOffset();
             
@@ -176,9 +176,9 @@ namespace JSONExport
         }
         
         for (unsigned int j = 0 ; j < allAccessors->size() ; j++) {
-            shared_ptr <JSONAccessor> accessor = (*allAccessors)[j];
-            shared_ptr <JSONBufferView> bufferView = accessor->getBufferView();
-            shared_ptr <JSONBuffer> buffer = bufferView->getBuffer();
+            shared_ptr <GLTFAccessor> accessor = (*allAccessors)[j];
+            shared_ptr <GLTFBufferView> bufferView = accessor->getBufferView();
+            shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
             
             if (!bufferView.get()) {
                 // FIXME: report error
@@ -191,7 +191,7 @@ namespace JSONExport
                 accessor->computeMinMax();
                 
                 accessor->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-                verticesOutputStream.write((const char*)(static_pointer_cast <JSONBuffer> (buffer)->getData()), buffer->getByteLength());
+                verticesOutputStream.write((const char*)(static_pointer_cast <GLTFBuffer> (buffer)->getData()), buffer->getByteLength());
 
                 //now that we wrote to the stream we can release the buffer.
                 accessor->setBufferView(dummyBuffer);

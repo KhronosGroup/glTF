@@ -24,54 +24,9 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
-using namespace rapidjson;
-
-namespace JSONExport 
+namespace GLTF 
 {
-    JSONEffect::JSONEffect(const std::string& ID):
-    _ID(ID)
-    {
-    }
 
-    JSONEffect::~JSONEffect()
-    {
-    }
-                        
-    const std::string& JSONEffect::getID()
-    {
-        return this->_ID;
-    }
-    
-    void JSONEffect::setTechniqueID(const std::string& techniqueID)
-    {
-        this->_techniqueID = techniqueID;
-    }
-    
-    const std::string& JSONEffect::getTechniqueID()
-    {
-        return this->_techniqueID;
-    }
-    
-    void JSONEffect::setName(const std::string& name)
-    {
-        this->_name = name;
-    }
-    
-    const std::string& JSONEffect::getName()
-    {
-        return this->_name;
-    }
-    
-    void JSONEffect::setTechniques(shared_ptr <JSONExport::JSONObject> techniques)
-    {
-        this->_techniques = techniques;
-    }
-    
-    shared_ptr <JSONExport::JSONObject> JSONEffect::getTechniques()
-    {
-        return this->_techniques;
-    }
-    
 }

@@ -24,30 +24,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_STRING_H__
-#define __JSON_STRING_H__
+#ifndef __JSON_INDICES_H__
+#define __JSON_INDICES_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
-    class JSONString : public JSONValue {
+    //we should specify in indices the type. SHORT or BYTE
+    class GLTFIndices {
     private:
+        GLTFIndices();
+        void _indicesCommonInit();
+    public:
+        GLTFIndices(shared_ptr <GLTFBufferView> bufferView, size_t count);
+        
+        virtual ~GLTFIndices();
+        
+        size_t const getCount();
 
-    public:        
-        JSONString();
-        JSONString(const std::string& str);
-        
-        virtual ~JSONString();
-        
-        virtual void write(JSONWriter* writer, void* context);
-        
-        const char* getCString();
+        shared_ptr <GLTFBufferView> const getBufferView();
+        const void setBufferView(shared_ptr <GLTFBufferView>);
 
-        const std::string& getString();
-        
+        void setByteOffset(size_t byteOffset);
+        size_t getByteOffset();
+
+
     private:
-        std::string _str;
+        size_t _count;
+        size_t _byteOffset;
+        shared_ptr <GLTFBufferView> _bufferView;
     };
-
 }
 
 

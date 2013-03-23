@@ -24,52 +24,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_OBJECT_H__
-#define __JSON_OBJECT_H__
+#ifndef __JSON_NUMBER_H__
+#define __JSON_NUMBER_H__
 
-namespace JSONExport 
-{    
-    typedef std::map<std::string , shared_ptr <JSONValue> > KeyToJSONValue;
-    
-    class JSONObject : public JSONValue {
-    protected:
-        JSONObject(JSONValueType type);
+namespace GLTF 
+{
+    class JSONNumber : public JSONValue {
+    private:
+        JSONNumber():JSONValue(GLTF::NUMBER), _type(NOT_A_NUMBER) {}
         
     public:        
-        
-        JSONObject();
-        virtual ~JSONObject();
-      
-        shared_ptr <JSONExport::JSONObject> createObjectIfNeeded(const std::string& key);
+        typedef enum 
+        {
+            NOT_A_NUMBER = 0,
+            UNSIGNED_INT32 = 1,
+            INT32 = 2,
+            DOUBLE = 3,
+            BOOL = 4
+        } JSONNumberType;
+                
+        explicit JSONNumber(unsigned int value);
+        explicit JSONNumber(int value);
+        explicit JSONNumber(double value);
+        explicit JSONNumber(bool value);
 
-        void setValue(const std::string &key, shared_ptr <JSONValue> value);
-        shared_ptr <JSONValue> getValue(std::string);
+        virtual ~JSONNumber();
         
-        shared_ptr <JSONObject> getObject(std::string);
+        virtual void write(GLTFWriter* writer, void* context = 0);
+        
+        unsigned int getUnsignedInt32();
+        int getInt32();
+        double getDouble();
+        bool getBool();
+        
+        JSONNumber::JSONNumberType getType();
 
-        bool contains(const std::string &key);
-        
-        void setUnsignedInt32(const std::string &key, unsigned int value);
-        unsigned int getUnsignedInt32(const std::string &key);
-        
-        void setInt32(const std::string &key, int value);
-        int getInt32(const std::string &key);
-        
-        void setDouble(const std::string &key, double value);
-        double getDouble(const std::string &key);
-        
-        void setBool(const std::string &key, bool value);
-        bool getBool(const std::string &key);
-        
-        void setString(const std::string &key, const std::string &value);
-        const std::string& getString(const std::string &key);
-        
-        std::vector <std::string> getAllKeys();
-        
-        bool isEmpty();
-        
     private:
-        KeyToJSONValue _keyToJSONValue;
+        void* _value;
+        JSONNumberType _type;
     };
 
 }

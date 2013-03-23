@@ -27,34 +27,34 @@
 #ifndef __JSON_PRIMITIVE_H__
 #define __JSON_PRIMITIVE_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
     class JSONVertexAttribute
     {
     public:
-        JSONVertexAttribute(JSONExport::Semantic semantic, unsigned int indexOfSet):
+        JSONVertexAttribute(GLTF::Semantic semantic, unsigned int indexOfSet):
         _semantic(semantic),
         _indexOfSet(indexOfSet) {
         }
-        JSONExport::Semantic getSemantic() {
+        GLTF::Semantic getSemantic() {
             return _semantic;
         }
         unsigned int const getIndexOfSet() {
             return _indexOfSet;
         }
     private:
-        JSONExport::Semantic _semantic;
+        GLTF::Semantic _semantic;
         unsigned int _indexOfSet;
     };
         
-    class JSONPrimitive
+    class GLTFPrimitive
     {
     public:
-        JSONPrimitive();
-        JSONPrimitive(const JSONPrimitive& primitive);
-        virtual ~JSONPrimitive();
+        GLTFPrimitive();
+        GLTFPrimitive(const GLTFPrimitive& primitive);
+        virtual ~GLTFPrimitive();
         
-        shared_ptr <JSONExport::JSONIndices> getUniqueIndices();
+        shared_ptr <GLTF::GLTFIndices> getUniqueIndices();
         
         std::string getType();
         void setType(std::string type);
@@ -62,26 +62,26 @@ namespace JSONExport
         std::string getMaterialID();
         void setMaterialID(std::string materialID);
         
-        //TODO: These 2 methods should be out of JSONPrimitive.
-        //A map like: primitive [->] objectID, could handle that within DAE2JSONWriter.cpp
+        //TODO: These 2 methods should be out of GLTFPrimitive.
+        //A map like: primitive [->] objectID, could handle that within DAE2GLTFWriter.cpp
         unsigned int getMaterialObjectID();
         void setMaterialObjectID(unsigned int materialID);
 
-        JSONExport::Semantic getSemanticAtIndex(unsigned int index);
+        GLTF::Semantic getSemanticAtIndex(unsigned int index);
         unsigned int getIndexOfSetAtIndex(unsigned int index);
         unsigned int getIndicesInfosCount();
         
         VertexAttributeVector getVertexAttributes();
         void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);
         
-        shared_ptr <JSONExport::JSONIndices>  getIndices();
-        void setIndices(shared_ptr <JSONExport::JSONIndices> indices);
+        shared_ptr <GLTF::GLTFIndices>  getIndices();
+        void setIndices(shared_ptr <GLTF::GLTFIndices> indices);
         
     private:                
         std::string _type;
         std::string _materialID;
         unsigned int _materialObjectID;
-        shared_ptr <JSONExport::JSONIndices> _uniqueIndices;
+        shared_ptr <GLTF::GLTFIndices> _uniqueIndices;
         VertexAttributeVector _allVertexAttributes;
     };
 

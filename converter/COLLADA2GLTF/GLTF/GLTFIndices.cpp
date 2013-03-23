@@ -24,45 +24,57 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_EXPORT_H__
-#define __JSON_EXPORT_H__
+#include "GLTF.h"
 
-// STL headers
-#include <stack>
-#include <list>
-#include <map>
-#include <set>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <vector>
-#ifdef WIN32
-#include <memory>
-#include <unordered_map>
-#else 
-#include <tr1/memory>
-#include <tr1/unordered_map>
-#endif
+using namespace std::tr1;
+using namespace std;
 
-// RapidJSON headers
-#include "prettywriter.h"	
-#include "filestream.h"
+namespace GLTF 
+{        
 
-// JSONExport headers
-#include "JSONExportTypesAndConstants.h"
-#include "JSONValue.h"
-#include "JSONNumber.h"
-#include "JSONString.h"
-#include "JSONObject.h"
-#include "JSONArray.h"
-#include "JSONUtils.h"
-#include "JSONBuffer.h"
-#include "JSONAccessor.h"
-#include "JSONIndices.h"
-#include "JSONEffect.h"
-#include "JSONPrimitive.h"
-#include "JSONMesh.h"
-#include "JSONWriter.h"
+    void GLTFIndices::_indicesCommonInit() 
+    {
+    }
+    
+    // this constructor is private and typically won't be called
+    GLTFIndices::GLTFIndices() {}
+    
+    GLTFIndices::GLTFIndices(shared_ptr <GLTFBufferView> bufferView,
+                             size_t count):
+    _count(count),
+    _byteOffset(0),
+    _bufferView(bufferView)
+    {
+        this->_indicesCommonInit();
+    }
 
-#endif 
+    GLTFIndices::~GLTFIndices()
+    {
+    }
+    
+    size_t const GLTFIndices::getCount()
+    {
+        return this->_count;
+    }
+                
+    shared_ptr <GLTFBufferView>  const GLTFIndices::getBufferView()
+    {
+        return this->_bufferView;
+    }
+    
+    const void GLTFIndices::setBufferView(shared_ptr <GLTFBufferView> bufferView)
+    {
+        this->_bufferView = bufferView;
+    }
+
+    void GLTFIndices::setByteOffset(size_t byteOffset)
+    {
+        this->_byteOffset = byteOffset;
+    }
+    
+    size_t GLTFIndices::getByteOffset()
+    {
+        return this->_byteOffset;
+    }
+            
+}

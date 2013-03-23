@@ -4,7 +4,7 @@
 #define SHADER_STR(Src) #Src
 #define SHADER(Src) SHADER_STR(Src)
 
-namespace JSONExport
+namespace GLTF
 {
 
 std::string inferTechniqueName(shared_ptr<JSONObject> technique, GLTFConverterContext& context);

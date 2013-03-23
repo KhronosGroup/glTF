@@ -24,16 +24,16 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport 
+namespace GLTF 
 {    
     JSONNumber::JSONNumber(unsigned int value):
-    JSONValue(JSONExport::NUMBER),
+    JSONValue(GLTF::NUMBER),
     _type(UNSIGNED_INT32)        
     {
         this->_value = malloc(sizeof(unsigned int));
@@ -41,7 +41,7 @@ namespace JSONExport
     }
     
     JSONNumber::JSONNumber(int value):
-    JSONValue(JSONExport::NUMBER),
+    JSONValue(GLTF::NUMBER),
     _type(INT32)        
     {
         this->_value = malloc(sizeof(int));
@@ -49,7 +49,7 @@ namespace JSONExport
     }
     
     JSONNumber::JSONNumber(double value):
-    JSONValue(JSONExport::NUMBER),
+    JSONValue(GLTF::NUMBER),
     _type(DOUBLE)        
     {
         this->_value = malloc(sizeof(double));
@@ -57,7 +57,7 @@ namespace JSONExport
     }
 
     JSONNumber::JSONNumber(bool value):
-    JSONValue(JSONExport::NUMBER),
+    JSONValue(GLTF::NUMBER),
     _type(BOOL)        
     {
         this->_value = malloc(sizeof(bool));
@@ -69,7 +69,7 @@ namespace JSONExport
         free(this->_value);
     }
     
-    void JSONNumber::write(JSONWriter* writer, void* context)
+    void JSONNumber::write(GLTFWriter* writer, void* context)
     {
         writer->writeNumber(this, context);
     }

@@ -24,37 +24,66 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#ifndef __JSON_EXPORT_TYPES_AND_CONSTANTS_H__
+#define __JSON_EXPORT_TYPES_AND_CONSTANTS_H__
 
-using namespace rapidjson;
+#define EXPORT_MATERIALS_AS_EFFECTS 1
+
+// FIXME: check if this is required for osx only, looks like the standard on other platform would be just std::
 using namespace std::tr1;
-using namespace std;
 
-namespace JSONExport 
+namespace GLTF 
 {
+    class JSONObject;
+    class GLTFIndices;
+    class GLTFPrimitive;
+    class GLTFAccessor;
+    class GLTFMesh;
+    class GLTFEffect;
+    class JSONVertexAttribute;
+    //-- Args & Options
+    typedef std::vector <shared_ptr<GLTF::GLTFIndices> > IndicesVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > AccessorVector;
+    typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
+
+    std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
     
-    JSONArray::JSONArray():
-    JSONValue(JSONExport::ARRAY)
-    {
-    }
+    typedef enum {
+        POSITION = 1,
+        NORMAL = 2,
+        TEXCOORD = 3,
+        COLOR = 4
+    } Semantic;    
+
+    typedef enum {
+        NOT_A_JSON_TYPE = 0,
+        NUMBER = 1,
+        OBJECT = 2,
+        ARRAY = 3,
+        STRING = 4,
         
-    JSONArray::~JSONArray()
-    {
-    }        
-
-    void JSONArray::write(JSONWriter* writer, void* context)
-    {        
-        writer->writeArray(this, context);
-    }
+        ACCESSOR = 5,
+        BUFFER = 6,
+        EFFECT = 7,
+        INDICES = 8,
+        MESH = 9,
+        PRIMITIVE = 10
+    } JSONValueType;
     
-    vector <shared_ptr <JSONValue> > JSONArray::values()
-    {
-        return this->_values;
-    }
+    typedef enum {
+        NOT_AN_ELEMENT_TYPE = 0,
+        BYTE = 1,
+        UNSIGNED_BYTE = 2,
+        SHORT = 3,
+        UNSIGNED_SHORT = 4,
+        FIXED = 5,
+        FLOAT = 6,
+        INT = 7,
+        UNSIGNED_INT = 8
+    } ComponentType;
     
-    void JSONArray::appendValue(shared_ptr <JSONValue> value)
-    {
-        this->_values.push_back(value);
-    }
+};
 
-}
+#endif

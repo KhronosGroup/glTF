@@ -27,15 +27,15 @@
 #ifndef __JSON_EFFECT_H__
 #define __JSON_EFFECT_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
-    class JSONEffect {
+    class GLTFEffect {
         
     public:
         
-        JSONEffect(const std::string &ID);
+        GLTFEffect(const std::string &ID);
 
-        virtual ~JSONEffect();
+        virtual ~GLTFEffect();
         
         const std::string& getID();        
 
@@ -45,14 +45,14 @@ namespace JSONExport
         void setName(const std::string& name);
         const std::string& getName();
 
-        void setTechniques(shared_ptr <JSONExport::JSONObject>);
-        shared_ptr <JSONExport::JSONObject> getTechniques();
+        void setTechniques(shared_ptr <GLTF::JSONObject>);
+        shared_ptr <GLTF::JSONObject> getTechniques();
                         
     private:
         std::string _ID;
         std::string _name;
         std::string _techniqueID;
-        shared_ptr <JSONExport::JSONObject> _techniques;
+        shared_ptr <GLTF::JSONObject> _techniques;
     };
 
 }

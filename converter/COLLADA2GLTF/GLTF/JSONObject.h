@@ -24,35 +24,54 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_INDICES_H__
-#define __JSON_INDICES_H__
+#ifndef __JSON_OBJECT_H__
+#define __JSON_OBJECT_H__
 
-namespace JSONExport 
-{
-    //we should specify in indices the type. SHORT or BYTE
-    class JSONIndices {
-    private:
-        JSONIndices();
-        void _indicesCommonInit();
-    public:
-        JSONIndices(shared_ptr <JSONBufferView> bufferView, size_t count);
+namespace GLTF 
+{    
+    typedef std::map<std::string , shared_ptr <JSONValue> > KeyToJSONValue;
+    
+    class JSONObject : public JSONValue {
+    protected:
+        JSONObject(JSONValueType type);
         
-        virtual ~JSONIndices();
+    public:        
         
-        size_t const getCount();
+        JSONObject();
+        virtual ~JSONObject();
+      
+        shared_ptr <GLTF::JSONObject> createObjectIfNeeded(const std::string& key);
 
-        shared_ptr <JSONBufferView> const getBufferView();
-        const void setBufferView(shared_ptr <JSONBufferView>);
+        void setValue(const std::string &key, shared_ptr <JSONValue> value);
+        shared_ptr <JSONValue> getValue(std::string);
+        
+        shared_ptr <JSONObject> getObject(std::string);
 
-        void setByteOffset(size_t byteOffset);
-        size_t getByteOffset();
-
-
+        bool contains(const std::string &key);
+        
+        void setUnsignedInt32(const std::string &key, unsigned int value);
+        unsigned int getUnsignedInt32(const std::string &key);
+        
+        void setInt32(const std::string &key, int value);
+        int getInt32(const std::string &key);
+        
+        void setDouble(const std::string &key, double value);
+        double getDouble(const std::string &key);
+        
+        void setBool(const std::string &key, bool value);
+        bool getBool(const std::string &key);
+        
+        void setString(const std::string &key, const std::string &value);
+        const std::string& getString(const std::string &key);
+        
+        std::vector <std::string> getAllKeys();
+        
+        bool isEmpty();
+        
     private:
-        size_t _count;
-        size_t _byteOffset;
-        shared_ptr <JSONBufferView> _bufferView;
+        KeyToJSONValue _keyToJSONValue;
     };
+
 }
 
 

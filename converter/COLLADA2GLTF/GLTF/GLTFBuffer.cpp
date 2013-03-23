@@ -24,21 +24,21 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 
-namespace JSONExport 
+namespace GLTF 
 {    
-    JSONBuffer::JSONBuffer() {}     //private
+    GLTFBuffer::GLTFBuffer() {}     //private
 
-    JSONBuffer::~JSONBuffer() {
+    GLTFBuffer::~GLTFBuffer() {
         if (this->_ownData && this->_data)
             free(this->_data);
     }    
 
     //FIXME:This one just should be removed, but some code depends on it.
-    JSONBuffer::JSONBuffer(std::string ID, size_t byteLength):
+    GLTFBuffer::GLTFBuffer(std::string ID, size_t byteLength):
     _ID(ID),
     _byteLength(byteLength),
     _data(0),
@@ -46,15 +46,15 @@ namespace JSONExport
     {
     }
     
-    JSONBuffer::JSONBuffer(void *data, size_t byteLength, bool ownData):
+    GLTFBuffer::GLTFBuffer(void *data, size_t byteLength, bool ownData):
     _byteLength(byteLength),
     _data((unsigned char*)data),
     _ownData(ownData)
     {
-        this->_ID = JSONUtils::generateIDForType("buffer");
+        this->_ID = GLTFUtils::generateIDForType("buffer");
     }
     
-    JSONBuffer::JSONBuffer(std::string ID,void *data, size_t byteLength, bool ownData):
+    GLTFBuffer::GLTFBuffer(std::string ID,void *data, size_t byteLength, bool ownData):
     _ID(ID),
     _byteLength(byteLength),
     _data((unsigned char*)data),
@@ -62,98 +62,98 @@ namespace JSONExport
     {
     }
 
-    size_t const JSONBuffer::getByteLength()
+    size_t const GLTFBuffer::getByteLength()
     {
         return this->_byteLength;
     }
         
-    std::string const JSONBuffer::getID()
+    std::string const GLTFBuffer::getID()
     {
         return this->_ID;
     }
     
-    const void* const JSONBuffer::getData()
+    const void* const GLTFBuffer::getData()
     {
         return this->_data;
     }
     
-    //--- JSONBufferView    
+    //--- GLTFBufferView    
     
-    JSONBufferView::~JSONBufferView()
+    GLTFBufferView::~GLTFBufferView()
     {
     }
     
-    JSONBufferView::JSONBufferView(shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength)
+    GLTFBufferView::GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength)
     {
-        this->_ID = JSONUtils::generateIDForType("bufferView");
+        this->_ID = GLTFUtils::generateIDForType("bufferView");
         this->_buffer = buffer;
         this->_byteLength = byteLength;
         this->_byteOffset = byteOffset;
     }
     
-    JSONBufferView::JSONBufferView(std::string ID, shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength)
+    GLTFBufferView::GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength)
     {
         this->_buffer = buffer;
         this->_byteLength = byteLength;
         this->_byteOffset = byteOffset;
     }
         
-    JSONBufferView::JSONBufferView()
+    GLTFBufferView::GLTFBufferView()
     {
-        this->_ID = JSONUtils::generateIDForType("bufferView");
+        this->_ID = GLTFUtils::generateIDForType("bufferView");
         this->_byteLength = 0;
         this->_byteOffset = 0;
     }
     
-    void const JSONBufferView::setByteLength(size_t byteLength)
+    void const GLTFBufferView::setByteLength(size_t byteLength)
     {
         this->_byteLength = byteLength;
     }
     
-    size_t const JSONBufferView::getByteLength()
+    size_t const GLTFBufferView::getByteLength()
     {
         return this->_byteLength;
     }
     
-    void const JSONBufferView::setByteOffset(size_t byteOffset)
+    void const GLTFBufferView::setByteOffset(size_t byteOffset)
     {
         this->_byteOffset = byteOffset;
     }
     
-    size_t const JSONBufferView::getByteOffset()
+    size_t const GLTFBufferView::getByteOffset()
     {
         return this->_byteOffset;
     }
 
-    std::string const JSONBufferView::getID()
+    std::string const GLTFBufferView::getID()
     {
         return this->_ID;
     }
     
-    shared_ptr <JSONBuffer> JSONBufferView::getBuffer()
+    shared_ptr <GLTFBuffer> GLTFBufferView::getBuffer()
     {
         return this->_buffer;
     }
     
-    void* JSONBufferView::getBufferDataByApplyingOffset()
+    void* GLTFBufferView::getBufferDataByApplyingOffset()
     {
         unsigned char *data = (unsigned char*)this->_buffer->getData();
         
         return (void*)(data + this->getByteOffset());
     }
 
-    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData)
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData)
     {
-        shared_ptr<JSONBuffer> buffer(new JSONBuffer(data, byteLength, ownData));
-        shared_ptr<JSONBufferView> bufferView(new JSONBufferView(ID, buffer, byteOffset, byteLength));
+        shared_ptr<GLTFBuffer> buffer(new GLTFBuffer(data, byteLength, ownData));
+        shared_ptr<GLTFBufferView> bufferView(new GLTFBufferView(ID, buffer, byteOffset, byteLength));
 
         return bufferView;
     }
     
-    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData)
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData)
     {
-        shared_ptr<JSONBuffer> buffer(new JSONBuffer(data, byteLength, ownData));
-        shared_ptr<JSONBufferView> bufferView(new JSONBufferView(buffer, byteOffset, byteLength));
+        shared_ptr<GLTFBuffer> buffer(new GLTFBuffer(data, byteLength, ownData));
+        shared_ptr<GLTFBufferView> bufferView(new GLTFBufferView(buffer, byteOffset, byteLength));
         
         return bufferView;
     }

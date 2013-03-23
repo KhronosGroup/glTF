@@ -28,21 +28,21 @@
 #define __JSON_BUFFER_H__
 
 /* 
-    A JSONBuffer holds raw data to be exported as an ArrayBuffer i.e http://www.khronos.org/registry/typedarray/specs/latest/
-    JSONBuffer can take ownership of the data passed, in that case when a JSONBuffer instance then the data is freed.
+    A GLTFBuffer holds raw data to be exported as an ArrayBuffer i.e http://www.khronos.org/registry/typedarray/specs/latest/
+    GLTFBuffer can take ownership of the data passed, in that case when a GLTFBuffer instance then the data is freed.
  */
 
-namespace JSONExport 
+namespace GLTF 
 {
-    class JSONBuffer {
+    class GLTFBuffer {
     private:
-        JSONBuffer();
+        GLTFBuffer();
     public:
-        JSONBuffer(std::string ID, size_t byteLength);
-        JSONBuffer(std::string ID, void *data, size_t byteLength, bool ownData);
-        JSONBuffer(void *data, size_t byteLength, bool ownData);
+        GLTFBuffer(std::string ID, size_t byteLength);
+        GLTFBuffer(std::string ID, void *data, size_t byteLength, bool ownData);
+        GLTFBuffer(void *data, size_t byteLength, bool ownData);
         
-        virtual ~JSONBuffer();
+        virtual ~GLTFBuffer();
         
         size_t const getByteLength();
         std::string const getID();
@@ -55,13 +55,13 @@ namespace JSONExport
         bool _ownData;
     };
     
-    class JSONBufferView {
+    class GLTFBufferView {
     public:
-        JSONBufferView();
-        JSONBufferView(shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength);
-        JSONBufferView(std::string ID, shared_ptr <JSONExport::JSONBuffer> buffer, size_t byteOffset, size_t byteLength);
+        GLTFBufferView();
+        GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
+        GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
         
-        virtual ~JSONBufferView();
+        virtual ~GLTFBufferView();
         
         void const setByteLength(size_t byteLength);
         size_t const getByteLength();
@@ -69,7 +69,7 @@ namespace JSONExport
         void const setByteOffset(size_t byteOffset);
         size_t const getByteOffset();
         
-        shared_ptr <JSONBuffer> getBuffer();
+        shared_ptr <GLTFBuffer> getBuffer();
 
         std::string const getID();
     
@@ -79,12 +79,12 @@ namespace JSONExport
         std::string  _ID;
         size_t _byteLength;
         size_t _byteOffset;
-        shared_ptr<JSONBuffer> _buffer;
+        shared_ptr<GLTFBuffer> _buffer;
     };
     
     //conveniences functions
-    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData);
-    shared_ptr <JSONBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData);
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData);
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData);
 
 }
 

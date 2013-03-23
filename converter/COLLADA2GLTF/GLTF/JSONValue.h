@@ -24,24 +24,28 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#ifndef __JSON_VALUE_H__
+#define __JSON_VALUE_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
-    JSONValue::JSONValue(JSONValueType type) 
-    {
-        this->_type = type;
-    }
-    
-    JSONValueType JSONValue::getType() 
-    {
-        return this->_type;
-    }    
-    
-    void JSONValue::write(JSONWriter* writer, void* context)
-    {
-        writer->write(this, context);
-    }
-    
-    
+    class GLTFWriter;
+    class JSONValue {
+    private:
+
+    public:        
+                        
+        JSONValue(JSONValueType type);
+        
+        virtual void write(GLTFWriter* , void* context = 0);
+                
+        JSONValueType getType();
+        
+    private:
+        JSONValueType _type;
+    };
+
 }
+
+
+#endif

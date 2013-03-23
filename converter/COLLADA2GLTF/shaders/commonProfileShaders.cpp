@@ -23,7 +23,7 @@
 #include "COLLADABUURI.h"
 #include "Math/COLLADABUMathMatrix4.h"
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 #include "../GLTFConverterContext.h"
 #include "commonProfileShaders.h"
@@ -32,7 +32,7 @@
 #endif
 using namespace std;
 
-namespace JSONExport
+namespace GLTF
 {
     
 #define PNGSIGSIZE 8
@@ -455,7 +455,7 @@ namespace JSONExport
         shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
         
         if (!shaderObject) {
-            shaderObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            shaderObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             
             std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
@@ -466,7 +466,7 @@ namespace JSONExport
             if (shaderString.size() > 0) {
                 COLLADABU::URI outputURI(context.outputFilePath);
                 std::string shaderPath =  outputURI.getPathDir() + path;
-                JSONExport::JSONUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
+                GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
                 
                 printf("[shader]: %s\n", shaderPath.c_str());
             }
@@ -477,9 +477,9 @@ namespace JSONExport
     
     static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context)
     {
-        shared_ptr <JSONObject> states(new JSONExport::JSONObject());
+        shared_ptr <JSONObject> states(new GLTF::JSONObject());
         
-        shared_ptr <JSONExport::JSONObject> parameters = technique->createObjectIfNeeded("parameters");
+        shared_ptr <GLTF::JSONObject> parameters = technique->createObjectIfNeeded("parameters");
 
         if (isOpaque(parameters, context)) {
             states->setBool("depthTestEnable", true);
@@ -490,7 +490,7 @@ namespace JSONExport
             states->setBool("depthTestEnable", true);
             states->setBool("depthMask", false);
             states->setString("blendEquation", "FUNC_ADD");
-            shared_ptr <JSONObject> blendFunc(new JSONExport::JSONObject());
+            shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
             blendFunc->setString("sfactor", "SRC_ALPHA");
             blendFunc->setString("dfactor", "ONE_MINUS_SRC_ALPHA");
             states->setValue("blendFunc", blendFunc) ;
@@ -540,15 +540,15 @@ namespace JSONExport
         
         std::string passName("defaultPass");
         //if the technique has not been serialized, first thing create the default pass for this technique
-        shared_ptr <JSONExport::JSONObject> pass(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> pass(new GLTF::JSONObject());
         
-        shared_ptr <JSONExport::JSONObject> states = createStatesForTechnique(technique, context);
+        shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(technique, context);
         pass->setValue("states", states);
         
         writeShaderIfNeeded(vs, context);
         writeShaderIfNeeded(fs, context);
         
-        shared_ptr <JSONExport::JSONObject> program(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
         
         pass->setString("type", "program");
         pass->setValue("program", program);
@@ -558,12 +558,12 @@ namespace JSONExport
         
         referenceTechnique->setString("pass", passName);
         
-        shared_ptr <JSONExport::JSONObject> parameters = referenceTechnique->createObjectIfNeeded("parameters");
+        shared_ptr <GLTF::JSONObject> parameters = referenceTechnique->createObjectIfNeeded("parameters");
         
-        shared_ptr <JSONExport::JSONArray> uniforms(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> uniforms(new GLTF::JSONArray());
         program->setValue("uniforms", uniforms);
         for (unsigned int i = 0 ; i < allUniforms.size() ; i++) {
-            shared_ptr <JSONExport::JSONObject> uniform(new JSONExport::JSONObject());
+            shared_ptr <GLTF::JSONObject> uniform(new GLTF::JSONObject());
             std::string symbol = allUniforms[i];
             
             uniform->setString("symbol", symbol);
@@ -579,10 +579,10 @@ namespace JSONExport
             uniform->setString("type", typeForUniform(symbol));
         }
         
-        shared_ptr <JSONExport::JSONArray> attributes(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> attributes(new GLTF::JSONArray());
         program->setValue("attributes", attributes);
         for (unsigned int i = 0 ; i < allAttributes.size() ; i++) {
-            shared_ptr <JSONExport::JSONObject> attribute(new JSONExport::JSONObject());
+            shared_ptr <GLTF::JSONObject> attribute(new GLTF::JSONObject());
             std::string semantic;
             
             std::string symbol = allAttributes[i];
@@ -607,7 +607,7 @@ namespace JSONExport
             attributes->appendValue(attribute);
         }
         
-        shared_ptr <JSONExport::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
+        shared_ptr <GLTF::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
         
         passes->setValue(passName, pass);
         

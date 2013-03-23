@@ -24,19 +24,19 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport 
+namespace GLTF 
 {
     //-- Serializers
 
-    shared_ptr <JSONExport::JSONObject> serializeBuffer(JSONBuffer* buffer, void *context)
+    shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, void *context)
     {
-        shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
         
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
         bufferObject->setString("path", buffer->getID());
@@ -44,9 +44,9 @@ namespace JSONExport
         return bufferObject;
     }
     
-    shared_ptr <JSONExport::JSONObject> serializeBufferView(JSONBufferView* bufferView, void *context)
+    shared_ptr <GLTF::JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context)
     {
-        shared_ptr <JSONExport::JSONObject> bufferObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
         
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)bufferView->getByteLength());
         bufferObject->setUnsignedInt32("byteOffset", (unsigned int)bufferView->getByteOffset());
@@ -56,10 +56,10 @@ namespace JSONExport
     }
 
     
-    shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context)
+    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context)
     {
-        shared_ptr <JSONExport::JSONObject> effectObject(new JSONExport::JSONObject());
-        shared_ptr <JSONExport::JSONArray> colorObject(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
+        shared_ptr <GLTF::JSONArray> colorObject(new GLTF::JSONArray());
         
         effectObject->setString("technique", effect->getTechniqueID());
         effectObject->setString("name", effect->getName());
@@ -68,18 +68,18 @@ namespace JSONExport
         return effectObject;
     }
     
-    shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context)
+    shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
     {
-        shared_ptr <JSONExport::JSONObject> meshObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> meshObject(new GLTF::JSONObject());
         
         meshObject->setString("name", mesh->getName());
         
         //primitives
-        shared_ptr <JSONExport::JSONArray> primitivesArray(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
         meshObject->setValue("primitives", primitivesArray);
         
         //accessors
-        shared_ptr <JSONExport::JSONObject> accessorsObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> accessorsObject(new GLTF::JSONObject());
         meshObject->setValue("attributes", accessorsObject);
         
         shared_ptr <AccessorVector> allAccessors = mesh->accessors();
@@ -88,33 +88,33 @@ namespace JSONExport
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             
-            shared_ptr<JSONExport::JSONPrimitive> primitive = primitives[i];
-            shared_ptr <JSONExport::JSONIndices> uniqueIndices =  primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
+            shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
             
             void *primitiveContext[2];
             
             primitiveContext[0] = mesh;
             primitiveContext[1] = context;
             
-            shared_ptr <JSONExport::JSONObject> primitiveObject = serializePrimitive(primitive.get(), primitiveContext);
+            shared_ptr <GLTF::JSONObject> primitiveObject = serializePrimitive(primitive.get(), primitiveContext);
             
             primitivesArray->appendValue(primitiveObject);
         }
         
-        vector <JSONExport::Semantic> allSemantics = mesh->allSemantics();
+        vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            JSONExport::Semantic semantic = allSemantics[i];
+            GLTF::Semantic semantic = allSemantics[i];
             
-            JSONExport::IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            JSONExport::IndexSetToAccessorHashmap& indexSetToAccessor = mesh->getAccessorsForSemantic(semantic);
+            GLTF::IndexSetToAccessorHashmap::const_iterator accessorIterator;
+            GLTF::IndexSetToAccessorHashmap& indexSetToAccessor = mesh->getAccessorsForSemantic(semantic);
             
             //FIXME: consider turn this search into a method for mesh
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> accessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> accessor = (*accessorIterator).second;
                 
-                shared_ptr <JSONExport::JSONObject> accessorObject = serializeAccessor(accessor.get(), context);
+                shared_ptr <GLTF::JSONObject> accessorObject = serializeAccessor(accessor.get(), context);
                 
                 accessorsObject->setValue(accessor->getID(), accessorObject);
             }
@@ -123,7 +123,7 @@ namespace JSONExport
         return meshObject;
     }
     
-    shared_ptr <JSONExport::JSONObject> serializeAccessor(JSONAccessor* accessor, void *context)
+    shared_ptr <GLTF::JSONObject> serializeAccessor(GLTFAccessor* accessor, void *context)
     {
         shared_ptr <JSONObject> accessorObject = shared_ptr<JSONObject>(new JSONObject());
         
@@ -131,28 +131,28 @@ namespace JSONExport
         accessorObject->setUnsignedInt32("byteOffset", (unsigned int)accessor->getByteOffset());
         accessorObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)accessor->getElementsPerVertexAttribute());
         accessorObject->setUnsignedInt32("count", (unsigned int)accessor->getCount());
-        accessorObject->setString("componentType", JSONUtils::getStringForGLType(accessor->getComponentType()));
+        accessorObject->setString("componentType", GLTFUtils::getStringForGLType(accessor->getComponentType()));
         
         void** buffers = (void**)context;
-        JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[0] : accessor->getBufferView().get();
+        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : accessor->getBufferView().get();
 
         accessorObject->setString("bufferView", bufferView->getID());
         
         const double* min = accessor->getMin();
         if (min) {
-            shared_ptr <JSONExport::JSONArray> minArray(new JSONExport::JSONArray());
+            shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
             accessorObject->setValue("min", minArray);
             for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
-                minArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(min[i])));
+                minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
             }
         }
         
         const double* max = accessor->getMax();
         if (max) {
-            shared_ptr <JSONExport::JSONArray> maxArray(new JSONExport::JSONArray());
+            shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
             accessorObject->setValue("max", maxArray);
             for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
-                maxArray->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(max[i])));
+                maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
             }
         }
         
@@ -160,14 +160,14 @@ namespace JSONExport
     }
     
     
-    shared_ptr <JSONExport::JSONObject> serializeIndices(JSONIndices* indices, void *context)
+    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context)
     {
-        shared_ptr <JSONExport::JSONObject> indicesObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> indicesObject(new GLTF::JSONObject());
         void** buffers = (void**)context;
         
-        JSONBufferView *bufferView = context ? (JSONBufferView*)buffers[1] : indices->getBufferView().get();
+        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[1] : indices->getBufferView().get();
         
-        indicesObject->setString("type", JSONUtils::getStringForGLType(JSONExport::UNSIGNED_SHORT));
+        indicesObject->setString("type", GLTFUtils::getStringForGLType(GLTF::UNSIGNED_SHORT));
         indicesObject->setString("bufferView", bufferView->getID());
         indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
         indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
@@ -175,79 +175,79 @@ namespace JSONExport
         return indicesObject;
     }
     
-    shared_ptr <JSONExport::JSONObject> serializePrimitive(JSONPrimitive* primitive, void *context)
+    shared_ptr <GLTF::JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context)
     {
         void** primitiveContext = (void**)context;
-        shared_ptr <JSONExport::JSONObject> primitiveObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> primitiveObject(new GLTF::JSONObject());
         
-        JSONMesh* mesh = (JSONMesh*)primitiveContext[0];
+        GLTFMesh* mesh = (GLTFMesh*)primitiveContext[0];
         
         primitiveObject->setString("primitive", primitive->getType());
         primitiveObject->setString("material", primitive->getMaterialID());
         
-        shared_ptr <JSONExport::JSONObject> semantics(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
         primitiveObject->setValue("semantics", semantics);
         
         size_t count = primitive->getIndicesInfosCount();
         for (size_t j = 0 ; j < count ; j++) {
-            JSONExport::Semantic semantic = primitive->getSemanticAtIndex(j);
+            GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
             
-            std::string semanticAndSet = JSONUtils::getStringForSemantic(semantic);
+            std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
             
             unsigned int indexOfSet = 0;
             if (mesh->getAccessorsForSemantic(semantic).size() > 1) {
                 indexOfSet = primitive->getIndexOfSetAtIndex(j);
-                semanticAndSet += "_" + JSONUtils::toString(indexOfSet);
+                semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
             }
             semantics->setString(semanticAndSet,
                                      mesh->getAccessorsForSemantic(semantic)[indexOfSet]->getID());
         }
         
-        shared_ptr <JSONExport::JSONIndices> uniqueIndices = primitive->getUniqueIndices();
-        shared_ptr <JSONExport::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), primitiveContext[1]);
+        shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
+        shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), primitiveContext[1]);
         primitiveObject->setValue("indices", serializedIndices);
         
         return primitiveObject;
     }
     
-    shared_ptr <JSONExport::JSONValue> serializeVec3(double x,double y, double z) {
-        shared_ptr <JSONExport::JSONArray> vec3(new JSONExport::JSONArray());
+    shared_ptr <GLTF::JSONValue> serializeVec3(double x,double y, double z) {
+        shared_ptr <GLTF::JSONArray> vec3(new GLTF::JSONArray());
         
-        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(x)));
-        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(y)));
-        vec3->appendValue(shared_ptr <JSONExport::JSONNumber> (new JSONExport::JSONNumber(z)));
+        vec3->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(x)));
+        vec3->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(y)));
+        vec3->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(z)));
         
         return vec3;
     }
 
     //-- Writer
     
-    JSONWriter::JSONWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer):
+    GLTFWriter::GLTFWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer):
     _writer(writer)
     {
     }
     
-    JSONWriter::JSONWriter():
+    GLTFWriter::GLTFWriter():
     _writer(0)
     {
     }
     
-    JSONWriter::~JSONWriter()
+    GLTFWriter::~GLTFWriter()
     {
     }
     
-    void JSONWriter::setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer)
+    void GLTFWriter::setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer)
     {
         this->_writer = writer;
     }
     
-    rapidjson::PrettyWriter <rapidjson::FileStream>* JSONWriter::getWriter()
+    rapidjson::PrettyWriter <rapidjson::FileStream>* GLTFWriter::getWriter()
     {
         return this->_writer;
     }
     
     //base
-    void JSONWriter::writeArray(JSONArray* array, void *context)
+    void GLTFWriter::writeArray(JSONArray* array, void *context)
     {
         this->_writer->StartArray();
         
@@ -260,7 +260,7 @@ namespace JSONExport
         this->_writer->EndArray();
     }
     
-    void JSONWriter::writeObject(JSONObject* object, void *context)
+    void GLTFWriter::writeObject(JSONObject* object, void *context)
     {
         this->_writer->StartObject(); 
 
@@ -278,7 +278,7 @@ namespace JSONExport
         this->_writer->EndObject(); 
     }
     
-    void JSONWriter::writeNumber(JSONNumber* number, void *context)
+    void GLTFWriter::writeNumber(JSONNumber* number, void *context)
     {
         JSONNumber::JSONNumberType type = number->getType();
         
@@ -307,24 +307,24 @@ namespace JSONExport
         }
     }
         
-    void JSONWriter::writeString(JSONString* str, void *context)
+    void GLTFWriter::writeString(JSONString* str, void *context)
     {
         this->_writer->String(str->getCString());
     }
     
-    void JSONWriter::write(JSONValue* value, void* context)
+    void GLTFWriter::write(JSONValue* value, void* context)
     {
         switch (value->getType()) {
-            case JSONExport::NUMBER:
+            case GLTF::NUMBER:
                 this->writeNumber((JSONNumber*)value, context);
                 break;
-            case JSONExport::OBJECT:
+            case GLTF::OBJECT:
                 this->writeObject((JSONObject*)value, context);
                 break;
-            case JSONExport::ARRAY:
+            case GLTF::ARRAY:
                 this->writeArray((JSONArray*)value, context);
                 break;
-            case JSONExport::STRING:
+            case GLTF::STRING:
                 this->writeString((JSONString*)value, context);
                 break;
             default:

@@ -4,7 +4,7 @@ project(COLLADA2GLTF)
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
 
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSONExport)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/rapidjson/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
@@ -27,37 +27,37 @@ endif()
 add_subdirectory(dependencies/OpenCOLLADA)
 
 add_executable(collada2gltf main.cpp 
-    DAE2JSONWriter.cpp
-    JSONExport/JSONAccessor.cpp
-    JSONExport/JSONArray.cpp
-    JSONExport/JSONBuffer.cpp
-    JSONExport/JSONEffect.cpp
-    JSONExport/JSONIndices.cpp
-    JSONExport/JSONMesh.cpp
-    JSONExport/JSONNumber.cpp
-    JSONExport/JSONObject.cpp
-    JSONExport/JSONPrimitive.cpp
-    JSONExport/JSONString.cpp
-    JSONExport/JSONUtils.cpp
-    JSONExport/JSONValue.cpp
-    JSONExport/JSONWriter.cpp
+    DAE2GLTFWriter.cpp
+    GLTF/GLTFAccessor.cpp
+    GLTF/JSONArray.cpp
+    GLTF/GLTFBuffer.cpp
+    GLTF/GLTFEffect.cpp
+    GLTF/GLTFIndices.cpp
+    GLTF/GLTFMesh.cpp
+    GLTF/JSONNumber.cpp
+    GLTF/JSONObject.cpp
+    GLTF/GLTFPrimitive.cpp
+    GLTF/JSONString.cpp
+    GLTF/GLTFUtils.cpp
+    GLTF/JSONValue.cpp
+    GLTF/GLTFWriter.cpp
     GLTFConverterContext.cpp
-    DAE2JSONWriter.h
-    JSONExport/JSONExport.h
-    JSONExport/JSONExportTypesAndConstants.h
-    JSONExport/JSONAccessor.h
-    JSONExport/JSONArray.h
-    JSONExport/JSONBuffer.h
-    JSONExport/JSONEffect.h
-    JSONExport/JSONIndices.h
-    JSONExport/JSONMesh.h
-    JSONExport/JSONNumber.h
-    JSONExport/JSONObject.h
-    JSONExport/JSONPrimitive.h
-    JSONExport/JSONString.h
-    JSONExport/JSONUtils.h
-    JSONExport/JSONValue.h
-    JSONExport/JSONWriter.h
+    DAE2GLTFWriter.h
+    GLTF/GLTF.h
+    GLTF/GLTFTypesAndConstants.h
+    GLTF/GLTFAccessor.h
+    GLTF/JSONArray.h
+    GLTF/GLTFBuffer.h
+    GLTF/GLTFEffect.h
+    GLTF/GLTFIndices.h
+    GLTF/GLTFMesh.h
+    GLTF/JSONNumber.h
+    GLTF/JSONObject.h
+    GLTF/GLTFPrimitive.h
+    GLTF/JSONString.h
+    GLTF/GLTFUtils.h
+    GLTF/JSONValue.h
+    GLTF/GLTFWriter.h
     GLTFConverterContext.h
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp

@@ -24,30 +24,38 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_ARRAY_H__
-#define __JSON_ARRAY_H__
+#include "GLTF.h"
 
-namespace JSONExport 
+namespace GLTF 
 {
-    class JSONArray : public JSONValue {
-    private:
+    JSONString::JSONString():
+    JSONValue(GLTF::STRING)
+    {
+    }
 
-    public:        
-        
-        JSONArray();
-        virtual ~JSONArray();
+    JSONString::JSONString(const std::string& str):
+    JSONValue(GLTF::STRING)
+    {
+        this->_str = str;
+    }
 
-        virtual void write(JSONWriter *writer, void* context = 0);
-
-        virtual void appendValue(shared_ptr <JSONValue>);
-        
-        std::vector <shared_ptr <JSONValue> > values();
-
-    private:
-        std::vector <shared_ptr <JSONValue> > _values;
-    };
-
+    JSONString::~JSONString()
+    {
+    }        
+    
+    void JSONString::write(GLTFWriter* writer, void* context)
+    {        
+        writer->writeString(this, context);
+    }
+    
+    const char* JSONString::getCString()
+    {
+        return this->_str.c_str();
+    }
+    
+    const std::string& JSONString::getString()
+    {
+        return this->_str;
+    }
+    
 }
-
-
-#endif

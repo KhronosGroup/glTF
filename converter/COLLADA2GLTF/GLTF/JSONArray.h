@@ -24,42 +24,27 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_WRITER_H__
-#define __JSON_WRITER_H__
+#ifndef __JSON_ARRAY_H__
+#define __JSON_ARRAY_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
-    shared_ptr <JSONExport::JSONValue> serializeVec3(double x,double y, double z);
-    shared_ptr <JSONExport::JSONObject> serializeBuffer(JSONBuffer* buffer, void *context);
-    shared_ptr <JSONExport::JSONObject> serializeBufferView(JSONBufferView* bufferView, void *context);
-    shared_ptr <JSONExport::JSONObject> serializeEffect(JSONEffect* effect, void *context);
-    shared_ptr <JSONExport::JSONObject> serializeMesh(JSONMesh* mesh, void *context);
-    shared_ptr <JSONExport::JSONObject> serializeAccessor(JSONAccessor* accessor, void *context);
-    shared_ptr <JSONExport::JSONObject> serializeIndices(JSONIndices* indices, void *context);
-    shared_ptr <JSONExport::JSONObject> serializePrimitive(JSONPrimitive* primitive, void *context);
-    
-    class JSONWriter {
+    class JSONArray : public JSONValue {
     private:
-        
+
     public:        
         
-        JSONWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
-        JSONWriter();
-        virtual ~JSONWriter();
-        
-        void setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
-        rapidjson::PrettyWriter <rapidjson::FileStream>* getWriter();
+        JSONArray();
+        virtual ~JSONArray();
 
-        //base
-        void writeArray(JSONArray* array, void *context);
-        void writeObject(JSONObject* object, void *context);
-        void writeNumber(JSONNumber* number, void *context);
-        void writeString(JSONString* str, void *context);        
-        void write(JSONValue* value, void *context);
+        virtual void write(GLTFWriter *writer, void* context = 0);
+
+        virtual void appendValue(shared_ptr <JSONValue>);
+        
+        std::vector <shared_ptr <JSONValue> > values();
 
     private:
-
-        rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
+        std::vector <shared_ptr <JSONValue> > _values;
     };
 
 }

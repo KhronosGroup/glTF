@@ -22,16 +22,16 @@
 #include "COLLADAFWImage.h"
 #include "COLLADABUURI.h"
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 #include "GLTFConverterContext.h"
 
-namespace JSONExport
+namespace GLTF
 {
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId)
     {
         std::string id = "";
-        id += type + "_" + JSONExport::JSONUtils::toString(uniqueId.getObjectId());
+        id += type + "_" + GLTF::GLTFUtils::toString(uniqueId.getObjectId());
         return id;
     }
 

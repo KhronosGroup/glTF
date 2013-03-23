@@ -24,47 +24,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_NUMBER_H__
-#define __JSON_NUMBER_H__
+#include "GLTF.h"
 
-namespace JSONExport 
+namespace GLTF 
 {
-    class JSONNumber : public JSONValue {
-    private:
-        JSONNumber():JSONValue(JSONExport::NUMBER), _type(NOT_A_NUMBER) {}
-        
-    public:        
-        typedef enum 
-        {
-            NOT_A_NUMBER = 0,
-            UNSIGNED_INT32 = 1,
-            INT32 = 2,
-            DOUBLE = 3,
-            BOOL = 4
-        } JSONNumberType;
-                
-        explicit JSONNumber(unsigned int value);
-        explicit JSONNumber(int value);
-        explicit JSONNumber(double value);
-        explicit JSONNumber(bool value);
-
-        virtual ~JSONNumber();
-        
-        virtual void write(JSONWriter* writer, void* context = 0);
-        
-        unsigned int getUnsignedInt32();
-        int getInt32();
-        double getDouble();
-        bool getBool();
-        
-        JSONNumber::JSONNumberType getType();
-
-    private:
-        void* _value;
-        JSONNumberType _type;
-    };
-
+    JSONValue::JSONValue(JSONValueType type) 
+    {
+        this->_type = type;
+    }
+    
+    JSONValueType JSONValue::getType() 
+    {
+        return this->_type;
+    }    
+    
+    void JSONValue::write(GLTFWriter* writer, void* context)
+    {
+        writer->write(this, context);
+    }
+    
+    
 }
-
-
-#endif

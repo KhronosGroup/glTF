@@ -24,57 +24,51 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#ifndef __JSON_MESH_H__
+#define __JSON_MESH_H__
 
-using namespace std::tr1;
-using namespace std;
-
-namespace JSONExport 
-{        
-
-    void JSONIndices::_indicesCommonInit() 
-    {
-    }
+namespace GLTF 
+{
+    class GLTFMesh;
     
-    // this constructor is private and typically won't be called
-    JSONIndices::JSONIndices() {}
+    shared_ptr <GLTFMesh> CreateUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
     
-    JSONIndices::JSONIndices(shared_ptr <JSONBufferView> bufferView,
-                             size_t count):
-    _count(count),
-    _byteOffset(0),
-    _bufferView(bufferView)
-    {
-        this->_indicesCommonInit();
-    }
-
-    JSONIndices::~JSONIndices()
-    {
-    }
+    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToAccessorHashmap;
+    typedef std::map<GLTF::Semantic , IndexSetToAccessorHashmap > SemanticToAccessorHashmap;
     
-    size_t const JSONIndices::getCount()
-    {
-        return this->_count;
-    }
+    class GLTFMesh {
+    public:
+        GLTFMesh();
+        GLTFMesh(const GLTFMesh &mesh);
+        
+        virtual ~GLTFMesh();
+        
+        shared_ptr <AccessorVector> accessors();
+        
+        bool appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive);
+        
+        void setAccessorsForSemantic(GLTF::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap);        
+        IndexSetToAccessorHashmap& getAccessorsForSemantic(Semantic semantic); 
+        
+        std::vector <GLTF::Semantic> allSemantics();
                 
-    shared_ptr <JSONBufferView>  const JSONIndices::getBufferView()
-    {
-        return this->_bufferView;
-    }
-    
-    const void JSONIndices::setBufferView(shared_ptr <JSONBufferView> bufferView)
-    {
-        this->_bufferView = bufferView;
-    }
+        std::string getID();
+        void setID(std::string ID);
+        
+        std::string getName();
+        void setName(std::string name);
+        
+        PrimitiveVector const getPrimitives();
 
-    void JSONIndices::setByteOffset(size_t byteOffset)
-    {
-        this->_byteOffset = byteOffset;
-    }
-    
-    size_t JSONIndices::getByteOffset()
-    {
-        return this->_byteOffset;
-    }
-            
+        bool const writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
+        
+    private:
+        PrimitiveVector _primitives;
+        SemanticToAccessorHashmap _semanticToAccessors;
+        std::string _ID, _name;
+    };    
+
 }
+
+
+#endif

@@ -28,7 +28,7 @@
 
 #include <iostream>
 
-#include "DAE2JSONWriter.h"
+#include "DAE2GLTFWriter.h"
 #include "GLTFConverterContext.h"
 #include "assert.h"
 
@@ -58,7 +58,7 @@ static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
     return pathDir + fileBase + ".json";
 }
 
-static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], JSONExport::GLTFConverterContext *converterArgs)
+static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], GLTF::GLTFConverterContext *converterArgs)
 {
     assert(converterArgs);
         
@@ -101,7 +101,7 @@ static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], JSONExport
 
 
 int main (int argc, char * const argv[]) {
-    JSONExport::GLTFConverterContext converterArgs;
+    GLTF::GLTFConverterContext converterArgs;
     
     printf("COLLADA2GLTF [pre-alpha] 0.1\n");
     if (__SetupCOLLADA2GLTFContext( argc, argv, &converterArgs)) {
@@ -114,7 +114,7 @@ int main (int argc, char * const argv[]) {
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
             printf("converting:%s ... as %s \n",converterArgs.inputFilePath.c_str(), converterArgs.outputFilePath.c_str());
-            JSONExport::DAE2JSONWriter* writer = new JSONExport::DAE2JSONWriter(converterArgs, &jsonWriter);
+            GLTF::DAE2GLTFWriter* writer = new GLTF::DAE2GLTFWriter(converterArgs, &jsonWriter);
             writer->write();
             printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT

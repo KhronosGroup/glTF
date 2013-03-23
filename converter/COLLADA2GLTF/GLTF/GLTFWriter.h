@@ -24,9 +24,45 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#ifndef __JSON_WRITER_H__
+#define __JSON_WRITER_H__
 
-namespace JSONExport 
+namespace GLTF 
 {
+    shared_ptr <GLTF::JSONValue> serializeVec3(double x,double y, double z);
+    shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, void *context);
+    shared_ptr <GLTF::JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
+    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context);
+    shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context);
+    shared_ptr <GLTF::JSONObject> serializeAccessor(GLTFAccessor* accessor, void *context);
+    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context);
+    shared_ptr <GLTF::JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
+    
+    class GLTFWriter {
+    private:
+        
+    public:        
+        
+        GLTFWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
+        GLTFWriter();
+        virtual ~GLTFWriter();
+        
+        void setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
+        rapidjson::PrettyWriter <rapidjson::FileStream>* getWriter();
+
+        //base
+        void writeArray(JSONArray* array, void *context);
+        void writeObject(JSONObject* object, void *context);
+        void writeNumber(JSONNumber* number, void *context);
+        void writeString(JSONString* str, void *context);        
+        void write(JSONValue* value, void *context);
+
+    private:
+
+        rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
+    };
 
 }
+
+
+#endif

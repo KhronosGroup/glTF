@@ -1,4 +1,4 @@
-#include "JSONExport.h"
+#include "GLTF.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "geometryHelpers.h"
@@ -7,7 +7,7 @@ using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport
+namespace GLTF
 {
     unsigned int* createTrianglesFromPolylist(unsigned int *verticesCount /* array containing the count for each array of indices per face */,
                                               unsigned int *polylist /* array containing the indices of a face */,
@@ -50,18 +50,18 @@ namespace JSONExport
         return triangleIndices;
     }
     
-    std::string _KeyWithSemanticAndSet(JSONExport::Semantic semantic, unsigned int indexSet)
+    std::string _KeyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet)
     {
         std::string semanticIndexSetKey = "";
         semanticIndexSetKey += "semantic";
-        semanticIndexSetKey += JSONUtils::toString(semantic);
+        semanticIndexSetKey += GLTFUtils::toString(semantic);
         semanticIndexSetKey += ":indexSet";
-        semanticIndexSetKey += JSONUtils::toString(indexSet);
+        semanticIndexSetKey += GLTFUtils::toString(indexSet);
         
         return semanticIndexSetKey;
     }
     
-    //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
+    //---- GLTFPrimitiveRemapInfos -------------------------------------------------------------
     
     // FIXME: put better comment here
     //RemappedMeshIndexes[0] = count ;  RemappedMeshIndexes[1+] original indexes (used for hash code)
@@ -100,12 +100,12 @@ namespace JSONExport
 
     typedef unordered_map<unsigned int ,unsigned int> IndicesMap;
     
-    //FIXME: this could be just an intermediate anonymous(no id) JSONBuffer
-    class JSONPrimitiveRemapInfos
+    //FIXME: this could be just an intermediate anonymous(no id) GLTFBuffer
+    class GLTFPrimitiveRemapInfos
     {
     public:
-        JSONPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount, unsigned int *originalCountAndIndexes);
-        virtual ~JSONPrimitiveRemapInfos();
+        GLTFPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount, unsigned int *originalCountAndIndexes);
+        virtual ~GLTFPrimitiveRemapInfos();
         
         unsigned int generatedIndicesCount();
         unsigned int* generatedIndices();
@@ -117,15 +117,15 @@ namespace JSONExport
         unsigned int* _originalCountAndIndexes;
     };
     
-    //---- JSONPrimitiveRemapInfos -------------------------------------------------------------
-    JSONPrimitiveRemapInfos::JSONPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount, unsigned int *originalCountAndIndexes):
+    //---- GLTFPrimitiveRemapInfos -------------------------------------------------------------
+    GLTFPrimitiveRemapInfos::GLTFPrimitiveRemapInfos(unsigned int* generatedIndices, unsigned int generatedIndicesCount, unsigned int *originalCountAndIndexes):
     _generatedIndicesCount(generatedIndicesCount),
     _generatedIndices(generatedIndices),
     _originalCountAndIndexes(originalCountAndIndexes)
     {
     }
     
-    JSONPrimitiveRemapInfos::~JSONPrimitiveRemapInfos()
+    GLTFPrimitiveRemapInfos::~GLTFPrimitiveRemapInfos()
     {
         if (this->_generatedIndices)
             free(this->_generatedIndices);
@@ -133,17 +133,17 @@ namespace JSONExport
             free(this->_originalCountAndIndexes);
     }
     
-    unsigned int JSONPrimitiveRemapInfos::generatedIndicesCount()
+    unsigned int GLTFPrimitiveRemapInfos::generatedIndicesCount()
     {
         return _generatedIndicesCount;
     }
     
-    unsigned int* JSONPrimitiveRemapInfos::generatedIndices()
+    unsigned int* GLTFPrimitiveRemapInfos::generatedIndices()
     {
         return _generatedIndices;
     }
     
-    unsigned int* JSONPrimitiveRemapInfos::originalCountAndIndexes()
+    unsigned int* GLTFPrimitiveRemapInfos::originalCountAndIndexes()
     {
         return _originalCountAndIndexes;
     }
@@ -167,8 +167,8 @@ namespace JSONExport
         for (size_t accessorIndex = 0 ; accessorIndex < count; accessorIndex++) {
             AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
             
-            shared_ptr <JSONExport::JSONAccessor> remappedAccessor = allRemappedAccessors[indicesInRemapping[accessorIndex]];
-            shared_ptr <JSONExport::JSONAccessor> originalAccessor = allOriginalAccessors[indicesInRemapping[accessorIndex]];
+            shared_ptr <GLTF::GLTFAccessor> remappedAccessor = allRemappedAccessors[indicesInRemapping[accessorIndex]];
+            shared_ptr <GLTF::GLTFAccessor> originalAccessor = allOriginalAccessors[indicesInRemapping[accessorIndex]];
             
             if (originalAccessor->getVertexAttributeByteLength() != remappedAccessor->getVertexAttributeByteLength()) {
                 // FIXME : report error
@@ -188,12 +188,12 @@ namespace JSONExport
         return allBufferInfos;
     }
     
-    bool __RemapPrimitiveVertices(shared_ptr<JSONExport::JSONPrimitive> primitive,
-                                  std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+    bool __RemapPrimitiveVertices(shared_ptr<GLTF::GLTFPrimitive> primitive,
+                                  std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices,
                                   AccessorVector allOriginalAccessors,
                                   AccessorVector allRemappedAccessors,
                                   unsigned int* indicesInRemapping,
-                                  shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos)
+                                  shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos)
     {
         size_t indicesSize = allIndices.size();
         if (allOriginalAccessors.size() < indicesSize) {
@@ -237,8 +237,8 @@ namespace JSONExport
     
     
     
-    shared_ptr<JSONExport::JSONPrimitiveRemapInfos> __BuildPrimitiveUniqueIndexes(shared_ptr<JSONExport::JSONPrimitive> primitive,
-                                                                                  std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices,
+    shared_ptr<GLTF::GLTFPrimitiveRemapInfos> __BuildPrimitiveUniqueIndexes(shared_ptr<GLTF::GLTFPrimitive> primitive,
+                                                                                  std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices,
                                                                                   RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
                                                                                   unsigned int* indicesInRemapping,
                                                                                   unsigned int startIndex,
@@ -278,10 +278,10 @@ namespace JSONExport
         }
         
         endIndex = currentIndex;
-        shared_ptr <JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos(new JSONExport::JSONPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
-        shared_ptr <JSONExport::JSONBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexIndicesCount * sizeof(unsigned int), true);
+        shared_ptr <GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos(new GLTF::GLTFPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
+        shared_ptr <GLTF::GLTFBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexIndicesCount * sizeof(unsigned int), true);
         
-        shared_ptr <JSONExport::JSONIndices> indices = shared_ptr <JSONExport::JSONIndices> (new JSONExport::JSONIndices(indicesBufferView, vertexIndicesCount));
+        shared_ptr <GLTF::GLTFIndices> indices = shared_ptr <GLTF::GLTFIndices> (new GLTF::GLTFIndices(indicesBufferView, vertexIndicesCount));
         
         primitive->setIndices(indices);
         
@@ -289,11 +289,11 @@ namespace JSONExport
     }
     
     
-    shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
+    shared_ptr <GLTFMesh> CreateUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
     {
         AccessorVector originalAccessors;
         AccessorVector remappedAccessors;
-        shared_ptr <JSONMesh> targetMesh(new JSONMesh(*sourceMesh));
+        shared_ptr <GLTFMesh> targetMesh(new GLTFMesh(*sourceMesh));
         
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
         PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
@@ -310,7 +310,7 @@ namespace JSONExport
         
         //in originalAccessors we'll get the flattened list of all the accessors as a vector.
         //fill semanticAndSetToIndex with key: (semantic, indexSet) value: index in originalAccessors vector.
-        vector <JSONExport::Semantic> allSemantics = sourceMesh->allSemantics();
+        vector <GLTF::Semantic> allSemantics = sourceMesh->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
@@ -319,9 +319,9 @@ namespace JSONExport
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
-                JSONExport::Semantic semantic = allSemantics[i];
+                GLTF::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)originalAccessors.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
@@ -332,10 +332,10 @@ namespace JSONExport
         
         maxVertexAttributes = (unsigned int)originalAccessors.size();
         
-        vector <shared_ptr<JSONExport::JSONPrimitiveRemapInfos> > allPrimitiveRemapInfos;
+        vector <shared_ptr<GLTF::GLTFPrimitiveRemapInfos> > allPrimitiveRemapInfos;
         
         //build a array that maps the accessors that the indices points to with the index of the indice.
-        JSONExport::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
+        GLTF::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
             shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
             IndicesVector *allIndices = allIndicesSharedPtr.get();
@@ -344,14 +344,14 @@ namespace JSONExport
             
             VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
-                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
+                GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
             }
             
-            shared_ptr<JSONExport::JSONPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitives[i], *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
+            shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitives[i], *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
             
             free(indicesInRemapping);
             
@@ -378,15 +378,15 @@ namespace JSONExport
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONExport::JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
                 
                 size_t sourceSize = vertexCount * selectedAccessor->getVertexAttributeByteLength();
                 void* sourceData = malloc(sourceSize);
                 
-                shared_ptr <JSONBufferView> referenceBufferView = selectedAccessor->getBufferView();
-                shared_ptr <JSONBufferView> remappedBufferView = createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), sourceData, 0, sourceSize, true);
+                shared_ptr <GLTFBufferView> referenceBufferView = selectedAccessor->getBufferView();
+                shared_ptr <GLTFBufferView> remappedBufferView = createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), sourceData, 0, sourceSize, true);
 
-                shared_ptr <JSONAccessor> remappedAccessor(new JSONAccessor(selectedAccessor.get()));
+                shared_ptr <GLTFAccessor> remappedAccessor(new GLTFAccessor(selectedAccessor.get()));
                 remappedAccessor->setBufferView(remappedBufferView);
                 remappedAccessor->setCount(vertexCount);
                 
@@ -409,7 +409,7 @@ namespace JSONExport
             VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
             
             for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
-                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
+                GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
@@ -437,7 +437,7 @@ namespace JSONExport
     
     class SubMeshContext {
     public:
-        shared_ptr <JSONMesh> targetMesh;
+        shared_ptr <GLTFMesh> targetMesh;
         //For each sub mesh being built, maintain 2 maps,
         //with key:indice value: remapped indice
         IndicesMap indexToRemappedIndex;
@@ -446,7 +446,7 @@ namespace JSONExport
     SubMeshContext* __CreateSubMeshContext()
     {
         SubMeshContext *subMesh = new SubMeshContext();
-        shared_ptr <JSONMesh> targetMesh = shared_ptr <JSONMesh> (new JSONMesh());
+        shared_ptr <GLTFMesh> targetMesh = shared_ptr <GLTFMesh> (new GLTFMesh());
         subMesh->targetMesh = targetMesh;
         
         return subMesh;
@@ -467,7 +467,7 @@ namespace JSONExport
     }
     
     static void __RemapAccessor(void *value,
-                          JSONExport::ComponentType type,
+                          GLTF::ComponentType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,
@@ -483,11 +483,11 @@ namespace JSONExport
     }
     
     //FIXME: add suport for interleaved arrays
-    void __RemapSubMesh(SubMeshContext *subMesh, JSONMesh *sourceMesh)
+    void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
     {
         //remap the subMesh using the original mesh
         //we walk through all accessors
-        vector <JSONExport::Semantic> allSemantics = sourceMesh->allSemantics();
+        vector <GLTF::Semantic> allSemantics = sourceMesh->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
@@ -497,10 +497,10 @@ namespace JSONExport
             for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <JSONAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTFAccessor> selectedAccessor = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
                 
-                shared_ptr <JSONBufferView> referenceBufferView = selectedAccessor->getBufferView();
+                shared_ptr <GLTFBufferView> referenceBufferView = selectedAccessor->getBufferView();
                 
                 unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
                 
@@ -512,10 +512,10 @@ namespace JSONExport
                 context[1] = subMesh;
                 selectedAccessor->apply(__RemapAccessor, (void*)context);
                                         
-                shared_ptr <JSONBufferView> remappedBufferView =
+                shared_ptr <GLTFBufferView> remappedBufferView =
                 createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount, true);
                 
-                shared_ptr <JSONAccessor> remappedAccessor(new JSONExport::JSONAccessor(selectedAccessor.get()));
+                shared_ptr <GLTFAccessor> remappedAccessor(new GLTF::GLTFAccessor(selectedAccessor.get()));
                 remappedAccessor->setBufferView(remappedBufferView);
                 remappedAccessor->setCount(vertexAttributeCount);
                 
@@ -524,7 +524,7 @@ namespace JSONExport
         }
     }
     
-    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(JSONMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
+    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
     {
         bool splitNeeded = false;
         
@@ -562,8 +562,8 @@ namespace JSONExport
                 meshID += sourceMesh->getID();
                 meshName += sourceMesh->getName();
                 if (meshIndex) {
-                    meshID += "-"+ JSONUtils::toString(meshIndex);
-                    meshName += "-"+ JSONUtils::toString(meshIndex);
+                    meshID += "-"+ GLTFUtils::toString(meshIndex);
+                    meshName += "-"+ GLTFUtils::toString(meshIndex);
                 }
                 subMesh->targetMesh->setID(meshID);
                 subMesh->targetMesh->setName(meshName);
@@ -572,15 +572,15 @@ namespace JSONExport
                 meshIndex++;
             }
             
-            shared_ptr <JSONPrimitive> targetPrimitive;
+            shared_ptr <GLTFPrimitive> targetPrimitive;
             //when we are done with a primitive we mark its nextIndice with a -1
 
-            targetPrimitive = shared_ptr <JSONPrimitive> (new JSONPrimitive((*primitives[i])));
+            targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*primitives[i])));
             
             unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
             
-            shared_ptr<JSONPrimitive> &primitive = primitives[i];
-            shared_ptr<JSONIndices> indices = primitive->getIndices();
+            shared_ptr<GLTFPrimitive> &primitive = primitives[i];
+            shared_ptr<GLTFIndices> indices = primitive->getIndices();
             
             unsigned int* indicesPtr = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
             unsigned int* targetIndicesPtr = (unsigned int*)malloc(indices->getBufferView()->getBuffer()->getByteLength());
@@ -640,9 +640,9 @@ namespace JSONExport
                 //To avoid this we would need to make a smaller copy.
                 //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
                 
-                shared_ptr <JSONBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
+                shared_ptr <GLTFBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
                 
-                shared_ptr <JSONIndices> indices(new JSONIndices(targetBufferView, targetIndicesCount));
+                shared_ptr <GLTFIndices> indices(new GLTFIndices(targetBufferView, targetIndicesCount));
                 targetPrimitive->setIndices(indices);
                 
                 subMesh->targetMesh->appendPrimitive(targetPrimitive);

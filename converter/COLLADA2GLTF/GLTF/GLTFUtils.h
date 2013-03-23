@@ -29,9 +29,9 @@
 
 #include <float.h>
 
-namespace JSONExport 
+namespace GLTF 
 {    
-    class JSONUtils 
+    class GLTFUtils 
     {
     public:        
 
@@ -63,7 +63,7 @@ namespace JSONExport
             
             std::string type(typeCStr);
             type +=  separator; // FIXME: should probably not generate a "-" for a JSON output
-            type += JSONUtils::toString(generatedIDCount++);
+            type += GLTFUtils::toString(generatedIDCount++);
             if (suffix) {
                 type +=  separator;
                 type += suffix;
@@ -75,33 +75,33 @@ namespace JSONExport
         static std::string getStringForGLType(int componentType)
         {
             switch (componentType) {
-                case JSONExport::UNSIGNED_BYTE:
+                case GLTF::UNSIGNED_BYTE:
                     return "UNSIGNED_BYTE";
-                case JSONExport::SHORT:
+                case GLTF::SHORT:
                     return "SHORT";
-                case JSONExport::UNSIGNED_SHORT:
+                case GLTF::UNSIGNED_SHORT:
                     return "UNSIGNED_SHORT";
-                case JSONExport::UNSIGNED_INT:
+                case GLTF::UNSIGNED_INT:
                     return "UNSIGNED_INT";
-                case JSONExport::FIXED:
+                case GLTF::FIXED:
                     return "UNSIGNED_INT";
-                case JSONExport::FLOAT: 
+                case GLTF::FLOAT: 
                     return "FLOAT";
                 default:
                     return "UNKNOWN";
             }
         }
         
-        static std::string getStringForSemantic(JSONExport::Semantic semantic) 
+        static std::string getStringForSemantic(GLTF::Semantic semantic) 
         {
             switch (semantic) {
-                case JSONExport::POSITION:
+                case GLTF::POSITION:
                     return "POSITION";
-                case JSONExport::NORMAL:
+                case GLTF::NORMAL:
                     return "NORMAL";
-                case JSONExport::TEXCOORD:
+                case GLTF::TEXCOORD:
                     return "TEXCOORD";
-                case JSONExport::COLOR:
+                case GLTF::COLOR:
                     return "COLOR";
                 default:
                     return "UNKNOWN";
@@ -112,7 +112,7 @@ namespace JSONExport
          @param T The type of the value to convert.
          @param value The value of type @a T to convert to a string.
          */
-        //This tiny code snippet was copied from the OpenCOLLADA fmk in order to keep the JSONExport independant
+        //This tiny code snippet was copied from the OpenCOLLADA fmk in order to keep the GLTF independant
         template<class T>
         static std::string toString(const T & value)
         {

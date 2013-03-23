@@ -24,20 +24,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport 
+namespace GLTF 
 {
-    void JSONAccessor::_generateID() 
+    void GLTFAccessor::_generateID() 
     {
-        this->_ID = JSONUtils::generateIDForType("attribute");
+        this->_ID = GLTFUtils::generateIDForType("attribute");
     }
     
-    JSONAccessor::JSONAccessor(): _min(0), _max(0) 
+    GLTFAccessor::GLTFAccessor(): _min(0), _max(0) 
     {
         this->setComponentType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
@@ -47,7 +47,7 @@ namespace JSONExport
         this->setCount(0);
     }
         
-    JSONAccessor::JSONAccessor(JSONAccessor* accessor): 
+    GLTFAccessor::GLTFAccessor(GLTFAccessor* accessor): 
     _bufferView(accessor->getBufferView()), _min(0), _max(0)
     {
         assert(accessor);
@@ -60,7 +60,7 @@ namespace JSONExport
         this->setCount(accessor->getCount());
     }
         
-    JSONAccessor::~JSONAccessor()
+    GLTFAccessor::~GLTFAccessor()
     {
         if (this->_min) {
             delete [] this->_min;
@@ -70,86 +70,86 @@ namespace JSONExport
         }
     }
         
-    void JSONAccessor::setBufferView(shared_ptr <JSONBufferView> bufferView)
+    void GLTFAccessor::setBufferView(shared_ptr <GLTFBufferView> bufferView)
     {
         this->_bufferView = bufferView;
     }
         
-    shared_ptr <JSONBufferView> JSONAccessor::getBufferView()
+    shared_ptr <GLTFBufferView> GLTFAccessor::getBufferView()
     {
         return this->_bufferView;
     }
         
-    void JSONAccessor::setElementsPerVertexAttribute(size_t elementsPerVertexAttribute)
+    void GLTFAccessor::setElementsPerVertexAttribute(size_t elementsPerVertexAttribute)
     {
         this->_elementsPerVertexAttribute = elementsPerVertexAttribute;
     }
         
-    size_t JSONAccessor::getElementsPerVertexAttribute()
+    size_t GLTFAccessor::getElementsPerVertexAttribute()
     {
         return this->_elementsPerVertexAttribute;
     }
         
-    void JSONAccessor::setByteStride(size_t byteStride)
+    void GLTFAccessor::setByteStride(size_t byteStride)
     {
         this->_byteStride = byteStride;
     }
         
-    size_t JSONAccessor::getByteStride()
+    size_t GLTFAccessor::getByteStride()
     {
         return this->_byteStride;
     }
         
-    void JSONAccessor::setComponentType(ComponentType componentType)
+    void GLTFAccessor::setComponentType(ComponentType componentType)
     {
         this->_componentType = componentType;
     }
         
-    ComponentType JSONAccessor::getComponentType()
+    ComponentType GLTFAccessor::getComponentType()
     {
         return this->_componentType;
     }
         
-    void JSONAccessor::setByteOffset(size_t byteOffset)
+    void GLTFAccessor::setByteOffset(size_t byteOffset)
     {
         this->_byteOffset = byteOffset;
     }
         
-    size_t JSONAccessor::getByteOffset()
+    size_t GLTFAccessor::getByteOffset()
     {
         return this->_byteOffset;
     }
         
-    size_t JSONAccessor::getCount()
+    size_t GLTFAccessor::getCount()
     {
         return this->_count;
     }
     
-    void JSONAccessor::setCount(size_t count)
+    void GLTFAccessor::setCount(size_t count)
     {
         this->_count = count;
     }
         
-    const std::string& JSONAccessor::getID()
+    const std::string& GLTFAccessor::getID()
     {
         return this->_ID;
     }
         
-    size_t JSONAccessor::getVertexAttributeByteLength()
+    size_t GLTFAccessor::getVertexAttributeByteLength()
     {
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         ComponentType type = this->getComponentType();
         switch (type) {
-            case JSONExport::BYTE:
-            case JSONExport::UNSIGNED_BYTE:
+            case GLTF::BYTE:
+            case GLTF::UNSIGNED_BYTE:
                 return elementsPerVertexAttribute;
-            case JSONExport::SHORT:
+            case GLTF::SHORT:
                 return elementsPerVertexAttribute * sizeof(short);                    
-            case JSONExport::UNSIGNED_SHORT:
+            case GLTF::UNSIGNED_SHORT:
                 return elementsPerVertexAttribute * sizeof(unsigned short);                    
-            case JSONExport::FIXED:
+            case GLTF::FIXED:
                 return elementsPerVertexAttribute * sizeof(int);                    
-            case JSONExport::FLOAT:
+            case GLTF::FLOAT:
                 return elementsPerVertexAttribute * sizeof(float);
             default: 
                 // FIXME: report error or just log ?
@@ -160,11 +160,11 @@ namespace JSONExport
         return 0;
     }
     
-    const double* JSONAccessor::getMin() {
+    const double* GLTFAccessor::getMin() {
         return this->_min;
     }
 
-    const double* JSONAccessor::getMax() {
+    const double* GLTFAccessor::getMax() {
         return this->_max;
     }
     
@@ -182,7 +182,7 @@ namespace JSONExport
         char* bufferData = (char*)value;
 
         switch (type) {
-            case JSONExport::FLOAT: {
+            case GLTF::FLOAT: {
                 float* vector = (float*)bufferData;
                 for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
                     float value = vector[j];
@@ -200,7 +200,7 @@ namespace JSONExport
         }
     }
     
-    void JSONAccessor::computeMinMax() 
+    void GLTFAccessor::computeMinMax() 
     {
         //size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
@@ -227,12 +227,12 @@ namespace JSONExport
         apply(__ComputeMinMax, &minMaxApplierInfo);
     }
     
-    void JSONAccessor::apply(JSONAccessorApplierFunc applierFunc, void* context)
+    void GLTFAccessor::apply(GLTFAccessorApplierFunc applierFunc, void* context)
     {
         size_t byteStride = this->getByteStride();
         size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
         size_t vertexAttributeByteSize = this->getVertexAttributeByteLength();
-        shared_ptr <JSONExport::JSONBufferView> bufferView = this->getBufferView();
+        shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
         ComponentType type = this->getComponentType();
         unsigned char* bufferData = (unsigned char*)bufferView->getBufferDataByApplyingOffset();
 
@@ -241,7 +241,7 @@ namespace JSONExport
         }
     }
     
-    bool JSONAccessor::matchesLayout(JSONAccessor* accessor)
+    bool GLTFAccessor::matchesLayout(GLTFAccessor* accessor)
     {
         assert(accessor);
         

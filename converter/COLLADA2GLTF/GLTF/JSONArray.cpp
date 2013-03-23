@@ -24,28 +24,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_VALUE_H__
-#define __JSON_VALUE_H__
+#include "GLTF.h"
 
-namespace JSONExport 
+using namespace rapidjson;
+using namespace std::tr1;
+using namespace std;
+
+namespace GLTF 
 {
-    class JSONWriter;
-    class JSONValue {
-    private:
+    
+    JSONArray::JSONArray():
+    JSONValue(GLTF::ARRAY)
+    {
+    }
+        
+    JSONArray::~JSONArray()
+    {
+    }        
 
-    public:        
-                        
-        JSONValue(JSONValueType type);
-        
-        virtual void write(JSONWriter* , void* context = 0);
-                
-        JSONValueType getType();
-        
-    private:
-        JSONValueType _type;
-    };
+    void JSONArray::write(GLTFWriter* writer, void* context)
+    {        
+        writer->writeArray(this, context);
+    }
+    
+    vector <shared_ptr <JSONValue> > JSONArray::values()
+    {
+        return this->_values;
+    }
+    
+    void JSONArray::appendValue(shared_ptr <JSONValue> value)
+    {
+        this->_values.push_back(value);
+    }
 
 }
-
-
-#endif

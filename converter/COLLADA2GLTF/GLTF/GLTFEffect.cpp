@@ -24,51 +24,54 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_MESH_H__
-#define __JSON_MESH_H__
+#include "GLTF.h"
 
-namespace JSONExport 
+using namespace rapidjson;
+
+namespace GLTF 
 {
-    class JSONMesh;
-    
-    shared_ptr <JSONMesh> CreateUnifiedIndexesMeshFromMesh(JSONMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
-    
-    typedef std::map<unsigned int /* IndexSet */, shared_ptr<JSONExport::JSONAccessor> > IndexSetToAccessorHashmap;
-    typedef std::map<JSONExport::Semantic , IndexSetToAccessorHashmap > SemanticToAccessorHashmap;
-    
-    class JSONMesh {
-    public:
-        JSONMesh();
-        JSONMesh(const JSONMesh &mesh);
-        
-        virtual ~JSONMesh();
-        
-        shared_ptr <AccessorVector> accessors();
-        
-        bool appendPrimitive(shared_ptr <JSONExport::JSONPrimitive> primitive);
-        
-        void setAccessorsForSemantic(JSONExport::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap);        
-        IndexSetToAccessorHashmap& getAccessorsForSemantic(Semantic semantic); 
-        
-        std::vector <JSONExport::Semantic> allSemantics();
-                
-        std::string getID();
-        void setID(std::string ID);
-        
-        std::string getName();
-        void setName(std::string name);
-        
-        PrimitiveVector const getPrimitives();
+    GLTFEffect::GLTFEffect(const std::string& ID):
+    _ID(ID)
+    {
+    }
 
-        bool const writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
-        
-    private:
-        PrimitiveVector _primitives;
-        SemanticToAccessorHashmap _semanticToAccessors;
-        std::string _ID, _name;
-    };    
-
+    GLTFEffect::~GLTFEffect()
+    {
+    }
+                        
+    const std::string& GLTFEffect::getID()
+    {
+        return this->_ID;
+    }
+    
+    void GLTFEffect::setTechniqueID(const std::string& techniqueID)
+    {
+        this->_techniqueID = techniqueID;
+    }
+    
+    const std::string& GLTFEffect::getTechniqueID()
+    {
+        return this->_techniqueID;
+    }
+    
+    void GLTFEffect::setName(const std::string& name)
+    {
+        this->_name = name;
+    }
+    
+    const std::string& GLTFEffect::getName()
+    {
+        return this->_name;
+    }
+    
+    void GLTFEffect::setTechniques(shared_ptr <GLTF::JSONObject> techniques)
+    {
+        this->_techniques = techniques;
+    }
+    
+    shared_ptr <GLTF::JSONObject> GLTFEffect::getTechniques()
+    {
+        return this->_techniques;
+    }
+    
 }
-
-
-#endif

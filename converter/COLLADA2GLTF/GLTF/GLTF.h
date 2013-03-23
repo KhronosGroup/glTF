@@ -24,38 +24,45 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#ifndef __JSON_EXPORT_H__
+#define __JSON_EXPORT_H__
 
-namespace JSONExport 
-{
-    JSONString::JSONString():
-    JSONValue(JSONExport::STRING)
-    {
-    }
+// STL headers
+#include <stack>
+#include <list>
+#include <map>
+#include <set>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#ifdef WIN32
+#include <memory>
+#include <unordered_map>
+#else 
+#include <tr1/memory>
+#include <tr1/unordered_map>
+#endif
 
-    JSONString::JSONString(const std::string& str):
-    JSONValue(JSONExport::STRING)
-    {
-        this->_str = str;
-    }
+// RapidJSON headers
+#include "prettywriter.h"	
+#include "filestream.h"
 
-    JSONString::~JSONString()
-    {
-    }        
-    
-    void JSONString::write(JSONWriter* writer, void* context)
-    {        
-        writer->writeString(this, context);
-    }
-    
-    const char* JSONString::getCString()
-    {
-        return this->_str.c_str();
-    }
-    
-    const std::string& JSONString::getString()
-    {
-        return this->_str;
-    }
-    
-}
+// GLTF headers
+#include "GLTFTypesAndConstants.h"
+#include "JSONValue.h"
+#include "JSONNumber.h"
+#include "JSONString.h"
+#include "JSONObject.h"
+#include "JSONArray.h"
+#include "GLTFUtils.h"
+#include "GLTFBuffer.h"
+#include "GLTFAccessor.h"
+#include "GLTFIndices.h"
+#include "GLTFEffect.h"
+#include "GLTFPrimitive.h"
+#include "GLTFMesh.h"
+#include "GLTFWriter.h"
+
+#endif 

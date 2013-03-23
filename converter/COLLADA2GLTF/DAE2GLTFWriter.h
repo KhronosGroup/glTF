@@ -27,7 +27,7 @@
 #ifndef __DAE2JSONWRITER_H__
 #define __DAE2JSONWRITER_H__
 
-#include "JSONExport.h"
+#include "GLTF.h"
 #include "COLLADASaxFWLLoader.h"
 
 #include "COLLADABUStableHeaders.h"
@@ -88,7 +88,7 @@ using namespace std::tr1;
 using namespace std;
 
 
-namespace JSONExport
+namespace GLTF
 {
     
     //-- BBOX helper class
@@ -136,15 +136,15 @@ namespace JSONExport
     
     //-- OpenCOLLADA -> JSON writer implementation
     
-	class DAE2JSONWriter : public COLLADAFW::IWriter
+	class DAE2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2JSONWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
-		virtual ~DAE2JSONWriter();
+		DAE2GLTFWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
+		virtual ~DAE2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
-        bool writeNode(const COLLADAFW::Node* node, shared_ptr <JSONExport::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
-        shared_ptr <JSONExport::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
+        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
+        shared_ptr <GLTF::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         const std::string writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
@@ -237,7 +237,7 @@ namespace JSONExport
 	private:
         GLTFConverterContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
-        JSONExport::JSONWriter _writer;
+        GLTF::GLTFWriter _writer;
         SceneFlatteningInfo _sceneFlatteningInfo;
 
         ofstream _verticesOutputStream;

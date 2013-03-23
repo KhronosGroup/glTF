@@ -24,23 +24,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 
-namespace JSONExport 
+namespace GLTF 
 {    
-    //---- JSONPrimitiveRemapInfos ------------------------------------------------------------------------------------------
+    //---- GLTFPrimitiveRemapInfos ------------------------------------------------------------------------------------------
 
-    JSONPrimitive::JSONPrimitive()
+    GLTFPrimitive::GLTFPrimitive()
     {
     }
     
-    JSONPrimitive::~JSONPrimitive()
+    GLTFPrimitive::~GLTFPrimitive()
     {
     }
     
-    JSONPrimitive::JSONPrimitive(const JSONPrimitive &primitive)
+    GLTFPrimitive::GLTFPrimitive(const GLTFPrimitive &primitive)
     {
         this->_allVertexAttributes = primitive._allVertexAttributes;
         this->_type = primitive._type;
@@ -49,72 +49,72 @@ namespace JSONExport
         this->_uniqueIndices = primitive._uniqueIndices;
     }
 
-    JSONExport::Semantic JSONPrimitive::getSemanticAtIndex(unsigned int index)
+    GLTF::Semantic GLTFPrimitive::getSemanticAtIndex(unsigned int index)
     {
         return this->_allVertexAttributes[index]->getSemantic();
     }
     
-    unsigned int JSONPrimitive::getIndexOfSetAtIndex(unsigned int index)
+    unsigned int GLTFPrimitive::getIndexOfSetAtIndex(unsigned int index)
     {
         return this->_allVertexAttributes[index]->getIndexOfSet();
     }
 
-    unsigned int JSONPrimitive::getIndicesInfosCount()
+    unsigned int GLTFPrimitive::getIndicesInfosCount()
     {
         return this->_allVertexAttributes.size();
     }
     
-    VertexAttributeVector JSONPrimitive::getVertexAttributes()
+    VertexAttributeVector GLTFPrimitive::getVertexAttributes()
     {
         return this->_allVertexAttributes;
     }
     
-    void JSONPrimitive::appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute)
+    void GLTFPrimitive::appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute)
     {
         this->_allVertexAttributes.push_back(VertexAttribute);
     }    
     
-    shared_ptr <JSONExport::JSONIndices> JSONPrimitive::getUniqueIndices()
+    shared_ptr <GLTF::GLTFIndices> GLTFPrimitive::getUniqueIndices()
     {
         return this->_uniqueIndices;
     }
     
-    std::string JSONPrimitive::getType()
+    std::string GLTFPrimitive::getType()
     {
         return _type;
     }
     
-    void JSONPrimitive::setType(std::string type)
+    void GLTFPrimitive::setType(std::string type)
     {
         this->_type = type;
     }
     
-    std::string JSONPrimitive::getMaterialID()
+    std::string GLTFPrimitive::getMaterialID()
     {
         return this->_materialID;
     }
     
-    void JSONPrimitive::setMaterialID(std::string materialID)
+    void GLTFPrimitive::setMaterialID(std::string materialID)
     {
         this->_materialID = materialID;
     }
     
-    unsigned int JSONPrimitive::getMaterialObjectID()
+    unsigned int GLTFPrimitive::getMaterialObjectID()
     {
         return this->_materialObjectID;
     }
     
-    void JSONPrimitive::setMaterialObjectID(unsigned int materialID)
+    void GLTFPrimitive::setMaterialObjectID(unsigned int materialID)
     {
         this->_materialObjectID = materialID;
     }
 
-    shared_ptr <JSONExport::JSONIndices>  JSONPrimitive::getIndices()
+    shared_ptr <GLTF::GLTFIndices>  GLTFPrimitive::getIndices()
     {
         return this->_uniqueIndices;
     }
     
-    void JSONPrimitive::setIndices(shared_ptr <JSONExport::JSONIndices> indices)
+    void GLTFPrimitive::setIndices(shared_ptr <GLTF::GLTFIndices> indices)
     {
         this->_uniqueIndices = indices;
     }

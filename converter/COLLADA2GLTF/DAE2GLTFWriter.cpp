@@ -32,13 +32,13 @@
 
 #include <algorithm>
 
-#include "JSONExport.h"
-#include "DAE2JSONWriter.h"
+#include "GLTF.h"
+#include "DAE2GLTFWriter.h"
 #include "COLLADAFWPolygons.h"
 #include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
 
-namespace JSONExport
+namespace GLTF
 {
         
     //converted to C++ from gl-matrix by Brandon Jones ( https://github.com/toji/gl-matrix )
@@ -133,7 +133,7 @@ namespace JSONExport
         
     //---- Convert OpenCOLLADA mesh to mesh -------------------------------------------
   
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(const COLLADAFW::MeshVertexData &vertexData, JSONExport::IndexSetToAccessorHashmap &accessors) 
+    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToAccessorHashmap &accessors) 
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -160,7 +160,7 @@ namespace JSONExport
                 inputLength = vertexData.getLength(indexOfSet);
             } else {
                 // for unpatched version of OpenCOLLADA we need this work-around.
-                name = JSONExport::JSONUtils::generateIDForType("buffer").c_str();
+                name = GLTF::GLTFUtils::generateIDForType("buffer").c_str();
                 size = 3; //only normal and positions should reach this code
                 inputLength = vertexData.getLength(0);
             }
@@ -173,10 +173,10 @@ namespace JSONExport
             unsigned char *sourceData = 0;
             size_t sourceSize = 0;
         
-            JSONExport::ComponentType componentType = JSONExport::NOT_AN_ELEMENT_TYPE;
+            GLTF::ComponentType componentType = GLTF::NOT_AN_ELEMENT_TYPE;
             switch (vertexData.getType()) {
                 case MeshVertexData::DATA_TYPE_FLOAT: {
-                    componentType = JSONExport::FLOAT;
+                    componentType = GLTF::FLOAT;
                     stride = sizeof(float) * size;
                     const FloatArray* array = vertexData.getFloatValues();
 
@@ -206,8 +206,8 @@ namespace JSONExport
             }
         
             // FIXME: the source could be shared, store / retrieve it here
-            shared_ptr <JSONBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(name, sourceData, 0, sourceSize, false);
-            shared_ptr <JSONAccessor> cvtAccessor(new JSONAccessor());
+            shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(name, sourceData, 0, sourceSize, false);
+            shared_ptr <GLTFAccessor> cvtAccessor(new GLTFAccessor());
         
             cvtAccessor->setBufferView(cvtBufferView);
             cvtAccessor->setElementsPerVertexAttribute(size);
@@ -221,9 +221,9 @@ namespace JSONExport
         return (unsigned int)setCount;
     }
     
-    static void __AppendIndices(shared_ptr <JSONExport::JSONPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <JSONExport::JSONIndices> &indices, JSONExport::Semantic semantic, unsigned int indexOfSet)
+    static void __AppendIndices(shared_ptr <GLTF::GLTFPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <GLTF::GLTFIndices> &indices, GLTF::Semantic semantic, unsigned int indexOfSet)
     {
-        primitive->appendVertexAttribute(shared_ptr <JSONExport::JSONVertexAttribute>( new JSONExport::JSONVertexAttribute(semantic,indexOfSet)));
+        primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(semantic,indexOfSet)));
         primitiveIndicesVector.push_back(indices);
     }
     
@@ -234,7 +234,7 @@ namespace JSONExport
                                   unsigned int count,
                                   unsigned int vcount,
                                   unsigned int *verticesCountArray,
-                                  shared_ptr <JSONExport::JSONPrimitive> cvtPrimitive,
+                                  shared_ptr <GLTF::GLTFPrimitive> cvtPrimitive,
                                   IndicesVector &primitiveIndicesVector
                                   )
     {
@@ -265,22 +265,22 @@ namespace JSONExport
             indices = bufferDestination;
         }
         
-        shared_ptr <JSONExport::JSONBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
+        shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
         
-        //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToJSONAccessors that begins at 0
+        //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors that begins at 0
         //for now forced to 0, to be fixed for multi texturing.
         
         //unsigned int idx = (unsigned int)indexList->getSetIndex();
         
-        shared_ptr <JSONIndices> jsonIndices(new JSONIndices(uvBuffer, count));
+        shared_ptr <GLTFIndices> jsonIndices(new GLTFIndices(uvBuffer, count));
         __AppendIndices(cvtPrimitive, primitiveIndicesVector, jsonIndices, semantic, idx);
     }
     
-    static shared_ptr <JSONExport::JSONPrimitive> ConvertOpenCOLLADAMeshPrimitive(
+    static shared_ptr <GLTF::GLTFPrimitive> ConvertOpenCOLLADAMeshPrimitive(
         COLLADAFW::MeshPrimitive *openCOLLADAMeshPrimitive,
         IndicesVector &primitiveIndicesVector)
     {
-        shared_ptr <JSONExport::JSONPrimitive> cvtPrimitive(new JSONExport::JSONPrimitive());
+        shared_ptr <GLTF::GLTFPrimitive> cvtPrimitive(new GLTF::GLTFPrimitive());
         
         // We want to match OpenGL/ES mode , as WebGL spec points to OpenGL/ES spec...
         // "Symbolic constants GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, and GL_TRIANGLES are accepted."
@@ -350,9 +350,9 @@ namespace JSONExport
             count = triangulatedIndicesCount;
         }
         
-        shared_ptr <JSONBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
+        shared_ptr <GLTFBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
         
-        shared_ptr <JSONExport::JSONIndices> positionIndices(new JSONExport::JSONIndices(positionBuffer,count));
+        shared_ptr <GLTF::GLTFIndices> positionIndices(new GLTF::GLTFIndices(positionBuffer,count));
         
         __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, POSITION, 0);
         
@@ -364,8 +364,8 @@ namespace JSONExport
                 count = triangulatedIndicesCount;
             }
             
-            shared_ptr <JSONExport::JSONBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <JSONExport::JSONIndices> normalIndices(new JSONExport::JSONIndices(normalBuffer,
+            shared_ptr <GLTF::GLTFBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
+            shared_ptr <GLTF::GLTFIndices> normalIndices(new GLTF::GLTFIndices(normalBuffer,
                                                                                            count));
             __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices, NORMAL, 0);
         }
@@ -376,7 +376,7 @@ namespace JSONExport
                 IndexList* indexList = openCOLLADAMeshPrimitive->getColorIndices(i);
                 __HandleIndexList(i,
                                   indexList,
-                                  JSONExport::COLOR,
+                                  GLTF::COLOR,
                                   shouldTriangulate,
                                   count,
                                   vcount,
@@ -392,7 +392,7 @@ namespace JSONExport
                 IndexList* indexList = openCOLLADAMeshPrimitive->getUVCoordIndices(i);
                 __HandleIndexList(i,
                                   indexList,
-                                  JSONExport::TEXCOORD,
+                                  GLTF::TEXCOORD,
                                   shouldTriangulate,
                                   count,
                                   vcount,
@@ -410,7 +410,7 @@ namespace JSONExport
     }
     
     static void __InvertV(void *value,
-                          JSONExport::ComponentType type,
+                          GLTF::ComponentType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,
@@ -419,7 +419,7 @@ namespace JSONExport
         
         if (elementsPerVertexAttribute > 1) {
             switch (type) {
-                case JSONExport::FLOAT: {
+                case GLTF::FLOAT: {
                     float* vector = (float*)bufferData;
                     vector[1] = (float) (1.0 - vector[1]);
                 }
@@ -433,7 +433,7 @@ namespace JSONExport
     void ConvertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh,
                                 MeshVector &meshes)
     {
-        shared_ptr <JSONExport::JSONMesh> cvtMesh(new JSONExport::JSONMesh());
+        shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
                 
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
         cvtMesh->setName(openCOLLADAMesh->getName());
@@ -445,10 +445,10 @@ namespace JSONExport
 
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
-            shared_ptr <JSONExport::IndicesVector> primitiveIndicesVector(new JSONExport::IndicesVector());
+            shared_ptr <GLTF::IndicesVector> primitiveIndicesVector(new GLTF::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
 
-            shared_ptr <JSONExport::JSONPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
+            shared_ptr <GLTF::GLTFPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
             if (primitive->getType() == "TRIANGLES") {
                 cvtMesh->appendPrimitive(primitive);
             } else {
@@ -460,27 +460,27 @@ namespace JSONExport
             primitiveIndicesVector = allPrimitiveIndicesVectors[i];
             
             // once we got a primitive, keep track of its accessors
-            std::vector< shared_ptr<JSONExport::JSONIndices> > allIndices = *primitiveIndicesVector;
+            std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
-                shared_ptr<JSONExport::JSONIndices> indices = allIndices[k];
-                JSONExport::Semantic semantic = vertexAttributes[k]->getSemantic();
-                JSONExport::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
+                shared_ptr<GLTF::GLTFIndices> indices = allIndices[k];
+                GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
+                GLTF::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
                     
                 switch (semantic) {
-                    case JSONExport::POSITION:
-                        ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(openCOLLADAMesh->getPositions(), accessors);
+                    case GLTF::POSITION:
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), accessors);
                         break;
                         
-                    case JSONExport::NORMAL: 
-                        ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(openCOLLADAMesh->getNormals(), accessors);
+                    case GLTF::NORMAL: 
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), accessors);
                         break;
                         
-                    case JSONExport::TEXCOORD: 
-                        ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(openCOLLADAMesh->getUVCoords(), accessors);
+                    case GLTF::TEXCOORD: 
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), accessors);
                         break;
 
-                    case JSONExport::COLOR: 
-                        ConvertOpenCOLLADAMeshVertexDataToJSONAccessors(openCOLLADAMesh->getColors(), accessors);
+                    case GLTF::COLOR: 
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), accessors);
                         break;
                             
                     default: 
@@ -493,21 +493,21 @@ namespace JSONExport
         
         //https://github.com/KhronosGroup/collada2json/issues/41
         //Goes through all texcoord and invert V
-        JSONExport::IndexSetToAccessorHashmap& texcoordAccessors = cvtMesh->getAccessorsForSemantic(JSONExport::TEXCOORD);
-        JSONExport::IndexSetToAccessorHashmap::const_iterator accessorIterator;
+        GLTF::IndexSetToAccessorHashmap& texcoordAccessors = cvtMesh->getAccessorsForSemantic(GLTF::TEXCOORD);
+        GLTF::IndexSetToAccessorHashmap::const_iterator accessorIterator;
         
         //FIXME: consider turn this search into a method for mesh
         for (accessorIterator = texcoordAccessors.begin() ; accessorIterator != texcoordAccessors.end() ; accessorIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
-            shared_ptr <JSONExport::JSONAccessor> accessor = (*accessorIterator).second;
+            shared_ptr <GLTF::GLTFAccessor> accessor = (*accessorIterator).second;
             
             accessor->apply(__InvertV, NULL);
         }
         
         if (cvtMesh->getPrimitives().size() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
-            shared_ptr <JSONExport::JSONMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
+            shared_ptr <GLTF::GLTFMesh> unifiedMesh = CreateUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
             if  (CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes) == false) {
                 meshes.push_back(unifiedMesh);
             }
@@ -515,7 +515,7 @@ namespace JSONExport
     }
         
     //--------------------------------------------------------------------
-	DAE2JSONWriter::DAE2JSONWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
+	DAE2GLTFWriter::DAE2GLTFWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
     _converterContext(converterArgs),
      _visualScene(0)
 	{
@@ -523,17 +523,17 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	DAE2JSONWriter::~DAE2JSONWriter()
+	DAE2GLTFWriter::~DAE2GLTFWriter()
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::reportError( const std::string& method, const std::string& message)
+	void DAE2GLTFWriter::reportError( const std::string& method, const std::string& message)
 	{
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::write()
+	bool DAE2GLTFWriter::write()
 	{
         ifstream inputVertices;
         ifstream inputIndices;
@@ -559,10 +559,10 @@ namespace JSONExport
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
                 
-        this->_converterContext.root = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+        this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
         this->_converterContext.root->setString("version", "0.2");
-        this->_converterContext.root->setValue("nodes", shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject()));
+        this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
                                 
         COLLADASaxFWL::Loader loader;
 		COLLADAFW::Root root(&loader, this);
@@ -600,15 +600,15 @@ namespace JSONExport
         
         //---
         
-        shared_ptr <JSONBuffer> sharedBuffer(new JSONBuffer(sharedVerticesAndIndicesBufferID, verticesLength + indicesLength));
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedVerticesAndIndicesBufferID, verticesLength + indicesLength));
         
-        shared_ptr <JSONBufferView> verticesBufferView(new JSONBufferView(sharedBuffer, 0, verticesLength));
-        shared_ptr <JSONBufferView> indicesBufferView(new JSONBufferView(sharedBuffer, verticesLength, indicesLength));
+        shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
+        shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
         
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
 
         // ----
-        shared_ptr <JSONExport::JSONObject> meshesObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> meshesObject(new GLTF::JSONObject());
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
@@ -618,13 +618,13 @@ namespace JSONExport
             MeshVectorSharedPtr meshes = (*UniqueIDToMeshesIterator).second;
             
             for (size_t j = 0 ; j < meshes->size() ; j++) {
-                shared_ptr<JSONMesh> mesh = (*meshes)[j];
+                shared_ptr<GLTFMesh> mesh = (*meshes)[j];
                 if (mesh) {
                     void *buffers[2];
                     buffers[0] = (void*)verticesBufferView.get();
                     buffers[1] = (void*)indicesBufferView.get();
                     
-                    shared_ptr <JSONExport::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
+                    shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
                     
                     meshesObject->setValue(mesh->getID(), meshObject);
                 }
@@ -633,7 +633,7 @@ namespace JSONExport
         
         // ----
         
-        shared_ptr <JSONExport::JSONObject> materialsObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> materialsObject(new GLTF::JSONObject());
 
         this->_converterContext.root->setValue("materials", materialsObject);
 
@@ -642,8 +642,8 @@ namespace JSONExport
         for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
-            shared_ptr <JSONExport::JSONEffect> effect = (*UniqueIDToEffectIterator).second;
-            shared_ptr <JSONExport::JSONObject> effectObject = serializeEffect(effect.get(), 0);
+            shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
+            shared_ptr <GLTF::JSONObject> effectObject = serializeEffect(effect.get(), 0);
             //FIXME:HACK: effects are exported as materials
             materialsObject->setValue(effect->getID(), effectObject);
         }
@@ -685,47 +685,47 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::cancel( const std::string& errorMessage )
+	void DAE2GLTFWriter::cancel( const std::string& errorMessage )
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::start()
+	void DAE2GLTFWriter::start()
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2JSONWriter::finish()
+	void DAE2GLTFWriter::finish()
 	{        
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeGlobalAsset( const COLLADAFW::FileInfo* asset )
+	bool DAE2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* asset )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
     
-    shared_ptr <JSONExport::JSONArray> DAE2JSONWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
+    shared_ptr <GLTF::JSONArray> DAE2GLTFWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
     {
-        shared_ptr <JSONExport::JSONArray> array(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
         
         COLLADABU::Math::Matrix4 transpose = matrix.transpose();
 
         for (int i = 0 ; i < 4 ; i++)  {
             const COLLADABU::Math::Real * real = transpose[i];
           
-            array->appendValue(shared_ptr <JSONExport::JSONValue> (new JSONExport::JSONNumber((double)real[0])));           
-            array->appendValue(shared_ptr <JSONExport::JSONValue> (new JSONExport::JSONNumber((double)real[1])));           
-            array->appendValue(shared_ptr <JSONExport::JSONValue> (new JSONExport::JSONNumber((double)real[2])));           
-            array->appendValue(shared_ptr <JSONExport::JSONValue> (new JSONExport::JSONNumber((double)real[3])));           
+            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[0])));           
+            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[1])));           
+            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[2])));           
+            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[3])));           
         }        
 
         return array;
     }
 
-    float DAE2JSONWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
+    float DAE2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
@@ -736,13 +736,13 @@ namespace JSONExport
         return this->_converterContext.invertTransparency ? 1 - transparency : transparency;
     }
     
-    float DAE2JSONWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
+    float DAE2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
     {
         return getTransparency(effectCommon)  >= 1;
     }
     
-    bool DAE2JSONWriter::writeNode( const COLLADAFW::Node* node, 
-                                    shared_ptr <JSONExport::JSONObject> nodesObject, 
+    bool DAE2GLTFWriter::writeNode( const COLLADAFW::Node* node, 
+                                    shared_ptr <GLTF::JSONObject> nodesObject, 
                                     COLLADABU::Math::Matrix4 parentMatrix,
                                     SceneFlatteningInfo* sceneFlatteningInfo) 
     {
@@ -750,7 +750,7 @@ namespace JSONExport
         const std::string& originalID = uniqueIdWithType("node", node->getUniqueId());
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
-        shared_ptr <JSONExport::JSONObject> nodeObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
         nodeObject->setString("name",node->getName());
         
         bool nodeContainsLookAtTr = false;
@@ -758,7 +758,7 @@ namespace JSONExport
         size_t camerasCount = instanceCameras.getCount();
         if (camerasCount > 0) {
             InstanceCamera* instanceCamera = instanceCameras[0];
-            shared_ptr <JSONExport::JSONObject> cameraObject(new JSONExport::JSONObject());
+            shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
 
             std::string cameraId = uniqueIdWithType("camera", instanceCamera->getInstanciatedObjectId());
             nodeObject->setString("camera", cameraId);
@@ -802,8 +802,8 @@ namespace JSONExport
         if (count > 0) {
             //FIXME: should not have to have a special attribute name for multiple meshes.
             // this might end up as making mode node, one per mesh.
-            //JSONExport
-            shared_ptr <JSONExport::JSONArray> meshesArray(new JSONExport::JSONArray());
+            //GLTF
+            shared_ptr <GLTF::JSONArray> meshesArray(new GLTF::JSONArray());
             nodeObject->setValue("meshes", meshesArray);
             
             for (unsigned int i = 0 ; i < count; i++) {
@@ -816,15 +816,15 @@ namespace JSONExport
                 MeshVectorSharedPtr meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
 
                 for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
-                    shared_ptr <JSONMesh> mesh = (*meshes)[meshIndex];
+                    shared_ptr <GLTFMesh> mesh = (*meshes)[meshIndex];
                     
                     if (!mesh) {
                         continue;
                     }
                     
                     if (sceneFlatteningInfo) {
-                        JSONExport::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(JSONExport::POSITION);
-                        shared_ptr <JSONExport::JSONAccessor> vertexAccessor = semanticMap[0];
+                        GLTF::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(GLTF::POSITION);
+                        shared_ptr <GLTF::GLTFAccessor> vertexAccessor = semanticMap[0];
                         
                         BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()),
                                         COLLADABU::Math::Vector3(vertexAccessor->getMax()));
@@ -835,7 +835,7 @@ namespace JSONExport
                     
                     PrimitiveVector primitives = mesh->getPrimitives();
                     for (size_t j = 0 ; j < primitives.size() ; j++) {
-                        shared_ptr <JSONExport::JSONPrimitive> primitive = primitives[j];
+                        shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[j];
                         
                         //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
                         int materialBindingIndex = -1;
@@ -854,13 +854,13 @@ namespace JSONExport
                             
                             unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
                             std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
-                            shared_ptr <JSONExport::JSONEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
+                            shared_ptr <GLTF::GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
                             effect->setName(materialName);
                             primitive->setMaterialID(effect->getID());
                         }
                     }
                     
-                    meshesArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(mesh->getID())));
+                    meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
                     if (sceneFlatteningInfo) {
                         shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
                         sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo); 
@@ -870,14 +870,14 @@ namespace JSONExport
             }
         }
         
-        shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
         nodeObject->setValue("children", childrenArray);
         
         count = (unsigned int)nodes.getCount();
         
         for (unsigned int i = 0 ; i < count ; i++)  {
             std::string id = uniqueIdWithType("node", nodes[i]->getUniqueId());
-            childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
+            childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(id)));
         }
         
         nodesObject->setValue(originalID, static_pointer_cast <JSONValue> (nodeObject));
@@ -892,7 +892,7 @@ namespace JSONExport
             InstanceNode* instanceNode  = instanceNodes[i];
             
             std::string id = uniqueIdWithType("node", instanceNode->getInstanciatedObjectId());
-            childrenArray->appendValue(shared_ptr <JSONExport::JSONString> (new JSONExport::JSONString(id)));
+            childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(id)));
         }
         
         return true;
@@ -909,7 +909,7 @@ namespace JSONExport
     // -> for all meshes
     //   -> get all accessors 
     //   -> transforms & write vtx attributes
-    bool DAE2JSONWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
+    bool DAE2GLTFWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
     {
         /*
         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
@@ -924,13 +924,13 @@ namespace JSONExport
         return true;
     }
     
-    bool DAE2JSONWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
+    bool DAE2GLTFWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
 	{
         //FIXME: only one visual scene assumed/handled
-        shared_ptr <JSONExport::JSONObject> scenesObject(new JSONExport::JSONObject());
-        shared_ptr <JSONExport::JSONObject> sceneObject(new JSONExport::JSONObject());
-        shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_converterContext.root->getValue("nodes"));
-        shared_ptr <JSONExport::JSONObject> rootObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
+        shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
+        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("nodes"));
+        shared_ptr <GLTF::JSONObject> rootObject(new GLTF::JSONObject());
 
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
@@ -941,13 +941,13 @@ namespace JSONExport
         nodesObject->setValue("root", rootObject);
                 
         //first pass to output children name of our root node
-        shared_ptr <JSONExport::JSONArray> childrenArray(new JSONExport::JSONArray());
+        shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
         
         for (size_t i = 0 ; i < nodeCount ; i++) { 
             std::string id = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());
 
-            shared_ptr <JSONExport::JSONString> nodeIDValue(new JSONExport::JSONString(id));            
-            childrenArray->appendValue(static_pointer_cast <JSONExport::JSONValue> (nodeIDValue));
+            shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(id));            
+            childrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (nodeIDValue));
         }
         
         rootObject->setValue("children", childrenArray);
@@ -961,17 +961,17 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeScene( const COLLADAFW::Scene* scene )
+	bool DAE2GLTFWriter::writeScene( const COLLADAFW::Scene* scene )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes )
+	bool DAE2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes )
 	{
         const NodePointerArray& nodes = libraryNodes->getNodes();
 
-        shared_ptr <JSONExport::JSONObject> nodesObject = static_pointer_cast <JSONExport::JSONObject> (this->_converterContext.root->getValue("nodes"));
+        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("nodes"));
         
         size_t count = nodes.getCount();
         for (size_t i = 0 ; i < count ; i++) {
@@ -985,7 +985,7 @@ namespace JSONExport
 	}   
             
 	//--------------------------------------------------------------------
-    bool DAE2JSONWriter::writeGeometry( const COLLADAFW::Geometry* geometry )
+    bool DAE2GLTFWriter::writeGeometry( const COLLADAFW::Geometry* geometry )
 	{
         switch (geometry->getType()) {
             case Geometry::GEO_TYPE_MESH:
@@ -1023,7 +1023,7 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeMaterial( const COLLADAFW::Material* material )
+	bool DAE2GLTFWriter::writeMaterial( const COLLADAFW::Material* material )
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
 		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
@@ -1032,7 +1032,7 @@ namespace JSONExport
 		return true;
 	}
             
-    const std::string DAE2JSONWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
+    const std::string DAE2GLTFWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
         std::string techniqueName = inferTechniqueName(technique, this->_converterContext);
         
         shared_ptr <JSONObject> techniquesObject;
@@ -1049,7 +1049,7 @@ namespace JSONExport
     }
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeEffect( const COLLADAFW::Effect* effect )
+	bool DAE2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
@@ -1063,12 +1063,12 @@ namespace JSONExport
 #else
             uniqueId += "effect.";
 #endif
-            uniqueId += JSONExport::JSONUtils::toString(effect->getUniqueId().getObjectId());;
+            uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
             
-            shared_ptr <JSONExport::JSONEffect> cvtEffect(new JSONExport::JSONEffect(uniqueId));
-            shared_ptr <JSONExport::JSONObject> techniques(new JSONExport::JSONObject());
-            shared_ptr <JSONExport::JSONObject> technique(new JSONExport::JSONObject());
-            shared_ptr <JSONExport::JSONObject> parameters(new JSONExport::JSONObject());
+            shared_ptr <GLTF::GLTFEffect> cvtEffect(new GLTF::GLTFEffect(uniqueId));
+            shared_ptr <GLTF::JSONObject> techniques(new GLTF::JSONObject());
+            shared_ptr <GLTF::JSONObject> technique(new GLTF::JSONObject());
+            shared_ptr <GLTF::JSONObject> parameters(new GLTF::JSONObject());
             
             //retrive the type, parameterName -> symbol -> type
             
@@ -1128,15 +1128,15 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeCamera( const COLLADAFW::Camera* camera )
+	bool DAE2GLTFWriter::writeCamera( const COLLADAFW::Camera* camera )
 	{
-        shared_ptr <JSONExport::JSONObject> camerasObject = static_pointer_cast <JSONExport::JSONObject> (this->_converterContext.root->getValue("cameras"));
+        shared_ptr <GLTF::JSONObject> camerasObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("cameras"));
         if (!camerasObject) {
-            camerasObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            camerasObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             this->_converterContext.root->setValue("cameras", camerasObject);
         }
         
-        shared_ptr <JSONExport::JSONObject> cameraObject(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
         
         std::string id = uniqueIdWithType("camera", camera->getUniqueId());
         
@@ -1214,10 +1214,10 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
+	bool DAE2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
 	{
-        shared_ptr <JSONExport::JSONObject> images = this->_converterContext.root->createObjectIfNeeded("images");
-        shared_ptr <JSONExport::JSONObject> image(new JSONExport::JSONObject());
+        shared_ptr <GLTF::JSONObject> images = this->_converterContext.root->createObjectIfNeeded("images");
+        shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
 
         images->setValue(uniqueIdWithType("image",openCOLLADAImage->getUniqueId()), image);
         /*
@@ -1241,31 +1241,31 @@ namespace JSONExport
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeLight( const COLLADAFW::Light* light )
+	bool DAE2GLTFWriter::writeLight( const COLLADAFW::Light* light )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeAnimation( const COLLADAFW::Animation* animation )
+	bool DAE2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
+	bool DAE2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
+	bool DAE2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2JSONWriter::writeController( const COLLADAFW::Controller* Controller )
+	bool DAE2GLTFWriter::writeController( const COLLADAFW::Controller* Controller )
 	{
 		return true;
 	}

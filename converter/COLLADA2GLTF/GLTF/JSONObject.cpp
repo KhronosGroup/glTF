@@ -24,13 +24,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "JSONExport.h"
+#include "GLTF.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
-namespace JSONExport 
+namespace GLTF 
 {
     JSONObject::JSONObject(JSONValueType type):
     JSONValue(type)
@@ -38,7 +38,7 @@ namespace JSONExport
     }
 
     JSONObject::JSONObject():
-    JSONValue(JSONExport::OBJECT)
+    JSONValue(GLTF::OBJECT)
     {
     }
     
@@ -46,13 +46,13 @@ namespace JSONExport
     {
     }        
     
-    shared_ptr <JSONExport::JSONObject> JSONObject::createObjectIfNeeded(const std::string& key) {
-        shared_ptr <JSONExport::JSONObject> outObject;
+    shared_ptr <GLTF::JSONObject> JSONObject::createObjectIfNeeded(const std::string& key) {
+        shared_ptr <GLTF::JSONObject> outObject;
         if (!contains(key)) {
-            outObject = shared_ptr <JSONExport::JSONObject> (new JSONExport::JSONObject());
+            outObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             setValue(key, outObject);
         } else {
-            outObject = static_pointer_cast <JSONExport::JSONObject> (getValue(key));
+            outObject = static_pointer_cast <GLTF::JSONObject> (getValue(key));
         }
         return outObject;
     }
