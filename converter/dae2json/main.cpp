@@ -58,7 +58,7 @@ static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
     return pathDir + fileBase + ".json";
 }
 
-static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport::GLTFConverterContext *converterArgs)
+static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], JSONExport::GLTFConverterContext *converterArgs)
 {
     assert(converterArgs);
         
@@ -103,8 +103,8 @@ static bool __SetupCOLLADA2JSONContext(int argc, char * const argv[], JSONExport
 int main (int argc, char * const argv[]) {
     JSONExport::GLTFConverterContext converterArgs;
     
-    printf("Collada2JSON [pre-alpha] 0.1\n");
-    if (__SetupCOLLADA2JSONContext( argc, argv, &converterArgs)) {
+    printf("COLLADA2GLTF [pre-alpha] 0.1\n");
+    if (__SetupCOLLADA2GLTFContext( argc, argv, &converterArgs)) {
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");
         if (fd) {

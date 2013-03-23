@@ -1,5 +1,5 @@
-#ifndef __COLLADA2JSON_SHADERS__
-#define __COLLADA2JSON_SHADERS__
+#ifndef __COLLADA2GLTF_SHADERS__
+#define __COLLADA2GLTF_SHADERS__
 
 #define SHADER_STR(Src) #Src
 #define SHADER(Src) SHADER_STR(Src)
