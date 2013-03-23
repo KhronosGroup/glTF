@@ -732,8 +732,7 @@ var global = window;
 
                 //-----
 
-
-                var available = availableCount === primitive.attributesCount;
+                var available = availableCount === attributes.length;
                 if (!renderVertices)  { 
                     //Just disable what is not required here…
                     if (available) {
@@ -741,7 +740,6 @@ var global = window;
                             gl.disableVertexAttribArray(i);
                         }
                     }
-                  
                     var glIndices = null;
                     //FIXME should not assume 2 bytes per indices (WebGL supports one byte too…)
                     this.indicesDelegate.webGLContext = this.webGLContext;
