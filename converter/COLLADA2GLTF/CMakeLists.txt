@@ -27,7 +27,7 @@ endif()
 add_subdirectory(dependencies/OpenCOLLADA)
 
 add_executable(collada2gltf main.cpp 
-    DAE2GLTFWriter.cpp
+    COLLADA2GLTFWriter.cpp
     GLTF/GLTFAccessor.cpp
     GLTF/JSONArray.cpp
     GLTF/GLTFBuffer.cpp
@@ -42,7 +42,7 @@ add_executable(collada2gltf main.cpp
     GLTF/JSONValue.cpp
     GLTF/GLTFWriter.cpp
     GLTFConverterContext.cpp
-    DAE2GLTFWriter.h
+    COLLADA2GLTFWriter.h
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
     GLTF/GLTFAccessor.h

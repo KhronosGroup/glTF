@@ -63,7 +63,7 @@ namespace GLTF
         void setMaterialID(std::string materialID);
         
         //TODO: These 2 methods should be out of GLTFPrimitive.
-        //A map like: primitive [->] objectID, could handle that within DAE2GLTFWriter.cpp
+        //A map like: primitive [->] objectID, could handle that within COLLADA2GLTFWriter.cpp
         unsigned int getMaterialObjectID();
         void setMaterialObjectID(unsigned int materialID);
 

@@ -33,7 +33,7 @@
 #include <algorithm>
 
 #include "GLTF.h"
-#include "DAE2GLTFWriter.h"
+#include "COLLADA2GLTFWriter.h"
 #include "COLLADAFWPolygons.h"
 #include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
@@ -515,7 +515,7 @@ namespace GLTF
     }
         
     //--------------------------------------------------------------------
-	DAE2GLTFWriter::DAE2GLTFWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
+	COLLADA2GLTFWriter::COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
     _converterContext(converterArgs),
      _visualScene(0)
 	{
@@ -523,17 +523,17 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	DAE2GLTFWriter::~DAE2GLTFWriter()
+	COLLADA2GLTFWriter::~COLLADA2GLTFWriter()
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2GLTFWriter::reportError( const std::string& method, const std::string& message)
+	void COLLADA2GLTFWriter::reportError( const std::string& method, const std::string& message)
 	{
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::write()
+	bool COLLADA2GLTFWriter::write()
 	{
         ifstream inputVertices;
         ifstream inputIndices;
@@ -685,29 +685,29 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2GLTFWriter::cancel( const std::string& errorMessage )
+	void COLLADA2GLTFWriter::cancel( const std::string& errorMessage )
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2GLTFWriter::start()
+	void COLLADA2GLTFWriter::start()
 	{
 	}
     
 	//--------------------------------------------------------------------
-	void DAE2GLTFWriter::finish()
+	void COLLADA2GLTFWriter::finish()
 	{        
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* asset )
+	bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* asset )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
     
-    shared_ptr <GLTF::JSONArray> DAE2GLTFWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
+    shared_ptr <GLTF::JSONArray> COLLADA2GLTFWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
     {
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
         
@@ -725,7 +725,7 @@ namespace GLTF
         return array;
     }
 
-    float DAE2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
+    float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
@@ -736,12 +736,12 @@ namespace GLTF
         return this->_converterContext.invertTransparency ? 1 - transparency : transparency;
     }
     
-    float DAE2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
+    float COLLADA2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
     {
         return getTransparency(effectCommon)  >= 1;
     }
     
-    bool DAE2GLTFWriter::writeNode( const COLLADAFW::Node* node, 
+    bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node, 
                                     shared_ptr <GLTF::JSONObject> nodesObject, 
                                     COLLADABU::Math::Matrix4 parentMatrix,
                                     SceneFlatteningInfo* sceneFlatteningInfo) 
@@ -909,7 +909,7 @@ namespace GLTF
     // -> for all meshes
     //   -> get all accessors 
     //   -> transforms & write vtx attributes
-    bool DAE2GLTFWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
+    bool COLLADA2GLTFWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
     {
         /*
         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
@@ -924,7 +924,7 @@ namespace GLTF
         return true;
     }
     
-    bool DAE2GLTFWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
+    bool COLLADA2GLTFWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene )
 	{
         //FIXME: only one visual scene assumed/handled
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
@@ -961,13 +961,13 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeScene( const COLLADAFW::Scene* scene )
+	bool COLLADA2GLTFWriter::writeScene( const COLLADAFW::Scene* scene )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes )
+	bool COLLADA2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes )
 	{
         const NodePointerArray& nodes = libraryNodes->getNodes();
 
@@ -985,7 +985,7 @@ namespace GLTF
 	}   
             
 	//--------------------------------------------------------------------
-    bool DAE2GLTFWriter::writeGeometry( const COLLADAFW::Geometry* geometry )
+    bool COLLADA2GLTFWriter::writeGeometry( const COLLADAFW::Geometry* geometry )
 	{
         switch (geometry->getType()) {
             case Geometry::GEO_TYPE_MESH:
@@ -1023,7 +1023,7 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeMaterial( const COLLADAFW::Material* material )
+	bool COLLADA2GLTFWriter::writeMaterial( const COLLADAFW::Material* material )
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
 		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
@@ -1032,7 +1032,7 @@ namespace GLTF
 		return true;
 	}
             
-    const std::string DAE2GLTFWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
+    const std::string COLLADA2GLTFWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
         std::string techniqueName = inferTechniqueName(technique, this->_converterContext);
         
         shared_ptr <JSONObject> techniquesObject;
@@ -1049,7 +1049,7 @@ namespace GLTF
     }
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
+	bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
@@ -1128,7 +1128,7 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeCamera( const COLLADAFW::Camera* camera )
+	bool COLLADA2GLTFWriter::writeCamera( const COLLADAFW::Camera* camera )
 	{
         shared_ptr <GLTF::JSONObject> camerasObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("cameras"));
         if (!camerasObject) {
@@ -1214,7 +1214,7 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
+	bool COLLADA2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
 	{
         shared_ptr <GLTF::JSONObject> images = this->_converterContext.root->createObjectIfNeeded("images");
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
@@ -1241,33 +1241,33 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeLight( const COLLADAFW::Light* light )
+	bool COLLADA2GLTFWriter::writeLight( const COLLADAFW::Light* light )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation )
+	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
+	bool COLLADA2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
+	bool COLLADA2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
 	{
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool DAE2GLTFWriter::writeController( const COLLADAFW::Controller* Controller )
+	bool COLLADA2GLTFWriter::writeController( const COLLADAFW::Controller* Controller )
 	{
 		return true;
 	}
     
-} // namespace DAE2JSON
+} // namespace COLLADA2JSON

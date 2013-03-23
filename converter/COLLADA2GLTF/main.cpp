@@ -28,7 +28,7 @@
 
 #include <iostream>
 
-#include "DAE2GLTFWriter.h"
+#include "COLLADA2GLTFWriter.h"
 #include "GLTFConverterContext.h"
 #include "assert.h"
 
@@ -114,7 +114,7 @@ int main (int argc, char * const argv[]) {
 #endif
             PrettyWriter <FileStream> jsonWriter(s);
             printf("converting:%s ... as %s \n",converterArgs.inputFilePath.c_str(), converterArgs.outputFilePath.c_str());
-            GLTF::DAE2GLTFWriter* writer = new GLTF::DAE2GLTFWriter(converterArgs, &jsonWriter);
+            GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterArgs, &jsonWriter);
             writer->write();
             printf("[completed conversion]\n");
 #if !STDOUT_OUTPUT

@@ -24,8 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __DAE2JSONWRITER_H__
-#define __DAE2JSONWRITER_H__
+#ifndef __COLLADA2JSONWRITER_H__
+#define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
 #include "COLLADASaxFWLLoader.h"
@@ -136,11 +136,11 @@ namespace GLTF
     
     //-- OpenCOLLADA -> JSON writer implementation
     
-	class DAE2GLTFWriter : public COLLADAFW::IWriter
+	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		DAE2GLTFWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
-		virtual ~DAE2GLTFWriter();
+		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
+		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
