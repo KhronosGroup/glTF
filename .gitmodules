@@ -1,11 +1,11 @@
 [submodule "webgl/runtime/dependencies/montage"]
 	path = webgl/runtime/dependencies/montage
 	url = git://github.com/montagejs/montage.git
-[submodule "converter/dae2json/dependencies/OpenCOLLADA"]
-	path = converter/dae2json/dependencies/OpenCOLLADA
+[submodule "converter/COLLADA2GLTF/dependencies/OpenCOLLADA"]
+	path = converter/COLLADA2GLTF/dependencies/OpenCOLLADA
 	url = https://github.com/KhronosGroup/OpenCOLLADA.git
-[submodule "converter/dae2json/dependencies/rapidjson"]
-	path = converter/dae2json/dependencies/rapidjson
+[submodule "converter/COLLADA2GLTF/dependencies/rapidjson"]
+	path = converter/COLLADA2GLTF/dependencies/rapidjson
 	url = git://github.com/kennytm/rapidjson.git
 [submodule "specification/validator/JSV"]
 	path = specification/validator/JSV
