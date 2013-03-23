@@ -28,37 +28,37 @@ add_subdirectory(dependencies/OpenCOLLADA)
 
 add_executable(collada2gltf main.cpp 
     COLLADA2GLTFWriter.cpp
-    GLTF/GLTFAccessor.cpp
+    GLTFConverterContext.cpp
     GLTF/JSONArray.cpp
+    GLTF/JSONNumber.cpp
+    GLTF/JSONObject.cpp
+    GLTF/JSONString.cpp
+    GLTF/JSONValue.cpp
+    GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
     GLTF/GLTFIndices.cpp
     GLTF/GLTFMesh.cpp
-    GLTF/JSONNumber.cpp
-    GLTF/JSONObject.cpp
     GLTF/GLTFPrimitive.cpp
-    GLTF/JSONString.cpp
     GLTF/GLTFUtils.cpp
-    GLTF/JSONValue.cpp
     GLTF/GLTFWriter.cpp
-    GLTFConverterContext.cpp
     COLLADA2GLTFWriter.h
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
-    GLTF/GLTFAccessor.h
+    GLTFConverterContext.h
     GLTF/JSONArray.h
+    GLTF/JSONNumber.h
+    GLTF/JSONObject.h
+    GLTF/JSONString.h
+    GLTF/JSONValue.h
+    GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
     GLTF/GLTFIndices.h
     GLTF/GLTFMesh.h
-    GLTF/JSONNumber.h
-    GLTF/JSONObject.h
     GLTF/GLTFPrimitive.h
-    GLTF/JSONString.h
     GLTF/GLTFUtils.h
-    GLTF/JSONValue.h
     GLTF/GLTFWriter.h
-    GLTFConverterContext.h
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
     helpers/geometryHelpers.h
