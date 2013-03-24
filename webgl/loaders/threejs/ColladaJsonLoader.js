@@ -161,7 +161,7 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
-        } else if(semantic == "TEXCOORD") {
+        } else if ((semantic == "TEXCOORD_0") || (semantic == "TEXCOORD" )) {
             geometry.uvs = [];
             floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
             for(i = 0, l = floatArray.length; i < l; i += 2) {
@@ -367,7 +367,6 @@ define( ["loader/webgl-tf-loader", "helpers/resource-manager"],
             value: function(entryID, description, userInfo) {
                 var mesh = new ThreeColladaMesh();
                 this.threeResources.setEntry(entryID, mesh, description);
-
                 var primitivesDescription = description.primitives;
                 if (!primitivesDescription) {
                     //FIXME: not implemented in delegate
