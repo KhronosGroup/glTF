@@ -342,8 +342,22 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
     _floorTextureLoaded : { writable: true, value: false },
 
-    enableReflection: {
+    _enableReflection: {
         value: true, writable: true
+    },
+
+    enableReflection: {
+        get: function() {
+            return this._enableReflection;
+        },
+        set: function(flag) {
+            this._enableReflection = flag;
+
+            //if reflection (e.g floor) is enabled, then we constrain the rotation
+            if (this.camera)
+                this.camera.constrainXOrbit = flag;
+        }
+
     },
 
     showBBOX: {
