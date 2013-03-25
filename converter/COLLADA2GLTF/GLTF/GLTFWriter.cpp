@@ -55,15 +55,20 @@ namespace GLTF
         return bufferObject;
     }
 
-    
     shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context)
     {
         shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONArray> colorObject(new GLTF::JSONArray());
         
-        effectObject->setString("technique", effect->getTechniqueID());
+        shared_ptr <GLTF::JSONObject> techniques(new GLTF::JSONObject());
+        
+        std::string techniqueID = effect->getTechniqueID();
+        
+        effectObject->setString("technique", techniqueID);
         effectObject->setString("name", effect->getName());
-        effectObject->setValue("techniques", effect->getTechniques());
+
+        shared_ptr <GLTF::JSONObject> technique = effect->getTechnique();
+        techniques->setValue(techniqueID, technique);
+        effectObject->setValue("techniques", techniques);
         
         return effectObject;
     }

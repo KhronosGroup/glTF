@@ -643,9 +643,11 @@ namespace GLTF
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
-            shared_ptr <GLTF::JSONObject> effectObject = serializeEffect(effect.get(), 0);
-            //FIXME:HACK: effects are exported as materials
-            materialsObject->setValue(effect->getID(), effectObject);
+            if (effect->getTechniqueID() != "") {
+                shared_ptr <GLTF::JSONObject> effectObject = serializeEffect(effect.get(), 0);
+                //FIXME:HACK: effects are exported as materials
+                materialsObject->setValue(effect->getID(), effectObject);
+            }
         }
 
         // ----
@@ -848,13 +850,42 @@ namespace GLTF
                             unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                             
                             /* will be needed to get semantic & set association to create the shader */
-                            /*
                             const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
-                            */
                             
                             unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
                             std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
-                            shared_ptr <GLTF::GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
+                            shared_ptr <GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
+
+                            // retrieve the semantic to be associated
+                            size_t coordBindingsCount = textureCoordBindings.getCount();
+                            if (coordBindingsCount > 0) {
+                                //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
+                                size_t minimumIndex = textureCoordBindings[0].getSetIndex();
+                                for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                                    if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
+                                        minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
+                                }
+                                
+                                for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                                    std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
+                                    SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
+                                    
+                                    std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
+                                    /*
+                                    for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
+                                        printf("attribute semantic:%s  texcoord:%s \n",
+                                               (*semanticArrayPtr)[0].c_str(),
+                                               shaderSemantic.c_str());
+                                    }
+                                     */
+                                }
+                            }
+                            
+                            //generate shaders if needed
+                            shared_ptr<JSONObject> technique = effect->getTechnique();
+                            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(technique);
+                            effect->setTechniqueID(techniqueID);
+                            
                             effect->setName(materialName);
                             primitive->setMaterialID(effect->getID());
                         }
@@ -1033,19 +1064,7 @@ namespace GLTF
 	}
             
     const std::string COLLADA2GLTFWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
-        std::string techniqueName = inferTechniqueName(technique, this->_converterContext);
-        
-        shared_ptr <JSONObject> techniquesObject;
-        
-        //get or create if necessary the techniques object
-        techniquesObject = this->_converterContext.root->createObjectIfNeeded("techniques");
-        
-        if (!techniquesObject->contains(techniqueName)) {
-            shared_ptr <JSONObject> referenceTechnique = createReferenceTechniqueBasedOnTechnique(technique, this->_converterContext);
-            techniquesObject->setValue(techniqueName, referenceTechnique);
-        }
-        
-        return techniqueName;
+        return getReferenceTechniqueID(technique, this->_converterContext);
     }
     
 	//--------------------------------------------------------------------
@@ -1088,62 +1107,91 @@ namespace GLTF
         return "LINEAR";
     }
 
+    void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
+                                              std::string slotName,
+                                              shared_ptr <GLTFEffect> cvtEffect)
+    {
+        shared_ptr <JSONObject> technique = cvtEffect->getTechnique();
+        shared_ptr <JSONObject> parameters = technique->getObject("parameters");
+
+        ColorOrTexture slot;
+        
+        if (slotName == "diffuse")
+            slot = commonProfile->getDiffuse();
+        else if (slotName == "ambient")
+            slot = commonProfile->getAmbient();
+        else if (slotName == "emission")
+            slot = commonProfile->getEmission();
+        else
+            return;
+
+        
+        //retrieve the type, parameterName -> symbol -> type
+        double red = 1, green = 1, blue = 1;
+        if (slot.isColor()) {
+            const Color& color = slot.getColor();
+            if (slot.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
+                red = color.getRed();
+                green = color.getGreen();
+                blue = color.getBlue();
+            }
+            shared_ptr <JSONObject> slotObject(new JSONObject());
+            slotObject->setValue("value", serializeVec3(red,green,blue));
+            slotObject->setString("type", "FLOAT_VEC3");
+            
+            parameters->setValue(slotName, slotObject);
+            
+        } else if (slot.isTexture()) {
+            const Texture&  texture = slot.getTexture();
+            const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
+            const Sampler* sampler = samplers[texture.getSamplerId()];
+            const UniqueId& imageUID = sampler->getSourceImage();
+            
+            shared_ptr <JSONObject> sampler2D(new JSONObject());
+            
+            std::string texcoord = texture.getTexcoord();
+            
+            cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
+            
+            //FIXME: this is assume SAMPLER_2D
+            sampler2D->setString("wrapS", __GetGLWrapMode(sampler->getWrapS()));
+            sampler2D->setString("wrapT", __GetGLWrapMode(sampler->getWrapT()));
+            sampler2D->setString("minFilter", __GetFilterMode(sampler->getMinFilter()));
+            sampler2D->setString("magFilter", __GetFilterMode(sampler->getMagFilter()));
+            sampler2D->setString("image", uniqueIdWithType("image",imageUID));
+            sampler2D->setString("type", "SAMPLER_2D");
+            parameters->setValue(slotName, sampler2D);
+        } else {
+            // nothing to do, no texture or color
+        }
+    }
+    
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
         if (commonEffects.getCount() > 0) {
-            const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
-            const ColorOrTexture& diffuse = effectCommon->getDiffuse ();
-            
             std::string uniqueId = "";
-#if EXPORT_MATERIALS_AS_EFFECTS        
+#if EXPORT_MATERIALS_AS_EFFECTS
             uniqueId += "material.";
 #else
             uniqueId += "effect.";
 #endif
             uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
             
-            shared_ptr <GLTF::GLTFEffect> cvtEffect(new GLTF::GLTFEffect(uniqueId));
-            shared_ptr <GLTF::JSONObject> techniques(new GLTF::JSONObject());
-            shared_ptr <GLTF::JSONObject> technique(new GLTF::JSONObject());
-            shared_ptr <GLTF::JSONObject> parameters(new GLTF::JSONObject());
+            shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(uniqueId));
+            shared_ptr <JSONObject> technique(new JSONObject());
+            shared_ptr <JSONObject> parameters(new JSONObject());
             
-            //retrieve the type, parameterName -> symbol -> type
-            
-            double red = 1, green = 1, blue = 1;
-            bool hasDiffuseTexture = diffuse.isTexture();
-            if (!hasDiffuseTexture) {
-                const Color& color = diffuse.getColor();
-                if (diffuse.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
-                    red = color.getRed();
-                    green = color.getGreen();
-                    blue = color.getBlue();
-                }
-                shared_ptr <JSONObject> diffuse(new JSONObject());
-                diffuse->setValue("value", serializeVec3(red,green,blue));
-                diffuse->setString("type", "FLOAT_VEC3");
+            cvtEffect->setTechnique(technique);
+            technique->setValue("parameters", parameters);
 
-                parameters->setValue("diffuse", diffuse);
-                
-            } else {
-                const Texture&  diffuseTexture = diffuse.getTexture();
-                const SamplerPointerArray& samplers = effectCommon->getSamplerPointerArray();
-                const Sampler* sampler = samplers[diffuseTexture.getSamplerId()]; 
-                const UniqueId& imageUID = sampler->getSourceImage();
-                                
-                shared_ptr <JSONObject> sampler2D(new JSONObject());
-                
-                //FIXME: this is assume SAMPLER_2D
-                sampler2D->setString("wrapS", __GetGLWrapMode(sampler->getWrapS()));
-                sampler2D->setString("wrapT", __GetGLWrapMode(sampler->getWrapT()));
-                sampler2D->setString("minFilter", __GetFilterMode(sampler->getMinFilter()));
-                sampler2D->setString("magFilter", __GetFilterMode(sampler->getMagFilter()));
-                sampler2D->setString("image", uniqueIdWithType("image",imageUID));
-                sampler2D->setString("type", "SAMPLER_2D");
-                parameters->setValue("diffuse", sampler2D);
-            }
+            const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
             
+            handleEffectSlot(effectCommon,"diffuse" , cvtEffect);
+            handleEffectSlot(effectCommon,"ambient" , cvtEffect);
+            handleEffectSlot(effectCommon,"emission" , cvtEffect);
+
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 double transparencyValue = effectCommon->getOpacity().getColor().getAlpha();
@@ -1154,16 +1202,11 @@ namespace GLTF
                 parameters->setValue("transparency", transparency);
             }
             
-            technique->setValue("parameters", parameters);
-            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(technique);
-            techniques->setValue(techniqueID.c_str(), technique);
             
-            cvtEffect->setTechniques(techniques);
-            cvtEffect->setTechniqueID(techniqueID);
-            this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;            
+            this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
             
         }
-		return true;                
+		return true;
 	}
     
 	//--------------------------------------------------------------------

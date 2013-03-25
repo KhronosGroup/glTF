@@ -110,24 +110,6 @@
                 }
             }
         },
-        "material.13": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "material.14": {
             "name": "_0135_DarkGray_",
             "technique": "lambert0",

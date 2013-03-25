@@ -39,48 +39,20 @@
         }
     },
     "materials": {
-        "material.0": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "material.1": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "material.2": {
             "name": "Wood_Cherry_Original_",
             "technique": "lambert1",
             "techniques": {
                 "lambert1": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.2,
+                                0.2,
+                                0.2
+                            ]
+                        },
                         "diffuse": {
                             "image": "image_1",
                             "magFilter": "LINEAR",
@@ -99,6 +71,14 @@
             "techniques": {
                 "lambert2": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.2,
+                                0.2,
+                                0.2
+                            ]
+                        },
                         "diffuse": {
                             "type": "FLOAT_VEC3",
                             "value": [
@@ -121,6 +101,14 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.2,
+                                0.2,
+                                0.2
+                            ]
+                        },
                         "diffuse": {
                             "image": "image_2",
                             "magFilter": "LINEAR",
@@ -139,6 +127,14 @@
             "techniques": {
                 "lambert0": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.2,
+                                0.2,
+                                0.2
+                            ]
+                        },
                         "diffuse": {
                             "type": "FLOAT_VEC3",
                             "value": [
@@ -157,6 +153,14 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0.2,
+                                0.2,
+                                0.2
+                            ]
+                        },
                         "diffuse": {
                             "image": "image_0",
                             "magFilter": "LINEAR",

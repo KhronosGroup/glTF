@@ -38,24 +38,6 @@
                 }
             }
         },
-        "material.1": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "material.2": {
             "name": "Color_007",
             "technique": "lambert0",
@@ -74,24 +56,6 @@
                 }
             }
         },
-        "material.3": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "material.4": {
             "name": "Color_E02",
             "technique": "lambert0",
@@ -104,24 +68,6 @@
                                 1,
                                 1,
                                 0.196078
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "material.5": {
-            "name": "",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
                             ]
                         }
                     }
@@ -166,24 +112,6 @@
         },
         "material.8": {
             "name": "material_0",
-            "technique": "lambert0",
-            "techniques": {
-                "lambert0": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "material.9": {
-            "name": "",
             "technique": "lambert0",
             "techniques": {
                 "lambert0": {

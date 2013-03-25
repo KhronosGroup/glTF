@@ -64,14 +64,32 @@ namespace GLTF
         return this->_name;
     }
     
-    void GLTFEffect::setTechniques(shared_ptr <GLTF::JSONObject> techniques)
+    void GLTFEffect::setTechnique(shared_ptr <GLTF::JSONObject> technique)
     {
-        this->_techniques = techniques;
+        this->_technique = technique;
     }
     
-    shared_ptr <GLTF::JSONObject> GLTFEffect::getTechniques()
+    shared_ptr <JSONObject> GLTFEffect::getTechnique()
     {
-        return this->_techniques;
+        return this->_technique;
     }
     
+    void GLTFEffect::addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic)
+    {
+        shared_ptr <SemanticArray> semanticArrayPtr;
+        if (this->_texcoordToSemantics.count(texcoord) == 0) {
+            semanticArrayPtr =  shared_ptr<SemanticArray> (new SemanticArray());
+            this->_texcoordToSemantics[texcoord] = semanticArrayPtr;
+        } else {
+            semanticArrayPtr = this->_texcoordToSemantics[texcoord];
+        }
+        
+        semanticArrayPtr->push_back(semantic);
+    }
+    
+    SemanticArrayPtr GLTFEffect::getSemanticsForTexcoordName(const std::string &texcoord)
+    {
+        return this->_texcoordToSemantics[texcoord];
+    }
+
 }

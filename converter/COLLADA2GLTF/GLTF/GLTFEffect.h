@@ -29,10 +29,13 @@
 
 namespace GLTF 
 {
+    typedef std::vector <std::string > SemanticArray;
+    typedef shared_ptr<SemanticArray> SemanticArrayPtr;
+    typedef std::map<std::string /* texcoord */, SemanticArrayPtr > TexCoordToSemanticsArrayPtr;
+    
     class GLTFEffect {
         
     public:
-        
         GLTFEffect(const std::string &ID);
 
         virtual ~GLTFEffect();
@@ -45,17 +48,19 @@ namespace GLTF
         void setName(const std::string& name);
         const std::string& getName();
 
-        void setTechniques(shared_ptr <GLTF::JSONObject>);
-        shared_ptr <GLTF::JSONObject> getTechniques();
-                        
+        void setTechnique(shared_ptr <GLTF::JSONObject>);
+        shared_ptr <GLTF::JSONObject> getTechnique();
+        
+        void addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic);
+        SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
+        
     private:
         std::string _ID;
         std::string _name;
         std::string _techniqueID;
-        shared_ptr <GLTF::JSONObject> _techniques;
+        shared_ptr <GLTF::JSONObject> _technique;
+        TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
     };
-
 }
-
 
 #endif

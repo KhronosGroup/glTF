@@ -230,9 +230,13 @@ namespace GLTF
          @return The writer should return true, if writing succeeded, false otherwise.*/
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
-	protected:
         
+        
+	private:
         bool writeData(std::string filename, unsigned char* data, size_t length);
+        void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
+                              std::string slotName,
+                              shared_ptr <GLTFEffect> cvtEffect);
         
 	private:
         GLTFConverterContext _converterContext;

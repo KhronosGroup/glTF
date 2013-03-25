@@ -499,12 +499,17 @@ namespace GLTF
         return states;
     }
 
-    shared_ptr<JSONObject> createReferenceTechniqueBasedOnTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context) {
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, GLTFConverterContext& context) {
+        
+        shared_ptr <JSONObject> techniquesObject = context.root->createObjectIfNeeded("techniques");
+        std::string techniqueName = inferTechniqueName(technique, context);
+
+        if (techniquesObject->contains(techniqueName))
+            return techniqueName;
         
         shared_ptr<JSONObject> referenceTechnique(new JSONObject());
         std::vector <std::string> allAttributes;
         std::vector <std::string> allUniforms;
-        std::string techniqueName = inferTechniqueName(technique, context);
         std::string shaderName = techniqueName; //simplification
         std::string vs =  shaderName + "Vs";
         std::string fs =  shaderName + "Fs";
@@ -610,8 +615,8 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
         
         passes->setValue(passName, pass);
-        
-        return referenceTechnique;
+        techniquesObject->setValue(techniqueName, referenceTechnique);
+        return techniqueName;
     }
 
 

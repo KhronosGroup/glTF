@@ -40,6 +40,14 @@
             "techniques": {
                 "lambert1": {
                     "parameters": {
+                        "ambient": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0,
+                                0,
+                                0
+                            ]
+                        },
                         "diffuse": {
                             "image": "image_0",
                             "magFilter": "LINEAR",
@@ -47,6 +55,14 @@
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
+                        },
+                        "emission": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0,
+                                0,
+                                0
+                            ]
                         }
                     }
                 }

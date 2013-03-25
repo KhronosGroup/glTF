@@ -7,9 +7,9 @@
 namespace GLTF
 {
 
-std::string inferTechniqueName(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
+    std::string inferTechniqueName(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
 
-shared_ptr<JSONObject> createReferenceTechniqueBasedOnTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
 };
 
 #endif
