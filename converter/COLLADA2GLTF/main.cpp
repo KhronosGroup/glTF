@@ -38,13 +38,12 @@ enum ArgsState
 {
     PARSE_INPUT_FILE_ARG = 0,
     PARSE_OUTPUT_FILE_ARG,
-    PARSE_OPTIONS_ARG,
     PARSE_STATES_END
 };
 
 void usage(char* prog)
 {
-	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [JSON outputFile] [options] \n", prog);
+	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [options] \n", prog);
 }
 
 static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
@@ -70,29 +69,13 @@ static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], GLTF::GLTF
     }
     converterArgs->invertTransparency = false;
     
-    for (int argIndex = 1, state = PARSE_INPUT_FILE_ARG ; argIndex < argc && state < PARSE_STATES_END ; state++) {
-        switch (state) {
-            case PARSE_INPUT_FILE_ARG:
-                converterArgs->inputFilePath = argv[argIndex++];
-                converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
-                break;
-            case PARSE_OUTPUT_FILE_ARG:
-                if (argIndex == argc) {
-                    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
-                } else if (argv[argIndex][0] == '-') { //check if we have an option instead of a destination path
-                    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
-                    argIndex++;
-                } else {
-                    converterArgs->outputFilePath = argv[argIndex++];
-                }
-                break;
-            case PARSE_OPTIONS_ARG:
-                if (strcmp(argv[argIndex++], "-i") == 0) {
-                    converterArgs->invertTransparency = true;
-                    printf("[option] invert transparency: on\n");
-                }
-
-                break;
+    converterArgs->inputFilePath = argv[1];
+    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
+    
+    if (argc > 2) {
+        if (strcmp(argv[2], "-i") == 0) {
+            converterArgs->invertTransparency = true;
+            printf("[option] invert transparency: on\n");
         }
     }
     
