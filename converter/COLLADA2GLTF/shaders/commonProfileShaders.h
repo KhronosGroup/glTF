@@ -6,10 +6,7 @@
 
 namespace GLTF
 {
-
-    std::string inferTechniqueName(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
-
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, GLTFConverterContext& context);
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::vector<shared_ptr<JSONObject> > &texcoordBindings, GLTFConverterContext& context);
 };
 
 #endif

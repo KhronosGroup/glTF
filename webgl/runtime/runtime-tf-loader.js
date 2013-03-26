@@ -216,7 +216,7 @@ var global = window;
                                 //TODO: handle with switch all types
                                 switch (param.type) {
                                     case "SAMPLER_2D": {
-                                        var sampler2D = Object.create(ResourceDescription).init(entryID+sampler2D, param);
+                                        var sampler2D = Object.create(ResourceDescription).init(param.image, param);
                                         sampler2D.type = param.type;
                                         if (param.image) {
                                             param.image = this.getEntry(param.image).entry;

@@ -1,30 +1,30 @@
 {
     "bufferViews": {
         "bufferView_13025": {
-            "buffer": "Rambler.bin",
+            "buffer": "rambler.bin",
             "byteLength": 10344480,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
         "bufferView_13026": {
-            "buffer": "Rambler.bin",
+            "buffer": "rambler.bin",
             "byteLength": 1197492,
             "byteOffset": 10344480,
             "target": "ELEMENT_ARRAY_BUFFER"
         }
     },
     "buffers": {
-        "Rambler.bin": {
+        "rambler.bin": {
             "byteLength": 11541972,
-            "path": "Rambler.bin"
+            "path": "rambler.bin"
         }
     },
     "materials": {
         "material.0": {
             "name": "Color_1",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -33,6 +33,10 @@
                                 0.776471,
                                 0.776471
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -40,9 +44,9 @@
         },
         "material.2": {
             "name": "Color_007",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -51,6 +55,10 @@
                                 0.227451,
                                 0.227451
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -58,9 +66,9 @@
         },
         "material.4": {
             "name": "Color_E02",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -69,6 +77,10 @@
                                 1,
                                 0.196078
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -76,9 +88,9 @@
         },
         "material.6": {
             "name": "Color_008",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -87,6 +99,10 @@
                                 0.117647,
                                 0.117647
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -94,9 +110,9 @@
         },
         "material.7": {
             "name": "material",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -105,6 +121,10 @@
                                 1,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -112,9 +132,9 @@
         },
         "material.8": {
             "name": "material_0",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -123,6 +143,10 @@
                                 1,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -45417,54 +45441,54 @@
         }
     },
     "shaders": {
-        "lambert0Fs": {
-            "path": "lambert0Fs.glsl"
+        "technique1Fs": {
+            "path": "technique1Fs.glsl"
         },
-        "lambert0Vs": {
-            "path": "lambert0Vs.glsl"
+        "technique1Vs": {
+            "path": "technique1Vs.glsl"
         }
     },
     "techniques": {
-        "lambert0": {
+        "technique1": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert0Fs",
-                        "VERTEX_SHADER": "lambert0Vs",
+                        "FRAGMENT_SHADER": "technique1Fs",
+                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
                                 "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
                             },
                             {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
+                                "parameter": "diffuse",
+                                "symbol": "u_diffuse",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuseColor",
-                                "type": "FLOAT_VEC3"
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },

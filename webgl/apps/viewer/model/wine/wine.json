@@ -41,9 +41,9 @@
     "materials": {
         "material.2": {
             "name": "Wood_Cherry_Original_",
-            "technique": "lambert1",
+            "technique": "technique1",
             "techniques": {
-                "lambert1": {
+                "technique1": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -60,6 +60,10 @@
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -67,9 +71,9 @@
         },
         "material.3": {
             "name": "material_5",
-            "technique": "lambert2",
+            "technique": "technique2",
             "techniques": {
-                "lambert2": {
+                "technique2": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -87,6 +91,10 @@
                                 0.835294
                             ]
                         },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
+                        },
                         "transparency": {
                             "type": "FLOAT",
                             "value": 0.14902
@@ -97,9 +105,9 @@
         },
         "material.4": {
             "name": "_2004_old_vine_zinfandel_btl_xlg",
-            "technique": "lambert1",
+            "technique": "technique1",
             "techniques": {
-                "lambert1": {
+                "technique1": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -116,6 +124,10 @@
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -123,9 +135,9 @@
         },
         "material.5": {
             "name": "material",
-            "technique": "lambert0",
+            "technique": "technique3",
             "techniques": {
-                "lambert0": {
+                "technique3": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -142,6 +154,10 @@
                                 1,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -149,9 +165,9 @@
         },
         "material.6": {
             "name": "artezin_bottle",
-            "technique": "lambert1",
+            "technique": "technique1",
             "techniques": {
-                "lambert1": {
+                "technique1": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -168,6 +184,10 @@
                             "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -11679,123 +11699,71 @@
         }
     },
     "shaders": {
-        "lambert0Fs": {
-            "path": "lambert0Fs.glsl"
+        "technique1Fs": {
+            "path": "technique1Fs.glsl"
         },
-        "lambert0Vs": {
-            "path": "lambert0Vs.glsl"
+        "technique1Vs": {
+            "path": "technique1Vs.glsl"
         },
-        "lambert1Fs": {
-            "path": "lambert1Fs.glsl"
+        "technique2Fs": {
+            "path": "technique2Fs.glsl"
         },
-        "lambert1Vs": {
-            "path": "lambert1Vs.glsl"
+        "technique2Vs": {
+            "path": "technique2Vs.glsl"
         },
-        "lambert2Fs": {
-            "path": "lambert2Fs.glsl"
+        "technique3Fs": {
+            "path": "technique3Fs.glsl"
         },
-        "lambert2Vs": {
-            "path": "lambert2Vs.glsl"
+        "technique3Vs": {
+            "path": "technique3Vs.glsl"
         }
     },
     "techniques": {
-        "lambert0": {
+        "technique1": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert0Fs",
-                        "VERTEX_SHADER": "lambert0Vs",
+                        "FRAGMENT_SHADER": "technique1Fs",
+                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
                                 "semantic": "NORMAL",
-                                "symbol": "normal",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ],
-                        "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                                "symbol": "u_normalMatrix",
-                                "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuseColor",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ]
-                    },
-                    "states": {
-                        "blendEnable": false,
-                        "depthMask": true,
-                        "depthTestEnable": true
-                    },
-                    "type": "program"
-                }
-            }
-        },
-        "lambert1": {
-            "parameters": {},
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "program": {
-                        "FRAGMENT_SHADER": "lambert1Fs",
-                        "VERTEX_SHADER": "lambert1Vs",
-                        "attributes": [
-                            {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
                                 "semantic": "TEXCOORD_0",
-                                "symbol": "texcoord",
+                                "symbol": "a_texcoord0",
                                 "type": "FLOAT_VEC2"
+                            },
+                            {
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
+                                "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
                             {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
-                                "type": "FLOAT_MAT4"
                             },
                             {
                                 "parameter": "diffuse",
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },
@@ -11808,51 +11776,51 @@
                 }
             }
         },
-        "lambert2": {
+        "technique2": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert2Fs",
-                        "VERTEX_SHADER": "lambert2Vs",
+                        "FRAGMENT_SHADER": "technique2Fs",
+                        "VERTEX_SHADER": "technique2Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
                                 "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
                             },
                             {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
                                 "parameter": "diffuse",
-                                "symbol": "u_diffuseColor",
+                                "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             },
                             {
                                 "parameter": "transparency",
                                 "symbol": "u_transparency",
                                 "type": "FLOAT"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },
@@ -11864,6 +11832,58 @@
                             "sfactor": "SRC_ALPHA"
                         },
                         "depthMask": false,
+                        "depthTestEnable": true
+                    },
+                    "type": "program"
+                }
+            }
+        },
+        "technique3": {
+            "parameters": {},
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "program": {
+                        "FRAGMENT_SHADER": "technique3Fs",
+                        "VERTEX_SHADER": "technique3Vs",
+                        "attributes": [
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
+                                "type": "FLOAT_VEC3"
+                            }
+                        ],
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "parameter": "diffuse",
+                                "symbol": "u_diffuse",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
+                            }
+                        ]
+                    },
+                    "states": {
+                        "blendEnable": false,
+                        "depthMask": true,
                         "depthTestEnable": true
                     },
                     "type": "program"

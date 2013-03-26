@@ -146,7 +146,6 @@ namespace GLTF
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         shared_ptr <GLTF::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
-        const std::string writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
 

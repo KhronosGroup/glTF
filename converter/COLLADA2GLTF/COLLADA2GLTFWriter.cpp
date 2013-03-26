@@ -846,6 +846,9 @@ namespace GLTF
                                 materialBindingIndex = (unsigned int)k;
                             }
                         }
+                        
+                        std::vector<shared_ptr<JSONObject> > texcoordBindings;
+                        
                         if (materialBindingIndex != -1) {
                             unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                             
@@ -871,19 +874,24 @@ namespace GLTF
                                     SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
                                     
                                     std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
-                                    /*
-                                    for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                        printf("attribute semantic:%s  texcoord:%s \n",
-                                               (*semanticArrayPtr)[0].c_str(),
-                                               shaderSemantic.c_str());
+                                    
+                                    if (semanticArrayPtr) {
+                                        for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
+                                            
+                                            shared_ptr<JSONObject> texcoordBinding(new JSONObject);
+                                            texcoordBinding->setString("slot", (*semanticArrayPtr)[0]);
+                                            texcoordBinding->setString("semantic", shaderSemantic);
+                                            texcoordBindings.push_back(texcoordBinding);
+                                        }
                                     }
-                                     */
+                                    
                                 }
                             }
                             
                             //generate shaders if needed
                             shared_ptr<JSONObject> technique = effect->getTechnique();
-                            const std::string& techniqueID = this->writeTechniqueForCommonProfileIfNeeded(technique);
+                            const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
+
                             effect->setTechniqueID(techniqueID);
                             
                             effect->setName(materialName);
@@ -1063,9 +1071,6 @@ namespace GLTF
 		return true;
 	}
             
-    const std::string COLLADA2GLTFWriter::writeTechniqueForCommonProfileIfNeeded(shared_ptr<JSONObject> technique) {
-        return getReferenceTechniqueID(technique, this->_converterContext);
-    }
     
 	//--------------------------------------------------------------------
     //FIXME: should be different depending on profiles. now assuming WebGL
@@ -1122,6 +1127,8 @@ namespace GLTF
             slot = commonProfile->getAmbient();
         else if (slotName == "emission")
             slot = commonProfile->getEmission();
+        else if (slotName == "specular")
+            slot = commonProfile->getSpecular();
         else
             return;
 
@@ -1191,6 +1198,7 @@ namespace GLTF
             handleEffectSlot(effectCommon,"diffuse" , cvtEffect);
             handleEffectSlot(effectCommon,"ambient" , cvtEffect);
             handleEffectSlot(effectCommon,"emission" , cvtEffect);
+            handleEffectSlot(effectCommon,"specular" , cvtEffect);
 
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
@@ -1202,6 +1210,12 @@ namespace GLTF
                 parameters->setValue("transparency", transparency);
             }
             
+            //should check if has specular first and the lighting model (if not lambert)
+            shared_ptr <JSONObject> shininessObject(new JSONObject());
+            double shininess = effectCommon->getShininess().getFloatValue();
+            shininessObject->setDouble("value", shininess);
+            shininessObject->setString("type", "FLOAT");
+            parameters->setValue("shininess", shininessObject);
             
             this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
             

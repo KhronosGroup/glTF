@@ -22,9 +22,9 @@
     "materials": {
         "material.0": {
             "name": "_0046_Gold_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -33,6 +33,10 @@
                                 0.843137,
                                 0
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -40,9 +44,9 @@
         },
         "material.1": {
             "name": "_0136_Charcoal_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -51,6 +55,10 @@
                                 0.137255,
                                 0.137255
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -58,9 +66,9 @@
         },
         "material.10": {
             "name": "_0110_LightSlateGray_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -69,6 +77,10 @@
                                 0.533333,
                                 0.6
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -76,9 +88,9 @@
         },
         "material.11": {
             "name": "__LightGray_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -87,6 +99,10 @@
                                 0.662745,
                                 0.662745
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -94,9 +110,9 @@
         },
         "material.12": {
             "name": "_0134_DimGray_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -105,6 +121,10 @@
                                 0.411765,
                                 0.411765
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -112,9 +132,9 @@
         },
         "material.14": {
             "name": "_0135_DarkGray_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -123,6 +143,10 @@
                                 0.317647,
                                 0.317647
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -130,9 +154,9 @@
         },
         "material.15": {
             "name": "material_2",
-            "technique": "lambert2",
+            "technique": "technique2",
             "techniques": {
-                "lambert2": {
+                "technique2": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -141,6 +165,10 @@
                                 0.458824,
                                 0.956863
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         },
                         "transparency": {
                             "type": "FLOAT",
@@ -152,9 +180,9 @@
         },
         "material.16": {
             "name": "_0019_Crimson_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -163,6 +191,10 @@
                                 0.0431373,
                                 0.180392
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -170,9 +202,9 @@
         },
         "material.17": {
             "name": "_0097_DeepSkyBlue_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -181,6 +213,10 @@
                                 0.74902,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -188,9 +224,9 @@
         },
         "material.18": {
             "name": "__0097_DeepSkyBlue_1",
-            "technique": "lambert2",
+            "technique": "technique2",
             "techniques": {
-                "lambert2": {
+                "technique2": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -199,6 +235,10 @@
                                 0.74902,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         },
                         "transparency": {
                             "type": "FLOAT",
@@ -210,9 +250,9 @@
         },
         "material.2": {
             "name": "black",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -221,6 +261,10 @@
                                 0,
                                 0
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -228,9 +272,9 @@
         },
         "material.3": {
             "name": "material",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -239,6 +283,10 @@
                                 1,
                                 1
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -246,9 +294,9 @@
         },
         "material.4": {
             "name": "_0044_DarkGoldenrod_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -257,6 +305,10 @@
                                 0.52549,
                                 0.0431373
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -264,9 +316,9 @@
         },
         "material.5": {
             "name": "jean_blue",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -275,6 +327,10 @@
                                 0.184314,
                                 0.258824
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -282,9 +338,9 @@
         },
         "material.6": {
             "name": "material_1",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -293,6 +349,10 @@
                                 0.0745098,
                                 0.0745098
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -300,9 +360,9 @@
         },
         "material.7": {
             "name": "__Charcoal_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -311,6 +371,10 @@
                                 0.137255,
                                 0.137255
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -318,9 +382,9 @@
         },
         "material.8": {
             "name": "_0023_FireBrick_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -329,6 +393,10 @@
                                 0.133333,
                                 0.133333
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -336,9 +404,9 @@
         },
         "material.9": {
             "name": "_0101_CornflowerBlue_",
-            "technique": "lambert0",
+            "technique": "technique1",
             "techniques": {
-                "lambert0": {
+                "technique1": {
                     "parameters": {
                         "diffuse": {
                             "type": "FLOAT_VEC3",
@@ -347,6 +415,10 @@
                                 0.305882,
                                 0.65098
                             ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": -1
                         }
                     }
                 }
@@ -14708,60 +14780,60 @@
         }
     },
     "shaders": {
-        "lambert0Fs": {
-            "path": "lambert0Fs.glsl"
+        "technique1Fs": {
+            "path": "technique1Fs.glsl"
         },
-        "lambert0Vs": {
-            "path": "lambert0Vs.glsl"
+        "technique1Vs": {
+            "path": "technique1Vs.glsl"
         },
-        "lambert2Fs": {
-            "path": "lambert2Fs.glsl"
+        "technique2Fs": {
+            "path": "technique2Fs.glsl"
         },
-        "lambert2Vs": {
-            "path": "lambert2Vs.glsl"
+        "technique2Vs": {
+            "path": "technique2Vs.glsl"
         }
     },
     "techniques": {
-        "lambert0": {
+        "technique1": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert0Fs",
-                        "VERTEX_SHADER": "lambert0Vs",
+                        "FRAGMENT_SHADER": "technique1Fs",
+                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
                                 "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
                             },
                             {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
+                                "parameter": "diffuse",
+                                "symbol": "u_diffuse",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
                                 "type": "FLOAT_MAT4"
                             },
                             {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuseColor",
-                                "type": "FLOAT_VEC3"
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },
@@ -14774,51 +14846,51 @@
                 }
             }
         },
-        "lambert2": {
+        "technique2": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert2Fs",
-                        "VERTEX_SHADER": "lambert2Vs",
+                        "FRAGMENT_SHADER": "technique2Fs",
+                        "VERTEX_SHADER": "technique2Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
                                 "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
                             },
                             {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
                                 "parameter": "diffuse",
-                                "symbol": "u_diffuseColor",
+                                "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             },
                             {
                                 "parameter": "transparency",
                                 "symbol": "u_transparency",
                                 "type": "FLOAT"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },

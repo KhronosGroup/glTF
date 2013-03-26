@@ -36,9 +36,9 @@
     "materials": {
         "material.0": {
             "name": "blinn3",
-            "technique": "lambert1",
+            "technique": "technique1",
             "techniques": {
-                "lambert1": {
+                "technique1": {
                     "parameters": {
                         "ambient": {
                             "type": "FLOAT_VEC3",
@@ -57,6 +57,18 @@
                             "wrapT": "REPEAT"
                         },
                         "emission": {
+                            "type": "FLOAT_VEC3",
+                            "value": [
+                                0,
+                                0,
+                                0
+                            ]
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": 0.3
+                        },
+                        "specular": {
                             "type": "FLOAT_VEC3",
                             "value": [
                                 0,
@@ -231,59 +243,59 @@
         }
     },
     "shaders": {
-        "lambert1Fs": {
-            "path": "lambert1Fs.glsl"
+        "technique1Fs": {
+            "path": "technique1Fs.glsl"
         },
-        "lambert1Vs": {
-            "path": "lambert1Vs.glsl"
+        "technique1Vs": {
+            "path": "technique1Vs.glsl"
         }
     },
     "techniques": {
-        "lambert1": {
+        "technique1": {
             "parameters": {},
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "lambert1Fs",
-                        "VERTEX_SHADER": "lambert1Vs",
+                        "FRAGMENT_SHADER": "technique1Fs",
+                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
-                                "semantic": "POSITION",
-                                "symbol": "vert",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
                                 "semantic": "NORMAL",
-                                "symbol": "normal",
+                                "symbol": "a_normal",
                                 "type": "FLOAT_VEC3"
                             },
                             {
                                 "semantic": "TEXCOORD_0",
-                                "symbol": "texcoord",
+                                "symbol": "a_texcoord0",
                                 "type": "FLOAT_VEC2"
+                            },
+                            {
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
+                                "type": "FLOAT_VEC3"
                             }
                         ],
                         "uniforms": [
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_mvMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
                             },
                             {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
                                 "parameter": "diffuse",
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
                             }
                         ]
                     },
