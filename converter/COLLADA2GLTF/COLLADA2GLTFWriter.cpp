@@ -1202,7 +1202,7 @@ namespace GLTF
 
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
-                double transparencyValue = effectCommon->getOpacity().getColor().getAlpha();
+                double transparencyValue = this->getTransparency(effectCommon);
 
                 transparency->setDouble("value", transparencyValue);
                 transparency->setString("type", "FLOAT");
