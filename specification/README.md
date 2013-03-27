@@ -2,7 +2,7 @@
 
 _This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
-_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL, OpenGL and OpenGL ES need additional considerations._
+_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL.  OpenGL and OpenGL ES need additional considerations._
 
 Editors
 
@@ -84,13 +84,13 @@ Editors
 
 glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
 
-There are industry-standard interchange formats, namely COLLADA, that allows sharing assets between modeling tools and within the content pipeline in general.  However, these formats are not optimized for size or runtime use nor are modeling-tool-specific formats.  At runtime, an application wishing to render an asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
+There are industry-standard interchange formats, namely COLLADA, that allow sharing assets between modeling tools and within the content pipeline in general.  However, these formats are not optimized for size or runtime use and neither are modeling-tool-specific formats.  At runtime, an application wishing to render an asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
 
 Applications seeking high-performance, such as games, rarely load interchange or modeling-tool-specific formats directly; instead, they process the model offline as part of a content pipeline to convert the asset to a proprietary format optimized for their runtime application.  This has lead to a fragmented market of incompatible proprietary runtime formats and duplicate efforts in content pipeline tools.  glTF solves this by providing an extensible open-standard runtime format that can be rendered with minimal processing, along with open-source pipeline tools, that, while not part of the glTF specification, provide the ecosystem of freely-available tools necessary to facilitate adoption of glTF.  In particular, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) converts COLLADA assets to glTF.
 
 ![](figures/COLLADA2GLTF.png)
 
-Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity and variety of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
+Another perspective that motivates glTF is that 3D is the last media type without a standard codec.  Audio has mp3.  Video has H.264.  Images have png and jpg.  What does 3D content have?  The variety of use cases and complexity of 3D asset types have left 3D without a standard codec.  A cross-vendor standard will allow for portable, reusable content, unified asset repositories and archives, and enable optimized codec implementations in hardware and software. 
 
 > Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs. 
 
@@ -124,7 +124,7 @@ glTF is a runtime asset format; not an interchange format.  Its primary use case
 
 To achieve this:
 * glTF uses [JSON](http://www.json.org/) for the node hierarchy, materials, and cameras.  JSON is compact, especially compared to XML, and minifies and compresses well.  For WebGL users, JSON parases in a single line of JavaScript using `JSON.parse`.  Free JSON libraries are also available for all major languages.
-* glTF stores geometry using binary, which allows efficient creation of GL buffers - as opposed to COLLADA, for example, where geometry is stored in XML).  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
+* glTF stores geometry using binary, which allows efficient creation of GL buffers - as opposed to COLLADA, for example, where geometry is stored in XML.  With the exception of potential decompression, geometry from glTF can be provided to GL directly with [`bufferData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferData.xml) or [`bufferSubData`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBufferSubData.xml).
 * glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing as possible so the runtime application can efficiently load and render assets.  In particular:
    * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling-tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
    * glTF only supports one index per vertex, which is what the GL APIs support.  Modeling-tool formats commonly use one index per attribute, which can reduce the total amount of vertex data, but requires processing before rendering.  For glTF, this "deindexing" happens as part of the content pipeline.
@@ -177,8 +177,8 @@ In particlar, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/co
 
 glTF is streamlined for rendering so it doesn't have as many options or as much metadata as a modeling-tool format.  However, different applications still have different needs within the rendering use case.  glTF strives to be flexible in areas where flexibility is needed, but at the same time does not allow too much flexibility that would significantly burden application developers.  For example:
 
-* glTF allows any number of binary files to store geometry and animations.  A user could store everything in one file to reduce the number of requests for a single asset or could store data common to several assets in a common binary file to reduce the amount of data requested for across several models.  This flexibility allows applications to optimize for their use case, which glTF can't predict, but does not make glTF significantly more difficult to render.  
-* glTF allows binary, image, and GLSL files to be separate from the main JSON file or embedded into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).  For WebGL developers using `XMLHTTPRequest`, the code to load binary, image, or GLSL data is the same regardless of if the URL is an external file or embedded data URI.  Therefore, allowing this flexibility does not burden the application developer, but it allows the application to decide what the best approach.  If assets share many of the same geometry, animation, textures, or shaders, separate files may be preferred to reduce the total amount of data requested.  If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding.  With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visisble.
+* glTF allows any number of binary files to store geometry and animations.  A user could store everything in one file to reduce the number of requests for a single asset or could store data common to several assets in a common binary file to reduce the amount of data requested across several models.  This flexibility allows applications to optimize for their use case, which glTF can't predict, but does not make glTF significantly more difficult to render.  
+* glTF allows binary, image, and GLSL files to be separate from the main JSON file or embedded in the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).  For WebGL developers using `XMLHTTPRequest`, the code to load binary, image, or GLSL data is the same regardless of if the URL is an external file or embedded data URI.  Therefore, allowing this flexibility does not burden the application developer, but it allows the application to decide what the best approach.  If assets share many of the same geometry, animation, textures, or shaders, separate files may be preferred to reduce the total amount of data requested.  If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding.  With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visisble.
 * glTF includes GLSL shaders and potential metadata describing the shaders, e.g., if it was generated from the COLLADA Common Profile.  Applications are free to use the provided shader directly or use the metadata to better integrate the asset into their application, e.g., model viewers may use the shaders where as deferred shading engines may use the metadata.
 
 ## Extensibility
@@ -201,6 +201,10 @@ glTF assets also have a <a href="#profile">`profile`</a> that indicates what GL 
 
 _TODO: need deeper discussion here, e.g., endianness._
 
+## Web Friendly
+
+_TODO: JSON, image formats, little processing, etc._
+
 ## Other
 
 These are observations; not necessarily design principles.
@@ -209,7 +213,7 @@ These are observations; not necessarily design principles.
 
 glTF is often human-readable, but doesn't strive to be.  Without minification and compression, JSON is even easier to read than XML since it is less cluttered.  Likewise, without optimization, minification, and compression, separate GLSL files are readable.
 
-However, glTF assets aren't allows readable.  For example, a simple shader embedded in JSON with a data URI becomes hard to read: `"data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B"`.  Once minification occurs, the JSON and GLSL become unreadable.
+However, glTF assets aren't always readable.  For example, a simple shader embedded in JSON with a data URI becomes hard to read: `"data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B"`.  Once minification occurs, the JSON and GLSL become unreadable.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="conventions">
