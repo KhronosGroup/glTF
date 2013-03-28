@@ -1,8 +1,8 @@
-# glTF - the runtime asset format for OpenGL, OpenGL ES, and WebGL
+# glTF - the runtime asset format for WebGL, OpenGL ES, and OpenGL
 
 _This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
-_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL.  OpenGL and OpenGL ES need additional considerations._
+_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL.  OpenGL ES and OpenGL need additional considerations._
 
 Editors
 
@@ -82,7 +82,7 @@ Editors
 
 # Motivation
 
-glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for the GL APIs: OpenGL, OpenGL ES, and WebGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
+glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for the GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
 
 There are industry-standard interchange formats, namely COLLADA, that allow sharing assets between modeling tools and within the content pipeline in general.  However, these formats are not optimized for size or runtime use and neither are modeling-tool-specific formats.  At runtime, an application wishing to render an asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
 
@@ -128,7 +128,7 @@ To achieve this:
 * glTF provides a streamlined set of features, relying on a content pipeline to do as much preprocessing as possible so the runtime application can efficiently load and render assets.  In particular:
    * glTF only supports variations of triangle, line, and point primitives.  It does not support more complex primitives found in modeling-tool formats like polygons and splines.  Instead, complex primitives are converted to triangles in the content pipeline.
    * glTF only supports one index per vertex, which is what the GL APIs support.  Modeling-tool formats commonly use one index per attribute, which can reduce the total amount of vertex data, but requires processing before rendering.  For glTF, this "deindexing" happens as part of the content pipeline.
-   * glTF only supports `UNSIGNED_SHORT` indices.  Modeling-tool formats commonly use `UNSIGNED_INT` indices, which are not supported by OpenGL ES or WebGL without an extension.  In glTF, meshes are split so indices fit within `UNSIGNED_SHORT` as part of the content pipeline.
+   * glTF only supports `UNSIGNED_SHORT` indices.  Modeling-tool formats commonly use `UNSIGNED_INT` indices, which are not supported by WebGL or OpenGL ES without an extension.  In glTF, meshes are split so indices fit within `UNSIGNED_SHORT` as part of the content pipeline.
    * The modern GL APIs require vertex and fragment shaders.  glTF includes GLSL shaders (as well as potential metadata describing the shaders) that can be used directly.  Modeling-tool formats commonly define higher-level material properties only, which the application then needs to generate shaders for.  In glTF, this generation is part of the content pipeline.
    * For easy use with WebGL applications, glTF only support image formats natively supported by modern web browsers: `.jpg`, `.png`, `.bmp`, and `.gif`.  Some modeling-tool formats allow any image format making it difficult to write a renderer that is likely to work for all assets.  In glTF, images are converted to a known format as part of the content pipeline.
 
