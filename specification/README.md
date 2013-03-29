@@ -109,7 +109,7 @@ For a simple example, see the converted [COLLADA duck model](https://github.com/
 Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 
 <!-- ----------------------------------------------------------------------- -->
-<a name="designgprinciples">
+<a name="designprinciples">
 
 # Design Principles
 
