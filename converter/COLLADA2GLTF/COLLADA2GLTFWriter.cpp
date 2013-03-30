@@ -445,16 +445,18 @@ namespace GLTF
 
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
+            const MeshPrimitive::PrimitiveType primitiveType = primitives[i]->getPrimitiveType();
+            if ((primitiveType != MeshPrimitive::TRIANGLES) &&
+                (primitiveType != MeshPrimitive::TRIANGLE_STRIPS) &&
+                (primitiveType != MeshPrimitive::POLYLIST) &&
+                (primitiveType != MeshPrimitive::POLYGONS))
+                continue;
+
             shared_ptr <GLTF::IndicesVector> primitiveIndicesVector(new GLTF::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
-
+            
             shared_ptr <GLTF::GLTFPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
-            if (primitive->getType() == "TRIANGLES") {
-                cvtMesh->appendPrimitive(primitive);
-            } else {
-                //TODO: support lines...
-                continue;
-            }
+            cvtMesh->appendPrimitive(primitive);
             
             VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
             primitiveIndicesVector = allPrimitiveIndicesVectors[i];
