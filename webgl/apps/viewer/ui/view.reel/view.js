@@ -163,7 +163,7 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                     var ctx = mat4.identity();
                     var node = scene.rootNode;
                     var sceneBBox = null;
-
+                    var self = this;
                     node.apply( function(node, parent, parentTransform) {
                         var modelMatrix = mat4.create();
                         mat4.multiply( parentTransform, node.transform, modelMatrix);
@@ -190,8 +190,9 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
                     scaleFactor =  1 / scaleFactor;
                      var scaleMatrix = mat4.scale(mat4.identity(), [scaleFactor, scaleFactor, scaleFactor]);
-            
-                    var translationVector = vec3.createFrom(    -((sceneSize[0] / 2) + sceneBBox[0][0]), 
+                    var center = vec3.createFrom(0,0,(sceneSize[2]*scaleFactor)/2);
+                    self.camera.setCenter(center);
+                    var translationVector = vec3.createFrom(    -((sceneSize[0] / 2) + sceneBBox[0][0]),
                                                         -((sceneSize[1] / 2) + sceneBBox[0][1]),
                                                         -( sceneBBox[0][2]));
                          
