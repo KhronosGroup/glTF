@@ -62,7 +62,7 @@ namespace GLTF
     {
     }
 
-    size_t const GLTFBuffer::getByteLength()
+    size_t GLTFBuffer::getByteLength()
     {
         return this->_byteLength;
     }
@@ -72,7 +72,7 @@ namespace GLTF
         return this->_ID;
     }
     
-    const void* const GLTFBuffer::getData()
+    const void* GLTFBuffer::getData()
     {
         return this->_data;
     }
@@ -105,22 +105,22 @@ namespace GLTF
         this->_byteOffset = 0;
     }
     
-    void const GLTFBufferView::setByteLength(size_t byteLength)
+    void GLTFBufferView::setByteLength(size_t byteLength)
     {
         this->_byteLength = byteLength;
     }
     
-    size_t const GLTFBufferView::getByteLength()
+    size_t GLTFBufferView::getByteLength()
     {
         return this->_byteLength;
     }
     
-    void const GLTFBufferView::setByteOffset(size_t byteOffset)
+    void GLTFBufferView::setByteOffset(size_t byteOffset)
     {
         this->_byteOffset = byteOffset;
     }
     
-    size_t const GLTFBufferView::getByteOffset()
+    size_t GLTFBufferView::getByteOffset()
     {
         return this->_byteOffset;
     }

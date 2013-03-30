@@ -39,7 +39,7 @@ namespace GLTF
         GLTF::Semantic getSemantic() {
             return _semantic;
         }
-        unsigned int const getIndexOfSet() {
+        unsigned int getIndexOfSet() {
             return _indexOfSet;
         }
     private:

@@ -60,7 +60,7 @@ namespace GLTF
         
         PrimitiveVector const getPrimitives();
 
-        bool const writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
+        bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
         
     private:
         PrimitiveVector _primitives;

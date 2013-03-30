@@ -39,10 +39,10 @@ namespace GLTF
         
         virtual ~GLTFIndices();
         
-        size_t const getCount();
+        size_t getCount();
 
         shared_ptr <GLTFBufferView> const getBufferView();
-        const void setBufferView(shared_ptr <GLTFBufferView>);
+        void setBufferView(shared_ptr <GLTFBufferView>);
 
         void setByteOffset(size_t byteOffset);
         size_t getByteOffset();

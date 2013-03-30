@@ -44,9 +44,9 @@ namespace GLTF
         
         virtual ~GLTFBuffer();
         
-        size_t const getByteLength();
+        size_t getByteLength();
         std::string const getID();
-        const void* const getData();
+        const void* getData();
         
     private:
         std::string  _ID;
@@ -63,11 +63,11 @@ namespace GLTF
         
         virtual ~GLTFBufferView();
         
-        void const setByteLength(size_t byteLength);
-        size_t const getByteLength();
+        void setByteLength(size_t byteLength);
+        size_t getByteLength();
         
-        void const setByteOffset(size_t byteOffset);
-        size_t const getByteOffset();
+        void setByteOffset(size_t byteOffset);
+        size_t getByteOffset();
         
         shared_ptr <GLTFBuffer> getBuffer();
 

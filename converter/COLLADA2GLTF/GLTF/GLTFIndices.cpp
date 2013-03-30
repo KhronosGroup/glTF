@@ -52,7 +52,7 @@ namespace GLTF
     {
     }
     
-    size_t const GLTFIndices::getCount()
+    size_t GLTFIndices::getCount()
     {
         return this->_count;
     }
@@ -62,7 +62,7 @@ namespace GLTF
         return this->_bufferView;
     }
     
-    const void GLTFIndices::setBufferView(shared_ptr <GLTFBufferView> bufferView)
+    void GLTFIndices::setBufferView(shared_ptr <GLTFBufferView> bufferView)
     {
         this->_bufferView = bufferView;
     }
