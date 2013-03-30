@@ -14774,6 +14774,7 @@
         }
     },
     "profile": "WebGL 1.0",
+    "scene" : "defaultScene",
     "scenes": {
         "defaultScene": {
             "node": "root"

@@ -977,6 +977,8 @@ namespace GLTF
         size_t nodeCount = nodePointerArray.getCount();
         
         this->_converterContext.root->setValue("scenes", scenesObject);
+        this->_converterContext.root->setString("scene", "defaultScene");
+
         sceneObject->setString("node", "root");
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         nodesObject->setValue("root", rootObject);
