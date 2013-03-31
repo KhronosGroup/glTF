@@ -33,8 +33,8 @@ namespace GLTF
     
     shared_ptr <GLTFMesh> CreateUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
     
-    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToAccessorHashmap;
-    typedef std::map<GLTF::Semantic , IndexSetToAccessorHashmap > SemanticToAccessorHashmap;
+    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFMeshAttribute> > IndexSetToMeshAttributeHashmap;
+    typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;
     
     class GLTFMesh {
     public:
@@ -43,12 +43,12 @@ namespace GLTF
         
         virtual ~GLTFMesh();
         
-        shared_ptr <AccessorVector> accessors();
+        shared_ptr <MeshAttributeVector> accessors();
         
         bool appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive);
         
-        void setAccessorsForSemantic(GLTF::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap);        
-        IndexSetToAccessorHashmap& getAccessorsForSemantic(Semantic semantic); 
+        void setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap);        
+        IndexSetToMeshAttributeHashmap& getMeshAttributesForSemantic(Semantic semantic); 
         
         std::vector <GLTF::Semantic> allSemantics();
                 
@@ -64,7 +64,7 @@ namespace GLTF
         
     private:
         PrimitiveVector _primitives;
-        SemanticToAccessorHashmap _semanticToAccessors;
+        SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID, _name;
     };    
 

@@ -150,39 +150,39 @@ namespace GLTF
     
     typedef struct {
         unsigned char* remappedBufferData;
-        //size_t remappedAccessorByteOffset;
-        size_t remappedAccessorByteStride;
+        //size_t remappedMeshAttributeByteOffset;
+        size_t remappedMeshAttributeByteStride;
         
         unsigned char* originalBufferData;
-        //size_t originalAccessorByteOffset;
-        size_t originalAccessorByteStride;
+        //size_t originalMeshAttributeByteOffset;
+        size_t originalMeshAttributeByteStride;
         
         size_t elementByteLength;
         
-    } AccessorsBufferInfos;
+    } MeshAttributesBufferInfos;
     
-    static AccessorsBufferInfos* createAccessorsBuffersInfos(AccessorVector allOriginalAccessors ,AccessorVector allRemappedAccessors, unsigned int*indicesInRemapping, unsigned int count)
+    static MeshAttributesBufferInfos* createMeshAttributesBuffersInfos(MeshAttributeVector allOriginalMeshAttributes ,MeshAttributeVector allRemappedMeshAttributes, unsigned int*indicesInRemapping, unsigned int count)
     {
-        AccessorsBufferInfos* allBufferInfos = (AccessorsBufferInfos*)malloc(count * sizeof(AccessorsBufferInfos));
-        for (size_t accessorIndex = 0 ; accessorIndex < count; accessorIndex++) {
-            AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
+        MeshAttributesBufferInfos* allBufferInfos = (MeshAttributesBufferInfos*)malloc(count * sizeof(MeshAttributesBufferInfos));
+        for (size_t meshAttributeIndex = 0 ; meshAttributeIndex < count; meshAttributeIndex++) {
+            MeshAttributesBufferInfos *bufferInfos = &allBufferInfos[meshAttributeIndex];
             
-            shared_ptr <GLTF::GLTFAccessor> remappedAccessor = allRemappedAccessors[indicesInRemapping[accessorIndex]];
-            shared_ptr <GLTF::GLTFAccessor> originalAccessor = allOriginalAccessors[indicesInRemapping[accessorIndex]];
+            shared_ptr <GLTF::GLTFMeshAttribute> remappedMeshAttribute = allRemappedMeshAttributes[indicesInRemapping[meshAttributeIndex]];
+            shared_ptr <GLTF::GLTFMeshAttribute> originalMeshAttribute = allOriginalMeshAttributes[indicesInRemapping[meshAttributeIndex]];
             
-            if (originalAccessor->getVertexAttributeByteLength() != remappedAccessor->getVertexAttributeByteLength()) {
+            if (originalMeshAttribute->getVertexAttributeByteLength() != remappedMeshAttribute->getVertexAttributeByteLength()) {
                 // FIXME : report error
                 free(allBufferInfos);
                 return 0;
             }
             
-            bufferInfos->remappedBufferData = (unsigned char*)remappedAccessor->getBufferView()->getBufferDataByApplyingOffset();
-            bufferInfos->remappedAccessorByteStride = remappedAccessor->getByteStride();
+            bufferInfos->remappedBufferData = (unsigned char*)remappedMeshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+            bufferInfos->remappedMeshAttributeByteStride = remappedMeshAttribute->getByteStride();
             
-            bufferInfos->originalBufferData = (unsigned char*)originalAccessor->getBufferView()->getBufferDataByApplyingOffset();;
-            bufferInfos->originalAccessorByteStride = originalAccessor->getByteStride();
+            bufferInfos->originalBufferData = (unsigned char*)originalMeshAttribute->getBufferView()->getBufferDataByApplyingOffset();;
+            bufferInfos->originalMeshAttributeByteStride = originalMeshAttribute->getByteStride();
             
-            bufferInfos->elementByteLength = remappedAccessor->getVertexAttributeByteLength();
+            bufferInfos->elementByteLength = remappedMeshAttribute->getVertexAttributeByteLength();
         }
         
         return allBufferInfos;
@@ -190,13 +190,13 @@ namespace GLTF
     
     bool __RemapPrimitiveVertices(shared_ptr<GLTF::GLTFPrimitive> primitive,
                                   std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices,
-                                  AccessorVector allOriginalAccessors,
-                                  AccessorVector allRemappedAccessors,
+                                  MeshAttributeVector allOriginalMeshAttributes,
+                                  MeshAttributeVector allRemappedMeshAttributes,
                                   unsigned int* indicesInRemapping,
                                   shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos)
     {
         size_t indicesSize = allIndices.size();
-        if (allOriginalAccessors.size() < indicesSize) {
+        if (allOriginalMeshAttributes.size() < indicesSize) {
             //TODO: assert & inconsistency check
         }
         
@@ -206,7 +206,7 @@ namespace GLTF
         unsigned int count = primitiveRemapInfos->generatedIndicesCount();
         unsigned int* indices = primitiveRemapInfos->generatedIndices();
         
-        AccessorsBufferInfos *allBufferInfos = createAccessorsBuffersInfos(allOriginalAccessors , allRemappedAccessors, indicesInRemapping, vertexAttributesCount);
+        MeshAttributesBufferInfos *allBufferInfos = createMeshAttributesBuffersInfos(allOriginalMeshAttributes , allRemappedMeshAttributes, indicesInRemapping, vertexAttributesCount);
         
         unsigned int* uniqueIndicesBuffer = (unsigned int*)primitive->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
         
@@ -214,16 +214,16 @@ namespace GLTF
         
         for (unsigned int k = 0 ; k < count ; k++) {
             unsigned int idx = indices[k];
-            unsigned int* remappedIndex = &originalCountAndIndexes[idx * (allOriginalAccessors.size() + 1)];
+            unsigned int* remappedIndex = &originalCountAndIndexes[idx * (allOriginalMeshAttributes.size() + 1)];
             
-            for (size_t accessorIndex = 0 ; accessorIndex < vertexAttributesCount  ; accessorIndex++) {
-                AccessorsBufferInfos *bufferInfos = &allBufferInfos[accessorIndex];
-                unsigned int indiceInRemap = indicesInRemapping[accessorIndex];
+            for (size_t meshAttributeIndex = 0 ; meshAttributeIndex < vertexAttributesCount  ; meshAttributeIndex++) {
+                MeshAttributesBufferInfos *bufferInfos = &allBufferInfos[meshAttributeIndex];
+                unsigned int indiceInRemap = indicesInRemapping[meshAttributeIndex];
                 unsigned int rindex = remappedIndex[1 /* skip count */ + indiceInRemap];
-                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalAccessorByteStride);
+                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalMeshAttributeByteStride);
                 //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
                 /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
-                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedAccessorByteStride);
+                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedMeshAttributeByteStride);
 
                 memcpy(ptrDst, ptrSrc , bufferInfos->elementByteLength);
             }
@@ -242,14 +242,14 @@ namespace GLTF
                                                                                   RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
                                                                                   unsigned int* indicesInRemapping,
                                                                                   unsigned int startIndex,
-                                                                                  unsigned int accessorsCount,
+                                                                                  unsigned int meshAttributesCount,
                                                                                   unsigned int &endIndex)
     {
         unsigned int generatedIndicesCount = 0;
 
         size_t allIndicesSize = allIndices.size();
         size_t vertexIndicesCount = allIndices[0]->getCount();
-        size_t sizeOfRemappedIndex = (accessorsCount + 1) * sizeof(unsigned int);
+        size_t sizeOfRemappedIndex = (meshAttributesCount + 1) * sizeof(unsigned int);
         
         unsigned int* originalCountAndIndexes = (unsigned int*)calloc( vertexIndicesCount, sizeOfRemappedIndex);
         //this is useful for debugging.
@@ -259,9 +259,9 @@ namespace GLTF
         unsigned int currentIndex = startIndex;
         
         for (size_t k = 0 ; k < vertexIndicesCount ; k++) {
-            unsigned int* remappedIndex = &originalCountAndIndexes[k * (accessorsCount + 1)];
+            unsigned int* remappedIndex = &originalCountAndIndexes[k * (meshAttributesCount + 1)];
                         
-            remappedIndex[0] = accessorsCount;
+            remappedIndex[0] = meshAttributesCount;
             for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];
                 unsigned int* indicesPtr = (unsigned int*)allIndices[i]->getBufferView()->getBufferDataByApplyingOffset();
@@ -291,8 +291,8 @@ namespace GLTF
     
     shared_ptr <GLTFMesh> CreateUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
     {
-        AccessorVector originalAccessors;
-        AccessorVector remappedAccessors;
+        MeshAttributeVector originalMeshAttributes;
+        MeshAttributeVector remappedMeshAttributes;
         shared_ptr <GLTFMesh> targetMesh(new GLTFMesh(*sourceMesh));
         
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
@@ -308,33 +308,33 @@ namespace GLTF
             //return 0;
         }
         
-        //in originalAccessors we'll get the flattened list of all the accessors as a vector.
-        //fill semanticAndSetToIndex with key: (semantic, indexSet) value: index in originalAccessors vector.
+        //in originalMeshAttributes we'll get the flattened list of all the meshAttributes as a vector.
+        //fill semanticAndSetToIndex with key: (semantic, indexSet) value: index in originalMeshAttributes vector.
         vector <GLTF::Semantic> allSemantics = sourceMesh->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = sourceMesh->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
+            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
-                unsigned int indexSet = (*accessorIterator).first;
+                shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
+                unsigned int indexSet = (*meshAttributeIterator).first;
                 GLTF::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
-                unsigned int size = (unsigned int)originalAccessors.size();
+                unsigned int size = (unsigned int)originalMeshAttributes.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
                 
-                originalAccessors.push_back(selectedAccessor);
+                originalMeshAttributes.push_back(selectedMeshAttribute);
             }
         }
         
-        maxVertexAttributes = (unsigned int)originalAccessors.size();
+        maxVertexAttributes = (unsigned int)originalMeshAttributes.size();
         
         vector <shared_ptr<GLTF::GLTFPrimitiveRemapInfos> > allPrimitiveRemapInfos;
         
-        //build a array that maps the accessors that the indices points to with the index of the indice.
+        //build a array that maps the meshAttributes that the indices points to with the index of the indice.
         GLTF::RemappedMeshIndexesHashmap remappedMeshIndexesMap;
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
             shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
@@ -370,34 +370,34 @@ namespace GLTF
         unsigned int vertexCount = endIndex - 1;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = sourceMesh->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap& destinationIndexSetToAccessor = targetMesh->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
+            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap& destinationIndexSetToMeshAttribute = targetMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
             
             //FIXME: consider turn this search into a method for mesh
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
                 
-                size_t sourceSize = vertexCount * selectedAccessor->getVertexAttributeByteLength();
+                size_t sourceSize = vertexCount * selectedMeshAttribute->getVertexAttributeByteLength();
                 void* sourceData = malloc(sourceSize);
                 
-                shared_ptr <GLTFBufferView> referenceBufferView = selectedAccessor->getBufferView();
+                shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 shared_ptr <GLTFBufferView> remappedBufferView = createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), sourceData, 0, sourceSize, true);
 
-                shared_ptr <GLTFAccessor> remappedAccessor(new GLTFAccessor(selectedAccessor.get()));
-                remappedAccessor->setBufferView(remappedBufferView);
-                remappedAccessor->setCount(vertexCount);
+                shared_ptr <GLTFMeshAttribute> remappedMeshAttribute(new GLTFMeshAttribute(selectedMeshAttribute.get()));
+                remappedMeshAttribute->setBufferView(remappedBufferView);
+                remappedMeshAttribute->setCount(vertexCount);
                 
-                destinationIndexSetToAccessor[(*accessorIterator).first] = remappedAccessor;
+                destinationIndexSetToMeshAttribute[(*meshAttributeIterator).first] = remappedMeshAttribute;
                 
-                remappedAccessors.push_back(remappedAccessor);
+                remappedMeshAttributes.push_back(remappedMeshAttribute);
             }
         }
         
         /*
-         if (_allOriginalAccessors.size() != allIndices.size()) {
+         if (_allOriginalMeshAttributes.size() != allIndices.size()) {
          // FIXME: report error
          return false;
          }
@@ -418,8 +418,8 @@ namespace GLTF
             
             bool status = __RemapPrimitiveVertices(targetPrimitives[i],
                                                    (*allIndices),
-                                                   originalAccessors ,
-                                                   remappedAccessors,
+                                                   originalMeshAttributes ,
+                                                   remappedMeshAttributes,
                                                    indicesInRemapping,
                                                    allPrimitiveRemapInfos[i]);
             free(indicesInRemapping);
@@ -466,7 +466,7 @@ namespace GLTF
         }
     }
     
-    static void __RemapAccessor(void *value,
+    static void __RemapMeshAttribute(void *value,
                           GLTF::ComponentType type,
                           size_t elementsPerVertexAttribute,
                           size_t index,
@@ -486,40 +486,40 @@ namespace GLTF
     void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
     {
         //remap the subMesh using the original mesh
-        //we walk through all accessors
+        //we walk through all meshAttributes
         vector <GLTF::Semantic> allSemantics = sourceMesh->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = sourceMesh->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap& targetIndexSetToAccessor = subMesh->targetMesh->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap& targetIndexSetToMeshAttribute = subMesh->targetMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
+            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTFAccessor> selectedAccessor = (*accessorIterator).second;
-                unsigned int indexSet = (*accessorIterator).first;
+                shared_ptr <GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
+                unsigned int indexSet = (*meshAttributeIterator).first;
                 
-                shared_ptr <GLTFBufferView> referenceBufferView = selectedAccessor->getBufferView();
+                shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 
                 unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
                 
                 //FIXME: this won't work with interleaved
-                unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount);
+                unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedMeshAttribute->getVertexAttributeByteLength() * vertexAttributeCount);
                 
                 void *context[2];
                 context[0] = targetBufferPtr;
                 context[1] = subMesh;
-                selectedAccessor->apply(__RemapAccessor, (void*)context);
+                selectedMeshAttribute->apply(__RemapMeshAttribute, (void*)context);
                                         
                 shared_ptr <GLTFBufferView> remappedBufferView =
-                createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedAccessor->getVertexAttributeByteLength() * vertexAttributeCount, true);
+                createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedMeshAttribute->getVertexAttributeByteLength() * vertexAttributeCount, true);
                 
-                shared_ptr <GLTFAccessor> remappedAccessor(new GLTF::GLTFAccessor(selectedAccessor.get()));
-                remappedAccessor->setBufferView(remappedBufferView);
-                remappedAccessor->setCount(vertexAttributeCount);
+                shared_ptr <GLTFMeshAttribute> remappedMeshAttribute(new GLTF::GLTFMeshAttribute(selectedMeshAttribute.get()));
+                remappedMeshAttribute->setBufferView(remappedBufferView);
+                remappedMeshAttribute->setCount(vertexAttributeCount);
                 
-                targetIndexSetToAccessor[indexSet] = remappedAccessor;
+                targetIndexSetToMeshAttribute[indexSet] = remappedMeshAttribute;
             }
         }
     }

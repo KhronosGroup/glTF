@@ -133,7 +133,7 @@ namespace GLTF
         
     //---- Convert OpenCOLLADA mesh to mesh -------------------------------------------
   
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToAccessorHashmap &accessors) 
+    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes) 
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -207,15 +207,15 @@ namespace GLTF
         
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(name, sourceData, 0, sourceSize, false);
-            shared_ptr <GLTFAccessor> cvtAccessor(new GLTFAccessor());
+            shared_ptr <GLTFMeshAttribute> cvtMeshAttribute(new GLTFMeshAttribute());
         
-            cvtAccessor->setBufferView(cvtBufferView);
-            cvtAccessor->setElementsPerVertexAttribute(size);
-            cvtAccessor->setByteStride(stride);
-            cvtAccessor->setComponentType(componentType);
-            cvtAccessor->setCount(elementsCount);
+            cvtMeshAttribute->setBufferView(cvtBufferView);
+            cvtMeshAttribute->setElementsPerVertexAttribute(size);
+            cvtMeshAttribute->setByteStride(stride);
+            cvtMeshAttribute->setComponentType(componentType);
+            cvtMeshAttribute->setCount(elementsCount);
             
-            accessors[(unsigned int)indexOfSet] = cvtAccessor;
+            meshAttributes[(unsigned int)indexOfSet] = cvtMeshAttribute;
         }
         
         return (unsigned int)setCount;
@@ -267,7 +267,7 @@ namespace GLTF
         
         shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
         
-        //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors that begins at 0
+        //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes that begins at 0
         //for now forced to 0, to be fixed for multi texturing.
         
         //unsigned int idx = (unsigned int)indexList->getSetIndex();
@@ -461,50 +461,50 @@ namespace GLTF
             VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
             primitiveIndicesVector = allPrimitiveIndicesVectors[i];
             
-            // once we got a primitive, keep track of its accessors
+            // once we got a primitive, keep track of its meshAttributes
             std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
                 shared_ptr<GLTF::GLTFIndices> indices = allIndices[k];
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
-                GLTF::IndexSetToAccessorHashmap& accessors = cvtMesh->getAccessorsForSemantic(semantic);
+                GLTF::IndexSetToMeshAttributeHashmap& meshAttributes = cvtMesh->getMeshAttributesForSemantic(semantic);
                     
                 switch (semantic) {
                     case GLTF::POSITION:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), accessors);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getPositions(), meshAttributes);
                         break;
                         
                     case GLTF::NORMAL: 
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), accessors);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getNormals(), meshAttributes);
                         break;
                         
                     case GLTF::TEXCOORD: 
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), accessors);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getUVCoords(), meshAttributes);
                         break;
 
                     case GLTF::COLOR: 
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), accessors);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getColors(), meshAttributes);
                         break;
                             
                     default: 
                         break;
                 }                   
                     
-                cvtMesh->setAccessorsForSemantic(semantic, accessors);
+                cvtMesh->setMeshAttributesForSemantic(semantic, meshAttributes);
             }
         }
         
         //https://github.com/KhronosGroup/collada2json/issues/41
         //Goes through all texcoord and invert V
-        GLTF::IndexSetToAccessorHashmap& texcoordAccessors = cvtMesh->getAccessorsForSemantic(GLTF::TEXCOORD);
-        GLTF::IndexSetToAccessorHashmap::const_iterator accessorIterator;
+        GLTF::IndexSetToMeshAttributeHashmap& texcoordMeshAttributes = cvtMesh->getMeshAttributesForSemantic(GLTF::TEXCOORD);
+        GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
         
         //FIXME: consider turn this search into a method for mesh
-        for (accessorIterator = texcoordAccessors.begin() ; accessorIterator != texcoordAccessors.end() ; accessorIterator++) {
+        for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
-            shared_ptr <GLTF::GLTFAccessor> accessor = (*accessorIterator).second;
+            shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
             
-            accessor->apply(__InvertV, NULL);
+            meshAttribute->apply(__InvertV, NULL);
         }
         
         if (cvtMesh->getPrimitives().size() > 0) {
@@ -827,11 +827,11 @@ namespace GLTF
                     }
                     
                     if (sceneFlatteningInfo) {
-                        GLTF::IndexSetToAccessorHashmap& semanticMap = mesh->getAccessorsForSemantic(GLTF::POSITION);
-                        shared_ptr <GLTF::GLTFAccessor> vertexAccessor = semanticMap[0];
+                        GLTF::IndexSetToMeshAttributeHashmap& semanticMap = mesh->getMeshAttributesForSemantic(GLTF::POSITION);
+                        shared_ptr <GLTF::GLTFMeshAttribute> vertexMeshAttribute = semanticMap[0];
                         
-                        BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexAccessor->getMin()),
-                                        COLLADABU::Math::Vector3(vertexAccessor->getMax()));
+                        BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexMeshAttribute->getMin()),
+                                        COLLADABU::Math::Vector3(vertexMeshAttribute->getMax()));
                         vertexBBOX.transform(worldMatrix);
                         
                         sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
@@ -944,22 +944,22 @@ namespace GLTF
     // -> same material
     // option to merge of not non-opaque geometry
     //  -> check per primitive that sources / semantic layout matches 
-    // [accessors]
+    // [meshAttributes]
     // -> for all meshes 
     //   -> collect all kind of semantic
     // -> for all meshes
-    //   -> get all accessors 
+    //   -> get all meshAttributes 
     //   -> transforms & write vtx attributes
     bool COLLADA2GLTFWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) 
     {
         /*
         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
-        //First collect all kind of accessors available
+        //First collect all kind of meshAttributes available
         size_t count = allMeshes.size();
         for (size_t i = 0 ; i < count ; i++) {
             shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
             MeshVectorSharedPtr *meshes = this->_uniqueIDToMeshes[meshInfo->getUID()];
-           // shared_ptr <AccessorVector> accessors = mesh->accessors();
+           // shared_ptr <MeshAttributeVector> meshAttributes = mesh->meshAttributes();
         }
         */
         return true;

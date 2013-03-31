@@ -87,7 +87,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> accessorsObject(new GLTF::JSONObject());
         meshObject->setValue("attributes", accessorsObject);
         
-        shared_ptr <AccessorVector> allAccessors = mesh->accessors();
+        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->accessors();
         
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -110,16 +110,16 @@ namespace GLTF
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
             GLTF::Semantic semantic = allSemantics[i];
             
-            GLTF::IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            GLTF::IndexSetToAccessorHashmap& indexSetToAccessor = mesh->getAccessorsForSemantic(semantic);
+            GLTF::IndexSetToMeshAttributeHashmap::const_iterator accessorIterator;
+            GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
             
             //FIXME: consider turn this search into a method for mesh
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+            for (accessorIterator = indexSetToMeshAttribute.begin() ; accessorIterator != indexSetToMeshAttribute.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> accessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFMeshAttribute> accessor = (*accessorIterator).second;
                 
-                shared_ptr <GLTF::JSONObject> accessorObject = serializeAccessor(accessor.get(), context);
+                shared_ptr <GLTF::JSONObject> accessorObject = serializeMeshAttribute(accessor.get(), context);
                 
                 accessorsObject->setValue(accessor->getID(), accessorObject);
             }
@@ -128,7 +128,7 @@ namespace GLTF
         return meshObject;
     }
     
-    shared_ptr <GLTF::JSONObject> serializeAccessor(GLTFAccessor* accessor, void *context)
+    shared_ptr <GLTF::JSONObject> serializeMeshAttribute(GLTFMeshAttribute* accessor, void *context)
     {
         shared_ptr <JSONObject> accessorObject = shared_ptr<JSONObject>(new JSONObject());
         
@@ -205,7 +205,7 @@ namespace GLTF
                 semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
             }
             semantics->setString(semanticAndSet,
-                                     mesh->getAccessorsForSemantic(semantic)[indexOfSet]->getID());
+                                     mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
         }
         
         shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();

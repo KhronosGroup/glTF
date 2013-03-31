@@ -44,31 +44,31 @@ namespace GLTF
     GLTFMesh::GLTFMesh(const GLTFMesh &mesh)
     {
         this->_primitives = mesh._primitives;
-        this->_semanticToAccessors = mesh._semanticToAccessors;
+        this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->_name = mesh._name;
     }
     
-    shared_ptr <AccessorVector> GLTFMesh::accessors()
+    shared_ptr <MeshAttributeVector> GLTFMesh::accessors()
     {
-        shared_ptr <AccessorVector> accessors(new AccessorVector());
+        shared_ptr <MeshAttributeVector> accessors(new MeshAttributeVector());
         vector <GLTF::Semantic> allSemantics = this->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToAccessorHashmap& indexSetToAccessor = this->getAccessorsForSemantic(allSemantics[i]);
-            IndexSetToAccessorHashmap::const_iterator accessorIterator;
-            for (accessorIterator = indexSetToAccessor.begin() ; accessorIterator != indexSetToAccessor.end() ; accessorIterator++) {
+            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = this->getMeshAttributesForSemantic(allSemantics[i]);
+            IndexSetToMeshAttributeHashmap::const_iterator accessorIterator;
+            for (accessorIterator = indexSetToMeshAttribute.begin() ; accessorIterator != indexSetToMeshAttribute.end() ; accessorIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedAccessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*accessorIterator).second;
                 unsigned int indexSet = (*accessorIterator).first;
                 GLTF::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)accessors->size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
                 
-                accessors->push_back(selectedAccessor);
+                accessors->push_back(selectedMeshAttribute);
             }
         }
         return accessors;
@@ -80,24 +80,24 @@ namespace GLTF
         return true;
     }
     
-    void GLTFMesh::setAccessorsForSemantic(GLTF::Semantic semantic, IndexSetToAccessorHashmap& indexSetToAccessorHashmap)
+    void GLTFMesh::setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap)
     {
-        this->_semanticToAccessors[semantic] = indexSetToAccessorHashmap;
+        this->_semanticToMeshAttributes[semantic] = indexSetToMeshAttributeHashmap;
     }
     
-    IndexSetToAccessorHashmap& GLTFMesh::getAccessorsForSemantic(Semantic semantic)
+    IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic)
     {
-        return this->_semanticToAccessors[semantic];
+        return this->_semanticToMeshAttributes[semantic];
     }
     
     vector <GLTF::Semantic> GLTFMesh::allSemantics()
     {
         vector <GLTF::Semantic> allSemantics;
         
-        SemanticToAccessorHashmap::const_iterator accessorIterator;
+        SemanticToMeshAttributeHashmap::const_iterator accessorIterator;
         
         //FIXME: consider turn this search into a method for mesh
-        for (accessorIterator = this->_semanticToAccessors.begin() ; accessorIterator != this->_semanticToAccessors.end() ; accessorIterator++) {
+        for (accessorIterator = this->_semanticToMeshAttributes.begin() ; accessorIterator != this->_semanticToMeshAttributes.end() ; accessorIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             allSemantics.push_back((*accessorIterator).first);
@@ -136,7 +136,7 @@ namespace GLTF
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
-        shared_ptr <AccessorVector> allAccessors = this->accessors();
+        shared_ptr <MeshAttributeVector> allMeshAttributes = this->accessors();
         
         shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
         
@@ -175,8 +175,8 @@ namespace GLTF
             }
         }
         
-        for (unsigned int j = 0 ; j < allAccessors->size() ; j++) {
-            shared_ptr <GLTFAccessor> accessor = (*allAccessors)[j];
+        for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
+            shared_ptr <GLTFMeshAttribute> accessor = (*allMeshAttributes)[j];
             shared_ptr <GLTFBufferView> bufferView = accessor->getBufferView();
             shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
             

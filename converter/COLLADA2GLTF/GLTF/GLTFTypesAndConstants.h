@@ -37,14 +37,14 @@ namespace GLTF
     class JSONObject;
     class GLTFIndices;
     class GLTFPrimitive;
-    class GLTFAccessor;
+    class GLTFMeshAttribute;
     class GLTFMesh;
     class GLTFEffect;
     class JSONVertexAttribute;
     //-- Args & Options
     typedef std::vector <shared_ptr<GLTF::GLTFIndices> > IndicesVector;
     typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > AccessorVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFMeshAttribute> > MeshAttributeVector;
     typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
 
