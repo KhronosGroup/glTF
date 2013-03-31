@@ -43,7 +43,7 @@ namespace GLTF
         
         virtual ~GLTFMesh();
         
-        shared_ptr <MeshAttributeVector> accessors();
+        shared_ptr <MeshAttributeVector> meshAttributes();
         
         bool appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive);
         

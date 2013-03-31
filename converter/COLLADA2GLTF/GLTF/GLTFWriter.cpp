@@ -83,11 +83,11 @@ namespace GLTF
         shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
         meshObject->setValue("primitives", primitivesArray);
         
-        //accessors
-        shared_ptr <GLTF::JSONObject> accessorsObject(new GLTF::JSONObject());
-        meshObject->setValue("attributes", accessorsObject);
+        //meshAttributes
+        shared_ptr <GLTF::JSONObject> meshAttributesObject(new GLTF::JSONObject());
+        meshObject->setValue("attributes", meshAttributesObject);
         
-        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->accessors();
+        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
         
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -110,58 +110,58 @@ namespace GLTF
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
             GLTF::Semantic semantic = allSemantics[i];
             
-            GLTF::IndexSetToMeshAttributeHashmap::const_iterator accessorIterator;
+            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
             GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
             
             //FIXME: consider turn this search into a method for mesh
-            for (accessorIterator = indexSetToMeshAttribute.begin() ; accessorIterator != indexSetToMeshAttribute.end() ; accessorIterator++) {
+            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFMeshAttribute> accessor = (*accessorIterator).second;
+                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
                 
-                shared_ptr <GLTF::JSONObject> accessorObject = serializeMeshAttribute(accessor.get(), context);
+                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), context);
                 
-                accessorsObject->setValue(accessor->getID(), accessorObject);
+                meshAttributesObject->setValue(meshAttribute->getID(), meshAttributeObject);
             }
         }
         
         return meshObject;
     }
     
-    shared_ptr <GLTF::JSONObject> serializeMeshAttribute(GLTFMeshAttribute* accessor, void *context)
+    shared_ptr <GLTF::JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
     {
-        shared_ptr <JSONObject> accessorObject = shared_ptr<JSONObject>(new JSONObject());
+        shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
         
-        accessorObject->setUnsignedInt32("byteStride", (unsigned int)accessor->getByteStride());
-        accessorObject->setUnsignedInt32("byteOffset", (unsigned int)accessor->getByteOffset());
-        accessorObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)accessor->getElementsPerVertexAttribute());
-        accessorObject->setUnsignedInt32("count", (unsigned int)accessor->getCount());
-        accessorObject->setString("componentType", GLTFUtils::getStringForGLType(accessor->getComponentType()));
+        meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
+        meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
+        meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getElementsPerVertexAttribute());
+        meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
+        meshAttributeObject->setString("componentType", GLTFUtils::getStringForGLType(meshAttribute->getComponentType()));
         
         void** buffers = (void**)context;
-        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : accessor->getBufferView().get();
+        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : meshAttribute->getBufferView().get();
 
-        accessorObject->setString("bufferView", bufferView->getID());
+        meshAttributeObject->setString("bufferView", bufferView->getID());
         
-        const double* min = accessor->getMin();
+        const double* min = meshAttribute->getMin();
         if (min) {
             shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
-            accessorObject->setValue("min", minArray);
-            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+            meshAttributeObject->setValue("min", minArray);
+            for (size_t i = 0 ; i < meshAttribute->getElementsPerVertexAttribute() ; i++) {
                 minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
             }
         }
         
-        const double* max = accessor->getMax();
+        const double* max = meshAttribute->getMax();
         if (max) {
             shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
-            accessorObject->setValue("max", maxArray);
-            for (size_t i = 0 ; i < accessor->getElementsPerVertexAttribute() ; i++) {
+            meshAttributeObject->setValue("max", maxArray);
+            for (size_t i = 0 ; i < meshAttribute->getElementsPerVertexAttribute() ; i++) {
                 maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
             }
         }
         
-        return accessorObject;
+        return meshAttributeObject;
     }
     
     
