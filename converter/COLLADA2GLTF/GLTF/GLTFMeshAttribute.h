@@ -49,15 +49,15 @@ namespace GLTF
     public:
         
         GLTFMeshAttribute();
-        GLTFMeshAttribute(GLTFMeshAttribute *accessor);
+        GLTFMeshAttribute(GLTFMeshAttribute *meshAttribute);
         
         virtual ~GLTFMeshAttribute();
         
         void setBufferView(shared_ptr <GLTFBufferView> buffer);
         shared_ptr <GLTFBufferView> getBufferView();
         
-        void setElementsPerVertexAttribute(size_t elementsPerVertexAttribute);         
-        size_t getElementsPerVertexAttribute();
+        void setComponentsPerAttribute(size_t componentsPerAttribute);         
+        size_t getComponentsPerAttribute();
         
         void setByteStride(size_t stride);
         size_t getByteStride();
@@ -82,11 +82,11 @@ namespace GLTF
         const double* getMin();
         const double* getMax();
         
-        bool matchesLayout(GLTFMeshAttribute* accessor);
+        bool matchesLayout(GLTFMeshAttribute* meshAttribute);
 
     private:
         shared_ptr <GLTFBufferView> _bufferView;
-        size_t              _elementsPerVertexAttribute;
+        size_t              _componentsPerAttribute;
         size_t              _count;
         size_t              _byteStride;
         size_t              _byteOffset;

@@ -468,7 +468,7 @@ namespace GLTF
     
     static void __RemapMeshAttribute(void *value,
                           GLTF::ComponentType type,
-                          size_t elementsPerVertexAttribute,
+                          size_t componentsPerAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,
                           void *context) {

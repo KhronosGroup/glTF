@@ -210,7 +210,7 @@ namespace GLTF
             shared_ptr <GLTFMeshAttribute> cvtMeshAttribute(new GLTFMeshAttribute());
         
             cvtMeshAttribute->setBufferView(cvtBufferView);
-            cvtMeshAttribute->setElementsPerVertexAttribute(size);
+            cvtMeshAttribute->setComponentsPerAttribute(size);
             cvtMeshAttribute->setByteStride(stride);
             cvtMeshAttribute->setComponentType(componentType);
             cvtMeshAttribute->setCount(elementsCount);
@@ -411,13 +411,13 @@ namespace GLTF
     
     static void __InvertV(void *value,
                           GLTF::ComponentType type,
-                          size_t elementsPerVertexAttribute,
+                          size_t componentsPerAttribute,
                           size_t index,
                           size_t vertexAttributeByteSize,
                           void *context) {
         char* bufferData = (char*)value;
         
-        if (elementsPerVertexAttribute > 1) {
+        if (componentsPerAttribute > 1) {
             switch (type) {
                 case GLTF::FLOAT: {
                     float* vector = (float*)bufferData;

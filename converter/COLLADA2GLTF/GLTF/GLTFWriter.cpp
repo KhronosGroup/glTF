@@ -134,7 +134,7 @@ namespace GLTF
         
         meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
         meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
-        meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getElementsPerVertexAttribute());
+        meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getComponentsPerAttribute());
         meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
         meshAttributeObject->setString("componentType", GLTFUtils::getStringForGLType(meshAttribute->getComponentType()));
         
@@ -147,7 +147,7 @@ namespace GLTF
         if (min) {
             shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
             meshAttributeObject->setValue("min", minArray);
-            for (size_t i = 0 ; i < meshAttribute->getElementsPerVertexAttribute() ; i++) {
+            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
                 minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
             }
         }
@@ -156,7 +156,7 @@ namespace GLTF
         if (max) {
             shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
             meshAttributeObject->setValue("max", maxArray);
-            for (size_t i = 0 ; i < meshAttribute->getElementsPerVertexAttribute() ; i++) {
+            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
                 maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
             }
         }

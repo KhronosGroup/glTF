@@ -43,21 +43,21 @@ namespace GLTF
         this->setByteStride(0);
         this->_byteOffset = 0;
         this->_generateID();
-        this->setElementsPerVertexAttribute(0);
+        this->setComponentsPerAttribute(0);
         this->setCount(0);
     }
         
-    GLTFMeshAttribute::GLTFMeshAttribute(GLTFMeshAttribute* accessor): 
-    _bufferView(accessor->getBufferView()), _min(0), _max(0)
+    GLTFMeshAttribute::GLTFMeshAttribute(GLTFMeshAttribute* meshAttribute): 
+    _bufferView(meshAttribute->getBufferView()), _min(0), _max(0)
     {
-        assert(accessor);
+        assert(meshAttribute);
         
-        this->setComponentType(accessor->getComponentType());
-        this->setByteStride(accessor->getByteStride());
-        this->_byteOffset = accessor->getByteOffset();
+        this->setComponentType(meshAttribute->getComponentType());
+        this->setByteStride(meshAttribute->getByteStride());
+        this->_byteOffset = meshAttribute->getByteOffset();
         this->_generateID();
-        this->setElementsPerVertexAttribute(accessor->getElementsPerVertexAttribute());
-        this->setCount(accessor->getCount());
+        this->setComponentsPerAttribute(meshAttribute->getComponentsPerAttribute());
+        this->setCount(meshAttribute->getCount());
     }
         
     GLTFMeshAttribute::~GLTFMeshAttribute()
@@ -80,14 +80,14 @@ namespace GLTF
         return this->_bufferView;
     }
         
-    void GLTFMeshAttribute::setElementsPerVertexAttribute(size_t elementsPerVertexAttribute)
+    void GLTFMeshAttribute::setComponentsPerAttribute(size_t componentsPerAttribute)
     {
-        this->_elementsPerVertexAttribute = elementsPerVertexAttribute;
+        this->_componentsPerAttribute = componentsPerAttribute;
     }
         
-    size_t GLTFMeshAttribute::getElementsPerVertexAttribute()
+    size_t GLTFMeshAttribute::getComponentsPerAttribute()
     {
-        return this->_elementsPerVertexAttribute;
+        return this->_componentsPerAttribute;
     }
         
     void GLTFMeshAttribute::setByteStride(size_t byteStride)
@@ -137,20 +137,20 @@ namespace GLTF
         
     size_t GLTFMeshAttribute::getVertexAttributeByteLength()
     {
-        size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
+        size_t componentsPerAttribute = this->getComponentsPerAttribute();
         ComponentType type = this->getComponentType();
         switch (type) {
             case GLTF::BYTE:
             case GLTF::UNSIGNED_BYTE:
-                return elementsPerVertexAttribute;
+                return componentsPerAttribute;
             case GLTF::SHORT:
-                return elementsPerVertexAttribute * sizeof(short);                    
+                return componentsPerAttribute * sizeof(short);                    
             case GLTF::UNSIGNED_SHORT:
-                return elementsPerVertexAttribute * sizeof(unsigned short);                    
+                return componentsPerAttribute * sizeof(unsigned short);                    
             case GLTF::FIXED:
-                return elementsPerVertexAttribute * sizeof(int);                    
+                return componentsPerAttribute * sizeof(int);                    
             case GLTF::FLOAT:
-                return elementsPerVertexAttribute * sizeof(float);
+                return componentsPerAttribute * sizeof(float);
             default: 
                 // FIXME: report error or just log ?
                 break;
@@ -174,7 +174,7 @@ namespace GLTF
     
     static void __ComputeMinMax(void *value,
                                ComponentType type,
-                               size_t elementsPerVertexAttribute,
+                               size_t componentsPerAttribute,
                                size_t index,
                                size_t vertexAttributeByteSize,
                                void *context) {
@@ -184,7 +184,7 @@ namespace GLTF
         switch (type) {
             case GLTF::FLOAT: {
                 float* vector = (float*)bufferData;
-                for (size_t j = 0 ; j < elementsPerVertexAttribute ; j++) {
+                for (size_t j = 0 ; j < componentsPerAttribute ; j++) {
                     float value = vector[j];
                     if (value < applierInfo->min[j]) {
                         applierInfo->min[j] = value;
@@ -203,7 +203,7 @@ namespace GLTF
     void GLTFMeshAttribute::computeMinMax() 
     {
         //size_t byteStride = this->getByteStride();
-        size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
+        size_t componentsPerAttribute = this->getComponentsPerAttribute();
 
         //realloc
         if (this->_min) {
@@ -212,14 +212,14 @@ namespace GLTF
         if (this->_max) {
             delete [] this->_max;
         }
-        this->_min = new double[elementsPerVertexAttribute];
-        this->_max = new double[elementsPerVertexAttribute];
+        this->_min = new double[componentsPerAttribute];
+        this->_max = new double[componentsPerAttribute];
 
         __MinMaxApplierInfo minMaxApplierInfo;
         minMaxApplierInfo.min = this->_min;
         minMaxApplierInfo.max = this->_max;
         
-        for (size_t i = 0 ; i < elementsPerVertexAttribute ; i++) {
+        for (size_t i = 0 ; i < componentsPerAttribute ; i++) {
             this->_min[i] = DBL_MAX;
             this->_max[i] = -DBL_MAX;
         }
@@ -230,25 +230,25 @@ namespace GLTF
     void GLTFMeshAttribute::apply(GLTFMeshAttributeApplierFunc applierFunc, void* context)
     {
         size_t byteStride = this->getByteStride();
-        size_t elementsPerVertexAttribute = this->getElementsPerVertexAttribute();
+        size_t componentsPerAttribute = this->getComponentsPerAttribute();
         size_t vertexAttributeByteSize = this->getVertexAttributeByteLength();
         shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
         ComponentType type = this->getComponentType();
         unsigned char* bufferData = (unsigned char*)bufferView->getBufferDataByApplyingOffset();
 
         for (size_t i = 0 ; i < _count ; i++) {
-            (*applierFunc)(bufferData + (i * byteStride), type, elementsPerVertexAttribute, i, vertexAttributeByteSize, context);
+            (*applierFunc)(bufferData + (i * byteStride), type, componentsPerAttribute, i, vertexAttributeByteSize, context);
         }
     }
     
-    bool GLTFMeshAttribute::matchesLayout(GLTFMeshAttribute* accessor)
+    bool GLTFMeshAttribute::matchesLayout(GLTFMeshAttribute* meshAttribute)
     {
-        assert(accessor);
+        assert(meshAttribute);
         
-        return ((accessor->getElementsPerVertexAttribute() == this->getElementsPerVertexAttribute()) &&
-                (accessor->getByteStride() == this->getByteStride()) &&
-                (accessor->getComponentType() == this->getComponentType()) &&
-                (accessor->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
+        return ((meshAttribute->getComponentsPerAttribute() == this->getComponentsPerAttribute()) &&
+                (meshAttribute->getByteStride() == this->getByteStride()) &&
+                (meshAttribute->getComponentType() == this->getComponentType()) &&
+                (meshAttribute->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
     }
                     
 }
