@@ -1,7 +1,6 @@
 # glTF - the runtime asset format for WebGL, OpenGL ES, and OpenGL
 
-_Draft Specification - may change before Ratification._  
-_It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
+_This is a draft specification; it is incomplete and may change before ratification.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
 _In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL.  OpenGL ES and OpenGL need additional considerations._
 
@@ -116,6 +115,28 @@ Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It 
 
 glTF strives to live up to the following design principles. 
 
+* <a href="#designprinciples.webfriendly">Web Friendly</a>
+* <a href="#designprinciples.streamlined">Streamlined for Rendering</a>
+* <a href="#designprinciples.mapwell">Map Well to the GL APIs</a>
+* <a href="#designprinciples.minimalrepresentation">Minimal Representation</a>
+* <a href="#designprinciples.reasonableflexibility">Reasonable Flexibility</a>
+* <a href="#designprinciples.extensibility">Extensibility</a>
+* <a href="#designprinciples.allowsconformancetesting">Allows Conformance Testing</a>
+* <a href="#designprinciples.crossplatformandcrossdevice">Cross-Platform and Cross-Device</a>
+
+<a name="designprinciples.webfriendly">
+## Web Friendly
+
+glTF is strives to be web friendly.  glTF:
+* Uses JSON, which is trivial to parse in JavaScript.
+* Only uses image formats that are supported by the JavaScript `Image` object.
+* Requires minimal JavaScript processing before rendering.
+* Maps well to web APIs like WebGL and typed and arrays.
+* Allows incremental streaming.
+
+_TODO: the above discussion does not account for compressed textures yet, which will require additional formats._
+
+<a name="designprinciples.streamlined">
 ## Streamlined for Rendering
 
 glTF is a runtime asset format; not an interchange format.  Its primary use case is rendering; therefore it is designed for runtime efficiency with consideration for:
@@ -139,6 +160,7 @@ _TODO: add discussion for `Normalize the "Up" axis of all scenes to allow easy r
 
 _TODO: pipeline diagram and opitonal optimization diagram._
 
+<a name="designprinciples.mapwell">
 ## Map Well to the GL APIs
 
 To make it easy for applications to implement, glTF is designed with the GL APIs in mind; in particular, the limitations of WebGL.
@@ -160,6 +182,7 @@ glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF striv
 
 To relieve the burden on the content pipeline, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  COLLADA was chosen because of its widespread use as an interchange format.
 
+<a name="designprinciples.minimalrepresentation">
 ## Minimal Representation
 
 glTF strives to keep the asset representation minimal.  That is, a glTF asset should only include data needed to render the model.
@@ -168,12 +191,14 @@ For example, it is common for a modeling-tool format to store several `technique
 
 _TODO: More info on glTF and REST APIs.  Perhaps an image._
 
+<a name="designprinciples.codenotjustspec">
 ## Code Not Just Spec
 
 Formally, glTF is this specification.  However, a specification alone is not enough to drive adoption.  An open ecosystem of tools is needed to bridge the gap between specification and implementation.
 
 In particlar, [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF) is an open-source COLLADA to glTF pipeline for integrating into existing pipelines or for use as a reference implementation for other glTF generation tools.  For runtime applications, there is an open-source [JavaScript loader, WebGL renderer, and Three.js renderer](https://github.com/KhronosGroup/glTF/tree/master/webgl). 
 
+<a name="designprinciples.reasonableflexibility">
 ## Reasonable Flexibility
 
 glTF is streamlined for rendering so it doesn't have as many options or as much metadata as a modeling-tool format.  However, different applications still have different needs within the rendering use case.  glTF strives to be flexible in areas where flexibility is needed, but at the same time does not allow too much flexibility that would significantly burden application developers.  For example:
@@ -182,10 +207,12 @@ glTF is streamlined for rendering so it doesn't have as many options or as much 
 * glTF allows binary, image, and GLSL files to be separate from the main JSON file or embedded in the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).  For WebGL developers using `XMLHTTPRequest`, the code to load binary, image, or GLSL data is the same regardless of if the URL is an external file or embedded data URI.  Therefore, allowing this flexibility does not burden the application developer, but it allows the application to decide what the best approach.  If assets share many of the same geometry, animation, textures, or shaders, separate files may be preferred to reduce the total amount of data requested.  If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding.  With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visisble.
 * glTF includes GLSL shaders and potential metadata describing the shaders, e.g., if it was generated from the COLLADA Common Profile.  Applications are free to use the provided shader directly or use the metadata to better integrate the asset into their application, e.g., model viewers may use the shaders where as deferred shading engines may use the metadata.
 
+<a name="designprinciples.extensibility">
 ## Extensibility
 
 glTF is streamlined for rendering so it does not include features tightly coupled with a particular application or niche vertical market.  Instead, glTF provides the foundations common to rendering assets - a node hierarchy, materials, animations, and geometry - and provides extensibility via <a href="#conventions-extra">`extra`</a> properties.  This allows applications to add specific metadata to glTF assets without burdening other application developers to support features.
 
+<a name="designprinciples.allowsconformancetesting">
 ## Allows Conformance Testing
 
 To ensure compatibility of glTF content among content pipelines and applications, glTF allows for validation.  A schema, written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03), describing the JSON for glTF is part of this specification.
@@ -196,6 +223,7 @@ This allows validating an asset against the glTF schema using a tool like the gl
 
 * [#50](https://github.com/KhronosGroup/glTF/issues/50) - Improved glTF validator
 
+<a name="designprinciples.crossplatformandcrossdevice">
 ## Cross-Platform and Cross-Device
 
 Like the GL APIs, glTF strives to be cross-platform and cross-device. JSON is platform-agnostic.  Libraries that load the glTF referenced image formats are readily avilable on all platforms.
@@ -204,10 +232,7 @@ glTF assets also have a <a href="#profile">`profile`</a> that indicates what GL 
 
 _TODO: need deeper discussion here, e.g., endianness._
 
-## Web Friendly
-
-_TODO: JSON, image formats, little processing, etc._
-
+<a name="designprinciples.other">
 ## Other
 
 These are observations; not necessarily design principles.
