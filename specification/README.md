@@ -228,11 +228,11 @@ This allows validating an asset against the glTF schema using a tool like the gl
 <a name="designprinciples.crossplatformandcrossdevice">
 ## Cross-Platform and Cross-Device
 
-Like the GL APIs, glTF strives to be cross-platform and cross-device. JSON is platform-agnostic.  Libraries that load the glTF referenced image formats are readily avilable on all platforms.
+Like the GL APIs, glTF strives to be cross-platform and cross-device.  JSON is platform-agnostic.  glTF explicitly defines the endianness of binary data as little endian.  Libraries that load the glTF referenced image formats are readily avilable on all platforms.
 
 glTF assets also have a <a href="#profile">`profile`</a> that indicates what GL API it targets, e.g., `WebGL 1.0`.
 
-_TODO: need deeper discussion here, e.g., endianness._
+_TODO: Deeper discussion here?_
 
 <a name="designprinciples.other">
 ## Other
@@ -248,6 +248,10 @@ However, glTF assets aren't always readable.  For example, a simple shader embed
 <!-- ----------------------------------------------------------------------- -->
 <a name="conventions">
 # Conventions
+
+## Endianness
+
+Binary data for geometry and animations is stored in little endian.  This does not require byte swapping on modern platforms running Windows, Linux, Mac, Android, and iOS.
 
 ## Naming
 
