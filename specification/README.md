@@ -192,7 +192,9 @@ To ensure compatibility of glTF content among content pipelines and applications
 
 This allows validating an asset against the glTF schema using a tool like the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  See <a href="#assetvalidation">Asset Validation</a>.
 
-_TODO: JSON Schema is not rigorous like XML.  We need custom tools to fully validate an asset._
+### Related Issues
+
+* [#50](https://github.com/KhronosGroup/glTF/issues/50) - Improved glTF validator
 
 ## Cross-Platform and Cross-Device
 
@@ -344,11 +346,11 @@ The design of `asset` in COLLADA is focused on asset interchange for assets pote
 
 None.
 
-### Related issues
+### Related Issues
 
-*  https://github.com/KhronosGroup/glTF/issues/22
-*  https://github.com/KhronosGroup/glTF/issues/23
-*  https://github.com/KhronosGroup/glTF/issues/24
+* [#22](https://github.com/KhronosGroup/glTF/issues/22) - unify scenes axis-up
+* [#23](https://github.com/KhronosGroup/glTF/issues/23) - should glTF specify unit property?
+* [#24](https://github.com/KhronosGroup/glTF/issues/24) - glTF should specify more aspects of assets
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="attribute">
@@ -402,7 +404,7 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 * `createBuffer` / [`genBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glGenBuffers.xml)
 * `deleteBuffer` / [`deleteBuffers`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDeleteBuffers.xml)
 
-### Related issues
+### Related Issues
 
    * Convert `bool_array` to `0.0` or `1.0`?
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
@@ -497,12 +499,12 @@ For compatibility with modern web browsers, the following image formats are supp
 * [`texImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml)
 * [`texSubImage2D`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexSubImage2D.xml)
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/15
-* https://github.com/KhronosGroup/glTF/issues/16
-* https://github.com/KhronosGroup/glTF/issues/17
-* https://github.com/KhronosGroup/glTF/issues/18
+* [#15](https://github.com/KhronosGroup/glTF/issues/15) - Support for extensions
+* [#16](https://github.com/KhronosGroup/glTF/issues/16) - Support for precomputed mips
+* [#17](https://github.com/KhronosGroup/glTF/issues/17) - Supprot for render targets
+* [#18](https://github.com/KhronosGroup/glTF/issues/18) - convert images for destination Profile
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="indices">
@@ -521,9 +523,9 @@ For compatibility with modern web browsers, the following image formats are supp
 
 Also see <a href="#buffer">buffer</a>.
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/14
+* [#14](https://github.com/KhronosGroup/glTF/issues/14) - support for models without indices ?
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="material">
@@ -564,7 +566,7 @@ See <a href="#meshAttribute">`attributes (mesh)`</a> and <a href="#primitives">`
 
 ### Related Issues
 
-   * https://github.com/KhronosGroup/glTF/issues/11
+* [#11](https://github.com/KhronosGroup/glTF/issues/11) - Splines should be converted
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="node">
@@ -586,10 +588,10 @@ _TODO_
 
 Also see <a href="#mesh">`mesh`</a> subproperties See <a href="#accessors">`accessors`</a> and <a href="#primitives">`primitives`</a>.
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/12
-* https://github.com/KhronosGroup/glTF/issues/13
+* [#12](https://github.com/KhronosGroup/glTF/issues/12) - Convert all transformation elements to matrices
+* [#13](https://github.com/KhronosGroup/glTF/issues/13) - Should we keep one or more mesh,camera,light per node.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="orthographic">
@@ -731,9 +733,9 @@ _TODO_
 
 Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniforms`</a> subproperties of <a href="#shader">`shader`</a>.
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/25
+* [#25](https://github.com/KhronosGroup/glTF/issues/25) - naming for vertex and fragment shaders
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="semantics">
@@ -753,9 +755,9 @@ Within the scope of a primitive a semantic points to a mesh attribute.
 When multiple sets are available for a given 'semantic', by convention both are concatenated as `semantic`_`set`.
 Specifying the set for index 0 is optional.  
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/26
+* [#26](https://github.com/KhronosGroup/glTF/issues/26) - semantic for mesh attributes. what is mandatory ? what is a suggestion ?
 
 
 #### Semantics
@@ -893,9 +895,9 @@ _TODO_
 
 See <a name="parameters">`parameters`</a>.
 
-### Related issues
+### Related Issues
 
-* https://github.com/KhronosGroup/glTF/issues/7
+* [#7](https://github.com/KhronosGroup/glTF/issues/7) - Add Schema for parameter
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -918,7 +920,7 @@ _TODO_
 * [`uniform[1234][fi]v`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 * [`uniformMatrix[234]fv`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glUniform.xml)
 
-### Related issues
+### Related Issues
 
 * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
 
