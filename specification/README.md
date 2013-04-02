@@ -16,7 +16,6 @@ Editors
 * <a href="#motivation">Motivation</a>
 * <a href="#designprinciples">Design Principles</a>
 * <a href="#conventions">Conventions</a>
-* <a href="#assetvalidation">Asset Validation</a>
 * <a href="#schema">Schema</a> - by category
    * Camera
       * <a href="#camera">`camera`</a>
@@ -73,6 +72,7 @@ Editors
    * <a href="#uniform">`uniform`</a>
    * <a href="#version">`version`</a>   
 * <a href="#about_shaders">Note about shaders</a>
+* <a href="#assetvalidation">Asset Validation</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 * <a href="#references">References</a>
@@ -118,6 +118,7 @@ glTF strives to live up to the following design principles.
 * <a href="#designprinciples.webfriendly">Web Friendly</a>
 * <a href="#designprinciples.streamlined">Streamlined for Rendering</a>
 * <a href="#designprinciples.mapwell">Map Well to the GL APIs</a>
+* <a href="#designprinciples.easiertorender">Easier to Render than to Author</a>
 * <a href="#designprinciples.minimalrepresentation">Minimal Representation</a>
 * <a href="#designprinciples.reasonableflexibility">Reasonable Flexibility</a>
 * <a href="#designprinciples.extensibility">Extensibility</a>
@@ -174,6 +175,7 @@ To help map between glTF and GL:
    * All attributes must be backed by buffers, i.e., nothing maps to [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
    * Geometry is defined with indices, implying [`drawElements`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml), not [`drawArrays`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawArrays.xml), should be used to issue draw calls.  This is because most assets are defined with indexed triangle lists.  Triangle soup, strips, and fans can be converted to indexed triangle lists in the content pipeline.
 
+<a name="designprinciples.easiertorender">
 ## Easier to Render than to Author
 
 glTF is streamlined for rendering.  When a tradeoff needs to be made, glTF strives for the simplicity of the runtime application over the simplicity of the tool generating glTF, e.g., the content pipeline.  For example:
@@ -292,41 +294,6 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * _Loader_
    * _Needs to pass through `extra` objects_.
    * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
-
-<!-- ----------------------------------------------------------------------- -->
-<a name="assetvalidation">
-# Asset Validation
-
-The glTF schema is written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03).
-
-An asset can be validated against the schema using the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  Setup a local webserver to point the root of your local copy of this repo, and browse to index.html.  For example:
-```
-http://localhost/gltf/specification/
-```
-
-There are a few query parameters.
-
-Use `schema` to provide the schema to validate against:
-```
-http://localhost/gltf/specification/?schema=states.schema.json
-```
-
-Use `json` to provide the asset's JSON to validate:
-```
-http://localhost/gltf/specification/?json=examples/states/translucency.json
-```
-
-Use `validate` to immediately validate the json with the schema:
-```
-http://localhost/gltf/specification/?validate=true
-```
-
-The most common use is something like:
-```
-http://localhost/gltf/specification/?schema=states.schema.json&json=examples/states/translucency.json&validate=true
-```
-
-Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="schema">
@@ -1003,6 +970,40 @@ For instance, the diffuse component of the lighting might be a color or a textur
 
 (*) POSITION might need specific consideration.
 
+<!-- ----------------------------------------------------------------------- -->
+<a name="assetvalidation">
+# Asset Validation
+
+The glTF schema is written using [JSON Schema 03](http://tools.ietf.org/html/draft-zyp-json-schema-03).
+
+An asset can be validated against the schema using the glTF Validator (based on [JSV](https://github.com/garycourt/JSV)).  Setup a local webserver to point the root of your local copy of this repo, and browse to index.html.  For example:
+```
+http://localhost/gltf/specification/
+```
+
+There are a few query parameters.
+
+Use `schema` to provide the schema to validate against:
+```
+http://localhost/gltf/specification/?schema=states.schema.json
+```
+
+Use `json` to provide the asset's JSON to validate:
+```
+http://localhost/gltf/specification/?json=examples/states/translucency.json
+```
+
+Use `validate` to immediately validate the json with the schema:
+```
+http://localhost/gltf/specification/?validate=true
+```
+
+The most common use is something like:
+```
+http://localhost/gltf/specification/?schema=states.schema.json&json=examples/states/translucency.json&validate=true
+```
+
+Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
