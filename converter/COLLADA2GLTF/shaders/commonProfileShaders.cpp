@@ -350,24 +350,28 @@ namespace GLTF
     }
     
     //need this for parameters
-    shared_ptr <JSONObject> createUniform(std::string semantic, std::string symbol) {
+    void appendUniform(std::string semantic, std::string symbol, shared_ptr <JSONArray> uniforms, std::string &declaration) {
         shared_ptr <JSONObject> uniform(new GLTF::JSONObject());
         
         uniform->setString("semantic", semantic);
         uniform->setString("symbol", symbol);
         uniform->setString("type", typeForSemanticUniform(semantic));
         
-        return uniform;
+        uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(uniform));
+        
+        declaration += GLSLDeclarationForUniform(uniform);
     }
 
-    shared_ptr <JSONObject> createUniformParameter(std::string slot, shared_ptr <JSONObject> inputParameter , std::string symbol) {
+    void appendUniformParameter(std::string slot, shared_ptr <JSONObject> inputParameter , std::string symbol, shared_ptr <JSONArray> uniforms, std::string &declaration) {
         shared_ptr <JSONObject> uniformParameter(new GLTF::JSONObject());
         
         uniformParameter->setString("parameter", slot);
         uniformParameter->setString("symbol", symbol);
         uniformParameter->setString("type", inputParameter->getString("type"));
-
-        return uniformParameter;
+        
+        uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(uniformParameter));
+        
+        declaration += GLSLDeclarationForUniform(uniformParameter);
     }
     
     typedef std::map<std::string , std::string > TechniqueHashToTechniqueID;
@@ -412,10 +416,10 @@ namespace GLTF
         std::string normalMatrixSymbol = "u_normalMatrix";
         std::string normalVaryingSymbol = "v_normal";
         shared_ptr <JSONObject> normalAttributeObject = createAttribute("NORMAL", normalAttributeSymbol);
-        shared_ptr <JSONObject> normalMatrixObject = createUniform("WORLDVIEWINVERSETRANSPOSE", normalMatrixSymbol);
+        
+        appendUniform("WORLDVIEWINVERSETRANSPOSE", normalMatrixSymbol, uniforms, vsDeclarations);
 
         attributes->appendValue(static_cast<shared_ptr<JSONValue> >(normalAttributeObject));
-        uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(normalMatrixObject));
         
         /*
             attribute vec3 normal;\n
@@ -424,7 +428,6 @@ namespace GLTF
          */
 
         vsDeclarations += GLSLDeclarationForAttribute(normalAttributeObject);
-        vsDeclarations += GLSLDeclarationForUniform(normalMatrixObject);
         vsDeclarations += GLSLDeclarationForVarying(normalVaryingSymbol, normalAttributeObject->getString("type"));
         fsDeclarations += GLSLDeclarationForVarying(normalVaryingSymbol, normalAttributeObject->getString("type"));
     
@@ -469,9 +472,7 @@ namespace GLTF
             //get the texture
             shared_ptr <JSONObject> textureParameter = inputParameters->getObject(slot);
             //FIXME:this should eventually not come from the inputParameter
-            shared_ptr <JSONObject> uniformParameter = createUniformParameter(slot, textureParameter, textureSymbol);
-            uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(uniformParameter));
-            fsDeclarations += GLSLDeclarationForUniform(uniformParameter);
+            appendUniformParameter(slot, textureParameter, textureSymbol, uniforms, fsDeclarations);
             
             //FS
             //FIXME: much more slots to consider, and be more generic...
@@ -488,9 +489,7 @@ namespace GLTF
             if (diffuseParam->getString("type") != "SAMPLER_2D" ) {
                 std::string diffuseSymbol = "u_" + slot;
                 sprintf(stringBuffer, "color = color + vec4(%s,1.) * vec4(lambert,lambert,lambert,1.);\n", diffuseSymbol.c_str()); fsBody += stringBuffer;
-                shared_ptr <JSONObject> uniformParameter = createUniformParameter(slot, diffuseParam, diffuseSymbol);
-                uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(uniformParameter));
-                fsDeclarations += GLSLDeclarationForUniform(uniformParameter);
+                appendUniformParameter(slot, diffuseParam, diffuseSymbol, uniforms, fsDeclarations);
             }
         }
         
@@ -501,10 +500,8 @@ namespace GLTF
             shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
             std::string transparencySymbol = "u_" + slot;
             
-            shared_ptr <JSONObject> uniformParameter = createUniformParameter(slot, transparencyParam, transparencySymbol);
-            uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(uniformParameter));
-            fsDeclarations += GLSLDeclarationForUniform(uniformParameter);
-
+            appendUniformParameter(slot, transparencyParam, transparencySymbol, uniforms, fsDeclarations);
+            
             sprintf(stringBuffer, "gl_FragColor = vec4(color.rgb * color.a, color.a * %s);\n", transparencySymbol.c_str()); fsBody += stringBuffer;
         } else {
             sprintf(stringBuffer, "gl_FragColor = vec4(color.rgb * color.a, color.a);\n"); fsBody += stringBuffer;
@@ -517,12 +514,8 @@ namespace GLTF
 
         std::string worldviewMatrixSymbol = "u_worldviewMatrix";
         std::string projectionMatrixSymbol = "u_projectionMatrix";
-        shared_ptr <JSONObject> worldviewMatrixObject = createUniform("WORLDVIEW", worldviewMatrixSymbol);
-        shared_ptr <JSONObject> projectionMatrixObject = createUniform("PROJECTION", projectionMatrixSymbol);
-        uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(worldviewMatrixObject));
-        uniforms->appendValue(static_cast<shared_ptr<JSONValue> >(projectionMatrixObject));
-        vsDeclarations += GLSLDeclarationForUniform(worldviewMatrixObject);
-        vsDeclarations += GLSLDeclarationForUniform(projectionMatrixObject);
+        appendUniform("WORLDVIEW", worldviewMatrixSymbol, uniforms, vsDeclarations);
+        appendUniform("PROJECTION", projectionMatrixSymbol, uniforms, vsDeclarations);
         
         sprintf(stringBuffer, "gl_Position = %s * %s * vec4(%s,1.0);\n",
                 projectionMatrixSymbol.c_str(),
