@@ -839,12 +839,6 @@ var global = window;
         
         getResource: {
                 value: function(resource, delegate, ctx) {
-                /*
-                    if (resource.id.search("indices") !== -1) {
-                        this.requested++;
-                        console.log("requested:"+this.requested);
-                    }
-                */
 
                 var managedResource = this._getResource(resource.id);
                 if (managedResource) {
