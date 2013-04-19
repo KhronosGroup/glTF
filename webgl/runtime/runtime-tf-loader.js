@@ -99,7 +99,6 @@ var global = window;
 
         handleBufferView: {
             value: function(entryID, description, userInfo) {
-
                 var bufferView = Object.create(ResourceDescription).init(entryID, description);
                 bufferView.id = entryID;
 
@@ -137,9 +136,9 @@ var global = window;
         handleTechnique: {
             value: function(entryID, description, userInfo) {
                 var technique = Object.create(Technique);
-
                 technique.id = entryID;
-                this.storeEntry(entryID, technique, description);
+
+                var globalID = this.storeEntry(entryID, technique, description);
 
                 var rootPassID = description.pass;
                 technique.passName = rootPassID;    
@@ -160,7 +159,7 @@ var global = window;
                             var pass = Object.create(ProgramPass).init();
                             //it is necessary to add an id that is composited using the techniqueID for pass, 
                             //so that we can uniquely identify them when adding primitives per passes.
-                            pass.id = entryID+"_"+rootPassID;
+                            pass.id = globalID + "_" + rootPassID;
                             var vsShaderEntry = this.getEntry(program["VERTEX_SHADER"]);
                             var fsShaderEntry = this.getEntry(program["FRAGMENT_SHADER"]);
 
@@ -170,11 +169,12 @@ var global = window;
                             progInfo["uniforms"] = program.uniforms;
                             progInfo["attributes"]= program.attributes;
 
-                            pass.program = Object.create(ResourceDescription).init(entryID+"_"+rootPassID+"_program", progInfo);
+                            pass.program = Object.create(ResourceDescription).init(pass.id +"_program", progInfo);
                             pass.program.type = "program"; //add this here this program object is not defined in the JSON format, we need to set the type manually.
 
                             pass.states = passDescription.states;
                             passes[passName] = pass;
+
                         } else {
                             console.log("ERROR: A Pass with type=program must have a program property");
                             return false;
@@ -216,9 +216,10 @@ var global = window;
                                 //TODO: handle with switch all types
                                 switch (param.type) {
                                     case "SAMPLER_2D": {
-                                        var sampler2D = Object.create(ResourceDescription).init(param.image, param);
-                                        sampler2D.type = param.type;
                                         if (param.image) {
+                                            var imageID = param.image + this.loaderContext() + "_sampler";
+                                            var sampler2D = Object.create(ResourceDescription).init(imageID, param);
+                                            sampler2D.type = param.type;
                                             param.image = this.getEntry(param.image).entry;
                                             technique.parameters[parameter] = sampler2D;
                                         }
@@ -284,7 +285,6 @@ var global = window;
                                 //let's just use an anonymous object for the attribute
                                 var attribute = description.attributes[attributeID];
                                 attribute.type = "attribute";
-                                attribute.id = attributeID;
                                 this.storeEntry(attributeID, attribute, attribute);
 
                                 var bufferEntry = this.getEntry(attribute.bufferView);
@@ -302,10 +302,11 @@ var global = window;
                         var indicesID = entryID + "_indices"+"_"+i;
                         var indicesEntry = this.getEntry(indicesID);
                         if (!indicesEntry) {
+
                             indices = primitiveDescription.indices;
                             indices.id = indicesID;
                             var bufferEntry = this.getEntry(indices.bufferView);
-                            indices.bufferView = bufferEntry.entry;
+                            indices.bufferView = bufferEntry.entry ;
                             this.storeEntry(indicesID, indices, indices);
                             indicesEntry = this.getEntry(indicesID);
                         }
@@ -479,26 +480,30 @@ var global = window;
                     this._entries = {};
                 }
 
+                id += this.loaderContext();
+
                 if (!id) {
                     console.log("ERROR: not id provided, cannot store");
                     return;
                 }
 
+                entry.id = id;
+
                 if (this.containsEntry[id]) {
                     console.log("WARNING: entry:"+id+" is already stored, overriding");
                 }
-
-                this._entries[id] = { "id" : id, "entry" : entry, "description" : description };
+                this._entries[id] = { "id" : id , "entry" : entry, "description" : description };
+                return id;
             }
         },
 
         getEntry: {
             enumerable: false,
             value: function(entryID) {
+                entryID = entryID + this.loaderContext();
                 return this._entries ? this._entries[entryID] : null;
             }
         }
-
 
     });
 

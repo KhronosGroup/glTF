@@ -265,6 +265,8 @@ var global = window;
                     }
                     var type = typeForCategory[category];
                     var entryID = keys[categoryState.index];
+                    var loaderContext = this.loaderContext();
+
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
                         if (this.handleError) {
@@ -278,6 +280,7 @@ var global = window;
                         }
 
                         if (methodForType[type]) {
+
                             if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
                                 success = false;
                                 break;
@@ -389,6 +392,19 @@ var global = window;
                 this._path = path;
                 this._json = null;
                 return this;
+            }
+        },
+
+        //this is meant to be global and common for all instances
+        _knownURLs: { writable: true, value: {} },
+
+        //to be invoked by subclass, so that ids can be ensured to not overlap
+        loaderContext: {
+            value: function() {
+                if (typeof this._knownURLs[this._path] === "undefined") {
+                    this._knownURLs[this._path] = Object.keys(this._knownURLs).length;
+                }
+                return "__" + this._knownURLs[this._path];
             }
         },
 
