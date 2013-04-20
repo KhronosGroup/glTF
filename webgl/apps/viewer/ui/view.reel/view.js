@@ -127,9 +127,45 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
 
     _scenePath: { value: null, writable: true },
 
+
+    //Test for https://github.com/KhronosGroup/glTF/issues/67
+    loadMultipleScenesTest: {
+        value: function() {
+            var paths = [];
+            paths.push( "model/duck/duck.json" );
+            paths.push( "model/rambler/Rambler.json" );
+            paths.push( "model/wine/wine.json" );
+            paths.push( "model/SuperMurdoch/SuperMurdoch.json" );
+            //paths.push( "model/NexusFlattened/NexusFlattened.json" );
+
+            var pathsIndex = 0;
+
+            var mainScene = Object.create(Scene).init();
+            var readerDelegate = {};
+            readerDelegate.loadCompleted = function (scene) {
+                mainScene.rootNode.children.push(scene.rootNode);
+                pathsIndex++;
+                if (paths.length === pathsIndex) {
+                    this.needsDraw = true;
+                    this.scene = mainScene;
+                }
+                //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
+            }.bind(this);
+
+            paths.forEach( function(path) {
+                var loader = Object.create(RuntimeTFLoader);
+                loader.initWithPath(path);
+                loader.delegate = readerDelegate;
+                loader.load(null /* userInfo */, null /* options */);
+            }, this);
+
+        }
+    },
+
     scenePath: {
         set: function(value) {
             if (value !== this._scenePath) {
+//                this.loadMultipleScenesTest();
 
                 var loader = Object.create(RuntimeTFLoader);
 
@@ -142,10 +178,11 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
                 }.bind(this);
 
                 var loader = Object.create(RuntimeTFLoader);
+                //debugger;
                 loader.initWithPath(value);
                 loader.delegate = readerDelegate;
-                loader.load(null /* userInfo */, null /* options */);
 
+                loader.load(null , null);
                 this._scenePath = value;
             }
         }, 
