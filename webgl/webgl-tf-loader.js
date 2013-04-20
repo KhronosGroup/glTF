@@ -263,9 +263,9 @@ var global = window;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
                     }
+
                     var type = typeForCategory[category];
                     var entryID = keys[categoryState.index];
-                    var loaderContext = this.loaderContext();
 
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
@@ -280,7 +280,6 @@ var global = window;
                         }
 
                         if (methodForType[type]) {
-
                             if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
                                 success = false;
                                 break;
@@ -302,7 +301,6 @@ var global = window;
             enumerable: true,
             value: function(callback) {
                 var self = this;
-
                 //FIXME: handle error
                 if (!this._json)  {
                     var jsonPath = this._path;
