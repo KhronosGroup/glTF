@@ -165,24 +165,27 @@ exports.View = Montage.create(Component, /** @lends module:"montage/ui/view.reel
     scenePath: {
         set: function(value) {
             if (value !== this._scenePath) {
-//                this.loadMultipleScenesTest();
+                if (0) {
+                    this.loadMultipleScenesTest();
+                } else {
+                    var loader = Object.create(RuntimeTFLoader);
 
-                var loader = Object.create(RuntimeTFLoader);
+                    var readerDelegate = {};
+                    readerDelegate.loadCompleted = function (scene) {
+                        this.totalBufferSize =  loader.totalBufferSize;
+                        this.scene = scene;
+                        this.needsDraw = true;
+                        //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
+                    }.bind(this);
 
-                var readerDelegate = {};
-                readerDelegate.loadCompleted = function (scene) {
-                    this.totalBufferSize =  loader.totalBufferSize;
-                    this.scene = scene;
-                    this.needsDraw = true;
-                    //FIXME:HACK: loader should be passed as arg, also multiple observers should pluggable here so that the top level could just pick that size info. (for the progress)
-                }.bind(this);
+                    var loader = Object.create(RuntimeTFLoader);
+                    //debugger;
+                    loader.initWithPath(value);
+                    loader.delegate = readerDelegate;
 
-                var loader = Object.create(RuntimeTFLoader);
-                //debugger;
-                loader.initWithPath(value);
-                loader.delegate = readerDelegate;
+                    loader.load(null , null);
+                }
 
-                loader.load(null , null);
                 this._scenePath = value;
             }
         }, 
