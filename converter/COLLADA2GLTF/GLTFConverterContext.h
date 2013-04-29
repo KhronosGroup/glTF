@@ -11,6 +11,7 @@ namespace GLTF
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
     
     //TODO: cleanup
@@ -29,6 +30,7 @@ namespace GLTF
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
         ImageIdToImagePath _imageIdToImagePath;
+        UniqueIDToAnimation _uniqueIDToAnimation;
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

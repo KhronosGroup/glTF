@@ -54,6 +54,10 @@
 #include "COLLADAFWEffect.h"
 #include "COLLADAFWImage.h"
 #include "COLLADABUURI.h"
+
+#include "COLLADAFWAnimation.h"
+#include "COLLADAFWAnimationCurve.h"
+
 #include "Math/COLLADABUMathMatrix4.h"
 
 #include "GLTFConverterContext.h"

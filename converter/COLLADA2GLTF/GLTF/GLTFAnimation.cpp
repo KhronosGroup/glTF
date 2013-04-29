@@ -24,15 +24,68 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __COLLADA2GLTF_SHADERS__
-#define __COLLADA2GLTF_SHADERS__
+#include "GLTF.h"
 
-#define SHADER_STR(Src) #Src
-#define SHADER(Src) SHADER_STR(Src)
+using namespace rapidjson;
 
-namespace GLTF
+namespace GLTF 
 {
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::vector<shared_ptr<JSONObject> > &texcoordBindings, GLTFConverterContext& context);
-};
+    
+    //-- GLTFAnimation::Parameter
+    
+    GLTFAnimation::Parameter::Parameter() {
+        
+    }
+    
+    GLTFAnimation::Parameter::~Parameter() {
+        
+    }
+    
+    void GLTFAnimation::Parameter::setBufferView(shared_ptr <GLTFBufferView> bufferView) {
+        this->_bufferView = bufferView;
+    }
+    
+    shared_ptr <GLTFBufferView>  GLTFAnimation::Parameter::getBufferView() {
+        return this->_bufferView;
+    }
+    
+    void GLTFAnimation::Parameter::setType(GLTFAnimation::ParameterType parameterType) {
+        this->_type = parameterType;
+    }
+    
+    GLTFAnimation::ParameterType GLTFAnimation::Parameter::getType() {
+        return this->_type;
+    }
+    
+    size_t GLTFAnimation::Parameter::getBufferOffet() {
+        return this->_bufferOffset;
+    }
+    
+    void GLTFAnimation::Parameter::setBufferOffset(size_t bufferOffset) {
+        this->_bufferOffset = bufferOffset;
+    }
 
-#endif
+    //-- GLTFAnimation
+    
+    GLTFAnimation::GLTFAnimation() {}
+
+    GLTFAnimation::~GLTFAnimation() {}
+    
+    
+    size_t GLTFAnimation::getCount() {
+        return this->_count;
+    }
+    
+    void GLTFAnimation::setCount(size_t count) {
+        this->_count = count;
+    }
+    
+    size_t GLTFAnimation::getDuration() {
+        return this->_duration;
+    }
+    
+    void GLTFAnimation::setDuration(size_t duration) {
+        this->_duration = duration;
+    }
+    
+}

@@ -130,7 +130,106 @@ namespace GLTF
         this->_min = min;
         this->_max = max;
     }
+    
+    
+    
+    //---- Convert OpenCOLLADA Animation GLTFAnimation  -------------------------------------------
+    
+    shared_ptr <GLTFBufferView> __ConvertFloatOrDoubleArrayToGLTFBuffer(const FloatOrDoubleArray &floatOrDoubleArray) {
+        unsigned char* sourceData = 0;
+        size_t sourceSize = 0;
         
+        switch (floatOrDoubleArray.getType()) {
+            case MeshVertexData::DATA_TYPE_FLOAT: {
+                const FloatArray* array = floatOrDoubleArray.getFloatValues();
+                
+                sourceData = (unsigned char*)array->getData();
+                sourceSize = array->getCount() * sizeof(float);
+            }
+                break;
+            case MeshVertexData::DATA_TYPE_DOUBLE: {
+                const DoubleArray* array = floatOrDoubleArray.getDoubleValues();
+                
+                sourceData = (unsigned char*)array->getData();
+                sourceSize = array->getCount() * sizeof(float);
+            }
+                
+                break;
+            default:
+            case MeshVertexData::DATA_TYPE_UNKNOWN:
+                //FIXME report error
+                break;
+        }
+        unsigned char* copiedData = (unsigned char*)malloc(sourceSize);
+        memcpy(copiedData, sourceData, sourceSize);
+        
+        shared_ptr <GLTF::GLTFBufferView> bufferView = createBufferViewWithAllocatedBuffer(copiedData, 0, sourceSize, true);
+        
+        return bufferView;
+    }
+    
+    static shared_ptr <GLTFAnimation>  __CreateAnimationForAnimationClass(shared_ptr <GLTFAnimation> cvtAnimation, const COLLADAFW::AnimationList::AnimationClass animationClass) {
+        shared_ptr <GLTFAnimation> adjustedAnimation(new GLTFAnimation());
+
+        /*
+         UNKNOWN_CLASS,
+         TIME,
+         POSITION_XYZ,			//!< Animation of all three coordinates of a position
+         POSITION_X,
+         POSITION_Y,
+         POSITION_Z,
+         COLOR_RGB,
+         COLOR_RGBA,
+         COLOR_R,
+         COLOR_G,
+         COLOR_B,
+         COLOR_A,
+         AXISANGLE,
+         ANGLE,
+         MATRIX4X4,
+         ARRAY_ELEMENT_1D,       //!< Array element accessed via one index
+         ARRAY_ELEMENT_2D,		//!< Array element accessed via two indices
+         FLOAT
+         */
+        
+        return adjustedAnimation;
+    }
+    
+    static shared_ptr <GLTFAnimation> ConvertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation) {
+        
+        shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
+        if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
+            const COLLADAFW::AnimationCurve* animationCurve = (const COLLADAFW::AnimationCurve*)animation;
+            
+            cvtAnimation->setCount(animationCurve->getKeyCount());
+            
+            /** Returns the input values of the animation. */
+            const FloatOrDoubleArray &inputArray =  animationCurve->getInputValues();
+            const FloatOrDoubleArray &outputArray =  animationCurve->getOutputValues();
+            
+            const String originalID = animationCurve->getOriginalId();
+            
+            shared_ptr <GLTFBufferView> inputBufferView = __ConvertFloatOrDoubleArrayToGLTFBuffer(inputArray);
+            shared_ptr <GLTFBufferView> outputBufferView = __ConvertFloatOrDoubleArrayToGLTFBuffer(outputArray);
+
+            //build up input parameter, typically TIME
+            GLTFAnimation::Parameter *inputParameter = new GLTFAnimation::Parameter();
+            
+            inputParameter->setBufferView(inputBufferView);
+            inputParameter->setType(GLTFAnimation::UNKNOWN);
+            inputParameter->setBufferOffset(0);
+                        
+            //build up output parameter, typically TIME
+            GLTFAnimation::Parameter *outputParameter = new GLTFAnimation::Parameter();
+            
+            outputParameter->setBufferView(outputBufferView);
+            outputParameter->setType(GLTFAnimation::UNKNOWN);
+            outputParameter->setBufferOffset(0);
+        }
+        
+        return cvtAnimation;
+    }
+    
     //---- Convert OpenCOLLADA mesh to mesh -------------------------------------------
   
     static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes) 
@@ -183,7 +282,7 @@ namespace GLTF
                     sourceData = (unsigned char*)array->getData() + byteOffset;
                     
                     sourceSize = length * sizeof(float);
-                    byteOffset += sourceSize;               //Doh! - OpenCOLLADA store all sets contiguously in the same array
+                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                 break;
                 case MeshVertexData::DATA_TYPE_DOUBLE: {
@@ -542,8 +641,8 @@ namespace GLTF
         ofstream verticesAndIndicesOutputStream;
 
         /*
-            We output vertices and indices separatly in 2 different files
-            TODO: make them in a single file again.
+            1. We output vertices and indices separatly in 2 different files
+            2. Then output them in a single file
          */
         this->_converterContext.shaderIdToShaderString.clear();
         this->_converterContext._uniqueIDToMeshes.clear();
@@ -1349,12 +1448,25 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation )
 	{
+        shared_ptr <GLTFAnimation> cvtAnimation = ConvertOpenCOLLADAAnimationToGLTFAnimation(animation);
+        
+        this->_converterContext._uniqueIDToAnimation[animation->getUniqueId().getObjectId()] = cvtAnimation;
+        
 		return true;
 	}
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
 	{
+        const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
+        
+        for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
+            shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];
+            const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+            cvtAnimation = __CreateAnimationForAnimationClass(cvtAnimation, animationClass);
+            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;
+        }
+        
 		return true;
 	}
     

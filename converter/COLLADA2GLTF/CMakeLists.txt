@@ -34,6 +34,7 @@ add_executable(collada2gltf main.cpp
     GLTF/JSONObject.cpp
     GLTF/JSONString.cpp
     GLTF/JSONValue.cpp
+    GLTF/GLTFAnimation.cpp
     GLTF/GLTFMeshAttribute.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
@@ -51,6 +52,7 @@ add_executable(collada2gltf main.cpp
     GLTF/JSONObject.h
     GLTF/JSONString.h
     GLTF/JSONValue.h
+    GLTF/GLTFAnimation.h
     GLTF/GLTFMeshAttribute.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h

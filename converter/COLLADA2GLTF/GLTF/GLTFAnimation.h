@@ -24,15 +24,55 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __COLLADA2GLTF_SHADERS__
-#define __COLLADA2GLTF_SHADERS__
+#ifndef __GLTF_ANIMATION_H__
+#define __GLTF_ANIMATION_H__
 
-#define SHADER_STR(Src) #Src
-#define SHADER(Src) SHADER_STR(Src)
+namespace GLTF 
+{    
+    class GLTFAnimation {
+    public:
+        typedef enum {
+            SCALE,
+            AXIS_ANGLE,
+            TRANSLATION,
+            UNKNOWN
+        } ParameterType;
+        
+        class Parameter {
+        public:
+            Parameter();
+            virtual ~Parameter();
+            
+            void setBufferView(shared_ptr <GLTFBufferView> bufferView);
+            shared_ptr <GLTFBufferView>  getBufferView();
 
-namespace GLTF
-{
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::vector<shared_ptr<JSONObject> > &texcoordBindings, GLTFConverterContext& context);
-};
+            void setType(ParameterType parameterType);
+            ParameterType getType();
+            
+            size_t getBufferOffet();
+            void setBufferOffset(size_t count);
+        private:
+            ParameterType _type;
+            size_t _bufferOffset;
+            shared_ptr <GLTFBufferView> _bufferView;
+        };
+        
+        GLTFAnimation();
+        virtual ~GLTFAnimation();
+        
+        size_t getCount();
+        void setCount(size_t count);
+        
+        size_t getDuration();
+        void setDuration(size_t duration);
+        
+    private:
+        size_t _count;
+        double _duration;
+        std::vector <shared_ptr <Parameter> > _parameters;
+    };
+    
+
+}
 
 #endif

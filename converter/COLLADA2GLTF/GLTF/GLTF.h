@@ -64,5 +64,6 @@
 #include "GLTFPrimitive.h"
 #include "GLTFMesh.h"
 #include "GLTFWriter.h"
+#include "GLTFAnimation.h"
 
 #endif 
