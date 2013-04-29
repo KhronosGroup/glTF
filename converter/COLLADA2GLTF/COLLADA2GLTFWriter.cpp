@@ -151,7 +151,7 @@ namespace GLTF
                 const DoubleArray* array = floatOrDoubleArray.getDoubleValues();
                 
                 sourceData = (unsigned char*)array->getData();
-                sourceSize = array->getCount() * sizeof(float);
+                sourceSize = array->getCount() * sizeof(double);
             }
                 
                 break;
