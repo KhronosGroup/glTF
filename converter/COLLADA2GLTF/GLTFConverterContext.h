@@ -5,6 +5,9 @@
 
 namespace GLTF
 {
+    typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
+    typedef shared_ptr <AnimatedTargets> AnimatedTargetsSharedPtr;
+
     typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
@@ -12,6 +15,7 @@ namespace GLTF
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
     
     //TODO: cleanup
@@ -31,6 +35,7 @@ namespace GLTF
         MaterialUIDToName _materialUIDToName;
         ImageIdToImagePath _imageIdToImagePath;
         UniqueIDToAnimation _uniqueIDToAnimation;
+        UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

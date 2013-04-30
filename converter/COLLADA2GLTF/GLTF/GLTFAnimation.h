@@ -28,7 +28,7 @@
 #define __GLTF_ANIMATION_H__
 
 namespace GLTF 
-{    
+{
     class GLTFAnimation {
     public:
         typedef enum {
@@ -46,15 +46,20 @@ namespace GLTF
             void setBufferView(shared_ptr <GLTFBufferView> bufferView);
             shared_ptr <GLTFBufferView>  getBufferView();
 
-            void setType(ParameterType parameterType);
-            ParameterType getType();
+            void setType(std::string type);
+            std::string getType();
+            
+            void setName(std::string name);
+            std::string getName();
             
             size_t getBufferOffet();
             void setBufferOffset(size_t count);
+                        
         private:
-            ParameterType _type;
+            std::string _type;
             size_t _bufferOffset;
             shared_ptr <GLTFBufferView> _bufferView;
+            std::string _name;
         };
         
         GLTFAnimation();
@@ -66,10 +71,25 @@ namespace GLTF
         size_t getDuration();
         void setDuration(size_t duration);
         
+        void setID(std::string animationID);
+        std::string getID();
+        
+        std::vector <shared_ptr <Parameter> >* parameters();
+        GLTFAnimation::Parameter* getParameterNamed(std::string parameter);
+        void removeParameterNamed(std::string parameter);
+        
+        shared_ptr <JSONObject> samplers();
+        shared_ptr <JSONObject> channels();
+
+        std::string getSamplerIDForName(std::string name);
+
     private:
         size_t _count;
         double _duration;
         std::vector <shared_ptr <Parameter> > _parameters;
+        std::string _id;
+        shared_ptr <JSONObject> _channels;
+        shared_ptr <JSONObject> _samplers;
     };
     
 

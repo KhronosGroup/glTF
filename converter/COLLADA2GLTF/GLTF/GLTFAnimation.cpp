@@ -34,7 +34,6 @@ namespace GLTF
     //-- GLTFAnimation::Parameter
     
     GLTFAnimation::Parameter::Parameter() {
-        
     }
     
     GLTFAnimation::Parameter::~Parameter() {
@@ -49,11 +48,11 @@ namespace GLTF
         return this->_bufferView;
     }
     
-    void GLTFAnimation::Parameter::setType(GLTFAnimation::ParameterType parameterType) {
-        this->_type = parameterType;
+    void GLTFAnimation::Parameter::setType(std::string componentType) {
+        this->_type = componentType;
     }
     
-    GLTFAnimation::ParameterType GLTFAnimation::Parameter::getType() {
+    std::string GLTFAnimation::Parameter::getType() {
         return this->_type;
     }
     
@@ -64,13 +63,23 @@ namespace GLTF
     void GLTFAnimation::Parameter::setBufferOffset(size_t bufferOffset) {
         this->_bufferOffset = bufferOffset;
     }
+    
+    void GLTFAnimation::Parameter::setName(std::string name) {
+        this->_name = name;
+    }
+    
+    std::string GLTFAnimation::Parameter::getName() {
+        return this->_name;
+    }
 
     //-- GLTFAnimation
     
-    GLTFAnimation::GLTFAnimation() {}
+    GLTFAnimation::GLTFAnimation() {
+        this->_samplers = shared_ptr<JSONObject> (new JSONObject());
+        this->_channels = shared_ptr<JSONObject> (new JSONObject());
+    }
 
     GLTFAnimation::~GLTFAnimation() {}
-    
     
     size_t GLTFAnimation::getCount() {
         return this->_count;
@@ -87,5 +96,51 @@ namespace GLTF
     void GLTFAnimation::setDuration(size_t duration) {
         this->_duration = duration;
     }
+ 
+    std::vector <shared_ptr <GLTFAnimation::Parameter> >* GLTFAnimation::parameters() {
+        return &this->_parameters;
+    }
+
+    //TODO: consider having a map to avoid this loop, but likely, we won't typically have many parameters
+    GLTFAnimation::Parameter* GLTFAnimation::getParameterNamed(std::string parameter) {
+        GLTFAnimation::Parameter *parameterOutput = 0;
+        for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
+            if (this->_parameters[i]->getName() == parameter) {
+                return this->_parameters[i].get();
+            }
+        }
+        
+        return parameterOutput;
+    }
+
+    void GLTFAnimation::removeParameterNamed(std::string parameter) {
+        for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
+            if (this->_parameters[i]->getName() == parameter) {
+                this->_parameters.erase(this->_parameters.begin() + i);
+                break;
+            }
+        }
+    }
+
+    void GLTFAnimation::setID(std::string animationID) {
+        this->_id = animationID;
+    }
+    
+    std::string GLTFAnimation::getID() {
+        return this->_id;
+    }
+    
+    shared_ptr <JSONObject> GLTFAnimation::samplers() {
+        return this->_samplers;
+    }
+
+    shared_ptr <JSONObject> GLTFAnimation::channels() {
+        return this->_channels;
+    }
+
+    std::string GLTFAnimation::getSamplerIDForName(std::string name) {
+        return this->_id + "_" + name + "_sampler";
+    }
+
     
 }

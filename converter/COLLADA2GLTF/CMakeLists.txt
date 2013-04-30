@@ -3,6 +3,7 @@ project(COLLADA2GLTF)
 
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
+set(BUILD_SHARED_LIBS OFF)
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
@@ -11,7 +12,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/MathGeoLib/src/Geometry)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/MathGeoLib/src/Geometry)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/MathGeoLib/src/Math)
 
 if (NOT WIN32)
     find_package(PNG REQUIRED)

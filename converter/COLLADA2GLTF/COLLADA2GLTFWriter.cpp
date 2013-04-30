@@ -38,6 +38,10 @@
 #include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
 
+//MathGeoLib
+#include "float4x4.h"
+#include "Quat.h"
+
 namespace GLTF
 {
         
@@ -135,7 +139,7 @@ namespace GLTF
     
     //---- Convert OpenCOLLADA Animation GLTFAnimation  -------------------------------------------
     
-    shared_ptr <GLTFBufferView> __ConvertFloatOrDoubleArrayToGLTFBuffer(const FloatOrDoubleArray &floatOrDoubleArray) {
+    shared_ptr <GLTFBufferView> __ConvertFloatOrDoubleArrayToGLTFBufferView(const FloatOrDoubleArray &floatOrDoubleArray) {
         unsigned char* sourceData = 0;
         size_t sourceSize = 0;
         
@@ -153,7 +157,6 @@ namespace GLTF
                 sourceData = (unsigned char*)array->getData();
                 sourceSize = array->getCount() * sizeof(double);
             }
-                
                 break;
             default:
             case MeshVertexData::DATA_TYPE_UNKNOWN:
@@ -168,38 +171,235 @@ namespace GLTF
         return bufferView;
     }
     
-    static shared_ptr <GLTFAnimation>  __CreateAnimationForAnimationClass(shared_ptr <GLTFAnimation> cvtAnimation, const COLLADAFW::AnimationList::AnimationClass animationClass) {
-        shared_ptr <GLTFAnimation> adjustedAnimation(new GLTFAnimation());
-
-        /*
-         UNKNOWN_CLASS,
-         TIME,
-         POSITION_XYZ,			//!< Animation of all three coordinates of a position
-         POSITION_X,
-         POSITION_Y,
-         POSITION_Z,
-         COLOR_RGB,
-         COLOR_RGBA,
-         COLOR_R,
-         COLOR_G,
-         COLOR_B,
-         COLOR_A,
-         AXISANGLE,
-         ANGLE,
-         MATRIX4X4,
-         ARRAY_ELEMENT_1D,       //!< Array element accessed via one index
-         ARRAY_ELEMENT_2D,		//!< Array element accessed via two indices
-         FLOAT
-         */
+    static void __DecomposeMatrices(float *matrices, size_t count,
+                                    std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
+        math::float3 translate, scale;
+        math::Quat rotate;
+        math::float3 rotationAxis;
+        float rotationAngleRadians;
         
-        return adjustedAnimation;
+        size_t translationBufferSize = sizeof(float) * 3 * count;
+        size_t rotationBufferSize = sizeof(float) * 4 * count;
+        size_t scaleBufferSize = sizeof(float) * 3 * count;
+        
+        float *translationData = (float*)malloc(translationBufferSize);
+        float *rotationData = (float*)malloc(rotationBufferSize);
+        float *scaleData = (float*)malloc(scaleBufferSize);
+        
+        shared_ptr <GLTF::GLTFBufferView> translationBufferView = createBufferViewWithAllocatedBuffer(translationData, 0, translationBufferSize, true);
+        shared_ptr <GLTF::GLTFBufferView> rotationBufferView = createBufferViewWithAllocatedBuffer(rotationData, 0, rotationBufferSize, true);
+        shared_ptr <GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(scaleData, 0, scaleBufferSize, true);
+        
+        for (size_t i = 0 ; i < count ; i++) {
+            float *m = matrices;
+            
+            math::float4x4 matrix(m[0], m[1], m[2], m[3],
+                                  m[4], m[5], m[6], m[7],
+                                  m[8], m[9], m[10], m[11],
+                                  m[12], m[13], m[14], m[15]);
+            
+            matrices += 16;
+                        
+            matrix.Decompose(translate, rotate, scale);
+            rotate.ToAxisAngle(rotationAxis, rotationAngleRadians);
+            
+            translationData[0] = translate.x;
+            translationData[1] = translate.y;
+            translationData[2] = translate.z;
+            translationData += 3;
+            
+            rotationData[0] = rotationAxis.x;
+            rotationData[1] = rotationAxis.y;
+            rotationData[2] = rotationAxis.z;
+            rotationData[3] = rotationAngleRadians;
+            rotationData += 4;
+
+            scaleData[0] = scale.x;
+            scaleData[1] = scale.y;
+            scaleData[2] = scale.z;
+            scaleData += 3;
+            /*
+             printf("*\n");
+             printf("translate x:%f y:%f z:%f\n", translate.x,  translate.y,  translate.z);
+             printf("axis angle x:%f y:%f z:%f angle:%f\n", rotationAxis.x,  rotationAxis.y,  rotationAxis.z, rotationAngleRadians);
+             printf("scale x:%f y:%f z:%f\n", scale.x,  scale.y,  scale.z);
+             */
+        }
+    
+        TRSBufferViews.push_back(translationBufferView);
+        TRSBufferViews.push_back(rotationBufferView);
+        TRSBufferViews.push_back(scaleBufferView);
     }
     
-    static shared_ptr <GLTFAnimation> ConvertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation) {
+    static shared_ptr <GLTFAnimation>  __AnimationForAnimationClass(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                                    const COLLADAFW::AnimationList::AnimationClass animationClass,
+                                                                    AnimatedTargetsSharedPtr animatedTargets) {
+
+        switch (animationClass) {
+            case COLLADAFW::AnimationList::TIME:
+                break;
+            case COLLADAFW::AnimationList::AXISANGLE:
+                break;
+            case COLLADAFW::AnimationList::MATRIX4X4: {
+                shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
+                shared_ptr<JSONObject> channels = cvtAnimation->channels();
+
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    std::vector< shared_ptr <GLTFBufferView> > TRSBufferViews;
+                    //FIXME: we assume float here, might be double
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    float* matrices = (float*)bufferView->getBufferDataByApplyingOffset();
+                    __DecomposeMatrices(matrices, cvtAnimation->getCount(), TRSBufferViews);
+                    cvtAnimation->removeParameterNamed("OUTPUT");
+                    std::string samplerID;
+                    std::string name;
+                    
+                    {
+                        //translation
+                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
+                        name = "TRANSLATION";
+                        samplerID = cvtAnimation->getSamplerIDForName(name);
+                        
+                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
+                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+                        trSamplerValue->setString("output", name);
+                        samplers->setValue(samplerID, trSamplerValue);
+                        
+                        shared_ptr <GLTFAnimation::Parameter> translationParameter(new GLTFAnimation::Parameter());
+                        
+                        translationParameter->setName(name);
+                        translationParameter->setType("FLOAT_VEC3");
+                        translationParameter->setBufferView(TRSBufferViews[0]);
+                        translationParameter->setBufferOffset(0);
+                        
+                        cvtAnimation->parameters()->push_back(translationParameter);
+                    }
+                    {
+                        //translation
+                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
+                        name = "ROTATION";
+                        samplerID = cvtAnimation->getSamplerIDForName(name);
+                        
+                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
+                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+                        trSamplerValue->setString("output", name);
+                        samplers->setValue(samplerID, trSamplerValue);
+                        
+                        shared_ptr <GLTFAnimation::Parameter> rotationParameter(new GLTFAnimation::Parameter());
+                        
+                        rotationParameter->setName(name);
+                        rotationParameter->setType("FLOAT_VEC4");
+                        rotationParameter->setBufferView(TRSBufferViews[1]);
+                        rotationParameter->setBufferOffset(0);
+                        
+                        cvtAnimation->parameters()->push_back(rotationParameter);
+                    }
+                    {
+                        //translation
+                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
+                        name = "SCALE";
+                        samplerID = cvtAnimation->getSamplerIDForName(name);
+                        
+                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
+                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+                        trSamplerValue->setString("output", name);
+                        samplers->setValue(samplerID, trSamplerValue);
+                        
+                        shared_ptr <GLTFAnimation::Parameter> scaleParameter(new GLTFAnimation::Parameter());
+                        
+                        scaleParameter->setName(name);
+                        scaleParameter->setType("FLOAT_VEC3");
+                        scaleParameter->setBufferView(TRSBufferViews[2]);
+                        scaleParameter->setBufferOffset(0);
+                        
+                        cvtAnimation->parameters()->push_back(scaleParameter);
+                    }
+                    
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        
+                        if (animatedTarget->getString("path") == "MATRIX") {
+                            std::string targetID = animatedTarget->getString("target");
+                            std::string channelID;
+                            {
+                                name = "TRANSLATION";
+                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
+                                shared_ptr<JSONObject> trChannel(new JSONObject());
+                                shared_ptr<JSONObject> trTarget(new JSONObject());
+                                
+                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
+                                trChannel->setValue("target", trTarget);
+                                trTarget->setString(targetID, "translation");
+                                channels->setValue(channelID, trChannel);
+                            }
+                            {
+                                name = "ROTATION";
+                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
+                                shared_ptr<JSONObject> trChannel(new JSONObject());
+                                shared_ptr<JSONObject> trTarget(new JSONObject());
+                                
+                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
+                                trChannel->setValue("target", trTarget);
+                                trTarget->setString(targetID, "rotation");
+                                channels->setValue(channelID, trChannel);
+                            }
+                            {
+                                name = "SCALE";
+                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
+                                shared_ptr<JSONObject> trChannel(new JSONObject());
+                                shared_ptr<JSONObject> trTarget(new JSONObject());
+                                
+                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
+                                trChannel->setValue("target", trTarget);
+                                trTarget->setString(targetID, "scale");
+                                channels->setValue(channelID, trChannel);
+                            }
+                            
+                        }
+                    }
+                    
+                    
+
+                } else {
+                    //FIXME: report error
+                    printf("WARNING: cannot find intermediate parameter named OUTPUT\n");
+                }
+            }
+                break;
+            case COLLADAFW::AnimationList::POSITION_XYZ:
+            case COLLADAFW::AnimationList::POSITION_X:
+            case COLLADAFW::AnimationList::POSITION_Y:
+            case COLLADAFW::AnimationList::POSITION_Z:
+            case COLLADAFW::AnimationList::COLOR_RGB:
+            case COLLADAFW::AnimationList::COLOR_RGBA:
+            case COLLADAFW::AnimationList::COLOR_R:
+            case COLLADAFW::AnimationList::COLOR_G:
+            case COLLADAFW::AnimationList::COLOR_B:
+            case COLLADAFW::AnimationList::COLOR_A:
+            case COLLADAFW::AnimationList::ARRAY_ELEMENT_1D:
+            case COLLADAFW::AnimationList::ARRAY_ELEMENT_2D:
+            case COLLADAFW::AnimationList::FLOAT:
+                break;
+            default:
+                break;
+        }
         
+        //shared_ptr <GLTFAnimation> adjustedAnimation(new GLTFAnimation());
+        
+        return cvtAnimation;
+    }
+    
+    static shared_ptr <GLTFAnimation> ConvertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation)
+    {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
+            std::vector <shared_ptr <GLTFAnimation::Parameter> >* animationParameters = cvtAnimation->parameters();
+            
             const COLLADAFW::AnimationCurve* animationCurve = (const COLLADAFW::AnimationCurve*)animation;
+            
+            std::string animationID = animation->getOriginalId();
+            cvtAnimation->setID(animationID);
             
             cvtAnimation->setCount(animationCurve->getKeyCount());
             
@@ -209,22 +409,27 @@ namespace GLTF
             
             const String originalID = animationCurve->getOriginalId();
             
-            shared_ptr <GLTFBufferView> inputBufferView = __ConvertFloatOrDoubleArrayToGLTFBuffer(inputArray);
-            shared_ptr <GLTFBufferView> outputBufferView = __ConvertFloatOrDoubleArrayToGLTFBuffer(outputArray);
+            shared_ptr <GLTFBufferView> inputBufferView = __ConvertFloatOrDoubleArrayToGLTFBufferView(inputArray);
+            shared_ptr <GLTFBufferView> outputBufferView = __ConvertFloatOrDoubleArrayToGLTFBufferView(outputArray);
 
             //build up input parameter, typically TIME
-            GLTFAnimation::Parameter *inputParameter = new GLTFAnimation::Parameter();
+            shared_ptr <GLTFAnimation::Parameter> inputParameter(new GLTFAnimation::Parameter());
             
+            inputParameter->setName("TIME");
+            inputParameter->setType("FLOAT");
             inputParameter->setBufferView(inputBufferView);
-            inputParameter->setType(GLTFAnimation::UNKNOWN);
             inputParameter->setBufferOffset(0);
-                        
-            //build up output parameter, typically TIME
-            GLTFAnimation::Parameter *outputParameter = new GLTFAnimation::Parameter();
+
+            animationParameters->push_back(inputParameter);
             
+            //build up output parameter
+            shared_ptr <GLTFAnimation::Parameter> outputParameter(new GLTFAnimation::Parameter());
+            
+            outputParameter->setName("OUTPUT"); //temporary, we'll put a better name in __AnimationForAnimationClass
             outputParameter->setBufferView(outputBufferView);
-            outputParameter->setType(GLTFAnimation::UNKNOWN);
             outputParameter->setBufferOffset(0);
+
+            animationParameters->push_back(outputParameter);
         }
         
         return cvtAnimation;
@@ -264,8 +469,6 @@ namespace GLTF
                 inputLength = vertexData.getLength(0);
             }
             
-            //printf("name %s\n", name.c_str());
-                    
             //name is the id
             length = inputLength ? inputLength : vertexData.getValuesCount();
             elementsCount = length / size;
@@ -706,9 +909,9 @@ namespace GLTF
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
         
-        UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
 
         // ----
+        UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
         shared_ptr <GLTF::JSONObject> meshesObject(new GLTF::JSONObject());
         
         this->_converterContext.root->setValue("meshes", meshesObject);
@@ -733,7 +936,6 @@ namespace GLTF
         }
         
         // ----
-        
         shared_ptr <GLTF::JSONObject> materialsObject(new GLTF::JSONObject());
 
         this->_converterContext.root->setValue("materials", materialsObject);
@@ -752,6 +954,22 @@ namespace GLTF
         }
 
         // ----
+        UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
+        shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
+        
+        this->_converterContext.root->setValue("animations", animationsObject);
+        
+        for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
+            //(*it).first;             // the key value (of type Key)
+            //(*it).second;            // the mapped value (of type T)
+            
+            unsigned int animationUID = (*UniqueIDToAnimationsIterator).first;
+            shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+            shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
+            
+            animationsObject->setValue(animation->getID(), animationObject);
+        }
+        
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
         shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
@@ -850,7 +1068,7 @@ namespace GLTF
                                     SceneFlatteningInfo* sceneFlatteningInfo) 
     {
         const NodePointerArray& nodes = node->getChildNodes();
-        const std::string& originalID = uniqueIdWithType("node", node->getUniqueId());
+        const std::string& nodeUID = uniqueIdWithType("node", node->getUniqueId());
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
         shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
@@ -874,6 +1092,7 @@ namespace GLTF
             size_t transformationsCount = transformations.getCount();
             for (size_t i = 0 ; i < transformationsCount ; i++) {
                 const Transformation* tr = transformations[i];
+                                
                 if (tr->getTransformationType() == Transformation::LOOKAT) {
                     Lookat* lookAt = (Lookat*)tr;
                     buildLookAtMatrix(lookAt, matrix);
@@ -888,10 +1107,30 @@ namespace GLTF
             }
         } 
         
-        if (!nodeContainsLookAtTr) { 
+        if (!nodeContainsLookAtTr) {
             node->getTransformationMatrix(matrix);
         }
-                
+        
+        
+        const TransformationPointerArray& transformations = node->getTransformations();
+        size_t transformationsCount = transformations.getCount();
+        for (size_t i = 0 ; i < transformationsCount ; i++) {
+            const Transformation* tr = transformations[i];
+            const UniqueId& animationListID = tr->getAnimationList();
+            if (!animationListID.isValid())
+                continue;
+            shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
+            this->_converterContext._uniqueIDToAnimatedTargets[animationListID.getObjectId()] = animatedTargets;
+            shared_ptr <JSONObject> animatedTarget(new JSONObject());
+            
+            if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
+                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("path", "MATRIX");
+                animatedTargets->push_back(animatedTarget);
+            }
+        }
+        
+        
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
 
         //Need to FIX OpenCOLLADA typo for isIdentity to reenable this
@@ -1020,7 +1259,7 @@ namespace GLTF
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(id)));
         }
         
-        nodesObject->setValue(originalID, static_pointer_cast <JSONValue> (nodeObject));
+        nodesObject->setValue(nodeUID, static_pointer_cast <JSONValue> (nodeObject));
         
         for (unsigned int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
@@ -1460,11 +1699,13 @@ namespace GLTF
 	{
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
+        AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().getObjectId()];
+
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
-            cvtAnimation = __CreateAnimationForAnimationClass(cvtAnimation, animationClass);
-            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;
+            cvtAnimation = __AnimationForAnimationClass(cvtAnimation, animationClass, animatedTargets);
+            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;            
         }
         
 		return true;

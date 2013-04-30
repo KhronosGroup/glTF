@@ -128,7 +128,7 @@ namespace GLTF
         return meshObject;
     }
     
-    shared_ptr <GLTF::JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
+    shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
     {
         shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
         
@@ -215,8 +215,8 @@ namespace GLTF
         return primitiveObject;
     }
     
-    shared_ptr <GLTF::JSONValue> serializeVec3(double x,double y, double z) {
-        shared_ptr <GLTF::JSONArray> vec3(new GLTF::JSONArray());
+    shared_ptr <JSONValue> serializeVec3(double x,double y, double z) {
+        shared_ptr <JSONArray> vec3(new GLTF::JSONArray());
         
         vec3->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(x)));
         vec3->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(y)));
@@ -225,6 +225,36 @@ namespace GLTF
         return vec3;
     }
 
+    shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter) {
+        shared_ptr <JSONObject> animationParameterObject(new JSONObject());
+        
+        animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
+        animationParameterObject->setString("type", animationParameter->getType());
+        animationParameterObject->setString("name", animationParameter->getName());
+        animationParameterObject->setUnsignedInt32("bufferOffset", animationParameter->getBufferOffet());
+        
+        return animationParameterObject;
+    }
+
+    shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation) {
+        shared_ptr <JSONObject> animationObject(new JSONObject());
+        shared_ptr <JSONObject> parametersObject(new JSONObject());
+
+        animationObject->setUnsignedInt32("count", animation->getCount());
+        animationObject->setValue("samplers", animation->samplers());
+        animationObject->setValue("channels", animation->channels());
+        
+        std::vector <shared_ptr <GLTFAnimation::Parameter> >  *parameters = animation->parameters();
+        for (size_t i = 0 ; i < parameters->size() ; i++) {
+            shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get());
+            
+            parametersObject->setValue((*parameters)[i]->getName(), parameterObject);
+        }
+        animationObject->setValue("parameters", parametersObject);
+        
+        return animationObject;
+    }
+    
     //-- Writer
     
     GLTFWriter::GLTFWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer):

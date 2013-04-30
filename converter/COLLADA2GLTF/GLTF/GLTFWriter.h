@@ -29,15 +29,16 @@
 
 namespace GLTF 
 {
-    shared_ptr <GLTF::JSONValue> serializeVec3(double x,double y, double z);
-    shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, void *context);
-    shared_ptr <GLTF::JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
-    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context);
-    shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context);
-    shared_ptr <GLTF::JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context);
-    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context);
-    shared_ptr <GLTF::JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
-    
+    shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
+    shared_ptr <JSONObject> serializeBuffer(GLTFBuffer* buffer, void *context);
+    shared_ptr <JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
+    shared_ptr <JSONObject> serializeEffect(GLTFEffect* effect, void *context);
+    shared_ptr <JSONObject> serializeMesh(GLTFMesh* mesh, void *context);
+    shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context);
+    shared_ptr <JSONObject> serializeIndices(GLTFIndices* indices, void *context);
+    shared_ptr <JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
+    shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation);
+
     class GLTFWriter {
     private:
         
