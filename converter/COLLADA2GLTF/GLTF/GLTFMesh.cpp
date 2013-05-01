@@ -191,12 +191,12 @@ namespace GLTF
                 meshAttribute->computeMinMax();
                 
                 meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-                verticesOutputStream.write((const char*)(static_pointer_cast <GLTFBuffer> (buffer)->getData()), buffer->getByteLength());
+                verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
 
                 //now that we wrote to the stream we can release the buffer.
                 meshAttribute->setBufferView(dummyBuffer);
                 
-                IDToBuffer[bufferView->getBuffer()->getID().c_str()] = buffer;
+                IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             } 
         }
                 

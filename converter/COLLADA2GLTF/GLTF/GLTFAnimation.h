@@ -52,12 +52,12 @@ namespace GLTF
             void setName(std::string name);
             std::string getName();
             
-            size_t getBufferOffet();
-            void setBufferOffset(size_t count);
+            size_t getByteOffset();
+            void setByteOffset(size_t count);
                         
         private:
             std::string _type;
-            size_t _bufferOffset;
+            size_t _byteOffset;
             shared_ptr <GLTFBufferView> _bufferView;
             std::string _name;
         };

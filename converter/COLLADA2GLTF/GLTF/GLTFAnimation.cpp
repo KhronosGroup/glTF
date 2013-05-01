@@ -56,12 +56,12 @@ namespace GLTF
         return this->_type;
     }
     
-    size_t GLTFAnimation::Parameter::getBufferOffet() {
-        return this->_bufferOffset;
+    size_t GLTFAnimation::Parameter::getByteOffset() {
+        return this->_byteOffset;
     }
     
-    void GLTFAnimation::Parameter::setBufferOffset(size_t bufferOffset) {
-        this->_bufferOffset = bufferOffset;
+    void GLTFAnimation::Parameter::setByteOffset(size_t byteOffset) {
+        this->_byteOffset = byteOffset;
     }
     
     void GLTFAnimation::Parameter::setName(std::string name) {

@@ -249,6 +249,7 @@ namespace GLTF
 
         ofstream _verticesOutputStream;
         ofstream _indicesOutputStream;
+        ofstream _animationsOutputStream;
 	};
 } 
 

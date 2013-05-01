@@ -231,7 +231,7 @@ namespace GLTF
         animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
         animationParameterObject->setString("type", animationParameter->getType());
         animationParameterObject->setString("name", animationParameter->getName());
-        animationParameterObject->setUnsignedInt32("bufferOffset", animationParameter->getBufferOffet());
+        animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
         
         return animationParameterObject;
     }

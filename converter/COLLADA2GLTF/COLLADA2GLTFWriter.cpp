@@ -231,12 +231,30 @@ namespace GLTF
         TRSBufferViews.push_back(scaleBufferView);
     }
     
-    static shared_ptr <GLTFAnimation>  __AnimationForAnimationClass(shared_ptr <GLTFAnimation> cvtAnimation,
+    static shared_ptr <GLTFAnimation>  __WriteAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                                                                     const COLLADAFW::AnimationList::AnimationClass animationClass,
-                                                                    AnimatedTargetsSharedPtr animatedTargets) {
+                                                                    AnimatedTargetsSharedPtr animatedTargets,
+                                                                    ofstream &animationsOutputStream) {
 
+        
+        GLTFAnimation::Parameter *timeParameter = cvtAnimation->getParameterNamed("TIME");
+        if (timeParameter) {
+            shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
+            std::string name = "TIME";
+            std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+            
+            timeParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+            animationsOutputStream.write((const char*)( timeBufferView->getBufferDataByApplyingOffset()),
+                                         timeBufferView->getByteLength());
+            
+            //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
+        }
+        
         switch (animationClass) {
             case COLLADAFW::AnimationList::TIME:
+            {
+                //In Currrent COLLADA Implementation, this is never called, only cases mapping to OUTPUT are, so we handle INPUT when we enter this function.
+            }
                 break;
             case COLLADAFW::AnimationList::AXISANGLE:
                 break;
@@ -270,9 +288,11 @@ namespace GLTF
                         
                         translationParameter->setName(name);
                         translationParameter->setType("FLOAT_VEC3");
-                        translationParameter->setBufferView(TRSBufferViews[0]);
-                        translationParameter->setBufferOffset(0);
+                        translationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                        animationsOutputStream.write((const char*)( TRSBufferViews[0]->getBufferDataByApplyingOffset()),
+                                                                    TRSBufferViews[0]->getByteLength());                        
                         
+                        //printf("translation animation length: %d\n",(int)TRSBufferViews[0]->getByteLength());
                         cvtAnimation->parameters()->push_back(translationParameter);
                     }
                     {
@@ -290,9 +310,11 @@ namespace GLTF
                         
                         rotationParameter->setName(name);
                         rotationParameter->setType("FLOAT_VEC4");
-                        rotationParameter->setBufferView(TRSBufferViews[1]);
-                        rotationParameter->setBufferOffset(0);
+                        rotationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                        animationsOutputStream.write((const char*)( TRSBufferViews[1]->getBufferDataByApplyingOffset()),
+                                                                    TRSBufferViews[1]->getByteLength());
                         
+                        //printf("rotation animation length: %d\n",(int)TRSBufferViews[1]->getByteLength());
                         cvtAnimation->parameters()->push_back(rotationParameter);
                     }
                     {
@@ -310,9 +332,11 @@ namespace GLTF
                         
                         scaleParameter->setName(name);
                         scaleParameter->setType("FLOAT_VEC3");
-                        scaleParameter->setBufferView(TRSBufferViews[2]);
-                        scaleParameter->setBufferOffset(0);
-                        
+                        scaleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                        animationsOutputStream.write((const char*)( TRSBufferViews[2]->getBufferDataByApplyingOffset()),
+                                                                    TRSBufferViews[2]->getByteLength());
+
+                        //printf("scale animation length: %d\n",(int)TRSBufferViews[2]->getByteLength());
                         cvtAnimation->parameters()->push_back(scaleParameter);
                     }
                     
@@ -418,7 +442,7 @@ namespace GLTF
             inputParameter->setName("TIME");
             inputParameter->setType("FLOAT");
             inputParameter->setBufferView(inputBufferView);
-            inputParameter->setBufferOffset(0);
+            inputParameter->setByteOffset(0);
 
             animationParameters->push_back(inputParameter);
             
@@ -427,7 +451,7 @@ namespace GLTF
             
             outputParameter->setName("OUTPUT"); //temporary, we'll put a better name in __AnimationForAnimationClass
             outputParameter->setBufferView(outputBufferView);
-            outputParameter->setBufferOffset(0);
+            outputParameter->setByteOffset(0);
 
             animationParameters->push_back(outputParameter);
         }
@@ -841,7 +865,8 @@ namespace GLTF
 	{
         ifstream inputVertices;
         ifstream inputIndices;
-        ofstream verticesAndIndicesOutputStream;
+        ifstream inputAnimations;
+        ofstream verticesOutputStream;
 
         /*
             1. We output vertices and indices separatly in 2 different files
@@ -854,18 +879,21 @@ namespace GLTF
         
         std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
         std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
-        std::string sharedVerticesAndIndicesBufferID = inputURI.getPathFileBase() + ".bin";
+        std::string sharedAnimationsBufferID = inputURI.getPathFileBase() + "animations" + ".bin";
+        std::string sharedBufferID = inputURI.getPathFileBase() + ".bin";
         std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
         std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
-        std::string outputVerticesAndIndicesFilePath = outputURI.getPathDir() + sharedVerticesAndIndicesBufferID;
+        std::string outputAnimationsFilePath = outputURI.getPathDir() + sharedAnimationsBufferID;
+        std::string outputFilePath = outputURI.getPathDir() + sharedBufferID;
         
         this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        verticesAndIndicesOutputStream.open (outputVerticesAndIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        this->_animationsOutputStream.open (outputAnimationsFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        verticesOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
                 
         this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
-        this->_converterContext.root->setString("version", "0.2");
+        this->_converterContext.root->setString("version", "0.3");
         this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
                                 
         COLLADASaxFWL::Loader loader;
@@ -878,38 +906,48 @@ namespace GLTF
         //reopen .bin files for vertices and indices
         size_t verticesLength = this->_verticesOutputStream.tellp();
         size_t indicesLength = this->_indicesOutputStream.tellp();
+        size_t animationsLength = this->_animationsOutputStream.tellp();
 
         this->_verticesOutputStream.flush();
         this->_verticesOutputStream.close();
         this->_indicesOutputStream.flush();
         this->_indicesOutputStream.close();
+        this->_animationsOutputStream.flush();
+        this->_animationsOutputStream.close();
         
         inputVertices.open(outputVerticesFilePath.c_str(), ios::in | ios::binary);
         inputIndices.open(outputIndicesFilePath.c_str(), ios::in | ios::binary);
+        inputAnimations.open(outputAnimationsFilePath.c_str(), ios::in | ios::binary);
         
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
-        verticesAndIndicesOutputStream.write(bufferIOStream, verticesLength);
+        verticesOutputStream.write(bufferIOStream, verticesLength);
         free(bufferIOStream);
         bufferIOStream = (char*)malloc(sizeof(char) * indicesLength);
         inputIndices.read(bufferIOStream, indicesLength);
-        verticesAndIndicesOutputStream.write(bufferIOStream, indicesLength);
+        verticesOutputStream.write(bufferIOStream, indicesLength);
+        free(bufferIOStream);
+        bufferIOStream = (char*)malloc(sizeof(char) * animationsLength);
+        inputAnimations.read(bufferIOStream, animationsLength);
+        verticesOutputStream.write(bufferIOStream, animationsLength);
         free(bufferIOStream);
         
         inputVertices.close();
         inputIndices.close();
+        inputAnimations.close();
         
         remove(outputIndicesFilePath.c_str());
         remove(outputVerticesFilePath.c_str());
+        remove(outputAnimationsFilePath.c_str());
         
         //---
         
-        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedVerticesAndIndicesBufferID, verticesLength + indicesLength));
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength));
         
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
+        shared_ptr <GLTFBufferView> animationsBufferView(new GLTFBufferView(sharedBuffer, verticesLength + indicesLength, animationsLength));
         
-
         // ----
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
         shared_ptr <GLTF::JSONObject> meshesObject(new GLTF::JSONObject());
@@ -963,8 +1001,12 @@ namespace GLTF
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             
-            unsigned int animationUID = (*UniqueIDToAnimationsIterator).first;
             shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+            std::vector <shared_ptr <GLTFAnimation::Parameter> > *parameters = animation->parameters();
+            for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
+                shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
+                parameter->setBufferView(animationsBufferView);
+            }
             shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
             
             animationsObject->setValue(animation->getID(), animationObject);
@@ -975,7 +1017,7 @@ namespace GLTF
         shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
 
         this->_converterContext.root->setValue("buffers", buffersObject);
-        buffersObject->setValue(sharedVerticesAndIndicesBufferID, bufferObject);
+        buffersObject->setValue(sharedBufferID, bufferObject);
         
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
@@ -984,8 +1026,10 @@ namespace GLTF
         
         shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
+        shared_ptr <JSONObject> bufferViewAnimationsObject = serializeBufferView(animationsBufferView.get(), 0);
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
+        bufferViewsObject->setValue(animationsBufferView->getID(), bufferViewAnimationsObject);
         bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
         bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
         
@@ -999,8 +1043,8 @@ namespace GLTF
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
         }
         
-        verticesAndIndicesOutputStream.flush();
-        verticesAndIndicesOutputStream.close();
+        verticesOutputStream.flush();
+        verticesOutputStream.close();
         
 		return true;
 	}
@@ -1704,8 +1748,9 @@ namespace GLTF
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
-            cvtAnimation = __AnimationForAnimationClass(cvtAnimation, animationClass, animatedTargets);
-            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;            
+            __WriteAnimation(cvtAnimation, animationClass, animatedTargets, this->_animationsOutputStream);
+            
+//            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;
         }
         
 		return true;
