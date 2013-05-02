@@ -171,12 +171,37 @@ namespace GLTF
         return bufferView;
     }
     
-    static void __DecomposeMatrices(float *matrices, size_t count,
-                                    std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
-        math::float3 translate, scale;
+    static void __DecomposeMatrix(float* m, float *translation, float *rotation, float *scale) {
+
+        math::float3 translate, scale_;
         math::Quat rotate;
         math::float3 rotationAxis;
         float rotationAngleRadians;
+        
+        math::float4x4 matrix(m[0], m[1], m[2], m[3],
+                              m[4], m[5], m[6], m[7],
+                              m[8], m[9], m[10], m[11],
+                              m[12], m[13], m[14], m[15]);
+                
+        matrix.Decompose(translate, rotate, scale_);
+        rotate.ToAxisAngle(rotationAxis, rotationAngleRadians);
+        
+        translation[0] = translate.x;
+        translation[1] = translate.y;
+        translation[2] = translate.z;
+        
+        rotation[0] = rotationAxis.x;
+        rotation[1] = rotationAxis.y;
+        rotation[2] = rotationAxis.z;
+        rotation[3] = rotationAngleRadians;
+        
+        scale[0] = scale_.x;
+        scale[1] = scale_.y;
+        scale[2] = scale_.z;
+    }
+    
+    static void __DecomposeMatrices(float *matrices, size_t count,
+                                    std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
         
         size_t translationBufferSize = sizeof(float) * 3 * count;
         size_t rotationBufferSize = sizeof(float) * 4 * count;
@@ -191,39 +216,12 @@ namespace GLTF
         shared_ptr <GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(scaleData, 0, scaleBufferSize, true);
         
         for (size_t i = 0 ; i < count ; i++) {
-            float *m = matrices;
+            __DecomposeMatrix(matrices, translationData, rotationData, scaleData);
             
-            math::float4x4 matrix(m[0], m[1], m[2], m[3],
-                                  m[4], m[5], m[6], m[7],
-                                  m[8], m[9], m[10], m[11],
-                                  m[12], m[13], m[14], m[15]);
-            
-            matrices += 16;
-                        
-            matrix.Decompose(translate, rotate, scale);
-            rotate.ToAxisAngle(rotationAxis, rotationAngleRadians);
-            
-            translationData[0] = translate.x;
-            translationData[1] = translate.y;
-            translationData[2] = translate.z;
             translationData += 3;
-            
-            rotationData[0] = rotationAxis.x;
-            rotationData[1] = rotationAxis.y;
-            rotationData[2] = rotationAxis.z;
-            rotationData[3] = rotationAngleRadians;
             rotationData += 4;
-
-            scaleData[0] = scale.x;
-            scaleData[1] = scale.y;
-            scaleData[2] = scale.z;
             scaleData += 3;
-            /*
-             printf("*\n");
-             printf("translate x:%f y:%f z:%f\n", translate.x,  translate.y,  translate.z);
-             printf("axis angle x:%f y:%f z:%f angle:%f\n", rotationAxis.x,  rotationAxis.y,  rotationAxis.z, rotationAngleRadians);
-             printf("scale x:%f y:%f z:%f\n", scale.x,  scale.y,  scale.z);
-             */
+            matrices += 16;
         }
     
         TRSBufferViews.push_back(translationBufferView);
@@ -1072,20 +1070,30 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
     
-    shared_ptr <GLTF::JSONArray> COLLADA2GLTFWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
-    {
+    static void __GetFloatArrayFromMatrix(const COLLADABU::Math::Matrix4 &matrix, float *m) {
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
         
         COLLADABU::Math::Matrix4 transpose = matrix.transpose();
-
+        
         for (int i = 0 ; i < 4 ; i++)  {
             const COLLADABU::Math::Real * real = transpose[i];
-          
-            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[0])));           
-            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[1])));           
-            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[2])));           
-            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber((double)real[3])));           
-        }        
+            
+            m[(i*4) + 0] = real[0];
+            m[(i*4) + 1] = real[1];
+            m[(i*4) + 2] = real[2];
+            m[(i*4) + 3] = real[3];
+        }
+    }
+    
+    shared_ptr <GLTF::JSONArray> COLLADA2GLTFWriter::serializeMatrix4Array(const COLLADABU::Math::Matrix4 &matrix) 
+    {
+        float m[16];
+        shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
+        __GetFloatArrayFromMatrix(matrix, m);
+        
+        for (int i = 0 ; i < 16; i++)  {
+            array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber(m[i])));
+        }
 
         return array;
     }
@@ -1111,6 +1119,7 @@ namespace GLTF
                                     COLLADABU::Math::Matrix4 parentMatrix,
                                     SceneFlatteningInfo* sceneFlatteningInfo) 
     {
+        bool shouldExportTRS = false;
         const NodePointerArray& nodes = node->getChildNodes();
         const std::string& nodeUID = uniqueIdWithType("node", node->getUniqueId());
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
@@ -1171,6 +1180,8 @@ namespace GLTF
                 animatedTarget->setString("target", nodeUID);
                 animatedTarget->setString("path", "MATRIX");
                 animatedTargets->push_back(animatedTarget);
+                shouldExportTRS = true;
+                
             }
         }
         
@@ -1179,7 +1190,24 @@ namespace GLTF
 
         //Need to FIX OpenCOLLADA typo for isIdentity to reenable this
         //if (!matrix.isIdentity())
-        nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
+        
+        if (shouldExportTRS) {
+            float rotation[4];
+            float scale[3];
+            float translation[3];
+            float m[16];
+
+            __GetFloatArrayFromMatrix(matrix, m);
+            __DecomposeMatrix(m, translation, rotation, scale);
+            
+            nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
+            nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
+            nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
+            
+        } else {
+            nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
+        }
+        
         
         // save mesh
 		const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();

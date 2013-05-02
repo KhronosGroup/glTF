@@ -86,7 +86,7 @@ static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], GLTF::GLTF
 int main (int argc, char * const argv[]) {
     GLTF::GLTFConverterContext converterArgs;
     
-    printf("COLLADA2GLTF [pre-alpha] 0.1\n");
+    printf("COLLADA2GLTF [pre-alpha] 0.2\n");
     if (__SetupCOLLADA2GLTFContext( argc, argv, &converterArgs)) {
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");

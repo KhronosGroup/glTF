@@ -224,6 +224,18 @@ namespace GLTF
         
         return vec3;
     }
+    
+    shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w) {
+        shared_ptr <JSONArray> vec4(new GLTF::JSONArray());
+        
+        vec4->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(x)));
+        vec4->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(y)));
+        vec4->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(z)));
+
+        vec4->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(w)));
+
+        return vec4;
+    }
 
     shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter) {
         shared_ptr <JSONObject> animationParameterObject(new JSONObject());

@@ -30,6 +30,7 @@
 namespace GLTF 
 {
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
+    shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
     shared_ptr <JSONObject> serializeBuffer(GLTFBuffer* buffer, void *context);
     shared_ptr <JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
     shared_ptr <JSONObject> serializeEffect(GLTFEffect* effect, void *context);
