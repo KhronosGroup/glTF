@@ -1072,11 +1072,9 @@ namespace GLTF
     
     static void __GetFloatArrayFromMatrix(const COLLADABU::Math::Matrix4 &matrix, float *m) {
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
-        
-        COLLADABU::Math::Matrix4 transpose = matrix.transpose();
-        
+                
         for (int i = 0 ; i < 4 ; i++)  {
-            const COLLADABU::Math::Real * real = transpose[i];
+            const COLLADABU::Math::Real * real = matrix[i];
             
             m[(i*4) + 0] = real[0];
             m[(i*4) + 1] = real[1];
@@ -1089,7 +1087,9 @@ namespace GLTF
     {
         float m[16];
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
-        __GetFloatArrayFromMatrix(matrix, m);
+        COLLADABU::Math::Matrix4 transpose = matrix.transpose();
+        
+        __GetFloatArrayFromMatrix(transpose, m);
         
         for (int i = 0 ; i < 16; i++)  {
             array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber(m[i])));
