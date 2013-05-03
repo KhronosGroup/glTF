@@ -565,7 +565,6 @@ namespace GLTF
         
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
         
-        pass->setString("type", "program");
         pass->setValue("program", program);
         
         program->setString("VERTEX_SHADER", vs);
