@@ -1267,7 +1267,7 @@ namespace GLTF
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo)
     {
-        bool shouldExportTRS = true;
+        bool shouldExportTRS = false;
         const NodePointerArray& nodes = node->getChildNodes();
         const std::string& nodeUID = uniqueIdWithType("node", node->getUniqueId());
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
