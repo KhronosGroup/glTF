@@ -1339,7 +1339,6 @@ namespace GLTF
         //Need to FIX OpenCOLLADA typo for isIdentity to reenable this
         //if (!matrix.isIdentity())
         
-        printf("node %s\n",nodeUID.c_str());
         if (shouldExportTRS) {
             float rotation[4];
             float scale[3];
