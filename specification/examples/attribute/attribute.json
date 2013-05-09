@@ -1,7 +1,7 @@
 {
     "semantic" : "POSITION",
     "symbol" : "position",
-    "type" : "vec3",
+    "type" : "FLOAT_VEC3",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     

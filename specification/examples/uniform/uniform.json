@@ -1,7 +1,7 @@
 {
     "semantic" : "MODELVIEW",
     "symbol" : "modelView",
-    "type" : "mat4",
+    "type" : "FLOAT_MAT4",
     "extra" : {
        "Application specific" : "The extra object can contain any properties."
     }     

@@ -169,7 +169,7 @@ To make it easy for applications to implement, glTF is designed with the GL APIs
 glTF tries to balance the tradeoffs between simplicity and completeness.  For example, although geometry, images, and shaders map easily to the GL APIs, they do not provide enough.  To make glTF broadly useful, glTF includes a node hierarchy, materials, and animations.  Leaving out the node hierarchy would hinder interaction with individual model nodes. Likewise leaving out materials and animations would leave out key functionality common to most applications.
 
 To help map between glTF and GL:
-* glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#meshAttribute">`attribute (mesh)`</a> glTF property maps closely to the [`vertexAttribPointer`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml) GL function, and the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
+* glTF properties commonly map to GL functions and function arguments.  For example, the <a href="#states">`states`</a> glTF property naming maps directly to GL functions.
 * This specification contains cross-references to the OpenGL ES SDK (which WebGL also references).  For example, see the <a href="#shader">`shader`</a> glTF property.
 * To reduce the burden on the application developer, glTF does not include all the flexibility of the GL APIs.  Features not relavant to assets or in widespread use are not included, especially if they can be supported in the content pipeline.  For example, in glTF:
    * All attributes must be backed by buffers, i.e., nothing maps to [`vertexAttrib`](http://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttrib.xml).
@@ -312,7 +312,7 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 
 ### Details
 
-* To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of [WebGL 1.0](https://www.khronos.org/registry/webgl/specs/1.0/), `byteOffset` and `byteStride` must be a multiple of the size of `componentType`.
+* To satisfy Section 6.3 (Buffer Offset and Stride Requirements) of [WebGL 1.0](https://www.khronos.org/registry/webgl/specs/1.0/), `byteOffset` and `byteStride` must be a multiple of the size of `type`.
 * To satisfy Section 6.9 (Vertex Attribute Data Stride) of [WebGL 1.0](https://www.khronos.org/registry/webgl/specs/1.0/), `byteStride` cannot exceed 255.
 * `min` and `max` properties are useful for creating bounding box or bounding sphere, and client-side compression/quantization.
 

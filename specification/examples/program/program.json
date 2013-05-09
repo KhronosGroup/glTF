@@ -2,7 +2,7 @@
 	"attributes" : [{
         "semantic" : "POSITION",
     	"symbol" : "position",
-    	"type" : "vec3"
+    	"type" : "FLOAT_VEC3"
 	}],
 	"FRAGMENT_SHADER" : "fragmentShader_id",
 	"uniforms" : [],
