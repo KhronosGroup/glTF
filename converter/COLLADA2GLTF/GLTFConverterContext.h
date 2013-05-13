@@ -17,7 +17,8 @@ namespace GLTF
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<unsigned int /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
-    
+    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToTrackedObject;
+
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
     typedef struct
@@ -36,6 +37,8 @@ namespace GLTF
         ImageIdToImagePath _imageIdToImagePath;
         UniqueIDToAnimation _uniqueIDToAnimation;
         UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
+        UniqueIDToTrackedObject _uniqueIDToTrackedObject;
+
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

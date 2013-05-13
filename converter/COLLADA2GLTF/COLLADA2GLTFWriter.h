@@ -94,6 +94,7 @@ using namespace std;
 
 namespace GLTF
 {
+    class GLTFObject;
     
     //-- BBOX helper class
         
@@ -236,6 +237,11 @@ namespace GLTF
         
         
 	private:
+        void registerObjectWithUniqueUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
+        bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                const COLLADAFW::AnimationList::AnimationClass animationClass,
+                                                AnimatedTargetsSharedPtr animatedTargets,
+                            ofstream &animationsOutputStream);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,

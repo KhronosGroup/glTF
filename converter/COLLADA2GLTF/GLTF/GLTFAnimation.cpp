@@ -34,6 +34,7 @@ namespace GLTF
     //-- GLTFAnimation::Parameter
     
     GLTFAnimation::Parameter::Parameter() {
+        this->_id = GLTFUtils::generateIDForType("bufferView");
     }
     
     GLTFAnimation::Parameter::~Parameter() {
@@ -70,6 +71,14 @@ namespace GLTF
     
     std::string GLTFAnimation::Parameter::getName() {
         return this->_name;
+    }
+
+    void GLTFAnimation::Parameter::setID(std::string ID) {
+        this->_id = ID;
+    }
+    
+    std::string GLTFAnimation::Parameter::getID() {
+        return this->_id;
     }
 
     //-- GLTFAnimation

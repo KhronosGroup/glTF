@@ -63,7 +63,7 @@ namespace GLTF
         U_TRANSZ,
         
     };
-    
+        
     /* Originally from: http://tog.acm.org/resources/GraphicsGems/gemsii/unmatrix.c
      * Simplified version without Shear and Perspective decomposition
      *
@@ -72,44 +72,43 @@ namespace GLTF
      * Author:	Spencer W. Thomas
      * 		University of Michigan
      */
-    bool unmatrix(float4x4 mat, double *tran)
+    bool unmatrix(COLLADABU::Math::Matrix4 mat, double *tran)
     {
         int i, j;
-        float4x4 locmat;
-        float4x4 pmat, invpmat, tinvpmat;
-        /* Vector4 type and functions need to be added to the common set. */
-        float4 prhs, psol;
-        float3 row[3], pdum3;
-        
-        mat.Transpose();
+        COLLADABU::Math::Matrix4 locmat;
+        COLLADABU::Math::Matrix4 pmat, invpmat, tinvpmat;
+        COLLADABU::Math::Vector3 row[3], pdum3;
         
         locmat = mat;
+        
         /* Normalize the matrix. */
         for ( i=0; i<4;i++ )
             for ( j=0; j<4; j++ )
-                locmat[i][j] /= locmat[3][3];
+                locmat.setElement(i, j, locmat.getElement(i,j) / locmat[3][3]) ;
         /* pmat is used to solve for perspective, but it also provides
          * an easy way to test for singularity of the upper 3x3 component.
          */
         pmat = locmat;
         for ( i=0; i<3; i++ )
-            pmat[i][3] = 0;
-        pmat[3][3] = 1;
+            pmat.setElement(i,3, 0);
+        pmat.setElement(3,3, 1);
         
-        if ( pmat.Determinant4() == 0.0 )
+        if ( pmat.determinant() == 0.0 )
             return false;
-
+        
         /* First, isolate perspective.  This is the messiest. */
-        if ( locmat[0][3] != 0 || locmat[1][3] != 0 ||
-            locmat[2][3] != 0 ) {
-            locmat[0][3] = locmat[1][3] =
- 			locmat[2][3] = 0;
-            locmat[3][3] = 1;
+        if ( locmat.getElement(0,3) != 0 ||
+            locmat.getElement(1,3) != 0 ||
+            locmat.getElement(2,3) != 0 ) {
+            locmat.setElement(0, 3,     0);
+            locmat.setElement(1, 3,     0);
+            locmat.setElement(2, 3,     0);
+            locmat.setElement(3, 3,     1);
         }
         
         for ( i=0; i<3; i++ ) {
             tran[U_TRANSX + i] = locmat[3][i];
-            locmat[3][i] = 0;
+            locmat.setElement(3,i,   0);
         }
         
         /* Now get scale and shear. */
@@ -120,16 +119,16 @@ namespace GLTF
         }
         
         /* Compute X scale factor and normalize first row. */
-        tran[U_SCALEX] = row[0].Length();
-        row[0].ScaledToLength(1.0);
+        tran[U_SCALEX] = row[0].length();
+        row[0].normalise();
         /* Compute XY shear factor and make 2nd row orthogonal to 1st. */
         //tran[U_SHEARXY] = row[0].Dot(row[1]);
         //(void)V3Combine(&row[1], &row[0], &row[1], 1.0, -tran[U_SHEARXY]);
         
         /* Now, compute Y scale and normalize 2nd row. */
-        tran[U_SCALEY] = row[1].Length();
-        row[1].ScaleToLength(1.0);
-       // tran[U_SHEARXY] /= tran[U_SCALEY];
+        tran[U_SCALEY] = row[1].length();
+        row[1].normalise();
+        // tran[U_SHEARXY] /= tran[U_SCALEY];
         
         /* Compute XZ and YZ shears, orthogonalize 3rd row. */
         //tran[U_SHEARXZ] = V3Dot(&row[0], &row[2]);
@@ -138,8 +137,8 @@ namespace GLTF
         //(void)V3Combine(&row[2], &row[1], &row[2], 1.0, -tran[U_SHEARYZ]);
         
         /* Next, get Z scale and normalize 3rd row. */
-        tran[U_SCALEZ] = row[2].Length();
-        row[2].ScaleToLength(1.0);
+        tran[U_SCALEZ] = row[2].length();
+        row[2].normalise();
         //tran[U_SHEARXZ] /= tran[U_SCALEZ];
         //tran[U_SHEARYZ] /= tran[U_SCALEZ];
         
@@ -147,30 +146,31 @@ namespace GLTF
          * Check for a coordinate system flip.  If the determinant
          * is -1, then negate the matrix and the scaling factors.
          */
-        if ( row[0].Dot(row[1].Cross(row[2]) ) < 0 )
+        
+        if ( row[0].dotProduct(row[1].crossProduct(row[2]) ) < 0 ) {
             for ( i = 0; i < 3; i++ ) {
                 tran[U_SCALEX+i] *= -1;
                 row[i].x *= -1;
                 row[i].y *= -1;
                 row[i].z *= -1;
             }
+        }
         
-        float3x3 tmp;
+        COLLADABU::Math::Matrix3 amat3( row[0][0], row[1][0], row[2][0],
+                                       row[0][1], row[1][1], row[2][1],
+                                       row[0][2], row[1][2], row[2][2]);
+        COLLADABU::Math::Real angle;
+        COLLADABU::Math::Vector3 axis;
+        //COLLADABU::Math::Quaternion aquat = QuaternionFromMatrix(amat3);
+        COLLADABU::Math::Quaternion aquat;
+        aquat.fromRotationMatrix(amat3);
         
-        tmp.SetRow(0, row[0]);
-        tmp.SetRow(1, row[1]);
-        tmp.SetRow(2, row[2]);
-        tmp.Transpose();
-
-        Quat quat = tmp.ToQuat();
-        float angle;
-        float3 axis;
-        quat.ToAxisAngle(axis, angle);
-        
+        aquat.toAngleAxis(angle, axis);
         tran[U_ROTATEX] = axis.x;
         tran[U_ROTATEY] = axis.y;
         tran[U_ROTATEZ] = axis.z;
         tran[U_ROTATEW] = angle;
+        
         return true;
     }
     
@@ -300,52 +300,36 @@ namespace GLTF
         return bufferView;
     }
     
-    static void __DecomposeMatrix(float* m, float *translation, float *rotation, float *scale) {
+    static void __DecomposeMatrix(COLLADABU::Math::Matrix4 &matrix, float *translation, float *rotation, float *scale) {
         
         math::float3 translate, scale_;
         math::float3x3 rotate;
         math::float3 rotationAxis;
-        float rotationAngleRadians;
         
-        math::float4x4 matrix(m[0], m[1], m[2], m[3],
-                              m[4], m[5], m[6], m[7],
-                              m[8], m[9], m[10], m[11],
-                              m[12], m[13], m[14], m[15]);
-        
-        //Some COLLADA files have a 0 here and it looks like an exporter bug...
-        matrix[3][3] = 1;
+        COLLADABU::Math::Matrix4 tr = matrix.transpose();
+        tr.setElement(0,3, 0);
+        tr.setElement(1,3, 0);
+        tr.setElement(2,3, 0);
+        tr.setElement(3,3, 1);
         double tran[20];
         
         //MathGeoLib is failing to decompose here, use SPENCER decomposition instead
-        if (!unmatrix(matrix, tran)) {
+        if (!unmatrix(tr, tran)) {
             printf("WARNING: matrix can't be decomposed \n");
         }
-
-        translate.x = tran[U_TRANSX];
-        translate.y = tran[U_TRANSY];
-        translate.z = tran[U_TRANSZ];
         
-        scale_.x = tran[U_SCALEX];
-        scale_.y = tran[U_SCALEY];
-        scale_.z = tran[U_SCALEZ];
-
-        rotationAxis.x = tran[U_ROTATEX];
-        rotationAxis.y = tran[U_ROTATEY];
-        rotationAxis.z = tran[U_ROTATEZ];
-        rotationAngleRadians = tran[U_ROTATEW];
+        translation[0] = tran[U_TRANSX];
+        translation[1] = tran[U_TRANSY];
+        translation[2] = tran[U_TRANSZ];
         
-        translation[0] = translate.x;
-        translation[1] = translate.y;
-        translation[2] = translate.z;
+        rotation[0] = tran[U_ROTATEX];
+        rotation[1] = tran[U_ROTATEY];
+        rotation[2] = tran[U_ROTATEZ];
+        rotation[3] = tran[U_ROTATEW];
         
-        rotation[0] = rotationAxis.x;
-        rotation[1] = rotationAxis.y;
-        rotation[2] = rotationAxis.z;
-        rotation[3] = rotationAngleRadians;
-        
-        scale[0] = scale_.x;
-        scale[1] = scale_.y;
-        scale[2] = scale_.z;
+        scale[0] = tran[U_SCALEX];
+        scale[1] = tran[U_SCALEY];
+        scale[2] = tran[U_SCALEZ];
     }
     
     static void __DecomposeMatrices(float *matrices, size_t count,
@@ -363,9 +347,46 @@ namespace GLTF
         shared_ptr <GLTF::GLTFBufferView> rotationBufferView = createBufferViewWithAllocatedBuffer(rotationData, 0, rotationBufferSize, true);
         shared_ptr <GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(scaleData, 0, scaleBufferSize, true);
         
+        float *previousRotation = 0;
+        
         for (size_t i = 0 ; i < count ; i++) {
-            __DecomposeMatrix(matrices, translationData, rotationData, scaleData);
+            float *m = matrices;
+            COLLADABU::Math::Matrix4 mat;
+            mat.setAllElements(m[0], m[1], m[2], m[3],
+                               m[4], m[5], m[6], m[7],
+                               m[8], m[9], m[10], m[11],
+                               m[12], m[13], m[14], m[15] );
+            __DecomposeMatrix(mat, translationData, rotationData, scaleData);            
             
+            //make sure we export the short path from orientations
+            if (0 != previousRotation) {
+                COLLADABU::Math::Vector3 axis1(previousRotation[0], previousRotation[1], previousRotation[2]);
+                COLLADABU::Math::Vector3 axis2(rotationData[0], rotationData[1], rotationData[2]);
+
+                COLLADABU::Math::Quaternion key1;
+                COLLADABU::Math::Quaternion key2;
+                
+                key1.fromAngleAxis(previousRotation[3], axis1);
+                key2.fromAngleAxis(rotationData[3], axis2);
+                
+                COLLADABU::Math::Real cosHalfTheta = key1.dot(key2);
+
+                if (cosHalfTheta < 0) {
+                    key2.x = -key2.x;
+                    key2.y = -key2.y;
+                    key2.z = -key2.z;
+                    key2.w = -key2.w;
+                    
+                    COLLADABU::Math::Real angle;
+                    key2.toAngleAxis( angle, axis2 );
+                    rotationData[3] = angle;
+                    rotationData[0] = axis2.x;
+                    rotationData[1] = axis2.y;
+                    rotationData[2] = axis2.z;
+                }
+            }
+            
+            previousRotation = rotationData;
             translationData += 3;
             rotationData += 4;
             scaleData += 3;
@@ -377,12 +398,78 @@ namespace GLTF
         TRSBufferViews.push_back(scaleBufferView);
     }
     
-    static shared_ptr <GLTFAnimation>  __WriteAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                        const COLLADAFW::AnimationList::AnimationClass animationClass,
-                                                        AnimatedTargetsSharedPtr animatedTargets,
-                                                        ofstream &animationsOutputStream) {
+    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                  shared_ptr <GLTFAnimation::Parameter> parameter) {
+        shared_ptr<JSONObject> sampler(new JSONObject());
+        std::string name = parameter->getID();
+        parameter->setName(name);
+        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+        sampler->setString("input", "TIME");           //FIXME:harcoded for now
+        sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+        sampler->setString("output", name);
+        cvtAnimation->samplers()->setValue(samplerID, sampler);
+        
+        return samplerID;
+    }
+    
+    static shared_ptr<GLTFBufferView> __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(shared_ptr<GLTFBufferView> bufferView,
+        shared_ptr<JSONArray> array,
+        size_t index,
+        std::string type,
+        size_t keyCount) {
+        
+        char *destinationBuffer = 0;
+        char *sourceBuffer = (char*)bufferView->getBufferDataByApplyingOffset();
+        size_t elementSize = 0;
+        size_t offset = 0;
+        //TODO handle other types
+        if (type == "FLOAT") {
+            elementSize = sizeof(float);
+            offset = (elementSize * array->values().size());
+        }
+
+        size_t destinationBufferLength = offset * keyCount;
+
+        if (elementSize != 0) {
+            //FIXME: should not assume FLOAT here
+            size_t count = array->values().size();
+            float *values = (float*)malloc(elementSize * count);
+            for (size_t i = 0 ; i < count ; i++) {
+                shared_ptr <JSONNumber> nb = static_pointer_cast<JSONNumber>(array->values()[i]);
+                values[i] = (float)nb->getDouble();
+            }
+            
+            destinationBuffer = (char*)malloc(destinationBufferLength);
+            for (size_t i = 0 ; i < keyCount ; i++) {
+                memcpy(destinationBuffer + (offset * i), values, offset);
+                memcpy(destinationBuffer + (offset * i) + (index * elementSize) ,
+                       sourceBuffer + (i * elementSize) ,
+                       elementSize);
+            }
+            
+            free(values);
+            
+        } else {
+            //TODO:..
+            printf("WARNING attempt to use __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex without using floats\n");
+        }
+
+        return  createBufferViewWithAllocatedBuffer(destinationBuffer, 0, destinationBufferLength, true);
+    }
+
+    
+    bool COLLADA2GLTFWriter::writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
+                                  const COLLADAFW::AnimationList::AnimationClass animationClass,
+                                  AnimatedTargetsSharedPtr animatedTargets,
+                                  ofstream &animationsOutputStream) {
         
         
+        
+        std::string samplerID;
+        std::string name;
+        shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
+        shared_ptr<JSONObject> channels = cvtAnimation->channels();
+        size_t keyCount = cvtAnimation->getCount();
         GLTFAnimation::Parameter *timeParameter = cvtAnimation->getParameterNamed("TIME");
         if (timeParameter) {
             shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
@@ -405,8 +492,6 @@ namespace GLTF
             case COLLADAFW::AnimationList::AXISANGLE:
                 break;
             case COLLADAFW::AnimationList::MATRIX4X4: {
-                shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
-                shared_ptr<JSONObject> channels = cvtAnimation->channels();
                 
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
@@ -416,9 +501,6 @@ namespace GLTF
                     float* matrices = (float*)bufferView->getBufferDataByApplyingOffset();
                     __DecomposeMatrices(matrices, cvtAnimation->getCount(), TRSBufferViews);
                     cvtAnimation->removeParameterNamed("OUTPUT");
-                    std::string samplerID;
-                    std::string name;
-                    
                     {
                         //translation
                         shared_ptr<JSONObject> trSamplerValue(new JSONObject());
@@ -482,7 +564,6 @@ namespace GLTF
                         animationsOutputStream.write((const char*)( TRSBufferViews[2]->getBufferDataByApplyingOffset()),
                                                      TRSBufferViews[2]->getByteLength());
                         
-                        //printf("scale animation length: %d\n",(int)TRSBufferViews[2]->getByteLength());
                         cvtAnimation->parameters()->push_back(scaleParameter);
                     }
                     
@@ -536,8 +617,97 @@ namespace GLTF
                     printf("WARNING: cannot find intermediate parameter named OUTPUT\n");
                 }
             }
+                return true;
                 break;
-            case COLLADAFW::AnimationList::POSITION_XYZ:
+            case COLLADAFW::AnimationList::POSITION_XYZ: {
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    //translation
+                    shared_ptr<JSONObject> trSamplerValue(new JSONObject());
+                    name = "TRANSLATION";
+                    samplerID = cvtAnimation->getSamplerIDForName(name);
+                    
+                    trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
+                    trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+                    trSamplerValue->setString("output", name);
+                    samplers->setValue(samplerID, trSamplerValue);
+                    
+                    parameter->setName(name);
+                    parameter->setType("FLOAT_VEC3");
+                    parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                    animationsOutputStream.write((const char*)( bufferView->getBufferDataByApplyingOffset()),
+                                                 bufferView->getByteLength());
+                    
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        
+                        if (animatedTarget->getString("path") == "translation") {
+                            std::string targetID = animatedTarget->getString("target");
+                            std::string channelID;
+                            {
+                                name = "TRANSLATION";
+                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
+                                shared_ptr<JSONObject> trChannel(new JSONObject());
+                                shared_ptr<JSONObject> trTarget(new JSONObject());
+                                
+                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
+                                trChannel->setValue("target", trTarget);
+                                trTarget->setString(targetID, "translation");
+                                channels->setValue(channelID, trChannel);
+                            }
+                        }
+                    }
+                }
+            }
+                return true;
+                break;
+            case COLLADAFW::AnimationList::ANGLE: {
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    //Convert angles to radians
+                    float *angles = (float*)bufferView->getBufferDataByApplyingOffset();
+                    
+                    for (size_t i = 0 ; i < keyCount ; i++) {
+                        angles[i] = angles[i] * 0.0174532925;
+                    }
+                    
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        std::string targetID = animatedTarget->getString("target");
+                        
+                        if (this->_converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            shared_ptr<JSONObject> targetObject = this->_converterContext._uniqueIDToTrackedObject[targetID];
+                            std::string path = animatedTarget->getString("path");
+                            if (path == "rotation") {
+                                shared_ptr <GLTFAnimation::Parameter> angleParameter(new GLTFAnimation::Parameter());
+                                angleParameter->setType("FLOAT_VEC4");
+                                samplerID = __SetupSamplerForParameter(cvtAnimation, angleParameter);
+                                shared_ptr<JSONArray> rotationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
+                                shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, rotationArray, 3, "FLOAT", cvtAnimation->getCount());
+                                angleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                                animationsOutputStream.write((const char*)(adjustedBuffer->getBufferDataByApplyingOffset()),adjustedBuffer->getByteLength());
+                                
+                                std::string targetID = animatedTarget->getString("target");
+                                std::string channelID = cvtAnimation->getID() + "_" + targetID + "_" +path + "_channel";
+                                shared_ptr<JSONObject> trChannel(new JSONObject());
+                                shared_ptr<JSONObject> trTarget(new JSONObject());
+                                
+                                trChannel->setString("sampler", samplerID);
+                                trChannel->setValue("target", trTarget);
+                                trTarget->setString(targetID, path);
+                                channels->setValue(channelID, trChannel);
+                                
+                                cvtAnimation->parameters()->push_back(angleParameter);
+                            }
+                        }
+                    }
+                }
+                cvtAnimation->removeParameterNamed("OUTPUT");
+        }
+                return true;
+                break;
             case COLLADAFW::AnimationList::POSITION_X:
             case COLLADAFW::AnimationList::POSITION_Y:
             case COLLADAFW::AnimationList::POSITION_Z:
@@ -549,15 +719,12 @@ namespace GLTF
             case COLLADAFW::AnimationList::COLOR_A:
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_1D:
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_2D:
-            case COLLADAFW::AnimationList::FLOAT:
-                break;
+            case COLLADAFW::AnimationList::FLOAT: 
             default:
                 break;
         }
         
-        //shared_ptr <GLTFAnimation> adjustedAnimation(new GLTFAnimation());
-        
-        return cvtAnimation;
+        return false;
     }
     
     static shared_ptr <GLTFAnimation> ConvertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation)
@@ -569,6 +736,9 @@ namespace GLTF
             const COLLADAFW::AnimationCurve* animationCurve = (const COLLADAFW::AnimationCurve*)animation;
             
             std::string animationID = animation->getOriginalId();
+            if (animationID.size() == 0) {
+                animationID = uniqueIdWithType("animation", animation->getUniqueId());
+            }
             cvtAnimation->setID(animationID);
             
             cvtAnimation->setCount(animationCurve->getKeyCount());
@@ -1088,7 +1258,7 @@ namespace GLTF
         
         //---
         
-        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength));
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationsLength));
         
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
@@ -1104,17 +1274,18 @@ namespace GLTF
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             MeshVectorSharedPtr meshes = (*UniqueIDToMeshesIterator).second;
-            
-            for (size_t j = 0 ; j < meshes->size() ; j++) {
-                shared_ptr<GLTFMesh> mesh = (*meshes)[j];
-                if (mesh) {
-                    void *buffers[2];
-                    buffers[0] = (void*)verticesBufferView.get();
-                    buffers[1] = (void*)indicesBufferView.get();
-                    
-                    shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
-                    
-                    meshesObject->setValue(mesh->getID(), meshObject);
+            if (meshes) {
+                for (size_t j = 0 ; j < meshes->size() ; j++) {
+                    shared_ptr<GLTFMesh> mesh = (*meshes)[j];
+                    if (mesh) {
+                        void *buffers[2];
+                        buffers[0] = (void*)verticesBufferView.get();
+                        buffers[1] = (void*)indicesBufferView.get();
+                        
+                        shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
+                        
+                        meshesObject->setValue(mesh->getID(), meshObject);
+                    }
                 }
             }
         }
@@ -1262,6 +1433,20 @@ namespace GLTF
         return getTransparency(effectCommon)  >= 1;
     }
     
+    void COLLADA2GLTFWriter::registerObjectWithUniqueUID(std::string objectUID, shared_ptr <JSONObject> obj, shared_ptr <JSONObject> objLib)
+    {
+        if (this->_converterContext._uniqueIDToTrackedObject.count(objectUID) == 0) {
+            if (!objLib->contains(objectUID)) {
+                objLib->setValue(objectUID, obj);
+                this->_converterContext._uniqueIDToTrackedObject[objectUID] = obj;
+            } else {
+                printf("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+            }
+        } else {
+            printf("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+        }
+    }
+
     bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node,
                                        shared_ptr <GLTF::JSONObject> nodesObject,
                                        COLLADABU::Math::Matrix4 parentMatrix,
@@ -1312,6 +1497,9 @@ namespace GLTF
             node->getTransformationMatrix(matrix);
         }
         
+        float scale[3];
+        float translation[3];
+        float rotation[4];
         
         const TransformationPointerArray& transformations = node->getTransformations();
         size_t transformationsCount = transformations.getCount();
@@ -1329,24 +1517,29 @@ namespace GLTF
                 animatedTarget->setString("path", "MATRIX");
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
-                
+            }
+            
+            if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
+                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("path", "translation");
+                animatedTargets->push_back(animatedTarget);
+                shouldExportTRS = true;
+            }
+
+            
+            if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
+                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("path", "rotation");
+                animatedTargets->push_back(animatedTarget);
+                shouldExportTRS = true;
             }
         }
         
         
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
-        
-        //Need to FIX OpenCOLLADA typo for isIdentity to reenable this
-        //if (!matrix.isIdentity())
-        
+                
         if (shouldExportTRS) {
-            float rotation[4];
-            float scale[3];
-            float translation[3];
-            float m[16];
-            
-            __GetFloatArrayFromMatrix(matrix, m);
-            __DecomposeMatrix(m, translation, rotation, scale);
+            __DecomposeMatrix(matrix, translation, rotation, scale);
             
             nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
             nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
@@ -1362,9 +1555,6 @@ namespace GLTF
         
         unsigned int count = (unsigned int)instanceGeometries.getCount();
         if (count > 0) {
-            //FIXME: should not have to have a special attribute name for multiple meshes.
-            // this might end up as making mode node, one per mesh.
-            //GLTF
             shared_ptr <GLTF::JSONArray> meshesArray(new GLTF::JSONArray());
             nodeObject->setValue("meshes", meshesArray);
             
@@ -1377,95 +1567,96 @@ namespace GLTF
                 unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
                 MeshVectorSharedPtr meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
                 
-                for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
-                    shared_ptr <GLTFMesh> mesh = (*meshes)[meshIndex];
-                    
-                    if (!mesh) {
-                        continue;
-                    }
-                    
-                    if (sceneFlatteningInfo) {
-                        GLTF::IndexSetToMeshAttributeHashmap& semanticMap = mesh->getMeshAttributesForSemantic(GLTF::POSITION);
-                        shared_ptr <GLTF::GLTFMeshAttribute> vertexMeshAttribute = semanticMap[0];
+                if (meshes) {
+                    for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
+                        shared_ptr <GLTFMesh> mesh = (*meshes)[meshIndex];
                         
-                        BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexMeshAttribute->getMin()),
-                                        COLLADABU::Math::Vector3(vertexMeshAttribute->getMax()));
-                        vertexBBOX.transform(worldMatrix);
-                        
-                        sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
-                    }
-                    
-                    PrimitiveVector primitives = mesh->getPrimitives();
-                    for (size_t j = 0 ; j < primitives.size() ; j++) {
-                        shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[j];
-                        
-                        //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
-                        int materialBindingIndex = -1;
-                        for (size_t k = 0; k < materialBindings.getCount() ; k++) {
-                            if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
-                                materialBindingIndex = (unsigned int)k;
-                            }
+                        if (!mesh) {
+                            continue;
                         }
                         
-                        std::vector<shared_ptr<JSONObject> > texcoordBindings;
+                        if (sceneFlatteningInfo) {
+                            GLTF::IndexSetToMeshAttributeHashmap& semanticMap = mesh->getMeshAttributesForSemantic(GLTF::POSITION);
+                            shared_ptr <GLTF::GLTFMeshAttribute> vertexMeshAttribute = semanticMap[0];
+                            
+                            BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexMeshAttribute->getMin()),
+                                            COLLADABU::Math::Vector3(vertexMeshAttribute->getMax()));
+                            vertexBBOX.transform(worldMatrix);
+                            
+                            sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
+                        }
                         
-                        if (materialBindingIndex != -1) {
-                            unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
+                        PrimitiveVector primitives = mesh->getPrimitives();
+                        for (size_t j = 0 ; j < primitives.size() ; j++) {
+                            shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[j];
                             
-                            /* will be needed to get semantic & set association to create the shader */
-                            const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
-                            
-                            unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
-                            std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
-                            shared_ptr <GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
-                            
-                            // retrieve the semantic to be associated
-                            size_t coordBindingsCount = textureCoordBindings.getCount();
-                            if (coordBindingsCount > 0) {
-                                //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
-                                size_t minimumIndex = textureCoordBindings[0].getSetIndex();
-                                for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                                    if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
-                                        minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
+                            //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
+                            int materialBindingIndex = -1;
+                            for (size_t k = 0; k < materialBindings.getCount() ; k++) {
+                                if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
+                                    materialBindingIndex = (unsigned int)k;
                                 }
+                            }
+                            
+                            std::vector<shared_ptr<JSONObject> > texcoordBindings;
+                            
+                            if (materialBindingIndex != -1) {
+                                unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
                                 
-                                for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                                    std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
-                                    SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
-                                    
-                                    std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
-                                    
-                                    if (semanticArrayPtr) {
-                                        for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                            
-                                            shared_ptr<JSONObject> texcoordBinding(new JSONObject);
-                                            texcoordBinding->setString("slot", (*semanticArrayPtr)[0]);
-                                            texcoordBinding->setString("semantic", shaderSemantic);
-                                            texcoordBindings.push_back(texcoordBinding);
-                                        }
+                                /* will be needed to get semantic & set association to create the shader */
+                                const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
+                                
+                                unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
+                                std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
+                                shared_ptr <GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
+                                
+                                // retrieve the semantic to be associated
+                                size_t coordBindingsCount = textureCoordBindings.getCount();
+                                if (coordBindingsCount > 0) {
+                                    //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
+                                    size_t minimumIndex = textureCoordBindings[0].getSetIndex();
+                                    for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                                        if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
+                                            minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
                                     }
                                     
+                                    for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                                        std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
+                                        SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
+                                        
+                                        std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
+                                        
+                                        if (semanticArrayPtr) {
+                                            for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
+                                                
+                                                shared_ptr<JSONObject> texcoordBinding(new JSONObject);
+                                                texcoordBinding->setString("slot", (*semanticArrayPtr)[0]);
+                                                texcoordBinding->setString("semantic", shaderSemantic);
+                                                texcoordBindings.push_back(texcoordBinding);
+                                            }
+                                        }
+                                        
+                                    }
                                 }
+                                
+                                //generate shaders if needed
+                                shared_ptr<JSONObject> technique = effect->getTechnique();
+                                const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
+                                
+                                effect->setTechniqueID(techniqueID);
+                                
+                                effect->setName(materialName);
+                                primitive->setMaterialID(effect->getID());
                             }
-                            
-                            //generate shaders if needed
-                            shared_ptr<JSONObject> technique = effect->getTechnique();
-                            const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
-                            
-                            effect->setTechniqueID(techniqueID);
-                            
-                            effect->setName(materialName);
-                            primitive->setMaterialID(effect->getID());
+                        }
+                        
+                        meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
+                        if (sceneFlatteningInfo) {
+                            shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
+                            sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo);
                         }
                     }
-                    
-                    meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
-                    if (sceneFlatteningInfo) {
-                        shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
-                        sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo);
-                    }
                 }
-                
             }
         }
         
@@ -1479,7 +1670,7 @@ namespace GLTF
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(id)));
         }
         
-        nodesObject->setValue(nodeUID, static_pointer_cast <JSONValue> (nodeObject));
+        registerObjectWithUniqueUID(nodeUID, nodeObject, nodesObject);
         
         for (unsigned int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
@@ -1924,9 +2115,9 @@ namespace GLTF
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
-            __WriteAnimation(cvtAnimation, animationClass, animatedTargets, this->_animationsOutputStream);
-            
-            //            this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()] = cvtAnimation;
+            if (!writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_animationsOutputStream)) {
+                this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find(animationBindings[i].animation.getObjectId()));
+            }
         }
         
 		return true;
