@@ -46,7 +46,6 @@
 
 namespace GLTF
 {
-    
     enum unmatrix_indices {
         U_SCALEX,
         U_SCALEY,
@@ -331,7 +330,9 @@ namespace GLTF
         scale[1] = tran[U_SCALEY];
         scale[2] = tran[U_SCALEZ];
     }
-    
+
+    //  printf("rotation at:%d %f %f %f %f\n",  i,
+    //  rotationData[0],rotationData[1],rotationData[2],rotationData[3]);
     static void __DecomposeMatrices(float *matrices, size_t count,
                                     std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
         
@@ -350,14 +351,16 @@ namespace GLTF
         float *previousRotation = 0;
         
         for (size_t i = 0 ; i < count ; i++) {
+            
             float *m = matrices;
             COLLADABU::Math::Matrix4 mat;
             mat.setAllElements(m[0], m[1], m[2], m[3],
                                m[4], m[5], m[6], m[7],
                                m[8], m[9], m[10], m[11],
                                m[12], m[13], m[14], m[15] );
-            __DecomposeMatrix(mat, translationData, rotationData, scaleData);            
             
+            __DecomposeMatrix(mat, translationData, rotationData, scaleData);            
+                        
             //make sure we export the short path from orientations
             if (0 != previousRotation) {
                 COLLADABU::Math::Vector3 axis1(previousRotation[0], previousRotation[1], previousRotation[2]);
@@ -370,7 +373,6 @@ namespace GLTF
                 key2.fromAngleAxis(rotationData[3], axis2);
                 
                 COLLADABU::Math::Real cosHalfTheta = key1.dot(key2);
-
                 if (cosHalfTheta < 0) {
                     key2.x = -key2.x;
                     key2.y = -key2.y;
@@ -378,12 +380,22 @@ namespace GLTF
                     key2.w = -key2.w;
                     
                     COLLADABU::Math::Real angle;
-                    key2.toAngleAxis( angle, axis2 );
+                    key2.toAngleAxis(angle, axis2);
                     rotationData[3] = angle;
                     rotationData[0] = axis2.x;
                     rotationData[1] = axis2.y;
                     rotationData[2] = axis2.z;
+                    
+                    key2.fromAngleAxis(rotationData[3], axis2);
+                    
+                    //FIXME: this needs to be refined, we ensure continuity here, but assume in clockwise order
+                    cosHalfTheta = key1.dot(key2);
+                    if (cosHalfTheta < 0) {
+                        rotationData[3] += (2 * 3.14159265359);
+                        key2.fromAngleAxis(rotationData[3], axis2);
+                    }
                 }
+                                
             }
             
             previousRotation = rotationData;
@@ -392,7 +404,15 @@ namespace GLTF
             scaleData += 3;
             matrices += 16;
         }
-        
+/*
+        rotationData = (float*)rotationBufferView->getBufferDataByApplyingOffset();
+        for (size_t i = 0 ; i < count ; i++) {
+            printf("rotation at:%d %f %f %f %f\n",  i,
+            rotationData[0],rotationData[1],rotationData[2],rotationData[3]);
+            
+            rotationData += 4;
+        }
+  */
         TRSBufferViews.push_back(translationBufferView);
         TRSBufferViews.push_back(rotationBufferView);
         TRSBufferViews.push_back(scaleBufferView);
@@ -457,6 +477,19 @@ namespace GLTF
         return  createBufferViewWithAllocatedBuffer(destinationBuffer, 0, destinationBufferLength, true);
     }
 
+    static void __AddChannel(shared_ptr <GLTFAnimation> cvtAnimation,
+                             const std::string &targetID,
+                             const std::string &path) {
+        std::string channelID = cvtAnimation->getID() + "_" + targetID + "_" +path + "_channel";
+        shared_ptr<JSONObject> trChannel(new JSONObject());
+        shared_ptr<JSONObject> trTarget(new JSONObject());
+        
+        trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
+        trChannel->setValue("target", trTarget);
+        trTarget->setString(targetID, path);
+        cvtAnimation->channels()->setValue(channelID, trChannel);
+    }
+    
     
     bool COLLADA2GLTFWriter::writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                                   const COLLADAFW::AnimationList::AnimationClass animationClass,
@@ -504,7 +537,7 @@ namespace GLTF
                     {
                         //translation
                         shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "TRANSLATION";
+                        name = "translation";
                         samplerID = cvtAnimation->getSamplerIDForName(name);
                         
                         trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
@@ -526,7 +559,7 @@ namespace GLTF
                     {
                         //translation
                         shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "ROTATION";
+                        name = "rotation";
                         samplerID = cvtAnimation->getSamplerIDForName(name);
                         
                         trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
@@ -548,7 +581,7 @@ namespace GLTF
                     {
                         //translation
                         shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "SCALE";
+                        name = "scale";
                         samplerID = cvtAnimation->getSamplerIDForName(name);
                         
                         trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
@@ -573,44 +606,11 @@ namespace GLTF
                         if (animatedTarget->getString("path") == "MATRIX") {
                             std::string targetID = animatedTarget->getString("target");
                             std::string channelID;
-                            {
-                                name = "TRANSLATION";
-                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
-                                shared_ptr<JSONObject> trChannel(new JSONObject());
-                                shared_ptr<JSONObject> trTarget(new JSONObject());
-                                
-                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
-                                trChannel->setValue("target", trTarget);
-                                trTarget->setString(targetID, "translation");
-                                channels->setValue(channelID, trChannel);
-                            }
-                            {
-                                name = "ROTATION";
-                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
-                                shared_ptr<JSONObject> trChannel(new JSONObject());
-                                shared_ptr<JSONObject> trTarget(new JSONObject());
-                                
-                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
-                                trChannel->setValue("target", trTarget);
-                                trTarget->setString(targetID, "rotation");
-                                channels->setValue(channelID, trChannel);
-                            }
-                            {
-                                name = "SCALE";
-                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
-                                shared_ptr<JSONObject> trChannel(new JSONObject());
-                                shared_ptr<JSONObject> trTarget(new JSONObject());
-                                
-                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
-                                trChannel->setValue("target", trTarget);
-                                trTarget->setString(targetID, "scale");
-                                channels->setValue(channelID, trChannel);
-                            }
-                            
+                            __AddChannel(cvtAnimation, targetID, "translation");
+                            __AddChannel(cvtAnimation, targetID, "rotation");
+                            __AddChannel(cvtAnimation, targetID, "scale");
                         }
                     }
-                    
-                    
                     
                 } else {
                     //FIXME: report error
@@ -625,7 +625,7 @@ namespace GLTF
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //translation
                     shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                    name = "TRANSLATION";
+                    name = "translation";
                     samplerID = cvtAnimation->getSamplerIDForName(name);
                     
                     trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
@@ -645,17 +645,7 @@ namespace GLTF
                         if (animatedTarget->getString("path") == "translation") {
                             std::string targetID = animatedTarget->getString("target");
                             std::string channelID;
-                            {
-                                name = "TRANSLATION";
-                                channelID = cvtAnimation->getID() + "_" + name + "_channel";
-                                shared_ptr<JSONObject> trChannel(new JSONObject());
-                                shared_ptr<JSONObject> trTarget(new JSONObject());
-                                
-                                trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(name));
-                                trChannel->setValue("target", trTarget);
-                                trTarget->setString(targetID, "translation");
-                                channels->setValue(channelID, trChannel);
-                            }
+                            __AddChannel(cvtAnimation, targetID, "translation");
                         }
                     }
                 }
@@ -689,16 +679,7 @@ namespace GLTF
                                 angleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
                                 animationsOutputStream.write((const char*)(adjustedBuffer->getBufferDataByApplyingOffset()),adjustedBuffer->getByteLength());
                                 
-                                std::string targetID = animatedTarget->getString("target");
-                                std::string channelID = cvtAnimation->getID() + "_" + targetID + "_" +path + "_channel";
-                                shared_ptr<JSONObject> trChannel(new JSONObject());
-                                shared_ptr<JSONObject> trTarget(new JSONObject());
-                                
-                                trChannel->setString("sampler", samplerID);
-                                trChannel->setValue("target", trTarget);
-                                trTarget->setString(targetID, path);
-                                channels->setValue(channelID, trChannel);
-                                
+                                __AddChannel(cvtAnimation, targetID, path);
                                 cvtAnimation->parameters()->push_back(angleParameter);
                             }
                         }
@@ -1278,6 +1259,19 @@ namespace GLTF
                 for (size_t j = 0 ; j < meshes->size() ; j++) {
                     shared_ptr<GLTFMesh> mesh = (*meshes)[j];
                     if (mesh) {
+                        /* some exporter bring meshes not used in the scene graph,
+                         for the moment we have to remove these meshes because this involves the side effect of not having a material assigned. Which makes it incomplete.
+                         */
+                        bool shouldSkipMesh = false;
+                        PrimitiveVector primitives = mesh->getPrimitives();
+                        for (size_t k = 0 ; k < primitives.size() ; k++) {
+                            shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[k];
+                            if (primitive->getMaterialID().length() == 0)
+                                shouldSkipMesh  = true;
+                        }
+                        if (shouldSkipMesh)
+                            continue;
+                        
                         void *buffers[2];
                         buffers[0] = (void*)verticesBufferView.get();
                         buffers[1] = (void*)indicesBufferView.get();
@@ -1324,11 +1318,13 @@ namespace GLTF
                 shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
                 parameter->setBufferView(animationsBufferView);
             }
-            shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
             
-            animationsObject->setValue(animation->getID(), animationObject);
+            if (animation->channels()->getAllKeys().size() > 0) {
+                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
+            
+                animationsObject->setValue(animation->getID(), animationObject);
+            }
         }
-        
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
         shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
@@ -1563,11 +1559,11 @@ namespace GLTF
                 
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 
-                
                 unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
                 MeshVectorSharedPtr meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
                 
-                if (meshes) {
+                if (meshes)
+                {
                     for (size_t meshIndex = 0 ; meshIndex < meshes->size() ; meshIndex++) {
                         shared_ptr <GLTFMesh> mesh = (*meshes)[meshIndex];
                         
@@ -1593,6 +1589,9 @@ namespace GLTF
                             //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
                             int materialBindingIndex = -1;
                             for (size_t k = 0; k < materialBindings.getCount() ; k++) {
+//                                printf("materialID in binding:%d primitveObjectID:%d\n", materialBindings[k].getMaterialId(),
+                                    //   primitive->getMaterialObjectID());
+                                
                                 if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
                                     materialBindingIndex = (unsigned int)k;
                                 }
@@ -1635,10 +1634,8 @@ namespace GLTF
                                                 texcoordBindings.push_back(texcoordBinding);
                                             }
                                         }
-                                        
                                     }
-                                }
-                                
+                                }                                 
                                 //generate shaders if needed
                                 shared_ptr<JSONObject> technique = effect->getTechnique();
                                 const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
@@ -1648,8 +1645,11 @@ namespace GLTF
                                 effect->setName(materialName);
                                 primitive->setMaterialID(effect->getID());
                             }
+                            //printf(":::: %s\n",primitive->getMaterialID().c_str());
+
                         }
-                        
+
+
                         meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
                         if (sceneFlatteningInfo) {
                             shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));

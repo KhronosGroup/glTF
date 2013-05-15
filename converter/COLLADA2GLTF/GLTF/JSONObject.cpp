@@ -160,5 +160,9 @@ namespace GLTF
     {
         return this->_keyToJSONValue.empty();
     }
+    
+    size_t JSONObject::getKeysCount() {
+        return this->_keyToJSONValue.size();
+    }
 
 }

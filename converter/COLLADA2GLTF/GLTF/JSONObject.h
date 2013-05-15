@@ -66,6 +66,8 @@ namespace GLTF
         
         std::vector <std::string> getAllKeys();
         
+        size_t getKeysCount();
+        
         bool isEmpty();
         
     private:

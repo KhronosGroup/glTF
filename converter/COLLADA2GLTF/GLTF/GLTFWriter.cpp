@@ -188,6 +188,7 @@ namespace GLTF
         GLTFMesh* mesh = (GLTFMesh*)primitiveContext[0];
         
         primitiveObject->setString("primitive", primitive->getType());
+        
         primitiveObject->setString("material", primitive->getMaterialID());
         
         shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());

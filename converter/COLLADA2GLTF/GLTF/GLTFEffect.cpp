@@ -28,7 +28,7 @@
 
 using namespace rapidjson;
 
-namespace GLTF 
+namespace GLTF
 {
     GLTFEffect::GLTFEffect(const std::string& ID):
     _ID(ID)
