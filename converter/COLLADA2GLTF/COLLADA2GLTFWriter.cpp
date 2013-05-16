@@ -419,10 +419,9 @@ namespace GLTF
     }
     
     static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                  shared_ptr <GLTFAnimation::Parameter> parameter) {
+                                                  GLTFAnimation::Parameter *parameter) {
         shared_ptr<JSONObject> sampler(new JSONObject());
         std::string name = parameter->getID();
-        parameter->setName(name);
         std::string samplerID = cvtAnimation->getSamplerIDForName(name);
         sampler->setString("input", "TIME");           //FIXME:harcoded for now
         sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
@@ -534,71 +533,35 @@ namespace GLTF
                     float* matrices = (float*)bufferView->getBufferDataByApplyingOffset();
                     __DecomposeMatrices(matrices, cvtAnimation->getCount(), TRSBufferViews);
                     cvtAnimation->removeParameterNamed("OUTPUT");
-                    {
-                        //translation
-                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "translation";
-                        samplerID = cvtAnimation->getSamplerIDForName(name);
-                        
-                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
-                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-                        trSamplerValue->setString("output", name);
-                        samplers->setValue(samplerID, trSamplerValue);
-                        
-                        shared_ptr <GLTFAnimation::Parameter> translationParameter(new GLTFAnimation::Parameter());
-                        
-                        translationParameter->setName(name);
-                        translationParameter->setType("FLOAT_VEC3");
-                        translationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                        animationsOutputStream.write((const char*)( TRSBufferViews[0]->getBufferDataByApplyingOffset()),
-                                                     TRSBufferViews[0]->getByteLength());
-                        
-                        //printf("translation animation length: %d\n",(int)TRSBufferViews[0]->getByteLength());
-                        cvtAnimation->parameters()->push_back(translationParameter);
-                    }
-                    {
-                        //translation
-                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "rotation";
-                        samplerID = cvtAnimation->getSamplerIDForName(name);
-                        
-                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
-                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-                        trSamplerValue->setString("output", name);
-                        samplers->setValue(samplerID, trSamplerValue);
-                        
-                        shared_ptr <GLTFAnimation::Parameter> rotationParameter(new GLTFAnimation::Parameter());
-                        
-                        rotationParameter->setName(name);
-                        rotationParameter->setType("FLOAT_VEC4");
-                        rotationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                        animationsOutputStream.write((const char*)( TRSBufferViews[1]->getBufferDataByApplyingOffset()),
-                                                     TRSBufferViews[1]->getByteLength());
-                        
-                        //printf("rotation animation length: %d\n",(int)TRSBufferViews[1]->getByteLength());
-                        cvtAnimation->parameters()->push_back(rotationParameter);
-                    }
-                    {
-                        //translation
-                        shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                        name = "scale";
-                        samplerID = cvtAnimation->getSamplerIDForName(name);
-                        
-                        trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
-                        trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-                        trSamplerValue->setString("output", name);
-                        samplers->setValue(samplerID, trSamplerValue);
-                        
-                        shared_ptr <GLTFAnimation::Parameter> scaleParameter(new GLTFAnimation::Parameter());
-                        
-                        scaleParameter->setName(name);
-                        scaleParameter->setType("FLOAT_VEC3");
-                        scaleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                        animationsOutputStream.write((const char*)( TRSBufferViews[2]->getBufferDataByApplyingOffset()),
-                                                     TRSBufferViews[2]->getByteLength());
-                        
-                        cvtAnimation->parameters()->push_back(scaleParameter);
-                    }
+                    
+                    //Translation
+                    shared_ptr <GLTFAnimation::Parameter> translationParameter(new GLTFAnimation::Parameter("translation"));
+                    translationParameter->setType("FLOAT_VEC3");
+                    __SetupSamplerForParameter(cvtAnimation, translationParameter.get());
+                    translationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                    animationsOutputStream.write((const char*)( TRSBufferViews[0]->getBufferDataByApplyingOffset()),
+                                                 TRSBufferViews[0]->getByteLength());
+                    cvtAnimation->parameters()->push_back(translationParameter);
+                    
+                    //Rotation
+                    shared_ptr <GLTFAnimation::Parameter> rotationParameter(new GLTFAnimation::Parameter("rotation"));
+                    __SetupSamplerForParameter(cvtAnimation, rotationParameter.get());
+                    rotationParameter->setType("FLOAT_VEC4");
+                    rotationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                    animationsOutputStream.write((const char*)( TRSBufferViews[1]->getBufferDataByApplyingOffset()),
+                                                 TRSBufferViews[1]->getByteLength());
+                    
+                    //printf("rotation animation length: %d\n",(int)TRSBufferViews[1]->getByteLength());
+                    cvtAnimation->parameters()->push_back(rotationParameter);
+
+                    //Scale
+                    shared_ptr <GLTFAnimation::Parameter> scaleParameter(new GLTFAnimation::Parameter("scale"));
+                    __SetupSamplerForParameter(cvtAnimation, scaleParameter.get());
+                    scaleParameter->setType("FLOAT_VEC3");
+                    scaleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+                    animationsOutputStream.write((const char*)( TRSBufferViews[2]->getBufferDataByApplyingOffset()),
+                                                 TRSBufferViews[2]->getByteLength());
+                    cvtAnimation->parameters()->push_back(scaleParameter);
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
@@ -625,15 +588,11 @@ namespace GLTF
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //translation
                     shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                    name = "translation";
+                    parameter->setID("translation");
                     samplerID = cvtAnimation->getSamplerIDForName(name);
                     
-                    trSamplerValue->setString("input", "TIME");           //FIXME:harcoded for now
-                    trSamplerValue->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-                    trSamplerValue->setString("output", name);
-                    samplers->setValue(samplerID, trSamplerValue);
+                    __SetupSamplerForParameter(cvtAnimation, parameter);
                     
-                    parameter->setName(name);
                     parameter->setType("FLOAT_VEC3");
                     parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
                     animationsOutputStream.write((const char*)( bufferView->getBufferDataByApplyingOffset()),
@@ -671,9 +630,9 @@ namespace GLTF
                             shared_ptr<JSONObject> targetObject = this->_converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
-                                shared_ptr <GLTFAnimation::Parameter> angleParameter(new GLTFAnimation::Parameter());
+                                shared_ptr <GLTFAnimation::Parameter> angleParameter(new GLTFAnimation::Parameter("rotation"));
                                 angleParameter->setType("FLOAT_VEC4");
-                                samplerID = __SetupSamplerForParameter(cvtAnimation, angleParameter);
+                                samplerID = __SetupSamplerForParameter(cvtAnimation, angleParameter.get());
                                 shared_ptr<JSONArray> rotationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
                                 shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, rotationArray, 3, "FLOAT", cvtAnimation->getCount());
                                 angleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
@@ -734,9 +693,8 @@ namespace GLTF
             shared_ptr <GLTFBufferView> outputBufferView = __ConvertFloatOrDoubleArrayToGLTFBufferView(outputArray);
             
             //build up input parameter, typically TIME
-            shared_ptr <GLTFAnimation::Parameter> inputParameter(new GLTFAnimation::Parameter());
+            shared_ptr <GLTFAnimation::Parameter> inputParameter(new GLTFAnimation::Parameter("TIME"));
             
-            inputParameter->setName("TIME");
             inputParameter->setType("FLOAT");
             inputParameter->setBufferView(inputBufferView);
             inputParameter->setByteOffset(0);
@@ -744,9 +702,8 @@ namespace GLTF
             animationParameters->push_back(inputParameter);
             
             //build up output parameter
-            shared_ptr <GLTFAnimation::Parameter> outputParameter(new GLTFAnimation::Parameter());
+            shared_ptr <GLTFAnimation::Parameter> outputParameter(new GLTFAnimation::Parameter("OUTPUT"));
             
-            outputParameter->setName("OUTPUT"); //temporary, we'll put a better name in __AnimationForAnimationClass
             outputParameter->setBufferView(outputBufferView);
             outputParameter->setByteOffset(0);
             

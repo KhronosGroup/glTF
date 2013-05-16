@@ -243,7 +243,6 @@ namespace GLTF
         
         animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
         animationParameterObject->setString("type", animationParameter->getType());
-        animationParameterObject->setString("name", animationParameter->getName());
         animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
         
         return animationParameterObject;
@@ -261,7 +260,7 @@ namespace GLTF
         for (size_t i = 0 ; i < parameters->size() ; i++) {
             shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get());
             
-            parametersObject->setValue((*parameters)[i]->getName(), parameterObject);
+            parametersObject->setValue((*parameters)[i]->getID(), parameterObject);
         }
         animationObject->setValue("parameters", parametersObject);
         

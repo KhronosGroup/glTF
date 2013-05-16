@@ -34,7 +34,11 @@ namespace GLTF
     //-- GLTFAnimation::Parameter
     
     GLTFAnimation::Parameter::Parameter() {
-        this->_id = GLTFUtils::generateIDForType("bufferView");
+        this->_id = GLTFUtils::generateIDForType("parameter");
+    }
+
+    GLTFAnimation::Parameter::Parameter(std::string id) {
+        this->_id = id;
     }
     
     GLTFAnimation::Parameter::~Parameter() {
@@ -65,14 +69,6 @@ namespace GLTF
         this->_byteOffset = byteOffset;
     }
     
-    void GLTFAnimation::Parameter::setName(std::string name) {
-        this->_name = name;
-    }
-    
-    std::string GLTFAnimation::Parameter::getName() {
-        return this->_name;
-    }
-
     void GLTFAnimation::Parameter::setID(std::string ID) {
         this->_id = ID;
     }
@@ -114,7 +110,7 @@ namespace GLTF
     GLTFAnimation::Parameter* GLTFAnimation::getParameterNamed(std::string parameter) {
         GLTFAnimation::Parameter *parameterOutput = 0;
         for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
-            if (this->_parameters[i]->getName() == parameter) {
+            if (this->_parameters[i]->getID() == parameter) {
                 return this->_parameters[i].get();
             }
         }
@@ -124,7 +120,7 @@ namespace GLTF
 
     void GLTFAnimation::removeParameterNamed(std::string parameter) {
         for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
-            if (this->_parameters[i]->getName() == parameter) {
+            if (this->_parameters[i]->getID() == parameter) {
                 this->_parameters.erase(this->_parameters.begin() + i);
                 break;
             }

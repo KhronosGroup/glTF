@@ -40,7 +40,7 @@ namespace GLTF
         
         class Parameter {
         public:
-            Parameter();
+            Parameter(std::string ID);
             virtual ~Parameter();
             
             void setBufferView(shared_ptr <GLTFBufferView> bufferView);
@@ -49,21 +49,18 @@ namespace GLTF
             void setType(std::string type);
             std::string getType();
             
-            void setName(std::string name);
-            std::string getName();
-            
             void setID(std::string ID);
             std::string getID();
             
             size_t getByteOffset();
             void setByteOffset(size_t count);
-                        
+        private:
+            Parameter();
         private:
             std::string _id;
             std::string _type;
             size_t _byteOffset;
             shared_ptr <GLTFBufferView> _bufferView;
-            std::string _name;
         };
         
         GLTFAnimation();
