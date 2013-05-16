@@ -489,6 +489,24 @@ namespace GLTF
         cvtAnimation->channels()->setValue(channelID, trChannel);
     }
     
+    static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                          const string& parameterSID,
+                                          const string& parameterType,
+                                          shared_ptr <GLTFBufferView> bufferView,
+                                          ofstream &animationsOutputStream) {
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
+        parameter->setType(parameterType);
+        __SetupSamplerForParameter(cvtAnimation, parameter.get());
+        
+        if (cvtAnimation->indexOfParameterNamed(parameter->getID()) == -1)
+            cvtAnimation->parameters()->push_back(parameter);
+        
+        //write
+        parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+        animationsOutputStream.write((const char*)( bufferView->getBufferDataByApplyingOffset()),
+                                     bufferView->getByteLength());
+    }
     
     bool COLLADA2GLTFWriter::writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                                   const COLLADAFW::AnimationList::AnimationClass animationClass,
@@ -535,33 +553,25 @@ namespace GLTF
                     cvtAnimation->removeParameterNamed("OUTPUT");
                     
                     //Translation
-                    shared_ptr <GLTFAnimation::Parameter> translationParameter(new GLTFAnimation::Parameter("translation"));
-                    translationParameter->setType("FLOAT_VEC3");
-                    __SetupSamplerForParameter(cvtAnimation, translationParameter.get());
-                    translationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                    animationsOutputStream.write((const char*)( TRSBufferViews[0]->getBufferDataByApplyingOffset()),
-                                                 TRSBufferViews[0]->getByteLength());
-                    cvtAnimation->parameters()->push_back(translationParameter);
+                    __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                      "translation",
+                                                      "FLOAT_VEC3",
+                                                      TRSBufferViews[0],
+                                                      animationsOutputStream);
                     
                     //Rotation
-                    shared_ptr <GLTFAnimation::Parameter> rotationParameter(new GLTFAnimation::Parameter("rotation"));
-                    __SetupSamplerForParameter(cvtAnimation, rotationParameter.get());
-                    rotationParameter->setType("FLOAT_VEC4");
-                    rotationParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                    animationsOutputStream.write((const char*)( TRSBufferViews[1]->getBufferDataByApplyingOffset()),
-                                                 TRSBufferViews[1]->getByteLength());
-                    
-                    //printf("rotation animation length: %d\n",(int)TRSBufferViews[1]->getByteLength());
-                    cvtAnimation->parameters()->push_back(rotationParameter);
+                    __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                      "rotation",
+                                                      "FLOAT_VEC4",
+                                                      TRSBufferViews[1],
+                                                      animationsOutputStream);
 
                     //Scale
-                    shared_ptr <GLTFAnimation::Parameter> scaleParameter(new GLTFAnimation::Parameter("scale"));
-                    __SetupSamplerForParameter(cvtAnimation, scaleParameter.get());
-                    scaleParameter->setType("FLOAT_VEC3");
-                    scaleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                    animationsOutputStream.write((const char*)( TRSBufferViews[2]->getBufferDataByApplyingOffset()),
-                                                 TRSBufferViews[2]->getByteLength());
-                    cvtAnimation->parameters()->push_back(scaleParameter);
+                    __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                      "scale",
+                                                      "FLOAT_VEC3",
+                                                      TRSBufferViews[2],
+                                                      animationsOutputStream);
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
@@ -586,24 +596,18 @@ namespace GLTF
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
-                    //translation
-                    shared_ptr<JSONObject> trSamplerValue(new JSONObject());
-                    parameter->setID("translation");
-                    samplerID = cvtAnimation->getSamplerIDForName(name);
-                    
-                    __SetupSamplerForParameter(cvtAnimation, parameter);
-                    
-                    parameter->setType("FLOAT_VEC3");
-                    parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                    animationsOutputStream.write((const char*)( bufferView->getBufferDataByApplyingOffset()),
-                                                 bufferView->getByteLength());
+
+                    __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                      "translation",
+                                                      "FLOAT_VEC3",
+                                                      bufferView,
+                                                      animationsOutputStream);
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         
                         if (animatedTarget->getString("path") == "translation") {
                             std::string targetID = animatedTarget->getString("target");
-                            std::string channelID;
                             __AddChannel(cvtAnimation, targetID, "translation");
                         }
                     }
@@ -630,16 +634,16 @@ namespace GLTF
                             shared_ptr<JSONObject> targetObject = this->_converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
-                                shared_ptr <GLTFAnimation::Parameter> angleParameter(new GLTFAnimation::Parameter("rotation"));
-                                angleParameter->setType("FLOAT_VEC4");
-                                samplerID = __SetupSamplerForParameter(cvtAnimation, angleParameter.get());
                                 shared_ptr<JSONArray> rotationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
                                 shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, rotationArray, 3, "FLOAT", cvtAnimation->getCount());
-                                angleParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-                                animationsOutputStream.write((const char*)(adjustedBuffer->getBufferDataByApplyingOffset()),adjustedBuffer->getByteLength());
+                                
+                                __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                                  "rotation",
+                                                                  "FLOAT_VEC4",
+                                                                  adjustedBuffer,
+                                                                  animationsOutputStream);
                                 
                                 __AddChannel(cvtAnimation, targetID, path);
-                                cvtAnimation->parameters()->push_back(angleParameter);
                             }
                         }
                     }

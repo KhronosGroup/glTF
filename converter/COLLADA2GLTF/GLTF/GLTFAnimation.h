@@ -78,6 +78,7 @@ namespace GLTF
         std::vector <shared_ptr <Parameter> >* parameters();
         GLTFAnimation::Parameter* getParameterNamed(std::string parameter);
         void removeParameterNamed(std::string parameter);
+        int indexOfParameterNamed(std::string parameter);
         
         shared_ptr <JSONObject> samplers();
         shared_ptr <JSONObject> channels();
