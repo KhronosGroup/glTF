@@ -17,9 +17,6 @@ A [converter](https://github.com/KhronosGroup/glTF/wiki/converter) can be used t
 
 GLTF Viewer based on [montagejs](https://github.com/montagejs/montage) can be found [here](https://github.com/fabrobinet/glTF-webgl-viewer)
 
-
-Start a web server in `glTF/webgl` which contains an `index.html` page linking to the demos.
-
 #### Workflow
 
 this project provides a reliable toolchain based on OpenCOLLADA.
