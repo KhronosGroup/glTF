@@ -38,12 +38,6 @@
 #include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
 
-//MathGeoLib
-#include "float4x4.h"
-#include "float4.h"
-#include "float3.h"
-#include "Quat.h"
-
 namespace GLTF
 {
     enum unmatrix_indices {
@@ -300,11 +294,6 @@ namespace GLTF
     }
     
     static void __DecomposeMatrix(COLLADABU::Math::Matrix4 &matrix, float *translation, float *rotation, float *scale) {
-        
-        math::float3 translate, scale_;
-        math::float3x3 rotate;
-        math::float3 rotationAxis;
-        
         COLLADABU::Math::Matrix4 tr = matrix.transpose();
         tr.setElement(0,3, 0);
         tr.setElement(1,3, 0);
@@ -541,7 +530,6 @@ namespace GLTF
             case COLLADAFW::AnimationList::AXISANGLE:
                 break;
             case COLLADAFW::AnimationList::MATRIX4X4: {
-                
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
                     std::vector< shared_ptr <GLTFBufferView> > TRSBufferViews;
@@ -574,10 +562,8 @@ namespace GLTF
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        
                         if (animatedTarget->getString("path") == "MATRIX") {
                             std::string targetID = animatedTarget->getString("target");
-                            std::string channelID;
                             __AddChannel(cvtAnimation, targetID, "translation");
                             __AddChannel(cvtAnimation, targetID, "rotation");
                             __AddChannel(cvtAnimation, targetID, "scale");
@@ -622,7 +608,6 @@ namespace GLTF
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //Convert angles to radians
                     float *angles = (float*)bufferView->getBufferDataByApplyingOffset();
-                    
                     for (size_t i = 0 ; i < keyCount ; i++) {
                         angles[i] = angles[i] * 0.0174532925;
                     }
@@ -1597,7 +1582,8 @@ namespace GLTF
                                             }
                                         }
                                     }
-                                }                                 
+                                }
+                                
                                 //generate shaders if needed
                                 shared_ptr<JSONObject> technique = effect->getTechnique();
                                 const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
@@ -1844,6 +1830,8 @@ namespace GLTF
             slot = commonProfile->getEmission();
         else if (slotName == "specular")
             slot = commonProfile->getSpecular();
+        //else if (slotName == "reflective")
+        //    slot = commonProfile->getReflective();
         else
             return;
         
@@ -1864,6 +1852,7 @@ namespace GLTF
             parameters->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
+            
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             const Sampler* sampler = samplers[texture.getSamplerId()];
@@ -1914,6 +1903,7 @@ namespace GLTF
             handleEffectSlot(effectCommon,"ambient" , cvtEffect);
             handleEffectSlot(effectCommon,"emission" , cvtEffect);
             handleEffectSlot(effectCommon,"specular" , cvtEffect);
+            handleEffectSlot(effectCommon,"reflective" , cvtEffect);
             
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());

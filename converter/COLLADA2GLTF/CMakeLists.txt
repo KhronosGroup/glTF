@@ -15,8 +15,6 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/rapidjson/include/ra
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/MathGeoLib/src/Geometry)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/MathGeoLib/src/Math)
 
 if (NOT WIN32)
     find_package(PNG REQUIRED)
@@ -32,7 +30,6 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
-add_subdirectory(dependencies/MathGeoLib)
 
 add_executable(collada2gltf main.cpp 
     COLLADA2GLTFWriter.cpp
@@ -75,7 +72,7 @@ add_executable(collada2gltf main.cpp
     helpers/geometryHelpers.cpp)
 
 if (WIN32)
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static MathGeoLib)
+target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
 else ()
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} z MathGeoLib)
+target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} z)
 endif()
