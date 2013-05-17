@@ -15,11 +15,8 @@ A [converter](https://github.com/KhronosGroup/glTF/wiki/converter) can be used t
 
 ## Viewer
 
-```
-git clone https://github.com/KhronosGroup/glTF.git
-cd glTF
-git submodule update --init --recursive
-```
+GLTF Viewer based on montagejs can be found (here)[https://github.com/fabrobinet/glTF-webgl-viewer]
+
 
 Start a web server in `glTF/webgl` which contains an `index.html` page linking to the demos.
 
