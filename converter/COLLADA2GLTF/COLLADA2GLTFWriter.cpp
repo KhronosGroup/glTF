@@ -1576,7 +1576,7 @@ namespace GLTF
                                             for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
                                                 
                                                 shared_ptr<JSONObject> texcoordBinding(new JSONObject);
-                                                texcoordBinding->setString("slot", (*semanticArrayPtr)[0]);
+                                                texcoordBinding->setString("slot", (*semanticArrayPtr)[semanticIndex]);
                                                 texcoordBinding->setString("semantic", shaderSemantic);
                                                 texcoordBindings.push_back(texcoordBinding);
                                             }
@@ -1830,8 +1830,8 @@ namespace GLTF
             slot = commonProfile->getEmission();
         else if (slotName == "specular")
             slot = commonProfile->getSpecular();
-        //else if (slotName == "reflective")
-        //    slot = commonProfile->getReflective();
+        else if (slotName == "reflective")
+            slot = commonProfile->getReflective();
         else
             return;
         

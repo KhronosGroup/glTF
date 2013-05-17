@@ -257,6 +257,7 @@ namespace GLTF
         if (typeForSemanticAttribute.empty()) {
             typeForSemanticAttribute["POSITION"] = "FLOAT_VEC3";
             typeForSemanticAttribute["NORMAL"] = "FLOAT_VEC3";
+            typeForSemanticAttribute["REFLECTIVE"] = "FLOAT_VEC2";
             
             //FIXME: be smarter and parse
             typeForSemanticAttribute["TEXCOORD_0"] = "FLOAT_VEC2";
@@ -303,6 +304,7 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "ambient");
         techniqueHash += buildSlotHash(parameters, "emission");
         techniqueHash += buildSlotHash(parameters, "specular");
+        techniqueHash += buildSlotHash(parameters, "reflective");
         
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, context));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, context));
@@ -471,6 +473,7 @@ namespace GLTF
         //texcoords
         std::string texcoordAttributeSymbol = "a_texcoord";
         std::string texcoordVaryingSymbol = "v_texcoord";
+        
         for (size_t i = 0 ; i < texcoordBindings.size() ; i++) {
             shared_ptr<JSONObject> texcoordBinding = texcoordBindings[i];
             //slot : diffuse, ambient...
@@ -517,15 +520,17 @@ namespace GLTF
             }
         }
         
+        //Reflective slot
+        if (inputParameters->contains("reflective")) {
+            vsDeclarations += GLSLDeclarationForVarying("v_envTexcoord", typeForSemanticAttribute("REFLECTIVE"));
+        }
+        
         bool hasTransparency = inputParameters->contains("transparency");
         if (hasTransparency) {
             std::string slot = "transparency";
-
             shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
             std::string transparencySymbol = "u_" + slot;
-            
             appendUniformParameter(slot, transparencyParam, transparencySymbol, uniforms, fsDeclarations);
-            
             sprintf(stringBuffer, "gl_FragColor = vec4(color.rgb * color.a, color.a * %s);\n", transparencySymbol.c_str()); fsBody += stringBuffer;
         } else {
             sprintf(stringBuffer, "gl_FragColor = vec4(color.rgb * color.a, color.a);\n"); fsBody += stringBuffer;
@@ -541,10 +546,14 @@ namespace GLTF
         appendUniform("WORLDVIEW", worldviewMatrixSymbol, uniforms, vsDeclarations);
         appendUniform("PROJECTION", projectionMatrixSymbol, uniforms, vsDeclarations);
         
-        sprintf(stringBuffer, "gl_Position = %s * %s * vec4(%s,1.0);\n",
-                projectionMatrixSymbol.c_str(),
+        sprintf(stringBuffer, "%s pos = %s * vec4(%s,1.0);\n",
+                GLSLTypeForGLType("FLOAT_VEC4").c_str(),
                 worldviewMatrixSymbol.c_str(),
                 positionAttributeSymbol.c_str());
+                vsBody += stringBuffer;
+
+        sprintf(stringBuffer, "gl_Position = %s * pos;\n",
+                projectionMatrixSymbol.c_str());
                 vsBody += stringBuffer;
 
         vsBody += "}\n";
