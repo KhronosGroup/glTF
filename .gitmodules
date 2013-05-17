@@ -10,6 +10,3 @@
 [submodule "converter/COLLADA2GLTF/dependencies/rapidjson"]
 	path = converter/COLLADA2GLTF/dependencies/rapidjson
 	url = git://github.com/kennytm/rapidjson.git
-[submodule "converter/COLLADA2GLTF/dependencies/MathGeoLib"]
-	path = converter/COLLADA2GLTF/dependencies/MathGeoLib
-	url = git://github.com/juj/MathGeoLib.git
