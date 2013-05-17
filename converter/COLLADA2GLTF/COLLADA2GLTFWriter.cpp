@@ -499,8 +499,7 @@ namespace GLTF
         parameter->setType(parameterType);
         __SetupSamplerForParameter(cvtAnimation, parameter.get());
         
-        if (cvtAnimation->indexOfParameterNamed(parameter->getID()) == -1)
-            cvtAnimation->parameters()->push_back(parameter);
+        cvtAnimation->parameters()->push_back(parameter);
         
         //write
         parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
@@ -611,8 +610,10 @@ namespace GLTF
                             __AddChannel(cvtAnimation, targetID, "translation");
                         }
                     }
+                    cvtAnimation->removeParameterNamed("OUTPUT");
                 }
             }
+                
                 return true;
                 break;
             case COLLADAFW::AnimationList::ANGLE: {
