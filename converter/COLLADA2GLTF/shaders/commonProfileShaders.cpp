@@ -400,6 +400,44 @@ namespace GLTF
     
     typedef std::map<std::string , std::string > TechniqueHashToTechniqueID;
     
+    /*
+    static size_t __GetSetIndex(const std::string &semantic) {
+        size_t index = semantic.find("_");
+        if (index !=  string::npos) {
+            std::string setStr = semantic.substr(index + 1);
+            index = atoi(setStr.c_str());
+            return index;
+        }
+        
+        return 0;
+    }
+    */
+    
+    //Not yet implemented for everything
+    bool __slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters) {
+        if (inputParameters->contains(slot)) {
+            shared_ptr <JSONObject> param = inputParameters->getObject(slot);
+            
+            if (param->getString("type") == "SAMPLER_2D" )
+                return true; //it is a texture, so presumably yes, this slot is not neutral
+            
+            if (inputParameters->contains("value")) {
+                shared_ptr <JSONArray> color = static_pointer_cast<JSONArray>(inputParameters->getValue("value"));
+                vector <shared_ptr <JSONValue> >  values = color->values();
+                size_t count = values.size();
+                if (count == 3) {
+                    //FIXME: handling post processing of JSON Array with numbers is just overkill
+                    shared_ptr <JSONNumber> r = static_pointer_cast<JSONNumber>(values[0]);
+                    shared_ptr <JSONNumber> g = static_pointer_cast<JSONNumber>(values[1]);
+                    shared_ptr <JSONNumber> b = static_pointer_cast<JSONNumber>(values[2]);
+                    return (r->getDouble() > 0 || r->getDouble() > 0 || b->getDouble());
+                }
+            }
+        }
+        
+        return false;
+    }
+    
     std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::vector<shared_ptr<JSONObject> > &texcoordBindings, GLTFConverterContext& context) {
         
         shared_ptr <JSONObject> inputParameters = technique->getObject("parameters");
@@ -467,33 +505,87 @@ namespace GLTF
         sprintf(stringBuffer, "vec3 normal = normalize(%s);\n", normalVaryingSymbol.c_str()); fsBody += stringBuffer;
         sprintf(stringBuffer, "float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n"); fsBody += stringBuffer;
         
-        //naive implementation for now, accumulate lighting model component in color
+        //color to cumulate all components and light contribution
         sprintf(stringBuffer, "vec4 color = vec4(0., 0., 0., 0.);\n"); fsBody += stringBuffer;
+        sprintf(stringBuffer, "vec4 diffuse = vec4(0., 0., 0., 1.);\n"); fsBody += stringBuffer;
+        if (__slotIsContributingToLighting("emission", inputParameters)) {
+            sprintf(stringBuffer, "vec4 emission;\n"); fsBody += stringBuffer;
+        }
+        if (__slotIsContributingToLighting("reflective", inputParameters)) {
+            sprintf(stringBuffer, "vec4 reflective;\n"); fsBody += stringBuffer;
+        }
+        
+        //attribute vec3 vert;\n
+        shared_ptr <JSONObject> positionAttributeObject = createAttribute("POSITION", positionAttributeSymbol);
+        vsDeclarations += GLSLDeclarationForAttribute(positionAttributeObject);
+        attributes->appendValue(static_cast<shared_ptr<JSONValue> >(positionAttributeObject));
+        
+        std::string worldviewMatrixSymbol = "u_worldviewMatrix";
+        std::string projectionMatrixSymbol = "u_projectionMatrix";
+        appendUniform("WORLDVIEW", worldviewMatrixSymbol, uniforms, vsDeclarations);
+        appendUniform("PROJECTION", projectionMatrixSymbol, uniforms, vsDeclarations);
+        
+        sprintf(stringBuffer, "%s pos = %s * vec4(%s,1.0);\n",
+                GLSLTypeForGLType("FLOAT_VEC4").c_str(),
+                worldviewMatrixSymbol.c_str(),
+                positionAttributeSymbol.c_str());
+        vsBody += stringBuffer;
         
         //texcoords
         std::string texcoordAttributeSymbol = "a_texcoord";
         std::string texcoordVaryingSymbol = "v_texcoord";
         
+        std::map<std::string , std::string> declaredTexcoordAttributes;
+        std::map<std::string , std::string> declaredTexcoordVaryings;
+                
         for (size_t i = 0 ; i < texcoordBindings.size() ; i++) {
             shared_ptr<JSONObject> texcoordBinding = texcoordBindings[i];
             //slot : diffuse, ambient...
             //semantic: TEXCOORD_0 ...
             std::string slot = texcoordBinding->getString("slot");
             std::string semantic = texcoordBinding->getString("semantic");
-            std::string texSymbol = texcoordAttributeSymbol + GLTFUtils::toString(i);
-            std::string texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(i);
+
+            std::string texSymbol;
+            std::string texVSymbol;
             
-            shared_ptr <JSONObject> texcoordAttributeObject = createAttribute(semantic, texSymbol);
-            attributes->appendValue(static_cast<shared_ptr<JSONValue> >(texcoordAttributeObject));
-            
-            //VS
-            sprintf(stringBuffer, "%s = %s;\n", texVSymbol.c_str(), texSymbol.c_str()); vsBody += stringBuffer;
-            
-            vsDeclarations += GLSLDeclarationForAttribute(texcoordAttributeObject);
-            vsDeclarations += GLSLDeclarationForVarying(texVSymbol, texcoordAttributeObject->getString("type"));
-            
-            fsDeclarations += GLSLDeclarationForVarying(texVSymbol, texcoordAttributeObject->getString("type"));
-            
+            if (slot == "reflective") {
+                texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
+                std::string reflectiveType = typeForSemanticAttribute("REFLECTIVE");
+                vsDeclarations += GLSLDeclarationForVarying(texVSymbol, reflectiveType);
+                fsDeclarations += GLSLDeclarationForVarying(texVSymbol, reflectiveType);
+                
+                //Update Vertex shader for reflection
+                std::string normalType = GLSLTypeForGLType(normalAttributeObject->getString("type"));
+                sprintf(stringBuffer, "%s normalizedVert = normalize(%s(pos));\n",
+                        normalType.c_str(),
+                        normalType.c_str()); vsBody += stringBuffer;
+                sprintf(stringBuffer, "%s r = reflect(normalizedVert, %s);\n",
+                        normalType.c_str(),
+                        normalVaryingSymbol.c_str()); vsBody += stringBuffer;
+                sprintf(stringBuffer, "r.z += 1.0;\n"); vsBody += stringBuffer;
+                sprintf(stringBuffer, "float m = 2.0 * sqrt(dot(r,r));\n"); vsBody += stringBuffer;
+                sprintf(stringBuffer, "%s = (r.xy / m) + 0.5;\n", texVSymbol.c_str()); vsBody += stringBuffer;
+                                
+                //sprintf(stringBuffer, "%s = %s;\n", texVSymbol.c_str(), texSymbol.c_str()); vsBody += stringBuffer;
+                declaredTexcoordVaryings[semantic] = texVSymbol;
+            } else {
+                if  (declaredTexcoordAttributes.count(semantic) == 0) {
+                    texSymbol = texcoordAttributeSymbol + GLTFUtils::toString(declaredTexcoordAttributes.size());
+                    texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
+                    
+                    shared_ptr <JSONObject> texcoordAttributeObject = createAttribute(semantic, texSymbol);
+                    attributes->appendValue(static_cast<shared_ptr<JSONValue> >(texcoordAttributeObject));
+                    vsDeclarations += GLSLDeclarationForAttribute(texcoordAttributeObject);
+                    vsDeclarations += GLSLDeclarationForVarying(texVSymbol, texcoordAttributeObject->getString("type"));
+                    fsDeclarations += GLSLDeclarationForVarying(texVSymbol, texcoordAttributeObject->getString("type"));
+                    
+                    sprintf(stringBuffer, "%s = %s;\n", texVSymbol.c_str(), texSymbol.c_str()); vsBody += stringBuffer;
+                    declaredTexcoordAttributes[semantic] = texSymbol;
+                    declaredTexcoordVaryings[semantic] = texVSymbol;
+                }
+            }
+
+
             std::string textureSymbol = "u_"+ slot + "Texture";
                         
             //get the texture
@@ -502,27 +594,34 @@ namespace GLTF
             appendUniformParameter(slot, textureParameter, textureSymbol, uniforms, fsDeclarations);
             
             //FS
-            //FIXME: much more slots to consider, and be more generic...
-            if (slot == "diffuse") {
-                sprintf(stringBuffer, "color = color + texture2D(%s, %s) * vec4(lambert,lambert,lambert,1.);\n", textureSymbol.c_str(), texVSymbol.c_str()); fsBody += stringBuffer;
-            } else if (slot == "emission") {
-                sprintf(stringBuffer, "color = color + texture2D(%s, %s);\n", textureSymbol.c_str(), texVSymbol.c_str()); fsBody += stringBuffer;
-            }
+            sprintf(stringBuffer, "%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
+            fsBody += stringBuffer;
         }
 
         if (inputParameters->contains("diffuse")) {
             std::string slot = "diffuse";
+            std::string diffuseSymbol = "u_"+slot;
             shared_ptr <JSONObject> diffuseParam = inputParameters->getObject(slot);
             if (diffuseParam->getString("type") != "SAMPLER_2D" ) {
-                std::string diffuseSymbol = "u_" + slot;
-                sprintf(stringBuffer, "color = color + vec4(%s,1.) * vec4(lambert,lambert,lambert,1.);\n", diffuseSymbol.c_str()); fsBody += stringBuffer;
+                sprintf(stringBuffer, "diffuse.xyz += %s;\n", diffuseSymbol.c_str()); fsBody += stringBuffer; //FIXME:currently colors are known to be FLOAT_VEC3, this should cleaned up by using the type.
                 appendUniformParameter(slot, diffuseParam, diffuseSymbol, uniforms, fsDeclarations);
             }
         }
         
-        //Reflective slot
-        if (inputParameters->contains("reflective")) {
-            vsDeclarations += GLSLDeclarationForVarying("v_envTexcoord", typeForSemanticAttribute("REFLECTIVE"));
+        
+        if (__slotIsContributingToLighting("reflective", inputParameters)) {
+            sprintf(stringBuffer, "diffuse.xyz += reflective.xyz;\n");
+            fsBody += stringBuffer;
+        }
+
+        sprintf(stringBuffer, "diffuse *= vec4(lambert,lambert,lambert,1.);\n"); fsBody += stringBuffer;
+        
+        sprintf(stringBuffer, "color += diffuse;\n");
+        fsBody += stringBuffer;
+
+        if (__slotIsContributingToLighting("emission", inputParameters)) {
+            sprintf(stringBuffer, "color.xyz += emission.xyz;\n");
+            fsBody += stringBuffer;
         }
         
         bool hasTransparency = inputParameters->contains("transparency");
@@ -535,22 +634,6 @@ namespace GLTF
         } else {
             sprintf(stringBuffer, "gl_FragColor = vec4(color.rgb * color.a, color.a);\n"); fsBody += stringBuffer;
         }
-        
-        //attribute vec3 vert;\n
-        shared_ptr <JSONObject> positionAttributeObject = createAttribute("POSITION", positionAttributeSymbol);
-        vsDeclarations += GLSLDeclarationForAttribute(positionAttributeObject);
-        attributes->appendValue(static_cast<shared_ptr<JSONValue> >(positionAttributeObject));
-
-        std::string worldviewMatrixSymbol = "u_worldviewMatrix";
-        std::string projectionMatrixSymbol = "u_projectionMatrix";
-        appendUniform("WORLDVIEW", worldviewMatrixSymbol, uniforms, vsDeclarations);
-        appendUniform("PROJECTION", projectionMatrixSymbol, uniforms, vsDeclarations);
-        
-        sprintf(stringBuffer, "%s pos = %s * vec4(%s,1.0);\n",
-                GLSLTypeForGLType("FLOAT_VEC4").c_str(),
-                worldviewMatrixSymbol.c_str(),
-                positionAttributeSymbol.c_str());
-                vsBody += stringBuffer;
 
         sprintf(stringBuffer, "gl_Position = %s * pos;\n",
                 projectionMatrixSymbol.c_str());

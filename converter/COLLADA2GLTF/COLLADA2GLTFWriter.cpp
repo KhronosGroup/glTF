@@ -1574,7 +1574,6 @@ namespace GLTF
                                         
                                         if (semanticArrayPtr) {
                                             for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                                
                                                 shared_ptr<JSONObject> texcoordBinding(new JSONObject);
                                                 texcoordBinding->setString("slot", (*semanticArrayPtr)[semanticIndex]);
                                                 texcoordBinding->setString("semantic", shaderSemantic);
