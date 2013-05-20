@@ -254,16 +254,14 @@ namespace GLTF
     static std::string typeForSemanticAttribute(const std::string& semantic) {
         static std::map<std::string , std::string> typeForSemanticAttribute;
         
+        if (semantic.find("TEXCOORD") != string::npos) {
+            return "FLOAT_VEC2";
+        }
+        
         if (typeForSemanticAttribute.empty()) {
             typeForSemanticAttribute["POSITION"] = "FLOAT_VEC3";
             typeForSemanticAttribute["NORMAL"] = "FLOAT_VEC3";
             typeForSemanticAttribute["REFLECTIVE"] = "FLOAT_VEC2";
-            
-            //FIXME: be smarter and parse
-            typeForSemanticAttribute["TEXCOORD_0"] = "FLOAT_VEC2";
-            typeForSemanticAttribute["TEXCOORD_1"] = "FLOAT_VEC2";
-            typeForSemanticAttribute["TEXCOORD_2"] = "FLOAT_VEC2";
-            typeForSemanticAttribute["TEXCOORD_3"] = "FLOAT_VEC2";
         }
         return typeForSemanticAttribute[semantic];
     }
