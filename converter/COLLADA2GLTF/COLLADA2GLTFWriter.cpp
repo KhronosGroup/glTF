@@ -1544,7 +1544,7 @@ namespace GLTF
                                 }
                             }
                             
-                            std::vector<shared_ptr<JSONObject> > texcoordBindings;
+                            std::map<std::string , std::string > texcoordBindings;
                             
                             if (materialBindingIndex != -1) {
                                 unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
@@ -1574,10 +1574,8 @@ namespace GLTF
                                         
                                         if (semanticArrayPtr) {
                                             for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                                shared_ptr<JSONObject> texcoordBinding(new JSONObject);
-                                                texcoordBinding->setString("slot", (*semanticArrayPtr)[semanticIndex]);
-                                                texcoordBinding->setString("semantic", shaderSemantic);
-                                                texcoordBindings.push_back(texcoordBinding);
+                                                std::string slot = (*semanticArrayPtr)[semanticIndex];
+                                                texcoordBindings[slot] = shaderSemantic;
                                             }
                                         }
                                     }
