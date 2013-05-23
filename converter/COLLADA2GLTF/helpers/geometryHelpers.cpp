@@ -264,9 +264,9 @@ namespace GLTF
                                                                                   std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices,
                                                                                   RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
                                                                                   unsigned int* indicesInRemapping,
-                                                                                  unsigned int startIndex,
+                                                                                  size_t startIndex,
                                                                                   unsigned int meshAttributesCount,
-                                                                                  unsigned int &endIndex)
+                                                                                  size_t &endIndex)
     {
         unsigned int generatedIndicesCount = 0;
 
@@ -291,13 +291,15 @@ namespace GLTF
                 remappedIndex[1 + idx] = indicesPtr[k];
             }
             
-            unsigned int index = remappedMeshIndexesMap[remappedIndex];
-            if (index == 0) {
+            unsigned int index;
+            if (remappedMeshIndexesMap.count(remappedIndex) == 0) {
                 index = currentIndex++;
                 generatedIndices[generatedIndicesCount++] = (unsigned int)k;
                 remappedMeshIndexesMap[remappedIndex] = index;
+            } else {
+                index = remappedMeshIndexesMap[remappedIndex];
             }
-            uniqueIndexes[k] = index - 1;
+            uniqueIndexes[k] = index;
         }
         
         endIndex = currentIndex;
@@ -321,8 +323,8 @@ namespace GLTF
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
         PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
         
-        size_t startIndex = 1; // begin at 1 because the hashtable will return 0 when the element is not present
-        unsigned endIndex = 0;
+        size_t startIndex = 0; 
+        size_t endIndex = 0;
         size_t primitiveCount = sourcePrimitives.size();
         unsigned int maxVertexAttributes = 0;
         
@@ -348,7 +350,7 @@ namespace GLTF
                 std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)originalMeshAttributes.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
-                
+        
                 originalMeshAttributes.push_back(selectedMeshAttribute);
             }
         }
@@ -390,7 +392,7 @@ namespace GLTF
         // we are using WebGL for rendering, this involve OpenGL/ES where only float are supported.
         // now we got not only the uniqueIndexes but also the number of different indexes, i.e the number of vertex attributes count
         // we can allocate the buffer to hold vertex attributes
-        unsigned int vertexCount = endIndex - 1;
+        unsigned int vertexCount = endIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
             IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
