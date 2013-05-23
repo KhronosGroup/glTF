@@ -119,7 +119,6 @@ namespace GLTF
     }
 
     int GLTFAnimation::indexOfParameterNamed(std::string parameter) {
-        GLTFAnimation::Parameter *parameterOutput = 0;
         for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
             if (this->_parameters[i]->getID() == parameter) {
                 return i;
