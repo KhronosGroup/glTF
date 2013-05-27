@@ -6,6 +6,7 @@
 
 //#include "GeneratedSaxParserUtils.h"
 
+#include <vector> //FIXME: this should be included by OpenCOLLADA.
 #include "GLTFExtraDataHandler.h"
 #include "GLTF.h"
 
