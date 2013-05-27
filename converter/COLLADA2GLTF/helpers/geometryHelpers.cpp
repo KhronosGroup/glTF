@@ -259,7 +259,6 @@ namespace GLTF
     }
     
     
-    
     shared_ptr<GLTF::GLTFPrimitiveRemapInfos> __BuildPrimitiveUniqueIndexes(shared_ptr<GLTF::GLTFPrimitive> primitive,
                                                                                   std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices,
                                                                                   RemappedMeshIndexesHashmap& remappedMeshIndexesMap,

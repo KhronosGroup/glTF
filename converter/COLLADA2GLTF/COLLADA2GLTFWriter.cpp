@@ -37,6 +37,7 @@
 #include "COLLADAFWPolygons.h"
 #include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
+#include "GLTFExtraDataHandler.h"
 
 namespace GLTF
 {
@@ -1112,6 +1113,8 @@ namespace GLTF
         ifstream inputAnimations;
         ofstream verticesOutputStream;
         
+        this->_extraDataHandler = new ExtraDataHandler();
+
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
@@ -1143,6 +1146,7 @@ namespace GLTF
         COLLADASaxFWL::Loader loader;
 		COLLADAFW::Root root(&loader, this);
         
+        loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
 		if (!root.loadDocument( this->_converterContext.inputFilePath))
 			return false;
         
@@ -1305,6 +1309,8 @@ namespace GLTF
         
         verticesOutputStream.flush();
         verticesOutputStream.close();
+        
+        delete this->_extraDataHandler;
         
 		return true;
 	}
@@ -1506,7 +1512,10 @@ namespace GLTF
                 
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 
-                unsigned int meshUID = (unsigned int)instanceGeometry->getInstanciatedObjectId().getObjectId();
+                COLLADAFW::UniqueId uniqueId = instanceGeometry->getInstanciatedObjectId();
+                shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
+                
+                unsigned int meshUID = (unsigned int)uniqueId.getObjectId();
                 MeshVectorSharedPtr meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
                 
                 if (meshes)
@@ -1552,7 +1561,10 @@ namespace GLTF
                                 /* will be needed to get semantic & set association to create the shader */
                                 const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
                                 
-                                unsigned int effectID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
+                                COLLADAFW::UniqueId effectUID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
+                                unsigned int effectID = effectUID.getObjectId();
+                                shared_ptr<JSONObject> effectExtras = this->_extraDataHandler->getExtras(effectUID);
+                                
                                 std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
                                 shared_ptr <GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
                                 
@@ -1581,12 +1593,24 @@ namespace GLTF
                                     }
                                 }
                                 
+                                shared_ptr<JSONObject> techniqueExtras(new JSONObject());
+                                if (meshExtras->contains("double_sided")) {
+                                    techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                                }
+                                if (effectExtras->contains("double_sided")) {
+                                    techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
+                                }
+                                
+
+                                
                                 //generate shaders if needed
                                 shared_ptr<JSONObject> technique = effect->getTechnique();
-                                const std::string& techniqueID = getReferenceTechniqueID(technique, texcoordBindings, this->_converterContext);
+                                const std::string& techniqueID = getReferenceTechniqueID(technique,
+                                                                                         techniqueExtras,
+                                                                                         texcoordBindings,
+                                                                                         this->_converterContext);
                                 
                                 effect->setTechniqueID(techniqueID);
-                                
                                 effect->setName(materialName);
                                 primitive->setMaterialID(effect->getID());
                             }
@@ -1765,7 +1789,7 @@ namespace GLTF
         const UniqueId& effectUID = material->getInstantiatedEffect();
 		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
         this->_converterContext._materialUIDToName[materialID] = material->getName();
-        this->_converterContext._materialUIDToEffectUID[materialID] = (unsigned int)effectUID.getObjectId();
+        this->_converterContext._materialUIDToEffectUID[materialID] = effectUID;
 		return true;
 	}
     
@@ -1913,11 +1937,16 @@ namespace GLTF
             }
             
             //should check if has specular first and the lighting model (if not lambert)
-            shared_ptr <JSONObject> shininessObject(new JSONObject());
             double shininess = effectCommon->getShininess().getFloatValue();
-            shininessObject->setDouble("value", shininess);
-            shininessObject->setString("type", "FLOAT");
-            parameters->setValue("shininess", shininessObject);
+            if (shininess >= 0) {
+                if (shininess < 1) {
+                    shininess *= 128.0;
+                }
+                shared_ptr <JSONObject> shininessObject(new JSONObject());
+                shininessObject->setDouble("value", shininess);
+                shininessObject->setString("type", "FLOAT");
+                parameters->setValue("shininess", shininessObject);
+            }
             
             this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
             

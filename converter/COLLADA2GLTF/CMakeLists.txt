@@ -15,6 +15,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/rapidjson/include/ra
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
 
 if (NOT WIN32)
     find_package(PNG REQUIRED)
@@ -66,6 +67,8 @@ add_executable(collada2gltf main.cpp
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
     GLTF/GLTFWriter.h
+    GLTF/GLTFExtraDataHandler.h
+    GLTF/GLTFExtraDataHandler.cpp
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
     helpers/geometryHelpers.h

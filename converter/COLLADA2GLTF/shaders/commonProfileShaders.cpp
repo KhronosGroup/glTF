@@ -112,6 +112,34 @@ namespace GLTF
     }
     
     
+    //Not yet implemented for everything
+    static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters) {
+        if (inputParameters->contains(slot)) {
+            shared_ptr <JSONObject> param = inputParameters->getObject(slot);
+            
+            if (param->getString("type") == "SAMPLER_2D" )
+                return true; //it is a texture, so presumably yes, this slot is not neutral
+            
+            if (param->contains("value")) {
+                if (slot == "reflective")
+                    return false;
+                
+                shared_ptr <JSONArray> color = static_pointer_cast<JSONArray>(param->getValue("value"));
+                vector <shared_ptr <JSONValue> >  values = color->values();
+                size_t count = values.size();
+                if (count == 3) {
+                    //FIXME: handling post processing of JSON Array with numbers is just overkill
+                    shared_ptr <JSONNumber> r = static_pointer_cast<JSONNumber>(values[0]);
+                    shared_ptr <JSONNumber> g = static_pointer_cast<JSONNumber>(values[1]);
+                    shared_ptr <JSONNumber> b = static_pointer_cast<JSONNumber>(values[2]);
+                    return (r->getDouble() > 0 || r->getDouble() > 0 || b->getDouble());
+                }
+            }
+        }
+        
+        return false;
+    }
+    
     static double getTransparency(shared_ptr<JSONObject> parameters, const GLTFConverterContext& context) {
         //super naive for now, also need to check sketchup work-around
         //if (effectCommon->getOpacity().isTexture()) {
@@ -279,18 +307,22 @@ namespace GLTF
 
     static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot) {
         std::string hash = slot + ":";
-        if (parameters->contains(slot)) {
+
+        if (slotIsContributingToLighting(slot, parameters)) {
+        //if (parameters->contains(slot)) {
             shared_ptr<JSONObject> parameter = parameters->getObject(slot);
             
             if (parameter->contains("type")) {
                 hash += parameter->getString("type");
                 return hash;
             }
+        } else if (parameters->contains(slot) && slot != "diffuse") {
+            parameters->removeValue(slot);
         }
         return hash + "none";
     }
     
-    static std::string buildTechniqueHash(shared_ptr<JSONObject> technique, GLTFConverterContext& context) {
+    static std::string buildTechniqueHash(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& context) {
         std::string techniqueHash = "";
         
         shared_ptr<JSONObject> parameters = technique->getObject("parameters");
@@ -304,6 +336,7 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "specular");
         techniqueHash += buildSlotHash(parameters, "reflective");
         
+        techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, context));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, context));
                 
@@ -337,20 +370,21 @@ namespace GLTF
         return true;
     }
     
-    static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> technique, GLTFConverterContext& context)
+    static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& context)
     {
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
-        
         shared_ptr <GLTF::JSONObject> parameters = technique->createObjectIfNeeded("parameters");
 
+        states->setBool("cullFaceEnable", !techniqueExtras->getBool("double_sided"));
+        
         if (isOpaque(parameters, context)) {
             states->setBool("depthTestEnable", true);
             states->setBool("depthMask", true);
             states->setBool("blendEnable", false);            
-        } else {
+        } else {            
             states->setBool("blendEnable", true);
             states->setBool("depthTestEnable", true);
-            states->setBool("depthMask", false);
+            states->setBool("depthMask", false);         //should be true for images, and false for plain color
             states->setString("blendEquation", "FUNC_ADD");
             shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
             blendFunc->setString("sfactor", "SRC_ALPHA");
@@ -411,37 +445,15 @@ namespace GLTF
     }
     */
     
-    //Not yet implemented for everything
-    bool __slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters) {
-        if (inputParameters->contains(slot)) {
-            shared_ptr <JSONObject> param = inputParameters->getObject(slot);
-            
-            if (param->getString("type") == "SAMPLER_2D" )
-                return true; //it is a texture, so presumably yes, this slot is not neutral
-            
-            if (param->contains("value")) {
-                shared_ptr <JSONArray> color = static_pointer_cast<JSONArray>(param->getValue("value"));
-                vector <shared_ptr <JSONValue> >  values = color->values();
-                size_t count = values.size();
-                if (count == 3) {
-                    //FIXME: handling post processing of JSON Array with numbers is just overkill
-                    shared_ptr <JSONNumber> r = static_pointer_cast<JSONNumber>(values[0]);
-                    shared_ptr <JSONNumber> g = static_pointer_cast<JSONNumber>(values[1]);
-                    shared_ptr <JSONNumber> b = static_pointer_cast<JSONNumber>(values[2]);
-                    return (r->getDouble() > 0 || r->getDouble() > 0 || b->getDouble());
-                }
-            }
-        }
-        
-        return false;
-    }
     
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::map<std::string , std::string > &texcoordBindings, GLTFConverterContext& context) {
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, std::map<std::string , std::string > &texcoordBindings, GLTFConverterContext& context) {
+        //no real support for lighting model at the moment
+        //we just switch to Blinn if there is any specular.
         
         shared_ptr <JSONObject> inputParameters = technique->getObject("parameters");
-        
+        bool useSimpleLambert = !(slotIsContributingToLighting("specular", inputParameters) && inputParameters->contains("shininess"));
         shared_ptr <JSONObject> techniquesObject = context.root->createObjectIfNeeded("techniques");
-        std::string techniqueHash = buildTechniqueHash(technique, context);
+        std::string techniqueHash = buildTechniqueHash(technique, techniqueExtras, context);
 
         static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
@@ -499,18 +511,30 @@ namespace GLTF
                 normalAttributeSymbol.c_str());
         vsBody += stringBuffer;
         
+        
+        
         //FS -> FIXME do not hard code type
         sprintf(stringBuffer, "vec3 normal = normalize(%s);\n", normalVaryingSymbol.c_str()); fsBody += stringBuffer;
-        sprintf(stringBuffer, "float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n"); fsBody += stringBuffer;
+        if (techniqueExtras->getBool("double_sided")) {
+            sprintf(stringBuffer, "if (gl_FrontFacing == false) normal = -normal;\n");
+            fsBody += stringBuffer;
+        }
+
+        if (useSimpleLambert) {
+            sprintf(stringBuffer, "float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n"); fsBody += stringBuffer;
+        }
         
         //color to cumulate all components and light contribution
         sprintf(stringBuffer, "vec4 color = vec4(0., 0., 0., 0.);\n"); fsBody += stringBuffer;
         sprintf(stringBuffer, "vec4 diffuse = vec4(0., 0., 0., 1.);\n"); fsBody += stringBuffer;
-        if (__slotIsContributingToLighting("emission", inputParameters)) {
+        if (slotIsContributingToLighting("emission", inputParameters)) {
             sprintf(stringBuffer, "vec4 emission;\n"); fsBody += stringBuffer;
         }
-        if (__slotIsContributingToLighting("reflective", inputParameters)) {
+        if (slotIsContributingToLighting("reflective", inputParameters)) {
             sprintf(stringBuffer, "vec4 reflective;\n"); fsBody += stringBuffer;
+        }
+        if (slotIsContributingToLighting("specular", inputParameters)) {
+            sprintf(stringBuffer, "vec4 specular;\n"); fsBody += stringBuffer;
         }
         
         //attribute vec3 vert;\n
@@ -529,18 +553,45 @@ namespace GLTF
                 positionAttributeSymbol.c_str());
         vsBody += stringBuffer;
         
+        if (!useSimpleLambert) {
+            //presence of shininess is tested above
+            shared_ptr <JSONObject> shininessObject = inputParameters->getObject("shininess");
+            appendUniformParameter("shininess", shininessObject, "u_shininess", uniforms, fsDeclarations);
+            
+            //save light direction
+            vsDeclarations += GLSLDeclarationForVarying("v_lightDirection", "FLOAT_VEC3");
+            fsDeclarations += GLSLDeclarationForVarying("v_lightDirection", "FLOAT_VEC3");
+            sprintf(stringBuffer,"v_lightDirection = vec3(%s * (vec4((vec3(0.,0.,-1.) - %s.xyz) ,1.0)));\n",
+                    worldviewMatrixSymbol.c_str(),
+                    positionAttributeSymbol.c_str());
+            vsBody += stringBuffer;
+            
+            //save camera-vertex
+            vsDeclarations += GLSLDeclarationForVarying("v_mPos", "FLOAT_VEC3");
+            fsDeclarations += GLSLDeclarationForVarying("v_mPos", "FLOAT_VEC3");
+            sprintf(stringBuffer,"v_mPos = pos.xyz;\n");
+            vsBody += stringBuffer;
+            
+            sprintf(stringBuffer, "vec3 l = normalize(v_lightDirection);\n\
+vec3 v = normalize(v_mPos);\n\
+vec3 h = normalize(l+v);\n\
+float lambert = max(-dot(normal,l), 0.);\n\
+float specLight = pow(max(0.0,-dot(normal,h)),u_shininess);\n");
+            fsBody += stringBuffer;
+        }
+
         //texcoords
         std::string texcoordAttributeSymbol = "a_texcoord";
         std::string texcoordVaryingSymbol = "v_texcoord";
         std::map<std::string , std::string> declaredTexcoordAttributes;
         std::map<std::string , std::string> declaredTexcoordVaryings;
         
-        const int slotsCount = 5;
-        std::string slots[slotsCount] = { "diffuse", "emission", "reflective" };
+        const int slotsCount = 4;
+        std::string slots[slotsCount] = { "diffuse", "emission", "reflective", "specular" };
         for (size_t slotIndex = 0 ; slotIndex < slotsCount ; slotIndex++) {
             std::string slot = slots[slotIndex];
             
-            if (!__slotIsContributingToLighting(slot, inputParameters))
+            if (!slotIsContributingToLighting(slot, inputParameters))
                 continue;
             
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
@@ -608,20 +659,25 @@ namespace GLTF
             }
         }
                 
-        if (__slotIsContributingToLighting("reflective", inputParameters)) {
+        if (slotIsContributingToLighting("reflective", inputParameters)) {
             sprintf(stringBuffer, "diffuse.xyz += reflective.xyz;\n");
             fsBody += stringBuffer;
         }
 
-        sprintf(stringBuffer, "diffuse *= vec4(lambert,lambert,lambert,1.);\n"); fsBody += stringBuffer;
-        
+        sprintf(stringBuffer, "diffuse.xyz *= lambert;\n"); fsBody += stringBuffer;
         sprintf(stringBuffer, "color += diffuse;\n");
         fsBody += stringBuffer;
 
-        if (__slotIsContributingToLighting("emission", inputParameters)) {
+        if (slotIsContributingToLighting("emission", inputParameters)) {
             sprintf(stringBuffer, "color.xyz += emission.xyz;\n");
             fsBody += stringBuffer;
         }
+        
+        if (slotIsContributingToLighting("specular", inputParameters)) {
+            sprintf(stringBuffer, "color.xyz += specular.xyz * specLight;\n");
+            fsBody += stringBuffer;
+        }
+
         
         bool hasTransparency = inputParameters->contains("transparency");
         if (hasTransparency) {
@@ -645,7 +701,7 @@ namespace GLTF
         //if the technique has not been serialized, first thing create the default pass for this technique
         shared_ptr <GLTF::JSONObject> pass(new GLTF::JSONObject());
         
-        shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(technique, context);
+        shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(technique, techniqueExtras, context);
         pass->setValue("states", states);
         
         context.shaderIdToShaderString[vs] = vsDeclarations + vsBody;

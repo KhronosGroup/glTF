@@ -62,6 +62,12 @@ namespace GLTF
         this->_keyToJSONValue[key] = value;
     }
     
+    void JSONObject::removeValue(const std::string &key)
+    {
+        this->_keyToJSONValue.erase(key);
+    }
+
+    
     shared_ptr <JSONValue> JSONObject::getValue(std::string key)
     {
         return this->_keyToJSONValue[key];
@@ -80,9 +86,11 @@ namespace GLTF
 
     unsigned int JSONObject::getUnsignedInt32(const std::string &key)
     {
-        shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
-        
-        return number->getUnsignedInt32();
+        if (this->contains(key)) {
+            shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+            return number->getUnsignedInt32();
+        }
+        return 0;
     }
     
     void JSONObject::setBool(const std::string &key, bool value)
@@ -92,9 +100,12 @@ namespace GLTF
     
     bool JSONObject::getBool(const std::string &key)
     {
-        shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
-        
-        return number->getBool();
+        if (this->contains(key)) {
+            shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+            
+            return number->getBool();
+        }
+        return false;
     }
     
     void JSONObject::setInt32(const std::string &key, int value)
@@ -104,9 +115,11 @@ namespace GLTF
     
     int JSONObject::getInt32(const std::string &key)
     {
-        shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
-        
-        return number->getInt32();
+        if (this->contains(key)) {
+            shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+            return number->getInt32();
+        }
+        return 0;
     }
     
     void JSONObject::setDouble(const std::string &key, double value)
@@ -116,10 +129,11 @@ namespace GLTF
     
     double JSONObject::getDouble(const std::string &key)
     {
-        shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
-        
-        
-        return number->getDouble();
+        if (this->contains(key)) {
+            shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
+            return number->getDouble();
+        }
+        return 0;
     }
     
     void JSONObject::setString(const std::string &key, const std::string &value)
@@ -127,11 +141,13 @@ namespace GLTF
         this->setValue(key, shared_ptr <JSONString> (new JSONString(value)));
     }
 
-    const std::string& JSONObject::getString(const std::string &key)
+    const std::string JSONObject::getString(const std::string &key)
     {
-        shared_ptr <JSONString> str = static_pointer_cast <JSONString> (this->getValue(key));
-        
-        return str->getString();
+        if (this->contains(key)) {
+            shared_ptr <JSONString> str = static_pointer_cast <JSONString> (this->getValue(key));
+            return str->getString();
+        }
+        return "";
     }
     
     vector <std::string> JSONObject::getAllKeys()

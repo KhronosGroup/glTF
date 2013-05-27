@@ -11,7 +11,7 @@ namespace GLTF
     typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, unsigned int /* effectID */ > MaterialUIDToEffectUID;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, COLLADAFW::UniqueId /* effectID */ > MaterialUIDToEffectUID;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;

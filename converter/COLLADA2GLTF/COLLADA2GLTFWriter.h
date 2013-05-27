@@ -95,6 +95,7 @@ using namespace std;
 namespace GLTF
 {
     class GLTFObject;
+    class ExtraDataHandler;
     
     //-- BBOX helper class
         
@@ -252,7 +253,7 @@ namespace GLTF
         const COLLADAFW::VisualScene* _visualScene;
         GLTF::GLTFWriter _writer;
         SceneFlatteningInfo _sceneFlatteningInfo;
-
+        GLTF::ExtraDataHandler *_extraDataHandler;
         ofstream _verticesOutputStream;
         ofstream _indicesOutputStream;
         ofstream _animationsOutputStream;

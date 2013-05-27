@@ -65,6 +65,9 @@ namespace GLTF
         void setComponentType(ComponentType type);
         ComponentType getComponentType();
         
+        //return a string that represents the GL Type,by taking into account componentType and componentsPerAttribute
+        std::string getGLType();
+        
         void setByteOffset(size_t offset);
         size_t getByteOffset();
         

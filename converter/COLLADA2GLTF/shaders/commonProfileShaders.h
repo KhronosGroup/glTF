@@ -29,7 +29,7 @@
 
 namespace GLTF
 {
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, std::map<std::string , std::string > &texcoordBindings, GLTFConverterContext& context);
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, std::map<std::string , std::string > &texcoordBindings, GLTFConverterContext& context);
 };
 
 #endif

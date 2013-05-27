@@ -44,6 +44,8 @@ namespace GLTF
 
         void setValue(const std::string &key, shared_ptr <JSONValue> value);
         shared_ptr <JSONValue> getValue(std::string);
+
+        void removeValue(const std::string &key);
         
         shared_ptr <JSONObject> getObject(std::string);
 
@@ -62,7 +64,7 @@ namespace GLTF
         bool getBool(const std::string &key);
         
         void setString(const std::string &key, const std::string &value);
-        const std::string& getString(const std::string &key);
+        const std::string getString(const std::string &key);
         
         std::vector <std::string> getAllKeys();
         
