@@ -41,6 +41,24 @@ define( ["../webgl-tf-loader", "helpers/resource-manager"],
         return color;
     }
 
+    function componentsPerElementForGLType(glType) {
+        switch (glType) {
+            case "FLOAT" :
+            case "UNSIGNED_BYTE" :
+            case "UNSIGNED_SHORT" :
+                return 1;
+            case "FLOAT_VEC2" :
+                return 2;
+            case "FLOAT_VEC3" :
+                return 3;
+            case "FLOAT_VEC4" :
+                return 4;
+            default:
+                return null;
+        }
+    }
+
+
     function LoadTexture(src) {
         if(!src) { return null; }
         return THREE.ImageUtils.loadTexture(src);
@@ -142,28 +160,32 @@ define( ["../webgl-tf-loader", "helpers/resource-manager"],
         return resource;
     };
 
+
+
+
     VertexAttributeDelegate.prototype.resourceAvailable = function(glResource, ctx) {
         var geometry = ctx.geometry;
         var attribute = ctx.attribute;
         var semantic = ctx.semantic;
         var floatArray;
         var i, l;
+        //FIXME: Float32 is assumed here, but should be checked.
 
         if(semantic == "POSITION") {
             // TODO: Should be easy to take strides into account here
-            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * componentsPerElementForGLType(attribute.type));
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.vertices.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
         } else if(semantic == "NORMAL") {
             geometry.normals = [];
-            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * componentsPerElementForGLType(attribute.type));
             for(i = 0, l = floatArray.length; i < l; i += 3) {
                 geometry.normals.push( new THREE.Vector3( floatArray[i], floatArray[i+1], floatArray[i+2] ) );
             }
         } else if ((semantic == "TEXCOORD_0") || (semantic == "TEXCOORD" )) {
             geometry.uvs = [];
-            floatArray = new Float32Array(glResource, 0, attribute.count * attribute.componentsPerAttribute);
+            floatArray = new Float32Array(glResource, 0, attribute.count * componentsPerElementForGLType(attribute.type));
             for(i = 0, l = floatArray.length; i < l; i += 2) {
                 geometry.uvs.push( new THREE.UV( floatArray[i], floatArray[i+1] ) );
             }
@@ -419,11 +441,11 @@ define( ["../webgl-tf-loader", "helpers/resource-manager"],
                                 var bufferEntry = this.threeResources.getEntry(attribute.bufferView);
                                 attribute.bufferView = bufferEntry;
                                 attributeEntry = this.threeResources.getEntry(attributeID);
-                                //this is a set ID, it has to stay a string
+
                             } else {
                                 attribute = attributeEntry.object;
                             }
-                            attribute.type = "attribute";
+
                             var attribContext = new VertexAttributeContext(attribute, semantic, geometry);
 
                             var alreadyProcessedAttribute = this.threeResources.binaryManager.getResource(attribute, vertexAttributeDelegate, attribContext);
