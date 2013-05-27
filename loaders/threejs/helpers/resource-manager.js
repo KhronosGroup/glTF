@@ -699,38 +699,42 @@ var global = window;
             }
         },
 
-        _handleAttributeResourceLoading: {
-            value: function(attribute, delegate, ctx) {
-                var bufferView = attribute.bufferView;
+
+        _elementSizeForGLType: {
+            value: function(glType) {
+                switch (glType) {
+                    case "FLOAT" :
+                        return Float32Array.BYTES_PER_ELEMENT;
+                    case "UNSIGNED_BYTE" :
+                        return Uint8Array.BYTES_PER_ELEMENT;
+                    case "UNSIGNED_SHORT" :
+                        return Uint16Array.BYTES_PER_ELEMENT;
+                    case "FLOAT_VEC2" :
+                        return Float32Array.BYTES_PER_ELEMENT * 2;
+                    case "FLOAT_VEC3" :
+                        return Float32Array.BYTES_PER_ELEMENT * 3;
+                    case "FLOAT_VEC4" :
+                        return Float32Array.BYTES_PER_ELEMENT * 4;
+                    default:
+                        return null;
+                }
+            }
+        },
+
+        _handleWrappedBufferViewResourceLoading: {
+            value: function(wrappedBufferView, delegate, ctx) {
+                var bufferView = wrappedBufferView.bufferView;
                 var buffer = bufferView.buffer;
-                var byteOffset = attribute.byteOffset + bufferView.description.byteOffset;
-                var range = [byteOffset , (attribute.byteStride * attribute.count) + byteOffset];
-                this._handleRequest({   "id" : attribute.id,
+                var byteOffset = wrappedBufferView.byteOffset + bufferView.description.byteOffset;
+                var range = [byteOffset , (this._elementSizeForGLType(wrappedBufferView.type) * wrappedBufferView.count) + byteOffset];
+
+                this._handleRequest({   "id" : wrappedBufferView.id,
                                         "range" : range,
                                         "type" : buffer.description.type,
                                         "path" : buffer.description.path,
                                         "delegate" : delegate,
                                         "ctx" : ctx,
                                         "kind" : "single-part" }, null);
-            }
-        },
-
-        _handleTypedArrayLoading: {
-            value: function(typedArrayDescr, delegate, ctx) {
-                //FIXME: extend testing to UInt8, 32, float and so on ...
-                if (typedArrayDescr.type === "UNSIGNED_SHORT") {
-                    var bufferView = typedArrayDescr.bufferView;
-                    var buffer = bufferView.buffer;
-                    var offset = typedArrayDescr.byteOffset + bufferView.description.byteOffset;
-                    var range = [offset, offset + ( typedArrayDescr.count * Uint16Array.BYTES_PER_ELEMENT)];
-                    this._handleRequest({   "id":typedArrayDescr.id,
-                                            "range" : range,
-                                            "type" : buffer.description.type,
-                                            "path" : buffer.description.path,
-                                            "delegate" : delegate,
-                                            "ctx" : ctx,
-                                            "kind" : "single-part" }, null);
-                }
             }
         },
 
@@ -845,9 +849,7 @@ var global = window;
                     return managedResource;
                 }
 
-                if (resource.type === "attribute") {
-                    this._handleAttributeResourceLoading(resource, delegate, ctx);
-                } else if (resource.type === "program") {
+                if (resource.type === "program") {
                     this._handleProgramLoading(resource, delegate, ctx);
                 } else if (resource.type === "shader") {
                     this._handleShaderLoading(resource, delegate, ctx);
@@ -856,7 +858,7 @@ var global = window;
                 } else if (resource.type === "SAMPLER_2D") {
                     this._handleSampler2DLoading(resource, delegate, ctx);
                 } else {
-                    this._handleTypedArrayLoading(resource, delegate, ctx);
+                    this._handleWrappedBufferViewResourceLoading(resource, delegate, ctx);
                 }
 
                 return null;

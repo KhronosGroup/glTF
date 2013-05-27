@@ -134,9 +134,9 @@ namespace GLTF
         
         meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
         meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
-        meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getComponentsPerAttribute());
+        //meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getComponentsPerAttribute());
         meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setString("componentType", GLTFUtils::getStringForGLType(meshAttribute->getComponentType()));
+        meshAttributeObject->setString("type", meshAttribute->getGLType());
         
         void** buffers = (void**)context;
         GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : meshAttribute->getBufferView().get();

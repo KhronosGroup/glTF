@@ -1,4 +1,5 @@
 {
+    "animations": {},
     "bufferViews": {
         "bufferView_24": {
             "buffer": "duck.bin",
@@ -11,6 +12,11 @@
             "byteLength": 25272,
             "byteOffset": 76768,
             "target": "ELEMENT_ARRAY_BUFFER"
+        },
+        "bufferView_26": {
+            "buffer": "duck.bin",
+            "byteLength": 0,
+            "byteOffset": 102040
         }
     },
     "buffers": {
@@ -40,14 +46,6 @@
             "techniques": {
                 "technique1": {
                     "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0,
-                                0,
-                                0
-                            ]
-                        },
                         "diffuse": {
                             "image": "image_0",
                             "magFilter": "LINEAR",
@@ -56,25 +54,9 @@
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         },
-                        "emission": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0,
-                                0,
-                                0
-                            ]
-                        },
                         "shininess": {
                             "type": "FLOAT",
-                            "value": 0.3
-                        },
-                        "specular": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0,
-                                0,
-                                0
-                            ]
+                            "value": 38.4
                         }
                     }
                 }
@@ -88,8 +70,6 @@
                     "bufferView": "bufferView_24",
                     "byteOffset": 0,
                     "byteStride": 12,
-                    "componentType": "FLOAT",
-                    "componentsPerAttribute": 3,
                     "count": 2399,
                     "max": [
                         96.1799,
@@ -100,14 +80,13 @@
                         -69.2985,
                         9.92937,
                         -61.3282
-                    ]
+                    ],
+                    "type": "FLOAT_VEC3"
                 },
                 "attribute_20": {
                     "bufferView": "bufferView_24",
                     "byteOffset": 28788,
                     "byteStride": 12,
-                    "componentType": "FLOAT",
-                    "componentsPerAttribute": 3,
                     "count": 2399,
                     "max": [
                         0.999599,
@@ -118,14 +97,13 @@
                         -0.999084,
                         -1,
                         -0.999832
-                    ]
+                    ],
+                    "type": "FLOAT_VEC3"
                 },
                 "attribute_22": {
                     "bufferView": "bufferView_24",
                     "byteOffset": 57576,
                     "byteStride": 8,
-                    "componentType": "FLOAT",
-                    "componentsPerAttribute": 2,
                     "count": 2399,
                     "max": [
                         0.983346,
@@ -134,7 +112,8 @@
                     "min": [
                         0.026409,
                         0.019963
-                    ]
+                    ],
+                    "type": "FLOAT_VEC2"
                 }
             },
             "name": "LOD3spShape",
@@ -267,14 +246,14 @@
                                 "type": "FLOAT_VEC3"
                             },
                             {
-                                "semantic": "TEXCOORD_0",
-                                "symbol": "a_texcoord0",
-                                "type": "FLOAT_VEC2"
-                            },
-                            {
                                 "semantic": "POSITION",
                                 "symbol": "a_position",
                                 "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "TEXCOORD_0",
+                                "symbol": "a_texcoord0",
+                                "type": "FLOAT_VEC2"
                             }
                         ],
                         "uniforms": [
@@ -282,11 +261,6 @@
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
                                 "symbol": "u_normalMatrix",
                                 "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuseTexture",
-                                "type": "SAMPLER_2D"
                             },
                             {
                                 "semantic": "WORLDVIEW",
@@ -297,18 +271,23 @@
                                 "semantic": "PROJECTION",
                                 "symbol": "u_projectionMatrix",
                                 "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuse",
+                                "symbol": "u_diffuseTexture",
+                                "type": "SAMPLER_2D"
                             }
                         ]
                     },
                     "states": {
                         "blendEnable": false,
+                        "cullFaceEnable": true,
                         "depthMask": true,
                         "depthTestEnable": true
-                    },
-                    "type": "program"
+                    }
                 }
             }
         }
     },
-    "version": "0.2"
+    "version": "0.3"
 }
