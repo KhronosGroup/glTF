@@ -52,14 +52,18 @@ namespace GLTF
             void setID(std::string ID);
             std::string getID();
             
+            size_t getCount();
+            void setCount(size_t count);
+
             size_t getByteOffset();
-            void setByteOffset(size_t count);
+            void setByteOffset(size_t byteOffset);
         private:
             Parameter();
         private:
             std::string _id;
             std::string _type;
             size_t _byteOffset;
+            size_t _count;
             shared_ptr <GLTFBufferView> _bufferView;
         };
         
@@ -81,7 +85,7 @@ namespace GLTF
         int indexOfParameterNamed(std::string parameter);
         
         shared_ptr <JSONObject> samplers();
-        shared_ptr <JSONObject> channels();
+        shared_ptr <JSONArray> channels();
 
         std::string getSamplerIDForName(std::string name);
 
@@ -90,7 +94,7 @@ namespace GLTF
         double _duration;
         std::vector <shared_ptr <Parameter> > _parameters;
         std::string _id;
-        shared_ptr <JSONObject> _channels;
+        shared_ptr <JSONArray> _channels;
         shared_ptr <JSONObject> _samplers;
     };
     

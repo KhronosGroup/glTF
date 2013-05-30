@@ -469,14 +469,14 @@ namespace GLTF
     static void __AddChannel(shared_ptr <GLTFAnimation> cvtAnimation,
                              const std::string &targetID,
                              const std::string &path) {
-        std::string channelID = cvtAnimation->getID() + "_" + targetID + "_" +path + "_channel";
         shared_ptr<JSONObject> trChannel(new JSONObject());
         shared_ptr<JSONObject> trTarget(new JSONObject());
         
         trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
         trChannel->setValue("target", trTarget);
-        trTarget->setString(targetID, path);
-        cvtAnimation->channels()->setValue(channelID, trChannel);
+        trTarget->setString("id", targetID);
+        trTarget->setString("path", path);
+        cvtAnimation->channels()->appendValue(trChannel);
     }
     
     static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
@@ -486,6 +486,7 @@ namespace GLTF
                                           ofstream &animationsOutputStream) {
         //setup
         shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
+        parameter->setCount(cvtAnimation->getCount());
         parameter->setType(parameterType);
         __SetupSamplerForParameter(cvtAnimation, parameter.get());
         
@@ -507,7 +508,7 @@ namespace GLTF
         std::string samplerID;
         std::string name;
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
-        shared_ptr<JSONObject> channels = cvtAnimation->channels();
+        shared_ptr<JSONArray> channels = cvtAnimation->channels();
         size_t keyCount = cvtAnimation->getCount();
         GLTFAnimation::Parameter *timeParameter = cvtAnimation->getParameterNamed("TIME");
         if (timeParameter) {
@@ -689,6 +690,7 @@ namespace GLTF
             inputParameter->setType("FLOAT");
             inputParameter->setBufferView(inputBufferView);
             inputParameter->setByteOffset(0);
+            inputParameter->setCount(cvtAnimation->getCount());
             
             animationParameters->push_back(inputParameter);
             
@@ -1270,7 +1272,7 @@ namespace GLTF
                 parameter->setBufferView(animationsBufferView);
             }
             
-            if (animation->channels()->getAllKeys().size() > 0) {
+            if (animation->channels()->values().size() > 0) {
                 shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
             
                 animationsObject->setValue(animation->getID(), animationObject);
@@ -1293,7 +1295,9 @@ namespace GLTF
         shared_ptr <JSONObject> bufferViewAnimationsObject = serializeBufferView(animationsBufferView.get(), 0);
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
-        bufferViewsObject->setValue(animationsBufferView->getID(), bufferViewAnimationsObject);
+        if (animationsLength > 0) {
+            bufferViewsObject->setValue(animationsBufferView->getID(), bufferViewAnimationsObject);
+        }
         bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
         bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
         

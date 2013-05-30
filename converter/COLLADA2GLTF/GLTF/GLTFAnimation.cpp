@@ -76,12 +76,21 @@ namespace GLTF
     std::string GLTFAnimation::Parameter::getID() {
         return this->_id;
     }
+    
+    size_t GLTFAnimation::Parameter::getCount() {
+        return this->_count;
+    }
+    
+    void GLTFAnimation::Parameter::setCount(size_t count) {
+        this->_count = count;
+    }
+
 
     //-- GLTFAnimation
     
     GLTFAnimation::GLTFAnimation() {
         this->_samplers = shared_ptr<JSONObject> (new JSONObject());
-        this->_channels = shared_ptr<JSONObject> (new JSONObject());
+        this->_channels = shared_ptr<JSONArray> (new JSONArray());
     }
 
     GLTFAnimation::~GLTFAnimation() {}
@@ -150,7 +159,7 @@ namespace GLTF
         return this->_samplers;
     }
 
-    shared_ptr <JSONObject> GLTFAnimation::channels() {
+    shared_ptr <JSONArray> GLTFAnimation::channels() {
         return this->_channels;
     }
 
