@@ -12,11 +12,6 @@
             "byteLength": 44940,
             "byteOffset": 284064,
             "target": "ELEMENT_ARRAY_BUFFER"
-        },
-        "bufferView_333": {
-            "buffer": "wine.bin",
-            "byteLength": 0,
-            "byteOffset": 329004
         }
     },
     "buffers": {

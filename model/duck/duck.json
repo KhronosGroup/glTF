@@ -12,11 +12,6 @@
             "byteLength": 25272,
             "byteOffset": 76768,
             "target": "ELEMENT_ARRAY_BUFFER"
-        },
-        "bufferView_26": {
-            "buffer": "duck.bin",
-            "byteLength": 0,
-            "byteOffset": 102040
         }
     },
     "buffers": {

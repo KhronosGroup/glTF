@@ -12,11 +12,6 @@
             "byteLength": 81816,
             "byteOffset": 390864,
             "target": "ELEMENT_ARRAY_BUFFER"
-        },
-        "bufferView_4090": {
-            "buffer": "SuperMurdoch.bin",
-            "byteLength": 0,
-            "byteOffset": 472680
         }
     },
     "buffers": {

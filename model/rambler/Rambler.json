@@ -12,11 +12,6 @@
             "byteLength": 1197492,
             "byteOffset": 10344480,
             "target": "ELEMENT_ARRAY_BUFFER"
-        },
-        "bufferView_12409": {
-            "buffer": "Rambler.bin",
-            "byteLength": 0,
-            "byteOffset": 11541972
         }
     },
     "buffers": {
