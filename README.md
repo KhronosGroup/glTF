@@ -3,6 +3,11 @@
 _glTF is a draft Specification - may change before Ratification -_  
 Everyone is welcomed to contribute to the code and provide feedback about the specification. 
 
+#### Common setup 
+```
+git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
+```
+
 ## Specification  
 
 _[glTF Specification](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  It is incomplete and subject to change.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
