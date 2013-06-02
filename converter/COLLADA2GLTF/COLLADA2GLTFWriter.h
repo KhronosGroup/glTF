@@ -35,6 +35,7 @@
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
 #include "convert/animationConverter.h"
+#include "convert/meshConverter.h"
 
 namespace GLTF
 {
@@ -43,7 +44,7 @@ namespace GLTF
         
     // -- SceneFlattening
     
-    class MeshFlatteningInfo  
+    class MeshFlatteningInfo
     {
     public:
         MeshFlatteningInfo(unsigned int meshUID, const COLLADABU::Math::Matrix4& worldMatrix) :
@@ -166,10 +167,6 @@ namespace GLTF
         
 	private:
         void registerObjectWithUniqueUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
-        bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                const COLLADAFW::AnimationList::AnimationClass animationClass,
-                                                AnimatedTargetsSharedPtr animatedTargets,
-                            std::ofstream &animationsOutputStream);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,

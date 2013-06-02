@@ -78,6 +78,8 @@ add_executable(collada2gltf main.cpp
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+    convert/meshConverter.cpp
+    convert/meshConverter.h
     convert/animationConverter.cpp
     convert/animationConverter.h)
 
