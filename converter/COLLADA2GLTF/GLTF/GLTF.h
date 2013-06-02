@@ -24,10 +24,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_EXPORT_H__
-#define __JSON_EXPORT_H__
+#ifndef __GLTF_H__
+#define __GLTF_H__
 
-// STL headers
+// system & STL headers
+#include <algorithm>
 #include <stack>
 #include <list>
 #include <map>
@@ -37,6 +38,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include "assert.h"
+
 #ifdef WIN32
 #include <memory>
 #include <unordered_map>

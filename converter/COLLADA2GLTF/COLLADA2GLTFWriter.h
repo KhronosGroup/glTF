@@ -28,93 +28,19 @@
 #define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
-#include "COLLADASaxFWLLoader.h"
-
-#include "COLLADABUStableHeaders.h"
-#include "COLLADABUNativeString.h"
-#include "COLLADABUStringUtils.h"
-
-
-#include "COLLADAFWRoot.h"
-#include "COLLADAFWGeometry.h"
-#include "COLLADAFWCamera.h"
-#include "COLLADAFWMesh.h"
-#include "COLLADAFWMeshVertexData.h"
-#include "COLLADAFWNode.h"
-#include "COLLADAFWVisualScene.h"
-#include "COLLADAFWInstanceGeometry.h"
-#include "COLLADAFWInstanceCamera.h"
-#include "COLLADAFWLookat.h"
-
-#include "COLLADAFWIWriter.h"
-#include "COLLADAFWUniqueId.h"
-#include "COLLADAFWVisualScene.h"
-#include "COLLADAFWLibraryNodes.h"
-#include "COLLADAFWMaterial.h"
-#include "COLLADAFWEffect.h"
-#include "COLLADAFWImage.h"
-#include "COLLADABUURI.h"
-
-#include "COLLADAFWAnimation.h"
-#include "COLLADAFWAnimationCurve.h"
-
-#include "Math/COLLADABUMathMatrix4.h"
-
+#include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
 
-#include "prettywriter.h"	
-#include "filestream.h"
-
-#include <stack>
-#include <list>
-#include <map>
-#include <set>
-#include <string>
-
-#include <iostream>
-
-#include <vector>
-
-#if WIN32
-#include <memory>
-#include <unordered_map>
-#else
-#include <tr1/memory>
-#include <tr1/unordered_map>
-#endif
-
-using namespace COLLADAFW;
-using namespace COLLADABU;
-using namespace COLLADASaxFWL;
-using namespace rapidjson;
-
-using namespace std::tr1;
-using namespace std;
-
+#include "shaders/commonProfileShaders.h"
+#include "helpers/geometryHelpers.h"
+#include "helpers/mathHelpers.h"
+#include "convert/animationConverter.h"
 
 namespace GLTF
 {
     class GLTFObject;
     class ExtraDataHandler;
-    
-    //-- BBOX helper class
         
-    class BBOX
-    {
-    public:
-        BBOX();
-        BBOX(const COLLADABU::Math::Vector3 &min, const COLLADABU::Math::Vector3 &max);
-        
-        void merge(BBOX* bbox);
-        const COLLADABU::Math::Vector3& getMin3();
-        const COLLADABU::Math::Vector3& getMax3();
-        
-        void transform(const COLLADABU::Math::Matrix4& mat4);
-    private:
-        COLLADABU::Math::Vector3 _min;
-        COLLADABU::Math::Vector3 _max;
-    };
-    
     // -- SceneFlattening
     
     class MeshFlatteningInfo  
@@ -132,6 +58,7 @@ namespace GLTF
         unsigned int _meshUID;
     };
     
+    
     typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
         
     typedef struct 
@@ -145,7 +72,7 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs,PrettyWriter <FileStream> *jsonWriter );
+		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs,rapidjson::PrettyWriter <rapidjson::FileStream> *jsonWriter );
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -242,21 +169,21 @@ namespace GLTF
         bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                                                 const COLLADAFW::AnimationList::AnimationClass animationClass,
                                                 AnimatedTargetsSharedPtr animatedTargets,
-                            ofstream &animationsOutputStream);
+                            std::ofstream &animationsOutputStream);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,
                               shared_ptr <GLTFEffect> cvtEffect);
         
 	private:
-        GLTFConverterContext _converterContext;
+        GLTF::GLTFConverterContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
         GLTF::GLTFWriter _writer;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-        ofstream _verticesOutputStream;
-        ofstream _indicesOutputStream;
-        ofstream _animationsOutputStream;
+        std::ofstream _verticesOutputStream;
+        std::ofstream _indicesOutputStream;
+        std::ofstream _animationsOutputStream;
 	};
 } 
 

@@ -64,7 +64,7 @@ namespace GLTF
                 shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
                 unsigned int indexSet = (*meshAttributeIterator).first;
                 GLTF::Semantic semantic = allSemantics[i];
-                std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)meshAttributes->size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
                 

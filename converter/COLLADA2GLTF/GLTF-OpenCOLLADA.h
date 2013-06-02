@@ -1,4 +1,4 @@
-// Copyright (c) Fabrice Robinet
+// Copyright (c) 2013, Fabrice Robinet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,15 +21,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __COLLADA2GLTF_SHADERS__
-#define __COLLADA2GLTF_SHADERS__
+#ifndef __GLTF_OPENCOLLADA_H__
+#define __GLTF_OPENCOLLADA_H__
 
-#define SHADER_STR(Src) #Src
-#define SHADER(Src) SHADER_STR(Src)
+#include "COLLADASaxFWLLoader.h"
+#include "COLLADABUStableHeaders.h"
+#include "COLLADABUNativeString.h"
+#include "COLLADABUStringUtils.h"
+#include "COLLADAFWRoot.h"
+#include "COLLADAFWGeometry.h"
+#include "COLLADAFWCamera.h"
+#include "COLLADAFWMesh.h"
+#include "COLLADAFWMeshVertexData.h"
+#include "COLLADAFWNode.h"
+#include "COLLADAFWVisualScene.h"
+#include "COLLADAFWInstanceGeometry.h"
+#include "COLLADAFWInstanceCamera.h"
+#include "COLLADAFWLookat.h"
+#include "COLLADAFWIWriter.h"
+#include "COLLADAFWUniqueId.h"
+#include "COLLADAFWVisualScene.h"
+#include "COLLADAFWLibraryNodes.h"
+#include "COLLADAFWMaterial.h"
+#include "COLLADAFWEffect.h"
+#include "COLLADAFWImage.h"
+#include "COLLADABUURI.h"
+#include "COLLADAFWAnimation.h"
+#include "COLLADAFWAnimationCurve.h"
+#include "COLLADAFWPolygons.h"
+#include "Math/COLLADABUMathMatrix4.h"
 
-namespace GLTF
-{
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, std::map<std::string , std::string > &texcoordBindings, GLTF::GLTFConverterContext& context);
-};
-
-#endif
+#endif 

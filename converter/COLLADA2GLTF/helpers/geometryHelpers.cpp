@@ -73,7 +73,7 @@ namespace GLTF
         return triangleIndices;
     }
     
-    std::string _KeyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet)
+    std::string keyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet)
     {
         std::string semanticIndexSetKey = "";
         semanticIndexSetKey += "semantic";
@@ -313,7 +313,7 @@ namespace GLTF
     }
     
     
-    shared_ptr <GLTFMesh> CreateUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
+    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
     {
         MeshAttributeVector originalMeshAttributes;
         MeshAttributeVector remappedMeshAttributes;
@@ -346,7 +346,7 @@ namespace GLTF
                 shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
                 unsigned int indexSet = (*meshAttributeIterator).first;
                 GLTF::Semantic semantic = allSemantics[i];
-                std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)originalMeshAttributes.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
         
@@ -370,7 +370,7 @@ namespace GLTF
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
-                std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
             }
@@ -435,7 +435,7 @@ namespace GLTF
             for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
-                std::string semanticIndexSetKey = _KeyWithSemanticAndSet(semantic, indexSet);
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
             }
@@ -548,7 +548,7 @@ namespace GLTF
         }
     }
     
-    bool CreateMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
+    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
     {
         bool splitNeeded = false;
         

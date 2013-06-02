@@ -21,31 +21,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <string>
-#include <algorithm>
-
-#include "COLLADASaxFWLLoader.h"
-
-#include "COLLADABUStableHeaders.h"
-#include "COLLADABUNativeString.h"
-#include "COLLADABUStringUtils.h"
-
-#include "COLLADAFWRoot.h"
-#include "COLLADAFWGeometry.h"
-#include "COLLADAFWCamera.h"
-#include "COLLADAFWMesh.h"
-#include "COLLADAFWMeshVertexData.h"
-#include "COLLADAFWNode.h"
-#include "COLLADAFWVisualScene.h"
-#include "COLLADAFWInstanceGeometry.h"
-#include "COLLADAFWInstanceCamera.h"
-#include "COLLADAFWMaterial.h"
-#include "COLLADAFWEffect.h"
-#include "COLLADAFWImage.h"
-#include "COLLADABUURI.h"
-#include "Math/COLLADABUMathMatrix4.h"
-
 #include "GLTF.h"
+#include "../GLTF-OpenCOLLADA.h"
 
 #include "../GLTFConverterContext.h"
 #include "commonProfileShaders.h"

@@ -28,9 +28,11 @@
 
 #include <iostream>
 
-#include "COLLADA2GLTFWriter.h"
+#include "GLTF.h"
+#include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
-#include "assert.h"
+
+#include "COLLADA2GLTFWriter.h"
 
 #define STDOUT_OUTPUT 0
 
@@ -91,11 +93,11 @@ int main (int argc, char * const argv[]) {
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");
         if (fd) {
-            FileStream s(fd);
+            rapidjson::FileStream s(fd);
 #else
-            FileStream s(stdout);
+            rapidjson::FileStream s(stdout);
 #endif
-            PrettyWriter <FileStream> jsonWriter(s);
+            rapidjson::PrettyWriter <rapidjson::FileStream> jsonWriter(s);
             printf("converting:%s ... as %s \n",converterArgs.inputFilePath.c_str(), converterArgs.outputFilePath.c_str());
             GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterArgs, &jsonWriter);
             writer->write();

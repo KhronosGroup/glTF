@@ -21,15 +21,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __COLLADA2GLTF_SHADERS__
-#define __COLLADA2GLTF_SHADERS__
-
-#define SHADER_STR(Src) #Src
-#define SHADER(Src) SHADER_STR(Src)
+#ifndef __MATH_HELPERS__
+#define __MATH_HELPERS__
 
 namespace GLTF
 {
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> technique, shared_ptr<JSONObject> techniqueExtras, std::map<std::string , std::string > &texcoordBindings, GLTF::GLTFConverterContext& context);
-};
+    //FIXME: add these methods to OpenCOLLADA if needed.
+    void decomposeMatrix(COLLADABU::Math::Matrix4 &matrix, float *translation, float *rotation, float *scale);
+    void buildLookAtMatrix(COLLADAFW::Lookat *lookat, COLLADABU::Math::Matrix4& matrix);
+
+    class BBOX
+    {
+    public:
+        BBOX();
+        BBOX(const COLLADABU::Math::Vector3 &min, const COLLADABU::Math::Vector3 &max);
+        
+        void merge(BBOX* bbox);
+        const COLLADABU::Math::Vector3& getMin3();
+        const COLLADABU::Math::Vector3& getMax3();
+        
+        void transform(const COLLADABU::Math::Matrix4& mat4);
+    private:
+        COLLADABU::Math::Vector3 _min;
+        COLLADABU::Math::Vector3 _max;
+    };
+
+}
 
 #endif

@@ -11,6 +11,8 @@ endif()
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/rapidjson/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
@@ -50,6 +52,7 @@ add_executable(collada2gltf main.cpp
     GLTF/GLTFUtils.cpp
     GLTF/GLTFWriter.cpp
     COLLADA2GLTFWriter.h
+    GLTF-OpenCOLLADA.h
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
     GLTFConverterContext.h
@@ -72,7 +75,11 @@ add_executable(collada2gltf main.cpp
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
     helpers/geometryHelpers.h
-    helpers/geometryHelpers.cpp)
+    helpers/geometryHelpers.cpp
+    helpers/mathHelpers.h
+    helpers/mathHelpers.cpp
+    convert/animationConverter.cpp
+    convert/animationConverter.h)
 
 if (WIN32)
 target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)

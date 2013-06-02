@@ -1,8 +1,6 @@
 #ifndef __GLTFConverterContext__
 #define __GLTFConverterContext__
 
-#include "COLLADAFWUniqueId.h"
-
 namespace GLTF
 {
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
