@@ -649,12 +649,11 @@ namespace GLTF
         this->_converterContext.root->setValue("scenes", scenesObject);
         this->_converterContext.root->setString("scene", "defaultScene");
         
-        sceneObject->setString("node", "root");
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
-        nodesObject->setValue("root", rootObject);
         
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
+        sceneObject->setValue("nodes", childrenArray);
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
             std::string id = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());

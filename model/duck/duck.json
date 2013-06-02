@@ -201,20 +201,17 @@
                 1
             ],
             "name": "directionalLight1"
-        },
-        "root": {
-            "children": [
-                "node_0",
-                "node_1",
-                "node_2"
-            ]
         }
     },
     "profile": "WebGL 1.0",
     "scene": "defaultScene",
     "scenes": {
         "defaultScene": {
-            "node": "root"
+            "nodes": [
+                "node_0",
+                "node_1",
+                "node_2"
+            ]
         }
     },
     "shaders": {

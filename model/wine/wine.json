@@ -11627,19 +11627,16 @@
                 "geometry51"
             ],
             "name": "ID75"
-        },
-        "root": {
-            "children": [
-                "node_0",
-                "node_423"
-            ]
         }
     },
     "profile": "WebGL 1.0",
     "scene": "defaultScene",
     "scenes": {
         "defaultScene": {
-            "node": "root"
+            "nodes": [
+                "node_0",
+                "node_423"
+            ]
         }
     },
     "shaders": {

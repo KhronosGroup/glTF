@@ -43960,18 +43960,15 @@
                 "ID4393"
             ],
             "name": "group_98"
-        },
-        "root": {
-            "children": [
-                "node_0"
-            ]
         }
     },
     "profile": "WebGL 1.0",
     "scene": "defaultScene",
     "scenes": {
         "defaultScene": {
-            "node": "root"
+            "nodes": [
+                "node_0"
+            ]
         }
     },
     "shaders": {

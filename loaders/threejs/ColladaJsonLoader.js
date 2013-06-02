@@ -486,12 +486,14 @@ define( ["../webgl-tf-loader", "helpers/resource-manager"],
         handleScene: {
             value: function(entryID, description, userInfo) {
 
-                if (!description.node) {
-                    console.log("ERROR: invalid file required node property is missing from scene");
+                if (!description.nodes) {
+                    console.log("ERROR: invalid file required nodes property is missing from scene");
                     return false;
                 }
 
-                this.buildNodeHirerachy(description.node, userInfo.rootObj);
+                description.nodes.forEach( function(nodeUID) {
+                    this.buildNodeHirerachy(nodeUID, userInfo.rootObj);
+                }, this);
 
                 /*if (this.delegate) {
                     this.delegate.loadCompleted(scene);
