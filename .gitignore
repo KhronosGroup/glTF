@@ -3,12 +3,12 @@ converter/collada2gltf/CMakeFiles
 converter/collada2gltf/cmake_install.cmake
 converter/collada2gltf/*.vcxproj*
 converter/collada2gltf/*.sln
-converter/collada2gltf/COLLADA2JSON.opensdf
-converter/collada2gltf/COLLADA2JSON.sdf
-converter/collada2gltf/COLLADA2JSON.suo
+converter/collada2gltf/collada2gltf.opensdf
+converter/collada2gltf/collada2gltf.sdf
+converter/collada2gltf/collada2gltf.suo
 converter/collada2gltf/Win32/
 converter/collada2gltf/bin/
-converter/collada2gltf/collada2json.dir/
+converter/collada2gltf/collada2gltf.dir/
 converter/collada2gltf/ipch/
 converter/collada2gltf/lib/
 specification/.project
