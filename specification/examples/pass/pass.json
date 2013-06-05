@@ -5,8 +5,8 @@
 	    	"symbol" : "position",
 	    	"type" : "FLOAT_VEC3"
 		}],
-		"FRAGMENT_SHADER" : "fragmentShader_id",
-		"VERTEX_SHADER" : "vertexShader_id"
+		"fragmentShader" : "fragmentShader_id",
+		"vertexShader" : "vertexShader_id"
     },
     "states" : {
         "depthTestEnable" : true

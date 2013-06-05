@@ -255,7 +255,7 @@ Binary data for geometry and animations is stored in little endian.  This does n
 
 ## Naming
 
-glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis` for the most part.  Camel case is a common naming convention in JSON and WebGL.  The exception is when a name is meant to match the GL name exactly, for example, `VERTEX_SHADER` and `FRAGMENT_SHADER`.
+glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis` for the most part.  Camel case is a common naming convention in JSON and WebGL.
 
 ## Angles
 
