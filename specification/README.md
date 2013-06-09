@@ -932,7 +932,9 @@ _TODO_
 
 Within glTF assets, shaders are always provided.
 This said, shader implementation is up to the glTF adopter.
-Consequently, none of the techniques, semantic (*), attributes are strictly imposed by glTF.
+Consequently, none of the techniques, semantic except `POSITION` and attributes are imposed by glTF.
+Using `POSITION` for attributes to be transformed then projected on screen is required.
+
 
 However, for heavier clients and especially the ones relying on deferred lighting, provided shaders might not be always usable.
 By supporting the following set of parameters and semantics, a client can re-generate the shaders to fit a specific architecture.
@@ -971,8 +973,6 @@ For instance, the diffuse component of the lighting might be a color or a textur
 | `TEXCOORD` | `float`, `vec2`, and `vec3` | Texture coordinate vector. |
 
 [TODO]example:
-
-(*) POSITION might need specific consideration.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="assetvalidation">
@@ -1277,7 +1277,7 @@ _TODO_
 <a name="acknowledgments">
 # Acknowledgments
 
-* Brandon Jones, for the Three.js loader and all his support in the early days of this project.
+* Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
 * Tom Fili, Analytical Graphics, Inc.
 
 <!-- ----------------------------------------------------------------------- -->
