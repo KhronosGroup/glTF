@@ -691,8 +691,8 @@ float specLight = pow(max(0.0,-dot(normal,h)),u_shininess);\n");
         
         pass->setValue("program", program);
         
-        program->setString("VERTEX_SHADER", vs);
-        program->setString("FRAGMENT_SHADER", fs);
+        program->setString("vertexShader", vs);
+        program->setString("fragmentShader", fs);
         
         referenceTechnique->setString("pass", passName);
         

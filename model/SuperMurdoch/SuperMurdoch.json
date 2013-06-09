@@ -14255,8 +14255,6 @@
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "technique1Fs",
-                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -14269,6 +14267,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
+                        "fragmentShader": "technique1Fs",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -14290,7 +14289,8 @@
                                 "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             }
-                        ]
+                        ],
+                        "vertexShader": "technique1Vs"
                     },
                     "states": {
                         "blendEnable": false,
@@ -14307,8 +14307,6 @@
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "technique2Fs",
-                        "VERTEX_SHADER": "technique2Vs",
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -14321,6 +14319,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
+                        "fragmentShader": "technique2Fs",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -14337,7 +14336,8 @@
                                 "symbol": "u_projectionMatrix",
                                 "type": "FLOAT_MAT4"
                             }
-                        ]
+                        ],
+                        "vertexShader": "technique2Vs"
                     },
                     "states": {
                         "blendEnable": false,
@@ -14354,8 +14354,6 @@
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "technique3Fs",
-                        "VERTEX_SHADER": "technique3Vs",
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -14368,6 +14366,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
+                        "fragmentShader": "technique3Fs",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -14394,7 +14393,8 @@
                                 "symbol": "u_transparency",
                                 "type": "FLOAT"
                             }
-                        ]
+                        ],
+                        "vertexShader": "technique3Vs"
                     },
                     "states": {
                         "blendEnable": true,

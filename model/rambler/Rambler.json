@@ -43986,8 +43986,6 @@
             "passes": {
                 "defaultPass": {
                     "program": {
-                        "FRAGMENT_SHADER": "technique1Fs",
-                        "VERTEX_SHADER": "technique1Vs",
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -44000,6 +43998,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
+                        "fragmentShader": "technique1Fs",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -44021,7 +44020,8 @@
                                 "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             }
-                        ]
+                        ],
+                        "vertexShader": "technique1Vs"
                     },
                     "states": {
                         "blendEnable": false,
