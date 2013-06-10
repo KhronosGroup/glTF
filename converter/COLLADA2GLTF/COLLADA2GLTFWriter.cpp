@@ -65,12 +65,13 @@ namespace GLTF
         
         this->_extraDataHandler = new ExtraDataHandler();
 
+        this->_converterContext.shaderIdToShaderString.clear();
+        this->_converterContext._uniqueIDToMeshes.clear();
+
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
          */
-        this->_converterContext.shaderIdToShaderString.clear();
-        this->_converterContext._uniqueIDToMeshes.clear();
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
