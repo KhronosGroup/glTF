@@ -1,0 +1,290 @@
+{
+    "animations": {},
+    "bufferViews": {
+        "bufferView_24": {
+            "buffer": "duck.bin",
+            "byteLength": 76768,
+            "byteOffset": 0,
+            "target": "ARRAY_BUFFER"
+        },
+        "bufferView_25": {
+            "buffer": "duck.bin",
+            "byteLength": 25272,
+            "byteOffset": 76768,
+            "target": "ELEMENT_ARRAY_BUFFER"
+        }
+    },
+    "buffers": {
+        "duck.bin": {
+            "byteLength": 102040,
+            "path": "duck.bin"
+        }
+    },
+    "cameras": {
+        "camera_0": {
+            "aspect_ratio": 1.5,
+            "projection": "perspective",
+            "yfov": 37.8492,
+            "zfar": 10000,
+            "znear": 1
+        }
+    },
+    "images": {
+        "image_0": {
+            "path": "duckCM.png"
+        }
+    },
+    "materials": {
+        "material.0": {
+            "name": "blinn3",
+            "technique": "technique1",
+            "techniques": {
+                "technique1": {
+                    "parameters": {
+                        "diffuse": {
+                            "image": "image_0",
+                            "magFilter": "LINEAR",
+                            "minFilter": "LINEAR_MIPMAP_LINEAR",
+                            "type": "SAMPLER_2D",
+                            "wrapS": "REPEAT",
+                            "wrapT": "REPEAT"
+                        },
+                        "shininess": {
+                            "type": "FLOAT",
+                            "value": 38.4
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "meshes": {
+        "LOD3spShape-lib": {
+            "attributes": {
+                "attribute_18": {
+                    "bufferView": "bufferView_24",
+                    "byteOffset": 0,
+                    "byteStride": 12,
+                    "count": 2399,
+                    "max": [
+                        96.1799,
+                        163.97,
+                        53.9252
+                    ],
+                    "min": [
+                        -69.2985,
+                        9.92937,
+                        -61.3282
+                    ],
+                    "type": "FLOAT_VEC3"
+                },
+                "attribute_20": {
+                    "bufferView": "bufferView_24",
+                    "byteOffset": 28788,
+                    "byteStride": 12,
+                    "count": 2399,
+                    "max": [
+                        0.999599,
+                        0.999581,
+                        0.998436
+                    ],
+                    "min": [
+                        -0.999084,
+                        -1,
+                        -0.999832
+                    ],
+                    "type": "FLOAT_VEC3"
+                },
+                "attribute_22": {
+                    "bufferView": "bufferView_24",
+                    "byteOffset": 57576,
+                    "byteStride": 8,
+                    "count": 2399,
+                    "max": [
+                        0.983346,
+                        0.980037
+                    ],
+                    "min": [
+                        0.026409,
+                        0.019963
+                    ],
+                    "type": "FLOAT_VEC2"
+                }
+            },
+            "name": "LOD3spShape",
+            "primitives": [
+                {
+                    "indices": {
+                        "bufferView": "bufferView_25",
+                        "byteOffset": 0,
+                        "count": 12636,
+                        "type": "UNSIGNED_SHORT"
+                    },
+                    "material": "material.0",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "NORMAL": "attribute_20",
+                        "POSITION": "attribute_18",
+                        "TEXCOORD_0": "attribute_22"
+                    }
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "node_0": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "meshes": [
+                "LOD3spShape-lib"
+            ],
+            "name": "LOD3sp"
+        },
+        "node_1": {
+            "camera": "camera_0",
+            "children": [],
+            "matrix": [
+                -0.728969,
+                0,
+                -0.684547,
+                0,
+                -0.425205,
+                0.783693,
+                0.452797,
+                0,
+                0.536475,
+                0.621148,
+                -0.571288,
+                0,
+                400.113,
+                463.264,
+                -431.078,
+                1
+            ],
+            "name": "camera1"
+        },
+        "node_2": {
+            "children": [],
+            "matrix": [
+                -0.954692,
+                0.218143,
+                -0.202428,
+                0,
+                0.0146721,
+                0.713885,
+                0.700109,
+                0,
+                0.297235,
+                0.665418,
+                -0.684741,
+                0,
+                148.654,
+                183.672,
+                -292.179,
+                1
+            ],
+            "name": "directionalLight1"
+        }
+    },
+    "profile": "WebGL 1.0",
+    "programs": {
+        "program_0": {
+            "fragmentShader": "technique1Fs",
+            "vertexShader": "technique1Vs"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "node_0",
+                "node_1",
+                "node_2"
+            ]
+        }
+    },
+    "shaders": {
+        "technique1Fs": {
+            "path": "technique1Fs.glsl"
+        },
+        "technique1Vs": {
+            "path": "technique1Vs.glsl"
+        }
+    },
+    "techniques": {
+        "technique1": {
+            "parameters": {},
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "instanceProgram": {
+                        "attributes": [
+                            {
+                                "semantic": "NORMAL",
+                                "symbol": "a_normal",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "POSITION",
+                                "symbol": "a_position",
+                                "type": "FLOAT_VEC3"
+                            },
+                            {
+                                "semantic": "TEXCOORD_0",
+                                "symbol": "a_texcoord0",
+                                "type": "FLOAT_VEC2"
+                            }
+                        ],
+                        "program": "program_0",
+                        "uniforms": [
+                            {
+                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                                "symbol": "u_normalMatrix",
+                                "type": "FLOAT_MAT3"
+                            },
+                            {
+                                "semantic": "WORLDVIEW",
+                                "symbol": "u_worldviewMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "semantic": "PROJECTION",
+                                "symbol": "u_projectionMatrix",
+                                "type": "FLOAT_MAT4"
+                            },
+                            {
+                                "parameter": "diffuse",
+                                "symbol": "u_diffuseTexture",
+                                "type": "SAMPLER_2D"
+                            }
+                        ]
+                    },
+                    "states": {
+                        "blendEnable": false,
+                        "cullFaceEnable": true,
+                        "depthMask": true,
+                        "depthTestEnable": true
+                    }
+                }
+            }
+        }
+    },
+    "version": "0.3"
+}
