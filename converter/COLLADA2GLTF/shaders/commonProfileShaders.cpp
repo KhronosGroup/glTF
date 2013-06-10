@@ -438,7 +438,6 @@ namespace GLTF
         }
         
         std::string techniqueID = techniqueHashToTechniqueID[techniqueHash];
-        
         if (techniquesObject->contains(techniqueID))
             return techniqueID;
         
@@ -687,9 +686,15 @@ float specLight = pow(max(0.0,-dot(normal,h)),u_shininess);\n");
         writeShaderIfNeeded(vs, context);
         writeShaderIfNeeded(fs, context);
         
+        shared_ptr <JSONObject> programsObject = context.root->createObjectIfNeeded("programs");
+        std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
+
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
+        shared_ptr <GLTF::JSONObject> instanceProgram(new GLTF::JSONObject());
         
-        pass->setValue("program", program);
+        pass->setValue("instanceProgram", instanceProgram);
+        instanceProgram->setString("program", programID);
+        programsObject->setValue(programID, program);
         
         program->setString("vertexShader", vs);
         program->setString("fragmentShader", fs);
@@ -697,8 +702,8 @@ float specLight = pow(max(0.0,-dot(normal,h)),u_shininess);\n");
         referenceTechnique->setString("pass", passName);
         
         shared_ptr <GLTF::JSONObject> parameters = referenceTechnique->createObjectIfNeeded("parameters");
-        program->setValue("uniforms", uniforms);
-        program->setValue("attributes", attributes);
+        instanceProgram->setValue("uniforms", uniforms);
+        instanceProgram->setValue("attributes", attributes);
         
         shared_ptr <GLTF::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
         

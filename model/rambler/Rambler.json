@@ -43963,6 +43963,12 @@
         }
     },
     "profile": "WebGL 1.0",
+    "programs": {
+        "program_0": {
+            "fragmentShader": "technique1Fs",
+            "vertexShader": "technique1Vs"
+        }
+    },
     "scene": "defaultScene",
     "scenes": {
         "defaultScene": {
@@ -43985,7 +43991,7 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "program": {
+                    "instanceProgram": {
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -43998,7 +44004,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
-                        "fragmentShader": "technique1Fs",
+                        "program": "program_0",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -44020,8 +44026,7 @@
                                 "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             }
-                        ],
-                        "vertexShader": "technique1Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": false,

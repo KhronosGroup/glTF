@@ -11630,6 +11630,20 @@
         }
     },
     "profile": "WebGL 1.0",
+    "programs": {
+        "program_0": {
+            "fragmentShader": "technique1Fs",
+            "vertexShader": "technique1Vs"
+        },
+        "program_1": {
+            "fragmentShader": "technique2Fs",
+            "vertexShader": "technique2Vs"
+        },
+        "program_2": {
+            "fragmentShader": "technique3Fs",
+            "vertexShader": "technique3Vs"
+        }
+    },
     "scene": "defaultScene",
     "scenes": {
         "defaultScene": {
@@ -11665,7 +11679,7 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "program": {
+                    "instanceProgram": {
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -11683,7 +11697,7 @@
                                 "type": "FLOAT_VEC2"
                             }
                         ],
-                        "fragmentShader": "technique1Fs",
+                        "program": "program_0",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -11705,8 +11719,7 @@
                                 "symbol": "u_diffuseTexture",
                                 "type": "SAMPLER_2D"
                             }
-                        ],
-                        "vertexShader": "technique1Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": false,
@@ -11722,7 +11735,7 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "program": {
+                    "instanceProgram": {
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -11735,7 +11748,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
-                        "fragmentShader": "technique2Fs",
+                        "program": "program_1",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -11762,8 +11775,7 @@
                                 "symbol": "u_transparency",
                                 "type": "FLOAT"
                             }
-                        ],
-                        "vertexShader": "technique2Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": true,
@@ -11784,7 +11796,7 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "program": {
+                    "instanceProgram": {
                         "attributes": [
                             {
                                 "semantic": "NORMAL",
@@ -11797,7 +11809,7 @@
                                 "type": "FLOAT_VEC3"
                             }
                         ],
-                        "fragmentShader": "technique3Fs",
+                        "program": "program_2",
                         "uniforms": [
                             {
                                 "semantic": "WORLDVIEWINVERSETRANSPOSE",
@@ -11819,8 +11831,7 @@
                                 "symbol": "u_diffuse",
                                 "type": "FLOAT_VEC3"
                             }
-                        ],
-                        "vertexShader": "technique3Vs"
+                        ]
                     },
                     "states": {
                         "blendEnable": false,
