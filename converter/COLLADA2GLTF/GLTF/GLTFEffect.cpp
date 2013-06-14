@@ -64,14 +64,14 @@ namespace GLTF
         return this->_name;
     }
     
-    void GLTFEffect::setTechnique(shared_ptr <GLTF::JSONObject> technique)
+    void GLTFEffect::setValues(shared_ptr <JSONObject> values)
     {
-        this->_technique = technique;
+        this->_values = values;
     }
     
-    shared_ptr <JSONObject> GLTFEffect::getTechnique()
+    shared_ptr <JSONObject> GLTFEffect::getValues()
     {
-        return this->_technique;
+        return this->_values;
     }
     
     void GLTFEffect::addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic)

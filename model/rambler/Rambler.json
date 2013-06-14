@@ -22,112 +22,100 @@
     },
     "materials": {
         "material.0": {
-            "name": "Color_1",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.776471,
-                                0.776471,
-                                0.776471
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.776471,
+                            0.776471,
+                            0.776471
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "Color_1"
         },
         "material.2": {
-            "name": "Color_007",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.227451,
-                                0.227451,
-                                0.227451
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.227451,
+                            0.227451,
+                            0.227451
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "Color_007"
         },
         "material.4": {
-            "name": "Color_E02",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                0.196078
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            0.196078
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "Color_E02"
         },
         "material.6": {
-            "name": "Color_008",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.117647,
-                                0.117647,
-                                0.117647
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.117647,
+                            0.117647,
+                            0.117647
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "Color_008"
         },
         "material.7": {
-            "name": "material",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "material"
         },
         "material.8": {
-            "name": "material_0",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "material_0"
         }
     },
     "meshes": {
@@ -43965,8 +43953,8 @@
     "profile": "WebGL 1.0",
     "programs": {
         "program_0": {
-            "fragmentShader": "technique1Fs",
-            "vertexShader": "technique1Vs"
+            "fragmentShader": "technique1FS",
+            "vertexShader": "technique1VS"
         }
     },
     "scene": "defaultScene",
@@ -43978,55 +43966,55 @@
         }
     },
     "shaders": {
-        "technique1Fs": {
-            "path": "technique1Fs.glsl"
+        "technique1FS": {
+            "path": "technique1FS.glsl"
         },
-        "technique1Vs": {
-            "path": "technique1Vs.glsl"
+        "technique1VS": {
+            "path": "technique1VS.glsl"
         }
     },
     "techniques": {
         "technique1": {
-            "parameters": {},
+            "parameters": {
+                "diffuse": {
+                    "type": "FLOAT_VEC3"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "instanceProgram": {
-                        "attributes": [
-                            {
-                                "semantic": "NORMAL",
-                                "symbol": "a_normal",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "POSITION",
-                                "symbol": "a_position",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ],
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position"
+                        },
                         "program": "program_0",
-                        "uniforms": [
-                            {
-                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                                "symbol": "u_normalMatrix",
-                                "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_worldviewMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projectionMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuse",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ]
+                        "uniforms": {
+                            "u_diffuse": "diffuse",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
                     },
                     "states": {
                         "blendEnable": false,

@@ -41,138 +41,134 @@
     },
     "materials": {
         "material.2": {
-            "name": "Wood_Cherry_Original_",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.2,
-                                0.2,
-                                0.2
-                            ]
-                        },
-                        "diffuse": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": {
                             "image": "image_1",
                             "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
-                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
                     }
-                }
-            }
+                ]
+            },
+            "name": "Wood_Cherry_Original_"
         },
         "material.3": {
-            "name": "material_5",
-            "technique": "technique2",
-            "techniques": {
-                "technique2": {
-                    "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.2,
-                                0.2,
-                                0.2
-                            ]
-                        },
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.564706,
-                                0.972549,
-                                0.835294
-                            ]
-                        },
-                        "transparency": {
-                            "type": "FLOAT",
-                            "value": 0.14902
-                        }
+            "instanceTechnique": {
+                "technique": "technique2",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.564706,
+                            0.972549,
+                            0.835294
+                        ]
+                    },
+                    {
+                        "parameter": "transparency",
+                        "value": 0.14902
                     }
-                }
-            }
+                ]
+            },
+            "name": "material_5"
         },
         "material.4": {
-            "name": "_2004_old_vine_zinfandel_btl_xlg",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.2,
-                                0.2,
-                                0.2
-                            ]
-                        },
-                        "diffuse": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": {
                             "image": "image_2",
                             "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
-                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
                     }
-                }
-            }
+                ]
+            },
+            "name": "_2004_old_vine_zinfandel_btl_xlg"
         },
         "material.5": {
-            "name": "material",
-            "technique": "technique3",
-            "techniques": {
-                "technique3": {
-                    "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.2,
-                                0.2,
-                                0.2
-                            ]
-                        },
-                        "diffuse": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
+            "instanceTechnique": {
+                "technique": "technique3",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1
+                        ]
                     }
-                }
-            }
+                ]
+            },
+            "name": "material"
         },
         "material.6": {
-            "name": "artezin_bottle",
-            "technique": "technique1",
-            "techniques": {
-                "technique1": {
-                    "parameters": {
-                        "ambient": {
-                            "type": "FLOAT_VEC3",
-                            "value": [
-                                0.2,
-                                0.2,
-                                0.2
-                            ]
-                        },
-                        "diffuse": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": {
                             "image": "image_0",
                             "magFilter": "LINEAR",
                             "minFilter": "LINEAR",
-                            "type": "SAMPLER_2D",
                             "wrapS": "REPEAT",
                             "wrapT": "REPEAT"
                         }
                     }
-                }
-            }
+                ]
+            },
+            "name": "artezin_bottle"
         }
     },
     "meshes": {
@@ -11632,16 +11628,16 @@
     "profile": "WebGL 1.0",
     "programs": {
         "program_0": {
-            "fragmentShader": "technique1Fs",
-            "vertexShader": "technique1Vs"
+            "fragmentShader": "technique1FS",
+            "vertexShader": "technique1VS"
         },
         "program_1": {
-            "fragmentShader": "technique2Fs",
-            "vertexShader": "technique2Vs"
+            "fragmentShader": "technique2FS",
+            "vertexShader": "technique2VS"
         },
         "program_2": {
-            "fragmentShader": "technique3Fs",
-            "vertexShader": "technique3Vs"
+            "fragmentShader": "technique3FS",
+            "vertexShader": "technique3VS"
         }
     },
     "scene": "defaultScene",
@@ -11654,72 +11650,77 @@
         }
     },
     "shaders": {
-        "technique1Fs": {
-            "path": "technique1Fs.glsl"
+        "technique1FS": {
+            "path": "technique1FS.glsl"
         },
-        "technique1Vs": {
-            "path": "technique1Vs.glsl"
+        "technique1VS": {
+            "path": "technique1VS.glsl"
         },
-        "technique2Fs": {
-            "path": "technique2Fs.glsl"
+        "technique2FS": {
+            "path": "technique2FS.glsl"
         },
-        "technique2Vs": {
-            "path": "technique2Vs.glsl"
+        "technique2VS": {
+            "path": "technique2VS.glsl"
         },
-        "technique3Fs": {
-            "path": "technique3Fs.glsl"
+        "technique3FS": {
+            "path": "technique3FS.glsl"
         },
-        "technique3Vs": {
-            "path": "technique3Vs.glsl"
+        "technique3VS": {
+            "path": "technique3VS.glsl"
         }
     },
     "techniques": {
         "technique1": {
-            "parameters": {},
+            "parameters": {
+                "diffuse": {
+                    "type": "SAMPLER_2D"
+                },
+                "diffuseAttrib": {
+                    "semantic": "TEXCOORD_0",
+                    "type": "FLOAT_VEC2"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "texcoord0": {
+                    "semantic": "TEXCOORD_0",
+                    "type": "FLOAT_VEC2"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "instanceProgram": {
-                        "attributes": [
-                            {
-                                "semantic": "NORMAL",
-                                "symbol": "a_normal",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "POSITION",
-                                "symbol": "a_position",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "TEXCOORD_0",
-                                "symbol": "a_texcoord0",
-                                "type": "FLOAT_VEC2"
-                            }
-                        ],
+                        "attributes": {
+                            "a_diffuseAttrib": "diffuseAttrib",
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_texcoord0": "texcoord0"
+                        },
                         "program": "program_0",
-                        "uniforms": [
-                            {
-                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                                "symbol": "u_normalMatrix",
-                                "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_worldviewMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projectionMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuseTexture",
-                                "type": "SAMPLER_2D"
-                            }
-                        ]
+                        "uniforms": {
+                            "u_diffuse": "diffuse",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
                     },
                     "states": {
                         "blendEnable": false,
@@ -11731,51 +11732,50 @@
             }
         },
         "technique2": {
-            "parameters": {},
+            "parameters": {
+                "diffuse": {
+                    "type": "FLOAT_VEC3"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "transparency": {
+                    "type": "FLOAT"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "instanceProgram": {
-                        "attributes": [
-                            {
-                                "semantic": "NORMAL",
-                                "symbol": "a_normal",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "POSITION",
-                                "symbol": "a_position",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ],
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position"
+                        },
                         "program": "program_1",
-                        "uniforms": [
-                            {
-                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                                "symbol": "u_normalMatrix",
-                                "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_worldviewMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projectionMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuse",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "parameter": "transparency",
-                                "symbol": "u_transparency",
-                                "type": "FLOAT"
-                            }
-                        ]
+                        "uniforms": {
+                            "u_diffuse": "diffuse",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_transparency": "transparency",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
                     },
                     "states": {
                         "blendEnable": true,
@@ -11792,46 +11792,46 @@
             }
         },
         "technique3": {
-            "parameters": {},
+            "parameters": {
+                "diffuse": {
+                    "type": "FLOAT_VEC3"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
                     "instanceProgram": {
-                        "attributes": [
-                            {
-                                "semantic": "NORMAL",
-                                "symbol": "a_normal",
-                                "type": "FLOAT_VEC3"
-                            },
-                            {
-                                "semantic": "POSITION",
-                                "symbol": "a_position",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ],
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position"
+                        },
                         "program": "program_2",
-                        "uniforms": [
-                            {
-                                "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                                "symbol": "u_normalMatrix",
-                                "type": "FLOAT_MAT3"
-                            },
-                            {
-                                "semantic": "WORLDVIEW",
-                                "symbol": "u_worldviewMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "semantic": "PROJECTION",
-                                "symbol": "u_projectionMatrix",
-                                "type": "FLOAT_MAT4"
-                            },
-                            {
-                                "parameter": "diffuse",
-                                "symbol": "u_diffuse",
-                                "type": "FLOAT_VEC3"
-                            }
-                        ]
+                        "uniforms": {
+                            "u_diffuse": "diffuse",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
                     },
                     "states": {
                         "blendEnable": false,

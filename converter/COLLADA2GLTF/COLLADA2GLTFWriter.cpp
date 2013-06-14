@@ -554,11 +554,8 @@ namespace GLTF
                                     techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
                                 }
                                 
-
-                                
                                 //generate shaders if needed
-                                shared_ptr<JSONObject> technique = effect->getTechnique();
-                                const std::string& techniqueID = GLTF::getReferenceTechniqueID(technique,
+                                const std::string& techniqueID = GLTF::getReferenceTechniqueID(effect->getValues(),
                                                                                          techniqueExtras,
                                                                                          texcoordBindings,
                                                                                          this->_converterContext);
@@ -790,8 +787,7 @@ namespace GLTF
                                               std::string slotName,
                                               shared_ptr <GLTFEffect> cvtEffect)
     {
-        shared_ptr <JSONObject> technique = cvtEffect->getTechnique();
-        shared_ptr <JSONObject> parameters = technique->getObject("parameters");
+        shared_ptr <JSONObject> values = cvtEffect->getValues();
         
         ColorOrTexture slot;
         
@@ -821,8 +817,7 @@ namespace GLTF
             shared_ptr <JSONObject> slotObject(new JSONObject());
             slotObject->setValue("value", serializeVec3(red,green,blue));
             slotObject->setString("type", "FLOAT_VEC3");
-            
-            parameters->setValue(slotName, slotObject);
+            values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
             
@@ -836,15 +831,17 @@ namespace GLTF
             std::string texcoord = texture.getTexcoord();
             
             cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
-            
-            //FIXME: this is assume SAMPLER_2D
+            shared_ptr <JSONObject> slotObject(new JSONObject());
+
             sampler2D->setString("wrapS", __GetGLWrapMode(sampler->getWrapS()));
             sampler2D->setString("wrapT", __GetGLWrapMode(sampler->getWrapT()));
             sampler2D->setString("minFilter", __GetFilterMode(sampler->getMinFilter()));
             sampler2D->setString("magFilter", __GetFilterMode(sampler->getMagFilter()));
             sampler2D->setString("image", uniqueIdWithType("image",imageUID));
-            sampler2D->setString("type", "SAMPLER_2D");
-            parameters->setValue(slotName, sampler2D);
+            slotObject->setString("type", "SAMPLER_2D");
+            slotObject->setValue("value", sampler2D);
+
+            values->setValue(slotName, slotObject);
         } else {
             // nothing to do, no texture or color
         }
@@ -864,11 +861,9 @@ namespace GLTF
             uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
             
             shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(uniqueId));
-            shared_ptr <JSONObject> technique(new JSONObject());
-            shared_ptr <JSONObject> parameters(new JSONObject());
+            shared_ptr <JSONObject> values(new JSONObject());
             
-            cvtEffect->setTechnique(technique);
-            technique->setValue("parameters", parameters);
+            cvtEffect->setValues(values);
             
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
             
@@ -880,12 +875,9 @@ namespace GLTF
             
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
-                double transparencyValue = this->getTransparency(effectCommon);
-                
-                transparency->setDouble("value", transparencyValue);
+                transparency->setDouble("value", this->getTransparency(effectCommon));
                 transparency->setString("type", "FLOAT");
-                
-                parameters->setValue("transparency", transparency);
+                values->setValue("transparency", transparency);
             }
             
             //should check if has specular first and the lighting model (if not lambert)
@@ -895,9 +887,9 @@ namespace GLTF
                     shininess *= 128.0;
                 }
                 shared_ptr <JSONObject> shininessObject(new JSONObject());
-                shininessObject->setDouble("value", shininess);
                 shininessObject->setString("type", "FLOAT");
-                parameters->setValue("shininess", shininessObject);
+                shininessObject->setDouble("value", shininess);
+                values->setValue("shininesss", shininessObject);
             }
             
             this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;

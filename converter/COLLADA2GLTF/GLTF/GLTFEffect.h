@@ -48,8 +48,8 @@ namespace GLTF
         void setName(const std::string& name);
         const std::string& getName();
 
-        void setTechnique(shared_ptr <GLTF::JSONObject>);
-        shared_ptr <GLTF::JSONObject> getTechnique();
+        void setValues(shared_ptr <JSONObject>);
+        shared_ptr <JSONObject> getValues();
         
         void addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic);
         SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
@@ -58,7 +58,7 @@ namespace GLTF
         std::string _ID;
         std::string _name;
         std::string _techniqueID;
-        shared_ptr <GLTF::JSONObject> _technique;
+        shared_ptr <JSONObject> _values;
         TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
     };
 }
