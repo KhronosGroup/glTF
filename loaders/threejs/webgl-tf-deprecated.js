@@ -56,7 +56,8 @@ var global = window;
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
-        factory(module.exports);
+        module.exports = factory(global);
+        module.exports.WebGLTFLoader = module.exports;
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
@@ -69,24 +70,21 @@ var global = window;
 }(this, function (root) {
     "use strict";
 
-    var categoriesDepsOrder = ["buffers", "bufferViews", "images", "shaders", "programs", "techniques", "materials", "indices", "attributes", "meshes", "cameras", "lights", "nodes", "scenes", "animations"];
+    //to be refined as a tree. in that case, asking for nodes or scenes (most common case) will be fine, but asking for light will trigger unexpected callback (that will be no-op on client side, but could be avoided...)
+    var categoriesDepsOrder = ["buffers", "bufferViews", "images", "shaders", "techniques", "materials", "meshes", "cameras", "lights", "nodes", "scenes"];
 
     var categoryForType = {
         "buffer" : "buffers",
         "bufferView" : "bufferViews",
         "image" : "images",
         "shader" : "shaders",
-        "program" : "programs",
         "technique" : "techniques",
         "material" : "materials",
         "mesh" : "meshes",
         "camera" : "cameras",
         "light" : "lights",
         "node" : "nodes",
-        "scene" : "scenes",
-        "animation" : "animations",
-        "attribute" : "attributes",
-        "indices" : "indices"
+        "scene" : "scenes"
     };
 
     var typeForCategory = {
@@ -94,17 +92,13 @@ var global = window;
         "bufferViews" : "bufferView",
         "images" : "image",
         "shaders" : "shader",
-        "programs" : "program",
         "techniques" : "technique",
         "materials" : "material",
         "meshes" : "mesh",
         "cameras" : "camera",
         "lights" : "light",
         "nodes" : "node",
-        "scenes" : "scene",
-        "animations" : "animation",
-        "indices" : "indices",
-        "attributes" : "attribute"
+        "scenes" : "scene"
     };
 
     var WebGLTFLoader = Object.create(Object.prototype, {
@@ -116,6 +110,7 @@ var global = window;
         SCENE: { value: "scene" },
         NODE: { value: "node" },
         CAMERA: { value: "camera" },
+        VERTEX_ATTRIBUTES: { value: "vertexAttributes" },
         BUFFER : { value: "buffer" },
         IMAGE : { value: "image" },
 
@@ -250,7 +245,6 @@ var global = window;
                     "buffer" : this.handleBuffer,
                     "bufferView" : this.handleBufferView,
                     "shader" : this.handleShader,
-                    "program" : this.handleProgram,
                     "technique" : this.handleTechnique,
                     "material" : this.handleMaterial,
                     "mesh" : this.handleMesh,
@@ -258,10 +252,7 @@ var global = window;
                     "light" : this.handleLight,
                     "node" : this.handleNode,
                     "scene" : this.handleScene,
-                    "image" : this.handleImage,
-                    "animation" : this.handleAnimation,
-                    "indices" : this.handleIndices,
-                    "attribute" : this.handleAttribute
+                    "image" : this.handleImage
                 };
 
                 var success = true;
@@ -275,6 +266,7 @@ var global = window;
 
                     var type = typeForCategory[category];
                     var entryID = keys[categoryState.index];
+
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
                         if (this.handleError) {
