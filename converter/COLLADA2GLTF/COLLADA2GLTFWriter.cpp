@@ -153,6 +153,9 @@ namespace GLTF
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
+        shared_ptr <GLTF::JSONObject> attributes = this->_converterContext.root->createObjectIfNeeded("attributes");
+        shared_ptr <GLTF::JSONObject> indices = this->_converterContext.root->createObjectIfNeeded("indices");
+
         for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
@@ -166,7 +169,7 @@ namespace GLTF
                          */
                         bool shouldSkipMesh = false;
                         PrimitiveVector primitives = mesh->getPrimitives();
-                        for (size_t k = 0 ; k < primitives.size() ; k++) {
+                        for (size_t k = 0 ; ((shouldSkipMesh == false) && (k < primitives.size())) ; k++) {
                             shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[k];
                             if (primitive->getMaterialID().length() == 0)
                                 shouldSkipMesh  = true;
@@ -179,6 +182,40 @@ namespace GLTF
                         buffers[1] = (void*)indicesBufferView.get();
                         
                         shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
+
+                        //serialize attributes
+                        vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
+                        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
+                            GLTF::Semantic semantic = allSemantics[i];
+                            
+                            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
+                            GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
+                            
+                            //FIXME: consider turn this search into a method for mesh
+                            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
+                                //(*it).first;             // the key value (of type Key)
+                                //(*it).second;            // the mapped value (of type T)
+                                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
+                                
+                                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)buffers);
+                                
+                                attributes->setValue(meshAttribute->getID(), meshAttributeObject);
+                            }
+                        }
+                        
+                        //serialize indices
+                        primitives = mesh->getPrimitives();
+                        unsigned int primitivesCount =  (unsigned int)primitives.size();
+                        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
+                            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
+                            shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
+                            
+                            shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)buffers);
+                            indices->setValue(uniqueIndices->getID(), serializedIndices);
+                            
+                        }
+
+                        
                         
                         meshesObject->setValue(mesh->getID(), meshObject);
                     }

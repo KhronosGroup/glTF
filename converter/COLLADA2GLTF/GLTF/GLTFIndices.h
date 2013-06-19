@@ -46,12 +46,14 @@ namespace GLTF
 
         void setByteOffset(size_t byteOffset);
         size_t getByteOffset();
-
+        
+        const std::string& getID();
 
     private:
         size_t _count;
         size_t _byteOffset;
         shared_ptr <GLTFBufferView> _bufferView;
+        std::string _ID;
     };
 }
 

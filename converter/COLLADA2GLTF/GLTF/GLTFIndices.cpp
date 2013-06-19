@@ -34,6 +34,8 @@ namespace GLTF
 
     void GLTFIndices::_indicesCommonInit() 
     {
+        this->_ID = GLTFUtils::generateIDForType("indices");
+        
     }
     
     // this constructor is private and typically won't be called
@@ -51,6 +53,12 @@ namespace GLTF
     GLTFIndices::~GLTFIndices()
     {
     }
+    
+    const std::string& GLTFIndices::getID()
+    {
+        return this->_ID;
+    }
+    
     
     size_t GLTFIndices::getCount()
     {

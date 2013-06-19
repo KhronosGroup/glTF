@@ -129,7 +129,7 @@ namespace GLTF
     {
         this->_count = count;
     }
-        
+ 
     const std::string& GLTFMeshAttribute::getID()
     {
         return this->_ID;

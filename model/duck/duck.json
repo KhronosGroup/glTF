@@ -1,13 +1,64 @@
 {
     "animations": {},
+    "attributes": {
+        "attribute_22": {
+            "bufferView": "bufferView_28",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "count": 2399,
+            "max": [
+                96.1799,
+                163.97,
+                53.9252
+            ],
+            "min": [
+                -69.2985,
+                9.92937,
+                -61.3282
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_24": {
+            "bufferView": "bufferView_28",
+            "byteOffset": 28788,
+            "byteStride": 12,
+            "count": 2399,
+            "max": [
+                0.999599,
+                0.999581,
+                0.998436
+            ],
+            "min": [
+                -0.999084,
+                -1,
+                -0.999832
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_26": {
+            "bufferView": "bufferView_28",
+            "byteOffset": 57576,
+            "byteStride": 8,
+            "count": 2399,
+            "max": [
+                0.983346,
+                0.980037
+            ],
+            "min": [
+                0.026409,
+                0.019963
+            ],
+            "type": "FLOAT_VEC2"
+        }
+    },
     "bufferViews": {
-        "bufferView_24": {
+        "bufferView_28": {
             "buffer": "duck.bin",
             "byteLength": 76768,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
-        "bufferView_25": {
+        "bufferView_29": {
             "buffer": "duck.bin",
             "byteLength": 25272,
             "byteOffset": 76768,
@@ -32,6 +83,14 @@
     "images": {
         "image_0": {
             "path": "duckCM.png"
+        }
+    },
+    "indices": {
+        "indices_20": {
+            "bufferView": "bufferView_29",
+            "byteOffset": 0,
+            "count": 12636,
+            "type": "UNSIGNED_SHORT"
         }
     },
     "materials": {
@@ -60,72 +119,16 @@
     },
     "meshes": {
         "LOD3spShape-lib": {
-            "attributes": {
-                "attribute_18": {
-                    "bufferView": "bufferView_24",
-                    "byteOffset": 0,
-                    "byteStride": 12,
-                    "count": 2399,
-                    "max": [
-                        96.1799,
-                        163.97,
-                        53.9252
-                    ],
-                    "min": [
-                        -69.2985,
-                        9.92937,
-                        -61.3282
-                    ],
-                    "type": "FLOAT_VEC3"
-                },
-                "attribute_20": {
-                    "bufferView": "bufferView_24",
-                    "byteOffset": 28788,
-                    "byteStride": 12,
-                    "count": 2399,
-                    "max": [
-                        0.999599,
-                        0.999581,
-                        0.998436
-                    ],
-                    "min": [
-                        -0.999084,
-                        -1,
-                        -0.999832
-                    ],
-                    "type": "FLOAT_VEC3"
-                },
-                "attribute_22": {
-                    "bufferView": "bufferView_24",
-                    "byteOffset": 57576,
-                    "byteStride": 8,
-                    "count": 2399,
-                    "max": [
-                        0.983346,
-                        0.980037
-                    ],
-                    "min": [
-                        0.026409,
-                        0.019963
-                    ],
-                    "type": "FLOAT_VEC2"
-                }
-            },
             "name": "LOD3spShape",
             "primitives": [
                 {
-                    "indices": {
-                        "bufferView": "bufferView_25",
-                        "byteOffset": 0,
-                        "count": 12636,
-                        "type": "UNSIGNED_SHORT"
-                    },
+                    "indices": "indices_20",
                     "material": "material.0",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_20",
-                        "POSITION": "attribute_18",
-                        "TEXCOORD_0": "attribute_22"
+                        "NORMAL": "attribute_24",
+                        "POSITION": "attribute_22",
+                        "TEXCOORD_0": "attribute_26"
                     }
                 }
             ]

@@ -94,18 +94,10 @@ namespace GLTF
         shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
         meshObject->setValue("primitives", primitivesArray);
         
-        //meshAttributes
-        shared_ptr <GLTF::JSONObject> meshAttributesObject(new GLTF::JSONObject());
-        meshObject->setValue("attributes", meshAttributesObject);
-        
-        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
-        
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
             
             void *primitiveContext[2];
             
@@ -116,26 +108,7 @@ namespace GLTF
             
             primitivesArray->appendValue(primitiveObject);
         }
-        
-        vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
-        for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            GLTF::Semantic semantic = allSemantics[i];
-            
-            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
-            
-            //FIXME: consider turn this search into a method for mesh
-            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
                 
-                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), context);
-                
-                meshAttributesObject->setValue(meshAttribute->getID(), meshAttributeObject);
-            }
-        }
-        
         return meshObject;
     }
     
@@ -219,11 +192,9 @@ namespace GLTF
             semantics->setString(semanticAndSet,
                                      mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
         }
-        
         shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
-        shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), primitiveContext[1]);
-        primitiveObject->setValue("indices", serializedIndices);
-        
+        primitiveObject->setString("indices", uniqueIndices->getID());
+
         return primitiveObject;
     }
     
