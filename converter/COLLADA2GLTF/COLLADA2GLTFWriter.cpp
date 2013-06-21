@@ -61,7 +61,8 @@ namespace GLTF
         ifstream inputVertices;
         ifstream inputIndices;
         ifstream inputAnimations;
-        ofstream verticesOutputStream;
+        ifstream inputCompressedData;
+        ofstream ouputStream;
         
         this->_extraDataHandler = new ExtraDataHandler();
 
@@ -78,16 +79,19 @@ namespace GLTF
         std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
         std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
         std::string sharedAnimationsBufferID = inputURI.getPathFileBase() + "animations" + ".bin";
+        std::string sharedCompressedDataBufferID = inputURI.getPathFileBase() + "compressedData" + ".bin";
         std::string sharedBufferID = inputURI.getPathFileBase() + ".bin";
         std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
         std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
         std::string outputAnimationsFilePath = outputURI.getPathDir() + sharedAnimationsBufferID;
+        std::string outputCompressedDataFilePath = outputURI.getPathDir() + sharedCompressedDataBufferID;
         std::string outputFilePath = outputURI.getPathDir() + sharedBufferID;
         
         this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_animationsOutputStream.open (outputAnimationsFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        verticesOutputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        this->_compressedDataOutputStream.open (outputCompressedDataFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        ouputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
         
         this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
@@ -105,39 +109,50 @@ namespace GLTF
         //reopen .bin files for vertices and indices
         size_t verticesLength = this->_verticesOutputStream.tellp();
         size_t indicesLength = this->_indicesOutputStream.tellp();
+        size_t compressedDataLength = this->_compressedDataOutputStream.tellp();
         size_t animationsLength = this->_animationsOutputStream.tellp();
         
         this->_verticesOutputStream.flush();
         this->_verticesOutputStream.close();
         this->_indicesOutputStream.flush();
         this->_indicesOutputStream.close();
+        this->_compressedDataOutputStream.flush();
+        this->_compressedDataOutputStream.close();
         this->_animationsOutputStream.flush();
         this->_animationsOutputStream.close();
         
         inputVertices.open(outputVerticesFilePath.c_str(), ios::in | ios::binary);
         inputIndices.open(outputIndicesFilePath.c_str(), ios::in | ios::binary);
         inputAnimations.open(outputAnimationsFilePath.c_str(), ios::in | ios::binary);
+        inputCompressedData.open(outputCompressedDataFilePath.c_str(), ios::in | ios::binary);
         
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
-        verticesOutputStream.write(bufferIOStream, verticesLength);
+        ouputStream.write(bufferIOStream, verticesLength);
         free(bufferIOStream);
         bufferIOStream = (char*)malloc(sizeof(char) * indicesLength);
         inputIndices.read(bufferIOStream, indicesLength);
-        verticesOutputStream.write(bufferIOStream, indicesLength);
+        ouputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
         bufferIOStream = (char*)malloc(sizeof(char) * animationsLength);
         inputAnimations.read(bufferIOStream, animationsLength);
-        verticesOutputStream.write(bufferIOStream, animationsLength);
+        ouputStream.write(bufferIOStream, animationsLength);
         free(bufferIOStream);
-        
+
+        bufferIOStream = (char*)malloc(sizeof(char) * compressedDataLength);
+        inputCompressedData.read(bufferIOStream, compressedDataLength);
+        ouputStream.write(bufferIOStream, compressedDataLength);
+        free(bufferIOStream);
+
         inputVertices.close();
         inputIndices.close();
         inputAnimations.close();
+        inputCompressedData.close();
         
         remove(outputIndicesFilePath.c_str());
         remove(outputVerticesFilePath.c_str());
         remove(outputAnimationsFilePath.c_str());
+        remove(outputCompressedDataFilePath.c_str());
         
         //---
         
@@ -146,6 +161,7 @@ namespace GLTF
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
         shared_ptr <GLTFBufferView> animationsBufferView(new GLTFBufferView(sharedBuffer, verticesLength + indicesLength, animationsLength));
+        shared_ptr <GLTFBufferView> compressedDataBufferView(new GLTFBufferView(sharedBuffer, verticesLength + indicesLength + animationsLength, compressedDataLength));
         
         // ----
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
@@ -177,9 +193,10 @@ namespace GLTF
                         if (shouldSkipMesh)
                             continue;
                         
-                        void *buffers[2];
+                        void *buffers[3];
                         buffers[0] = (void*)verticesBufferView.get();
                         buffers[1] = (void*)indicesBufferView.get();
+                        buffers[2] = (void*)compressedDataBufferView.get();
                         
                         shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
 
@@ -212,10 +229,7 @@ namespace GLTF
                             
                             shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)buffers);
                             indices->setValue(uniqueIndices->getID(), serializedIndices);
-                            
                         }
-
-                        
                         
                         meshesObject->setValue(mesh->getID(), meshObject);
                     }
@@ -279,11 +293,16 @@ namespace GLTF
         shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewAnimationsObject = serializeBufferView(animationsBufferView.get(), 0);
+        shared_ptr <JSONObject> bufferViewCompressedDataObject = serializeBufferView(compressedDataBufferView.get(), 0);
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
         if (animationsLength > 0) {
             bufferViewsObject->setValue(animationsBufferView->getID(), bufferViewAnimationsObject);
         }
+        if (compressedDataLength > 0) {
+            bufferViewsObject->setValue(compressedDataBufferView->getID(), bufferViewCompressedDataObject);
+        }
+        
         bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
         bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
         
@@ -297,8 +316,8 @@ namespace GLTF
             processSceneFlatteningInfo(&this->_sceneFlatteningInfo);
         }
         
-        verticesOutputStream.flush();
-        verticesOutputStream.close();
+        ouputStream.flush();
+        ouputStream.close();
         
         delete this->_extraDataHandler;
         
@@ -749,7 +768,7 @@ namespace GLTF
                     if (meshes->size()) {
                         for (size_t i = 0 ; i < meshes->size() ; i++) {
                             if ((*meshes)[i]->getPrimitives().size() > 0) {
-                                (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream);
+                                (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream, this->_compressedDataOutputStream);
                             }
                         }
                     }

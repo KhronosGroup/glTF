@@ -18,6 +18,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 
 if (NOT WIN32)
     find_package(PNG REQUIRED)
@@ -33,6 +34,7 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
+add_subdirectory(dependencies/webgl-loader)
 
 add_executable(collada2gltf main.cpp 
     COLLADA2GLTFWriter.cpp
@@ -84,7 +86,7 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.h)
 
 if (WIN32)
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
+target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static WEBGLLOADER)
 else ()
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} z)
+target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} z WEBGLLOADER)
 endif()

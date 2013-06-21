@@ -47,6 +47,7 @@ namespace GLTF
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->_name = mesh._name;
+        this->_extensions = shared_ptr<JSONObject>(new JSONObject());
     }
     
     shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes()
@@ -106,46 +107,60 @@ namespace GLTF
         return allSemantics;
     }
     
-    std::string GLTFMesh::getID()
-    {
+    std::string GLTFMesh::getID() {
         return _ID;
     }
     
-    void GLTFMesh::setID(std::string ID)
-    {
+    void GLTFMesh::setID(std::string ID) {
         this->_ID = ID;
     }
     
-    std::string GLTFMesh::getName()
-    {        
+    std::string GLTFMesh::getName() {
         return _name;
     }
 
-    void GLTFMesh::setName(std::string name)
-    {
+    void GLTFMesh::setName(std::string name) {
         this->_name = name;
     }
     
-    PrimitiveVector const GLTFMesh::getPrimitives()
-    {
+    PrimitiveVector const GLTFMesh::getPrimitives() {
         return this->_primitives;
     }
+    
+    //TODO: allocate extras lazily
+    shared_ptr<JSONObject> GLTFMesh::getExtensions() {
+        return _extensions;
+    }
+    
+    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& compressedDataOutputStream) {
+
+        if (this->getExtensions()->contains("won-compression")) {
+            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(this->getExtensions()->getValue("won-compression"));
+
+            shared_ptr<GLTFBuffer> buffer = this->getCompressedBuffer();
+            
+            shared_ptr<JSONObject> compressedData(new JSONObject());
+            compressedData->setUnsignedInt32("count", buffer->getByteLength());
+            compressedData->setString("type", "UNSIGNED_BYTE");
+            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(compressedDataOutputStream.tellp()));
+            compressionObject->setValue("compressedData", compressedData);
+            compressedDataOutputStream.write((const char*)buffer->getData(), buffer->getByteLength());
+            
+            //bufferView will be set when the mesh is serialized
+            return true;
+        }
         
-    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
-    {
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
         shared_ptr <MeshAttributeVector> allMeshAttributes = this->meshAttributes();
-        
         shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
-        
+                
         PrimitiveVector primitives = this->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];            
             shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
-            
             /*
                 Convert the indices to unsigned short and write the blob 
              */
@@ -201,6 +216,14 @@ namespace GLTF
         }
                 
         return true;
+    }
+
+    void GLTFMesh::setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer) {
+        this->_compressedBuffer = compressedBuffer;
+    }
+    
+    shared_ptr<GLTFBuffer> GLTFMesh::getCompressedBuffer() {
+        return this->_compressedBuffer;
     }
 
 }

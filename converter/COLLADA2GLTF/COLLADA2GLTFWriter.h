@@ -181,6 +181,7 @@ namespace GLTF
         std::ofstream _verticesOutputStream;
         std::ofstream _indicesOutputStream;
         std::ofstream _animationsOutputStream;
+        std::ofstream _compressedDataOutputStream;
 	};
 } 
 

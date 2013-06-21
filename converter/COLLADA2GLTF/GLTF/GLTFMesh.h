@@ -58,14 +58,21 @@ namespace GLTF
         std::string getName();
         void setName(std::string name);
         
+        shared_ptr<JSONObject> getExtensions();
+        
         PrimitiveVector const getPrimitives();
 
-        bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
+        bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& compressedDataOutputStream);
+        
+        void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
+        shared_ptr<GLTFBuffer> getCompressedBuffer();
         
     private:
         PrimitiveVector _primitives;
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID, _name;
+        shared_ptr<JSONObject> _extensions;
+        shared_ptr<GLTFBuffer> _compressedBuffer;
     };    
 
 }

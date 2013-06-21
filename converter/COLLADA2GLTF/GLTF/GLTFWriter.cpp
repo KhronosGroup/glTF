@@ -108,7 +108,20 @@ namespace GLTF
             
             primitivesArray->appendValue(primitiveObject);
         }
+        
+        if (mesh->getExtensions()->getKeysCount() > 0) {
+            meshObject->setValue("extensions", mesh->getExtensions());
+            if (mesh->getExtensions()->contains("won-compression")) {
+                shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("won-compression"));
+                if (compressionObject->contains("compressedData")) {
+                    shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
+                    GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[2];
+                    compressionData->setString("bufferView", bufferView->getID());
+                }
                 
+            }
+        }
+        
         return meshObject;
     }
     
@@ -126,6 +139,8 @@ namespace GLTF
         GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : meshAttribute->getBufferView().get();
 
         meshAttributeObject->setString("bufferView", bufferView->getID());
+        
+        
         
         const double* min = meshAttribute->getMin();
         if (min) {

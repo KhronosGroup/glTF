@@ -571,9 +571,9 @@ namespace GLTF
             std::string shaderName = techniqueID;
             
             GLSLProgram* program = _pass.instanceProgram();
-            program->setName(shaderName);
             GLSLShader* vertexShader = program->vertexShader();
             GLSLShader* fragmentShader = program->fragmentShader();
+            program->setName(shaderName);
 
             //position attribute
             addSemantic("vs", "attribute",
@@ -722,8 +722,8 @@ namespace GLTF
 
                     fragmentShader->appendCode("%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
                 }
-                
             }
+            
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
