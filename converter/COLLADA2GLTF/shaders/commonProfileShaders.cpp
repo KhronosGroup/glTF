@@ -735,7 +735,7 @@ namespace GLTF
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
             }
             
-            if (slotIsContributingToLighting("specular", inputParameters)) {
+            if (!useSimpleLambert) {
                 fragmentShader->appendCode("color.xyz += specular.xyz * specLight;\n");
             }
             
