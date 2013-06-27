@@ -26,6 +26,8 @@
 
 //find . -name '*.dae' -exec dae2json {} \;
 
+#import <getopt.h>
+
 #include <iostream>
 
 #include "GLTF.h"
@@ -35,61 +37,113 @@
 #include "COLLADA2GLTFWriter.h"
 
 #define STDOUT_OUTPUT 0
+#define OPTIONS_COUNT 5
 
-enum ArgsState
-{
-    PARSE_INPUT_FILE_ARG = 0,
-    PARSE_OUTPUT_FILE_ARG,
-    PARSE_STATES_END
+typedef struct {
+    const char* name;
+    int has_arg;
+    const char* help;
+} OptionDescriptor;
+
+option* opt_options;
+std::string helpMessage = "";
+
+static const OptionDescriptor options[] = {
+	{ "f",				required_argument,  "-f -> path of input file, argument [string]" },
+	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
+	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
+	{ "i",              no_argument,        "-i -> invert-transparency, argument [bool], default:false" },
+	{ "h",              no_argument,        "-h -> help" }
 };
 
-void usage(char* prog)
-{
-	fprintf(stderr,"\nUSAGE: %s [COLLADA inputFile] [options] \n", prog);
+static void buildOptions() {
+    helpMessage += "*COLLADA2GLTF V 0.1*\n\n";
+    helpMessage += "usage: collada2gltlf -f [file] [options]\n";
+    helpMessage += "options:\n";
+    
+    opt_options = (option*)malloc(sizeof(option) * OPTIONS_COUNT);
+    
+    for (size_t i = 0 ; i < OPTIONS_COUNT ; i++) {
+        opt_options[i].flag = 0;
+        opt_options[i].val = 'f';
+        opt_options[i].name = options[i].name;
+        opt_options[i].has_arg = options[i].has_arg;
+        
+        helpMessage += options[i].help;
+        helpMessage += "\n";
+    }
 }
 
-static std::string __ReplacePathExtensionWithJSON(const std::string& inputFile)
+static void dumpHelpMessage() {
+    printf("%s\n", helpMessage.c_str());
+}
+
+static std::string replacePathExtensionWithJSON(const std::string& inputFile)
 {
     COLLADABU::URI inputFileURI(inputFile.c_str());
     
     std::string pathDir = inputFileURI.getPathDir();
-    
     std::string fileBase = inputFileURI.getPathFileBase();
     
     return pathDir + fileBase + ".json";
 }
 
-static bool __SetupCOLLADA2GLTFContext(int argc, char * const argv[], GLTF::GLTFConverterContext *converterArgs)
-{
-    assert(converterArgs);
-        
-    if (argc < 2) {
-		fprintf(stderr, "%s: missing arguments\n", argv[0]);
-		usage(argv[0]);
-		exit(1);
+static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContext *converterArgs) {
+	int ch;
+    std::string file;
+    std::string output;
+    converterArgs->invertTransparency = false;
+    converterArgs->exportAnimations = true;
+    bool hasOutputPath = false;
+    bool hasInputPath = false;
+ 
+    buildOptions();
+    
+    if (argc == 2) {
+        converterArgs->inputFilePath = argv[1];
+        converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
+        return true;
+    }
+    
+    while ((ch = getopt_long(argc, argv, "f:o:a:ih", opt_options, 0)) != -1) {
+        switch (ch) {
+            case 'h':
+                return false;
+            case 'f':
+                converterArgs->inputFilePath = optarg;
+                hasInputPath = true;
+				break;
+            case 'o':
+                converterArgs->outputFilePath = replacePathExtensionWithJSON(optarg);
+                hasOutputPath = true;
+				break;
+            case 'i':
+                converterArgs->invertTransparency = true;
+                break;
+            case 'a':
+                //converterArgs->exportAnimations = true;
+                break;
+			case 0:
+				break;
+		}
+	}
+    
+    if (!hasInputPath) {
+        dumpHelpMessage();
         return false;
     }
-    converterArgs->invertTransparency = false;
     
-    converterArgs->inputFilePath = argv[1];
-    converterArgs->outputFilePath = __ReplacePathExtensionWithJSON(converterArgs->inputFilePath);
-    
-    if (argc > 2) {
-        if (strcmp(argv[2], "-i") == 0) {
-            converterArgs->invertTransparency = true;
-            printf("[option] invert transparency: on\n");
-        }
+    if (!hasOutputPath) {
+        converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
     }
-    
+        
     return true;
 }
-
 
 int main (int argc, char * const argv[]) {
     GLTF::GLTFConverterContext converterArgs;
     
-    printf("COLLADA2GLTF [pre-alpha] 0.2\n");
-    if (__SetupCOLLADA2GLTFContext( argc, argv, &converterArgs)) {
+    if (processArgs(argc, argv, &converterArgs)) {
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");
         if (fd) {
@@ -105,7 +159,7 @@ int main (int argc, char * const argv[]) {
 #if !STDOUT_OUTPUT
             fclose(fd);
             delete writer;
-        }   
+        }
 #endif
     }
     return 0;
