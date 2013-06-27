@@ -78,7 +78,7 @@ namespace GLTF
         std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
         std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
         std::string sharedAnimationsBufferID = inputURI.getPathFileBase() + "animations" + ".bin";
-        std::string sharedBufferID = inputURI.getPathFileBase() + ".bin";
+        std::string sharedBufferID = outputURI.getPathFileBase() + ".bin";
         std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
         std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
         std::string outputAnimationsFilePath = outputURI.getPathDir() + sharedAnimationsBufferID;
