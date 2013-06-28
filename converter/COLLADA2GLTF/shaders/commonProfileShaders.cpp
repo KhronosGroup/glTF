@@ -850,11 +850,18 @@ namespace GLTF
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
         
-        context.shaderIdToShaderString[vs->getName()] = vs->source();
-        context.shaderIdToShaderString[fs->getName()] = fs->source();
         
-        writeShaderIfNeeded(glTFProgram->vertexShader()->getName(), context);
-        writeShaderIfNeeded(glTFProgram->fragmentShader()->getName(), context);
+        //create shader name made of the input file name to avoid file name conflicts
+        COLLADABU::URI outputFileURI(context.outputFilePath.c_str());
+        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(context.shaderIdToShaderString.size());
+        std::string shaderFS = shaderBaseId + "FS";
+        std::string shaderVS = shaderBaseId + "VS";
+        
+        context.shaderIdToShaderString[shaderVS] = vs->source();
+        context.shaderIdToShaderString[shaderFS] = fs->source();
+        
+        writeShaderIfNeeded(shaderVS, context);
+        writeShaderIfNeeded(shaderFS, context);
         
         shared_ptr <JSONObject> programsObject = context.root->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
@@ -867,8 +874,8 @@ namespace GLTF
         instanceProgram->setString("program", programID);
         programsObject->setValue(programID, program);
         
-        program->setString("vertexShader", vs->getName());
-        program->setString("fragmentShader", fs->getName());
+        program->setString("vertexShader", shaderVS);
+        program->setString("fragmentShader", shaderFS);
         
         shared_ptr<JSONObject> referenceTechnique(new JSONObject());
         
