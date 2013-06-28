@@ -469,6 +469,50 @@ namespace GLTF
             return &_instanceProgram;
         }
         
+        shared_ptr <JSONObject> getDetails(const std::string &lightingModel,
+                                           shared_ptr<JSONObject> values,
+                                           shared_ptr<JSONObject> techniqueExtras,
+                                           std::map<std::string , std::string > &texcoordBindings,
+                                           GLTFConverterContext& context) {
+            shared_ptr <JSONObject> details(new JSONObject());
+            
+            shared_ptr <JSONObject> commonProfile = details->createObjectIfNeeded("commonProfile");
+            shared_ptr <JSONObject> extras = commonProfile->createObjectIfNeeded("extras");
+            
+            details->setString("type", "COLLADA-1.4.1/commonProfile");
+            
+            shared_ptr <JSONObject> uniforms = _instanceProgram.uniforms();
+            vector <std::string> keys = uniforms->getAllKeys();
+            for (size_t i = 0 ; i < keys.size() ; i++) {
+                std::string parameter = uniforms->getString(keys[i]);
+                if ((parameter == "diffuse") ||
+                    (parameter == "ambient") ||
+                    (parameter == "specular") ||
+                    (parameter == "normal") ||
+                    (parameter == "reflective") ||
+                    (parameter == "transparency")) {
+                    commonProfile->setString(parameter, parameter);
+                }
+            }
+            
+            commonProfile->setString("lightingModel", lightingModel);
+            
+            extras->setBool("doubleSided", techniqueExtras->getBool("double_sided"));
+            
+            if (texcoordBindings.size() > 0) {
+                std::map<std::string , std::string >::const_iterator texcoordIterator;
+                shared_ptr <JSONObject> texcoordBindingsObject = commonProfile->createObjectIfNeeded("texcoordBindings");
+                
+                for (texcoordIterator = texcoordBindings.begin() ; texcoordIterator != texcoordBindings.end() ; texcoordIterator++) {
+                    std::string key = (*texcoordIterator).first;
+                    std::string texcoord = texcoordBindings[key];
+                    texcoordBindingsObject->setString(key, texcoord);
+                }
+            }
+            
+            return details;
+        }
+        
     private:
         GLSLProgram _instanceProgram;
         shared_ptr <JSONObject> states;
@@ -553,7 +597,8 @@ namespace GLTF
             }
         }
         
-        Technique(std::string techniqueID,
+        Technique(const std::string &lightingModel,
+                  std::string techniqueID,
                   shared_ptr<JSONObject> values,
                   shared_ptr<JSONObject> techniqueExtras,
                   std::map<std::string , std::string > &texcoordBindings,
@@ -769,7 +814,8 @@ namespace GLTF
         
     };
     
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> values,
+    std::string getReferenceTechniqueID(const std::string &lightingModel,
+                                        shared_ptr<JSONObject> values,
                                         shared_ptr<JSONObject> techniqueExtras,
                                         std::map<std::string , std::string > &texcoordBindings,
                                         GLTFConverterContext& context) {
@@ -787,7 +833,7 @@ namespace GLTF
         if (techniquesObject->contains(techniqueID))
             return techniqueID;
         
-        GLTF::Technique glTFTechnique(techniqueID, values, techniqueExtras, texcoordBindings, context);
+        GLTF::Technique glTFTechnique(lightingModel, techniqueID, values, techniqueExtras, texcoordBindings, context);
         GLTF::Pass *glTFPass = glTFTechnique.getPass();
         
         std::string passName("defaultPass");
@@ -801,7 +847,6 @@ namespace GLTF
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
         
-        
         context.shaderIdToShaderString[vs->getName()] = vs->source();
         context.shaderIdToShaderString[fs->getName()] = fs->source();
         
@@ -810,7 +855,6 @@ namespace GLTF
         
         shared_ptr <JSONObject> programsObject = context.root->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
-
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> instanceProgram(new GLTF::JSONObject());
         
@@ -826,14 +870,18 @@ namespace GLTF
         shared_ptr<JSONObject> referenceTechnique(new JSONObject());
         
         referenceTechnique->setValue("parameters", glTFTechnique.parameters());
-        
         referenceTechnique->setString("pass", passName);
-        
         
         shared_ptr <GLTF::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
         
         passes->setValue(passName, pass);
         techniquesObject->setValue(techniqueID, referenceTechnique);
+        
+        if (context.exportPassDetails) {
+            shared_ptr <JSONObject> details = glTFPass->getDetails(lightingModel, values, techniqueExtras, texcoordBindings, context);
+            pass->setValue("details", details);
+        }
+        
         return techniqueID;
     }    
 }

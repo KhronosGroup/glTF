@@ -53,6 +53,7 @@ static const OptionDescriptor options[] = {
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
 	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
 	{ "i",              no_argument,        "-i -> invert-transparency, argument [bool], default:false" },
+	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "h",              no_argument,        "-h -> help" }
 };
 
@@ -92,11 +93,13 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
 	int ch;
     std::string file;
     std::string output;
-    converterArgs->invertTransparency = false;
-    converterArgs->exportAnimations = true;
     bool hasOutputPath = false;
     bool hasInputPath = false;
- 
+
+    converterArgs->invertTransparency = false;
+    converterArgs->exportAnimations = true;
+    converterArgs->exportPassDetails = false;
+
     buildOptions();
     
     if (argc == 2) {
@@ -105,9 +108,10 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
         return true;
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:ih", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "f:o:a:ihd", opt_options, 0)) != -1) {
         switch (ch) {
             case 'h':
+                dumpHelpMessage();
                 return false;
             case 'f':
                 converterArgs->inputFilePath = optarg;
@@ -123,6 +127,11 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
             case 'a':
                 //converterArgs->exportAnimations = true;
                 break;
+            case 'd':
+                converterArgs->exportPassDetails = true;
+                printf("[option] export pass details\n");
+                break;
+                
 			case 0:
 				break;
 		}

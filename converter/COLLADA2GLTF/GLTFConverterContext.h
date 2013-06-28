@@ -25,6 +25,7 @@ namespace GLTF
         std::string outputFilePath;
         bool invertTransparency;
         bool exportAnimations;
+        bool exportPassDetails;
         
         //TODO: add options here
         shared_ptr <GLTF::JSONObject> root;

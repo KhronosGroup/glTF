@@ -592,10 +592,11 @@ namespace GLTF
                                 }
                                 
                                 //generate shaders if needed
-                                const std::string& techniqueID = GLTF::getReferenceTechniqueID(effect->getValues(),
-                                                                                         techniqueExtras,
-                                                                                         texcoordBindings,
-                                                                                         this->_converterContext);
+                                const std::string& techniqueID = GLTF::getReferenceTechniqueID(effect->getLightingModel(),
+                                                                                               effect->getValues(),
+                                                                                               techniqueExtras,
+                                                                                               texcoordBindings,
+                                                                                               this->_converterContext);
                                 
                                 effect->setTechniqueID(techniqueID);
                                 effect->setName(materialName);
@@ -903,6 +904,23 @@ namespace GLTF
             cvtEffect->setValues(values);
             
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
+            
+            switch (effectCommon->getShaderType()) {
+                case COLLADAFW::EffectCommon::SHADER_BLINN:
+                    cvtEffect->setLightingModel("Blinn");
+                    break;
+                case COLLADAFW::EffectCommon::SHADER_CONSTANT:
+                    cvtEffect->setLightingModel("Constant");
+                    break;
+                case COLLADAFW::EffectCommon::SHADER_PHONG:
+                    cvtEffect->setLightingModel("Phong");
+                    break;
+                case COLLADAFW::EffectCommon::SHADER_LAMBERT:
+                    cvtEffect->setLightingModel("Lambert");
+                    break;
+                default:
+                    break;
+            }
             
             handleEffectSlot(effectCommon,"diffuse" , cvtEffect);
             handleEffectSlot(effectCommon,"ambient" , cvtEffect);
