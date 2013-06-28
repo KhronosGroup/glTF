@@ -31,51 +31,49 @@ using namespace rapidjson;
 namespace GLTF
 {
     GLTFEffect::GLTFEffect(const std::string& ID):
-    _ID(ID)
-    {
+    _ID(ID) {
     }
 
-    GLTFEffect::~GLTFEffect()
-    {
+    GLTFEffect::~GLTFEffect() {
     }
                         
-    const std::string& GLTFEffect::getID()
-    {
+    const std::string& GLTFEffect::getID() {
         return this->_ID;
     }
     
-    void GLTFEffect::setTechniqueID(const std::string& techniqueID)
-    {
+    void GLTFEffect::setTechniqueID(const std::string& techniqueID) {
         this->_techniqueID = techniqueID;
     }
     
-    const std::string& GLTFEffect::getTechniqueID()
-    {
+    const std::string& GLTFEffect::getTechniqueID() {
         return this->_techniqueID;
     }
     
-    void GLTFEffect::setName(const std::string& name)
-    {
+    void GLTFEffect::setName(const std::string& name) {
         this->_name = name;
     }
     
-    const std::string& GLTFEffect::getName()
-    {
+    const std::string& GLTFEffect::getName() {
         return this->_name;
     }
     
-    void GLTFEffect::setValues(shared_ptr <JSONObject> values)
-    {
+    void GLTFEffect::setValues(shared_ptr <JSONObject> values) {
         this->_values = values;
     }
     
-    shared_ptr <JSONObject> GLTFEffect::getValues()
-    {
+    shared_ptr <JSONObject> GLTFEffect::getValues() {
         return this->_values;
     }
     
-    void GLTFEffect::addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic)
-    {
+    void GLTFEffect::setLightingModel(const std::string& lightingModel) {
+        this->_lightingModel = lightingModel;
+    }
+    
+    const std::string& GLTFEffect::getLightingModel() {
+        return this->_lightingModel;
+    }
+    
+    void GLTFEffect::addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic) {
         shared_ptr <SemanticArray> semanticArrayPtr;
         if (this->_texcoordToSemantics.count(texcoord) == 0) {
             semanticArrayPtr =  shared_ptr<SemanticArray> (new SemanticArray());
@@ -87,8 +85,7 @@ namespace GLTF
         semanticArrayPtr->push_back(semantic);
     }
     
-    SemanticArrayPtr GLTFEffect::getSemanticsForTexcoordName(const std::string &texcoord)
-    {
+    SemanticArrayPtr GLTFEffect::getSemanticsForTexcoordName(const std::string &texcoord) {
         return this->_texcoordToSemantics[texcoord];
     }
 

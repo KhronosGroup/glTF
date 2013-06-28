@@ -47,6 +47,9 @@ namespace GLTF
 
         void setName(const std::string& name);
         const std::string& getName();
+        
+        void setLightingModel(const std::string& lightingModel);
+        const std::string& getLightingModel();
 
         void setValues(shared_ptr <JSONObject>);
         shared_ptr <JSONObject> getValues();
@@ -57,6 +60,7 @@ namespace GLTF
     private:
         std::string _ID;
         std::string _name;
+        std::string _lightingModel;
         std::string _techniqueID;
         shared_ptr <JSONObject> _values;
         TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
