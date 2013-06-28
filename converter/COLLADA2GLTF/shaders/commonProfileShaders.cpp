@@ -481,6 +481,8 @@ namespace GLTF
             
             details->setString("type", "COLLADA-1.4.1/commonProfile");
             
+            shared_ptr<JSONArray> parameters(new JSONArray());
+            
             shared_ptr <JSONObject> uniforms = _instanceProgram.uniforms();
             vector <std::string> keys = uniforms->getAllKeys();
             for (size_t i = 0 ; i < keys.size() ; i++) {
@@ -491,9 +493,10 @@ namespace GLTF
                     (parameter == "normal") ||
                     (parameter == "reflective") ||
                     (parameter == "transparency")) {
-                    commonProfile->setString(parameter, parameter);
+                    parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
                 }
             }
+            commonProfile->setValue("parameters", parameters);
             
             commonProfile->setString("lightingModel", lightingModel);
             
