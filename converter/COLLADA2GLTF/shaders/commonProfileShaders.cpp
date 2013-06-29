@@ -280,8 +280,9 @@ namespace GLTF
                 COLLADABU::URI outputURI(context.outputFilePath);
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
-                
-                printf("[shader]: %s\n", shaderPath.c_str());
+                if (!context.outputProgress) {
+                    printf("[shader]: %s\n", shaderPath.c_str());
+                }
             }
         }
         

@@ -26,6 +26,7 @@ namespace GLTF
         bool invertTransparency;
         bool exportAnimations;
         bool exportPassDetails;
+        bool outputProgress;
         
         //TODO: add options here
         shared_ptr <GLTF::JSONObject> root;

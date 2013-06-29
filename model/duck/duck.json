@@ -224,11 +224,11 @@
         }
     },
     "shaders": {
-        "technique1FS": {
-            "path": "technique1FS.glsl"
+        "duck0FS": {
+            "path": "duck0FS.glsl"
         },
-        "technique1VS": {
-            "path": "technique1VS.glsl"
+        "duck0VS": {
+            "path": "duck0VS.glsl"
         }
     },
     "techniques": {
@@ -269,21 +269,6 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Blinn",
-                            "parameters": [
-                                "diffuse"
-                            ],
-                            "texcoordBindings": {
-                                "diffuse": "TEXCOORD_0"
-                            }
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_diffuseAttrib": "diffuseAttrib",

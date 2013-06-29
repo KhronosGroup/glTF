@@ -95,8 +95,11 @@ namespace GLTF
         
         this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
-        this->_converterContext.root->setString("version", "0.3");
         this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
+        
+        shared_ptr<JSONObject> asset = this->_converterContext.root->createObjectIfNeeded("asset");
+        std::string version = "collada2gltf "+std::string(CONVERTER_VERSION);
+        asset->setString("generator",version);
         
         COLLADASaxFWL::Loader loader;
 		COLLADAFW::Root root(&loader, this);

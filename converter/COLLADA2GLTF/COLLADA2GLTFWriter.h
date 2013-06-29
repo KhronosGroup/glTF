@@ -27,6 +27,8 @@
 #ifndef __COLLADA2JSONWRITER_H__
 #define __COLLADA2JSONWRITER_H__
 
+#define CONVERTER_VERSION "0.1.0"
+
 #include "GLTF.h"
 #include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
