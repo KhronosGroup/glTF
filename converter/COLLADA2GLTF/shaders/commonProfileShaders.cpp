@@ -749,8 +749,6 @@ namespace GLTF
                             texSymbol = texcoordAttributeSymbol + GLTFUtils::toString(declaredTexcoordAttributes.size());
                             texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
                             
-                            addSemantic("vs", "attribute", semantic, slot+"Attrib", true);
-                            
                             addSemantic("vs", "attribute",
                                         semantic, "texcoord" + GLTFUtils::toString(declaredTexcoordAttributes.size()), false);
                             program->addVarying(texVSymbol, typeForSemanticAttribute(semantic));
