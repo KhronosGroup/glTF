@@ -37,7 +37,7 @@
 #include "COLLADA2GLTFWriter.h"
 
 #define STDOUT_OUTPUT 0
-#define OPTIONS_COUNT 5
+#define OPTIONS_COUNT 7
 
 typedef struct {
     const char* name;
@@ -52,13 +52,14 @@ static const OptionDescriptor options[] = {
 	{ "f",				required_argument,  "-f -> path of input file, argument [string]" },
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
 	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
-	{ "i",              no_argument,        "-i -> invert-transparency, argument [bool], default:false" },
+	{ "i",              no_argument,        "-i -> invert-transparency" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
+	{ "p",              no_argument,        "-p -> output progress" },
 	{ "h",              no_argument,        "-h -> help" }
 };
 
 static void buildOptions() {
-    helpMessage += "*COLLADA2GLTF V 0.1*\n\n";
+    helpMessage += "*COLLADA2GLTF V"+std::string(CONVERTER_VERSION)+"*\n\n";
     helpMessage += "usage: collada2gltlf -f [file] [options]\n";
     helpMessage += "options:\n";
     
@@ -99,7 +100,8 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     converterArgs->invertTransparency = false;
     converterArgs->exportAnimations = true;
     converterArgs->exportPassDetails = false;
-
+    converterArgs->outputProgress = false;
+    
     buildOptions();
     
     if (argc == 2) {
@@ -108,7 +110,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
         return true;
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:ihd", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "f:o:a:ihdp", opt_options, 0)) != -1) {
         switch (ch) {
             case 'h':
                 dumpHelpMessage();
@@ -123,6 +125,9 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
 				break;
             case 'i':
                 converterArgs->invertTransparency = true;
+                break;
+            case 'p':
+                converterArgs->outputProgress = true;
                 break;
             case 'a':
                 //converterArgs->exportAnimations = true;
@@ -150,21 +155,31 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
 }
 
 int main (int argc, char * const argv[]) {
-    GLTF::GLTFConverterContext converterArgs;
+    GLTF::GLTFConverterContext converterContext;
     
-    if (processArgs(argc, argv, &converterArgs)) {
+    if (processArgs(argc, argv, &converterContext)) {
 #if !STDOUT_OUTPUT
-        FILE* fd = fopen(converterArgs.outputFilePath.c_str(), "w");
+        FILE* fd = fopen(converterContext.outputFilePath.c_str(), "w");
         if (fd) {
             rapidjson::FileStream s(fd);
 #else
             rapidjson::FileStream s(stdout);
 #endif
             rapidjson::PrettyWriter <rapidjson::FileStream> jsonWriter(s);
-            printf("converting:%s ... as %s \n",converterArgs.inputFilePath.c_str(), converterArgs.outputFilePath.c_str());
-            GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterArgs, &jsonWriter);
+            if (converterContext.outputProgress) {
+                printf("convertion 0%%");
+                printf("\n\033[F\033[J");
+            } else {
+                printf("converting:%s ... as %s \n",converterContext.inputFilePath.c_str(), converterContext.outputFilePath.c_str());
+            }
+            GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext, &jsonWriter);
             writer->write();
-            printf("[completed conversion]\n");
+            if (converterContext.outputProgress) {
+                printf("convertion 100%%");
+                printf("\n");
+            } else {
+                printf("[completed conversion]\n");
+            }
 #if !STDOUT_OUTPUT
             fclose(fd);
             delete writer;
