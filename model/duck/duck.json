@@ -1,5 +1,8 @@
 {
     "animations": {},
+    "asset": {
+        "generator": "collada2gltf 0.1.0"
+    },
     "attributes": {
         "attribute_22": {
             "bufferView": "bufferView_28",
@@ -209,8 +212,8 @@
     "profile": "WebGL 1.0",
     "programs": {
         "program_0": {
-            "fragmentShader": "technique1FS",
-            "vertexShader": "technique1VS"
+            "fragmentShader": "duck0FS",
+            "vertexShader": "duck0VS"
         }
     },
     "scene": "defaultScene",
@@ -269,6 +272,21 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Blinn",
+                            "parameters": [
+                                "diffuse"
+                            ],
+                            "texcoordBindings": {
+                                "diffuse": "TEXCOORD_0"
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_diffuseAttrib": "diffuseAttrib",
@@ -293,6 +311,5 @@
                 }
             }
         }
-    },
-    "version": "0.3"
+    }
 }

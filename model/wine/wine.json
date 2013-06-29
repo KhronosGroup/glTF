@@ -1,5 +1,8 @@
 {
     "animations": {},
+    "asset": {
+        "generator": "collada2gltf 0.1.0"
+    },
     "attributes": {
         "attribute_116": {
             "bufferView": "bufferView_391",
@@ -11620,16 +11623,16 @@
     "profile": "WebGL 1.0",
     "programs": {
         "program_0": {
-            "fragmentShader": "technique1FS",
-            "vertexShader": "technique1VS"
+            "fragmentShader": "wine0FS",
+            "vertexShader": "wine0VS"
         },
         "program_1": {
-            "fragmentShader": "technique2FS",
-            "vertexShader": "technique2VS"
+            "fragmentShader": "wine2FS",
+            "vertexShader": "wine2VS"
         },
         "program_2": {
-            "fragmentShader": "technique3FS",
-            "vertexShader": "technique3VS"
+            "fragmentShader": "wine4FS",
+            "vertexShader": "wine4VS"
         }
     },
     "scene": "defaultScene",
@@ -11642,23 +11645,23 @@
         }
     },
     "shaders": {
-        "technique1FS": {
-            "path": "technique1FS.glsl"
+        "wine0FS": {
+            "path": "wine0FS.glsl"
         },
-        "technique1VS": {
-            "path": "technique1VS.glsl"
+        "wine0VS": {
+            "path": "wine0VS.glsl"
         },
-        "technique2FS": {
-            "path": "technique2FS.glsl"
+        "wine2FS": {
+            "path": "wine2FS.glsl"
         },
-        "technique2VS": {
-            "path": "technique2VS.glsl"
+        "wine2VS": {
+            "path": "wine2VS.glsl"
         },
-        "technique3FS": {
-            "path": "technique3FS.glsl"
+        "wine4FS": {
+            "path": "wine4FS.glsl"
         },
-        "technique3VS": {
-            "path": "technique3VS.glsl"
+        "wine4VS": {
+            "path": "wine4VS.glsl"
         }
     },
     "techniques": {
@@ -11699,6 +11702,21 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Lambert",
+                            "parameters": [
+                                "diffuse"
+                            ],
+                            "texcoordBindings": {
+                                "diffuse": "TEXCOORD_0"
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_diffuseAttrib": "diffuseAttrib",
@@ -11755,6 +11773,19 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Lambert",
+                            "parameters": [
+                                "diffuse",
+                                "transparency"
+                            ]
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_normal": "normal",
@@ -11812,6 +11843,18 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Lambert",
+                            "parameters": [
+                                "diffuse"
+                            ]
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_normal": "normal",
@@ -11834,6 +11877,5 @@
                 }
             }
         }
-    },
-    "version": "0.3"
+    }
 }

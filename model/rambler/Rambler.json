@@ -1,5 +1,8 @@
 {
     "animations": {},
+    "asset": {
+        "generator": "collada2gltf 0.1.0"
+    },
     "attributes": {
         "attribute_10012": {
             "bufferView": "bufferView_14606",
@@ -43246,8 +43249,8 @@
     "profile": "WebGL 1.0",
     "programs": {
         "program_0": {
-            "fragmentShader": "technique1FS",
-            "vertexShader": "technique1VS"
+            "fragmentShader": "Rambler0FS",
+            "vertexShader": "Rambler0VS"
         }
     },
     "scene": "defaultScene",
@@ -43259,11 +43262,11 @@
         }
     },
     "shaders": {
-        "technique1FS": {
-            "path": "technique1FS.glsl"
+        "Rambler0FS": {
+            "path": "Rambler0FS.glsl"
         },
-        "technique1VS": {
-            "path": "technique1VS.glsl"
+        "Rambler0VS": {
+            "path": "Rambler0VS.glsl"
         }
     },
     "techniques": {
@@ -43296,6 +43299,18 @@
             "pass": "defaultPass",
             "passes": {
                 "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Lambert",
+                            "parameters": [
+                                "diffuse"
+                            ]
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_normal": "normal",
@@ -43318,6 +43333,5 @@
                 }
             }
         }
-    },
-    "version": "0.3"
+    }
 }
