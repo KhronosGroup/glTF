@@ -11670,10 +11670,6 @@
                 "diffuse": {
                     "type": "SAMPLER_2D"
                 },
-                "diffuseAttrib": {
-                    "semantic": "TEXCOORD_0",
-                    "type": "FLOAT_VEC2"
-                },
                 "normal": {
                     "semantic": "NORMAL",
                     "type": "FLOAT_VEC3"
@@ -11719,7 +11715,6 @@
                     },
                     "instanceProgram": {
                         "attributes": {
-                            "a_diffuseAttrib": "diffuseAttrib",
                             "a_normal": "normal",
                             "a_position": "position",
                             "a_texcoord0": "texcoord0"
