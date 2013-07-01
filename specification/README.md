@@ -6,7 +6,7 @@ _In particular, the definition of materials are in flux, and work on animations 
 
 Editors
 
-* Fabrice Robinet
+* Fabrice Robinet, COLLADA Working Group Chair
 * Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
 * Remi Arnaud, AMD
 * Tony Parisi, SkyBox Networks
