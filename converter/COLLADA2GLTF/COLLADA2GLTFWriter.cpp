@@ -686,7 +686,15 @@ namespace GLTF
                     Loader::InstanceControllerData instanceControllerData = *list.begin();
                     
                     shared_ptr<JSONObject> instanceSkin(new JSONObject());
-                    instanceSkin->setString("skeleton", instanceControllerData.skeletonRoots.begin()->getFragment().c_str());
+                    
+                    shared_ptr<JSONArray> skeletons(new JSONArray());
+                    URIList::iterator listIterator;
+                    for(listIterator = instanceControllerData.skeletonRoots.begin(); listIterator != instanceControllerData.skeletonRoots.end(); ++listIterator) {
+                        std::string skeleton = listIterator->getFragment();
+                        skeletons->appendValue(shared_ptr<JSONString>(new JSONString(skeleton)));
+                    }
+                    
+                    instanceSkin->setValue("skeletons", skeletons);
                     instanceSkin->setString("skin", skin->getId());
                     
                     //FIXME: this should account for morph as sources to
