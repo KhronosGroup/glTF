@@ -24,8 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_MESH_H__
-#define __JSON_MESH_H__
+#ifndef __GLTFMESH_H__
+#define __GLTFMESH_H__
 
 namespace GLTF 
 {
@@ -58,6 +58,9 @@ namespace GLTF
         std::string getName();
         void setName(std::string name);
         
+        void setRemapTableForPositions(unsigned int* remapTableForPositions);
+        unsigned int* getRemapTableForPositions();
+        
         PrimitiveVector const getPrimitives();
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
@@ -66,6 +69,11 @@ namespace GLTF
         PrimitiveVector _primitives;
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID, _name;
+        
+        //This is unfortunate that we need to keep this information,
+        //but since we get skinning weights and bone indices after the mesh and the openCOLLADA is not available anymore, we need to keep
+        //the remap table to build the weights and bone indices as mesh attributes.
+        unsigned int *_remapTableForPositions;
     };    
 
 }

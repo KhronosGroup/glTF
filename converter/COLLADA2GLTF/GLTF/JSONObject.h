@@ -28,7 +28,9 @@
 #define __JSON_OBJECT_H__
 
 namespace GLTF 
-{    
+{
+    class JSONArray;
+    
     typedef std::map<std::string , shared_ptr <JSONValue> > KeyToJSONValue;
     
     class JSONObject : public JSONValue {
@@ -40,8 +42,8 @@ namespace GLTF
         JSONObject();
         virtual ~JSONObject();
       
-        shared_ptr <GLTF::JSONObject> createObjectIfNeeded(const std::string& key);
-
+        shared_ptr <JSONObject> createObjectIfNeeded(const std::string& key);
+        shared_ptr <JSONArray> createArrayIfNeeded(const std::string& key);
         void setValue(const std::string &key, shared_ptr <JSONValue> value);
         shared_ptr <JSONValue> getValue(std::string);
 

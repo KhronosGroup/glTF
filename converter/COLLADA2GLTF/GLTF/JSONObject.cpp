@@ -57,6 +57,18 @@ namespace GLTF
         return outObject;
     }
     
+    shared_ptr <GLTF::JSONArray> JSONObject::createArrayIfNeeded(const std::string& key) {
+        shared_ptr <GLTF::JSONArray> outObject;
+        if (!contains(key)) {
+            outObject = shared_ptr <GLTF::JSONArray> (new GLTF::JSONArray());
+            setValue(key, outObject);
+        } else {
+            outObject = static_pointer_cast <GLTF::JSONArray> (getValue(key));
+        }
+        return outObject;
+    }
+
+    
     void JSONObject::setValue(const std::string &key, shared_ptr <JSONValue> value)
     {
         this->_keyToJSONValue[key] = value;

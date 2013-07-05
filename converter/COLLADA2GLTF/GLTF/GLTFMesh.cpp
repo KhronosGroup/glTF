@@ -33,24 +33,24 @@ using namespace std;
 
 namespace GLTF
 {
-    GLTFMesh::GLTFMesh()
-    {
+    GLTFMesh::GLTFMesh() {
+        this->_remapTableForPositions = 0;
     }
     
-    GLTFMesh::~GLTFMesh()
-    {
+    GLTFMesh::~GLTFMesh() {
+        if (this->_remapTableForPositions)
+            free(this->_remapTableForPositions);
     }
 
-    GLTFMesh::GLTFMesh(const GLTFMesh &mesh)
-    {
+    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) {
+        this->_remapTableForPositions = 0;
         this->_primitives = mesh._primitives;
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->_name = mesh._name;
     }
     
-    shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes()
-    {
+    shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes() {
         shared_ptr <MeshAttributeVector> meshAttributes(new MeshAttributeVector());
         vector <GLTF::Semantic> allSemantics = this->allSemantics();
         std::map<string, unsigned int> semanticAndSetToIndex;
@@ -74,24 +74,20 @@ namespace GLTF
         return meshAttributes;
     }
     
-    bool GLTFMesh::appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive)
-    {
+    bool GLTFMesh::appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive) {
         this->_primitives.push_back(primitive);
         return true;
     }
     
-    void GLTFMesh::setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap)
-    {
+    void GLTFMesh::setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap) {
         this->_semanticToMeshAttributes[semantic] = indexSetToMeshAttributeHashmap;
     }
     
-    IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic)
-    {
+    IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic) {
         return this->_semanticToMeshAttributes[semantic];
     }
     
-    vector <GLTF::Semantic> GLTFMesh::allSemantics()
-    {
+    vector <GLTF::Semantic> GLTFMesh::allSemantics() {
         vector <GLTF::Semantic> allSemantics;
         
         SemanticToMeshAttributeHashmap::const_iterator meshAttributeIterator;
@@ -106,31 +102,34 @@ namespace GLTF
         return allSemantics;
     }
     
-    std::string GLTFMesh::getID()
-    {
+    std::string GLTFMesh::getID() {
         return _ID;
     }
     
-    void GLTFMesh::setID(std::string ID)
-    {
+    void GLTFMesh::setID(std::string ID) {
         this->_ID = ID;
     }
     
-    std::string GLTFMesh::getName()
-    {        
+    std::string GLTFMesh::getName() {
         return _name;
     }
 
-    void GLTFMesh::setName(std::string name)
-    {
+    void GLTFMesh::setName(std::string name) {
         this->_name = name;
     }
     
-    PrimitiveVector const GLTFMesh::getPrimitives()
-    {
+    PrimitiveVector const GLTFMesh::getPrimitives() {
         return this->_primitives;
     }
-        
+    
+    void GLTFMesh::setRemapTableForPositions(unsigned int* remapTableForPositions) {
+        this->_remapTableForPositions = remapTableForPositions;
+    }
+    
+    unsigned int* GLTFMesh::getRemapTableForPositions() {
+        return this->_remapTableForPositions;
+    }
+    
     bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;

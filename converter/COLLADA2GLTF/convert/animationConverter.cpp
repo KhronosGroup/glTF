@@ -3,6 +3,7 @@
 #include "../GLTFConverterContext.h"
 
 #include "animationConverter.h"
+#include "meshConverter.h"
 #include "../helpers/mathHelpers.h"
 
 namespace GLTF
@@ -104,43 +105,7 @@ namespace GLTF
         
         return samplerID;
     }
-    
-    /* 
-        Convert an OpenCOLLADA's FloatOrDoubleArray type to a GLTFBufferView
-        Note: the resulting GLTFBufferView is not typed, it's the call responsability to keep track of the type if needed.
-     */
-    static shared_ptr <GLTFBufferView> __ConvertFloatOrDoubleArrayToGLTFBufferView(const COLLADAFW::FloatOrDoubleArray &floatOrDoubleArray) {
-        unsigned char* sourceData = 0;
-        size_t sourceSize = 0;
         
-        switch (floatOrDoubleArray.getType()) {
-            case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
-                const COLLADAFW::FloatArray* array = floatOrDoubleArray.getFloatValues();
-                
-                sourceData = (unsigned char*)array->getData();
-                sourceSize = array->getCount() * sizeof(float);
-            }
-                break;
-            case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
-                const COLLADAFW::DoubleArray* array = floatOrDoubleArray.getDoubleValues();
-                
-                sourceData = (unsigned char*)array->getData();
-                sourceSize = array->getCount() * sizeof(double);
-            }
-                break;
-            default:
-            case COLLADAFW::MeshVertexData::DATA_TYPE_UNKNOWN:
-                //FIXME report error
-                break;
-        }
-        unsigned char* copiedData = (unsigned char*)malloc(sourceSize);
-        memcpy(copiedData, sourceData, sourceSize);
-        
-        shared_ptr <GLTF::GLTFBufferView> bufferView = createBufferViewWithAllocatedBuffer(copiedData, 0, sourceSize, true);
-        
-        return bufferView;
-    }
-    
     /*
         Since GLTF does not have the same granularity as COLLADA, we need in some situations to duplicate a few datas.
         For instance a target path like position.x is not supported by glTF, just the 3 components (x,y,z) can be animated.
@@ -419,8 +384,8 @@ namespace GLTF
             
             const std::string originalID = animationCurve->getOriginalId();
             
-            shared_ptr <GLTFBufferView> inputBufferView = __ConvertFloatOrDoubleArrayToGLTFBufferView(inputArray);
-            shared_ptr <GLTFBufferView> outputBufferView = __ConvertFloatOrDoubleArrayToGLTFBufferView(outputArray);
+            shared_ptr <GLTFBufferView> inputBufferView = convertFloatOrDoubleArrayToGLTFBufferView(inputArray);
+            shared_ptr <GLTFBufferView> outputBufferView = convertFloatOrDoubleArrayToGLTFBufferView(outputArray);
             
             //build up input parameter, typically TIME
             shared_ptr <GLTFAnimation::Parameter> inputParameter(new GLTFAnimation::Parameter("TIME"));

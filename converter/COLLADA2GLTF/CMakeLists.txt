@@ -51,6 +51,7 @@ add_executable(collada2gltf main.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
     GLTF/GLTFWriter.cpp
+    GLTF/GLTFSkin.cpp
     COLLADA2GLTFWriter.h
     GLTF-OpenCOLLADA.h
     GLTF/GLTF.h
@@ -70,6 +71,7 @@ add_executable(collada2gltf main.cpp
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
     GLTF/GLTFWriter.h
+    GLTF/GLTFSkin.h
     GLTF/GLTFExtraDataHandler.h
     GLTF/GLTFExtraDataHandler.cpp
     shaders/commonProfileShaders.h
