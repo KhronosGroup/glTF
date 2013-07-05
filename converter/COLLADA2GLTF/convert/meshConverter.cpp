@@ -207,9 +207,65 @@ namespace GLTF
         
         return true;
     }
-    
-    
     //    
+    /*
+     Convert an OpenCOLLADA's FloatOrDoubleArray type to a GLTFBufferView
+     Note: the resulting GLTFBufferView is not typed, it's the call responsability to keep track of the type if needed.
+     */
+    shared_ptr <GLTFBufferView> convertFloatOrDoubleArrayToGLTFBufferView(const COLLADAFW::FloatOrDoubleArray &floatOrDoubleArray) {
+        unsigned char* sourceData = 0;
+        size_t sourceSize = 0;
+        
+        switch (floatOrDoubleArray.getType()) {
+            case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
+                const COLLADAFW::FloatArray* array = floatOrDoubleArray.getFloatValues();
+                
+                sourceData = (unsigned char*)array->getData();
+                sourceSize = array->getCount() * sizeof(float);
+            }
+                break;
+            case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
+                const COLLADAFW::DoubleArray* array = floatOrDoubleArray.getDoubleValues();
+                
+                sourceData = (unsigned char*)array->getData();
+                sourceSize = array->getCount() * sizeof(double);
+            }
+                break;
+            default:
+            case COLLADAFW::MeshVertexData::DATA_TYPE_UNKNOWN:
+                //FIXME report error
+                break;
+        }
+        unsigned char* copiedData = (unsigned char*)malloc(sourceSize);
+        memcpy(copiedData, sourceData, sourceSize);
+        
+        shared_ptr <GLTF::GLTFBufferView> bufferView = createBufferViewWithAllocatedBuffer(copiedData, 0, sourceSize, true);
+        
+        return bufferView;
+    }
+    
+    shared_ptr <GLTFBufferView> convertUnsignedIntArrayToGLTFBufferView(const COLLADAFW::UIntValuesArray &array) {
+        unsigned char* sourceData = (unsigned char*)array.getData();
+        size_t sourceSize = array.getCount() * sizeof(unsigned int);
+        unsigned char* copiedData = (unsigned char*)malloc(sourceSize);
+        memcpy(copiedData, sourceData, sourceSize);
+        shared_ptr <GLTF::GLTFBufferView> bufferView = createBufferViewWithAllocatedBuffer(copiedData, 0, sourceSize, true);
+        
+        return bufferView;
+    }
+    
+    //FIXME: these 3 functions up there could use some refactoring
+    shared_ptr <GLTFBufferView> convertIntArrayToGLTFBufferView(const COLLADAFW::IntValuesArray &array) {
+        unsigned char* sourceData = (unsigned char*)array.getData();
+        size_t sourceSize = array.getCount() * sizeof(int);
+        unsigned char* copiedData = (unsigned char*)malloc(sourceSize);
+        memcpy(copiedData, sourceData, sourceSize);
+        shared_ptr <GLTF::GLTFBufferView> bufferView = createBufferViewWithAllocatedBuffer(copiedData, 0, sourceSize, true);
+        
+        return bufferView;
+    }
+    
+    
     static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
@@ -230,7 +286,6 @@ namespace GLTF
             setCount = 1;
         
         for (size_t indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
-            
             if (!unpatchedOpenCOLLADA) {
                 name = vertexData.getName(indexOfSet);
                 size = vertexData.getStride(indexOfSet);
@@ -505,9 +560,7 @@ namespace GLTF
         }
     }
     
-    void convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh,
-                                MeshVector &meshes)
-    {
+    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFConverterContext& context) {
         shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
         
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
@@ -584,18 +637,16 @@ namespace GLTF
         
         if (cvtMesh->getPrimitives().size() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
-            shared_ptr <GLTF::GLTFMesh> unifiedMesh = createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
-            if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, meshes) == false) {
-                meshes.push_back(unifiedMesh);
-            }
+            return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
         }
-        
+
+#if WEBGLLOADER_COMPRESSION
         //now compress meshes
         for (size_t i = 0 ; i < meshes.size() ; i++) {
             shared_ptr <GLTF::GLTFMesh> mesh = meshes[i];
             compress(mesh);
         }
+#endif
+        return shared_ptr <GLTF::GLTFMesh> ((GLTFMesh*)0);
     }
-
-    
 }

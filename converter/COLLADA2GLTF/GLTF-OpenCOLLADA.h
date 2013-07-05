@@ -49,6 +49,9 @@
 #include "COLLADAFWAnimation.h"
 #include "COLLADAFWAnimationCurve.h"
 #include "COLLADAFWPolygons.h"
+#include "COLLADAFWSkinController.h"
+#include "COLLADAFWSkinControllerData.h"
 #include "Math/COLLADABUMathMatrix4.h"
+
 
 #endif 

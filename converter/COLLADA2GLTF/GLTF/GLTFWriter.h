@@ -39,6 +39,7 @@ namespace GLTF
     shared_ptr <JSONObject> serializeIndices(GLTFIndices* indices, void *context);
     shared_ptr <JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
     shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation);
+    shared_ptr <JSONObject> serializeSkin(GLTFSkin* skin);
 
     class GLTFWriter {
     private:

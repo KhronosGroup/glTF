@@ -84,7 +84,10 @@ namespace GLTF
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
-
+        bool writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
+                                                  COLLADAFW::MaterialBindingArray &materialBindings,
+                                                  shared_ptr <GLTF::JSONArray> &meshesArray);
+        
 	public:        
         
 		bool write();
@@ -165,8 +168,6 @@ namespace GLTF
          @return The writer should return true, if writing succeeded, false otherwise.*/
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
-        
-        
 	private:
         void registerObjectWithUniqueUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
         bool writeData(std::string filename, unsigned char* data, size_t length);
@@ -175,6 +176,7 @@ namespace GLTF
                               shared_ptr <GLTFEffect> cvtEffect);
         
 	private:
+        COLLADASaxFWL::Loader _loader;
         GLTF::GLTFConverterContext _converterContext;
         const COLLADAFW::VisualScene* _visualScene;
         GLTF::GLTFWriter _writer;

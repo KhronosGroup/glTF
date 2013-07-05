@@ -182,6 +182,7 @@ namespace GLTF
         
         size_t elementByteLength;
         
+        
     } MeshAttributesBufferInfos;
     
     static MeshAttributesBufferInfos* createMeshAttributesBuffersInfos(MeshAttributeVector allOriginalMeshAttributes ,MeshAttributeVector allRemappedMeshAttributes, unsigned int*indicesInRemapping, unsigned int count)
@@ -197,8 +198,7 @@ namespace GLTF
                 // FIXME : report error
                 free(allBufferInfos);
                 return 0;
-            }
-            
+            }            
             bufferInfos->remappedBufferData = (unsigned char*)remappedMeshAttribute->getBufferView()->getBufferDataByApplyingOffset();
             bufferInfos->remappedMeshAttributeByteStride = remappedMeshAttribute->getByteStride();
             
@@ -216,7 +216,8 @@ namespace GLTF
                                   MeshAttributeVector allOriginalMeshAttributes,
                                   MeshAttributeVector allRemappedMeshAttributes,
                                   unsigned int* indicesInRemapping,
-                                  shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos)
+                                  shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos,
+                                  unsigned int* remapTableForPositions /* we fill/keep this to be able to remap skin weight/bone indices later on*/)
     {
         size_t indicesSize = allIndices.size();
         if (allOriginalMeshAttributes.size() < indicesSize) {
@@ -226,23 +227,28 @@ namespace GLTF
         unsigned int vertexAttributesCount = (unsigned int)indicesSize;
         
         //get the primitive infos to know where we need to "go" for remap
-        unsigned int count = primitiveRemapInfos->generatedIndicesCount();
         unsigned int* indices = primitiveRemapInfos->generatedIndices();
         
         MeshAttributesBufferInfos *allBufferInfos = createMeshAttributesBuffersInfos(allOriginalMeshAttributes , allRemappedMeshAttributes, indicesInRemapping, vertexAttributesCount);
         
         unsigned int* uniqueIndicesBuffer = (unsigned int*)primitive->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
-        
         unsigned int *originalCountAndIndexes = primitiveRemapInfos->originalCountAndIndexes();
         
+        unsigned int count = primitiveRemapInfos->generatedIndicesCount();
         for (unsigned int k = 0 ; k < count ; k++) {
             unsigned int idx = indices[k];
             unsigned int* remappedIndex = &originalCountAndIndexes[idx * (allOriginalMeshAttributes.size() + 1)];
             
             for (size_t meshAttributeIndex = 0 ; meshAttributeIndex < vertexAttributesCount  ; meshAttributeIndex++) {
-                MeshAttributesBufferInfos *bufferInfos = &allBufferInfos[meshAttributeIndex];
                 unsigned int indiceInRemap = indicesInRemapping[meshAttributeIndex];
                 unsigned int rindex = remappedIndex[1 /* skip count */ + indiceInRemap];
+                
+                if (meshAttributeIndex == 0) {
+                    //HACK: we know that first vertex attribute to be processed is of semantic POSITION
+                    remapTableForPositions[uniqueIndicesBuffer[idx]] = rindex;
+                }
+                
+                MeshAttributesBufferInfos *bufferInfos = &allBufferInfos[meshAttributeIndex];
                 void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalMeshAttributeByteStride);
                 //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
                 /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
@@ -388,14 +394,17 @@ namespace GLTF
             }
         }
         
-        // we are using WebGL for rendering, this involve OpenGL/ES where only float are supported.
         // now we got not only the uniqueIndexes but also the number of different indexes, i.e the number of vertex attributes count
         // we can allocate the buffer to hold vertex attributes
         unsigned int vertexCount = endIndex;
+        //just allocate it now, will be filled later
+        unsigned int* remapTableForPositions = (unsigned int*)malloc(sizeof(unsigned int) * vertexCount);
+        targetMesh->setRemapTableForPositions(remapTableForPositions);
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
-            IndexSetToMeshAttributeHashmap& destinationIndexSetToMeshAttribute = targetMesh->getMeshAttributesForSemantic(allSemantics[i]);
+            Semantic semantic = allSemantics[i];
+            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(semantic);
+            IndexSetToMeshAttributeHashmap& destinationIndexSetToMeshAttribute = targetMesh->getMeshAttributesForSemantic(semantic);
             IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
             
             //FIXME: consider turn this search into a method for mesh
@@ -426,6 +435,7 @@ namespace GLTF
          return false;
          }
          */
+        
         for (unsigned int i = 0 ; i < primitiveCount ; i++) {
             shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
             IndicesVector *allIndices = allIndicesSharedPtr.get();
@@ -445,7 +455,8 @@ namespace GLTF
                                                    originalMeshAttributes ,
                                                    remappedMeshAttributes,
                                                    indicesInRemapping,
-                                                   allPrimitiveRemapInfos[i]);
+                                                   allPrimitiveRemapInfos[i],
+                                                   remapTableForPositions);
             free(indicesInRemapping);
             
             if (!status) {

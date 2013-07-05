@@ -488,14 +488,16 @@ namespace GLTF
             vector <std::string> keys = uniforms->getAllKeys();
             for (size_t i = 0 ; i < keys.size() ; i++) {
                 std::string parameter = uniforms->getString(keys[i]);
-                if ((parameter == "diffuse") ||
+                parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
+
+                /*if ((parameter == "diffuse") ||
                     (parameter == "ambient") ||
                     (parameter == "specular") ||
                     (parameter == "normal") ||
                     (parameter == "reflective") ||
                     (parameter == "transparency")) {
                     parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
-                }
+                }*/
             }
             commonProfile->setValue("parameters", parameters);
             

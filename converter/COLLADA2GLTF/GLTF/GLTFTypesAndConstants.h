@@ -46,6 +46,8 @@ namespace GLTF
     typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
     typedef std::vector <shared_ptr<GLTF::GLTFMeshAttribute> > MeshAttributeVector;
     typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
+    
+    typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
     typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
@@ -54,7 +56,9 @@ namespace GLTF
         POSITION = 1,
         NORMAL = 2,
         TEXCOORD = 3,
-        COLOR = 4
+        COLOR = 4,
+        WEIGHT = 5,
+        JOINT = 6
     } Semantic;    
 
     typedef enum {

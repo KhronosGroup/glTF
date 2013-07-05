@@ -103,6 +103,11 @@ namespace GLTF
                     return "TEXCOORD";
                 case GLTF::COLOR:
                     return "COLOR";
+                case GLTF::JOINT:
+                    return "JOINT";
+                case GLTF::WEIGHT:
+                    return "WEIGHT";
+                    
                 default:
                     return "UNKNOWN";
             }

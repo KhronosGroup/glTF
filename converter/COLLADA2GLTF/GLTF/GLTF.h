@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2013, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,7 @@
 #include "GLTFEffect.h"
 #include "GLTFPrimitive.h"
 #include "GLTFMesh.h"
+#include "GLTFSkin.h"
 #include "GLTFAnimation.h"
 #include "GLTFWriter.h"
 
