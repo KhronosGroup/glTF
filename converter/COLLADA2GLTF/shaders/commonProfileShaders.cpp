@@ -28,6 +28,7 @@
 #include "commonProfileShaders.h"
 #ifndef WIN32
 #include "png.h"
+#include "stdarg.h"
 #endif
 using namespace std;
 
