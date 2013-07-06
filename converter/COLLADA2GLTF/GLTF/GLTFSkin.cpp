@@ -101,4 +101,13 @@ namespace GLTF
     std::string GLTFSkin::getSourceUID() {
         return this->_sourceUID;
     }
+    
+    void GLTFSkin::setInverseBindMatrices(shared_ptr <GLTFBufferView> inverseBindMatrices) {
+        this->_inverseBindMatrices = inverseBindMatrices;
+    }
+    
+    shared_ptr <GLTFBufferView> GLTFSkin::getInverseBindMatrices() {
+        return this->_inverseBindMatrices;
+    }
+    
 };
