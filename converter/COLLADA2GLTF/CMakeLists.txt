@@ -6,7 +6,7 @@ set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
 set(BUILD_SHARED_LIBS OFF)
 
 if (NOT WIN32)
-    set(CMAKE_FIND_LIBRARY_SUFFIXES .a .dylib)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
 endif()
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
@@ -22,6 +22,8 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/Generate
 if (NOT WIN32)
     find_package(PNG REQUIRED)
     include_directories(${PNG_INCLUDE_DIR})
+    find_package(ZLIB REQUIRED)
+    include_directories(${ZLIB_INCLUDE_DIR})
 endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
@@ -86,7 +88,8 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.h)
 
 if (WIN32)
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
 else ()
-target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} z)
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
+
