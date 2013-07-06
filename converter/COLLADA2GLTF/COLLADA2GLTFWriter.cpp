@@ -1290,6 +1290,9 @@ namespace GLTF
         float *weightsPtr = (float*)malloc(skinAttributeSize);
         float *bonesIndices = (float*)malloc(skinAttributeSize);
 
+        memset(weightsPtr, 0, skinAttributeSize);
+        memset(bonesIndices, 0, skinAttributeSize);
+        
         for (size_t i = 0 ; i < vertexCount ; i++) {
             size_t pairCount = jointsPerVertex[i];
 			if ( pairCount == 0 )
