@@ -60,17 +60,22 @@ namespace GLTF
 
         void setSourceUID(std::string uniqueId);
         std::string getSourceUID();
+        
+        void setInverseBindMatrices(shared_ptr <GLTFBufferView> inverseBindMatrices);
+        shared_ptr <GLTFBufferView> getInverseBindMatrices();
                 
         //controller
         std::string getType();
         
     private:
+        shared_ptr <GLTFBufferView> _inverseBindMatrices;
+        
         shared_ptr<JSONArray> _bindShapeMatrix;
         shared_ptr<JSONArray> _jointsIds;
         
         shared_ptr<GLTFMeshAttribute> _joints;
         shared_ptr<GLTFMeshAttribute> _weights;
-                
+        
         std::string _id;
         std::string _sourceUID;
     };

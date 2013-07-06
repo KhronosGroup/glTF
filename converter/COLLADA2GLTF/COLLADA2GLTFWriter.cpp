@@ -262,6 +262,13 @@ namespace GLTF
             skin->setJointsIds(jointsWithOriginalSids);
             
             shared_ptr <JSONObject> serializedSkin = serializeSkin(skin.get());
+            //FIXME: we should rename _animationsOutputStream to something more generic since we use it for skin matrices too..
+            shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue("inverseBindMatrices"));
+
+            inverseBindMatrices->setString("bufferView", animationsBufferView->getID());
+
+            serializedSkin->setValue("inverseBindMatrices", inverseBindMatrices);
+            
             skins->setValue(skin->getId(), serializedSkin);
         }
         
@@ -355,8 +362,10 @@ namespace GLTF
     static void __GetFloatArrayFromMatrix(const COLLADABU::Math::Matrix4 &matrix, float *m) {
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
         
+        COLLADABU::Math::Matrix4 transpose = matrix.transpose();
+
         for (int i = 0 ; i < 4 ; i++)  {
-            const COLLADABU::Math::Real * real = matrix[i];
+            const COLLADABU::Math::Real * real = transpose[i];
             
             m[(i*4) + 0] = real[0];
             m[(i*4) + 1] = real[1];
@@ -369,9 +378,8 @@ namespace GLTF
     {
         float m[16];
         shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
-        COLLADABU::Math::Matrix4 transpose = matrix.transpose();
-        
-        __GetFloatArrayFromMatrix(transpose, m);
+
+        __GetFloatArrayFromMatrix(matrix, m);
         
         for (int i = 0 ; i < 16; i++)  {
             array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber(m[i])));
@@ -1272,6 +1280,27 @@ namespace GLTF
 			}
         }
         
+        //inverse bind matrice
+        const Matrix4Array& matrices = skinControllerData->getInverseBindMatrices();
+        size_t matricesSize = sizeof(float) * 16 * skinControllerData->getJointsCount();
+        float *matricesPtr = (float*)malloc(matricesSize);
+        for (size_t i = 0 ; i < skinControllerData->getJointsCount() ; i++) {
+            __GetFloatArrayFromMatrix(matrices[i], matricesPtr + (i*16));
+        }
+        shared_ptr <GLTFBufferView> inverseBindMatricesView = createBufferViewWithAllocatedBuffer(matricesPtr, 0, matricesSize, true);
+        glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
+        
+        shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
+        inverseBindMatrices->setString("type", "FLOAT_MAT4");
+        inverseBindMatrices->setUnsignedInt32("count", skinControllerData->getJointsCount());
+        inverseBindMatrices->setUnsignedInt32("byteOffset", 0);
+        glTFSkin->extras()->setValue("inverseBindMatrices", inverseBindMatrices);
+        
+        inverseBindMatrices->setUnsignedInt32("byteOffset",static_cast<size_t>(this->_animationsOutputStream.tellp()));
+        shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
+        this->_animationsOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
+
+        //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
         shared_ptr <GLTFMeshAttribute> weightsAttribute(new GLTFMeshAttribute());
         
@@ -1367,6 +1396,7 @@ namespace GLTF
                 joints->appendValue(jointId);
             }
             glTFSkin->setJointsIds(joints);
+            
         }
 		return true;
 	}
