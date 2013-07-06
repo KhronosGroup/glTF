@@ -1,0 +1,32 @@
+{
+  "name":"glTF-node-module",
+  "version" : "0.1.0",
+  "main":"./converter/COLLADA2GLTF/bin/collada2gltf",
+  "description": "A C++ executable to convert COLLADA documents into glTF to be used with node-js.",
+   "keywords": [
+       "glTF",
+       "COLLADA"
+   ],
+   "author": {
+       "name": "Fabrice Robinet"
+   }, 
+   "license": {
+       "type": "BSD"
+   }, 
+   "repository": {
+       "type": "git",
+       "url": "https://github.com/KhronosGroup/glTF.git"
+   }, 
+   "directories": {
+       "converter" : "COLLADA -> glTF converter",
+       "model" : "sample models"
+   },
+   "engines": {
+       "node": ">=0.6.0"
+   },
+   "scripts" : {
+       "preinstall" : "cd converter/COLLADA2GLTF; mkdir dependencies; cd dependencies; git clone https://github.com/KhronosGroup/OpenCOLLADA.git; git clone https://github.com/kennytm/rapidjson.git",
+       "postinstall" : "cd converter/COLLADA2GLTF; cmake -f CMakeLists.txt; make -j1 collada2gltf"
+   }
+   
+}
