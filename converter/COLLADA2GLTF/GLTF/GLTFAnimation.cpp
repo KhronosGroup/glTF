@@ -145,6 +145,14 @@ namespace GLTF
                 break;
             }
         }
+        
+        for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
+            if (this->_parameters[i]->getID() == parameter) {
+                break;
+            }
+        }
+        
+        
     }
 
     void GLTFAnimation::setID(std::string animationID) {

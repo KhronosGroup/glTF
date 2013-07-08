@@ -105,11 +105,11 @@ namespace GLTF
         
         return samplerID;
     }
-        
+    
     /*
-        Since GLTF does not have the same granularity as COLLADA, we need in some situations to duplicate a few datas.
-        For instance a target path like position.x is not supported by glTF, just the 3 components (x,y,z) can be animated.
-        This function create a buffer that will allow to handle a target path supported by GLTF.
+     Since GLTF does not have the same granularity as COLLADA, we need in some situations to duplicate a few datas.
+     For instance a target path like position.x is not supported by glTF, just the 3 components (x,y,z) can be animated.
+     This function create a buffer that will allow to handle a target path supported by GLTF.
      */
     static shared_ptr<GLTFBufferView> __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(shared_ptr<GLTFBufferView> bufferView,
                                                                                                    shared_ptr<JSONArray> array,
@@ -156,8 +156,8 @@ namespace GLTF
         return  createBufferViewWithAllocatedBuffer(destinationBuffer, 0, destinationBufferLength, true);
     }
     
-    /* 
-        Handles Channel creation + additions
+    /*
+     Handles Channel creation + additions
      */
     static void __AddChannel(shared_ptr <GLTFAnimation> cvtAnimation,
                              const std::string &targetID,
@@ -171,9 +171,9 @@ namespace GLTF
         trTarget->setString("path", path);
         cvtAnimation->channels()->appendValue(trChannel);
     }
-
+    
     /*
-        Handles Parameter creation / addition / write
+     Handles Parameter creation / addition / write
      */
     static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
                                                   const std::string& parameterSID,
@@ -195,8 +195,8 @@ namespace GLTF
     }
     
     /*
-        The animation creation/write is in 2 steps.
-        We first create the animation, but then, we need to set the channels for every targets, and targets ids are not available when animations are created
+     The animation creation/write is in 2 steps.
+     We first create the animation, but then, we need to set the channels for every targets, and targets ids are not available when animations are created
      */
     
     
@@ -205,8 +205,6 @@ namespace GLTF
                         AnimatedTargetsSharedPtr animatedTargets,
                         std::ofstream &animationsOutputStream,
                         GLTF::GLTFConverterContext &converterContext) {
-        
-        
         
         std::string samplerID;
         std::string name;
@@ -306,7 +304,6 @@ namespace GLTF
             }
                 
                 return true;
-                break;
             case COLLADAFW::AnimationList::ANGLE: {
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
@@ -342,10 +339,41 @@ namespace GLTF
                 cvtAnimation->removeParameterNamed("OUTPUT");
             }
                 return true;
-                break;
             case COLLADAFW::AnimationList::POSITION_X:
             case COLLADAFW::AnimationList::POSITION_Y:
             case COLLADAFW::AnimationList::POSITION_Z:
+            {
+                int index = animationClass - COLLADAFW::AnimationList::POSITION_X;
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        std::string targetID = animatedTarget->getString("target");
+                        
+                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
+                            std::string path = animatedTarget->getString("path");
+                            if (path == "translation") {
+                                shared_ptr<JSONArray> translationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
+                                shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, translationArray, index, "FLOAT", cvtAnimation->getCount());
+                                
+                                __SetupAndWriteAnimationParameter(cvtAnimation,
+                                                                  path,
+                                                                  "FLOAT_VEC3",
+                                                                  adjustedBuffer,
+                                                                  animationsOutputStream);
+                                
+                                __AddChannel(cvtAnimation, targetID, path);
+                            }
+                        }
+                    }
+                }
+                cvtAnimation->removeParameterNamed("OUTPUT");
+            }
+                return true;
+                
+                
             case COLLADAFW::AnimationList::COLOR_RGB:
             case COLLADAFW::AnimationList::COLOR_RGBA:
             case COLLADAFW::AnimationList::COLOR_R:
@@ -354,7 +382,7 @@ namespace GLTF
             case COLLADAFW::AnimationList::COLOR_A:
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_1D:
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_2D:
-            case COLLADAFW::AnimationList::FLOAT: 
+            case COLLADAFW::AnimationList::FLOAT:
             default:
                 break;
         }
@@ -408,6 +436,6 @@ namespace GLTF
         
         return cvtAnimation;
     }
-
+    
     
 }

@@ -69,7 +69,7 @@ namespace GLTF
 
         GLTF::Semantic getSemanticAtIndex(unsigned int index);
         unsigned int getIndexOfSetAtIndex(unsigned int index);
-        unsigned int getIndicesInfosCount();
+        size_t getVertexAttributesCount();
         
         VertexAttributeVector getVertexAttributes();
         void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);

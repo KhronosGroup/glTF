@@ -193,7 +193,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
         primitiveObject->setValue("semantics", semantics);
         
-        size_t count = primitive->getIndicesInfosCount();
+        size_t count = primitive->getVertexAttributesCount();
         for (size_t j = 0 ; j < count ; j++) {
             GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
             

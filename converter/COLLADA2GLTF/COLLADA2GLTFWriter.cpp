@@ -437,6 +437,38 @@ namespace GLTF
         }
     }
     
+    shared_ptr <GLTF::JSONObject> serializeAttributeSemanticsForPrimitiveAtIndex(GLTFMesh* mesh, unsigned int idx)
+    {
+        shared_ptr <GLTFPrimitive> primitive = mesh->getPrimitives()[idx];
+                                
+        shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
+        shared_ptr<JSONArray> sets(new JSONArray());
+        
+        size_t count = primitive->getVertexAttributesCount();
+        for (size_t j = 0 ; j < count ; j++) {
+            Semantic semantic = primitive->getSemanticAtIndex(j);
+            std::string semanticString = GLTFUtils::getStringForSemantic(semantic);
+
+            shared_ptr<JSONObject> semanticInfo;
+            if (semantics->contains(semanticString) == false) {
+                semanticInfo = shared_ptr<JSONObject> (new JSONObject());
+                semantics->setValue(semanticString, semanticInfo);
+            }
+            
+            unsigned int indexOfSet = 0;
+            if (semantic == GLTF::TEXCOORD) {
+                indexOfSet = primitive->getIndexOfSetAtIndex(j);
+            }
+            
+            sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
+            
+            shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttributesForSemantic(semantic)[indexOfSet];            
+        }
+        
+        return semantics;
+    }
+    
+    
     bool COLLADA2GLTFWriter::writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                                    MaterialBindingArray &materialBindings,
                                                                    shared_ptr <GLTF::JSONArray> &meshesArray) {
@@ -528,6 +560,7 @@ namespace GLTF
                             }
                             
                             for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                                
                                 std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
                                 SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
                                 
@@ -551,7 +584,9 @@ namespace GLTF
                         }
                         
                         //generate shaders if needed
+                        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
                         const std::string& techniqueID = GLTF::getReferenceTechniqueID(effect->getLightingModel(),
+                                                                                       attributeSemantics,
                                                                                        effect->getValues(),
                                                                                        techniqueExtras,
                                                                                        texcoordBindings,
@@ -1297,6 +1332,10 @@ namespace GLTF
             size_t pairCount = jointsPerVertex[i];
 			if ( pairCount == 0 )
 				continue;
+            if (pairCount > bucketSize) {
+                pairCount = bucketSize;
+            }
+            
 			if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT ) {
 				const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
 				for (size_t j = 0; j < pairCount; ++j, ++index) {
