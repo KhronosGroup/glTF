@@ -669,7 +669,7 @@ namespace GLTF
         if (!nodeContainsLookAtTr) {
             node->getTransformationMatrix(matrix);
         }
-        
+                
         float scale[3];
         float translation[3];
         float rotation[4];
@@ -684,6 +684,7 @@ namespace GLTF
             shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
             this->_converterContext._uniqueIDToAnimatedTargets[animationListID.getObjectId()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
+            std::string animationID = animationListID.toAscii();
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
                 animatedTarget->setString("target", nodeUID);

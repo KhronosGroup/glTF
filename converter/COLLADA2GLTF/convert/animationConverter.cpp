@@ -8,6 +8,112 @@
 
 namespace GLTF
 {
+    //a few helper classes to help flattening animations
+
+    typedef std::map<std::string , shared_ptr<COLLADAFW::Transformation> > IDToTransform;
+    
+    class GLTFTransform {
+    public:
+        void _commonInit() {
+            this->_transformsOrder = shared_ptr <std::vector<std::string> > (new std::vector<std::string>);
+        }
+        
+        GLTFTransform() {
+            this->_commonInit();
+        }
+        
+        GLTFTransform(shared_ptr<std::vector<std::string> > transformOrder) {
+            this->_commonInit();
+            setTransformsOrder(transformOrder);
+        }
+        
+        void setTransformsOrder(shared_ptr<std::vector<std::string> > transformsOrder) {
+            this->_transformsOrder = transformsOrder;
+        }
+        
+        shared_ptr<std::vector<std::string> > getTransformsOrder() {
+            return this->_transformsOrder;
+        }
+        
+        IDToTransform* subTranforms() {
+            return &this->_subTransforms;
+        }
+        
+        bool canEvaluateTransform() {
+            for (size_t i = 0 ; i < this->_transformsOrder->size(); i++) {
+                std::string transformID = this->_transformsOrder->at(i);
+                if (this->_subTransforms.count(transformID) == 0) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        void getTransformationMatrix(COLLADABU::Math::Matrix4& transformationMatrix) {
+            transformationMatrix = COLLADABU::Math::Matrix4::IDENTITY;
+            
+            if (!canEvaluateTransform())
+                return;
+                
+            for ( size_t i = 0, count = this->_transformsOrder->size(); i < count; ++i ) {
+                std::string transformID = this->_transformsOrder->at(i);
+
+                COLLADAFW::Transformation* transform = this->_subTransforms[transformID].get();
+                
+                switch ( transform->getTransformationType() ) {
+                    case COLLADAFW::Transformation::ROTATE:
+                    {
+                        COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
+                        COLLADABU::Math::Vector3 axis = rotate->getRotationAxis();
+                        axis.normalise();
+                        double angle = rotate->getRotationAngle();
+                        transformationMatrix = transformationMatrix * COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
+                        break;
+                    }
+                    case COLLADAFW::Transformation::TRANSLATE:
+                    {
+                        COLLADAFW::Translate* translate = (COLLADAFW::Translate*)transform;
+                        const COLLADABU::Math::Vector3& translation = translate->getTranslation();
+                        COLLADABU::Math::Matrix4 translationMatrix;
+                        translationMatrix.makeTrans(translation);
+                        transformationMatrix = transformationMatrix * translationMatrix;
+                        break;
+                    }
+                    case COLLADAFW::Transformation::SCALE:
+                    {
+                        COLLADAFW::Scale* scale = (COLLADAFW::Scale*)transform;
+                        const COLLADABU::Math::Vector3& scaleVector = scale->getScale();
+                        COLLADABU::Math::Matrix4 scaleMatrix;
+                        scaleMatrix.makeScale(scaleVector);
+                        transformationMatrix = transformationMatrix * scaleMatrix;
+                        break;
+                    }
+                    case COLLADAFW::Transformation::MATRIX:
+                    {
+                        COLLADAFW::Matrix* matrix = (COLLADAFW::Matrix*)transform;
+                        transformationMatrix = transformationMatrix * matrix->getMatrix();
+                        break;
+                    }
+                    case COLLADAFW::Transformation::LOOKAT:
+                        break; /** @TODO unhandled case */
+                    case COLLADAFW::Transformation::SKEW:
+                        break; /** @TODO unhandled case */
+                }
+                
+            }
+        }
+        
+        
+    private:
+        shared_ptr<std::vector<std::string> > _transformsOrder;
+        IDToTransform _subTransforms;
+    };
+    
+    
+    
+    //-------
+    
     static void __DecomposeMatrices(float *matrices, size_t count,
                                     std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
         
@@ -227,7 +333,7 @@ namespace GLTF
         switch (animationClass) {
             case COLLADAFW::AnimationList::TIME:
             {
-                //In Currrent COLLADA Implementation, this is never called, only cases mapping to OUTPUT are, so we handle INPUT when we enter this function.
+                //In Currrent COLLADA Implementation, this is never called, only cases mapping to OUTPUT are, so we handle INPUT (i.e time) when we enter this function.
             }
                 break;
             case COLLADAFW::AnimationList::AXISANGLE:
@@ -317,7 +423,7 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        
+                        printf("target:%s\n",targetID.c_str());
                         if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
                             shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
