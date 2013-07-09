@@ -1140,7 +1140,7 @@ namespace GLTF
                 shared_ptr <JSONObject> shininessObject(new JSONObject());
                 shininessObject->setString("type", "FLOAT");
                 shininessObject->setDouble("value", shininess);
-                values->setValue("shininesss", shininessObject);
+                values->setValue("shininess", shininessObject);
             }
             
             this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
