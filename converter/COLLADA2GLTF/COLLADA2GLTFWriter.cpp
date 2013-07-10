@@ -863,9 +863,6 @@ namespace GLTF
             
             shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
             
-            if (this->_converterContext._uniqueIDToAnimatedTargets.count(animationListID.toAscii()) > 0) {
-                printf("we already got someone here");
-            
             this->_converterContext._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
             std::string animationID = animationListID.toAscii();
