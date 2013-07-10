@@ -410,7 +410,9 @@ namespace GLTF
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
                 shared_ptr<JSONObject> node = this->_converterContext._uniqueIDToNode[jointId->getString()];
-                jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
+                if (node->contains("jointId")) {
+                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
+                }
             }
             skin->setJointsIds(jointsWithOriginalSids);
             
@@ -863,7 +865,6 @@ namespace GLTF
             
             if (this->_converterContext._uniqueIDToAnimatedTargets.count(animationListID.toAscii()) > 0) {
                 printf("we already got someone here");
-            }
             
             this->_converterContext._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
