@@ -719,7 +719,7 @@ namespace GLTF
                 program->addVarying("v_lightDirection", "FLOAT_VEC3");
                 
                 vertexShader->appendCode("v_lightDirection = vec3(%s * (vec4((vec3(0.,0.,-1.) - %s.xyz) ,1.0)));\n",
-                        "u_worldviewMatrixSymbol",
+                        "u_worldViewMatrix",
                         "a_position");
                 
                 //save camera-vertex

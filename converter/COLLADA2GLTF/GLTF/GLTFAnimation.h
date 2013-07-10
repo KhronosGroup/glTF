@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -31,12 +28,6 @@ namespace GLTF
 {
     class GLTFAnimation {
     public:
-        typedef enum {
-            SCALE,
-            AXIS_ANGLE,
-            TRANSLATION,
-            UNKNOWN
-        } ParameterType;
         
         class Parameter {
         public:
@@ -86,6 +77,7 @@ namespace GLTF
         
         shared_ptr <JSONObject> samplers();
         shared_ptr <JSONArray> channels();
+        shared_ptr <JSONObject> targets();
 
         std::string getSamplerIDForName(std::string name);
 
@@ -96,9 +88,9 @@ namespace GLTF
         std::string _id;
         shared_ptr <JSONArray> _channels;
         shared_ptr <JSONObject> _samplers;
+        shared_ptr <JSONObject> _targets;
     };
     
-
 }
 
 #endif

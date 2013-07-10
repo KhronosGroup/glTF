@@ -8,112 +8,6 @@
 
 namespace GLTF
 {
-    //a few helper classes to help flattening animations
-
-    typedef std::map<std::string , shared_ptr<COLLADAFW::Transformation> > IDToTransform;
-    
-    class GLTFTransform {
-    public:
-        void _commonInit() {
-            this->_transformsOrder = shared_ptr <std::vector<std::string> > (new std::vector<std::string>);
-        }
-        
-        GLTFTransform() {
-            this->_commonInit();
-        }
-        
-        GLTFTransform(shared_ptr<std::vector<std::string> > transformOrder) {
-            this->_commonInit();
-            setTransformsOrder(transformOrder);
-        }
-        
-        void setTransformsOrder(shared_ptr<std::vector<std::string> > transformsOrder) {
-            this->_transformsOrder = transformsOrder;
-        }
-        
-        shared_ptr<std::vector<std::string> > getTransformsOrder() {
-            return this->_transformsOrder;
-        }
-        
-        IDToTransform* subTranforms() {
-            return &this->_subTransforms;
-        }
-        
-        bool canEvaluateTransform() {
-            for (size_t i = 0 ; i < this->_transformsOrder->size(); i++) {
-                std::string transformID = this->_transformsOrder->at(i);
-                if (this->_subTransforms.count(transformID) == 0) {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-        
-        void getTransformationMatrix(COLLADABU::Math::Matrix4& transformationMatrix) {
-            transformationMatrix = COLLADABU::Math::Matrix4::IDENTITY;
-            
-            if (!canEvaluateTransform())
-                return;
-                
-            for ( size_t i = 0, count = this->_transformsOrder->size(); i < count; ++i ) {
-                std::string transformID = this->_transformsOrder->at(i);
-
-                COLLADAFW::Transformation* transform = this->_subTransforms[transformID].get();
-                
-                switch ( transform->getTransformationType() ) {
-                    case COLLADAFW::Transformation::ROTATE:
-                    {
-                        COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
-                        COLLADABU::Math::Vector3 axis = rotate->getRotationAxis();
-                        axis.normalise();
-                        double angle = rotate->getRotationAngle();
-                        transformationMatrix = transformationMatrix * COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
-                        break;
-                    }
-                    case COLLADAFW::Transformation::TRANSLATE:
-                    {
-                        COLLADAFW::Translate* translate = (COLLADAFW::Translate*)transform;
-                        const COLLADABU::Math::Vector3& translation = translate->getTranslation();
-                        COLLADABU::Math::Matrix4 translationMatrix;
-                        translationMatrix.makeTrans(translation);
-                        transformationMatrix = transformationMatrix * translationMatrix;
-                        break;
-                    }
-                    case COLLADAFW::Transformation::SCALE:
-                    {
-                        COLLADAFW::Scale* scale = (COLLADAFW::Scale*)transform;
-                        const COLLADABU::Math::Vector3& scaleVector = scale->getScale();
-                        COLLADABU::Math::Matrix4 scaleMatrix;
-                        scaleMatrix.makeScale(scaleVector);
-                        transformationMatrix = transformationMatrix * scaleMatrix;
-                        break;
-                    }
-                    case COLLADAFW::Transformation::MATRIX:
-                    {
-                        COLLADAFW::Matrix* matrix = (COLLADAFW::Matrix*)transform;
-                        transformationMatrix = transformationMatrix * matrix->getMatrix();
-                        break;
-                    }
-                    case COLLADAFW::Transformation::LOOKAT:
-                        break; /** @TODO unhandled case */
-                    case COLLADAFW::Transformation::SKEW:
-                        break; /** @TODO unhandled case */
-                }
-                
-            }
-        }
-        
-        
-    private:
-        shared_ptr<std::vector<std::string> > _transformsOrder;
-        IDToTransform _subTransforms;
-    };
-    
-    
-    
-    //-------
-    
     static void __DecomposeMatrices(float *matrices, size_t count,
                                     std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
         
@@ -212,55 +106,6 @@ namespace GLTF
         return samplerID;
     }
     
-    /*
-     Since GLTF does not have the same granularity as COLLADA, we need in some situations to duplicate a few datas.
-     For instance a target path like position.x is not supported by glTF, just the 3 components (x,y,z) can be animated.
-     This function create a buffer that will allow to handle a target path supported by GLTF.
-     */
-    static shared_ptr<GLTFBufferView> __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(shared_ptr<GLTFBufferView> bufferView,
-                                                                                                   shared_ptr<JSONArray> array,
-                                                                                                   size_t index,
-                                                                                                   std::string type,
-                                                                                                   size_t keyCount) {
-        
-        char *destinationBuffer = 0;
-        char *sourceBuffer = (char*)bufferView->getBufferDataByApplyingOffset();
-        size_t elementSize = 0;
-        size_t offset = 0;
-        //TODO handle other types
-        if (type == "FLOAT") {
-            elementSize = sizeof(float);
-            offset = (elementSize * array->values().size());
-        }
-        
-        size_t destinationBufferLength = offset * keyCount;
-        
-        if (elementSize != 0) {
-            //FIXME: should not assume FLOAT here
-            size_t count = array->values().size();
-            float *values = (float*)malloc(elementSize * count);
-            for (size_t i = 0 ; i < count ; i++) {
-                shared_ptr <JSONNumber> nb = static_pointer_cast<JSONNumber>(array->values()[i]);
-                values[i] = (float)nb->getDouble();
-            }
-            
-            destinationBuffer = (char*)malloc(destinationBufferLength);
-            for (size_t i = 0 ; i < keyCount ; i++) {
-                memcpy(destinationBuffer + (offset * i), values, offset);
-                memcpy(destinationBuffer + (offset * i) + (index * elementSize) ,
-                       sourceBuffer + (i * elementSize) ,
-                       elementSize);
-            }
-            
-            free(values);
-            
-        } else {
-            //TODO:..
-            printf("WARNING attempt to use __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex without using floats\n");
-        }
-        
-        return  createBufferViewWithAllocatedBuffer(destinationBuffer, 0, destinationBufferLength, true);
-    }
     
     /*
      Handles Channel creation + additions
@@ -279,6 +124,23 @@ namespace GLTF
     }
     
     /*
+     Handles Parameter creation / addition
+     */
+    static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                  const std::string& parameterSID,
+                                                  const std::string& parameterType) {
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
+        parameter->setCount(cvtAnimation->getCount());
+        parameter->setType(parameterType);
+        __SetupSamplerForParameter(cvtAnimation, parameter.get());
+        
+        cvtAnimation->parameters()->push_back(parameter);
+        
+        return parameter;
+    }
+    
+    /*
      Handles Parameter creation / addition / write
      */
     static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
@@ -287,12 +149,7 @@ namespace GLTF
                                                   shared_ptr <GLTFBufferView> bufferView,
                                                   std::ofstream &animationsOutputStream) {
         //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
-        parameter->setCount(cvtAnimation->getCount());
-        parameter->setType(parameterType);
-        __SetupSamplerForParameter(cvtAnimation, parameter.get());
-        
-        cvtAnimation->parameters()->push_back(parameter);
+        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
         
         //write
         parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
@@ -312,23 +169,18 @@ namespace GLTF
                         std::ofstream &animationsOutputStream,
                         GLTF::GLTFConverterContext &converterContext) {
         
-        std::string samplerID;
-        std::string name;
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
         shared_ptr<JSONArray> channels = cvtAnimation->channels();
-        size_t keyCount = cvtAnimation->getCount();
         GLTFAnimation::Parameter *timeParameter = cvtAnimation->getParameterNamed("TIME");
-        if (timeParameter) {
-            shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
-            std::string name = "TIME";
-            std::string samplerID = cvtAnimation->getSamplerIDForName(name);
-            
-            timeParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-            animationsOutputStream.write((const char*)( timeBufferView->getBufferDataByApplyingOffset()),
-                                         timeBufferView->getByteLength());
-            
+        shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
+        std::string name = "TIME";
+        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+        
+        timeParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+        animationsOutputStream.write((const char*)( timeBufferView->getBufferDataByApplyingOffset()),
+                                     timeBufferView->getByteLength());
+        
             //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
-        }
         
         switch (animationClass) {
             case COLLADAFW::AnimationList::TIME:
@@ -415,22 +267,46 @@ namespace GLTF
                 if (parameter) {
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //Convert angles to radians
-                    float *angles = (float*)bufferView->getBufferDataByApplyingOffset();
-                    for (size_t i = 0 ; i < keyCount ; i++) {
-                        angles[i] = angles[i] * 0.0174532925; //to radians.
-                    }
+                    //float *angles = (float*)bufferView->getBufferDataByApplyingOffset();
+                    //for (size_t i = 0 ; i < keyCount ; i++) {
+                    //    angles[i] = angles[i] * 0.0174532925; //to radians.
+                    //}
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        printf("target:%s\n",targetID.c_str());
                         if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
+                            
                             shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    animationFlattener->insertValueAtTime(transformID, rotations[k], 3, timeValues[k]);
+                                }
+                                
+                                /*
                                 shared_ptr<JSONArray> rotationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
                                 shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, rotationArray, 3, "FLOAT", cvtAnimation->getCount());
                                 
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* rotations = (float*)adjustedBuffer->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    size_t offset = k * 4;
+                                    shared_ptr <COLLADAFW::Rotate> rotate(new COLLADAFW::Rotate(rotations[offset + 0],
+                                                             rotations[offset + 1],
+                                                             rotations[offset + 2],
+                                                             rotations[offset + 3]));
+                                    animationFlattener->insertTransformAtTime(transformID, rotate, timeValues[k]);
+                                }
+                                */
+                                
+                                /*
                                 __SetupAndWriteAnimationParameter(cvtAnimation,
                                                                   "rotation",
                                                                   "FLOAT_VEC4",
@@ -438,6 +314,7 @@ namespace GLTF
                                                                   animationsOutputStream);
                                 
                                 __AddChannel(cvtAnimation, targetID, path);
+                                 */
                             }
                         }
                     }
@@ -458,12 +335,39 @@ namespace GLTF
                         std::string targetID = animatedTarget->getString("target");
                         
                         if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    animationFlattener->insertValueAtTime(transformID, translations[k], index, timeValues[k]);
+                                }
+
+                                /*
                                 shared_ptr<JSONArray> translationArray = static_pointer_cast <JSONArray>(targetObject->getValue(path));
                                 shared_ptr<GLTFBufferView> adjustedBuffer = __CreateBufferViewByReplicatingArrayAndReplacingValueAtIndex(bufferView, translationArray, index, "FLOAT", cvtAnimation->getCount());
                                 
+                                std::string transformID = animatedTarget->getString("transformId");
+                                
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* translations = (float*)adjustedBuffer->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    size_t offset = k * 3;
+                                    shared_ptr <COLLADAFW::Translate> translate(new COLLADAFW::Translate(translations[offset + 0],
+                                                                                                translations[offset + 1],
+                                                                                                translations[offset + 2]));
+                                    animationFlattener->insertTransformAtTime(transformID, translate, timeValues[k]);
+                                }
+                                */
+                                
+                                /*
                                 __SetupAndWriteAnimationParameter(cvtAnimation,
                                                                   path,
                                                                   "FLOAT_VEC3",
@@ -471,6 +375,7 @@ namespace GLTF
                                                                   animationsOutputStream);
                                 
                                 __AddChannel(cvtAnimation, targetID, path);
+                                 */
                             }
                         }
                     }

@@ -170,18 +170,24 @@ namespace GLTF
             printf("WARNING: matrix can't be decomposed \n");
         }
         
-        translation[0] = tran[U_TRANSX];
-        translation[1] = tran[U_TRANSY];
-        translation[2] = tran[U_TRANSZ];
+        if (translation) {
+            translation[0] = tran[U_TRANSX];
+            translation[1] = tran[U_TRANSY];
+            translation[2] = tran[U_TRANSZ];
+        }
         
-        rotation[0] = tran[U_ROTATEX];
-        rotation[1] = tran[U_ROTATEY];
-        rotation[2] = tran[U_ROTATEZ];
-        rotation[3] = tran[U_ROTATEW];
+        if (rotation) {
+            rotation[0] = tran[U_ROTATEX];
+            rotation[1] = tran[U_ROTATEY];
+            rotation[2] = tran[U_ROTATEZ];
+            rotation[3] = tran[U_ROTATEW];
+        }
         
-        scale[0] = tran[U_SCALEX];
-        scale[1] = tran[U_SCALEY];
-        scale[2] = tran[U_SCALEZ];
+        if (scale) {
+            scale[0] = tran[U_SCALEX];
+            scale[1] = tran[U_SCALEY];
+            scale[2] = tran[U_SCALEZ];
+        }
     }
     
     //converted to C++ from gl-matrix by Brandon Jones ( https://github.com/toji/gl-matrix )

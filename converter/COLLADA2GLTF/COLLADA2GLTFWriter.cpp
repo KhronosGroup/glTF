@@ -27,6 +27,7 @@
 // reminder; to run recursively against all dae files: find . -name '*.dae' -exec dae2json {} \;
 #include "COLLADA2GLTFWriter.h"
 #include "GLTFExtraDataHandler.h"
+#include "COLLADASaxFWLLoader.h"
 
 using namespace std::tr1;
 using namespace std;
@@ -56,7 +57,71 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::write()
+	
+    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                  GLTFAnimation::Parameter *parameter) {
+        shared_ptr<JSONObject> sampler(new JSONObject());
+        std::string name = parameter->getID();
+        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+        sampler->setString("input", "TIME");           //FIXME:harcoded for now
+        sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+        sampler->setString("output", name);
+        cvtAnimation->samplers()->setValue(samplerID, sampler);
+        
+        return samplerID;
+    }
+
+    /*
+     Handles Channel creation + additions
+     */
+    static void __AddChannel(shared_ptr <GLTFAnimation> cvtAnimation,
+                             const std::string &targetID,
+                             const std::string &path) {
+        shared_ptr<JSONObject> trChannel(new JSONObject());
+        shared_ptr<JSONObject> trTarget(new JSONObject());
+        
+        trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
+        trChannel->setValue("target", trTarget);
+        trTarget->setString("id", targetID);
+        trTarget->setString("path", path);
+        cvtAnimation->channels()->appendValue(trChannel);
+    }
+    
+    /*
+     Handles Parameter creation / addition
+     */
+    static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                                           const std::string& parameterSID,
+                                                                           const std::string& parameterType) {
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
+        parameter->setCount(cvtAnimation->getCount());
+        parameter->setType(parameterType);
+        __SetupSamplerForParameter(cvtAnimation, parameter.get());
+        
+        cvtAnimation->parameters()->push_back(parameter);
+        
+        return parameter;
+    }
+    
+    /*
+     Handles Parameter creation / addition / write
+     */
+    static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                  const std::string& parameterSID,
+                                                  const std::string& parameterType,
+                                                  unsigned char* buffer, size_t length,
+                                                  std::ofstream &animationsOutputStream) {
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
+        
+        //write
+        parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
+        animationsOutputStream.write((const char*)buffer, length);
+    }
+
+    
+    bool COLLADA2GLTFWriter::write()
 	{
         ifstream inputVertices;
         ifstream inputIndices;
@@ -107,13 +172,78 @@ namespace GLTF
 		if (!root.loadDocument( this->_converterContext.inputFilePath))
 			return false;
         
+        // ----
+        UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
+        shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
+        
+        this->_converterContext.root->setValue("animations", animationsObject);
+        
+        for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
+            //(*it).first;             // the key value (of type Key)
+            //(*it).second;            // the mapped value (of type T)
+            
+            shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+            
+            std::vector<std::string> allTargets = animation->targets()->getAllKeys();
+            for (size_t i = 0 ; i < allTargets.size() ; i++) {
+                std::string targetID = allTargets[i];
+                
+                shared_ptr<GLTFAnimationFlattener> animationFlattener = this->_converterContext._uniqueIDToAnimationFlattener[targetID];
+                
+                size_t count = 0;
+                float* rotations = 0;
+                float* positions = 0;
+                float* scales = 0;
+                
+                animationFlattener->allocAndFillAffineTransformsBuffers(&positions, &rotations, &scales, count);
+                
+                if (animationFlattener->hasAnimatedScale()) {
+                    //Scale
+                    __SetupAndWriteAnimationParameter(animation,
+                                                      "scale",
+                                                      "FLOAT_VEC3",
+                                                      (unsigned char*)scales,
+                                                      count * sizeof(float) * 3,
+                                                      this->_animationsOutputStream);
+                    __AddChannel(animation, targetID, "scale");
+                    
+                }
+                
+                
+                if (animationFlattener->hasAnimatedTranslation()) {
+                    //Translation
+                    __SetupAndWriteAnimationParameter(animation,
+                                                      "translation",
+                                                      "FLOAT_VEC3",
+                                                      (unsigned char*)positions,
+                                                      count * sizeof(float) * 3,
+                                                      this->_animationsOutputStream);
+                    __AddChannel(animation, targetID, "translation");
+                    
+                }
+                
+                if (animationFlattener->hasAnimatedRotation()) {
+                    //Rotation
+                    __SetupAndWriteAnimationParameter(animation,
+                                                      "rotation",
+                                                      "FLOAT_VEC4",
+                                                      (unsigned char*)rotations,
+                                                      count * sizeof(float) * 4,
+                                                      this->_animationsOutputStream);
+                    __AddChannel(animation, targetID, "rotation");
+                    
+                }
+                
+            }
+        }
+        
         
         //reopen .bin files for vertices and indices
         size_t verticesLength = this->_verticesOutputStream.tellp();
         size_t indicesLength = this->_indicesOutputStream.tellp();
         size_t compressedDataLength = this->_compressedDataOutputStream.tellp();
         size_t animationsLength = this->_animationsOutputStream.tellp();
-        
+
         this->_verticesOutputStream.flush();
         this->_verticesOutputStream.close();
         this->_indicesOutputStream.flush();
@@ -136,6 +266,7 @@ namespace GLTF
         inputIndices.read(bufferIOStream, indicesLength);
         ouputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
+
         bufferIOStream = (char*)malloc(sizeof(char) * animationsLength);
         inputAnimations.read(bufferIOStream, animationsLength);
         ouputStream.write(bufferIOStream, animationsLength);
@@ -155,10 +286,18 @@ namespace GLTF
         remove(outputVerticesFilePath.c_str());
         remove(outputAnimationsFilePath.c_str());
         remove(outputCompressedDataFilePath.c_str());
+
+        bufferIOStream = (char*)malloc(sizeof(char) * animationsLength);
+        inputAnimations.read(bufferIOStream, animationsLength);
+        verticesOutputStream.write(bufferIOStream, animationsLength);
+        free(bufferIOStream);
         
+        inputAnimations.close();
+        remove(outputAnimationsFilePath.c_str());
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationsLength));
+
         //---
         
-        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationsLength));
         
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
@@ -286,11 +425,27 @@ namespace GLTF
             skins->setValue(skin->getId(), serializedSkin);
         }
         
-        // ----
-        UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
-        shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
         
-        this->_converterContext.root->setValue("animations", animationsObject);
+        // ----
+        
+        /*
+        UniqueIDToAnimationFlattener::const_iterator UniqueIDToAnimationFlattenerIterator;
+        
+        for (UniqueIDToAnimationFlattenerIterator = this->_converterContext._uniqueIDToAnimationFlattener.begin() ; UniqueIDToAnimationFlattenerIterator != this->_converterContext._uniqueIDToAnimationFlattener.end() ; UniqueIDToAnimationFlattenerIterator++) {
+            //(*it).first;             // the key value (of type Key)
+            //(*it).second;            // the mapped value (of type T)
+            
+            shared_ptr<GLTFAnimationFlattener> animationFlattener = (*UniqueIDToAnimationFlattenerIterator).second;
+            
+            size_t count = animationFlattener->getCount();
+            for (size_t i = 0 ; i < count ; i++) {
+                COLLADABU::Math::Matrix4 matrix;
+                animationFlattener->getTransformationMatrixAtIndex(matrix, i);
+            }
+            
+            
+        }*/
+        // ----
         
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
@@ -298,6 +453,9 @@ namespace GLTF
             
             shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
             std::vector <shared_ptr <GLTFAnimation::Parameter> > *parameters = animation->parameters();
+            
+            std::vector<std::string> allTargets = animation->targets()->getAllKeys();
+            
             for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
                 shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
                 parameter->setBufferView(animationsBufferView);
@@ -651,7 +809,6 @@ namespace GLTF
             size_t transformationsCount = transformations.getCount();
             for (size_t i = 0 ; i < transformationsCount ; i++) {
                 const Transformation* tr = transformations[i];
-                
                 if (tr->getTransformationType() == Transformation::LOOKAT) {
                     Lookat* lookAt = (Lookat*)tr;
                     buildLookAtMatrix(lookAt, matrix);
@@ -674,6 +831,8 @@ namespace GLTF
         float translation[3];
         float rotation[4];
         
+//        Loader::AnimationSidAddressBindingList& bindingList = _loader.getAnimationSidAddressBindings();
+
         const TransformationPointerArray& transformations = node->getTransformations();
         size_t transformationsCount = transformations.getCount();
         for (size_t i = 0 ; i < transformationsCount ; i++) {
@@ -681,14 +840,39 @@ namespace GLTF
             const UniqueId& animationListID = tr->getAnimationList();
             if (!animationListID.isValid())
                 continue;
+            
+            /*
+            for (size_t k = 0 ; k < bindingList.size() ; k++) {
+                Loader::AnimationSidAddressBinding binding = bindingList[k];
+                if (binding.sidAddress.getId().c_str() == nodeUID) {
+                    SidAddress::SidList sids = binding.sidAddress.getSids();
+                    printf("%s\n",binding.sidAddress.getSidAddressString().c_str());
+
+                }
+                //if (binding.animationInfo.uniqueId.toAscii() == tr->getUniqueId().toAscii()) {
+                //    printf("we already got someone here");
+
+                //}
+                
+            }*/
+
+            
+            
+            
             shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
-            this->_converterContext._uniqueIDToAnimatedTargets[animationListID.getObjectId()] = animatedTargets;
+            
+            if (this->_converterContext._uniqueIDToAnimatedTargets.count(animationListID.toAscii()) > 0) {
+                printf("we already got someone here");
+            }
+            
+            this->_converterContext._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
             std::string animationID = animationListID.toAscii();
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
                 animatedTarget->setString("target", nodeUID);
                 animatedTarget->setString("path", "MATRIX");
+                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
@@ -696,6 +880,7 @@ namespace GLTF
             if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
                 animatedTarget->setString("target", nodeUID);
                 animatedTarget->setString("path", "translation");
+                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
@@ -703,9 +888,16 @@ namespace GLTF
             if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
                 animatedTarget->setString("target", nodeUID);
                 animatedTarget->setString("path", "rotation");
+                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
+        }
+        
+        
+        if (shouldExportTRS) {
+            shared_ptr<GLTFAnimationFlattener> animationFlattener(new GLTFAnimationFlattener((Node*)node));
+            this->_converterContext._uniqueIDToAnimationFlattener[nodeUID] = animationFlattener;
         }
                 
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
@@ -783,7 +975,6 @@ namespace GLTF
         if (meshesArray->values().size() > 0)
             nodeObject->setValue("meshes", meshesArray);
 
-        
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
         nodeObject->setValue("children", childrenArray);
         
@@ -1283,7 +1474,7 @@ namespace GLTF
 	{
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
-        AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().getObjectId()];
+        AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];

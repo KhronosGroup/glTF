@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -91,10 +88,15 @@ namespace GLTF
     GLTFAnimation::GLTFAnimation() {
         this->_samplers = shared_ptr<JSONObject> (new JSONObject());
         this->_channels = shared_ptr<JSONArray> (new JSONArray());
+        this->_targets = shared_ptr<JSONObject> (new JSONObject());
     }
 
     GLTFAnimation::~GLTFAnimation() {}
-    
+
+    shared_ptr <JSONObject> GLTFAnimation::targets() {
+        return this->_targets;
+    }
+
     size_t GLTFAnimation::getCount() {
         return this->_count;
     }
@@ -137,7 +139,6 @@ namespace GLTF
         return -1;
     }
 
-    
     void GLTFAnimation::removeParameterNamed(std::string parameter) {
         for (size_t i = 0 ; i < this->_parameters.size() ; i++) {
             if (this->_parameters[i]->getID() == parameter) {
@@ -166,6 +167,5 @@ namespace GLTF
     std::string GLTFAnimation::getSamplerIDForName(std::string name) {
         return this->_id + "_" + name + "_sampler";
     }
-
     
 }

@@ -3,6 +3,8 @@
 
 namespace GLTF
 {
+    class GLTFAnimationFlattener;
+    
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
     typedef shared_ptr <AnimatedTargets> AnimatedTargetsSharedPtr;
 
@@ -16,11 +18,12 @@ namespace GLTF
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
     typedef std::map<std::string /* openCOLLADA uniqueID */, shared_ptr<JSONObject> > UniqueIDToNode;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
+    typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
     typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToTrackedObject;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
-
+    typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
+    
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
     typedef struct
@@ -48,6 +51,7 @@ namespace GLTF
         UniqueIDToSkin _uniqueIDToSkin;
         UniqueIDToNode _uniqueIDToNode;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
+        UniqueIDToAnimationFlattener _uniqueIDToAnimationFlattener;
         
     } GLTFConverterContext;
 
