@@ -224,7 +224,9 @@ namespace GLTF
         if (typeForSemanticUniform.empty()) {
             typeForSemanticUniform["WORLDVIEWINVERSETRANSPOSE"] = "FLOAT_MAT3"; //typically the normal matrix
             typeForSemanticUniform["WORLDVIEW"] = "FLOAT_MAT4"; 
-            typeForSemanticUniform["PROJECTION"] = "FLOAT_MAT4"; 
+            typeForSemanticUniform["PROJECTION"] = "FLOAT_MAT4";
+            typeForSemanticUniform["JOINT_MATRIX"] = "FLOAT_MAT4";
+            
         }
         return typeForSemanticUniform[semantic];
     }
@@ -653,7 +655,10 @@ namespace GLTF
                             "JOINT", "joint", 1, true);
                 addSemantic("vs", "attribute",
                             "WEIGHT", "weight", 1, true);
-                addValue("vs", "uniform",   "FLOAT_MAT4", 60, "jointMat");
+                //addValue("vs", "uniform",   "FLOAT_MAT4", 60, "jointMat");
+                addSemantic("vs", "uniform",
+                            "JOINT_MATRIX", "jointMat", 60, false);
+
             }
             
             //normal matrix
