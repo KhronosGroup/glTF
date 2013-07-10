@@ -92,6 +92,9 @@ namespace GLTF
     //Not yet implemented for everything
     static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters) {
         if (inputParameters->contains(slot)) {
+            return true;
+            
+            //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
             
             if (param->getString("type") == "SAMPLER_2D" )
@@ -627,9 +630,9 @@ namespace GLTF
             _parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
             
             shared_ptr <JSONObject> inputParameters = values;
-
-            bool useSimpleLambert = !(slotIsContributingToLighting("specular", inputParameters) &&
-                                      inputParameters->contains("shininess"));
+            
+            bool useSimpleLambert = !(inputParameters->contains("specular") &&
+                                     inputParameters->contains("shininess"));
             
             bool hasSkinning = attributeSemantics->contains("WEIGHT") && attributeSemantics->contains("JOINT");
             
@@ -712,7 +715,9 @@ namespace GLTF
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("vec4 reflective;\n");
             }
-            if (slotIsContributingToLighting("specular", inputParameters)) {
+            
+            if (inputParameters->contains("specular")) {
+            //if (slotIsContributingToLighting("specular", inputParameters)) {
                 fragmentShader->appendCode("vec4 specular;\n");
             }
             
