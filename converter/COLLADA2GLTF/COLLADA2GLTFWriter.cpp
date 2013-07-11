@@ -178,6 +178,9 @@ namespace GLTF
         
         this->_converterContext.root->setValue("animations", animationsObject);
         
+        std::map<std::string, bool> targetProcessed;
+        std::vector<unsigned int > animationsToBeRemoved;
+        
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
@@ -187,6 +190,12 @@ namespace GLTF
             std::vector<std::string> allTargets = animation->targets()->getAllKeys();
             for (size_t i = 0 ; i < allTargets.size() ; i++) {
                 std::string targetID = allTargets[i];
+                
+                if (targetProcessed.count(targetID) > 0) {
+                    animationsToBeRemoved.push_back((*UniqueIDToAnimationsIterator).first);
+                    continue;
+                }
+                targetProcessed[targetID] = true;
                 
                 shared_ptr<GLTFAnimationFlattener> animationFlattener = this->_converterContext._uniqueIDToAnimationFlattener[targetID];
                 
@@ -206,7 +215,8 @@ namespace GLTF
                                                       count * sizeof(float) * 3,
                                                       this->_animationsOutputStream);
                     __AddChannel(animation, targetID, "scale");
-                    
+                    free(scales);
+
                 }
                 
                 
@@ -219,7 +229,8 @@ namespace GLTF
                                                       count * sizeof(float) * 3,
                                                       this->_animationsOutputStream);
                     __AddChannel(animation, targetID, "translation");
-                    
+                    free(positions);
+
                 }
                 
                 if (animationFlattener->hasAnimatedRotation()) {
@@ -232,11 +243,16 @@ namespace GLTF
                                                       this->_animationsOutputStream);
                     __AddChannel(animation, targetID, "rotation");
                     
+                    free(rotations);
                 }
-                
             }
         }
         
+        
+        for (size_t i= 0 ; i < animationsToBeRemoved.size() ; i++) {
+            this->_converterContext._uniqueIDToAnimation.erase(animationsToBeRemoved[i]);
+        }
+
         
         //reopen .bin files for vertices and indices
         size_t verticesLength = this->_verticesOutputStream.tellp();
