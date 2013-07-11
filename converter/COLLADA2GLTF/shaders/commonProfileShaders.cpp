@@ -676,8 +676,6 @@ namespace GLTF
             addSemantic("vs", "uniform",
                         "PROJECTION", "projectionMatrix" , 1, false);
             
-            vertexShader->appendCode("%s = normalize(%s * %s);\n",
-                                        "v_normal", "u_normalMatrix", "a_normal");
            
             if (hasSkinning) {
                 vertexShader->appendCode("mat4 skinMat = a_weight.x * u_jointMat[int(a_joint.x)];\n");
@@ -688,15 +686,19 @@ namespace GLTF
                                          GLSLShader::GLSLTypeForGLType("FLOAT_VEC4").c_str(),
                                          "u_worldViewMatrix",
                                          "a_position");
+                vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
+                                         "v_normal", "u_normalMatrix", "a_normal");
+                
             } else {
                 vertexShader->appendCode("%s pos = %s * vec4(%s,1.0);\n",
                                          GLSLShader::GLSLTypeForGLType("FLOAT_VEC4").c_str(),
                                          "u_worldViewMatrix",
                                          "a_position");
+                vertexShader->appendCode("%s = normalize(%s * %s);\n",
+                                         "v_normal", "u_normalMatrix", "a_normal");
+                
             }
             
-            
-
             fragmentShader->appendCode("vec3 normal = normalize(%s);\n",
                                         "v_normal");
             if (techniqueExtras->getBool("double_sided")) {
@@ -708,13 +710,17 @@ namespace GLTF
             }
             
             //color to cumulate all components and light contribution
-            fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 0.);\n");
-            fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 1.);\n");
+            fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 1.);\n");
+            fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 0.);\n");
             if (slotIsContributingToLighting("emission", inputParameters)) {
                 fragmentShader->appendCode("vec4 emission;\n");             }
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("vec4 reflective;\n");
             }
+            if (slotIsContributingToLighting("ambient", inputParameters)) {
+                fragmentShader->appendCode("vec4 ambient;\n");
+            }
+
             
             if (inputParameters->contains("specular")) {
             //if (slotIsContributingToLighting("specular", inputParameters)) {
@@ -749,8 +755,8 @@ namespace GLTF
             std::map<std::string , std::string> declaredTexcoordAttributes;
             std::map<std::string , std::string> declaredTexcoordVaryings;
             
-            const int slotsCount = 4;
-            std::string slots[slotsCount] = { "diffuse", "emission", "reflective", "specular" };
+            const int slotsCount = 5;
+            std::string slots[slotsCount] = { "ambient", "diffuse", "emission", "reflective", "specular" };
             for (size_t slotIndex = 0 ; slotIndex < slotsCount ; slotIndex++) {
                 std::string slot = slots[slotIndex];
                 
@@ -824,9 +830,13 @@ namespace GLTF
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
+            if (slotIsContributingToLighting("ambient", inputParameters)) {
+                fragmentShader->appendCode("color.xyz += ambient.xyz;\n");
+            }
+
             
             fragmentShader->appendCode("diffuse.xyz *= lambert;\n");
-            fragmentShader->appendCode("color += diffuse;\n");
+            fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
             
             if (slotIsContributingToLighting("emission", inputParameters)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
