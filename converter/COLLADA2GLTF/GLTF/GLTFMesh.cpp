@@ -24,6 +24,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+//--- X3DGC
+#define _CRT_SECURE_NO_WARNINGS
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+#include "x3dgc_Vector.h"
+#include "x3dgc_SC3DMCEncodeParams.h"
+#include "x3dgc_IndexedFaceSet.h"
+#include "x3dgc_SC3DMCEncoder.h"
+#include "x3dgc_SC3DMCDecoder.h"
+using namespace x3dgc;
+//--- X3DGC
+
+
 #include "GLTF.h"
 #include "../helpers/geometryHelpers.h"
 
@@ -156,12 +174,40 @@ namespace GLTF
     
     bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
+        int qcoord    = 12;
+        int qtexCoord = 10;
+        int qnormal   = 10;
+
+        SC3DMCEncodeParams params;
+        IndexedFaceSet ifs;
+        params.SetCoordQuantBits(qcoord);
+        params.SetNormalQuantBits(qnormal);
+        params.SetTexCoordQuantBits(qtexCoord);
+        /*
+        ifs.SetNCoord(points.size());
+        ifs.SetNNormal(normals.size());
+        ifs.SetNTexCoord(texCoords.size());
+        //ifs.SetNCoordIndex(triangles.size());
+        
+        ifs.SetCoord((Real * const) & (points[0]));
+        ifs.SetCoordIndex((long * const ) &(triangles[0]));
+        if (normals.size() > 0)
+        {
+            ifs.SetNormal((Real * const) & (normals[0]));
+        }
+        if (texCoords.size() > 0)
+        {
+            ifs.SetTexCoord((Real * const ) & (texCoords[0]));
+        }
+*/
+        
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
         shared_ptr <MeshAttributeVector> allMeshAttributes = this->meshAttributes();
         shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
-                
+        int vertexCount;
+        unsigned int indicesCount;
         PrimitiveVector primitives = this->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
@@ -170,7 +216,9 @@ namespace GLTF
             /*
                 Convert the indices to unsigned short and write the blob 
              */
-            unsigned int indicesCount = (unsigned int)uniqueIndices->getCount();
+            indicesCount = (unsigned int)uniqueIndices->getCount();
+            
+            ifs.SetNCoordIndex(indicesCount / 3);
             
             shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
@@ -182,10 +230,17 @@ namespace GLTF
             } else {
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
+                long* longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
+
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
+                    longIndices[idx] = (long)uniqueIndicesBuffer[idx];
+
                 }
-                    
+                
+                    ifs.SetCoordIndex((long * const ) longIndices);
+               // free(longIndices);
+                
                 uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
                 indicesOutputStream.write((const char*)ushortIndices, indicesLength);
                 
@@ -196,6 +251,7 @@ namespace GLTF
             }
         }
         
+        int attributeCount = 0;
         for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
             shared_ptr <GLTFMeshAttribute> meshAttribute = (*allMeshAttributes)[j];
             shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
@@ -211,6 +267,27 @@ namespace GLTF
                 // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 meshAttribute->computeMinMax();
                 
+                vertexCount = meshAttribute->getCount();// * meshAttribute->getComponentsPerAttribute();
+                
+                //ifs.SetNFloatAttribute  (attributeCount, meshAttribute->getCount() * meshAttribute->getComponentsPerAttribute());
+  //              ifs.SetFloatAttributeDim(attributeCount, meshAttribute->getComponentsPerAttribute());
+    //            ifs.SetFloatAttribute   (attributeCount, (Real * const) buffer->getData());
+      //          params.SetFloatAttributeQuantBits(0, 13);
+                attributeCount++;
+                
+                if (j == 0) {
+                    ifs.SetNCoord(vertexCount);
+                    ifs.SetCoord((Real * const)buffer->getData());
+                }
+                if (j == 1) {
+                    ifs.SetNNormal(vertexCount);
+                    ifs.SetNormal((Real * const)buffer->getData());
+                }
+                if (j == 2) {
+                    ifs.SetNTexCoord(vertexCount);
+                    ifs.SetTexCoord((Real * const)buffer->getData());
+                }
+                
                 meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
                 verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
 
@@ -220,6 +297,15 @@ namespace GLTF
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             } 
         }
+        // compute min/max
+        ifs.ComputeMinMax(X3DGC_SC3DMC_MAX_ALL_DIMS); // X3DGC_SC3DMC_DIAG_BB
+        
+        BinaryStream bstream(vertexCount * 8);
+        
+        SC3DMCEncoder encoder;
+        encoder.Encode(params, ifs, bstream);
+        bstream.Save("duck.x3d");
+
                 
         return true;
     }

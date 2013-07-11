@@ -20,6 +20,11 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAS
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_common_lib/inc)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_encode_lib/inc)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_decode_lib/inc)
+
 if (NOT WIN32)
     find_package(PNG REQUIRED)
     include_directories(${PNG_INCLUDE_DIR})
@@ -36,7 +41,11 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
+<<<<<<< HEAD
 add_subdirectory(dependencies/webgl-loader)
+=======
+add_subdirectory(dependencies/x3dgc/src)
+>>>>>>> quick hack to try compression on the COLLADA duck
 
 add_executable(collada2gltf main.cpp 
     COLLADA2GLTFWriter.cpp
@@ -90,7 +99,7 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.h)
 
 if (WIN32)
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static x3dgc_enc_lib)
 else ()
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY})
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY} x3dgc_enc_lib x3dgc_common_lib)
 endif()
