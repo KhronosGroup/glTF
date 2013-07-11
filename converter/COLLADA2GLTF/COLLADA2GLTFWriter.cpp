@@ -1524,22 +1524,23 @@ namespace GLTF
             size_t pairCount = jointsPerVertex[i];
 			if ( pairCount == 0 )
 				continue;
-            if (pairCount > bucketSize) {
-                pairCount = bucketSize;
-            }
             
 			if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT ) {
 				const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
 				for (size_t j = 0; j < pairCount; ++j, ++index) {
-                    bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
-                    weightsPtr[(i * bucketSize) + j] = (*floatWeights)[weightIndices[index]];
+                    if (j < bucketSize) {
+                        bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
+                        weightsPtr[(i * bucketSize) + j] = (*floatWeights)[weightIndices[index]];
+                    }
 				}
 			}
 			else if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE ) {
 				const COLLADAFW::DoubleArray* doubleWeights = weights.getDoubleValues();
 				for (size_t j = 0; j < pairCount; ++j, ++index) {
-                    bonesIndices[(i * bucketSize) + j] = jointIndices[index];
-					weightsPtr[(i * bucketSize) + j]  = (float)(*doubleWeights)[weightIndices[index]];
+                    if (j < bucketSize) {
+                        bonesIndices[(i * bucketSize) + j] = jointIndices[index];
+                        weightsPtr[(i * bucketSize) + j]  = (float)(*doubleWeights)[weightIndices[index]];
+                    }
 				}
 			}
         }
