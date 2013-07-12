@@ -154,10 +154,30 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     return true;
 }
 
+bool fileExists(const char * filename) {
+    if (FILE * file = fopen(filename, "r")) {
+        fclose(file);
+        return true;
+    }
+    return false;
+}
+
 int main (int argc, char * const argv[]) {
     GLTF::GLTFConverterContext converterContext;
     
     if (processArgs(argc, argv, &converterContext)) {
+        if (converterContext.inputFilePath.length() == 0) {
+            perror("no input file provided, convertion aborted");
+            return -1;
+        }
+        const char* inputFilePathCStr = converterContext.inputFilePath.c_str();
+        
+        if (!fileExists(converterContext.inputFilePath.c_str())) {
+            printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
+            
+            return -1;
+        }
+        
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterContext.outputFilePath.c_str(), "w");
         if (fd) {
