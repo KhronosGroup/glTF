@@ -175,6 +175,8 @@ namespace GLTF
                               std::string slotName,
                               shared_ptr <GLTFEffect> cvtEffect);
         
+        std::string getSamplerUIDForParameters(std::string wrapS, std::string wrapT, std::string minFilter, std::string maxFilter);
+        
 	private:
         COLLADASaxFWL::Loader _loader;
         GLTF::GLTFConverterContext _converterContext;

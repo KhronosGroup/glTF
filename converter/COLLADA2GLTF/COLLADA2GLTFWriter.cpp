@@ -242,7 +242,6 @@ namespace GLTF
                                                       count * sizeof(float) * 4,
                                                       this->_animationsOutputStream);
                     __AddChannel(animation, targetID, "rotation");
-                    
                     free(rotations);
                 }
             }
@@ -1222,6 +1221,38 @@ namespace GLTF
         return "LINEAR";
     }
     
+    std::string COLLADA2GLTFWriter::getSamplerUIDForParameters(std::string wrapS,
+                                                               std::string wrapT,
+                                                               std::string minFilter,
+                                                               std::string maxFilter) {
+        std::string samplerHash = wrapS+wrapT+minFilter+maxFilter;
+        bool addSampler = false;
+        size_t index = 0;
+        
+        if (this->_converterContext._samplerHashtoSamplerIndex.count(samplerHash) == 0) {
+            index = this->_converterContext._samplerHashtoSamplerIndex.size();
+            this->_converterContext._samplerHashtoSamplerIndex[samplerHash] = index;            
+            addSampler = true;
+        } else {
+            index = this->_converterContext._samplerHashtoSamplerIndex[samplerHash];
+        }
+        
+        std::string samplerUID = "sampler_"+GLTFUtils::toString(index);
+        if (addSampler) {
+            shared_ptr <JSONObject> sampler2D(new JSONObject());
+            
+            sampler2D->setString("wrapS", wrapS);
+            sampler2D->setString("wrapT", wrapT);
+            sampler2D->setString("minFilter", minFilter);
+            sampler2D->setString("magFilter", maxFilter);
+
+            shared_ptr <GLTF::JSONObject> samplers = this->_converterContext.root->createObjectIfNeeded("samplers");
+            samplers->setValue(samplerUID, sampler2D);
+        }
+        
+        return samplerUID;
+    }
+    
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                                               std::string slotName,
                                               shared_ptr <GLTFEffect> cvtEffect)
@@ -1245,7 +1276,6 @@ namespace GLTF
         else
             return;
         
-        
         //retrieve the type, parameterName -> symbol -> type
         double red = 1, green = 1, blue = 1;
         if (slot.isColor()) {
@@ -1261,27 +1291,39 @@ namespace GLTF
             values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
-            
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             const Sampler* sampler = samplers[texture.getSamplerId()];
-            const UniqueId& imageUID = sampler->getSourceImage();
-            
-            shared_ptr <JSONObject> sampler2D(new JSONObject());
+            std::string imageUID = uniqueIdWithType("image",sampler->getSourceImage());
             
             std::string texcoord = texture.getTexcoord();
             
             cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
             shared_ptr <JSONObject> slotObject(new JSONObject());
-
-            sampler2D->setString("wrapS", __GetGLWrapMode(sampler->getWrapS()));
-            sampler2D->setString("wrapT", __GetGLWrapMode(sampler->getWrapT()));
-            sampler2D->setString("minFilter", __GetFilterMode(sampler->getMinFilter()));
-            sampler2D->setString("magFilter", __GetFilterMode(sampler->getMagFilter()));
-            sampler2D->setString("image", uniqueIdWithType("image",imageUID));
+            
+            //do we need to export a new texture ? if yes compose a new unique ID
             slotObject->setString("type", "SAMPLER_2D");
-            slotObject->setValue("value", sampler2D);
+            
+            //do we need a new sampler ?
+            std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS()),
+                                                                      __GetGLWrapMode(sampler->getWrapT()),
+                                                                      __GetFilterMode(sampler->getMinFilter()),
+                                                                      __GetFilterMode(sampler->getMagFilter()));
+            
+            std::string textureUID = "texture_" + imageUID;
+            
+            shared_ptr <GLTF::JSONObject> textures = this->_converterContext.root->createObjectIfNeeded("textures");
+            if (textures->contains(textureUID) == false) {
+                shared_ptr <JSONObject> textureObject(new JSONObject());
+                textureObject->setString("source", imageUID);
+                textureObject->setString("sampler", samplerUID);
+                textureObject->setString("format", "RGBA");
+                textureObject->setString("internalFormat", "RGBA");
+                textureObject->setString("target", "TEXTURE_2D");
+                textures->setValue(textureUID, textureObject);
+            }
 
+            slotObject->setString("value", textureUID);
             values->setValue(slotName, slotObject);
         } else {
             // nothing to do, no texture or color

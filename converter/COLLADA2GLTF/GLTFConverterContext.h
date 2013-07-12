@@ -23,6 +23,7 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToTrackedObject;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
     typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
+    typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
@@ -52,6 +53,7 @@ namespace GLTF
         UniqueIDToNode _uniqueIDToNode;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         UniqueIDToAnimationFlattener _uniqueIDToAnimationFlattener;
+        SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         
     } GLTFConverterContext;
 
