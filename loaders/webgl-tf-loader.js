@@ -69,55 +69,10 @@ var global = window;
 }(this, function (root) {
     "use strict";
 
-    var categoriesDepsOrder = ["buffers", "bufferViews", "images", "shaders", "programs", "techniques", "materials", "indices", "attributes", "meshes", "cameras", "lights", "nodes", "scenes", "animations"];
-
-    var categoryForType = {
-        "buffer" : "buffers",
-        "bufferView" : "bufferViews",
-        "image" : "images",
-        "shader" : "shaders",
-        "program" : "programs",
-        "technique" : "techniques",
-        "material" : "materials",
-        "mesh" : "meshes",
-        "camera" : "cameras",
-        "light" : "lights",
-        "node" : "nodes",
-        "scene" : "scenes",
-        "animation" : "animations",
-        "attribute" : "attributes",
-        "indices" : "indices"
-    };
-
-    var typeForCategory = {
-        "buffers" : "buffer",
-        "bufferViews" : "bufferView",
-        "images" : "image",
-        "shaders" : "shader",
-        "programs" : "program",
-        "techniques" : "technique",
-        "materials" : "material",
-        "meshes" : "mesh",
-        "cameras" : "camera",
-        "lights" : "light",
-        "nodes" : "node",
-        "scenes" : "scene",
-        "animations" : "animation",
-        "indices" : "indices",
-        "attributes" : "attribute"
-    };
+    var categoriesDepsOrder = ["buffers", "bufferViews", "images", "samplers", "textures", "shaders", "programs", "techniques", "materials", "indices", "attributes", "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
 
     var WebGLTFLoader = Object.create(Object.prototype, {
 
-        MESH: { value: "mesh" },
-        MATERIAL: { value: "material" },
-        TECHNIQUE: { value: "technique" },
-        SHADER: { value: "shader" },
-        SCENE: { value: "scene" },
-        NODE: { value: "node" },
-        CAMERA: { value: "camera" },
-        BUFFER : { value: "buffer" },
-        IMAGE : { value: "image" },
 
         _rootDescription: { value: null, writable: true },
 
@@ -195,7 +150,7 @@ var global = window;
             value: function (entryID, entryType) {
                 var entries = null;
 
-                var category = categoryForType[entryType];
+                var category = entryType;
                 entries = this.rootDescription[category];
                 if (!entries) {
                     console.log("ERROR:CANNOT find expected category named:"+category);
@@ -247,21 +202,24 @@ var global = window;
             value: function() {
 
                 var methodForType = {
-                    "buffer" : this.handleBuffer,
-                    "bufferView" : this.handleBufferView,
-                    "shader" : this.handleShader,
-                    "program" : this.handleProgram,
-                    "technique" : this.handleTechnique,
-                    "material" : this.handleMaterial,
-                    "mesh" : this.handleMesh,
-                    "camera" : this.handleCamera,
-                    "light" : this.handleLight,
-                    "node" : this.handleNode,
-                    "scene" : this.handleScene,
-                    "image" : this.handleImage,
-                    "animation" : this.handleAnimation,
+                    "buffers" : this.handleBuffer,
+                    "bufferViews" : this.handleBufferView,
+                    "shaders" : this.handleShader,
+                    "programs" : this.handleProgram,
+                    "techniques" : this.handleTechnique,
+                    "materials" : this.handleMaterial,
+                    "meshes" : this.handleMesh,
+                    "cameras" : this.handleCamera,
+                    "lights" : this.handleLight,
+                    "nodes" : this.handleNode,
+                    "scenes" : this.handleScene,
+                    "images" : this.handleImage,
+                    "animations" : this.handleAnimation,
                     "indices" : this.handleIndices,
-                    "attribute" : this.handleAttribute
+                    "attributes" : this.handleAttribute,
+                    "skins" : this.handleSkin,
+                    "samplers" : this.handleSampler,
+                    "textures" : this.handleTexture
                 };
 
                 var success = true;
@@ -271,9 +229,15 @@ var global = window;
                     var keys = categoryState.keys;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
+                        if (keys) {
+                            if (keys.length == 0) {
+                                this._stepToNextDescription();
+                                continue;
+                            }
+                        }
                     }
 
-                    var type = typeForCategory[category];
+                    var type = category;
                     var entryID = keys[categoryState.index];
                     var description = this.getEntryDescription(entryID, type);
                     if (!description) {
