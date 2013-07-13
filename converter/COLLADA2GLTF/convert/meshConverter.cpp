@@ -266,18 +266,19 @@ namespace GLTF
     }
     
     
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes)
+    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, int allowedComponentsPerAttribute)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
         //2. not the original id in the source
         
-        std::string name;
+        std::string id;
         size_t length, elementsCount;
         size_t stride = 0;
-        size_t size = 0;
+        size_t componentsPerAttribute = 0;
         size_t byteOffset = 0;
         size_t inputLength = 0;
+        bool meshAttributeOwnsBuffer = false;
         
         size_t setCount = vertexData.getNumInputInfos();
         bool unpatchedOpenCOLLADA = (setCount == 0); // reliable heuristic to know if the input have not been set
@@ -287,19 +288,18 @@ namespace GLTF
         
         for (size_t indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
             if (!unpatchedOpenCOLLADA) {
-                name = vertexData.getName(indexOfSet);
-                size = vertexData.getStride(indexOfSet);
+                id = vertexData.getName(indexOfSet);
+                componentsPerAttribute = vertexData.getStride(indexOfSet);
                 inputLength = vertexData.getLength(indexOfSet);
             } else {
                 // for unpatched version of OpenCOLLADA we need this work-around.
-                name = GLTF::GLTFUtils::generateIDForType("buffer").c_str();
-                size = 3; //only normal and positions should reach this code
+                id = GLTF::GLTFUtils::generateIDForType("buffer").c_str();
+                componentsPerAttribute = 3; //only normal and positions should reach this code
                 inputLength = vertexData.getLength(0);
             }
             
-            //name is the id
             length = inputLength ? inputLength : vertexData.getValuesCount();
-            elementsCount = length / size;
+            elementsCount = length / componentsPerAttribute;
             unsigned char *sourceData = 0;
             size_t sourceSize = 0;
             
@@ -307,23 +307,24 @@ namespace GLTF
             switch (vertexData.getType()) {
                 case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
                     componentType = GLTF::FLOAT;
-                    stride = sizeof(float) * size;
+                    stride = sizeof(float) * componentsPerAttribute;
                     const COLLADAFW::FloatArray* array = vertexData.getFloatValues();
                     
                     sourceData = (unsigned char*)array->getData() + byteOffset;
-                    
                     sourceSize = length * sizeof(float);
-                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+
+                     byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                     break;
                 case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
+                    //FIXME: handle this
                     /*
                      sourceType = DOUBLE;
                      
                      const DoubleArray& array = vertexData.getDoubleValues()[indexOfSet];
                      const size_t count = array.getCount();
                      sourceData = (void*)array.getData();
-                     sourceSize = count * sizeof(double);
+                     sourceSize = length * sizeof(double);
                      */
                     // Warning if can't make "safe" conversion
                 }
@@ -335,12 +336,41 @@ namespace GLTF
                     break;
             }
             
+            //FIXME: this is assuming float
+            if (allowedComponentsPerAttribute != componentsPerAttribute) {
+                sourceSize = elementsCount * sizeof(float) * allowedComponentsPerAttribute;
+                
+                float *adjustedSource = (float*)malloc(sourceSize);
+                float *originalSource = (float*)sourceData;
+                size_t adjustedStride = sizeof(float) * allowedComponentsPerAttribute;
+                
+                if (allowedComponentsPerAttribute < componentsPerAttribute) {
+                    for (size_t i = 0 ; i < elementsCount ; i++) {
+                        for (size_t j= 0 ; j < allowedComponentsPerAttribute ; j++) {
+                            adjustedSource[(i*allowedComponentsPerAttribute) + j] = originalSource[(i*componentsPerAttribute) + j];
+                        }
+                    }
+                } else {
+                    //FIXME: unlikely but should be taken care of
+                }
+
+                //Free source before replacing it
+                if (meshAttributeOwnsBuffer) {
+                    free(sourceData);
+                }
+                
+                componentsPerAttribute = allowedComponentsPerAttribute;
+                meshAttributeOwnsBuffer = true;
+                sourceData = (unsigned char*)adjustedSource;
+                stride = adjustedStride;
+            }
+            
             // FIXME: the source could be shared, store / retrieve it here
-            shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(name, sourceData, 0, sourceSize, false);
+            shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(id, sourceData, 0, sourceSize, meshAttributeOwnsBuffer);
             shared_ptr <GLTFMeshAttribute> cvtMeshAttribute(new GLTFMeshAttribute());
             
             cvtMeshAttribute->setBufferView(cvtBufferView);
-            cvtMeshAttribute->setComponentsPerAttribute(size);
+            cvtMeshAttribute->setComponentsPerAttribute(componentsPerAttribute);
             cvtMeshAttribute->setByteStride(stride);
             cvtMeshAttribute->setComponentType(componentType);
             cvtMeshAttribute->setCount(elementsCount);
@@ -396,11 +426,6 @@ namespace GLTF
         }
         
         shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
-        
-        //FIXME: Looks like for texcoord indexSet begin at 1, this is out of the sync with the index used in ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes that begins at 0
-        //for now forced to 0, to be fixed for multi texturing.
-        
-        //unsigned int idx = (unsigned int)indexList->getSetIndex();
         
         shared_ptr <GLTFIndices> jsonIndices(new GLTFIndices(uvBuffer, count));
         __AppendIndices(cvtPrimitive, primitiveIndicesVector, jsonIndices, semantic, idx);
@@ -598,19 +623,19 @@ namespace GLTF
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getPositions(), meshAttributes);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getPositions(), meshAttributes, 3);
                         break;
                         
                     case GLTF::NORMAL:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getNormals(), meshAttributes);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getNormals(), meshAttributes, 3);
                         break;
                         
                     case GLTF::TEXCOORD:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getUVCoords(), meshAttributes);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getUVCoords(), meshAttributes,2);
                         break;
                         
                     case GLTF::COLOR:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getColors(), meshAttributes);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getColors(), meshAttributes, 4);
                         break;
                         
                     default:
