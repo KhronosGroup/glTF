@@ -56,5 +56,6 @@
 #include "COLLADAFWTranslate.h"
 #include "COLLADAFWScale.h"
 #include "COLLADAFWMatrix.h"
+#include "COLLADAFWLight.h"
 
 #endif 

@@ -25,6 +25,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFConverterContext.h"
+#include "../shaders/commonProfileShaders.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
@@ -58,11 +61,13 @@ namespace GLTF
     shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context)
     {
         shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
-        
         shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
+        shared_ptr <JSONObject> techniqueGenerator = effect->getTechniqueGenerator();
         
-        std::string techniqueID = effect->getTechniqueID();
-
+        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
+        
+        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *converterContext);
+        
         effectObject->setString("name", effect->getName());
         effectObject->setValue("instanceTechnique", instanceTechnique);
         instanceTechnique->setString("technique", techniqueID);

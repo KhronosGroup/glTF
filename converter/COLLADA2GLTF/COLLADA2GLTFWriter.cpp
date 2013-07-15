@@ -171,7 +171,7 @@ namespace GLTF
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
 		if (!root.loadDocument( this->_converterContext.inputFilePath))
 			return false;
-        
+                
         // ----
         UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
         shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
@@ -402,10 +402,8 @@ namespace GLTF
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
-            if (effect->getTechniqueID() != "") {
-                shared_ptr <GLTF::JSONObject> effectObject = serializeEffect(effect.get(), 0);
-                //FIXME:HACK: effects are exported as materials
-                materialsObject->setValue(effect->getID(), effectObject);
+            if (effect->getTechniqueGenerator()) {
+                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_converterContext));
             }
         }
         
@@ -513,7 +511,8 @@ namespace GLTF
         bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
         
         //---
-        
+        this->_converterContext.root->removeValue("lightsIds");
+
         this->_converterContext.root->write(&this->_writer);
         
         bool sceneFlatteningEnabled = false;
@@ -709,7 +708,7 @@ namespace GLTF
                         }
                     }
                     
-                    std::map<std::string , std::string > texcoordBindings;
+                    shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                     
                     if (materialBindingIndex != -1) {
                         unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
@@ -744,7 +743,10 @@ namespace GLTF
                                 if (semanticArrayPtr) {
                                     for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
                                         std::string slot = (*semanticArrayPtr)[semanticIndex];
-                                        texcoordBindings[slot] = shaderSemantic;
+                                        texcoordBindings->setString(slot, shaderSemantic);
+                                        if ((slot == "diffuse") && effectExtras->getBool("ambient_diffuse_lock")) {
+                                            texcoordBindings->setString("ambient", shaderSemantic);
+                                        }
                                     }
                                 }
                             }
@@ -760,14 +762,16 @@ namespace GLTF
                         
                         //generate shaders if needed
                         shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
-                        const std::string& techniqueID = GLTF::getReferenceTechniqueID(effect->getLightingModel(),
-                                                                                       attributeSemantics,
-                                                                                       effect->getValues(),
-                                                                                       techniqueExtras,
-                                                                                       texcoordBindings,
-                                                                                       this->_converterContext);
+                    
+                        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
                         
-                        effect->setTechniqueID(techniqueID);
+                        techniqueGenerator->setString("lightingModel", effect->getLightingModel());
+                        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+                        techniqueGenerator->setValue("values", effect->getValues());
+                        techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
+                        techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
+                        
+                        effect->setTechniqueGenerator(techniqueGenerator);
                         effect->setName(materialName);
                         primitive->setMaterialID(effect->getID());
                     }
@@ -1022,6 +1026,36 @@ namespace GLTF
             parents->appendValue(shared_ptr<JSONString> (new JSONString(node->getUniqueId().toAscii())));
         }
         
+        shared_ptr <GLTF::JSONArray> lightsInNode(new GLTF::JSONArray());
+
+        const InstanceLightPointerArray& instanceLights = node->getInstanceLights();
+        count = (unsigned int)instanceLights.getCount();
+        
+        //For a given light, keep track of all the nodes holding it
+        if (count) {
+            shared_ptr<JSONObject> lights = this->_converterContext.root->createObjectIfNeeded("lights");
+            for (unsigned int i = 0 ; i < count ; i++) {
+                InstanceLight* instanceLight  = instanceLights[i];
+                std::string id = instanceLight->getInstanciatedObjectId().toAscii();
+                
+                shared_ptr<JSONObject> light = this->_converterContext._uniqueIDToLight[id];
+                shared_ptr<JSONString> lightUID(new JSONString(light->getString("id")));
+
+                shared_ptr<JSONArray> listOfNodesPerLight;
+                if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
+                    listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
+                    this->_converterContext._uniqueIDOfLightToNodes[lightUID->getString()] = listOfNodesPerLight;
+                } else {
+                    listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID->getString()];
+                }
+                
+                listOfNodesPerLight->appendValue(JSONSTRING(nodeUID));
+                lightsInNode->appendValue(lightUID);
+                lights->setValue(lightUID->getString(), light);
+            }
+            nodeObject->setValue("lights", lightsInNode);
+        }
+        
         return true;
     }
     
@@ -1255,7 +1289,8 @@ namespace GLTF
     
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                                               std::string slotName,
-                                              shared_ptr <GLTFEffect> cvtEffect)
+                                              shared_ptr <GLTFEffect> cvtEffect,
+                                              shared_ptr <JSONObject> extras)
     {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
         
@@ -1263,10 +1298,17 @@ namespace GLTF
         
         if (slotName == "diffuse")
             slot = commonProfile->getDiffuse();
-#if 0
-        else if (slotName == "ambient")
-            slot = commonProfile->getAmbient();
-#endif
+        else if (slotName == "ambient") {
+            bool lockAmbientWithDiffuse = false;
+            if (extras) {
+                lockAmbientWithDiffuse = extras->getBool("ambient_diffuse_lock");
+            }
+            if (lockAmbientWithDiffuse) {
+                slot = commonProfile->getDiffuse();
+            } else {
+                slot = commonProfile->getAmbient();
+            }
+        }
         else if (slotName == "emission")
             slot = commonProfile->getEmission();
         else if (slotName == "specular")
@@ -1277,17 +1319,18 @@ namespace GLTF
             return;
         
         //retrieve the type, parameterName -> symbol -> type
-        double red = 1, green = 1, blue = 1;
+        double red = 1, green = 1, blue = 1, alpha = 1;
         if (slot.isColor()) {
             const Color& color = slot.getColor();
             if (slot.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
                 red = color.getRed();
                 green = color.getGreen();
                 blue = color.getBlue();
+                alpha = color.getAlpha();
             }
             shared_ptr <JSONObject> slotObject(new JSONObject());
-            slotObject->setValue("value", serializeVec3(red,green,blue));
-            slotObject->setString("type", "FLOAT_VEC3");
+            slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
+            slotObject->setString("type", "FLOAT_VEC4");
             values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
@@ -1367,11 +1410,13 @@ namespace GLTF
                     break;
             }
             
-            handleEffectSlot(effectCommon,"diffuse" , cvtEffect);
-            handleEffectSlot(effectCommon,"ambient" , cvtEffect);
-            handleEffectSlot(effectCommon,"emission" , cvtEffect);
-            handleEffectSlot(effectCommon,"specular" , cvtEffect);
-            handleEffectSlot(effectCommon,"reflective" , cvtEffect);
+            shared_ptr<JSONObject> extras = this->_extraDataHandler->getExtras(effect->getUniqueId());
+            
+            handleEffectSlot(effectCommon,"diffuse" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"ambient" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"emission" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
             
             if (!isOpaque(effectCommon)) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
@@ -1490,7 +1535,9 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> images = this->_converterContext.root->createObjectIfNeeded("images");
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
         
-        images->setValue(uniqueIdWithType("image",openCOLLADAImage->getUniqueId()), image);
+        std::string imageUID = uniqueIdWithType("image",openCOLLADAImage->getUniqueId());
+        
+        images->setValue(imageUID, image);
         /*
          bool relativePath = true;
          if (pathDir.size() > 0) {
@@ -1500,25 +1547,80 @@ namespace GLTF
          }*/
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
         std::string relPathFile = imageURI.getPathFile();
-        if (imageURI.getPathDir() != "./") {
+        
+        if (imageURI.getPathDir().substr(0,2) != "./") {
             relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
         } else {
-            relPathFile = imageURI.getPathFile();
+            relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
         }
         image->setString("path", relPathFile);
-        
-        this->_converterContext._imageIdToImagePath[uniqueIdWithType("image",openCOLLADAImage->getUniqueId()) ] = relPathFile;
+
         return true;
 	}
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeLight( const COLLADAFW::Light* light )
 	{
+        //FIXME: add projection
+        shared_ptr <JSONObject> glTFLight(new JSONObject());
+        shared_ptr <JSONObject> description(new JSONObject());
+
+        COLLADAFW::Light::LightType lightType = light->getLightType();
+		Color color = light->getColor();
+
+        float constantAttenuation = light->getConstantAttenuation().getValue();
+        float linearAttenuation = light->getLinearAttenuation().getValue();
+        float quadraticAttenuation = light->getQuadraticAttenuation().getValue();
+
+        shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
+        
+        switch (lightType) {
+            case COLLADAFW::Light::AMBIENT_LIGHT:
+                glTFLight->setString("type", "ambient");
+                break;
+            case COLLADAFW::Light::DIRECTIONAL_LIGHT:
+                glTFLight->setString("type", "directional");
+                break;
+            case COLLADAFW::Light::POINT_LIGHT: {
+                glTFLight->setString("type", "point");
+
+                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
+                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
+                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
+            }
+                break;
+            case COLLADAFW::Light::SPOT_LIGHT: {
+                glTFLight->setString("type", "spot");
+
+                float fallOffAngle = light->getFallOffAngle().getValue();
+                float fallOffExponent = light->getFallOffExponent().getValue();
+                
+                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
+                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
+                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
+                
+                description->setValue("fallOffAngle", shared_ptr <JSONNumber> (new JSONNumber(fallOffAngle)));
+                description->setValue("fallOffExponent", shared_ptr <JSONNumber> (new JSONNumber(fallOffExponent)));
+            }
+                break;
+            default:
+                return false;
+        }
+        
+        description->setValue("color", lightColor);
+        glTFLight->setString("id", light->getOriginalId());
+        glTFLight->setValue(glTFLight->getString("type"), description);
+        
+        this->_converterContext._uniqueIDToLight[light->getUniqueId().toAscii()] = glTFLight;
+         
+        shared_ptr<JSONArray> lightsIds = this->_converterContext.root->createArrayIfNeeded("lightsIds");
+        lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
+        
 		return true;
 	}
     
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation )
+	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation)
 	{
         shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation);
         

@@ -46,9 +46,9 @@ namespace GLTF
 #ifndef WIN32
         bool hasAlpha = false;
         std::ifstream source;
-        
+
         source.open(path, ios::in | ios::binary);
-        
+//        printf("path:%s\n",path);
         png_byte pngsig[PNGSIGSIZE];
         int isPNG = 0;
         source.read((char*)pngsig, PNGSIGSIZE);
@@ -142,7 +142,17 @@ namespace GLTF
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
             if (diffuse->getString("type") == "SAMPLER_2D") {
-                std::string imagePath = context._imageIdToImagePath[diffuse->getString("image")];
+                shared_ptr<JSONObject> textures = context.root->createObjectIfNeeded("textures");
+                if (textures->getKeysCount() == 0) {
+                    return false;
+                }
+                shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
+                std::string sourceUID = texture->getString("source");
+                shared_ptr<JSONObject> images = context.root->createObjectIfNeeded("images");
+                shared_ptr<JSONObject> image = images->getObject(sourceUID);
+
+                std::string imagePath = image->getString("path");
+                
                 
                 COLLADABU::URI inputURI(context.inputFilePath.c_str());
                 std::string imageFullPath = inputURI.getPathDir() + imagePath;
@@ -238,7 +248,6 @@ namespace GLTF
         std::string hash = slot + ":";
 
         if (slotIsContributingToLighting(slot, parameters)) {
-        //if (parameters->contains(slot)) {
             shared_ptr<JSONObject> parameter = parameters->getObject(slot);
             
             if (parameter->contains("type")) {
@@ -251,6 +260,27 @@ namespace GLTF
         return hash + "none";
     }
     
+    /*
+    static std::string buildLightsHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& context) {
+        std::string lightsHash = "";
+        
+        if (context.root->contains("lightsIds")) {
+            shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+            std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
+            
+            for (size_t i = 0 ; i < ids.size() ; i++) {
+                shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
+                
+                shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
+                
+                std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
+                for (size_t i = 0 ; i < ids.size() ; i++) {
+                }
+           }
+        }
+        return lightsHash;
+    }
+    */
     static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& context) {
         std::string techniqueHash = "";
         
@@ -262,6 +292,7 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "emission");
         techniqueHash += buildSlotHash(parameters, "specular");
         techniqueHash += buildSlotHash(parameters, "reflective");
+        //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, context));
@@ -486,7 +517,7 @@ namespace GLTF
         shared_ptr <JSONObject> getDetails(const std::string &lightingModel,
                                            shared_ptr<JSONObject> values,
                                            shared_ptr<JSONObject> techniqueExtras,
-                                           std::map<std::string , std::string > &texcoordBindings,
+                                           shared_ptr<JSONObject> texcoordBindings,
                                            GLTFConverterContext& context) {
             shared_ptr <JSONObject> details(new JSONObject());
             
@@ -502,15 +533,6 @@ namespace GLTF
             for (size_t i = 0 ; i < keys.size() ; i++) {
                 std::string parameter = uniforms->getString(keys[i]);
                 parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
-
-                /*if ((parameter == "diffuse") ||
-                    (parameter == "ambient") ||
-                    (parameter == "specular") ||
-                    (parameter == "normal") ||
-                    (parameter == "reflective") ||
-                    (parameter == "transparency")) {
-                    parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
-                }*/
             }
             commonProfile->setValue("parameters", parameters);
             
@@ -518,15 +540,8 @@ namespace GLTF
             
             extras->setBool("doubleSided", techniqueExtras->getBool("double_sided"));
             
-            if (texcoordBindings.size() > 0) {
-                std::map<std::string , std::string >::const_iterator texcoordIterator;
-                shared_ptr <JSONObject> texcoordBindingsObject = commonProfile->createObjectIfNeeded("texcoordBindings");
-                
-                for (texcoordIterator = texcoordBindings.begin() ; texcoordIterator != texcoordBindings.end() ; texcoordIterator++) {
-                    std::string key = (*texcoordIterator).first;
-                    std::string texcoord = texcoordBindings[key];
-                    texcoordBindingsObject->setString(key, texcoord);
-                }
+            if (texcoordBindings->getKeysCount() > 0) {
+                commonProfile->setValue("texcoordBindings", texcoordBindings);
             }
             
             return details;
@@ -587,7 +602,7 @@ namespace GLTF
         }
         
         //FIXME: refactor with addSemantic
-        void addValue(std::string vertexOrFragment,
+        shared_ptr <JSONObject> addValue(std::string vertexOrFragment,
                       std::string uniformOrAttribute,
                       std::string type,
                       size_t count,
@@ -609,7 +624,6 @@ namespace GLTF
                 program->uniforms()->setString(symbol, parameterID);
             } else {
                 printf("cannot add semantic of unknown kind %s\n", uniformOrAttribute.c_str());
-                return;
             }
             
             if (uniformOrAttribute == "attribute") {
@@ -617,6 +631,8 @@ namespace GLTF
             } else {
                 shader->addUniform(symbol, type, count);
             }
+            
+            return parameter;
         }
         
         Technique(const std::string &lightingModel,
@@ -624,7 +640,7 @@ namespace GLTF
                   std::string techniqueID,
                   shared_ptr<JSONObject> values,
                   shared_ptr<JSONObject> techniqueExtras,
-                  std::map<std::string , std::string > &texcoordBindings,
+                  shared_ptr<JSONObject> texcoordBindings,
                   GLTFConverterContext& context) {
             
             _parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
@@ -677,6 +693,9 @@ namespace GLTF
                         "PROJECTION", "projectionMatrix" , 1, false);
             
            
+            /* 
+                Handle hardware skinning, for now with a fixed limit of 4 influences
+             */
             if (hasSkinning) {
                 vertexShader->appendCode("mat4 skinMat = a_weight.x * u_jointMat[int(a_joint.x)];\n");
                 vertexShader->appendCode("skinMat += a_weight.y * u_jointMat[int(a_joint.y)];\n");
@@ -704,49 +723,124 @@ namespace GLTF
             if (techniqueExtras->getBool("double_sided")) {
                 fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
             }
+                        
+            //color to cumulate all components and light contribution
+            fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 0.);\n");
+            fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 1.);\n");
+            fragmentShader->appendCode("vec3 diffuseLight = vec3(0., 0., 0.);\n");
             
-            if (useSimpleLambert) {
-                fragmentShader->appendCode("float lambert = max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
+            if (slotIsContributingToLighting("emission", inputParameters)) {
+                fragmentShader->appendCode("vec4 emission;\n");
             }
             
-            //color to cumulate all components and light contribution
-            fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 1.);\n");
-            fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 0.);\n");
-            if (slotIsContributingToLighting("emission", inputParameters)) {
-                fragmentShader->appendCode("vec4 emission;\n");             }
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("vec4 reflective;\n");
             }
             if (slotIsContributingToLighting("ambient", inputParameters)) {
                 fragmentShader->appendCode("vec4 ambient;\n");
+                fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
             }
-
-            
-            if (inputParameters->contains("specular")) {
-            //if (slotIsContributingToLighting("specular", inputParameters)) {
+            if (slotIsContributingToLighting("specular", inputParameters)) {
                 fragmentShader->appendCode("vec4 specular;\n");
+                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
             }
+                                    
+            /* 
+             Handle lighting
+             */
             
+            /*
             if (!useSimpleLambert) {
                 shared_ptr <JSONObject> shininessObject = inputParameters->getObject("shininess");
                 addValue("fs", "uniform",   shininessObject->getString("type"), 1, "shininess");
-                
-                //save light direction
-                program->addVarying("v_lightDirection", "FLOAT_VEC3");
-                
-                vertexShader->appendCode("v_lightDirection = vec3(%s * (vec4((vec3(0.,0.,-1.) - %s.xyz) ,1.0)));\n",
-                        "u_worldViewMatrix",
-                        "a_position");
-                
-                //save camera-vertex
+
                 program->addVarying("v_mPos", "FLOAT_VEC3");
                 vertexShader->appendCode("v_mPos = pos.xyz;\n");
+            }
+            */
+            shared_ptr <JSONObject> shininessObject;
+            
+            bool hasLights = false;
+            size_t lightIndex = 0;
+            if (context.root->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+                std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 
-                fragmentShader->appendCode("vec3 l = normalize(v_lightDirection);\n\
-                        vec3 v = normalize(v_mPos);\n\
-                        vec3 h = normalize(l+v);\n\
-                        float lambert = max(-dot(normal,l), 0.);\n\
-                        float specLight = pow(max(0.0,-dot(normal,h)),u_shininess);\n");
+                for (size_t i = 0 ; i < ids.size() ; i++) {
+                    shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
+                    shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
+                    
+                    shared_ptr<JSONObject> lights = context.root->createObjectIfNeeded("lights");
+                    shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());                    
+                    std::string lightType = light->getString("type");
+                    shared_ptr<JSONObject> description = light->getObject(lightType);
+
+                    std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
+                    for (size_t j = 0 ; j < nodesIds.size() ; j++, lightIndex++) {
+                        
+                        //each light needs to be re-processed for each node
+                        char lightIndexCStr[100];
+                        char lightColor[100];
+                        char lightTransform[100];
+                        sprintf(lightIndexCStr, "light%d", (int)lightIndex);
+                        sprintf(lightColor, "%sColor", lightIndexCStr);
+                        sprintf(lightTransform, "%sTransform", lightIndexCStr);
+                        fragmentShader->appendCode("{\n");
+
+                        hasLights = true;
+                        
+                        shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform",   "FLOAT_VEC3", 1, lightColor);
+                        lightColorParameter->setValue("value", description->getValue("color"));
+                        
+                        fragmentShader->appendCode("float diffuseIntensity;\n");
+                        fragmentShader->appendCode("float specularIntensity;\n");
+                        
+                        if (lightType == "ambient") {
+                            //FIXME: what happens if multiple ambient light ?
+                            fragmentShader->appendCode("ambientLight += u_%s;\n", lightColor);
+                            
+                        } else if (1 /*lightType == "directional"*/) {
+                            char varyingLightDirection[100];
+                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
+                            
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform",   "FLOAT_MAT4", 1, lightTransform);
+                            
+                            vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
+
+                            program->addVarying(varyingLightDirection, "FLOAT_VEC3");
+                            lightTransformParameter->setValue("source", nodesIds[j]);
+
+                            if (!useSimpleLambert) {
+                                if (!shininessObject) {
+                                    shininessObject = inputParameters->getObject("shininess");
+                                    addValue("fs", "uniform",   shininessObject->getString("type"), 1, "shininess");
+                                }
+                                
+                                fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                                fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
+                                fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
+                                fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                                
+                            } else {
+                                fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
+                            }
+                            
+                            fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
+
+
+                        } else if (lightType == "spot") {
+                            
+                        } else if (lightType == "point") {
+                            
+                        } else {
+                            //FIXME: report error
+                            
+                        }
+                        fragmentShader->appendCode("}\n");
+
+                    }
+                }
             }
             
             //texcoords
@@ -765,16 +859,14 @@ namespace GLTF
                 
                 shared_ptr <JSONObject> param = inputParameters->getObject(slot);
                 
-                //FIXME:currently colors are known to be FLOAT_VEC3, this should cleaned up by using the type.
                 std::string slotType = param->getString("type");
-                if (slotType == "FLOAT_VEC3" ) {
+                if (slotType == "FLOAT_VEC4" ) {
                     std::string slotColorSymbol = "u_"+slot;
-                    fragmentShader->appendCode("%s.xyz = %s;\n", slot.c_str(), slotColorSymbol.c_str());
+                    fragmentShader->appendCode("%s = %s;\n", slot.c_str(), slotColorSymbol.c_str());
                     
                     addValue("fs", "uniform",   slotType, 1, slot);
                 } else if (slotType == "SAMPLER_2D") {
-                    std::string semantic = texcoordBindings[slot];
-                    
+                    std::string semantic = texcoordBindings->getString(slot);
                     if (semantic.length() == 0) {
                         semantic = "TEXCOORD_0";
                     }
@@ -804,7 +896,7 @@ namespace GLTF
                         if  (declaredTexcoordAttributes.count(semantic) == 0) {
                             texSymbol = texcoordAttributeSymbol + GLTFUtils::toString(declaredTexcoordAttributes.size());
                             texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
-                            
+
                             addSemantic("vs", "attribute",
                                         semantic, "texcoord" + GLTFUtils::toString(declaredTexcoordAttributes.size()), 1, false);
                             program->addVarying(texVSymbol, typeForSemanticAttribute(semantic));
@@ -812,9 +904,11 @@ namespace GLTF
                             vertexShader->appendCode("%s = %s;\n", texVSymbol.c_str(), texSymbol.c_str());
                             declaredTexcoordAttributes[semantic] = texSymbol;
                             declaredTexcoordVaryings[semantic] = texVSymbol;
+                        } else {
+                            texSymbol =  declaredTexcoordAttributes[semantic];
+                            texVSymbol = declaredTexcoordVaryings[semantic];
                         }
                     }
-                    
                     
                     std::string textureSymbol = "u_"+ slot;
                     
@@ -830,20 +924,23 @@ namespace GLTF
             if (slotIsContributingToLighting("reflective", inputParameters)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
-            if (slotIsContributingToLighting("ambient", inputParameters)) {
+            if (hasLights && slotIsContributingToLighting("ambient", inputParameters)) {
+                fragmentShader->appendCode("ambient.xyz *= ambientLight;\n");
                 fragmentShader->appendCode("color.xyz += ambient.xyz;\n");
             }
-
-            
-            fragmentShader->appendCode("diffuse.xyz *= lambert;\n");
+            if (hasLights && slotIsContributingToLighting("specular", inputParameters)) {
+                fragmentShader->appendCode("specular.xyz *= specularLight;\n");
+                fragmentShader->appendCode("color.xyz += specular.xyz;\n");
+            }
+            if (hasLights) {
+                fragmentShader->appendCode("diffuse.xyz *= diffuseLight;\n");
+            } else if (context.useDefaultLight) {
+                fragmentShader->appendCode("diffuse.xyz *= max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
+            }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
             
             if (slotIsContributingToLighting("emission", inputParameters)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
-            }
-            
-            if (!useSimpleLambert) {
-                fragmentShader->appendCode("color.xyz += specular.xyz * specLight;\n");
             }
             
             bool hasTransparency = inputParameters->contains("transparency");
@@ -853,9 +950,9 @@ namespace GLTF
                 
                 addValue("fs", "uniform",   transparencyParam->getString("type"), 1, slot);
                 
-                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * color.a, color.a * %s);\n", "u_transparency");
+                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
             } else {
-                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * color.a, color.a);\n");
+                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * diffuse.a, diffuse.a);\n");
             }
             
             vertexShader->appendCode("gl_Position = %s * pos;\n",
@@ -876,12 +973,13 @@ namespace GLTF
         
     };
     
-    std::string getReferenceTechniqueID(const std::string &lightingModel,
-                                        shared_ptr<JSONObject> attributeSemantics,
-                                        shared_ptr<JSONObject> values,
-                                        shared_ptr<JSONObject> techniqueExtras,
-                                        std::map<std::string , std::string > &texcoordBindings,
-                                        GLTFConverterContext& context) {
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFConverterContext& context) {
+        
+        std::string lightingModel = techniqueGenerator->getString("lightingModel");
+        shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
+        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
+        shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
         
         shared_ptr <JSONObject> inputParameters = values;
         shared_ptr <JSONObject> techniquesObject = context.root->createObjectIfNeeded("techniques");

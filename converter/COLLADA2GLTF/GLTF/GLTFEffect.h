@@ -37,13 +37,12 @@ namespace GLTF
         
     public:
         GLTFEffect(const std::string &ID);
-
         virtual ~GLTFEffect();
         
         const std::string& getID();        
 
-        void setTechniqueID(const std::string& techniqueID);
-        const std::string& getTechniqueID();
+        void setTechniqueGenerator(shared_ptr <JSONObject> techniqueGenerator);
+        shared_ptr <JSONObject> getTechniqueGenerator();
 
         void setName(const std::string& name);
         const std::string& getName();
@@ -61,7 +60,7 @@ namespace GLTF
         std::string _ID;
         std::string _name;
         std::string _lightingModel;
-        std::string _techniqueID;
+        shared_ptr <JSONObject> _techniqueGenerator;
         shared_ptr <JSONObject> _values;
         TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
     };

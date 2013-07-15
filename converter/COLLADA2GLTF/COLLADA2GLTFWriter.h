@@ -33,7 +33,6 @@
 #include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
 
-#include "shaders/commonProfileShaders.h"
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
 #include "convert/animationConverter.h"
@@ -173,7 +172,8 @@ namespace GLTF
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,
-                              shared_ptr <GLTFEffect> cvtEffect);
+                              shared_ptr <GLTFEffect> cvtEffect,
+                              shared_ptr<JSONObject> extras);
         
         std::string getSamplerUIDForParameters(std::string wrapS, std::string wrapT, std::string minFilter, std::string maxFilter);
         

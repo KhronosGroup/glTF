@@ -52,6 +52,11 @@ namespace GLTF
             return true;
         }
         
+        if (strcmp(elementName, "ambient_diffuse_lock") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE;
+            return true;
+        }
+        
         /*
 		switch ( mExtraTagType )
 		{
@@ -108,13 +113,23 @@ namespace GLTF
 	{
         bool failed = false;
         if (mExtraTagType == EXTRA_TAG_TYPE_DOUBLE_SIDED) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
             shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
-            bool val = GeneratedSaxParser::Utils::toBool(mTextBuffer.c_str(), failed);
+            bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
             if ( !failed ) {
                 extras->setBool("double_sided", val);
             }
         }
         
+        if (mExtraTagType == EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
+            if ( !failed ) {
+                extras->setBool("ambient_diffuse_lock", val);
+            }
+        }
+
 		/*
 		switch ( mExtraTagType )
 		{

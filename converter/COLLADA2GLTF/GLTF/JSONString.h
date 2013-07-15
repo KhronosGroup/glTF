@@ -29,6 +29,8 @@
 
 namespace GLTF 
 {
+#define JSONSTRING(x) (shared_ptr <GLTF::JSONString> (new GLTF::JSONString(x)))
+    
     class JSONString : public JSONValue {
     private:
 

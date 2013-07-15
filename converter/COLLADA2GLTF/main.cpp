@@ -55,6 +55,7 @@ static const OptionDescriptor options[] = {
 	{ "i",              no_argument,        "-i -> invert-transparency" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "p",              no_argument,        "-p -> output progress" },
+	{ "l",              required_argument,  "-l -> enable default lighting (if no lights in scene) [bool], default:true" },
 	{ "h",              no_argument,        "-h -> help" }
 };
 
@@ -101,6 +102,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     converterArgs->exportAnimations = true;
     converterArgs->exportPassDetails = false;
     converterArgs->outputProgress = false;
+    converterArgs->useDefaultLight = true;
     
     buildOptions();
     
@@ -110,7 +112,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
         return true;
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:ihdp", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:h", opt_options, 0)) != -1) {
         switch (ch) {
             case 'h':
                 dumpHelpMessage();
@@ -128,6 +130,19 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 break;
             case 'p':
                 converterArgs->outputProgress = true;
+                break;
+            case 'l':
+                if (optarg != NULL) {
+                    if (strcmp(optarg, "true") == 0) {
+                        converterArgs->useDefaultLight = true;
+                    }
+                    if (strcmp(optarg, "false") == 0) {
+                        converterArgs->useDefaultLight = false;
+                    } else {
+                        converterArgs->useDefaultLight = atoi(optarg) != 0;
+                    }
+                }
+                
                 break;
             case 'a':
                 //converterArgs->exportAnimations = true;

@@ -41,14 +41,14 @@ namespace GLTF
         return this->_ID;
     }
     
-    void GLTFEffect::setTechniqueID(const std::string& techniqueID) {
-        this->_techniqueID = techniqueID;
+    void GLTFEffect::setTechniqueGenerator(shared_ptr <JSONObject> techniqueGenerator) {
+        this->_techniqueGenerator = techniqueGenerator;
     }
     
-    const std::string& GLTFEffect::getTechniqueID() {
-        return this->_techniqueID;
+    shared_ptr <JSONObject> GLTFEffect::getTechniqueGenerator() {
+        return this->_techniqueGenerator;
     }
-    
+        
     void GLTFEffect::setName(const std::string& name) {
         this->_name = name;
     }

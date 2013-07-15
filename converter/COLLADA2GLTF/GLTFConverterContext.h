@@ -24,7 +24,9 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
     typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
-    
+    typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
+    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToLight;
+
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
     typedef struct
@@ -37,6 +39,7 @@ namespace GLTF
         bool exportAnimations;
         bool exportPassDetails;
         bool outputProgress;
+        bool useDefaultLight;
         
         shared_ptr <GLTF::JSONObject> root;
         ShaderIdToShaderString shaderIdToShaderString;
@@ -45,7 +48,6 @@ namespace GLTF
         UniqueIDToEffect _uniqueIDToEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
-        ImageIdToImagePath _imageIdToImagePath;
         UniqueIDToAnimation _uniqueIDToAnimation;
         UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
         UniqueIDToTrackedObject _uniqueIDToTrackedObject;
@@ -54,7 +56,8 @@ namespace GLTF
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         UniqueIDToAnimationFlattener _uniqueIDToAnimationFlattener;
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
-        
+        UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
+        UniqueIDToLight _uniqueIDToLight;
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

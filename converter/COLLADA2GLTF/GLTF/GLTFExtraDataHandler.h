@@ -26,8 +26,9 @@ namespace GLTF
 	private:
 		enum ExtraTagType
 		{
-			EXTRA_TAG_TYPE_UNKNOWN,
+			EXTRA_TAG_TYPE_UNKNOWN = 0,
 			EXTRA_TAG_TYPE_DOUBLE_SIDED,
+            EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE,
 			EXTRA_TAG_TYPE_BUMP
 		};
 
