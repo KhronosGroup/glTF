@@ -33,12 +33,12 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "x3dgc_Vector.h"
-#include "x3dgc_SC3DMCEncodeParams.h"
-#include "x3dgc_IndexedFaceSet.h"
-#include "x3dgc_SC3DMCEncoder.h"
-#include "x3dgc_SC3DMCDecoder.h"
-using namespace x3dgc;
+//#include "opengc_Vector.h"
+#include "ogcSC3DMCEncodeParams.h"
+#include "ogcIndexedFaceSet.h"
+#include "ogcSC3DMCEncoder.h"
+#include "ogcSC3DMCDecoder.h"
+using namespace ogc;
 //--- X3DGC
 
 
@@ -174,32 +174,18 @@ namespace GLTF
     
     bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
-        int qcoord    = 12;
-        int qtexCoord = 10;
-        int qnormal   = 10;
-
         SC3DMCEncodeParams params;
         IndexedFaceSet ifs;
-        params.SetCoordQuantBits(qcoord);
-        params.SetNormalQuantBits(qnormal);
-        params.SetTexCoordQuantBits(qtexCoord);
-        /*
-        ifs.SetNCoord(points.size());
-        ifs.SetNNormal(normals.size());
-        ifs.SetNTexCoord(texCoords.size());
-        //ifs.SetNCoordIndex(triangles.size());
-        
-        ifs.SetCoord((Real * const) & (points[0]));
-        ifs.SetCoordIndex((long * const ) &(triangles[0]));
-        if (normals.size() > 0)
-        {
-            ifs.SetNormal((Real * const) & (normals[0]));
+
+        bool shouldOGCompressMesh = true;
+        if (shouldOGCompressMesh) {
+            int qcoord    = 12;
+            int qtexCoord = 10;
+            int qnormal   = 10;
+            params.SetCoordQuantBits(qcoord);
+            params.SetNormalQuantBits(qnormal);
+            params.SetTexCoordQuantBits(qtexCoord);
         }
-        if (texCoords.size() > 0)
-        {
-            ifs.SetTexCoord((Real * const ) & (texCoords[0]));
-        }
-*/
         
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
@@ -209,6 +195,8 @@ namespace GLTF
         int vertexCount;
         unsigned int indicesCount;
         PrimitiveVector primitives = this->getPrimitives();
+        unsigned bufferStart = indicesOutputStream.tellp();
+        
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];            
@@ -218,7 +206,8 @@ namespace GLTF
              */
             indicesCount = (unsigned int)uniqueIndices->getCount();
             
-            ifs.SetNCoordIndex(indicesCount / 3);
+            if (shouldOGCompressMesh)
+                ifs.SetNCoordIndex(indicesCount / 3);
             
             shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
@@ -230,19 +219,28 @@ namespace GLTF
             } else {
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
-                long* longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
+                long *longIndices = 0;
+                
+                if (shouldOGCompressMesh)
+                    longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
 
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
-                    longIndices[idx] = (long)uniqueIndicesBuffer[idx];
-
+                    if (shouldOGCompressMesh)
+                        longIndices[idx] = (long)uniqueIndicesBuffer[idx];
                 }
                 
+                if (shouldOGCompressMesh) {
                     ifs.SetCoordIndex((long * const ) longIndices);
-               // free(longIndices);
+                }
                 
-                uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
-                indicesOutputStream.write((const char*)ushortIndices, indicesLength);
+                if (!shouldOGCompressMesh) {
+                    uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
+                    indicesOutputStream.write((const char*)ushortIndices, indicesLength);
+                } else {
+                    uniqueIndices->setByteOffset(bufferStart);
+                    bufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
+                }
                 
                 //now that we wrote to the stream we can release the buffer.
                 uniqueIndices->setBufferView(dummyBuffer);
@@ -262,51 +260,50 @@ namespace GLTF
                 return false;
             }
                         
-            if (!IDToBuffer[bufferView->getBuffer()->getID().c_str()].get()) {
+            if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
                 // FIXME: this should be internal to meshAttribute when a Data buffer is set
                 // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 meshAttribute->computeMinMax();
                 
-                vertexCount = meshAttribute->getCount();// * meshAttribute->getComponentsPerAttribute();
-                
-                //ifs.SetNFloatAttribute  (attributeCount, meshAttribute->getCount() * meshAttribute->getComponentsPerAttribute());
-  //              ifs.SetFloatAttributeDim(attributeCount, meshAttribute->getComponentsPerAttribute());
-    //            ifs.SetFloatAttribute   (attributeCount, (Real * const) buffer->getData());
-      //          params.SetFloatAttributeQuantBits(0, 13);
+                vertexCount = meshAttribute->getCount();
                 attributeCount++;
                 
-                if (j == 0) {
-                    ifs.SetNCoord(vertexCount);
-                    ifs.SetCoord((Real * const)buffer->getData());
+                if (shouldOGCompressMesh) {
+                    if (j == 0) {
+                        ifs.SetNCoord(vertexCount);
+                        ifs.SetCoord((Real * const)buffer->getData());
+                    }
+                    if (j == 1) {
+                        ifs.SetNNormal(vertexCount);
+                        ifs.SetNormal((Real * const)buffer->getData());
+                    }
+                    if (j == 2) {
+                        ifs.SetNTexCoord(vertexCount);
+                        ifs.SetTexCoord((Real * const)buffer->getData());
+                    }
+                    meshAttribute->setByteOffset(bufferStart);
+                    bufferStart += buffer->getByteLength();
+                } else {
+                    meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
+                    verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
                 }
-                if (j == 1) {
-                    ifs.SetNNormal(vertexCount);
-                    ifs.SetNormal((Real * const)buffer->getData());
-                }
-                if (j == 2) {
-                    ifs.SetNTexCoord(vertexCount);
-                    ifs.SetTexCoord((Real * const)buffer->getData());
-                }
-                
-                meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-                verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
 
                 //now that we wrote to the stream we can release the buffer.
                 meshAttribute->setBufferView(dummyBuffer);
-                
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             } 
         }
-        // compute min/max
-        ifs.ComputeMinMax(X3DGC_SC3DMC_MAX_ALL_DIMS); // X3DGC_SC3DMC_DIAG_BB
         
-        BinaryStream bstream(vertexCount * 8);
+        if (shouldOGCompressMesh) {
+            ifs.ComputeMinMax(OGC_SC3DMC_MAX_ALL_DIMS);
+            BinaryStream bstream(vertexCount * 8);
+            SC3DMCEncoder encoder;
+            encoder.Encode(params, ifs, bstream);
+            
+            //meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
+            //verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
+        }
         
-        SC3DMCEncoder encoder;
-        encoder.Encode(params, ifs, bstream);
-        bstream.Save("duck.x3d");
-
-                
         return true;
     }
 

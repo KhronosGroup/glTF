@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(COLLADA2GLTF)
 
+set(USE_OPENGC "ON")
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
 set(BUILD_SHARED_LIBS OFF)
@@ -20,10 +21,12 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAS
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_common_lib/inc)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_encode_lib/inc)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/x3dgc/src/x3dgc_decode_lib/inc)
+if (USE_OPENGC)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_common_lib/inc)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_encode_lib/inc)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_decode_lib/inc)
+endif()
 
 if (NOT WIN32)
     find_package(PNG REQUIRED)
@@ -41,11 +44,11 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
-<<<<<<< HEAD
 add_subdirectory(dependencies/webgl-loader)
-=======
-add_subdirectory(dependencies/x3dgc/src)
->>>>>>> quick hack to try compression on the COLLADA duck
+
+if (USE_OPENGC)
+    add_subdirectory(dependencies/opengc/src)
+endif()
 
 add_executable(collada2gltf main.cpp 
     COLLADA2GLTFWriter.cpp
@@ -99,7 +102,7 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.h)
 
 if (WIN32)
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static x3dgc_enc_lib)
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static opengc_enc_lib opengc_common_lib)
 else ()
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY} x3dgc_enc_lib x3dgc_common_lib)
+  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY} opengc_enc_lib opengc_common_lib)
 endif()
