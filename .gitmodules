@@ -1,6 +1,3 @@
-[submodule "webgl/runtime/dependencies/montage"]
-	path = webgl/runtime/dependencies/montage
-	url = git://github.com/montagejs/montage.git
 [submodule "specification/validator/JSV"]
 	path = specification/validator/JSV
 	url = git://github.com/garycourt/JSV.git
@@ -10,6 +7,3 @@
 [submodule "converter/COLLADA2GLTF/dependencies/rapidjson"]
 	path = converter/COLLADA2GLTF/dependencies/rapidjson
 	url = git://github.com/kennytm/rapidjson.git
-[submodule "converter/COLLADA2GLTF/dependencies/webgl-loader"]
-	path = converter/COLLADA2GLTF/dependencies/webgl-loader
-	url = https://github.com/andrew-aladev/webgl-loader.git
