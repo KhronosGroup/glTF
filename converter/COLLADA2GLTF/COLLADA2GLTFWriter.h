@@ -186,7 +186,7 @@ namespace GLTF
         GLTF::ExtraDataHandler *_extraDataHandler;
         std::ofstream _verticesOutputStream;
         std::ofstream _indicesOutputStream;
-        std::ofstream _animationsOutputStream;
+        std::ofstream _genericOutputStream;
         std::ofstream _compressedDataOutputStream;
 	};
 } 

@@ -371,7 +371,6 @@ namespace GLTF
             IndicesVector *allIndices = allIndicesSharedPtr.get();
             unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices->size());
             
-            
             VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
@@ -706,4 +705,7 @@ namespace GLTF
         return true;
     }
 
+    
+    
+    
 }

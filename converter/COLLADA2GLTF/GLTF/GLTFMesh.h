@@ -65,7 +65,7 @@ namespace GLTF
 
         PrimitiveVector const getPrimitives();
 
-        bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream);
+        bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);
         
         void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
         shared_ptr<GLTFBuffer> getCompressedBuffer();

@@ -125,6 +125,17 @@ namespace GLTF
                 }
                 
             }
+            
+            if (mesh->getExtensions()->contains("Open3DGC-compression")) {
+                shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("Open3DGC-compression"));
+                if (compressionObject->contains("compressedData")) {
+                    shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
+                    GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[2];
+                    compressionData->setString("bufferView", bufferView->getID());
+                }
+                
+            }
+            
         }
         
         return meshObject;

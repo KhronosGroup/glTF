@@ -56,6 +56,7 @@ namespace GLTF
 {
     GLTFMesh::GLTFMesh() {
         this->_remapTableForPositions = 0;
+        this->_extensions = shared_ptr<JSONObject>(new JSONObject());
     }
     
     GLTFMesh::~GLTFMesh() {
@@ -177,16 +178,15 @@ namespace GLTF
         return this->_remapTableForPositions;
     }
     
-    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
+    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream)
     {
         bool shouldOGCompressMesh = false;
 
 #ifdef USE_OPENGC
         SC3DMCEncodeParams params;
         IndexedFaceSet ifs;
-        shouldOGCompressMesh = true;
+        //shouldOGCompressMesh = true;
         if (shouldOGCompressMesh) {
-            
             int qcoord    = 12;
             int qtexCoord = 10;
             int qnormal   = 10;
@@ -204,7 +204,7 @@ namespace GLTF
         unsigned int indicesCount;
         PrimitiveVector primitives = this->getPrimitives();
 #ifdef USE_OPENGC
-        unsigned bufferStart = genericBuffer.tellp();
+        unsigned bufferStart = genericStream.tellp();
 #endif
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
@@ -229,15 +229,20 @@ namespace GLTF
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
 #ifdef USE_OPENGC
+                size_t longindicesSize = 0;
                 long *longIndices = 0;
-                if (shouldOGCompressMesh)
+                if (shouldOGCompressMesh) {
+                    longindicesSize = sizeof(long) * indicesCount;
                     longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
+                }
 #endif
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
+                    
 #ifdef USE_OPENGC
                     if (shouldOGCompressMesh)
                         longIndices[idx] = (long)uniqueIndicesBuffer[idx];
+
 #endif
                 }
 #ifdef USE_OPENGC
@@ -311,13 +316,22 @@ namespace GLTF
         }
 #ifdef USE_OPENGC
         if (shouldOGCompressMesh) {
+            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(this->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
+            
             ifs.ComputeMinMax(OGC_SC3DMC_MAX_ALL_DIMS);
             BinaryStream bstream(vertexCount * 8);
             SC3DMCEncoder encoder;
             encoder.Encode(params, ifs, bstream);
             
-            //meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-            //verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
+            shared_ptr<JSONObject> compressedData(new JSONObject());
+            compressedData->setUnsignedInt32("count", bstream.GetSize());
+            compressedData->setString("type", "UNSIGNED_BYTE");
+            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
+            compressionObject->setValue("compressedData", compressedData);
+            //GetStreamType
+            //OGC_SC3DMC_STREAM_TYPE_BINARY
+            
+            genericStream.write((const char*)bstream.GetBuffer(0), bstream.GetSize());
         }
 #endif
         
