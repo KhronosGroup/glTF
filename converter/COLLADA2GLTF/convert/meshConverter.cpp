@@ -6,15 +6,18 @@
 #include "../helpers/mathHelpers.h"
 #include "../helpers/geometryHelpers.h"
 
+#ifdef USE_WEBGLLOADER
 //WebGL Loader..
 #include "bounds.h"
 #include "compress.h"
 #include "mesh.h"
 #include "optimize.h"
 #include "stream.h"
+#endif
 
 namespace GLTF
 {
+#ifdef USE_WEBGLLOADER
     //webgl-loader compression
     static void __FeedAttribs(void *value,
                               GLTF::ComponentType type,
@@ -207,7 +210,8 @@ namespace GLTF
         
         return true;
     }
-    //    
+#endif
+    //
     /*
      Convert an OpenCOLLADA's FloatOrDoubleArray type to a GLTFBufferView
      Note: the resulting GLTFBufferView is not typed, it's the call responsability to keep track of the type if needed.

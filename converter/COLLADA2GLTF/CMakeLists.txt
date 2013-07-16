@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(COLLADA2GLTF)
 
-set(USE_OPENGC "ON")
+set(USE_OPENGC "OFF")
+set(USE_WEBGLLOADER "OFF")
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
-set(BUILD_SHARED_LIBS OFF)
+set(BUILD_SHARED_LIBS "OFF")
+
+set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
 
 if (NOT WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
@@ -19,9 +22,15 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
+
+if (USE_WEBGLOADER)
+    add_definitions( -DUSE_WEBGLLOADER )
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
+endif()
 
 if (USE_OPENGC)
+    add_definitions( -DUSE_OPENGC )
+
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_common_lib/inc)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_encode_lib/inc)
@@ -44,7 +53,10 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
-add_subdirectory(dependencies/webgl-loader)
+
+if (USE_WEBGLOADER)
+    add_subdirectory(dependencies/webgl-loader)
+endif()
 
 if (USE_OPENGC)
     add_subdirectory(dependencies/opengc/src)
@@ -101,8 +113,13 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.cpp
     convert/animationConverter.h)
 
-if (WIN32)
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static opengc_enc_lib opengc_common_lib)
-else ()
-  target_link_libraries (collada2gltf GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static ${PNG_LIBRARY} ${ZLIB_LIBRARY} opengc_enc_lib opengc_common_lib)
+if (NOT WIN32)
+LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
+
+if (USE_OPENGC)
+LIST(APPEND TARGET_LIBS opengc_enc_lib opengc_common_lib)
+endif()
+
+target_link_libraries (collada2gltf ${TARGET_LIBS})
+

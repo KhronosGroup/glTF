@@ -277,6 +277,7 @@ namespace GLTF
         inputVertices.read(bufferIOStream, verticesLength);
         ouputStream.write(bufferIOStream, verticesLength);
         free(bufferIOStream);
+        
         bufferIOStream = (char*)malloc(sizeof(char) * indicesLength);
         inputIndices.read(bufferIOStream, indicesLength);
         ouputStream.write(bufferIOStream, indicesLength);
@@ -301,14 +302,7 @@ namespace GLTF
         remove(outputVerticesFilePath.c_str());
         remove(outputAnimationsFilePath.c_str());
         remove(outputCompressedDataFilePath.c_str());
-
-        bufferIOStream = (char*)malloc(sizeof(char) * animationsLength);
-        inputAnimations.read(bufferIOStream, animationsLength);
-        verticesOutputStream.write(bufferIOStream, animationsLength);
-        free(bufferIOStream);
         
-        inputAnimations.close();
-        remove(outputAnimationsFilePath.c_str());
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationsLength));
 
         //---
@@ -1174,6 +1168,7 @@ namespace GLTF
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 
                 if (this->_converterContext._uniqueIDToMeshes.count(meshID) == 0) {
+                    /*
                     meshes =  shared_ptr<MeshVector> (new MeshVector);
                     
                     convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, (*meshes));
@@ -1184,7 +1179,8 @@ namespace GLTF
                                 (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream, this->_compressedDataOutputStream);
                             }
                         }
-
+                    }
+*/
                         shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_converterContext);
                     if (cvtMesh) {
                         //here we stock the mesh with unified indices but we may have to handle additional mesh attributes

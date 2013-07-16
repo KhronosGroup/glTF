@@ -34,11 +34,14 @@
 #include <string>
 #include <vector>
 //#include "opengc_Vector.h"
+#ifdef USE_OPENGC
 #include "ogcSC3DMCEncodeParams.h"
 #include "ogcIndexedFaceSet.h"
 #include "ogcSC3DMCEncoder.h"
 #include "ogcSC3DMCDecoder.h"
+
 using namespace ogc;
+#endif
 //--- X3DGC
 
 
@@ -146,6 +149,7 @@ namespace GLTF
         return _extensions;
     }
     
+    /*
     bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& compressedDataOutputStream) {
 
         if (this->getExtensions()->contains("won-compression")) {
@@ -163,6 +167,7 @@ namespace GLTF
             //bufferView will be set when the mesh is serialized
             return true;
         }
+     */
         
     void GLTFMesh::setRemapTableForPositions(unsigned int* remapTableForPositions) {
         this->_remapTableForPositions = remapTableForPositions;
@@ -174,11 +179,14 @@ namespace GLTF
     
     bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream)
     {
+        bool shouldOGCompressMesh = false;
+
+#ifdef USE_OPENGC
         SC3DMCEncodeParams params;
         IndexedFaceSet ifs;
-
-        bool shouldOGCompressMesh = true;
+        shouldOGCompressMesh = true;
         if (shouldOGCompressMesh) {
+            
             int qcoord    = 12;
             int qtexCoord = 10;
             int qnormal   = 10;
@@ -186,7 +194,7 @@ namespace GLTF
             params.SetNormalQuantBits(qnormal);
             params.SetTexCoordQuantBits(qtexCoord);
         }
-        
+#endif
         typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
@@ -195,8 +203,9 @@ namespace GLTF
         int vertexCount;
         unsigned int indicesCount;
         PrimitiveVector primitives = this->getPrimitives();
-        unsigned bufferStart = indicesOutputStream.tellp();
-        
+#ifdef USE_OPENGC
+        unsigned bufferStart = genericBuffer.tellp();
+#endif
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];            
@@ -205,10 +214,10 @@ namespace GLTF
                 Convert the indices to unsigned short and write the blob 
              */
             indicesCount = (unsigned int)uniqueIndices->getCount();
-            
+#ifdef USE_OPENGC
             if (shouldOGCompressMesh)
                 ifs.SetNCoordIndex(indicesCount / 3);
-            
+#endif
             shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
             uniqueIndicesBufferPtr += indicesBufferView->getByteOffset();
@@ -219,29 +228,33 @@ namespace GLTF
             } else {
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
+#ifdef USE_OPENGC
                 long *longIndices = 0;
-                
                 if (shouldOGCompressMesh)
                     longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
-
+#endif
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
+#ifdef USE_OPENGC
                     if (shouldOGCompressMesh)
                         longIndices[idx] = (long)uniqueIndicesBuffer[idx];
+#endif
                 }
-                
+#ifdef USE_OPENGC
                 if (shouldOGCompressMesh) {
                     ifs.SetCoordIndex((long * const ) longIndices);
                 }
-                
+#endif
                 if (!shouldOGCompressMesh) {
                     uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
                     indicesOutputStream.write((const char*)ushortIndices, indicesLength);
-                } else {
+                }
+#ifdef USE_OPENGC
+                else {
                     uniqueIndices->setByteOffset(bufferStart);
                     bufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
                 }
-                
+#endif
                 //now that we wrote to the stream we can release the buffer.
                 uniqueIndices->setBufferView(dummyBuffer);
                 
@@ -267,7 +280,7 @@ namespace GLTF
                 
                 vertexCount = meshAttribute->getCount();
                 attributeCount++;
-                
+#ifdef USE_OPENGC
                 if (shouldOGCompressMesh) {
                     if (j == 0) {
                         ifs.SetNCoord(vertexCount);
@@ -283,7 +296,10 @@ namespace GLTF
                     }
                     meshAttribute->setByteOffset(bufferStart);
                     bufferStart += buffer->getByteLength();
-                } else {
+                } else
+#endif
+                {
+                    
                     meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
                     verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
                 }
@@ -293,7 +309,7 @@ namespace GLTF
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             } 
         }
-        
+#ifdef USE_OPENGC
         if (shouldOGCompressMesh) {
             ifs.ComputeMinMax(OGC_SC3DMC_MAX_ALL_DIMS);
             BinaryStream bstream(vertexCount * 8);
@@ -303,6 +319,7 @@ namespace GLTF
             //meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
             //verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
         }
+#endif
         
         return true;
     }
