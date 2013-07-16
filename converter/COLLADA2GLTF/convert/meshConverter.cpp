@@ -616,7 +616,7 @@ namespace GLTF
             cvtMesh->appendPrimitive(primitive);
             
             VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
-            primitiveIndicesVector = allPrimitiveIndicesVectors[i];
+            primitiveIndicesVector = allPrimitiveIndicesVectors[allPrimitiveIndicesVectors.size()-1];
             
             // once we got a primitive, keep track of its meshAttributes
             std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices = *primitiveIndicesVector;
