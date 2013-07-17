@@ -28,6 +28,7 @@
 #include "COLLADA2GLTFWriter.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
+#include "GITSHA1.h"
 
 using namespace std::tr1;
 using namespace std;
@@ -160,7 +161,7 @@ namespace GLTF
         this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
         
         shared_ptr<JSONObject> asset = this->_converterContext.root->createObjectIfNeeded("asset");
-        std::string version = "collada2gltf "+std::string(CONVERTER_VERSION);
+        std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
         asset->setString("generator",version);
         
 		COLLADAFW::Root root(&this->_loader, this);
@@ -623,23 +624,40 @@ namespace GLTF
         unsigned int meshUID = uniqueId.getObjectId();
         shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
         
-        MeshVectorSharedPtr meshes = shared_ptr<MeshVector> (new MeshVector());
+        MeshVectorSharedPtr meshes;
+        MeshVectorSharedPtr meshes2;
+
         size_t meshesCount = 0;
         if (!this->_converterContext._uniqueIDToMeshes.count(meshUID)) {
             if (this->_converterContext._uniqueIDToMesh.count(uniqueId.toAscii())) {
+                meshes = shared_ptr<MeshVector> (new MeshVector());
                 
                 shared_ptr<GLTFMesh> unifiedMesh = this->_converterContext._uniqueIDToMesh[uniqueId.toAscii()];
                 if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, *meshes) == false) {
                     meshes->push_back(unifiedMesh);
                 }
-                meshesCount = meshes->size();
+
+                if (this->_converterContext.compressionType == "Open3DGC") {
+                    meshes2 = shared_ptr<MeshVector> (new MeshVector());
+                    for (size_t j = 0 ; j < meshes->size() ; j++) {
+                        shared_ptr<GLTFMesh> aMesh = (*meshes)[j];
+                        if (!createMeshesFromMeshPrimitives(aMesh.get(), *meshes2)) {
+                            meshes2->push_back(aMesh);
+                        }
+                    }
+                } else {
+                    meshes2 = meshes;
+                }
+                
+                meshesCount = meshes2->size();
                 if (meshesCount) {
-                    for (size_t i = 0 ; i < meshes->size() ; i++) {
-                        if ((*meshes)[i]->getPrimitives().size() > 0) {
-                            (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream, this->_genericOutputStream);
+                    for (size_t i = 0 ; i < meshes2->size() ; i++) {
+                        if ((*meshes2)[i]->getPrimitives().size() > 0) {
+                            writeAllMeshBuffers((*meshes2)[i],this->_verticesOutputStream, this->_indicesOutputStream, this->_genericOutputStream, this->_converterContext);
                         }
                     }
                 }
+                meshes = meshes2;
                 this->_converterContext._uniqueIDToMeshes[meshUID] = meshes;
             }
         } else {

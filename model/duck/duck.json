@@ -1,11 +1,11 @@
 {
     "animations": {},
     "asset": {
-        "generator": "collada2gltf 0.1.0"
+        "generator": "collada2gltf@cadab1ae180241a1d97279f3be8f9942ead79acc"
     },
     "attributes": {
-        "attribute_22": {
-            "bufferView": "bufferView_28",
+        "attribute_23": {
+            "bufferView": "bufferView_29",
             "byteOffset": 0,
             "byteStride": 12,
             "count": 2399,
@@ -21,8 +21,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_24": {
-            "bufferView": "bufferView_28",
+        "attribute_25": {
+            "bufferView": "bufferView_29",
             "byteOffset": 28788,
             "byteStride": 12,
             "count": 2399,
@@ -38,8 +38,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_26": {
-            "bufferView": "bufferView_28",
+        "attribute_27": {
+            "bufferView": "bufferView_29",
             "byteOffset": 57576,
             "byteStride": 8,
             "count": 2399,
@@ -55,13 +55,13 @@
         }
     },
     "bufferViews": {
-        "bufferView_28": {
+        "bufferView_29": {
             "buffer": "duck.bin",
             "byteLength": 76768,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
-        "bufferView_29": {
+        "bufferView_30": {
             "buffer": "duck.bin",
             "byteLength": 25272,
             "byteOffset": 76768,
@@ -89,8 +89,8 @@
         }
     },
     "indices": {
-        "indices_20": {
-            "bufferView": "bufferView_29",
+        "indices_21": {
+            "bufferView": "bufferView_30",
             "byteOffset": 0,
             "count": 12636,
             "type": "UNSIGNED_SHORT"
@@ -168,13 +168,13 @@
             "name": "LOD3spShape",
             "primitives": [
                 {
-                    "indices": "indices_20",
+                    "indices": "indices_21",
                     "material": "material.0",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_24",
-                        "POSITION": "attribute_22",
-                        "TEXCOORD_0": "attribute_26"
+                        "NORMAL": "attribute_25",
+                        "POSITION": "attribute_23",
+                        "TEXCOORD_0": "attribute_27"
                     }
                 }
             ]

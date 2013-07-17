@@ -50,6 +50,9 @@ namespace GLTF
         void setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap);        
         IndexSetToMeshAttributeHashmap& getMeshAttributesForSemantic(Semantic semantic); 
         
+        void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute);
+        shared_ptr<GLTFMeshAttribute> getMeshAttribute(Semantic semantic, size_t indexOfSet);
+        
         std::vector <GLTF::Semantic> allSemantics();
                 
         std::string getID();

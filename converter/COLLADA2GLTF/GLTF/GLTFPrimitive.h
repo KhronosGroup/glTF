@@ -32,19 +32,19 @@ namespace GLTF
     class JSONVertexAttribute
     {
     public:
-        JSONVertexAttribute(GLTF::Semantic semantic, unsigned int indexOfSet):
+        JSONVertexAttribute(GLTF::Semantic semantic, size_t indexOfSet):
         _semantic(semantic),
         _indexOfSet(indexOfSet) {
         }
         GLTF::Semantic getSemantic() {
             return _semantic;
         }
-        unsigned int getIndexOfSet() {
+        size_t getIndexOfSet() {
             return _indexOfSet;
         }
     private:
         GLTF::Semantic _semantic;
-        unsigned int _indexOfSet;
+        size_t _indexOfSet;
     };
         
     class GLTFPrimitive

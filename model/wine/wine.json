@@ -1,11 +1,11 @@
 {
     "animations": {},
     "asset": {
-        "generator": "collada2gltf 0.1.0"
+        "generator": "collada2gltf@cadab1ae180241a1d97279f3be8f9942ead79acc"
     },
     "attributes": {
-        "attribute_112": {
-            "bufferView": "bufferView_391",
+        "attribute_120": {
+            "bufferView": "bufferView_408",
             "byteOffset": 38592,
             "byteStride": 12,
             "count": 176,
@@ -21,8 +21,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_114": {
-            "bufferView": "bufferView_391",
+        "attribute_122": {
+            "bufferView": "bufferView_408",
             "byteOffset": 40704,
             "byteStride": 12,
             "count": 176,
@@ -38,8 +38,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_116": {
-            "bufferView": "bufferView_391",
+        "attribute_124": {
+            "bufferView": "bufferView_408",
             "byteOffset": 42816,
             "byteStride": 8,
             "count": 176,
@@ -53,8 +53,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_138": {
-            "bufferView": "bufferView_391",
+        "attribute_147": {
+            "bufferView": "bufferView_408",
             "byteOffset": 44224,
             "byteStride": 12,
             "count": 96,
@@ -70,8 +70,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_140": {
-            "bufferView": "bufferView_391",
+        "attribute_149": {
+            "bufferView": "bufferView_408",
             "byteOffset": 45376,
             "byteStride": 12,
             "count": 96,
@@ -87,8 +87,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_142": {
-            "bufferView": "bufferView_391",
+        "attribute_151": {
+            "bufferView": "bufferView_408",
             "byteOffset": 46528,
             "byteStride": 8,
             "count": 96,
@@ -102,8 +102,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_164": {
-            "bufferView": "bufferView_391",
+        "attribute_174": {
+            "bufferView": "bufferView_408",
             "byteOffset": 47296,
             "byteStride": 12,
             "count": 1968,
@@ -119,8 +119,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_166": {
-            "bufferView": "bufferView_391",
+        "attribute_176": {
+            "bufferView": "bufferView_408",
             "byteOffset": 70912,
             "byteStride": 12,
             "count": 1968,
@@ -136,8 +136,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_168": {
-            "bufferView": "bufferView_391",
+        "attribute_178": {
+            "bufferView": "bufferView_408",
             "byteOffset": 94528,
             "byteStride": 8,
             "count": 1968,
@@ -151,8 +151,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_210": {
-            "bufferView": "bufferView_391",
+        "attribute_221": {
+            "bufferView": "bufferView_408",
             "byteOffset": 110272,
             "byteStride": 12,
             "count": 48,
@@ -168,8 +168,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_212": {
-            "bufferView": "bufferView_391",
+        "attribute_223": {
+            "bufferView": "bufferView_408",
             "byteOffset": 110848,
             "byteStride": 12,
             "count": 48,
@@ -185,8 +185,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_214": {
-            "bufferView": "bufferView_391",
+        "attribute_225": {
+            "bufferView": "bufferView_408",
             "byteOffset": 111424,
             "byteStride": 8,
             "count": 48,
@@ -200,25 +200,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_22": {
-            "bufferView": "bufferView_391",
-            "byteOffset": 0,
-            "byteStride": 12,
-            "count": 96,
-            "max": [
-                2,
-                21,
-                38
-            ],
-            "min": [
-                0,
-                0,
-                5.5
-            ],
-            "type": "FLOAT_VEC3"
-        },
-        "attribute_236": {
-            "bufferView": "bufferView_391",
+        "attribute_248": {
+            "bufferView": "bufferView_408",
             "byteOffset": 111808,
             "byteStride": 12,
             "count": 176,
@@ -234,8 +217,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_238": {
-            "bufferView": "bufferView_391",
+        "attribute_250": {
+            "bufferView": "bufferView_408",
             "byteOffset": 113920,
             "byteStride": 12,
             "count": 176,
@@ -251,25 +234,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_24": {
-            "bufferView": "bufferView_391",
-            "byteOffset": 1152,
-            "byteStride": 12,
-            "count": 96,
-            "max": [
-                1,
-                1,
-                1
-            ],
-            "min": [
-                -1,
-                -1,
-                -1
-            ],
-            "type": "FLOAT_VEC3"
-        },
-        "attribute_240": {
-            "bufferView": "bufferView_391",
+        "attribute_252": {
+            "bufferView": "bufferView_408",
             "byteOffset": 116032,
             "byteStride": 8,
             "count": 176,
@@ -283,8 +249,25 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_257": {
-            "bufferView": "bufferView_391",
+        "attribute_26": {
+            "bufferView": "bufferView_408",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "count": 96,
+            "max": [
+                2,
+                21,
+                38
+            ],
+            "min": [
+                0,
+                0,
+                5.5
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_270": {
+            "bufferView": "bufferView_408",
             "byteOffset": 117440,
             "byteStride": 12,
             "count": 224,
@@ -300,8 +283,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_259": {
-            "bufferView": "bufferView_391",
+        "attribute_272": {
+            "bufferView": "bufferView_408",
             "byteOffset": 120128,
             "byteStride": 12,
             "count": 224,
@@ -317,23 +300,25 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_26": {
-            "bufferView": "bufferView_391",
-            "byteOffset": 2304,
-            "byteStride": 8,
+        "attribute_28": {
+            "bufferView": "bufferView_408",
+            "byteOffset": 1152,
+            "byteStride": 12,
             "count": 96,
             "max": [
-                4.15963,
-                1.11374
+                1,
+                1,
+                1
             ],
             "min": [
-                -1.14777,
-                -0.08885
+                -1,
+                -1,
+                -1
             ],
-            "type": "FLOAT_VEC2"
+            "type": "FLOAT_VEC3"
         },
-        "attribute_281": {
-            "bufferView": "bufferView_391",
+        "attribute_295": {
+            "bufferView": "bufferView_408",
             "byteOffset": 122816,
             "byteStride": 12,
             "count": 2933,
@@ -349,8 +334,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_283": {
-            "bufferView": "bufferView_391",
+        "attribute_297": {
+            "bufferView": "bufferView_408",
             "byteOffset": 158012,
             "byteStride": 12,
             "count": 2933,
@@ -366,8 +351,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_285": {
-            "bufferView": "bufferView_391",
+        "attribute_299": {
+            "bufferView": "bufferView_408",
             "byteOffset": 193208,
             "byteStride": 8,
             "count": 2933,
@@ -381,8 +366,23 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_302": {
-            "bufferView": "bufferView_391",
+        "attribute_30": {
+            "bufferView": "bufferView_408",
+            "byteOffset": 2304,
+            "byteStride": 8,
+            "count": 96,
+            "max": [
+                4.15963,
+                1.11374
+            ],
+            "min": [
+                -1.14777,
+                -0.08885
+            ],
+            "type": "FLOAT_VEC2"
+        },
+        "attribute_317": {
+            "bufferView": "bufferView_408",
             "byteOffset": 216672,
             "byteStride": 12,
             "count": 120,
@@ -398,8 +398,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_304": {
-            "bufferView": "bufferView_391",
+        "attribute_319": {
+            "bufferView": "bufferView_408",
             "byteOffset": 218112,
             "byteStride": 12,
             "count": 120,
@@ -415,8 +415,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_326": {
-            "bufferView": "bufferView_391",
+        "attribute_342": {
+            "bufferView": "bufferView_408",
             "byteOffset": 219552,
             "byteStride": 12,
             "count": 1968,
@@ -432,8 +432,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_328": {
-            "bufferView": "bufferView_391",
+        "attribute_344": {
+            "bufferView": "bufferView_408",
             "byteOffset": 243168,
             "byteStride": 12,
             "count": 1968,
@@ -449,8 +449,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_330": {
-            "bufferView": "bufferView_391",
+        "attribute_346": {
+            "bufferView": "bufferView_408",
             "byteOffset": 266784,
             "byteStride": 8,
             "count": 1968,
@@ -464,8 +464,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_372": {
-            "bufferView": "bufferView_391",
+        "attribute_389": {
+            "bufferView": "bufferView_408",
             "byteOffset": 282528,
             "byteStride": 12,
             "count": 48,
@@ -481,8 +481,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_374": {
-            "bufferView": "bufferView_391",
+        "attribute_391": {
+            "bufferView": "bufferView_408",
             "byteOffset": 283104,
             "byteStride": 12,
             "count": 48,
@@ -498,8 +498,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_376": {
-            "bufferView": "bufferView_391",
+        "attribute_393": {
+            "bufferView": "bufferView_408",
             "byteOffset": 283680,
             "byteStride": 8,
             "count": 48,
@@ -513,8 +513,8 @@
             ],
             "type": "FLOAT_VEC2"
         },
-        "attribute_43": {
-            "bufferView": "bufferView_391",
+        "attribute_48": {
+            "bufferView": "bufferView_408",
             "byteOffset": 3072,
             "byteStride": 12,
             "count": 720,
@@ -530,8 +530,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_45": {
-            "bufferView": "bufferView_391",
+        "attribute_50": {
+            "bufferView": "bufferView_408",
             "byteOffset": 11712,
             "byteStride": 12,
             "count": 720,
@@ -547,8 +547,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_62": {
-            "bufferView": "bufferView_391",
+        "attribute_68": {
+            "bufferView": "bufferView_408",
             "byteOffset": 20352,
             "byteStride": 12,
             "count": 720,
@@ -564,8 +564,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_64": {
-            "bufferView": "bufferView_391",
+        "attribute_70": {
+            "bufferView": "bufferView_408",
             "byteOffset": 28992,
             "byteStride": 12,
             "count": 720,
@@ -581,8 +581,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_86": {
-            "bufferView": "bufferView_391",
+        "attribute_93": {
+            "bufferView": "bufferView_408",
             "byteOffset": 37632,
             "byteStride": 12,
             "count": 30,
@@ -598,8 +598,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_88": {
-            "bufferView": "bufferView_391",
+        "attribute_95": {
+            "bufferView": "bufferView_408",
             "byteOffset": 37992,
             "byteStride": 12,
             "count": 30,
@@ -615,8 +615,8 @@
             ],
             "type": "FLOAT_VEC3"
         },
-        "attribute_90": {
-            "bufferView": "bufferView_391",
+        "attribute_97": {
+            "bufferView": "bufferView_408",
             "byteOffset": 38352,
             "byteStride": 8,
             "count": 30,
@@ -632,13 +632,13 @@
         }
     },
     "bufferViews": {
-        "bufferView_391": {
+        "bufferView_408": {
             "buffer": "wine.bin",
             "byteLength": 284064,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
-        "bufferView_392": {
+        "bufferView_409": {
             "buffer": "wine.bin",
             "byteLength": 44940,
             "byteOffset": 284064,
@@ -671,98 +671,98 @@
         }
     },
     "indices": {
-        "indices_110": {
-            "bufferView": "bufferView_392",
+        "indices_118": {
+            "bufferView": "bufferView_409",
             "byteOffset": 8208,
             "count": 360,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_136": {
-            "bufferView": "bufferView_392",
+        "indices_145": {
+            "bufferView": "bufferView_409",
             "byteOffset": 8928,
             "count": 168,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_162": {
-            "bufferView": "bufferView_392",
+        "indices_172": {
+            "bufferView": "bufferView_409",
             "byteOffset": 9264,
             "count": 4740,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_20": {
-            "bufferView": "bufferView_392",
-            "byteOffset": 0,
-            "count": 168,
-            "type": "UNSIGNED_SHORT"
-        },
-        "indices_205": {
-            "bufferView": "bufferView_392",
+        "indices_216": {
+            "bufferView": "bufferView_409",
             "byteOffset": 18744,
             "count": 66,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_208": {
-            "bufferView": "bufferView_392",
+        "indices_219": {
+            "bufferView": "bufferView_409",
             "byteOffset": 18876,
             "count": 66,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_234": {
-            "bufferView": "bufferView_392",
+        "indices_24": {
+            "bufferView": "bufferView_409",
+            "byteOffset": 0,
+            "count": 168,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_246": {
+            "bufferView": "bufferView_409",
             "byteOffset": 19008,
             "count": 360,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_255": {
-            "bufferView": "bufferView_392",
+        "indices_268": {
+            "bufferView": "bufferView_409",
             "byteOffset": 19728,
             "count": 600,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_279": {
-            "bufferView": "bufferView_392",
+        "indices_293": {
+            "bufferView": "bufferView_409",
             "byteOffset": 20928,
             "count": 6918,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_300": {
-            "bufferView": "bufferView_392",
+        "indices_315": {
+            "bufferView": "bufferView_409",
             "byteOffset": 34764,
             "count": 216,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_324": {
-            "bufferView": "bufferView_392",
+        "indices_340": {
+            "bufferView": "bufferView_409",
             "byteOffset": 35196,
             "count": 4740,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_367": {
-            "bufferView": "bufferView_392",
+        "indices_384": {
+            "bufferView": "bufferView_409",
             "byteOffset": 44676,
             "count": 66,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_370": {
-            "bufferView": "bufferView_392",
+        "indices_387": {
+            "bufferView": "bufferView_409",
             "byteOffset": 44808,
             "count": 66,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_41": {
-            "bufferView": "bufferView_392",
+        "indices_46": {
+            "bufferView": "bufferView_409",
             "byteOffset": 336,
             "count": 1944,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_60": {
-            "bufferView": "bufferView_392",
+        "indices_66": {
+            "bufferView": "bufferView_409",
             "byteOffset": 4224,
             "count": 1944,
             "type": "UNSIGNED_SHORT"
         },
-        "indices_84": {
-            "bufferView": "bufferView_392",
+        "indices_91": {
+            "bufferView": "bufferView_409",
             "byteOffset": 8112,
             "count": 48,
             "type": "UNSIGNED_SHORT"
@@ -939,13 +939,13 @@
             "name": "geometry16",
             "primitives": [
                 {
-                    "indices": "indices_20",
+                    "indices": "indices_24",
                     "material": "material.2",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_24",
-                        "POSITION": "attribute_22",
-                        "TEXCOORD_0": "attribute_26"
+                        "NORMAL": "attribute_28",
+                        "POSITION": "attribute_26",
+                        "TEXCOORD_0": "attribute_30"
                     }
                 }
             ]
@@ -954,12 +954,12 @@
             "name": "geometry24",
             "primitives": [
                 {
-                    "indices": "indices_41",
+                    "indices": "indices_46",
                     "material": "material.3",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_45",
-                        "POSITION": "attribute_43"
+                        "NORMAL": "attribute_50",
+                        "POSITION": "attribute_48"
                     }
                 }
             ]
@@ -968,12 +968,12 @@
             "name": "geometry29",
             "primitives": [
                 {
-                    "indices": "indices_60",
+                    "indices": "indices_66",
                     "material": "material.3",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_64",
-                        "POSITION": "attribute_62"
+                        "NORMAL": "attribute_70",
+                        "POSITION": "attribute_68"
                     }
                 }
             ]
@@ -982,13 +982,13 @@
             "name": "geometry35",
             "primitives": [
                 {
-                    "indices": "indices_84",
+                    "indices": "indices_91",
                     "material": "material.2",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_88",
-                        "POSITION": "attribute_86",
-                        "TEXCOORD_0": "attribute_90"
+                        "NORMAL": "attribute_95",
+                        "POSITION": "attribute_93",
+                        "TEXCOORD_0": "attribute_97"
                     }
                 }
             ]
@@ -997,13 +997,13 @@
             "name": "geometry40",
             "primitives": [
                 {
-                    "indices": "indices_110",
+                    "indices": "indices_118",
                     "material": "material.2",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_114",
-                        "POSITION": "attribute_112",
-                        "TEXCOORD_0": "attribute_116"
+                        "NORMAL": "attribute_122",
+                        "POSITION": "attribute_120",
+                        "TEXCOORD_0": "attribute_124"
                     }
                 }
             ]
@@ -1012,13 +1012,13 @@
             "name": "geometry45",
             "primitives": [
                 {
-                    "indices": "indices_136",
+                    "indices": "indices_145",
                     "material": "material.2",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_140",
-                        "POSITION": "attribute_138",
-                        "TEXCOORD_0": "attribute_142"
+                        "NORMAL": "attribute_149",
+                        "POSITION": "attribute_147",
+                        "TEXCOORD_0": "attribute_151"
                     }
                 }
             ]
@@ -1027,13 +1027,13 @@
             "name": "geometry51",
             "primitives": [
                 {
-                    "indices": "indices_162",
+                    "indices": "indices_172",
                     "material": "material.4",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_166",
-                        "POSITION": "attribute_164",
-                        "TEXCOORD_0": "attribute_168"
+                        "NORMAL": "attribute_176",
+                        "POSITION": "attribute_174",
+                        "TEXCOORD_0": "attribute_178"
                     }
                 }
             ]
@@ -1042,23 +1042,23 @@
             "name": "geometry58",
             "primitives": [
                 {
-                    "indices": "indices_205",
+                    "indices": "indices_216",
                     "material": "material.5",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_212",
-                        "POSITION": "attribute_210",
-                        "TEXCOORD_0": "attribute_214"
+                        "NORMAL": "attribute_223",
+                        "POSITION": "attribute_221",
+                        "TEXCOORD_0": "attribute_225"
                     }
                 },
                 {
-                    "indices": "indices_208",
+                    "indices": "indices_219",
                     "material": "material.4",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_212",
-                        "POSITION": "attribute_210",
-                        "TEXCOORD_0": "attribute_214"
+                        "NORMAL": "attribute_223",
+                        "POSITION": "attribute_221",
+                        "TEXCOORD_0": "attribute_225"
                     }
                 }
             ]
@@ -1067,13 +1067,13 @@
             "name": "geometry64",
             "primitives": [
                 {
-                    "indices": "indices_234",
+                    "indices": "indices_246",
                     "material": "material.2",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_238",
-                        "POSITION": "attribute_236",
-                        "TEXCOORD_0": "attribute_240"
+                        "NORMAL": "attribute_250",
+                        "POSITION": "attribute_248",
+                        "TEXCOORD_0": "attribute_252"
                     }
                 }
             ]
@@ -1082,12 +1082,12 @@
             "name": "geometry71",
             "primitives": [
                 {
-                    "indices": "indices_255",
+                    "indices": "indices_268",
                     "material": "material.3",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_259",
-                        "POSITION": "attribute_257"
+                        "NORMAL": "attribute_272",
+                        "POSITION": "attribute_270"
                     }
                 }
             ]
@@ -1096,13 +1096,13 @@
             "name": "geometry75",
             "primitives": [
                 {
-                    "indices": "indices_279",
+                    "indices": "indices_293",
                     "material": "material.6",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_283",
-                        "POSITION": "attribute_281",
-                        "TEXCOORD_0": "attribute_285"
+                        "NORMAL": "attribute_297",
+                        "POSITION": "attribute_295",
+                        "TEXCOORD_0": "attribute_299"
                     }
                 }
             ]
@@ -1111,12 +1111,12 @@
             "name": "geometry85",
             "primitives": [
                 {
-                    "indices": "indices_300",
+                    "indices": "indices_315",
                     "material": "material.3",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_304",
-                        "POSITION": "attribute_302"
+                        "NORMAL": "attribute_319",
+                        "POSITION": "attribute_317"
                     }
                 }
             ]
@@ -1125,13 +1125,13 @@
             "name": "geometry89",
             "primitives": [
                 {
-                    "indices": "indices_324",
+                    "indices": "indices_340",
                     "material": "material.4",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_328",
-                        "POSITION": "attribute_326",
-                        "TEXCOORD_0": "attribute_330"
+                        "NORMAL": "attribute_344",
+                        "POSITION": "attribute_342",
+                        "TEXCOORD_0": "attribute_346"
                     }
                 }
             ]
@@ -1140,23 +1140,23 @@
             "name": "geometry98",
             "primitives": [
                 {
-                    "indices": "indices_367",
+                    "indices": "indices_384",
                     "material": "material.5",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_374",
-                        "POSITION": "attribute_372",
-                        "TEXCOORD_0": "attribute_376"
+                        "NORMAL": "attribute_391",
+                        "POSITION": "attribute_389",
+                        "TEXCOORD_0": "attribute_393"
                     }
                 },
                 {
-                    "indices": "indices_370",
+                    "indices": "indices_387",
                     "material": "material.4",
                     "primitive": "TRIANGLES",
                     "semantics": {
-                        "NORMAL": "attribute_374",
-                        "POSITION": "attribute_372",
-                        "TEXCOORD_0": "attribute_376"
+                        "NORMAL": "attribute_391",
+                        "POSITION": "attribute_389",
+                        "TEXCOORD_0": "attribute_393"
                     }
                 }
             ]

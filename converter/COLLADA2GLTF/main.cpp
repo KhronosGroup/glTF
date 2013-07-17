@@ -30,6 +30,7 @@
 
 #include <iostream>
 
+#include "GITSHA1.h"
 #include "GLTF.h"
 #include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
@@ -37,7 +38,12 @@
 #include "COLLADA2GLTFWriter.h"
 
 #define STDOUT_OUTPUT 0
-#define OPTIONS_COUNT 7
+#if USE_OPENGC
+#define OPTIONS_COUNT 11
+#else
+#define OPTIONS_COUNT 9
+#endif
+
 
 typedef struct {
     const char* name;
@@ -56,11 +62,15 @@ static const OptionDescriptor options[] = {
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "p",              no_argument,        "-p -> output progress" },
 	{ "l",              required_argument,  "-l -> enable default lighting (if no lights in scene) [bool], default:true" },
+#if USE_OPENGC
+	{ "c",              required_argument,  "-c -> compression type: available: Open3DGC [string]" },
+	{ "m",              required_argument,  "-m -> compression mode: for Open3DGC can be \"ascii\"(default) or \"binary\" [string]" },
+#endif
+    { "v",              no_argument,        "-v -> print version" },
 	{ "h",              no_argument,        "-h -> help" }
 };
 
 static void buildOptions() {
-    helpMessage += "*COLLADA2GLTF V"+std::string(CONVERTER_VERSION)+"*\n\n";
     helpMessage += "usage: collada2gltlf -f [file] [options]\n";
     helpMessage += "options:\n";
     
@@ -91,28 +101,45 @@ static std::string replacePathExtensionWithJSON(const std::string& inputFile)
     return pathDir + fileBase + ".json";
 }
 
+bool fileExists(const char * filename) {
+    if (FILE * file = fopen(filename, "r")) {
+        fclose(file);
+        return true;
+    }
+    return false;
+}
+
 static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContext *converterArgs) {
 	int ch;
     std::string file;
     std::string output;
     bool hasOutputPath = false;
     bool hasInputPath = false;
-
+    bool shouldShowHelp = false;
     converterArgs->invertTransparency = false;
     converterArgs->exportAnimations = true;
     converterArgs->exportPassDetails = false;
     converterArgs->outputProgress = false;
     converterArgs->useDefaultLight = true;
     
+    converterArgs->compressionType = "none";
+    converterArgs->compressionMode = "";
+    
     buildOptions();
     
-    if (argc == 2) {
-        converterArgs->inputFilePath = argv[1];
-        converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
-        return true;
+    if (argc == 1) {
+        shouldShowHelp = true;
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:h", opt_options, 0)) != -1) {
+    if (argc == 2) {
+        if (fileExists(argv[1])) {
+            converterArgs->inputFilePath = argv[1];
+            converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
+            return true;
+        }
+    }
+    
+    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:c:m:vh", opt_options, 0)) != -1) {
         switch (ch) {
             case 'h':
                 dumpHelpMessage();
@@ -131,6 +158,25 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
             case 'p':
                 converterArgs->outputProgress = true;
                 break;
+                
+            case 'c':
+                //compression type
+                converterArgs->compressionType = optarg;
+                printf("[option] compression type:%s\n",optarg);
+
+                break;
+                
+            case 'v':
+                printf("collada2gltf@%s\n",g_GIT_SHA1);
+                break;
+                
+            case 'm':
+                //compression mode
+                converterArgs->compressionMode = optarg;
+                printf("[option] compression mode:%s\n",optarg);
+
+                break;
+                
             case 'l':
                 if (optarg != NULL) {
                     if (strcmp(optarg, "true") == 0) {
@@ -152,29 +198,22 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 printf("[option] export pass details\n");
                 break;
                 
-			case 0:
+			default:
+                shouldShowHelp = true;
 				break;
 		}
 	}
     
-    if (!hasInputPath) {
+    if (shouldShowHelp) {
         dumpHelpMessage();
         return false;
     }
     
-    if (!hasOutputPath) {
+    if (!hasOutputPath & hasInputPath) {
         converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
     }
         
     return true;
-}
-
-bool fileExists(const char * filename) {
-    if (FILE * file = fopen(filename, "r")) {
-        fclose(file);
-        return true;
-    }
-    return false;
 }
 
 int main (int argc, char * const argv[]) {
@@ -182,14 +221,12 @@ int main (int argc, char * const argv[]) {
     
     if (processArgs(argc, argv, &converterContext)) {
         if (converterContext.inputFilePath.length() == 0) {
-            perror("no input file provided, convertion aborted");
             return -1;
         }
         const char* inputFilePathCStr = converterContext.inputFilePath.c_str();
         
         if (!fileExists(converterContext.inputFilePath.c_str())) {
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
-            
             return -1;
         }
         

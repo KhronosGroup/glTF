@@ -37,6 +37,9 @@ namespace GLTF
                                               unsigned int count /* count of entries within the verticesCount array */,
                                               unsigned int *triangulatedIndicesCount /* number of indices in returned array */);
 
+    //helper only required to facilitate compression as Open3DGC and WebGLLoader do not allow (yet) to share the same vertex buffer with multiple index buffer
+    bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes);
+
 }
 
 #endif

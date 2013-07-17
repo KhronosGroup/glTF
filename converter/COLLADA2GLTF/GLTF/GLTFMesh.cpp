@@ -24,26 +24,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-//--- X3DGC
-#define _CRT_SECURE_NO_WARNINGS
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
-//#include "opengc_Vector.h"
-#ifdef USE_OPENGC
-#include "ogcSC3DMCEncodeParams.h"
-#include "ogcIndexedFaceSet.h"
-#include "ogcSC3DMCEncoder.h"
-#include "ogcSC3DMCDecoder.h"
-
-using namespace ogc;
-#endif
-//--- X3DGC
-
 
 #include "GLTF.h"
 #include "../helpers/geometryHelpers.h"
@@ -57,6 +37,7 @@ namespace GLTF
     GLTFMesh::GLTFMesh() {
         this->_remapTableForPositions = 0;
         this->_extensions = shared_ptr<JSONObject>(new JSONObject());
+        this->_ID = GLTFUtils::generateIDForType("mesh");
     }
     
     GLTFMesh::~GLTFMesh() {
@@ -108,6 +89,16 @@ namespace GLTF
     
     IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic) {
         return this->_semanticToMeshAttributes[semantic];
+    }
+    
+    shared_ptr<GLTFMeshAttribute> GLTFMesh::getMeshAttribute(Semantic semantic, size_t indexOfSet) {
+        IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
+        return hasmap[indexOfSet];
+    }
+
+    void GLTFMesh::setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute) {
+        IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
+        hasmap[indexOfSet] = meshAttribute;
     }
     
     vector <GLTF::Semantic> GLTFMesh::allSemantics() {
@@ -178,165 +169,6 @@ namespace GLTF
         return this->_remapTableForPositions;
     }
     
-    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream)
-    {
-        bool shouldOGCompressMesh = false;
-
-#ifdef USE_OPENGC
-        SC3DMCEncodeParams params;
-        IndexedFaceSet ifs;
-        //shouldOGCompressMesh = true;
-        if (shouldOGCompressMesh) {
-            int qcoord    = 12;
-            int qtexCoord = 10;
-            int qnormal   = 10;
-            params.SetCoordQuantBits(qcoord);
-            params.SetNormalQuantBits(qnormal);
-            params.SetTexCoordQuantBits(qtexCoord);
-        }
-#endif
-        typedef map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
-        IDToBufferDef IDToBuffer;
-        
-        shared_ptr <MeshAttributeVector> allMeshAttributes = this->meshAttributes();
-        shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
-        int vertexCount;
-        unsigned int indicesCount;
-        PrimitiveVector primitives = this->getPrimitives();
-#ifdef USE_OPENGC
-        unsigned bufferStart = genericStream.tellp();
-#endif
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {            
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];            
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
-            /*
-                Convert the indices to unsigned short and write the blob 
-             */
-            indicesCount = (unsigned int)uniqueIndices->getCount();
-#ifdef USE_OPENGC
-            if (shouldOGCompressMesh)
-                ifs.SetNCoordIndex(indicesCount / 3);
-#endif
-            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
-            unsigned char* uniqueIndicesBufferPtr = (unsigned char*)indicesBufferView->getBuffer()->getData();
-            uniqueIndicesBufferPtr += indicesBufferView->getByteOffset();
-            
-            unsigned int* uniqueIndicesBuffer = (unsigned int*) uniqueIndicesBufferPtr;
-            if (indicesCount <= 0) {
-                // FIXME: report error
-            } else {
-                size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
-#ifdef USE_OPENGC
-                size_t longindicesSize = 0;
-                long *longIndices = 0;
-                if (shouldOGCompressMesh) {
-                    longindicesSize = sizeof(long) * indicesCount;
-                    longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
-                }
-#endif
-                for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
-                    ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
-                    
-#ifdef USE_OPENGC
-                    if (shouldOGCompressMesh)
-                        longIndices[idx] = (long)uniqueIndicesBuffer[idx];
-
-#endif
-                }
-#ifdef USE_OPENGC
-                if (shouldOGCompressMesh) {
-                    ifs.SetCoordIndex((long * const ) longIndices);
-                }
-#endif
-                if (!shouldOGCompressMesh) {
-                    uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
-                    indicesOutputStream.write((const char*)ushortIndices, indicesLength);
-                }
-#ifdef USE_OPENGC
-                else {
-                    uniqueIndices->setByteOffset(bufferStart);
-                    bufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
-                }
-#endif
-                //now that we wrote to the stream we can release the buffer.
-                uniqueIndices->setBufferView(dummyBuffer);
-                
-                free(ushortIndices);
-            }
-        }
-        
-        int attributeCount = 0;
-        for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
-            shared_ptr <GLTFMeshAttribute> meshAttribute = (*allMeshAttributes)[j];
-            shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
-            shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
-            
-            if (!bufferView.get()) {
-                // FIXME: report error
-                return false;
-            }
-                        
-            if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
-                // FIXME: this should be internal to meshAttribute when a Data buffer is set
-                // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
-                meshAttribute->computeMinMax();
-                
-                vertexCount = meshAttribute->getCount();
-                attributeCount++;
-#ifdef USE_OPENGC
-                if (shouldOGCompressMesh) {
-                    if (j == 0) {
-                        ifs.SetNCoord(vertexCount);
-                        ifs.SetCoord((Real * const)buffer->getData());
-                    }
-                    if (j == 1) {
-                        ifs.SetNNormal(vertexCount);
-                        ifs.SetNormal((Real * const)buffer->getData());
-                    }
-                    if (j == 2) {
-                        ifs.SetNTexCoord(vertexCount);
-                        ifs.SetTexCoord((Real * const)buffer->getData());
-                    }
-                    meshAttribute->setByteOffset(bufferStart);
-                    bufferStart += buffer->getByteLength();
-                } else
-#endif
-                {
-                    
-                    meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-                    verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
-                }
-
-                //now that we wrote to the stream we can release the buffer.
-                meshAttribute->setBufferView(dummyBuffer);
-                IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-            } 
-        }
-#ifdef USE_OPENGC
-        if (shouldOGCompressMesh) {
-            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(this->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
-            
-            ifs.ComputeMinMax(OGC_SC3DMC_MAX_ALL_DIMS);
-            BinaryStream bstream(vertexCount * 8);
-            SC3DMCEncoder encoder;
-            encoder.Encode(params, ifs, bstream);
-            
-            shared_ptr<JSONObject> compressedData(new JSONObject());
-            compressedData->setUnsignedInt32("count", bstream.GetSize());
-            compressedData->setString("type", "UNSIGNED_BYTE");
-            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
-            compressionObject->setValue("compressedData", compressedData);
-            //GetStreamType
-            //OGC_SC3DMC_STREAM_TYPE_BINARY
-            
-            genericStream.write((const char*)bstream.GetBuffer(0), bstream.GetSize());
-        }
-#endif
-        
-        return true;
-    }
 
     void GLTFMesh::setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer) {
         this->_compressedBuffer = compressedBuffer;

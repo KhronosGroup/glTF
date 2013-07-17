@@ -40,6 +40,8 @@ namespace GLTF
         bool exportPassDetails;
         bool outputProgress;
         bool useDefaultLight;
+        std::string compressionMode;
+        std::string compressionType;
         
         shared_ptr <GLTF::JSONObject> root;
         ShaderIdToShaderString shaderIdToShaderString;

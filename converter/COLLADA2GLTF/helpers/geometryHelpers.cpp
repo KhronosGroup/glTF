@@ -705,7 +705,80 @@ namespace GLTF
         return true;
     }
 
-    
-    
+    bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes) {
+        if (sourceMesh->getPrimitives().size() == 1) {
+            return false;
+        }
+        
+        PrimitiveVector primitives = sourceMesh->getPrimitives();
+        size_t primitiveCount = primitives.size();
+        
+        for (size_t i = 0 ; i < primitiveCount ; i++) {
+            IndicesMap remappedIndices;
+            shared_ptr <GLTFMesh> targetMesh = shared_ptr <GLTFMesh> (new GLTFMesh());
+            shared_ptr <GLTFPrimitive> targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*primitives[i])));
+
+            targetMesh->appendPrimitive(targetPrimitive);
+            
+            unsigned int* originalIndices = (unsigned int*)primitives[i]->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
+            size_t indicesCount = primitives[i]->getIndices()->getCount();
+            unsigned int* targetIndices = (unsigned int*)malloc(indicesCount * sizeof(unsigned int));
+            
+            //perform remapping of indices
+            for (size_t j = 0 ; j < indicesCount ; j++) {
+                if (remappedIndices.count(originalIndices[j]) == 0) {
+                    //this index is not yet added
+                    targetIndices[j] = remappedIndices.size();
+                    remappedIndices[originalIndices[j]] = targetIndices[j];
+                } else {
+                    targetIndices[j] = remappedIndices[originalIndices[j]];
+                }
+            }
+            
+            shared_ptr <GLTFBufferView> targetIndicesView = createBufferViewWithAllocatedBuffer(targetIndices, 0,indicesCount * sizeof(unsigned int), true);
+            
+            shared_ptr <GLTFIndices> indices(new GLTFIndices(targetIndicesView, indicesCount));
+            targetPrimitive->setIndices(indices);
+
+            
+            // Now for each mesh attribute in the mesh, create another one just for the primitive
+            VertexAttributeVector vertexAttributes = primitives[i]->getVertexAttributes();
+            for (size_t j = 0 ; j < vertexAttributes.size() ; j++) {
+                Semantic semantic = vertexAttributes[j]->getSemantic();
+                size_t indexOfSet = vertexAttributes[j]->getIndexOfSet();
+                shared_ptr <GLTFMeshAttribute> meshAttribute = sourceMesh->getMeshAttribute(semantic, indexOfSet);
+                
+                size_t targetVertexCount = remappedIndices.size();
+                
+                unsigned char *sourcePtr = (unsigned char *)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+                
+                shared_ptr<GLTFMeshAttribute> targetAttribute = shared_ptr<GLTFMeshAttribute> (new GLTFMeshAttribute(meshAttribute.get()));
+                size_t targetAttributeSize = targetVertexCount * meshAttribute->getVertexAttributeByteLength();
+                unsigned char *targetAttributePtr = (unsigned char*)malloc(targetAttributeSize);
+                shared_ptr <GLTFBufferView> targetAttributeBufferView = createBufferViewWithAllocatedBuffer(targetAttributePtr, 0, targetAttributeSize, true);
+                targetAttribute->setCount(targetVertexCount);
+                targetAttribute->setBufferView(targetAttributeBufferView);
+
+                size_t vertexAttributeByteSize = meshAttribute->getVertexAttributeByteLength();
+
+                IndicesMap::const_iterator indicesIterator;                
+                for (indicesIterator = remappedIndices.begin() ; indicesIterator != remappedIndices.end() ; indicesIterator++) {
+                    //(*it).first;             // the key value (of type Key)
+                    //(*it).second;            // the mapped value (of type T)
+                    unsigned int originalIndex = (*indicesIterator).first;
+                    unsigned int remappedIndex = (*indicesIterator).second;
+                    
+                    memcpy(&targetAttributePtr[vertexAttributeByteSize * remappedIndex], sourcePtr + (vertexAttributeByteSize * originalIndex), vertexAttributeByteSize);
+
+                }
+                
+                targetMesh->setMeshAttribute(semantic, indexOfSet, targetAttribute);
+            }
+            meshes.push_back(targetMesh);
+            
+        }
+
+        return true;
+    }
     
 }

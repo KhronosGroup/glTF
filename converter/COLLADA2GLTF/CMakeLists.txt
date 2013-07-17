@@ -7,6 +7,12 @@ set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
 set(BUILD_SHARED_LIBS "OFF")
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GitSHA1.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp" @ONLY)
+
 set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
 
 if (NOT WIN32)
@@ -111,7 +117,10 @@ add_executable(collada2gltf main.cpp
     convert/meshConverter.cpp
     convert/meshConverter.h
     convert/animationConverter.cpp
-    convert/animationConverter.h)
+    convert/animationConverter.h
+    ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
+    GitSHA1.h
+    )
 
 if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
