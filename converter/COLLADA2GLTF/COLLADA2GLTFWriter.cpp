@@ -28,7 +28,7 @@
 #include "COLLADA2GLTFWriter.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
-#include "GITSHA1.h"
+#include "GitSHA1.h"
 
 using namespace std::tr1;
 using namespace std;

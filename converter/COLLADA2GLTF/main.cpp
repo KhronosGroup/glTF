@@ -30,7 +30,7 @@
 
 #include <iostream>
 
-#include "GITSHA1.h"
+#include "GitSHA1.h"
 #include "GLTF.h"
 #include "GLTF-OpenCOLLADA.h"
 #include "GLTFConverterContext.h"
