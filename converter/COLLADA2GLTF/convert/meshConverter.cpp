@@ -42,6 +42,31 @@ namespace GLTF
     bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream, const GLTFConverterContext& context)
     {
         bool shouldOGCompressMesh = false;
+
+#ifdef USE_WEBGLLOADER
+
+        if (mesh->getExtensions()->contains("won-compression")) {
+            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("won-compression"));
+            
+            shared_ptr<GLTFBuffer> buffer = mesh->getCompressedBuffer();
+            
+            shared_ptr<JSONObject> compressedData(new JSONObject());
+            compressedData->setUnsignedInt32("count", buffer->getByteLength());
+            compressedData->setString("type", "UNSIGNED_BYTE");
+            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
+            compressionObject->setValue("compressedData", compressedData);
+            genericStream.write((const char*)buffer->getData(), buffer->getByteLength());
+            
+            shared_ptr <MeshAttributeVector> attributes = mesh->meshAttributes();
+            for (size_t i = 0 ; i < attributes->size() ; i++) {
+                shared_ptr <GLTFMeshAttribute> meshAttribute = (*attributes)[i];
+                meshAttribute->computeMinMax();
+            }
+            
+            //bufferView will be set when the mesh is serialized
+            return true;
+        }
+#endif
         
 #ifdef USE_OPENGC
         SC3DMCEncodeParams params;
@@ -247,7 +272,184 @@ namespace GLTF
         return decodeParams;
     }
     
-    static bool compress(shared_ptr <GLTF::GLTFMesh> mesh) {
+    
+    bool compress(shared_ptr <GLTF::GLTFMesh> mesh) {
+        //Compresss wavefront
+        WavefrontObjFile dummyObj;
+        
+        AttribList *positions = dummyObj.positions();
+        shared_ptr <GLTFMeshAttribute> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
+        positionAttrib->apply(__FeedAttribs, positions);
+        
+        AttribList *normals = dummyObj.normals();
+        shared_ptr <GLTFMeshAttribute> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
+        normalAttrib->apply(__FeedAttribs, normals);
+        
+        AttribList *texcoords = dummyObj.texcoords();
+        shared_ptr <GLTFMeshAttribute> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
+        texcoordAttrib->apply(__FeedAttribs, texcoords);
+        
+        DrawBatch* drawBatch = dummyObj.drawBatch();
+        
+        PrimitiveVector primitives = mesh->getPrimitives();
+        int dummyIndices[9];
+        
+        //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
+        //webgl_loader::FileSink utf8_sink(utf8_out_fp);
+        
+        std::vector<char> compressedOutput;
+        webgl_loader::VectorSink utf8_sink(&compressedOutput);
+        
+        for (size_t i = 0 ; i < primitives.size(); i++) {
+            shared_ptr <GLTFPrimitive> primitive = primitives[i];
+            shared_ptr <GLTFIndices> indices = primitive->getUniqueIndices();
+            
+            //FIXME: assume triangles
+            size_t count = indices->getCount();
+            
+            unsigned int* intIndices = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
+            
+            for (size_t k = 0 ; k < count ; k += 3) {
+                unsigned int i1 = intIndices[k];
+                unsigned int i2 = intIndices[k + 1];
+                unsigned int i3 = intIndices[k + 2];
+                
+                //simulate OBJ files 1-based indexing
+                i1 += 1;
+                i2 += 1;
+                i3 += 1;
+                
+                dummyIndices[0] = dummyIndices[1] = dummyIndices[2] = (int)i1;
+                dummyIndices[3] = dummyIndices[4] = dummyIndices[5] = (int)i2;
+                dummyIndices[6] = dummyIndices[7] = dummyIndices[8] = (int)i3;
+                
+                drawBatch->AddTriangle(0, dummyIndices);
+            }
+            
+            const MaterialBatches& batches = dummyObj.material_batches();
+            
+            // Pass 1: compute bounds.
+            webgl_loader::Bounds bounds;
+            bounds.Clear();
+            for (MaterialBatches::const_iterator iter = batches.begin();
+                 iter != batches.end(); ++iter) {
+                const DrawBatch& draw_batch = iter->second;
+                bounds.Enclose(draw_batch.draw_mesh().attribs);
+            }
+            FILE* json_out = stdout;
+            
+            webgl_loader::BoundsParams bounds_params =
+            webgl_loader::BoundsParams::FromBounds(bounds);
+            
+            shared_ptr<JSONObject> decodeParams = getDecodeParams(bounds_params);
+            
+            fputs("  \"decodeParams\": ", json_out);
+            bounds_params.DumpJson(json_out);
+            fputs(", \"urls\": {\n", json_out);
+            // Pass 2: quantize, optimize, compress, report.
+            //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
+            //CHECK(utf8_out_fp != NULL);
+            fprintf(json_out, "    \"%s\": [\n", "testglloader.bin");
+            
+            size_t offset = 0;
+            MaterialBatches::const_iterator iter = batches.begin();
+            while (iter != batches.end()) {
+                const DrawMesh& draw_mesh = iter->second.draw_mesh();
+                if (draw_mesh.indices.empty()) {
+                    ++iter;
+                    continue;
+                }
+                QuantizedAttribList quantized_attribs;
+                webgl_loader::AttribsToQuantizedAttribs(draw_mesh.attribs, bounds_params,&quantized_attribs);
+                VertexOptimizer vertex_optimizer(quantized_attribs);
+                const std::vector<GroupStart>& group_starts = iter->second.group_starts();
+                WebGLMeshList webgl_meshes;
+                std::vector<size_t> group_lengths;
+                for (size_t i = 1; i < group_starts.size(); ++i) {
+                    const size_t here = group_starts[i-1].offset;
+                    const size_t length = group_starts[i].offset - here;
+                    group_lengths.push_back(length);
+                    vertex_optimizer.AddTriangles(&draw_mesh.indices[here], length,&webgl_meshes);
+                }
+                const size_t here = group_starts.back().offset;
+                const size_t length = draw_mesh.indices.size() - here;
+                CHECK(length % 3 == 0);
+                group_lengths.push_back(length);
+                vertex_optimizer.AddTriangles(&draw_mesh.indices[here], length,&webgl_meshes);
+                
+                std::vector<std::string> material;
+                std::vector<size_t> attrib_start, attrib_length, index_start, index_length;
+                for (size_t i = 0; i < webgl_meshes.size(); ++i) {
+                    const size_t num_attribs = webgl_meshes[i].attribs.size();
+                    const size_t num_indices = webgl_meshes[i].indices.size();
+                    CHECK(num_attribs % 8 == 0);
+                    CHECK(num_indices % 3 == 0);
+                    webgl_loader::CompressQuantizedAttribsToUtf8(webgl_meshes[i].attribs, &utf8_sink);
+                    webgl_loader::CompressIndicesToUtf8(webgl_meshes[i].indices, &utf8_sink);
+                    material.push_back(iter->first);
+                    attrib_start.push_back(offset);
+                    attrib_length.push_back(num_attribs / 8);
+                    index_start.push_back(offset + num_attribs);
+                    index_length.push_back(num_indices / 3);
+                    offset += num_attribs + num_indices;
+                }
+                
+                int meshIndex = 0;
+                
+                shared_ptr<JSONArray> attribs(new JSONArray());
+                shared_ptr<JSONArray> indices(new JSONArray());
+                attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_start[meshIndex])));
+                attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_length[meshIndex])));
+                indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_start[meshIndex])));
+                indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_length[meshIndex])));
+                
+                decodeParams->setValue("attribRange", attribs);
+                decodeParams->setValue("indexRange", indices);
+                
+                mesh->getExtensions()->setValue("won-compression", decodeParams);
+                
+                for (size_t i = 0; i < webgl_meshes.size(); ++i) {
+                    fprintf(json_out,
+                            "      { \"material\": \"%s\",\n"
+                            "        \"attribRange\": [" PRIuS ", " PRIuS "],\n"
+                            "        \"indexRange\": [" PRIuS ", " PRIuS "]\n"
+                            "      }",
+                            material[i].c_str(),
+                            attrib_start[i], attrib_length[i],
+                            index_start[i], index_length[i]);
+                    if (i != webgl_meshes.size() - 1) {
+                        fputs(",\n", json_out);
+                    }
+                }
+                const bool last = (++iter == batches.end());
+                fputs(",\n" + last, json_out);
+                
+                
+            }
+            fputs("    ]\n", json_out);
+            fputs("  }\n}", json_out);
+            
+            printf("compressed output size:%d\n",compressedOutput.size());
+            
+            //FIXME: remove that crappy copy here
+            char *bufferPtr = ( char*)malloc(compressedOutput.size());
+            for (size_t idx = 0 ; idx < compressedOutput.size() ; idx++) {
+                bufferPtr[idx] = compressedOutput[idx];
+            }
+            shared_ptr<GLTFBuffer> compressedBuffer(new GLTFBuffer(bufferPtr, compressedOutput.size(), true));
+            
+            mesh->setCompressedBuffer(compressedBuffer);
+            
+        }
+        
+        return true;
+    }
+    
+    
+    
+    
+#if 0
+    bool compress(shared_ptr <GLTF::GLTFMesh> mesh) {
         //Compresss wavefront
         WavefrontObjFile dummyObj;
         
@@ -334,10 +536,9 @@ namespace GLTF
         
         size_t offset = 0;
         
-        //VertexOptimizer vertex_optimizer(quantized_attribs);
+        VertexOptimizer vertex_optimizer(quantized_attribs);
         const size_t length = draw_mesh.indices.size();
         CHECK(length % 3 == 0);
-        //vertex_optimizer.AddTriangles(&draw_mesh.indices[here], length, &webgl_meshes);
         
         bool *knownIndices = (bool*)malloc(sizeof(bool) * quantized_attribs.size());
         memset(knownIndices, 0, sizeof(bool) * quantized_attribs.size());
@@ -358,6 +559,9 @@ namespace GLTF
 
         std::vector<std::string> material;
         std::vector<size_t> attrib_start, attrib_length, index_start, index_length;
+        
+        vertex_optimizer.AddTriangles(&draw_mesh.indices[0], length, &webgl_meshes);
+        
         
         for (size_t i = 0; i < webgl_meshes.size(); ++i) {
             const size_t num_attribs = webgl_meshes[i].attribs.size();
@@ -400,6 +604,8 @@ namespace GLTF
         
         return true;
     }
+#endif
+    
 #endif
     //
     /*
@@ -859,13 +1065,6 @@ namespace GLTF
             return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
         }
 
-#if USE_WEBGLOADER
-        //now compress meshes
-        for (size_t i = 0 ; i < meshes.size() ; i++) {
-            shared_ptr <GLTF::GLTFMesh> mesh = meshes[i];
-            compress(mesh);
-        }
-#endif
         return shared_ptr <GLTF::GLTFMesh> ((GLTFMesh*)0);
     }
 }

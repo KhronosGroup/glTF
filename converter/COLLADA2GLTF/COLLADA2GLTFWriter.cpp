@@ -127,7 +127,6 @@ namespace GLTF
         ifstream inputVertices;
         ifstream inputIndices;
         ifstream inputGeneric;
-        ifstream inputCompressedData;
         ofstream ouputStream;
         
         this->_extraDataHandler = new ExtraDataHandler();
@@ -293,7 +292,6 @@ namespace GLTF
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + genericLength));
 
         //---
-        
         
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
@@ -637,7 +635,7 @@ namespace GLTF
                     meshes->push_back(unifiedMesh);
                 }
 
-                if (this->_converterContext.compressionType == "Open3DGC") {
+                if ((this->_converterContext.compressionType == "Open3DGC") || (this->_converterContext.compressionType == "won")) {
                     meshes2 = shared_ptr<MeshVector> (new MeshVector());
                     for (size_t j = 0 ; j < meshes->size() ; j++) {
                         shared_ptr<GLTFMesh> aMesh = (*meshes)[j];
@@ -649,6 +647,16 @@ namespace GLTF
                     meshes2 = meshes;
                 }
                 
+#if USE_WEBGLLOADER
+                //now compress meshes
+                if (this->_converterContext.compressionType == "won") {
+                    for (size_t i = 0 ; i < meshes2->size() ; i++) {
+                        shared_ptr <GLTF::GLTFMesh> mesh = (*meshes2)[i];
+                        compress(mesh);
+                    }
+                }
+#endif
+                
                 meshesCount = meshes2->size();
                 if (meshesCount) {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
@@ -657,7 +665,9 @@ namespace GLTF
                         }
                     }
                 }
+                
                 meshes = meshes2;
+                                
                 this->_converterContext._uniqueIDToMeshes[meshUID] = meshes;
             }
         } else {
@@ -1166,19 +1176,6 @@ namespace GLTF
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 
                 if (this->_converterContext._uniqueIDToMeshes.count(meshID) == 0) {
-                    /*
-                    meshes =  shared_ptr<MeshVector> (new MeshVector);
-                    
-                    convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, (*meshes));
-                    
-                    if (meshes->size()) {
-                        for (size_t i = 0 ; i < meshes->size() ; i++) {
-                            if ((*meshes)[i]->getPrimitives().size() > 0) {
-                                (*meshes)[i]->writeAllBuffers(this->_verticesOutputStream, this->_indicesOutputStream, this->_compressedDataOutputStream);
-                            }
-                        }
-                    }
-*/
                         shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_converterContext);
                     if (cvtMesh) {
                         //here we stock the mesh with unified indices but we may have to handle additional mesh attributes

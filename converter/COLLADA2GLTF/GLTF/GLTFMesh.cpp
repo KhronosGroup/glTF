@@ -141,26 +141,6 @@ namespace GLTF
         return _extensions;
     }
     
-    /*
-    bool GLTFMesh::writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& compressedDataOutputStream) {
-
-        if (this->getExtensions()->contains("won-compression")) {
-            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(this->getExtensions()->getValue("won-compression"));
-
-            shared_ptr<GLTFBuffer> buffer = this->getCompressedBuffer();
-            
-            shared_ptr<JSONObject> compressedData(new JSONObject());
-            compressedData->setUnsignedInt32("count", buffer->getByteLength());
-            compressedData->setString("type", "UNSIGNED_BYTE");
-            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(compressedDataOutputStream.tellp()));
-            compressionObject->setValue("compressedData", compressedData);
-            compressedDataOutputStream.write((const char*)buffer->getData(), buffer->getByteLength());
-            
-            //bufferView will be set when the mesh is serialized
-            return true;
-        }
-     */
-        
     void GLTFMesh::setRemapTableForPositions(unsigned int* remapTableForPositions) {
         this->_remapTableForPositions = remapTableForPositions;
     }

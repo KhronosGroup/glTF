@@ -317,7 +317,8 @@ namespace GLTF
         
         return primitiveRemapInfos;
     }
-    
+
+#define DUMP_UNIFIED_INDEXES_INFO 0
     
     shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
     {
@@ -328,7 +329,13 @@ namespace GLTF
         PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
         PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
         
-        size_t startIndex = 0; 
+#if DUMP_UNIFIED_INDEXES_INFO
+        {
+        shared_ptr<GLTFMeshAttribute> vertexSource = sourceMesh->getMeshAttribute(GLTF::POSITION, 0);
+        printf("vertex source cout :%d\n",(int)vertexSource->getCount());
+        }
+#endif
+        size_t startIndex = 0;
         size_t endIndex = 0;
         size_t primitiveCount = sourcePrimitives.size();
         unsigned int maxVertexAttributes = 0;
@@ -463,6 +470,13 @@ namespace GLTF
                 //return NULL;
             }
         }
+        
+#if DUMP_UNIFIED_INDEXES_INFO
+        {
+            shared_ptr<GLTFMeshAttribute> vertexSource = targetMesh->getMeshAttribute(GLTF::POSITION, 0);
+            printf("vertex dest count :%d\n",(int)vertexSource->getCount());
+        }
+#endif
         
         return targetMesh;
     }

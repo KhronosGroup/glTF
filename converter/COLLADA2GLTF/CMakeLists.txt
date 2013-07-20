@@ -29,7 +29,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAB
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
 
-if (USE_WEBGLOADER)
+if (USE_WEBGLLOADER)
     add_definitions( -DUSE_WEBGLLOADER )
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 endif()
@@ -60,7 +60,7 @@ endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
 
-if (USE_WEBGLOADER)
+if (USE_WEBGLLOADER)
     add_subdirectory(dependencies/webgl-loader)
 endif()
 
@@ -129,6 +129,11 @@ endif()
 if (USE_OPENGC)
 LIST(APPEND TARGET_LIBS opengc_enc_lib opengc_common_lib)
 endif()
+
+if (USE_WEBGLLOADER)
+LIST(APPEND TARGET_LIBS WEBGLLOADER)
+endif()
+
 
 target_link_libraries (collada2gltf ${TARGET_LIBS})
 
