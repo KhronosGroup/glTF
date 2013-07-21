@@ -25,13 +25,13 @@
 #include <map>
 #include <string>
 #include <vector>
-#ifdef USE_OPENGC
-#include "ogcSC3DMCEncodeParams.h"
-#include "ogcIndexedFaceSet.h"
-#include "ogcSC3DMCEncoder.h"
-#include "ogcSC3DMCDecoder.h"
+#ifdef USE_OPEN3DGC
+#include "o3dgcSC3DMCEncodeParams.h"
+#include "o3dgcIndexedFaceSet.h"
+#include "o3dgcSC3DMCEncoder.h"
+#include "o3dgcSC3DMCDecoder.h"
 
-using namespace ogc;
+using namespace o3dgc;
 #endif
 //--- X3DGC
 
@@ -68,9 +68,9 @@ namespace GLTF
         }
 #endif
         
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
         SC3DMCEncodeParams params;
-        IndexedFaceSet ifs;
+        IndexedFaceSet <unsigned short> ifs;
         
         shouldOGCompressMesh = context.compressionType == "Open3DGC";
         if (shouldOGCompressMesh) {
@@ -90,7 +90,7 @@ namespace GLTF
         int vertexCount;
         unsigned int indicesCount;
         PrimitiveVector primitives = mesh->getPrimitives();
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
         unsigned bufferStart = genericStream.tellp();
 #endif
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -101,7 +101,7 @@ namespace GLTF
              Convert the indices to unsigned short and write the blob
              */
             indicesCount = (unsigned int)uniqueIndices->getCount();
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
             if (shouldOGCompressMesh)
                 ifs.SetNCoordIndex(indicesCount / 3);
 #endif
@@ -115,33 +115,20 @@ namespace GLTF
             } else {
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
-#ifdef USE_OPENGC
-                size_t longindicesSize = 0;
-                long *longIndices = 0;
-                if (shouldOGCompressMesh) {
-                    longindicesSize = sizeof(long) * indicesCount;
-                    longIndices = (long*)calloc(sizeof(long) * indicesCount, 1);
-                }
-#endif
+
                 for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                     ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
-                    
-#ifdef USE_OPENGC
-                    if (shouldOGCompressMesh)
-                        longIndices[idx] = (long)uniqueIndicesBuffer[idx];
-                    
-#endif
                 }
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
                 if (shouldOGCompressMesh) {
-                    ifs.SetCoordIndex((long * const ) longIndices);
+                    ifs.SetCoordIndex((unsigned short * const ) ushortIndices);
                 }
 #endif
                 if (!shouldOGCompressMesh) {
                     uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
                     indicesOutputStream.write((const char*)ushortIndices, indicesLength);
                 }
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
                 else {
                     uniqueIndices->setByteOffset(bufferStart);
                     bufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
@@ -150,7 +137,7 @@ namespace GLTF
                 //now that we wrote to the stream we can release the buffer.
                 uniqueIndices->setBufferView(dummyBuffer);
                 
-                free(ushortIndices);
+                //free(ushortIndices);
             }
         }
         
@@ -172,7 +159,7 @@ namespace GLTF
                 
                 vertexCount = meshAttribute->getCount();
                 attributeCount++;
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
                 if (shouldOGCompressMesh) {
                     if (j == 0) {
                         ifs.SetNCoord(vertexCount);
@@ -201,19 +188,19 @@ namespace GLTF
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             }
         }
-#ifdef USE_OPENGC
+#ifdef USE_OPEN3DGC
         if (shouldOGCompressMesh) {
             shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
             
-            ifs.ComputeMinMax(OGC_SC3DMC_MAX_ALL_DIMS);
+            ifs.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
             BinaryStream bstream(vertexCount * 8);
-            SC3DMCEncoder encoder;
+            SC3DMCEncoder <unsigned short> encoder;
             
             shared_ptr<JSONObject> compressedData(new JSONObject());
             compressedData->setInt32("verticesCount", vertexCount);
             compressedData->setInt32("indicesCount", indicesCount);
             if (context.compressionMode == "binary") {
-                params.SetStreamType(OGC_SC3DMC_STREAM_TYPE_BINARY);
+                params.SetStreamType(O3DGC_SC3DMC_STREAM_TYPE_BINARY);
             }
             encoder.Encode(params, ifs, bstream);
 

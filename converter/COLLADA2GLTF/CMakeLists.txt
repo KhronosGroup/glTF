@@ -34,13 +34,13 @@ if (USE_WEBGLLOADER)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 endif()
 
-if (USE_OPENGC)
-    add_definitions( -DUSE_OPENGC )
+if (USE_OPEN3DGC)
+    add_definitions( -DUSE_OPEN3DGC )
 
-    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src)
-    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_common_lib/inc)
-    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_encode_lib/inc)
-    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/opengc/src/opengc_decode_lib/inc)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_common_lib/inc)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_encode_lib/inc)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_decode_lib/inc)
 endif()
 
 if (NOT WIN32)
@@ -64,8 +64,8 @@ if (USE_WEBGLLOADER)
     add_subdirectory(dependencies/webgl-loader)
 endif()
 
-if (USE_OPENGC)
-    add_subdirectory(dependencies/opengc/src)
+if (USE_OPEN3DGC)
+    add_subdirectory(dependencies/o3dgc/src)
 endif()
 
 add_executable(collada2gltf main.cpp 
@@ -126,8 +126,8 @@ if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
-if (USE_OPENGC)
-LIST(APPEND TARGET_LIBS opengc_enc_lib opengc_common_lib)
+if (USE_OPEN3DGC)
+LIST(APPEND TARGET_LIBS o3dgc_common_lib)
 endif()
 
 if (USE_WEBGLLOADER)

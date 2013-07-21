@@ -38,7 +38,7 @@
 #include "COLLADA2GLTFWriter.h"
 
 #define STDOUT_OUTPUT 0
-#if USE_OPENGC
+#if USE_OPEN3DGC
 #define OPTIONS_COUNT 11
 #else
 #define OPTIONS_COUNT 9
@@ -62,7 +62,7 @@ static const OptionDescriptor options[] = {
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "p",              no_argument,        "-p -> output progress" },
 	{ "l",              required_argument,  "-l -> enable default lighting (if no lights in scene) [bool], default:true" },
-#if USE_OPENGC
+#if USE_OPEN3DGC
 	{ "c",              required_argument,  "-c -> compression type: available: Open3DGC and won [string]" },
 	{ "m",              required_argument,  "-m -> compression mode: for Open3DGC can be \"ascii\"(default) or \"binary\" [string]" },
 #endif
