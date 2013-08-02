@@ -40,6 +40,11 @@ namespace GLTF
         bool exportPassDetails;
         bool outputProgress;
         bool useDefaultLight;
+        
+        bool alwaysExportTRS;
+        bool alwaysExportFilterColor;
+        bool alwaysExportTransparency;
+        
         std::string compressionMode;
         std::string compressionType;
         

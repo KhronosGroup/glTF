@@ -213,9 +213,7 @@ namespace GLTF
                                                       this->_genericOutputStream);
                     __AddChannel(animation, targetID, "scale");
                     free(scales);
-
                 }
-                
                 
                 if (animationFlattener->hasAnimatedTranslation()) {
                     //Translation
@@ -227,7 +225,6 @@ namespace GLTF
                                                       this->_genericOutputStream);
                     __AddChannel(animation, targetID, "translation");
                     free(positions);
-
                 }
                 
                 if (animationFlattener->hasAnimatedRotation()) {
@@ -796,7 +793,7 @@ namespace GLTF
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo)
     {
-        bool shouldExportTRS = false;
+        bool shouldExportTRS = this->_converterContext.alwaysExportTRS;
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeUID = node->getOriginalId();
         if (nodeUID.length() == 0) {
@@ -864,24 +861,6 @@ namespace GLTF
             if (!animationListID.isValid())
                 continue;
             
-            /*
-            for (size_t k = 0 ; k < bindingList.size() ; k++) {
-                Loader::AnimationSidAddressBinding binding = bindingList[k];
-                if (binding.sidAddress.getId().c_str() == nodeUID) {
-                    SidAddress::SidList sids = binding.sidAddress.getSids();
-                    printf("%s\n",binding.sidAddress.getSidAddressString().c_str());
-
-                }
-                //if (binding.animationInfo.uniqueId.toAscii() == tr->getUniqueId().toAscii()) {
-                //    printf("we already got someone here");
-
-                //}
-                
-            }*/
-
-            
-            
-            
             shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
             
             this->_converterContext._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
@@ -912,7 +891,6 @@ namespace GLTF
                 shouldExportTRS = true;
             }
         }
-        
         
         if (shouldExportTRS) {
             shared_ptr<GLTFAnimationFlattener> animationFlattener(new GLTFAnimationFlattener((Node*)node));
@@ -1311,7 +1289,7 @@ namespace GLTF
         
         //retrieve the type, parameterName -> symbol -> type
         double red = 1, green = 1, blue = 1, alpha = 1;
-        if (slot.isColor()) {
+        if (slot.isColor() && (slotName != "reflective")) {
             const Color& color = slot.getColor();
             if (slot.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
                 red = color.getRed();
@@ -1377,7 +1355,7 @@ namespace GLTF
 #endif
             uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
             
-            shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(uniqueId));
+            shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(effect->getOriginalId()));
             shared_ptr <JSONObject> values(new JSONObject());
             
             cvtEffect->setValues(values);
@@ -1409,7 +1387,14 @@ namespace GLTF
             handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
             
-            if (!isOpaque(effectCommon)) {
+            if (this->_converterContext.alwaysExportFilterColor) {
+                shared_ptr <JSONObject> slotObject(new JSONObject());
+                slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
+                slotObject->setString("type", "FLOAT_VEC4");
+                values->setValue("filterColor", slotObject);
+            }
+            
+            if (!isOpaque(effectCommon) || this->_converterContext.alwaysExportTransparency) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
                 transparency->setString("type", "FLOAT");

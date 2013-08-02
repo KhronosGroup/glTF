@@ -126,7 +126,13 @@ namespace GLTF
         //    return 1;
         //}
         
-        double transparency = parameters->contains("transparency") ? parameters->getDouble("transparency") : 1;
+        if (!parameters->contains("transparency")) {
+            return 1;
+        }
+        
+        shared_ptr<JSONObject> tr = parameters->getObject("transparency");
+        
+        double transparency = tr->getDouble("value");
         
         return context.invertTransparency ? 1 - transparency : transparency;
     }
@@ -941,6 +947,15 @@ namespace GLTF
             
             if (slotIsContributingToLighting("emission", inputParameters)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
+            }
+            
+            if (context.alwaysExportFilterColor) {
+                if (inputParameters->contains("filterColor")) {
+                    shared_ptr<JSONObject> filterColor = inputParameters->getObject("filterColor");
+                    shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", "FLOAT_VEC4", 1, "filterColor");
+                    filterColorParameter->setValue("value", filterColor->getValue("value"));
+                    fragmentShader->appendCode("color *= u_filterColor;\n");
+                }
             }
             
             bool hasTransparency = inputParameters->contains("transparency");

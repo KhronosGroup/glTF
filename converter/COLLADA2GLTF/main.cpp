@@ -39,9 +39,9 @@
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 11
+#define OPTIONS_COUNT 12
 #else
-#define OPTIONS_COUNT 9
+#define OPTIONS_COUNT 10
 #endif
 
 
@@ -67,6 +67,7 @@ static const OptionDescriptor options[] = {
 	{ "m",              required_argument,  "-m -> compression mode: for Open3DGC can be \"ascii\"(default) or \"binary\" [string]" },
 #endif
     { "v",              no_argument,        "-v -> print version" },
+    { "s",              no_argument,        "-s -> experimental mode"},
 	{ "h",              no_argument,        "-h -> help" }
 };
 
@@ -122,6 +123,10 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     converterArgs->outputProgress = false;
     converterArgs->useDefaultLight = true;
     
+    converterArgs->alwaysExportTRS = false;
+    converterArgs->alwaysExportFilterColor = false;
+    converterArgs->alwaysExportTransparency = false;
+    
     converterArgs->compressionType = "none";
     converterArgs->compressionMode = "";
     
@@ -139,7 +144,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
         }
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:c:m:vh", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
         switch (ch) {
             case 'h':
                 dumpHelpMessage();
@@ -196,6 +201,14 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
             case 'd':
                 converterArgs->exportPassDetails = true;
                 printf("[option] export pass details\n");
+                break;
+            case 's':
+                //special mode - not exposed - yet.
+                converterArgs->alwaysExportTRS = true;
+                converterArgs->alwaysExportFilterColor = true;
+                converterArgs->alwaysExportTransparency = true;
+                converterArgs->useDefaultLight = false;
+                printf("[option] special mode on\n");
                 break;
                 
 			default:

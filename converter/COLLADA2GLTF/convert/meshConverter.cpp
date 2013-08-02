@@ -15,7 +15,6 @@
 #include "stream.h"
 #endif
 
-
 //--- X3DGC
 #define _CRT_SECURE_NO_WARNINGS
 #include <time.h>
@@ -80,6 +79,10 @@ namespace GLTF
             params.SetCoordQuantBits(qcoord);
             params.SetNormalQuantBits(qnormal);
             params.SetTexCoordQuantBits(qtexCoord);
+            params.SetCoordPredMode(O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+            params.SetNormalPredMode(O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+            params.SetTexCoordPredMode(O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+
         }
 #endif
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
