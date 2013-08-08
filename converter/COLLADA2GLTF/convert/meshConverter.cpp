@@ -668,7 +668,6 @@ namespace GLTF
         size_t componentsPerAttribute = 0;
         size_t byteOffset = 0;
         size_t inputLength = 0;
-        bool meshAttributeOwnsBuffer = false;
         
         size_t setCount = vertexData.getNumInputInfos();
         bool unpatchedOpenCOLLADA = (setCount == 0); // reliable heuristic to know if the input have not been set
@@ -677,6 +676,8 @@ namespace GLTF
             setCount = 1;
         
         for (size_t indexOfSet = 0 ; indexOfSet < setCount ; indexOfSet++) {
+            bool meshAttributeOwnsBuffer = false;
+
             if (!unpatchedOpenCOLLADA) {
                 id = vertexData.getName(indexOfSet);
                 componentsPerAttribute = vertexData.getStride(indexOfSet);
