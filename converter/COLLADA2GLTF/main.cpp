@@ -122,7 +122,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     converterArgs->exportPassDetails = false;
     converterArgs->outputProgress = false;
     converterArgs->useDefaultLight = true;
-    
+    converterArgs->optimizeParameters = false;
     converterArgs->alwaysExportTRS = false;
     converterArgs->alwaysExportFilterColor = false;
     converterArgs->alwaysExportTransparency = false;
@@ -208,6 +208,8 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 converterArgs->alwaysExportFilterColor = true;
                 converterArgs->alwaysExportTransparency = true;
                 converterArgs->useDefaultLight = false;
+                converterArgs->optimizeParameters = true;
+
                 printf("[option] special mode on\n");
                 break;
                 

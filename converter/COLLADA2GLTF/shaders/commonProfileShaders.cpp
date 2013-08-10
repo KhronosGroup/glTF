@@ -90,9 +90,10 @@ namespace GLTF
     
     
     //Not yet implemented for everything
-    static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters) {
+    static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters, const GLTFConverterContext& context) {
         if (inputParameters->contains(slot)) {
-            return true;
+            if (context.optimizeParameters == false)
+                return true;
             
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
@@ -250,10 +251,10 @@ namespace GLTF
         return typeForSemanticUniform[semantic];
     }
 
-    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot) {
+    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, const GLTFConverterContext& context) {
         std::string hash = slot + ":";
 
-        if (slotIsContributingToLighting(slot, parameters)) {
+        if (slotIsContributingToLighting(slot, parameters, context)) {
             shared_ptr<JSONObject> parameter = parameters->getObject(slot);
             
             if (parameter->contains("type")) {
@@ -293,11 +294,11 @@ namespace GLTF
         //FIXME:now assume we always have diffuse specified
         shared_ptr<JSONObject> parameter = parameters->getObject("diffuse");
         
-        techniqueHash += buildSlotHash(parameters, "diffuse");
-        techniqueHash += buildSlotHash(parameters, "ambient");
-        techniqueHash += buildSlotHash(parameters, "emission");
-        techniqueHash += buildSlotHash(parameters, "specular");
-        techniqueHash += buildSlotHash(parameters, "reflective");
+        techniqueHash += buildSlotHash(parameters, "diffuse", context);
+        techniqueHash += buildSlotHash(parameters, "ambient", context);
+        techniqueHash += buildSlotHash(parameters, "emission", context);
+        techniqueHash += buildSlotHash(parameters, "specular", context);
+        techniqueHash += buildSlotHash(parameters, "reflective", context);
         //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
@@ -724,29 +725,53 @@ namespace GLTF
                 
             }
             
-            fragmentShader->appendCode("vec3 normal = normalize(%s);\n",
-                                        "v_normal");
-            if (techniqueExtras->getBool("double_sided")) {
-                fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
-            }
+            bool hasLights = false;
+            if (context.root->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+                std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
+                if (ids.size() > 0) {
+                    if (ids.size() == 1) {
+                        shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[0]);
+                        shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
                         
+                        shared_ptr<JSONObject> lights = context.root->createObjectIfNeeded("lights");
+                        shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
+                        std::string lightType = light->getString("type");
+                        
+                        //we ignore lighting if the only light we have is ambient
+                        hasLights = lightType != "ambient";
+                    } else {
+                        hasLights = true;
+                    }
+                }
+            }
+            
+            
+            if (hasLights || context.useDefaultLight) {
+                fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
+                if (techniqueExtras->getBool("double_sided")) {
+                    fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
+                }
+            }
+            
             //color to cumulate all components and light contribution
             fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 0.);\n");
             fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 1.);\n");
-            fragmentShader->appendCode("vec3 diffuseLight = vec3(0., 0., 0.);\n");
+            if (hasLights)
+                fragmentShader->appendCode("vec3 diffuseLight = vec3(0., 0., 0.);\n");
             
-            if (slotIsContributingToLighting("emission", inputParameters)) {
+            if (slotIsContributingToLighting("emission", inputParameters, context)) {
                 fragmentShader->appendCode("vec4 emission;\n");
             }
             
-            if (slotIsContributingToLighting("reflective", inputParameters)) {
+            if (slotIsContributingToLighting("reflective", inputParameters, context)) {
                 fragmentShader->appendCode("vec4 reflective;\n");
             }
-            if (slotIsContributingToLighting("ambient", inputParameters)) {
+            if (hasLights && slotIsContributingToLighting("ambient", inputParameters, context)) {
                 fragmentShader->appendCode("vec4 ambient;\n");
                 fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
             }
-            if (slotIsContributingToLighting("specular", inputParameters)) {
+            if (hasLights && slotIsContributingToLighting("specular", inputParameters, context)) {
                 fragmentShader->appendCode("vec4 specular;\n");
                 fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
             }
@@ -766,9 +791,8 @@ namespace GLTF
             */
             shared_ptr <JSONObject> shininessObject;
             
-            bool hasLights = false;
             size_t lightIndex = 0;
-            if (context.root->contains("lightsIds")) {
+            if (hasLights && context.root->contains("lightsIds")) {
                 shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 
@@ -779,6 +803,11 @@ namespace GLTF
                     shared_ptr<JSONObject> lights = context.root->createObjectIfNeeded("lights");
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());                    
                     std::string lightType = light->getString("type");
+                    
+                    //we ignore lighting if the only light we have is ambient
+                    if ((lightType == "ambient") && ids.size() == 1)
+                        continue;
+                    
                     shared_ptr<JSONObject> description = light->getObject(lightType);
 
                     std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
@@ -792,8 +821,6 @@ namespace GLTF
                         sprintf(lightColor, "%sColor", lightIndexCStr);
                         sprintf(lightTransform, "%sTransform", lightIndexCStr);
                         fragmentShader->appendCode("{\n");
-
-                        hasLights = true;
                         
                         shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform",   "FLOAT_VEC3", 1, lightColor);
                         lightColorParameter->setValue("value", description->getValue("color"));
@@ -860,7 +887,13 @@ namespace GLTF
             for (size_t slotIndex = 0 ; slotIndex < slotsCount ; slotIndex++) {
                 std::string slot = slots[slotIndex];
                 
-                if (!slotIsContributingToLighting(slot, inputParameters))
+                if (values->contains(slot) == false)
+                    continue;
+                
+                if ((!hasLights) && ((slot == "ambient") || (slot == "specular")))
+                    continue;
+                
+                if (!slotIsContributingToLighting(slot, inputParameters, context))
                     continue;
                 
                 shared_ptr <JSONObject> param = inputParameters->getObject(slot);
@@ -927,14 +960,14 @@ namespace GLTF
                 }
             }
             
-            if (slotIsContributingToLighting("reflective", inputParameters)) {
+            if (slotIsContributingToLighting("reflective", inputParameters, context)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
-            if (hasLights && slotIsContributingToLighting("ambient", inputParameters)) {
+            if (hasLights && slotIsContributingToLighting("ambient", inputParameters, context)) {
                 fragmentShader->appendCode("ambient.xyz *= ambientLight;\n");
                 fragmentShader->appendCode("color.xyz += ambient.xyz;\n");
             }
-            if (hasLights && slotIsContributingToLighting("specular", inputParameters)) {
+            if (hasLights && slotIsContributingToLighting("specular", inputParameters, context)) {
                 fragmentShader->appendCode("specular.xyz *= specularLight;\n");
                 fragmentShader->appendCode("color.xyz += specular.xyz;\n");
             }
@@ -945,8 +978,20 @@ namespace GLTF
             }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
             
-            if (slotIsContributingToLighting("emission", inputParameters)) {
+            if (slotIsContributingToLighting("emission", inputParameters, context)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
+            }
+                        
+            bool hasTransparency = inputParameters->contains("transparency");
+            if (hasTransparency) {
+                std::string slot = "transparency";
+                shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
+                
+                addValue("fs", "uniform",   transparencyParam->getString("type"), 1, slot);
+                
+                fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
+            } else {
+                fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a);\n");
             }
             
             if (context.alwaysExportFilterColor) {
@@ -957,19 +1002,9 @@ namespace GLTF
                     fragmentShader->appendCode("color *= u_filterColor;\n");
                 }
             }
-            
-            bool hasTransparency = inputParameters->contains("transparency");
-            if (hasTransparency) {
-                std::string slot = "transparency";
-                shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
-                
-                addValue("fs", "uniform",   transparencyParam->getString("type"), 1, slot);
-                
-                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
-            } else {
-                fragmentShader->appendCode("gl_FragColor = vec4(color.rgb * diffuse.a, diffuse.a);\n");
-            }
-            
+
+            fragmentShader->appendCode("gl_FragColor = color;\n");
+
             vertexShader->appendCode("gl_Position = %s * pos;\n",
                                      "u_projectionMatrix");
             

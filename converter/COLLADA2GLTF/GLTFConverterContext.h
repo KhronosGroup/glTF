@@ -40,6 +40,7 @@ namespace GLTF
         bool exportPassDetails;
         bool outputProgress;
         bool useDefaultLight;
+        bool optimizeParameters;
         
         bool alwaysExportTRS;
         bool alwaysExportFilterColor;
