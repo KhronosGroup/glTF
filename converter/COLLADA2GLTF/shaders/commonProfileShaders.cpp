@@ -28,8 +28,10 @@
 #include "commonProfileShaders.h"
 #ifndef WIN32
 #include "png.h"
-#include "stdarg.h"
 #endif
+
+#include "stdarg.h"
+
 using namespace std;
 
 namespace GLTF

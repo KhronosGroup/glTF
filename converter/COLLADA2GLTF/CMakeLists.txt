@@ -28,6 +28,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc)
 
 if (USE_WEBGLLOADER)
     add_definitions( -DUSE_WEBGLLOADER )
@@ -68,7 +69,7 @@ if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
 endif()
 
-add_executable(collada2gltf main.cpp 
+set(GLTF_SOURCES main.cpp 
     COLLADA2GLTFWriter.cpp
     GLTFConverterContext.cpp
     GLTF/JSONArray.cpp
@@ -119,8 +120,13 @@ add_executable(collada2gltf main.cpp
     convert/animationConverter.cpp
     convert/animationConverter.h
     ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
-    GitSHA1.h
-    )
+    GitSHA1.h)
+
+if (WIN32)
+LIST(APPEND GLTF_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
+endif()
+
+add_executable(collada2gltf ${GLTF_SOURCES})
 
 if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})

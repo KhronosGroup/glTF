@@ -26,7 +26,7 @@
 
 //find . -name '*.dae' -exec dae2json {} \;
 
-#import <getopt.h>
+#include <getopt.h>
 
 #include <iostream>
 
