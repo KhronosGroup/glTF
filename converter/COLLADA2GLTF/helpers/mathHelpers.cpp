@@ -171,22 +171,22 @@ namespace GLTF
         }
         
         if (translation) {
-            translation[0] = tran[U_TRANSX];
-            translation[1] = tran[U_TRANSY];
-            translation[2] = tran[U_TRANSZ];
+            translation[0] = (float)tran[U_TRANSX];
+            translation[1] = (float)tran[U_TRANSY];
+            translation[2] = (float)tran[U_TRANSZ];
         }
         
         if (rotation) {
-            rotation[0] = tran[U_ROTATEX];
-            rotation[1] = tran[U_ROTATEY];
-            rotation[2] = tran[U_ROTATEZ];
-            rotation[3] = tran[U_ROTATEW];
+            rotation[0] = (float)tran[U_ROTATEX];
+            rotation[1] = (float)tran[U_ROTATEY];
+            rotation[2] = (float)tran[U_ROTATEZ];
+            rotation[3] = (float)tran[U_ROTATEW];
         }
         
         if (scale) {
-            scale[0] = tran[U_SCALEX];
-            scale[1] = tran[U_SCALEY];
-            scale[2] = tran[U_SCALEZ];
+            scale[0] = (float)tran[U_SCALEX];
+            scale[1] = (float)tran[U_SCALEY];
+            scale[2] = (float)tran[U_SCALEZ];
         }
     }
     

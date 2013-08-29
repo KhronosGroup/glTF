@@ -16,7 +16,6 @@
 #endif
 
 //--- X3DGC
-#define _CRT_SECURE_NO_WARNINGS
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -656,7 +655,7 @@ namespace GLTF
     }
     
     
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, int allowedComponentsPerAttribute)
+    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, size_t allowedComponentsPerAttribute)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos

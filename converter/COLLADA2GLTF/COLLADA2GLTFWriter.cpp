@@ -248,9 +248,9 @@ namespace GLTF
 
         
         //reopen .bin files for vertices and indices
-        size_t verticesLength = this->_verticesOutputStream.tellp();
-        size_t indicesLength = this->_indicesOutputStream.tellp();
-        size_t genericLength = this->_genericOutputStream.tellp();
+        size_t verticesLength = (size_t)this->_verticesOutputStream.tellp();
+        size_t indicesLength = (size_t)this->_indicesOutputStream.tellp();
+        size_t genericLength = (size_t)this->_genericOutputStream.tellp();
 
         this->_verticesOutputStream.flush();
         this->_verticesOutputStream.close();
@@ -530,10 +530,10 @@ namespace GLTF
         for (int i = 0 ; i < 4 ; i++)  {
             const COLLADABU::Math::Real * real = transpose[i];
             
-            m[(i*4) + 0] = real[0];
-            m[(i*4) + 1] = real[1];
-            m[(i*4) + 2] = real[2];
-            m[(i*4) + 3] = real[3];
+            m[(i*4) + 0] = (float)real[0];
+            m[(i*4) + 1] = (float)real[1];
+            m[(i*4) + 2] = (float)real[2];
+            m[(i*4) + 3] = (float)real[3];
         }
     }
     
@@ -616,7 +616,7 @@ namespace GLTF
     bool COLLADA2GLTFWriter::writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                                    MaterialBindingArray &materialBindings,
                                                                    shared_ptr <GLTF::JSONArray> &meshesArray) {
-        unsigned int meshUID = uniqueId.getObjectId();
+        unsigned int meshUID = (unsigned int)uniqueId.getObjectId();
         shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
         
         MeshVectorSharedPtr meshes;
@@ -716,7 +716,7 @@ namespace GLTF
                         const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
                         
                         COLLADAFW::UniqueId effectUID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
-                        unsigned int effectID = effectUID.getObjectId();
+                        unsigned int effectID = (unsigned int)effectUID.getObjectId();
                         shared_ptr<JSONObject> effectExtras = this->_extraDataHandler->getExtras(effectUID);
                         
                         std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
@@ -919,10 +919,10 @@ namespace GLTF
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 
-                if (this->_converterContext._uniqueIDToSkin.count(uniqueId.getObjectId()) > 0) {
+                if (this->_converterContext._uniqueIDToSkin.count((unsigned int)uniqueId.getObjectId()) > 0) {
                     shared_ptr <GLTF::JSONArray> skinMeshesArray(new GLTF::JSONArray());
 
-                    shared_ptr<GLTFSkin> skin = this->_converterContext._uniqueIDToSkin[uniqueId.getObjectId()];
+                    shared_ptr<GLTFSkin> skin = this->_converterContext._uniqueIDToSkin[(unsigned int)uniqueId.getObjectId()];
                     UniqueId meshUniqueId(skin->getSourceUID());
                     writeMeshFromUIDWithMaterialBindings(meshUniqueId, materialBindings, skinMeshesArray);
                     
@@ -1544,9 +1544,9 @@ namespace GLTF
         COLLADAFW::Light::LightType lightType = light->getLightType();
 		Color color = light->getColor();
 
-        float constantAttenuation = light->getConstantAttenuation().getValue();
-        float linearAttenuation = light->getLinearAttenuation().getValue();
-        float quadraticAttenuation = light->getQuadraticAttenuation().getValue();
+        float constantAttenuation =  (float)light->getConstantAttenuation().getValue();
+        float linearAttenuation =  (float)light->getLinearAttenuation().getValue();
+        float quadraticAttenuation =  (float)light->getQuadraticAttenuation().getValue();
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
         
@@ -1568,8 +1568,8 @@ namespace GLTF
             case COLLADAFW::Light::SPOT_LIGHT: {
                 glTFLight->setString("type", "spot");
 
-                float fallOffAngle = light->getFallOffAngle().getValue();
-                float fallOffExponent = light->getFallOffExponent().getValue();
+                float fallOffAngle =  (float)light->getFallOffAngle().getValue();
+                float fallOffExponent = (float)light->getFallOffExponent().getValue();
                 
                 description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
                 description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
@@ -1600,7 +1600,7 @@ namespace GLTF
 	{
         shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation);
         
-        this->_converterContext._uniqueIDToAnimation[animation->getUniqueId().getObjectId()] = cvtAnimation;
+        this->_converterContext._uniqueIDToAnimation[(unsigned int)animation->getUniqueId().getObjectId()] = cvtAnimation;
         
 		return true;
 	}
@@ -1613,10 +1613,10 @@ namespace GLTF
         AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
-            shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[animationBindings[i].animation.getObjectId()];
+            shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
             if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_genericOutputStream, this->_converterContext)) {
-                this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find(animationBindings[i].animation.getObjectId()));
+                this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
             }
         }
         
@@ -1674,7 +1674,7 @@ namespace GLTF
 				const COLLADAFW::DoubleArray* doubleWeights = weights.getDoubleValues();
 				for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
-                        bonesIndices[(i * bucketSize) + j] = jointIndices[index];
+                        bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
                         weightsPtr[(i * bucketSize) + j]  = (float)(*doubleWeights)[weightIndices[index]];
                     }
 				}
@@ -1724,7 +1724,7 @@ namespace GLTF
 
         glTFSkin->setJoints(jointsAttribute);
 
-        this->_converterContext._uniqueIDToSkin[skinControllerData->getObjectId()] = glTFSkin;
+        this->_converterContext._uniqueIDToSkin[(unsigned int)skinControllerData->getObjectId()] = glTFSkin;
         
 		return true;
 	}
@@ -1761,7 +1761,7 @@ namespace GLTF
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
             
             //Now we get the skin and the mesh, and
-            shared_ptr <GLTFSkin> glTFSkin = this->_converterContext._uniqueIDToSkin[skinController->getSkinControllerData().getObjectId()];
+            shared_ptr <GLTFSkin> glTFSkin = this->_converterContext._uniqueIDToSkin[(unsigned int)skinController->getSkinControllerData().getObjectId()];
             shared_ptr<GLTFMesh> mesh = this->_converterContext._uniqueIDToMesh[skinController->getSource().toAscii()];
             
             glTFSkin->setSourceUID(skinController->getSource().toAscii());

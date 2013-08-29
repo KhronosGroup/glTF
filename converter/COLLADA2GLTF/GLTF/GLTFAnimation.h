@@ -64,8 +64,8 @@ namespace GLTF
         size_t getCount();
         void setCount(size_t count);
         
-        size_t getDuration();
-        void setDuration(size_t duration);
+        double getDuration();
+        void setDuration(double duration);
         
         void setID(std::string animationID);
         std::string getID();

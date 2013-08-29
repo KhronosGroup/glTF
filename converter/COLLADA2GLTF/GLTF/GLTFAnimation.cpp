@@ -105,11 +105,11 @@ namespace GLTF
         this->_count = count;
     }
     
-    size_t GLTFAnimation::getDuration() {
+    double GLTFAnimation::getDuration() {
         return this->_duration;
     }
     
-    void GLTFAnimation::setDuration(size_t duration) {
+    void GLTFAnimation::setDuration(double duration) {
         this->_duration = duration;
     }
  

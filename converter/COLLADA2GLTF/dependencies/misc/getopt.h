@@ -57,6 +57,8 @@
 #include <unistd.h>
 #endif*/
 
+#define GETOPT_API
+
 #ifdef _WIN32
 # if !defined(GETOPT_API)
 #  define GETOPT_API __declspec(dllimport)

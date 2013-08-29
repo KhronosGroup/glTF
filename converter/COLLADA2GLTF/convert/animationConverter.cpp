@@ -56,17 +56,17 @@ namespace GLTF
                     
                     COLLADABU::Math::Real angle;
                     key2.toAngleAxis(angle, axis2);
-                    rotationData[3] = angle;
-                    rotationData[0] = axis2.x;
-                    rotationData[1] = axis2.y;
-                    rotationData[2] = axis2.z;
+                    rotationData[3] = (float)angle;
+                    rotationData[0] = (float)axis2.x;
+                    rotationData[1] = (float)axis2.y;
+                    rotationData[2] = (float)axis2.z;
                     
                     key2.fromAngleAxis(rotationData[3], axis2);
                     
                     //FIXME: this needs to be refined, we ensure continuity here, but assume in clockwise order
                     cosHalfTheta = key1.dot(key2);
                     if (cosHalfTheta < 0) {
-                        rotationData[3] += (2 * 3.14159265359);
+                        rotationData[3] += (float)(2. * 3.14159265359);
                         key2.fromAngleAxis(rotationData[3], axis2);
                     }
                 }
