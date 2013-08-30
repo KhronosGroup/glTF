@@ -28,7 +28,9 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAF
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADASaxFrameworkLoader/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
-include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc)
+if (WIN32)
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc)
+endif()
 
 if (USE_WEBGLLOADER)
     add_definitions( -DUSE_WEBGLLOADER )
