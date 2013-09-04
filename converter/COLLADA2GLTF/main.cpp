@@ -29,6 +29,8 @@
 #include <getopt.h>
 
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include "GitSHA1.h"
 #include "GLTF.h"
@@ -245,6 +247,8 @@ int main (int argc, char * const argv[]) {
             return -1;
         }
         
+        clock_t start = clock();
+
 #if !STDOUT_OUTPUT
         FILE* fd = fopen(converterContext.outputFilePath.c_str(), "w");
         if (fd) {
@@ -272,6 +276,10 @@ int main (int argc, char * const argv[]) {
             delete writer;
         }
 #endif
+
+        std::stringstream s;
+        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / CLK_TCK;
+        std::cout << "Runtime: " << s.str() << " seconds" << std::endl;
     }
     return 0;
 }
