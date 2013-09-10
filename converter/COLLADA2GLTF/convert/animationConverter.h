@@ -1,5 +1,5 @@
 /*
-*/
+ */
 
 #ifndef __GLTFANIMATIONCONVERTER_H__
 #define __GLTFANIMATIONCONVERTER_H__
@@ -129,7 +129,7 @@ namespace GLTF
             
             return clonedTransform;
         }
-
+        
     public:
         
         GLTFAnimationFlattener(COLLADAFW::Node *node) {
@@ -139,10 +139,8 @@ namespace GLTF
             int index = 0;
             
             this->_hasAnimatedScale = this->_hasAnimatedTranslation = this->_hasAnimatedRotation = false;
-
-            this->_targetUID = node->getOriginalId();
             
-            //printf("for node:%s\n",node->getOriginalId().c_str());
+            this->_targetUID = node->getOriginalId();
             
             _idIndex = (int*)malloc(sizeof(int) * transformationsCount);
             for (size_t i = 0 ; i < transformationsCount ; i++) {
@@ -171,8 +169,7 @@ namespace GLTF
                     _idIndex[i] = index++;
                     _idToTransform[animationListID.toAscii()] = clonedTransform;
                     this->_transformsOrder->push_back(animationListID.toAscii());
-                    //printf("tr:%s\n",animationListID.toAscii().c_str());
-
+                    
                 } else {
                     _idIndex[i] = -1;
                 }
@@ -187,15 +184,15 @@ namespace GLTF
         bool hasAnimatedScale() {
             return this->_hasAnimatedScale;
         }
-
+        
         bool hasAnimatedTranslation() {
             return this->_hasAnimatedTranslation;
         }
-
+        
         bool hasAnimatedRotation() {
             return this->_hasAnimatedRotation;
         }
-
+        
         void allocAndFillAffineTransformsBuffers(float **translationsPtr, float **rotationsPtr, float **scalePtr, size_t &count) {
             
             COLLADABU::Math::Matrix4 transformationMatrix;
@@ -214,7 +211,7 @@ namespace GLTF
                 *rotationsPtr = (float*)malloc(sizeof(float) * count * 4);
                 rotations = *rotationsPtr;
             }
-
+            
             if (this->_hasAnimatedScale && scalePtr) {
                 *scalePtr = (float*)malloc(sizeof(float) * count * 3);
                 scales = *scalePtr;
@@ -225,14 +222,14 @@ namespace GLTF
                 
                 getTransformationMatrixAtIndex(transformationMatrix, i);
                 decomposeMatrix(transformationMatrix,   translations ? translations + (i * 3) : 0,
-                                                        rotations ? rotations + (i * 4) : 0,
-                                                        scales ? scales + (i * 3) : 0);
+                                rotations ? rotations + (i * 4) : 0,
+                                scales ? scales + (i * 3) : 0);
             }
         }
         
         //to be used for whole matrices and angle axis
         void insertTransformAtTime(std::string transformID, shared_ptr<COLLADAFW::Transformation> transformation, double time) {
-
+            
             if (_transforms.size() == 0) {
                 shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
@@ -267,6 +264,7 @@ namespace GLTF
                 
                 shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
+                return;
             } else {
                 for (size_t i = 0 ; i < _transforms.size() ; i++) {
                     shared_ptr<GLTFTransformKey> key = _transforms[i];
@@ -288,7 +286,7 @@ namespace GLTF
                             return;
                         } else if (time < _transforms[i+1]->getTime()) {
                             shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
-
+                            
                             shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.insert(_transforms.begin() + i, key);
                             return;
@@ -296,8 +294,9 @@ namespace GLTF
                     }
                 }
             }
+            
         }
-
+        
         void setTransformsOrder(shared_ptr<std::vector<std::string> > transformsOrder) {
             this->_transformsOrder = transformsOrder;
         }
@@ -307,6 +306,73 @@ namespace GLTF
         }
         
         size_t getCount() { return this->_transforms.size(); };
+        
+#define _INTERPOLATE(I1, I2, STEP) (I1 + (STEP / (I2-I1)))
+        
+        //TODO: might be worth checking for equality for prev & transform to be interpolated here
+        shared_ptr <COLLADAFW::Transformation> _interpolateTransforms(shared_ptr<COLLADAFW::Transformation> previousTransform, shared_ptr<COLLADAFW::Transformation> nextTransform, double ratio) {
+            
+            COLLADAFW::Transformation::TransformationType transformationType = previousTransform->getTransformationType();
+            shared_ptr<COLLADAFW::Transformation> transform(previousTransform->clone());
+            
+            return transform;
+            
+            switch (transformationType) {
+                case COLLADAFW::Transformation::ROTATE:
+                {
+                    COLLADAFW::Rotate* r1 = (COLLADAFW::Rotate*)previousTransform.get();
+                    COLLADAFW::Rotate* r2 = (COLLADAFW::Rotate*)nextTransform.get();
+                    
+                    COLLADAFW::Rotate* r = (COLLADAFW::Rotate*)transform.get();
+                    
+                    r->setRotationAngle(_INTERPOLATE(r1->getRotationAngle(), r2->getRotationAngle(), ratio));
+                    
+                    COLLADABU::Math::Vector3& rAxis1 = r1->getRotationAxis();
+                    COLLADABU::Math::Vector3& rAxis2 = r2->getRotationAxis();
+                    
+                    r->setRotationAxis(_INTERPOLATE(rAxis1.x, rAxis2.x, ratio),
+                                       _INTERPOLATE(rAxis1.y, rAxis2.y, ratio),
+                                       _INTERPOLATE(rAxis1.z, rAxis2.z, ratio));
+                    break;
+                }
+                case COLLADAFW::Transformation::TRANSLATE:
+                {
+                    COLLADAFW::Translate* t1 = (COLLADAFW::Translate*)previousTransform.get();
+                    COLLADAFW::Translate* t2 = (COLLADAFW::Translate*)nextTransform.get();
+                    COLLADAFW::Translate* t = (COLLADAFW::Translate*)transform.get();
+                    
+                    COLLADABU::Math::Vector3& translation1 = t1->getTranslation();
+                    COLLADABU::Math::Vector3& translation2 = t2->getTranslation();
+                    
+                    t->setTranslation(_INTERPOLATE(translation1.x, translation2.x, ratio),
+                                      _INTERPOLATE(translation1.y, translation2.y, ratio),
+                                      _INTERPOLATE(translation1.z, translation2.z, ratio));
+                    
+                    break;
+                    
+                }
+                case COLLADAFW::Transformation::SCALE:
+                {
+                    COLLADAFW::Scale* s1 = (COLLADAFW::Scale*)previousTransform.get();
+                    COLLADAFW::Scale* s2 = (COLLADAFW::Scale*)nextTransform.get();
+                    
+                    COLLADAFW::Scale* t = (COLLADAFW::Scale*)transform.get();
+                    
+                    COLLADABU::Math::Vector3& scale1 = s1->getScale();
+                    COLLADABU::Math::Vector3& scale2 = s2->getScale();
+                    
+                    t->setScale(_INTERPOLATE(scale1.x, scale2.x, ratio),
+                                _INTERPOLATE(scale1.y, scale2.y, ratio),
+                                _INTERPOLATE(scale1.z, scale2.z, ratio));
+                    
+                    break;
+                }
+                default:
+                    break;
+            }
+            
+            return transform;
+        }
         
         void getTransformationMatrixAtIndex(COLLADABU::Math::Matrix4& transformationMatrix, size_t index) {
             transformationMatrix = COLLADABU::Math::Matrix4::IDENTITY;
@@ -319,14 +385,69 @@ namespace GLTF
                     shared_ptr <GLTFTransformKey> key = this->_transforms[index];
                     
                     if ((*key->subTransforms()).count(transformID) == 0) {
+                        //so here we need to get a transform matching transformID for this key but it does not contain it,
+                        //we need to figure it out by interpolating the previous/next key containing this transform (this involves a search.
+                        
+                        shared_ptr<COLLADAFW::Transformation> previousTransform;
+                        shared_ptr<COLLADAFW::Transformation> nextTransform;
+                        shared_ptr <GLTFTransformKey> previousKey;
+                        shared_ptr <GLTFTransformKey> nextKey;
+                        double t1 = 0, t2 = 0;
+                        
+                        bool found = false;
+                        if (index > 0) {
+                            int previousIndex = index - 1;
+                            do {
+                                previousKey = this->_transforms[previousIndex--];
+                                if ((*previousKey->subTransforms()).count(transformID) != 0) {
+                                    previousTransform = (*previousKey->subTransforms())[transformID];
+                                    t1 = previousKey->getTime();
+                                    found = true;
+                                    break;
+                                }
+                            } while (previousIndex >= 0);
+                        }
+                        
+                        if (found == false) {
+                            previousTransform = _idToTransform[transformID];
+                            t1 = 0;
+                        }
+                        
+                        found = false;
+                        if (index + 1 < this->_transforms.size()) {
+                            int nextIndex = index + 1;
+                            do {
+                                nextKey = this->_transforms[nextIndex++];
+                                if ((*nextKey->subTransforms()).count(transformID) != 0) {
+                                    nextTransform = (*nextKey->subTransforms())[transformID];
+                                    t2 = nextKey->getTime();
+                                    found = true;
+                                    break;
+                                }
+                            } while (nextIndex < this->_transforms.size());
+                        }
+                        
+                        if (found == false) {
+                            shared_ptr <GLTFTransformKey> lastKey = this->_transforms[this->_transforms.size() - 1];
+                            nextTransform = _idToTransform[transformID];
+                            t2 = lastKey->getTime();
+                        }
+                        
+                        if (previousTransform->getTransformationType() == nextTransform->getTransformationType()) {
+                            float ratio = key->getTime() / (t2 - t1);
+                            (*key->subTransforms())[transformID] = _interpolateTransforms(previousTransform, nextTransform, ratio);
+                        } else {
+                            printf("inconsistent state: cannot interpolate keys of different types\n");
+                        }
+                        
+                        
                         std::string nodeUID = _targetUID;
-                        printf("warning: missing key\n");
                     }
                     
                     transform = (*key->subTransforms())[transformID].get();
                     if (!transform) {
                         printf("warning:can't find id\n");
-
+                        
                     }
                 } else {
                     transform = this->_originalTransforms[i].get();

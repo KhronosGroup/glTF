@@ -185,10 +185,44 @@ namespace GLTF
         switch (animationClass) {
             case COLLADAFW::AnimationList::TIME:
             {
-                //In Currrent COLLADA Implementation, this is never called, only cases mapping to OUTPUT are, so we handle INPUT (i.e time) when we enter this function.
+                //In Currrent OpenCOLLADA Implementation, this is never called, only cases mapping to OUTPUT are, so we handle INPUT (i.e time) when we enter this function.
             }
                 break;
-            case COLLADAFW::AnimationList::AXISANGLE:
+            case COLLADAFW::AnimationList::AXISANGLE: {
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    //the angles to radians necessary convertion is done within the animationFlattener
+                    //but it might be better to make it before...
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        std::string targetID = animatedTarget->getString("target");
+                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
+                            
+                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
+                            std::string path = animatedTarget->getString("path");
+                            if (path == "rotation") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    size_t offset = k * 4;
+
+                                    shared_ptr <COLLADAFW::Rotate> rotate(new COLLADAFW::Rotate(rotations[offset + 0],
+                                                                                                rotations[offset + 1],
+                                                                                                rotations[offset + 2],
+                                                                                                rotations[offset + 3]));
+                                    animationFlattener->insertTransformAtTime(transformID, rotate, timeValues[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                cvtAnimation->removeParameterNamed("OUTPUT");
+            }
                 break;
             case COLLADAFW::AnimationList::MATRIX4X4: {
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
@@ -239,6 +273,42 @@ namespace GLTF
                 return true;
                 break;
             case COLLADAFW::AnimationList::POSITION_XYZ: {
+#if 1
+                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
+                if (parameter) {
+                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
+                    //the angles to radians necessary convertion is done within the animationFlattener
+                    //but it might be better to make it before...
+                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        std::string targetID = animatedTarget->getString("target");
+                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
+                            
+                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
+                            std::string path = animatedTarget->getString("path");
+                            if (path == "translation") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    size_t offset = k * 3;
+                                    shared_ptr <COLLADAFW::Translate> translate(new COLLADAFW::Translate(translations[offset + 0],
+                                                                                                         translations[offset + 1],
+                                                                                                         translations[offset + 2]));
+                                    animationFlattener->insertTransformAtTime(transformID, translate, timeValues[k]);
+                                    
+                                    
+                                    animationFlattener->insertValueAtTime(transformID, translations[k], 3, timeValues[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                cvtAnimation->removeParameterNamed("OUTPUT");
+#else
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
@@ -259,6 +329,7 @@ namespace GLTF
                     }
                     cvtAnimation->removeParameterNamed("OUTPUT");
                 }
+#endif
             }
                 
                 return true;
@@ -266,12 +337,8 @@ namespace GLTF
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
                     shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
-                    //Convert angles to radians
-                    //float *angles = (float*)bufferView->getBufferDataByApplyingOffset();
-                    //for (size_t i = 0 ; i < keyCount ; i++) {
-                    //    angles[i] = angles[i] * 0.0174532925; //to radians.
-                    //}
-                    
+                    //the angles to radians necessary convertion is done within the animationFlattener
+                    //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
