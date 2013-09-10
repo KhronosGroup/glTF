@@ -97,7 +97,7 @@ namespace GLTF
             for (size_t i = 0 ; i < count ; i++) {
                 hash += (size_t)remappedMeshIndexes[i + 1 /* skip count */];
             }
-            
+
             return hash;
         }
     };
@@ -286,13 +286,18 @@ namespace GLTF
         unsigned int *generatedIndices = (unsigned int*) calloc (vertexIndicesCount , sizeof(unsigned int)); //owned by PrimitiveRemapInfos
         unsigned int currentIndex = startIndex;
         
+        unsigned int** allIndicesPtr = (unsigned int**) malloc(sizeof(unsigned int*) * allIndicesSize);
+        for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
+            allIndicesPtr[i] = (unsigned int*)allIndices[i]->getBufferView()->getBufferDataByApplyingOffset();
+        }
+        
         for (size_t k = 0 ; k < vertexIndicesCount ; k++) {
             unsigned int* remappedIndex = &originalCountAndIndexes[k * (meshAttributesCount + 1)];
                         
             remappedIndex[0] = meshAttributesCount;
             for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
                 unsigned int idx = indicesInRemapping[i];
-                unsigned int* indicesPtr = (unsigned int*)allIndices[i]->getBufferView()->getBufferDataByApplyingOffset();
+                unsigned int* indicesPtr = allIndicesPtr[i];
                 remappedIndex[1 + idx] = indicesPtr[k];
             }
             
@@ -301,6 +306,7 @@ namespace GLTF
                 index = currentIndex++;
                 generatedIndices[generatedIndicesCount++] = (unsigned int)k;
                 remappedMeshIndexesMap[remappedIndex] = index;
+                                
             } else {
                 index = remappedMeshIndexesMap[remappedIndex];
             }
@@ -314,6 +320,8 @@ namespace GLTF
         shared_ptr <GLTF::GLTFIndices> indices = shared_ptr <GLTF::GLTFIndices> (new GLTF::GLTFIndices(indicesBufferView, vertexIndicesCount));
         
         primitive->setIndices(indices);
+        
+        free(allIndicesPtr);
         
         return primitiveRemapInfos;
     }
