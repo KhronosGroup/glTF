@@ -11,4 +11,5 @@ converter/collada2gltf/bin/
 converter/collada2gltf/collada2gltf.dir/
 converter/collada2gltf/ipch/
 converter/collada2gltf/lib/
+converter/collada2gltf/GitSHA1.cpp
 specification/.project

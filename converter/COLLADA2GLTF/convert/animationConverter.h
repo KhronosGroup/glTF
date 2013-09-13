@@ -415,7 +415,7 @@ namespace GLTF
                         
                         found = false;
                         if (index + 1 < this->_transforms.size()) {
-                            int nextIndex = index + 1;
+                            size_t nextIndex = index + 1;
                             do {
                                 nextKey = this->_transforms[nextIndex++];
                                 if ((*nextKey->subTransforms()).count(transformID) != 0) {
@@ -434,7 +434,7 @@ namespace GLTF
                         }
                         
                         if (previousTransform->getTransformationType() == nextTransform->getTransformationType()) {
-                            float ratio = key->getTime() / (t2 - t1);
+                            double ratio = key->getTime() / (t2 - t1);
                             (*key->subTransforms())[transformID] = _interpolateTransforms(previousTransform, nextTransform, ratio);
                         } else {
                             printf("inconsistent state: cannot interpolate keys of different types\n");
