@@ -158,15 +158,22 @@ namespace GLTF
                 shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
                 std::string sourceUID = texture->getString("source");
                 shared_ptr<JSONObject> images = context.root->createObjectIfNeeded("images");
-                shared_ptr<JSONObject> image = images->getObject(sourceUID);
-
-                std::string imagePath = image->getString("path");
                 
-                
-                COLLADABU::URI inputURI(context.inputFilePath.c_str());
-                std::string imageFullPath = inputURI.getPathDir() + imagePath;
-                if (imageHasAlpha(imageFullPath.c_str()))
+                if (images->contains(sourceUID)) {
+                    shared_ptr<JSONObject> image = images->getObject(sourceUID);
+                    std::string imagePath = image->getString("path");
+                    COLLADABU::URI inputURI(context.inputFilePath.c_str());
+                    std::string imageFullPath = inputURI.getPathDir() + imagePath;
+                    if (imageHasAlpha(imageFullPath.c_str()))
+                        return false;
+                } else {
+                    static bool printedOnce = false;
+                    if (!printedOnce) {
+                        printedOnce = true;
+                        printf("Inconsistency error: this asset probably refers to invalid image Ids within <surface>\n");
+                    }
                     return false;
+                }
             }
         }
         return !hasTransparency(parameters, context);
