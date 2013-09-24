@@ -53,6 +53,8 @@ namespace GLTF
         void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute);
         shared_ptr<GLTFMeshAttribute> getMeshAttribute(Semantic semantic, size_t indexOfSet);
         
+        size_t getMeshAttributesCountForSemantic(Semantic semantic);
+        
         std::vector <GLTF::Semantic> allSemantics();
                 
         std::string getID();
@@ -70,8 +72,10 @@ namespace GLTF
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);
         
+#ifdef USE_WEBGLLOADER
         void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
         shared_ptr<GLTFBuffer> getCompressedBuffer();
+#endif
         
     private:
         PrimitiveVector _primitives;

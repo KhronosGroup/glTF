@@ -91,6 +91,10 @@ namespace GLTF
         return this->_semanticToMeshAttributes[semantic];
     }
     
+    size_t GLTFMesh::getMeshAttributesCountForSemantic(Semantic semantic) {
+        return this->_semanticToMeshAttributes[semantic].size();
+    }
+    
     shared_ptr<GLTFMeshAttribute> GLTFMesh::getMeshAttribute(Semantic semantic, size_t indexOfSet) {
         IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
         return hasmap[indexOfSet];
@@ -149,7 +153,7 @@ namespace GLTF
         return this->_remapTableForPositions;
     }
     
-
+#ifdef USE_WEBGLLOADER
     void GLTFMesh::setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer) {
         this->_compressedBuffer = compressedBuffer;
     }
@@ -157,5 +161,5 @@ namespace GLTF
     shared_ptr<GLTFBuffer> GLTFMesh::getCompressedBuffer() {
         return this->_compressedBuffer;
     }
-
+#endif
 }

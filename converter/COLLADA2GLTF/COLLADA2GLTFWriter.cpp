@@ -632,7 +632,7 @@ namespace GLTF
                     meshes->push_back(unifiedMesh);
                 }
 
-                if ((this->_converterContext.compressionType == "Open3DGC") || (this->_converterContext.compressionType == "won")) {
+                if (this->_converterContext.compressionType == "won") {
                     meshes2 = shared_ptr<MeshVector> (new MeshVector());
                     for (size_t j = 0 ; j < meshes->size() ; j++) {
                         shared_ptr<GLTFMesh> aMesh = (*meshes)[j];
