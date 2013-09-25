@@ -38,7 +38,6 @@ namespace GLTF
 {
     
 #ifdef USE_OPEN3DGC
-    
     //All these limitations will be fixed in coming iterations:
     //Do we have only triangles, only one set of texcoord and no skinning ?
     //TODO:Also check that the same buffer is not shared by 2 different semantics or set
@@ -56,6 +55,9 @@ namespace GLTF
                 hasOnlyTriangles = false;
             }
         }
+        
+        bool hasNormal = false;
+        bool hasTexcoord = false;
 
         bool handled = false;
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
@@ -69,9 +71,11 @@ namespace GLTF
                         break;
                     case NORMAL:
                         handled = true;
+                        hasNormal = true;
                         break;
                     case TEXCOORD:
                         handled = true;
+                        hasTexcoord = true;
                         break;
                     case COLOR:
                         handled = true;
@@ -88,7 +92,7 @@ namespace GLTF
                 break;
         }
         
-        return handled && hasOnlyTriangles;
+        return (hasNormal && hasTexcoord) && handled && hasOnlyTriangles;
     }
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
@@ -113,7 +117,7 @@ namespace GLTF
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         unsigned int allIndicesCount = 0;
-        unsigned int trianglesCount = 0;
+        unsigned int allTrianglesCount = 0;
 
         std::vector <unsigned int> trianglesPerPrimitive;
         
@@ -128,8 +132,7 @@ namespace GLTF
         }
         
         //Then we setup the matIDs array and at the same time concatenate all triangle indices
-        trianglesCount = allIndicesCount / 3;
-        unsigned long *matIDs = (unsigned long*)malloc(sizeof(unsigned long) * trianglesCount);
+        unsigned long *matIDs = (unsigned long*)malloc(sizeof(unsigned long) * (allIndicesCount / 3));
         unsigned long *matIDsPtr = matIDs;
         unsigned short* allConcatenatedIndices = (unsigned short*)malloc(allIndicesCount * sizeof(unsigned short));
         unsigned short* allConcatenatedIndicesPtr = allConcatenatedIndices;
@@ -140,7 +143,7 @@ namespace GLTF
                 matIDsPtr[j] = i;
             }
             matIDsPtr += trianglesCount;
-
+            allTrianglesCount += trianglesCount;
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
             shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
             unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
@@ -152,7 +155,7 @@ namespace GLTF
         }
         
         //FIXME:Open3DGC SetNCoordIndex is not a good name here
-        ifs.SetNCoordIndex(trianglesCount);
+        ifs.SetNCoordIndex(allTrianglesCount);
         ifs.SetCoordIndex((unsigned short * const ) allConcatenatedIndices);
         
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
@@ -245,7 +248,7 @@ namespace GLTF
         shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
         shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
         int vertexCount;
-        unsigned int indicesCount;
+        unsigned int indicesCount, allIndicesCount = 0;
         PrimitiveVector primitives = mesh->getPrimitives();
 #ifdef USE_OPEN3DGC
         unsigned bufferStart = genericStream.tellp();
@@ -258,18 +261,20 @@ namespace GLTF
              Convert the indices to unsigned short and write the blob
              */
             indicesCount = (unsigned int)uniqueIndices->getCount();
-            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();            
+            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             unsigned int* uniqueIndicesBuffer = (unsigned int*) indicesBufferView->getBufferDataByApplyingOffset();
             if (indicesCount <= 0) {
                 // FIXME: report error
             } else {
+                allIndicesCount += indicesCount;
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                unsigned short* ushortIndices = (unsigned short*)calloc(indicesLength, 1);
-
-                for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
-                    ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
-                }
+                unsigned short* ushortIndices = 0;
+                
                 if (!shouldOGCompressMesh) {
+                    ushortIndices = (unsigned short*)calloc(indicesLength, 1);
+                    for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
+                        ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
+                    }
                     uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
                     indicesOutputStream.write((const char*)ushortIndices, indicesLength);
                 }
@@ -312,7 +317,6 @@ namespace GLTF
                 } else
 #endif
                 {
-                    
                     meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
                     verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
                 }
@@ -332,7 +336,7 @@ namespace GLTF
             
             shared_ptr<JSONObject> compressedData(new JSONObject());
             compressedData->setInt32("verticesCount", vertexCount);
-            compressedData->setInt32("indicesCount", indicesCount);
+            compressedData->setInt32("indicesCount", allIndicesCount);
             //if (context.compressionMode == "binary") {
             //    params.SetStreamType(O3DGC_SC3DMC_STREAM_TYPE_BINARY);
             //}
