@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 #ifdef USE_OPEN3DGC
+#include <math.h>
 #include "o3dgcSC3DMCEncodeParams.h"
 #include "o3dgcIndexedFaceSet.h"
 #include "o3dgcSC3DMCEncoder.h"
@@ -38,6 +39,62 @@ namespace GLTF
 {
     
 #ifdef USE_OPEN3DGC
+    
+    void testDecode(shared_ptr <GLTFMesh> mesh, BinaryStream &bstream)
+    {
+        SC3DMCDecoder <unsigned short> decoder;
+        IndexedFaceSet <unsigned short> ifs;
+        unsigned char* outputData;
+        
+        decoder.DecodeHeader(ifs, bstream);
+        
+        unsigned int vertexSize = ifs.GetNCoord() * 3 * sizeof(float);
+        unsigned int normalSize = ifs.GetNNormal() * 3 * sizeof(float);
+        unsigned int texcoordSize = ifs.GetNTexCoord() * 2 * sizeof(float);
+        unsigned int indicesSize = ifs.GetNCoordIndex() * 3 * sizeof(unsigned short);
+        
+        outputData = (unsigned char*)malloc(vertexSize + normalSize + texcoordSize + indicesSize);
+        
+        size_t vertexOffset = indicesSize;
+        float* uncompressedVertices = (Real * const )(outputData + vertexOffset);
+        
+        ifs.SetCoordIndex((unsigned short * const ) outputData );
+        ifs.SetCoord((Real * const )uncompressedVertices);
+        
+        if (ifs.GetNNormal() > 0) {
+            ifs.SetNormal((Real * const )(outputData + indicesSize + vertexSize));
+        }
+        if (ifs.GetNTexCoord() > 0) {
+            ifs.SetTexCoord((Real * const )(outputData + indicesSize + vertexSize + normalSize));
+        }
+        
+        decoder.DecodePlayload(ifs, bstream);
+        
+        //---
+        
+        shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(POSITION, 0);
+        float* vertices = (float*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+        
+        printf("coord nb:%d\n",(int)meshAttribute->getCount());
+        
+        if (meshAttribute->getCount() == ifs.GetNCoord()) {
+            for (size_t i = 0 ; i < (meshAttribute->getCount() * 3) ; i++ ) {
+                float error = vertices[i] - uncompressedVertices[i];
+                
+                if (fabs(error) > 100) {
+                   printf("input:%f compressed:%f\n", vertices[i], uncompressedVertices[i]);
+                   printf("delta is: %f\n", error);
+                } else {
+                    //printf("ok\n");
+                }
+            }
+            
+        } else {
+            printf("Fatal error: vertex count do not match\n");
+        }
+        
+    }
+    
     //All these limitations will be fixed in coming iterations:
     //Do we have only triangles, only one set of texcoord and no skinning ?
     //TODO:Also check that the same buffer is not shared by 2 different semantics or set
@@ -92,7 +149,7 @@ namespace GLTF
                 break;
         }
         
-        return (hasNormal && hasTexcoord) && handled && hasOnlyTriangles;
+        return handled && hasOnlyTriangles;
     }
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
@@ -157,6 +214,7 @@ namespace GLTF
         //FIXME:Open3DGC SetNCoordIndex is not a good name here
         ifs.SetNCoordIndex(allTrianglesCount);
         ifs.SetCoordIndex((unsigned short * const ) allConcatenatedIndices);
+        ifs.SetMatID(matIDs);
         
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
@@ -208,7 +266,6 @@ namespace GLTF
     bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream, const GLTFConverterContext& context)
     {
         bool shouldOGCompressMesh = false;
-
 #ifdef USE_WEBGLLOADER
 
         if (mesh->getExtensions()->contains("won-compression")) {
@@ -228,7 +285,6 @@ namespace GLTF
                 shared_ptr <GLTFMeshAttribute> meshAttribute = (*attributes)[i];
                 meshAttribute->computeMinMax();
             }
-            
             //bufferView will be set when the mesh is serialized
             return true;
         }
@@ -285,7 +341,7 @@ namespace GLTF
                 }
 #endif
                 //now that we wrote to the stream we can release the buffer.
-                uniqueIndices->setBufferView(dummyBuffer);
+                //uniqueIndices->setBufferView(dummyBuffer);
                 
                 if (!shouldOGCompressMesh)
                     free(ushortIndices);
@@ -322,7 +378,7 @@ namespace GLTF
                 }
                 
                 //now that we wrote to the stream we can release the buffer.
-                meshAttribute->setBufferView(dummyBuffer);
+                //meshAttribute->setBufferView(dummyBuffer);
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             }
         }
@@ -333,10 +389,10 @@ namespace GLTF
             ifs.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
             BinaryStream bstream(vertexCount * 8);
             SC3DMCEncoder <unsigned short> encoder;
-            
             shared_ptr<JSONObject> compressedData(new JSONObject());
             compressedData->setInt32("verticesCount", vertexCount);
             compressedData->setInt32("indicesCount", allIndicesCount);
+            //Open3DGC binary is disabled
             //if (context.compressionMode == "binary") {
             //    params.SetStreamType(O3DGC_SC3DMC_STREAM_TYPE_BINARY);
             //}
@@ -350,10 +406,12 @@ namespace GLTF
             
             genericStream.write((const char*)bstream.GetBuffer(0), bstream.GetSize());
             
+            testDecode(mesh, bstream);
+
             if (ifs.GetCoordIndex()) {
                 free(ifs.GetCoordIndex());
             }
-            
+
         }
 #endif
         
