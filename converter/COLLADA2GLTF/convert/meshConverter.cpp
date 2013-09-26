@@ -230,6 +230,7 @@ namespace GLTF
         //FIXME:Open3DGC SetNCoordIndex is not a good name here
         ifs.SetNCoordIndex(allTrianglesCount);
         ifs.SetCoordIndex((unsigned short * const ) allConcatenatedIndices);
+        //FIXME: matIDs isn't freed - will be when we figure out what's wrong in the encoding (within Open3DGC-integration branch)
         ifs.SetMatID(matIDs);
         
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
@@ -357,7 +358,7 @@ namespace GLTF
                 }
 #endif
                 //now that we wrote to the stream we can release the buffer.
-                //uniqueIndices->setBufferView(dummyBuffer);
+                uniqueIndices->setBufferView(dummyBuffer);
                 
                 if (!shouldOGCompressMesh)
                     free(ushortIndices);
@@ -392,7 +393,7 @@ namespace GLTF
                 }
                 
                 //now that we wrote to the stream we can release the buffer.
-                //meshAttribute->setBufferView(dummyBuffer);
+                meshAttribute->setBufferView(dummyBuffer);
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             }
         }
@@ -419,8 +420,6 @@ namespace GLTF
             compressionObject->setValue("compressedData", compressedData);
             
             genericStream.write((const char*)bstream.GetBuffer(0), bstream.GetSize());
-            
-            testDecode(mesh, bstream);
 
             if (ifs.GetCoordIndex()) {
                 free(ifs.GetCoordIndex());
