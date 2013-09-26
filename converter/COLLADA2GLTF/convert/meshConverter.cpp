@@ -56,6 +56,8 @@ namespace GLTF
         outputData = (unsigned char*)malloc(vertexSize + normalSize + texcoordSize + indicesSize);
         
         size_t vertexOffset = indicesSize;
+
+        unsigned short *uncompressedIndices = (unsigned short * const ) outputData;
         float* uncompressedVertices = (Real * const )(outputData + vertexOffset);
         
         ifs.SetCoordIndex((unsigned short * const ) outputData );
@@ -73,16 +75,28 @@ namespace GLTF
         //---
         
         shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(POSITION, 0);
+        
+        meshAttribute->computeMinMax();
+        const double* min = meshAttribute->getMin();
+        const double* max = meshAttribute->getMax();
+        
         float* vertices = (float*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
         
         printf("coord nb:%d\n",(int)meshAttribute->getCount());
+        printf("min: %f %f %f\n", min[0], min[1], min[2]);
+        printf("max: %f %f %f\n", max[0], max[1], max[2]);
+        
+        float maxQuantError[3];
+        maxQuantError[0] = (max[0] - min[0]) / (float)(2^12 - 1);
+        maxQuantError[1] = (max[1] - min[1]) / (float)(2^12 - 1);
+        maxQuantError[2] = (max[2] - min[2]) / (float)(2^12 - 1);
         
         if (meshAttribute->getCount() == ifs.GetNCoord()) {
             for (size_t i = 0 ; i < (meshAttribute->getCount() * 3) ; i++ ) {
                 float error = vertices[i] - uncompressedVertices[i];
                 
-                if (fabs(error) > 100) {
-                   printf("input:%f compressed:%f\n", vertices[i], uncompressedVertices[i]);
+                if (error > maxQuantError[i%3]) {
+                   printf("%d:input:%f compressed:%f\n",(int) i%3, vertices[i], uncompressedVertices[i]);
                    printf("delta is: %f\n", error);
                 } else {
                     //printf("ok\n");
@@ -92,6 +106,8 @@ namespace GLTF
         } else {
             printf("Fatal error: vertex count do not match\n");
         }
+        
+        free(outputData);
         
     }
     
@@ -360,8 +376,6 @@ namespace GLTF
             }
             
             if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
-                // FIXME: this should be internal to meshAttribute when a Data buffer is set
-                // for this, add a type to buffers , and check this type in setBuffer , then call computeMinMax
                 meshAttribute->computeMinMax();
                 
                 vertexCount = meshAttribute->getCount();
