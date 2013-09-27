@@ -27,7 +27,7 @@
 #ifndef __JSON_WRITER_H__
 #define __JSON_WRITER_H__
 
-namespace GLTF 
+namespace GLTF
 {
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
     shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
@@ -38,7 +38,7 @@ namespace GLTF
     shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context);
     shared_ptr <JSONObject> serializeIndices(GLTFIndices* indices, void *context);
     shared_ptr <JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
-    shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation);
+    shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation, void *context);
     shared_ptr <JSONObject> serializeSkin(GLTFSkin* skin);
 
     class GLTFWriter {

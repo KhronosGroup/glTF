@@ -251,11 +251,8 @@ namespace GLTF
                 (meshAttribute->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
     }
     
-    std::string GLTFMeshAttribute::getGLType() {
-        //FIXME: simplified version 
-        //FIXME: at the moment our ComponentType does not support Mat. We will probably have to add it for Skinning
-        //OpenGL ES2.0 supports GL_FLOAT, GL_FLOAT_VEC2, GL_FLOAT_VEC3, GL_FLOAT_VEC4, GL_FLOAT_MAT2, GL_FLOAT_MAT3, or GL_FLOAT_MAT4
-        return GLTFUtils::getStringForGLType(this->_componentType) + "_VEC" + GLTFUtils::toString(this->_componentsPerAttribute);
+    unsigned int GLTFMeshAttribute::getGLType(shared_ptr<GLTFProfile> profile) {
+        return profile->getGLTypeForComponentType(this->_componentType, this->getComponentsPerAttribute());
     }
 
 }

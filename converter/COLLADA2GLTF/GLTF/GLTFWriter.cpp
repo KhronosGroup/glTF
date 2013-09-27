@@ -135,7 +135,6 @@ namespace GLTF
                 }
                 
             }
-            
         }
         
         return meshObject;
@@ -144,19 +143,18 @@ namespace GLTF
     shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
     {
         shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
+        void** serializationContext = (void**)context;
+
+        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
         
         meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
         meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
-        //meshAttributeObject->setUnsignedInt32("componentsPerAttribute", (unsigned int)meshAttribute->getComponentsPerAttribute());
         meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setString("type", meshAttribute->getGLType());
+        meshAttributeObject->setUnsignedInt32("type", meshAttribute->getGLType(converterContext->profile));
         
-        void** buffers = (void**)context;
-        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[0] : meshAttribute->getBufferView().get();
+        GLTFBufferView *bufferView = context ? (GLTFBufferView*)serializationContext[0] : meshAttribute->getBufferView().get();
 
         meshAttributeObject->setString("bufferView", bufferView->getID());
-        
-        
         
         const double* min = meshAttribute->getMin();
         if (min) {
@@ -183,11 +181,12 @@ namespace GLTF
     shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context)
     {
         shared_ptr <GLTF::JSONObject> indicesObject(new GLTF::JSONObject());
-        void** buffers = (void**)context;
+        void** serializationContext = (void**)context;
+        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
+
+        GLTFBufferView *bufferView = (GLTFBufferView*)serializationContext[1];
         
-        GLTFBufferView *bufferView = context ? (GLTFBufferView*)buffers[1] : indices->getBufferView().get();
-        
-        indicesObject->setString("type", GLTFUtils::getStringForGLType(GLTF::UNSIGNED_SHORT));
+        indicesObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString("UNSIGNED_SHORT"));
         indicesObject->setString("bufferView", bufferView->getID());
         indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
         indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
@@ -250,20 +249,22 @@ namespace GLTF
         return vec4;
     }
 
-    shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter) {
+    shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter, void *context) {
         shared_ptr <JSONObject> animationParameterObject(new JSONObject());
+        GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
         
         animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
-        animationParameterObject->setString("type", animationParameter->getType());
+        animationParameterObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString(animationParameter->getType()));
         animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
         animationParameterObject->setUnsignedInt32("count", animationParameter->getCount());
         
         return animationParameterObject;
     }
 
-    shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation) {
+    shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation, void *context) {
         shared_ptr <JSONObject> animationObject(new JSONObject());
         shared_ptr <JSONObject> parametersObject(new JSONObject());
+        GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
 
         animationObject->setUnsignedInt32("count", animation->getCount());
         animationObject->setValue("samplers", animation->samplers());
@@ -271,7 +272,7 @@ namespace GLTF
         
         std::vector <shared_ptr <GLTFAnimation::Parameter> >  *parameters = animation->parameters();
         for (size_t i = 0 ; i < parameters->size() ; i++) {
-            shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get());
+            shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get(), converterContext);
             
             parametersObject->setValue((*parameters)[i]->getID(), parameterObject);
         }

@@ -49,7 +49,9 @@ namespace GLTF
         std::string compressionMode;
         std::string compressionType;
         
-        shared_ptr <GLTF::JSONObject> root;
+        shared_ptr <GLTFProfile> profile;
+        shared_ptr <JSONObject> root;
+        
         ShaderIdToShaderString shaderIdToShaderString;
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToMeshes _uniqueIDToMeshes;

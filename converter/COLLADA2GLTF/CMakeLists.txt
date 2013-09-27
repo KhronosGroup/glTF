@@ -111,6 +111,11 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFSkin.h
     GLTF/GLTFExtraDataHandler.h
     GLTF/GLTFExtraDataHandler.cpp
+    GLTF/GLTFProfile.h
+    GLTF/GLTFProfile.cpp
+    profiles/webgl-1.0/webgl-idl.h
+    profiles/webgl-1.0/GLTFWebGL_1_0_Profile.cpp
+    profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
     helpers/geometryHelpers.h

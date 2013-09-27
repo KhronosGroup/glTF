@@ -173,7 +173,7 @@ namespace GLTF
                               shared_ptr <GLTFEffect> cvtEffect,
                               shared_ptr<JSONObject> extras);
         
-        std::string getSamplerUIDForParameters(std::string wrapS, std::string wrapT, std::string minFilter, std::string maxFilter);
+        std::string getSamplerUIDForParameters(unsigned int wrapS, unsigned int wrapT, unsigned int minFilter, unsigned int maxFilter);
         
 	private:
         COLLADASaxFWL::Loader _loader;

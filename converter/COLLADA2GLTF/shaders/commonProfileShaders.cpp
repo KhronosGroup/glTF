@@ -32,6 +32,9 @@
 
 #include "stdarg.h"
 
+#define _GL_STR(X) #X
+#define _GL(X) (this->_profile->getGLenumForString(_GL_STR(X)));
+
 using namespace std;
 
 namespace GLTF
@@ -100,7 +103,7 @@ namespace GLTF
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
             
-            if (param->getString("type") == "SAMPLER_2D" )
+            if (param->getUnsignedInt32("type") == context.profile->getGLenumForString("SAMPLER_2D"))
                 return true; //it is a texture, so presumably yes, this slot is not neutral
             
             if (param->contains("value")) {
@@ -150,7 +153,7 @@ namespace GLTF
         if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
-            if (diffuse->getString("type") == "SAMPLER_2D") {
+            if (diffuse->getUnsignedInt32("type") == context.profile->getGLenumForString("SAMPLER_2D")) {
                 shared_ptr<JSONObject> textures = context.root->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
@@ -228,46 +231,14 @@ namespace GLTF
      GL_SAMPLER_CUBE
      */
     
-    
-    static std::string typeForSemanticAttribute(const std::string& semantic) {
-        static std::map<std::string , std::string> typeForSemanticAttribute;
-        
-        if (semantic.find("TEXCOORD") != string::npos) {
-            return "FLOAT_VEC2";
-        }
-        
-        if (typeForSemanticAttribute.empty()) {
-            typeForSemanticAttribute["POSITION"] = "FLOAT_VEC3";
-            typeForSemanticAttribute["NORMAL"] = "FLOAT_VEC3";
-            typeForSemanticAttribute["REFLECTIVE"] = "FLOAT_VEC2";
-            typeForSemanticAttribute["WEIGHT"] = "FLOAT_VEC4";
-            typeForSemanticAttribute["JOINT"] = "FLOAT_VEC4";
-
-        }
-        return typeForSemanticAttribute[semantic];
-    }
-
-    static std::string typeForSemanticUniform(const std::string& semantic) {
-        static std::map<std::string , std::string> typeForSemanticUniform;
-        
-        if (typeForSemanticUniform.empty()) {
-            typeForSemanticUniform["WORLDVIEWINVERSETRANSPOSE"] = "FLOAT_MAT3"; //typically the normal matrix
-            typeForSemanticUniform["WORLDVIEW"] = "FLOAT_MAT4"; 
-            typeForSemanticUniform["PROJECTION"] = "FLOAT_MAT4";
-            typeForSemanticUniform["JOINT_MATRIX"] = "FLOAT_MAT4";
-            
-        }
-        return typeForSemanticUniform[semantic];
-    }
-
-    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, const GLTFConverterContext& context) {
+    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, const GLTFConverterContext& converterContext) {
         std::string hash = slot + ":";
 
-        if (slotIsContributingToLighting(slot, parameters, context)) {
+        if (slotIsContributingToLighting(slot, parameters, converterContext)) {
             shared_ptr<JSONObject> parameter = parameters->getObject(slot);
             
             if (parameter->contains("type")) {
-                hash += parameter->getString("type");
+                hash += GLTFUtils::toString(parameter->getUnsignedInt32("type"));
                 return hash;
             }
         } else if (parameters->contains(slot) && slot != "diffuse") {
@@ -345,24 +316,27 @@ namespace GLTF
         return true;
     }
     
-    static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& context)
+    static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFConverterContext& converterContext)
     {
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
-
-        states->setBool("cullFaceEnable", !techniqueExtras->getBool("double_sided"));
+        shared_ptr <GLTFProfile> profile = converterContext.profile;
+        unsigned int GLZero = 0;
+        unsigned int GLOne = 1;
         
-        if (isOpaque(parameters, context)) {
-            states->setBool("depthTestEnable", true);
-            states->setBool("depthMask", true);
-            states->setBool("blendEnable", false);            
+        states->setUnsignedInt32("cullFaceEnable", techniqueExtras->getBool("double_sided") ? GLZero : GLOne );
+        
+        if (isOpaque(parameters, converterContext)) {
+            states->setUnsignedInt32("depthTestEnable", GLOne);
+            states->setUnsignedInt32("depthMask", GLOne);
+            states->setUnsignedInt32("blendEnable", GLZero);
         } else {            
-            states->setBool("blendEnable", true);
-            states->setBool("depthTestEnable", true);
-            states->setBool("depthMask", false);         //should be true for images, and false for plain color
-            states->setString("blendEquation", "FUNC_ADD");
+            states->setUnsignedInt32("blendEnable", GLOne);
+            states->setUnsignedInt32("depthTestEnable", GLOne);
+            states->setUnsignedInt32("depthMask", GLZero); //should be true for images, and false for plain color
+            states->setUnsignedInt32("blendEquation", profile->getGLenumForString("FUNC_ADD"));
             shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
-            blendFunc->setString("sfactor", "SRC_ALPHA");
-            blendFunc->setString("dfactor", "ONE_MINUS_SRC_ALPHA");
+            blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
+            blendFunc->setUnsignedInt32("dfactor", profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"));
             states->setValue("blendFunc", blendFunc) ;
         }
         
@@ -387,9 +361,10 @@ namespace GLTF
     class GLSLShader {
     public:
         
-        GLSLShader() {
-            _declarations = "precision highp float;\n";;
-            _body = "void main(void) {\n";
+        GLSLShader(shared_ptr <GLTFProfile> profile) {
+            this->_declarations = "precision highp float;\n";;
+            this->_body = "void main(void) {\n";
+            this->_profile = profile;
         }
         
         void setName(std::string name) {
@@ -400,36 +375,11 @@ namespace GLTF
             return _name;
         }
         
-        static std::string GLSLTypeForGLType(const std::string &glType) {
-            static std::map<std::string , std::string> GLSLTypeForGLType;
-            
-            if (GLSLTypeForGLType.empty()) {
-                GLSLTypeForGLType["FLOAT"] = "float";
-                GLSLTypeForGLType["FLOAT_VEC2"] = "vec2";
-                GLSLTypeForGLType["FLOAT_VEC3"] = "vec3";
-                GLSLTypeForGLType["FLOAT_VEC4"] = "vec4";
-                
-                GLSLTypeForGLType["FLOAT_MAT2"] = "mat2";
-                GLSLTypeForGLType["FLOAT_MAT3"] = "mat3";
-                GLSLTypeForGLType["FLOAT_MAT4"] = "mat4";
-                
-                GLSLTypeForGLType["INT"] = "int";
-                GLSLTypeForGLType["INT_VEC2"] = "ivec";
-                GLSLTypeForGLType["INT_VEC3"] = "ivec3";
-                GLSLTypeForGLType["INT_VEC4"] = "ivec4";
-                
-                GLSLTypeForGLType["BOOL"] = "bool";
-                GLSLTypeForGLType["BOOL_VEC2"] = "bvec2";
-                GLSLTypeForGLType["BOOL_VEC3"] = "bvec3";
-                GLSLTypeForGLType["BOOL_VEC4"] = "bvec4";
-                
-                GLSLTypeForGLType["SAMPLER_2D"] = "sampler2D";
-                GLSLTypeForGLType["SAMPLER_CUBE"] = "samplerCube";
-            }
-            return GLSLTypeForGLType[glType];
+        std::string GLSLTypeForGLType(unsigned int glType) {
+            return this->_profile->getGLSLTypeForGLType(glType);
         }
         
-        void _addDeclaration(std::string qualifier, std::string symbol, std::string type, size_t count) {
+        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count) {
             std::string declaration = qualifier + " ";
             declaration += GLSLTypeForGLType(type);
             declaration += " " + symbol;
@@ -440,15 +390,15 @@ namespace GLTF
             _declarations += declaration;
         }
         
-        void addAttribute(std::string symbol, std::string type) {
+        void addAttribute(std::string symbol, unsigned int type) {
             _addDeclaration("attribute", symbol, type, 1);
         }
         
-        void addUniform(std::string symbol, std::string type, size_t count) {
+        void addUniform(std::string symbol, unsigned int type, size_t count) {
             _addDeclaration("uniform", symbol, type, count);
         }
         
-        void addVarying(std::string symbol, std::string type) {
+        void addVarying(std::string symbol, unsigned int type) {
             _addDeclaration("varying", symbol, type, 1);
         }
         
@@ -469,65 +419,80 @@ namespace GLTF
         std::string _name;
         std::string _declarations;
         std::string _body;
+        
+        shared_ptr <GLTFProfile> _profile;
     };
     
     class GLSLProgram {
     public:
-        GLSLProgram() {
-            _uniforms = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
-            _attributes = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
+        GLSLProgram(shared_ptr<GLTFProfile> profile) {
+            this->_profile = profile;
+            this->_uniforms = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
+            this->_attributes = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
+            this->_vertexShader = new GLSLShader(profile);
+            this->_fragmentShader = new GLSLShader(profile);
+        }
+        
+        virtual ~GLSLProgram() {
+            delete this->_vertexShader;
+            delete this->_fragmentShader;
         }
 
         void _nameDidChange() {
-            _vertexShader.setName(_name + "VS");
-            _fragmentShader.setName(_name + "FS");
+            this->_vertexShader->setName(_name + "VS");
+            this->_fragmentShader->setName(_name + "FS");
         }
         
         void setName(std::string name) {
-            _name = name;
-            _nameDidChange();
+            this->_name = name;
+            this->_nameDidChange();
         }
         
         std::string getName() {
-            return _name;
+            return this->_name;
         }
         
         shared_ptr <JSONObject> attributes() {
-            return _attributes;
+            return this->_attributes;
         }
         
         shared_ptr <JSONObject> uniforms() {
-            return _uniforms;
+            return this->_uniforms;
         }
         
         GLSLShader* vertexShader() {
-            return &_vertexShader;
+            return this->_vertexShader;
         }
         
         GLSLShader* fragmentShader() {
-            return &_fragmentShader;
+            return this->_fragmentShader;
         }
         
-        void addVarying(std::string symbol, std::string type) {
-            _vertexShader.addVarying(symbol, type);
-            _fragmentShader.addVarying(symbol, type);
+        void addVarying(std::string symbol, unsigned int type) {
+            this->_vertexShader->addVarying(symbol, type);
+            this->_fragmentShader->addVarying(symbol, type);
         }
         
     private:
-        GLSLShader _vertexShader;
-        GLSLShader _fragmentShader;
+        GLSLShader *_vertexShader;
+        GLSLShader *_fragmentShader;
         std::string _name;
         
         shared_ptr <GLTF::JSONObject> _attributes;
         shared_ptr <GLTF::JSONObject> _uniforms;
+        
+        shared_ptr <GLTFProfile> _profile;
     };
     
     class Pass {
     public:
-        Pass() {}
+        Pass(shared_ptr <GLTFProfile> profile) {
+            this->_profile = profile;
+            this->_instanceProgram = new GLSLProgram(profile);
+        }
         
         GLSLProgram* instanceProgram() {
-            return &_instanceProgram;
+            return this->_instanceProgram;
         }
         
         shared_ptr <JSONObject> getDetails(const std::string &lightingModel,
@@ -544,7 +509,7 @@ namespace GLTF
             
             shared_ptr<JSONArray> parameters(new JSONArray());
             
-            shared_ptr <JSONObject> uniforms = _instanceProgram.uniforms();
+            shared_ptr <JSONObject> uniforms = _instanceProgram->uniforms();
             vector <std::string> keys = uniforms->getAllKeys();
             for (size_t i = 0 ; i < keys.size() ; i++) {
                 std::string parameter = uniforms->getString(keys[i]);
@@ -564,7 +529,8 @@ namespace GLTF
         }
         
     private:
-        GLSLProgram _instanceProgram;
+        GLSLProgram* _instanceProgram;
+        shared_ptr <GLTFProfile> _profile;
         shared_ptr <JSONObject> states;
     };
     
@@ -573,7 +539,37 @@ namespace GLTF
         
         //FIXME: pass id when we support multipass
         Pass* getPass() {
-            return &_pass;
+            return this->_pass;
+        }
+        
+        unsigned int typeForSemanticAttribute(const std::string& semantic) {
+            static std::map<std::string , unsigned int> typeForSemanticAttribute;
+            
+            if (semantic.find("TEXCOORD") != string::npos) {
+                return _GL(FLOAT_VEC2);
+            }
+            
+            if (typeForSemanticAttribute.empty()) {
+                typeForSemanticAttribute["POSITION"] = _GL(FLOAT_VEC3);
+                typeForSemanticAttribute["NORMAL"] = _GL(FLOAT_VEC3);
+                typeForSemanticAttribute["REFLECTIVE"] = _GL(FLOAT_VEC2);
+                typeForSemanticAttribute["WEIGHT"] = _GL(FLOAT_VEC4);
+                typeForSemanticAttribute["JOINT"] = _GL(FLOAT_VEC4);
+                
+            }
+            
+            return typeForSemanticAttribute[semantic];
+        }
+        
+        unsigned int typeForSemanticUniform(const std::string& semantic) {
+            static std::map<std::string , unsigned int> typeForSemanticUniform;
+            if (typeForSemanticUniform.empty()) {
+                typeForSemanticUniform["WORLDVIEWINVERSETRANSPOSE"] = _GL(FLOAT_MAT3);; //typically the normal matrix
+                typeForSemanticUniform["WORLDVIEW"] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform["PROJECTION"] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform["JOINT_MATRIX"] = _GL(FLOAT_MAT4);
+            }
+            return typeForSemanticUniform[semantic];
         }
         
         //FIXME: it's a bad API since we won't have at the same time a varying an uniform...
@@ -585,17 +581,17 @@ namespace GLTF
             
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
 
-            std::string type = (uniformOrAttribute == "uniform") ?
+            unsigned int type = (uniformOrAttribute == "uniform") ?
                                     typeForSemanticUniform(semantic) :
                                     typeForSemanticAttribute(semantic);
             
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
             parameter->setString("semantic", semantic);
-            parameter->setString("type",  type);
+            parameter->setUnsignedInt32("type",  type);
             _parameters->setValue(parameterID, parameter);
 
             //FIXME: should not assume default pass / default program
-            GLSLProgram* program = _pass.instanceProgram();
+            GLSLProgram* program = _pass->instanceProgram();
             GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
             if (uniformOrAttribute == "attribute") {
                 program->attributes()->setString(symbol, parameterID);
@@ -618,9 +614,9 @@ namespace GLTF
         }
         
         //FIXME: refactor with addSemantic
-        shared_ptr <JSONObject> addParameter(std::string parameterID, std::string type) {
+        shared_ptr <JSONObject> addParameter(std::string parameterID, unsigned int type) {
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
-            parameter->setString("type",  type);
+            parameter->setUnsignedInt32("type",  type);
             _parameters->setValue(parameterID, parameter);
             
             return parameter;
@@ -628,14 +624,14 @@ namespace GLTF
         
         shared_ptr <JSONObject> addValue(std::string vertexOrFragment,
                       std::string uniformOrAttribute,
-                      std::string type,
+                      unsigned int type,
                       size_t count,
                       std::string parameterID) {
                         
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
                         
             //FIXME: should not assume default pass / default program
-            GLSLProgram* program = _pass.instanceProgram();
+            GLSLProgram* program = _pass->instanceProgram();
             GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
             if (uniformOrAttribute == "attribute") {
                 program->attributes()->setString(symbol, parameterID);
@@ -660,9 +656,17 @@ namespace GLTF
                   shared_ptr<JSONObject> values,
                   shared_ptr<JSONObject> techniqueExtras,
                   shared_ptr<JSONObject> texcoordBindings,
-                  GLTFConverterContext& context) {
+                  GLTFConverterContext& converterContext) {
             
-            _parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+            this->_profile = converterContext.profile;
+            
+            unsigned int vec3Type =  _GL(FLOAT_VEC3);
+            unsigned int vec4Type = _GL(FLOAT_VEC4);
+            unsigned int mat4Type = _GL(FLOAT_MAT4);
+            unsigned int sampler2DType = _GL(SAMPLER_2D);
+            
+            this->_pass = new Pass(this->_profile);
+            this->_parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
             
             shared_ptr <JSONObject> inputParameters = values;
             
@@ -675,7 +679,7 @@ namespace GLTF
             std::vector <std::string> allUniforms;
             std::string shaderName = techniqueID;
             
-            GLSLProgram* program = _pass.instanceProgram();
+            GLSLProgram* program = this->_pass->instanceProgram();
             GLSLShader* vertexShader = program->vertexShader();
             GLSLShader* fragmentShader = program->fragmentShader();
             program->setName(shaderName);
@@ -715,13 +719,14 @@ namespace GLTF
             /* 
                 Handle hardware skinning, for now with a fixed limit of 4 influences
              */
+            
             if (hasSkinning) {
                 vertexShader->appendCode("mat4 skinMat = a_weight.x * u_jointMat[int(a_joint.x)];\n");
                 vertexShader->appendCode("skinMat += a_weight.y * u_jointMat[int(a_joint.y)];\n");
                 vertexShader->appendCode("skinMat += a_weight.z * u_jointMat[int(a_joint.z)];\n");
                 vertexShader->appendCode("skinMat += a_weight.w * u_jointMat[int(a_joint.w)];\n");
                 vertexShader->appendCode("%s pos = %s * skinMat * vec4(%s,1.0);\n",
-                                         GLSLShader::GLSLTypeForGLType("FLOAT_VEC4").c_str(),
+                                         vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
                                          "u_worldViewMatrix",
                                          "a_position");
                 vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
@@ -729,7 +734,7 @@ namespace GLTF
                 
             } else {
                 vertexShader->appendCode("%s pos = %s * vec4(%s,1.0);\n",
-                                         GLSLShader::GLSLTypeForGLType("FLOAT_VEC4").c_str(),
+                                         vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
                                          "u_worldViewMatrix",
                                          "a_position");
                 vertexShader->appendCode("%s = normalize(%s * %s);\n",
@@ -738,15 +743,15 @@ namespace GLTF
             }
             
             bool modelContainsLights = false;
-            if (context.root->contains("lightsIds")) {
-                shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+            if (converterContext.root->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = converterContext.root->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 if (ids.size() > 0) {
                     if (ids.size() == 1) {
                         shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[0]);
-                        shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
+                        shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(converterContext._uniqueIDOfLightToNodes[lightUID->getString()]);
                         
-                        shared_ptr<JSONObject> lights = context.root->createObjectIfNeeded("lights");
+                        shared_ptr<JSONObject> lights = converterContext.root->createObjectIfNeeded("lights");
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                         std::string lightType = light->getString("type");
                         
@@ -759,7 +764,7 @@ namespace GLTF
             }
             
             
-            bool lightingIsEnabled = modelContainsLights || context.useDefaultLight;
+            bool lightingIsEnabled = modelContainsLights || converterContext.useDefaultLight;
             
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
@@ -779,18 +784,18 @@ namespace GLTF
             if (modelContainsLights)
                 fragmentShader->appendCode("vec3 diffuseLight = vec3(0., 0., 0.);\n");
             
-            if (slotIsContributingToLighting("emission", inputParameters, context)) {
+            if (slotIsContributingToLighting("emission", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 emission;\n");
             }
             
-            if (slotIsContributingToLighting("reflective", inputParameters, context)) {
+            if (slotIsContributingToLighting("reflective", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 reflective;\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, context)) {
+            if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 ambient;\n");
                 fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, context)) {
+            if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 specular;\n");
                 fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
             }
@@ -802,15 +807,15 @@ namespace GLTF
             shared_ptr <JSONObject> shininessObject;
             
             size_t lightIndex = 0;
-            if (modelContainsLights && context.root->contains("lightsIds")) {
-                shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+            if (modelContainsLights && converterContext.root->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = converterContext.root->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 
                 for (size_t i = 0 ; i < ids.size() ; i++) {
                     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
-                    shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
+                    shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(converterContext._uniqueIDOfLightToNodes[lightUID->getString()]);
                     
-                    shared_ptr<JSONObject> lights = context.root->createObjectIfNeeded("lights");
+                    shared_ptr<JSONObject> lights = converterContext.root->createObjectIfNeeded("lights");
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());                    
                     std::string lightType = light->getString("type");
                     
@@ -818,8 +823,8 @@ namespace GLTF
                     if ((lightType == "ambient") && ids.size() == 1)
                         continue;
                     
+                    
                     shared_ptr<JSONObject> description = light->getObject(lightType);
-
                     std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
                     for (size_t j = 0 ; j < nodesIds.size() ; j++, lightIndex++) {
                         
@@ -832,7 +837,7 @@ namespace GLTF
                         sprintf(lightTransform, "%sTransform", lightIndexCStr);
                         fragmentShader->appendCode("{\n");
                         
-                        shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform",   "FLOAT_VEC3", 1, lightColor);
+                        shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
                         lightColorParameter->setValue("value", description->getValue("color"));
                         
                         fragmentShader->appendCode("float diffuseIntensity;\n");
@@ -846,17 +851,17 @@ namespace GLTF
                             char varyingLightDirection[100];
                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                             
-                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform",   "FLOAT_MAT4", 1, lightTransform);
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform);
                             
                             vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
 
-                            program->addVarying(varyingLightDirection, "FLOAT_VEC3");
+                            program->addVarying(varyingLightDirection, vec3Type);
                             lightTransformParameter->setValue("source", nodesIds[j]);
 
                             if (!useSimpleLambert) {
                                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                                     shininessObject = inputParameters->getObject("shininess");
-                                    addValue("fs", "uniform",   shininessObject->getString("type"), 1, "shininess");
+                                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess");
                                 }
                                 
                                 fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
@@ -887,10 +892,10 @@ namespace GLTF
             
             //Currently the declaration of the shininess is dependent of the presence of light.
             //if we want details, we want also all parameters.
-            if (context.exportPassDetails) {
+            if (converterContext.exportPassDetails) {
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
-                    addValue("fs", "uniform",   shininessObject->getString("type"), 1, "shininess");
+                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess");
                 }
             }
             
@@ -908,25 +913,25 @@ namespace GLTF
                 if (inputParameters->contains(slot) == false)
                     continue;
                 
-                if (!slotIsContributingToLighting(slot, inputParameters, context))
+                if (!slotIsContributingToLighting(slot, inputParameters, converterContext))
                     continue;
                 
                 shared_ptr <JSONObject> param = inputParameters->getObject(slot);
-                std::string slotType = param->getString("type");
+                unsigned int slotType = param->getUnsignedInt32("type");
 
                 if ((!lightingIsEnabled) && ((slot == "ambient") || (slot == "specular"))) {
                     //as explained in https://github.com/KhronosGroup/glTF/issues/121 export all parameters when details is specified
-                    if (context.exportPassDetails)
+                    if (converterContext.exportPassDetails)
                         addParameter(slot, slotType);
                     continue;
                 }
                 
-                if (slotType == "FLOAT_VEC4" ) {
+                if (slotType == vec4Type) {
                     std::string slotColorSymbol = "u_"+slot;
                     fragmentShader->appendCode("%s = %s;\n", slot.c_str(), slotColorSymbol.c_str());
                     
                     addValue("fs", "uniform",   slotType, 1, slot);
-                } else if (slotType == "SAMPLER_2D") {
+                } else if (slotType == sampler2DType) {
                     std::string semantic = texcoordBindings->getString(slot);
                     if (semantic.length() == 0) {
                         semantic = "TEXCOORD_0";
@@ -937,11 +942,11 @@ namespace GLTF
                     
                     if (slot == "reflective") {
                         texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
-                        std::string reflectiveType = typeForSemanticAttribute("REFLECTIVE");
+                        unsigned int reflectiveType = typeForSemanticAttribute("REFLECTIVE");
                         program->addVarying(texVSymbol, reflectiveType);
                         
                         //Update Vertex shader for reflection
-                        std::string normalType = GLSLShader::GLSLTypeForGLType("FLOAT_VEC3");
+                        std::string normalType = vertexShader->GLSLTypeForGLType(vec3Type);
                         vertexShader->appendCode("%s normalizedVert = normalize(%s(pos));\n",
                                 normalType.c_str(),
                                 normalType.c_str());
@@ -976,31 +981,31 @@ namespace GLTF
                     //get the texture
                     shared_ptr <JSONObject> textureParameter = inputParameters->getObject(slot);
                     //FIXME:this should eventually not come from the inputParameter
-                    addValue("fs", "uniform", textureParameter->getString("type"), 1, slot);
+                    addValue("fs", "uniform", textureParameter->getUnsignedInt32("type"), 1, slot);
 
                     fragmentShader->appendCode("%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
                 }
             }
             
-            if (slotIsContributingToLighting("reflective", inputParameters, context)) {
+            if (slotIsContributingToLighting("reflective", inputParameters, converterContext)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, context)) {
+            if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, converterContext)) {
                 fragmentShader->appendCode("ambient.xyz *= ambientLight;\n");
                 fragmentShader->appendCode("color.xyz += ambient.xyz;\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, context)) {
+            if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, converterContext)) {
                 fragmentShader->appendCode("specular.xyz *= specularLight;\n");
                 fragmentShader->appendCode("color.xyz += specular.xyz;\n");
             }
             if (modelContainsLights) {
                 fragmentShader->appendCode("diffuse.xyz *= diffuseLight;\n");
-            } else if (context.useDefaultLight) {
+            } else if (converterContext.useDefaultLight) {
                 fragmentShader->appendCode("diffuse.xyz *= max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
             }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
             
-            if (slotIsContributingToLighting("emission", inputParameters, context)) {
+            if (slotIsContributingToLighting("emission", inputParameters, converterContext)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
             }
                         
@@ -1009,17 +1014,17 @@ namespace GLTF
                 std::string slot = "transparency";
                 shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
                 
-                addValue("fs", "uniform",   transparencyParam->getString("type"), 1, slot);
+                addValue("fs", "uniform",   transparencyParam->getUnsignedInt32("type"), 1, slot);
                 
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
             } else {
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a);\n");
             }
             
-            if (context.alwaysExportFilterColor) {
+            if (converterContext.alwaysExportFilterColor) {
                 if (inputParameters->contains("filterColor")) {
                     shared_ptr<JSONObject> filterColor = inputParameters->getObject("filterColor");
-                    shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", "FLOAT_VEC4", 1, "filterColor");
+                    shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", vec4Type, 1, "filterColor");
                     filterColorParameter->setValue("value", filterColor->getValue("value"));
                     fragmentShader->appendCode("color *= u_filterColor;\n");
                 }
@@ -1040,8 +1045,9 @@ namespace GLTF
         }
         
     private:
-        Pass _pass;
+        Pass *_pass;
         shared_ptr <GLTF::JSONObject> _parameters;
+        shared_ptr <GLTFProfile> _profile;
         
     };
     

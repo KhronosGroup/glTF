@@ -28,7 +28,9 @@
 #include "COLLADA2GLTFWriter.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
+#include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
+
 
 using namespace std::tr1;
 using namespace std;
@@ -154,6 +156,8 @@ namespace GLTF
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_genericOutputStream.open (outputGenericFilePath.c_str(), ios::out | ios::ate | ios::binary);
         ouputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        
+        this->_converterContext.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
         
         this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_converterContext.root->setString("profile", "WebGL 1.0");
@@ -324,12 +328,13 @@ namespace GLTF
                         if (shouldSkipMesh)
                             continue;
                         
-                        void *buffers[3];
-                        buffers[0] = (void*)verticesBufferView.get();
-                        buffers[1] = (void*)indicesBufferView.get();
-                        buffers[2] = (void*)genericBufferView.get();
+                        void *serializationContext[4];
+                        serializationContext[0] = (void*)verticesBufferView.get();
+                        serializationContext[1] = (void*)indicesBufferView.get();
+                        serializationContext[2] = (void*)genericBufferView.get();
+                        serializationContext[3] = (void*)&this->_converterContext;
                         
-                        shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)buffers);
+                        shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)serializationContext);
 
                         //serialize attributes
                         vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
@@ -345,7 +350,7 @@ namespace GLTF
                                 //(*it).second;            // the mapped value (of type T)
                                 shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
                                 
-                                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)buffers);
+                                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)serializationContext);
                                 
                                 attributes->setValue(meshAttribute->getID(), meshAttributeObject);
                             }
@@ -358,7 +363,7 @@ namespace GLTF
                             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
                             shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
                             
-                            shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)buffers);
+                            shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)serializationContext);
                             indices->setValue(uniqueIndices->getID(), serializedIndices);
                         }
                         
@@ -451,7 +456,7 @@ namespace GLTF
             }
             
             if (animation->channels()->values().size() > 0) {
-                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get());
+                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get(), &this->_converterContext);
             
                 animationsObject->setValue(animation->getID(), animationObject);
             }
@@ -1185,50 +1190,49 @@ namespace GLTF
     
     
 	//--------------------------------------------------------------------
-    //FIXME: should be different depending on profiles. now assuming WebGL
-	static std::string __GetGLWrapMode(COLLADAFW::Sampler::WrapMode wrapMode) {
+	unsigned int __GetGLWrapMode(COLLADAFW::Sampler::WrapMode wrapMode, GLTFProfile *profile) {
         switch (wrapMode) {
             case COLLADAFW::Sampler::WRAP_MODE_UNSPECIFIED:
             case COLLADAFW::Sampler::WRAP_MODE_NONE:
             case COLLADAFW::Sampler::WRAP_MODE_WRAP:
-                return "REPEAT";
+                return profile->getGLenumForString("REPEAT");
             case COLLADAFW::Sampler::WRAP_MODE_MIRROR:
-                return "MIRRORED_REPEAT";
+                return profile->getGLenumForString("MIRRORED_REPEAT");
             case COLLADAFW::Sampler::WRAP_MODE_CLAMP:
-                return "CLAMP_TO_EDGE";
+                return profile->getGLenumForString("CLAMP_TO_EDGE");
             default:
                 break;
         }
-        return "REPEAT";
+        return profile->getGLenumForString("REPEAT");
     }
     
-    static std::string __GetFilterMode(COLLADAFW::Sampler::SamplerFilter wrapMode) {
+    static unsigned int __GetFilterMode(COLLADAFW::Sampler::SamplerFilter wrapMode, GLTFProfile *profile) {
         switch (wrapMode) {
             case COLLADAFW::Sampler::SAMPLER_FILTER_UNSPECIFIED:
             case COLLADAFW::Sampler::SAMPLER_FILTER_NONE:
             case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR:
-                return "LINEAR";
+                return profile->getGLenumForString("LINEAR");
             case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST:
-                return "NEAREST";
+                return profile->getGLenumForString("NEAREST");
             case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_NEAREST:
-                return "NEAREST_MIPMAP_NEAREST";
+                return profile->getGLenumForString("NEAREST_MIPMAP_NEAREST");
             case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_NEAREST:
-                return "LINEAR_MIPMAP_NEAREST";
+                return profile->getGLenumForString("LINEAR_MIPMAP_NEAREST");
             case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_LINEAR:
-                return "NEAREST_MIPMAP_LINEAR";
+                return profile->getGLenumForString("NEAREST_MIPMAP_LINEAR");
             case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_LINEAR:
-                return "LINEAR_MIPMAP_LINEAR";
+                return profile->getGLenumForString("LINEAR_MIPMAP_LINEAR");
             default:
                 break;
         }
-        return "LINEAR";
+        return profile->getGLenumForString("LINEAR");
     }
     
-    std::string COLLADA2GLTFWriter::getSamplerUIDForParameters(std::string wrapS,
-                                                               std::string wrapT,
-                                                               std::string minFilter,
-                                                               std::string maxFilter) {
-        std::string samplerHash = wrapS+wrapT+minFilter+maxFilter;
+    std::string COLLADA2GLTFWriter::getSamplerUIDForParameters(unsigned int wrapS,
+                                                               unsigned int wrapT,
+                                                               unsigned int minFilter,
+                                                               unsigned int maxFilter) {
+        std::string samplerHash = GLTFUtils::toString(wrapS)+GLTFUtils::toString(wrapT)+GLTFUtils::toString(minFilter)+GLTFUtils::toString(maxFilter);
         bool addSampler = false;
         size_t index = 0;
         
@@ -1244,10 +1248,10 @@ namespace GLTF
         if (addSampler) {
             shared_ptr <JSONObject> sampler2D(new JSONObject());
             
-            sampler2D->setString("wrapS", wrapS);
-            sampler2D->setString("wrapT", wrapT);
-            sampler2D->setString("minFilter", minFilter);
-            sampler2D->setString("magFilter", maxFilter);
+            sampler2D->setUnsignedInt32("wrapS", wrapS);
+            sampler2D->setUnsignedInt32("wrapT", wrapT);
+            sampler2D->setUnsignedInt32("minFilter", minFilter);
+            sampler2D->setUnsignedInt32("magFilter", maxFilter);
 
             shared_ptr <GLTF::JSONObject> samplers = this->_converterContext.root->createObjectIfNeeded("samplers");
             samplers->setValue(samplerUID, sampler2D);
@@ -1262,7 +1266,8 @@ namespace GLTF
                                               shared_ptr <JSONObject> extras)
     {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
-        
+        GLTFProfile* profile = this->_converterContext.profile.get();
+
         ColorOrTexture slot;
         
         if (slotName == "diffuse")
@@ -1299,7 +1304,7 @@ namespace GLTF
             }
             shared_ptr <JSONObject> slotObject(new JSONObject());
             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-            slotObject->setString("type", "FLOAT_VEC4");
+            slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
             values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
@@ -1314,13 +1319,14 @@ namespace GLTF
             shared_ptr <JSONObject> slotObject(new JSONObject());
             
             //do we need to export a new texture ? if yes compose a new unique ID
-            slotObject->setString("type", "SAMPLER_2D");
+            slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
             
             //do we need a new sampler ?
-            std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS()),
-                                                                      __GetGLWrapMode(sampler->getWrapT()),
-                                                                      __GetFilterMode(sampler->getMinFilter()),
-                                                                      __GetFilterMode(sampler->getMagFilter()));
+            GLTFProfile* profile = this->_converterContext.profile.get();
+            std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
+                                                                      __GetGLWrapMode(sampler->getWrapT(), profile),
+                                                                      __GetFilterMode(sampler->getMinFilter(), profile),
+                                                                      __GetFilterMode(sampler->getMagFilter(), profile));
             
             std::string textureUID = "texture_" + imageUID;
             
@@ -1329,9 +1335,9 @@ namespace GLTF
                 shared_ptr <JSONObject> textureObject(new JSONObject());
                 textureObject->setString("source", imageUID);
                 textureObject->setString("sampler", samplerUID);
-                textureObject->setString("format", "RGBA");
-                textureObject->setString("internalFormat", "RGBA");
-                textureObject->setString("target", "TEXTURE_2D");
+                textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
+                textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
+                textureObject->setUnsignedInt32("target", profile->getGLenumForString("TEXTURE_2D"));
                 textures->setValue(textureUID, textureObject);
             }
 
@@ -1344,6 +1350,7 @@ namespace GLTF
     
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
+        GLTFProfile* profile = this->_converterContext.profile.get();
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
         if (commonEffects.getCount() > 0) {
@@ -1390,14 +1397,14 @@ namespace GLTF
             if (this->_converterContext.alwaysExportFilterColor) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
-                slotObject->setString("type", "FLOAT_VEC4");
+                slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
             
             if (!isOpaque(effectCommon) || this->_converterContext.alwaysExportTransparency) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
-                transparency->setString("type", "FLOAT");
+                transparency->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
                 values->setValue("transparency", transparency);
             }
             
@@ -1408,7 +1415,7 @@ namespace GLTF
                     shininess *= 128.0;
                 }
                 shared_ptr <JSONObject> shininessObject(new JSONObject());
-                shininessObject->setString("type", "FLOAT");
+                shininessObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
                 shininessObject->setDouble("value", shininess);
                 values->setValue("shininess", shininessObject);
             }
@@ -1692,7 +1699,7 @@ namespace GLTF
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setString("type", "FLOAT_MAT4");
+        inverseBindMatrices->setUnsignedInt32("type", this->_converterContext.profile->getGLenumForString("FLOAT_MAT4"));
         inverseBindMatrices->setUnsignedInt32("count", skinControllerData->getJointsCount());
         inverseBindMatrices->setUnsignedInt32("byteOffset", 0);
         glTFSkin->extras()->setValue("inverseBindMatrices", inverseBindMatrices);

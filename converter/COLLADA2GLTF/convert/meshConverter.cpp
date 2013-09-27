@@ -57,7 +57,6 @@ namespace GLTF
         
         size_t vertexOffset = indicesSize;
 
-        unsigned short *uncompressedIndices = (unsigned short * const ) outputData;
         float* uncompressedVertices = (Real * const )(outputData + vertexOffset);
         
         ifs.SetCoordIndex((unsigned short * const ) outputData );
@@ -280,7 +279,7 @@ namespace GLTF
 #endif
  
     
-    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream, const GLTFConverterContext& context)
+    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream, const GLTFConverterContext& converterContext)
     {
         bool shouldOGCompressMesh = false;
 #ifdef USE_WEBGLLOADER
@@ -292,7 +291,7 @@ namespace GLTF
             
             shared_ptr<JSONObject> compressedData(new JSONObject());
             compressedData->setUnsignedInt32("count", buffer->getByteLength());
-            compressedData->setString("type", "UNSIGNED_BYTE");
+            compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
             compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
             compressionObject->setValue("compressedData", compressedData);
             genericStream.write((const char*)buffer->getData(), buffer->getByteLength());
@@ -310,7 +309,7 @@ namespace GLTF
 #ifdef USE_OPEN3DGC
         SC3DMCEncodeParams params;
         IndexedFaceSet <unsigned short> ifs;
-        shouldOGCompressMesh = (context.compressionType == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
+        shouldOGCompressMesh = (converterContext.compressionType == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
         if (shouldOGCompressMesh) {
             encodeOpen3DGCMesh(mesh, params, ifs);
         }
@@ -413,9 +412,9 @@ namespace GLTF
             //}
             encoder.Encode(params, ifs, bstream);
 
-            compressedData->setString("mode", context.compressionMode);
+            compressedData->setString("mode", converterContext.compressionMode);
             compressedData->setUnsignedInt32("count", bstream.GetSize());
-            compressedData->setString("type", "UNSIGNED_BYTE");
+            compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
             compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
             compressionObject->setValue("compressedData", compressedData);
             
