@@ -1201,10 +1201,18 @@ namespace GLTF
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             const COLLADAFW::MeshPrimitive::PrimitiveType primitiveType = primitives[i]->getPrimitiveType();
             if ((primitiveType != COLLADAFW::MeshPrimitive::TRIANGLES) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::TRIANGLE_STRIPS) &&
+                //(primitiveType != COLLADAFW::MeshPrimitive::TRIANGLE_STRIPS) &&
                 (primitiveType != COLLADAFW::MeshPrimitive::POLYLIST) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS))
+                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS)) {
+                
+                static bool printedOnce = false;
+                if (!printedOnce) {
+                    printf("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                    printedOnce = true;
+                }
+                
                 continue;
+            }
             
             shared_ptr <GLTF::IndicesVector> primitiveIndicesVector(new GLTF::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
