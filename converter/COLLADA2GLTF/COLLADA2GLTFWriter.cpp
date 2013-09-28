@@ -143,14 +143,14 @@ namespace GLTF
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
-        std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices" + ".bin";
-        std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices" + ".bin";
-        std::string sharedGenericBufferID = inputURI.getPathFileBase() + "generic" + ".bin";
-        std::string sharedBufferID = inputURI.getPathFileBase() + ".bin";
-        std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID;
-        std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID;
-        std::string outputGenericFilePath = outputURI.getPathDir() + sharedGenericBufferID;
-        std::string outputFilePath = outputURI.getPathDir() + sharedBufferID;
+        std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices";
+        std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices";
+        std::string sharedGenericBufferID = inputURI.getPathFileBase() + "generic";
+        std::string sharedBufferID = inputURI.getPathFileBase();
+        std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID + ".bin";
+        std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID + ".bin";
+        std::string outputGenericFilePath = outputURI.getPathDir() + sharedGenericBufferID + ".bin";
+        std::string outputFilePath = outputURI.getPathDir() + sharedBufferID + ".bin";
         
         this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
         this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
@@ -463,7 +463,7 @@ namespace GLTF
         }
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
-        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), 0);
+        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  0);
         
         this->_converterContext.root->setValue("buffers", buffersObject);
         buffersObject->setValue(sharedBufferID, bufferObject);
