@@ -160,7 +160,7 @@ namespace GLTF
         this->_converterContext.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
         
         this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-        this->_converterContext.root->setString("profile", "WebGL 1.0");
+        this->_converterContext.root->setString("profile", this->_converterContext.profile->id());
         this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
         
         shared_ptr<JSONObject> asset = this->_converterContext.root->createObjectIfNeeded("asset");

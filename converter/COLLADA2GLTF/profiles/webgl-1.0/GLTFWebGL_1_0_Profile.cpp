@@ -472,4 +472,7 @@ namespace GLTF
         }
         return GLSLTypeForGLType[glType];
     }
+    
+    
+    std::string GLTFWebGL_1_0_Profile::id() { return "WebGL 1.0.2"; }
 }
