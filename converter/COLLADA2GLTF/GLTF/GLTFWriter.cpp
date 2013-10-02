@@ -71,7 +71,7 @@ namespace GLTF
         effectObject->setString("name", effect->getName());
         effectObject->setValue("instanceTechnique", instanceTechnique);
         instanceTechnique->setString("technique", techniqueID);
-        shared_ptr<JSONArray> outputs(new JSONArray());
+        shared_ptr<JSONObject> outputs(new JSONObject());
         shared_ptr <JSONObject> values = effect->getValues();
         std::vector <std::string> keys = values->getAllKeys();
         for (size_t i = 0 ; i < keys.size() ; i++) {
@@ -79,9 +79,7 @@ namespace GLTF
             shared_ptr <JSONObject> parameterValue = static_pointer_cast <JSONObject> (parameter->getValue("value"));
             shared_ptr<JSONObject> output(new JSONObject());
             if (parameterValue) {
-                output->setValue("value", parameterValue);
-                output->setString("parameter", keys[i]);
-                outputs->appendValue(output);
+                outputs->setValue(keys[i], parameterValue);
             }
         }
         instanceTechnique->setValue("values", outputs);
