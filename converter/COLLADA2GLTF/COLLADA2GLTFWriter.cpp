@@ -890,8 +890,16 @@ namespace GLTF
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
+          
+          if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
+            animatedTarget->setString("target", nodeUID);
+            animatedTarget->setString("path", "scale");
+            animatedTarget->setString("transformId", animationID);
+            animatedTargets->push_back(animatedTarget);
+            shouldExportTRS = true;
+          }
         }
-        
+      
         if (shouldExportTRS) {
             shared_ptr<GLTFAnimationFlattener> animationFlattener(new GLTFAnimationFlattener((Node*)node));
             this->_converterContext._uniqueIDToAnimationFlattener[nodeUID] = animationFlattener;
