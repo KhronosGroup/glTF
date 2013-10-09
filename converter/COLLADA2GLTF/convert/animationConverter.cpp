@@ -449,9 +449,9 @@ namespace GLTF
                               shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
                               
                               float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
-                              float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
+                              float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
                               for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
-                                animationFlattener->insertValueAtTime(transformID, translations[k], index, timeValues[k]);
+                                animationFlattener->insertValueAtTime(transformID, scales[k], index, timeValues[k]);
                               }
                             }
                             else {
