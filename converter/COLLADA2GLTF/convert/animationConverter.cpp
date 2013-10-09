@@ -442,6 +442,20 @@ namespace GLTF
                                 
                                 __AddChannel(cvtAnimation, targetID, path);
                                  */
+
+                            } else if (path == "scale") {
+                              std::string transformID = animatedTarget->getString("transformId");
+                              shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                              
+                              float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                              float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
+                              for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                animationFlattener->insertValueAtTime(transformID, translations[k], index, timeValues[k]);
+                              }
+                            }
+                            else {
+                              assert(0 && "unknown path name");
+
                             }
                         }
                     }
@@ -461,6 +475,7 @@ namespace GLTF
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_2D:
             case COLLADAFW::AnimationList::FLOAT:
             default:
+            assert(0 && "unknown animation type");
                 break;
         }
         
