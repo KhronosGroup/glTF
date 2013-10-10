@@ -130,7 +130,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     converterArgs->alwaysExportTransparency = false;
     
     converterArgs->compressionType = "none";
-    converterArgs->compressionMode = "";
+    converterArgs->compressionMode = "ascii";
     
     buildOptions();
     
