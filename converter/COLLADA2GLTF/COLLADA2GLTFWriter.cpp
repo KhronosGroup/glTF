@@ -123,6 +123,39 @@ namespace GLTF
         outputStream->write((const char*)buffer, length);
     }
 
+    /*
+    static shared_ptr <GLTFEffect> defaultEffect() {
+        std::string uniqueId = "__glTF__defaultMaterial";
+        
+        shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(uniqueId));
+        shared_ptr <JSONObject> values(new JSONObject());
+        
+        cvtEffect->setValues(values);
+        cvtEffect->setLightingModel("Phong");
+        
+        //retrieve the type, parameterName -> symbol -> type
+        double red = 1, green = 1, blue = 1, alpha = 1;
+        shared_ptr <JSONObject> slotObject(new JSONObject());
+        slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
+        slotObject->setString("type", "FLOAT_VEC4");
+        values->setValue("diffuse", slotObject);
+        
+        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
+        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
+        
+        techniqueGenerator->setString("lightingModel", cvtEffect->getLightingModel());
+        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+        techniqueGenerator->setValue("values", cvtEffect->getValues());
+        //techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
+        //techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
+        
+        cvtEffect->setTechniqueGenerator(techniqueGenerator);
+        cvtEffect->setName(uniqueId);
+        
+        return cvtEffect;
+    }
+     */
+
     
     bool COLLADA2GLTFWriter::write()
 	{
@@ -137,6 +170,10 @@ namespace GLTF
         this->_converterContext.shaderIdToShaderString.clear();
         this->_converterContext._uniqueIDToMeshes.clear();
 
+        //shared_ptr <GLTFEffect> aDefaultEffect = defaultEffect();
+        //this->_converterContext._uniqueIDToEffect[0] = aDefaultEffect;
+
+        
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
@@ -310,7 +347,7 @@ namespace GLTF
         
         shared_ptr <GLTF::JSONObject> attributes = this->_converterContext.root->createObjectIfNeeded("attributes");
         shared_ptr <GLTF::JSONObject> indices = this->_converterContext.root->createObjectIfNeeded("indices");
-
+        
         for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
@@ -322,15 +359,16 @@ namespace GLTF
                         /* some exporter bring meshes not used in the scene graph,
                          for the moment we have to remove these meshes because this involves the side effect of not having a material assigned. Which makes it incomplete.
                          */
-                        bool shouldSkipMesh = false;
                         PrimitiveVector primitives = mesh->getPrimitives();
-                        for (size_t k = 0 ; ((shouldSkipMesh == false) && (k < primitives.size())) ; k++) {
-                            shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[k];
-                            if (primitive->getMaterialID().length() == 0)
-                                shouldSkipMesh  = true;
-                        }
-                        if (shouldSkipMesh)
-                            continue;
+                        /*
+                         for (size_t k = 0 ; ((shouldSkipMesh == false) && (k < primitives.size())) ; k++) {
+                         shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[k];
+                         
+                         if (primitive->getMaterialID().length() == 0) {
+                         primitive->setMaterialID(aDefaultEffect->getID());
+                         }
+                         }
+                         */
                         
                         bool isCompressed = false;
                         if (mesh->getExtensions()) {
@@ -382,7 +420,6 @@ namespace GLTF
         
         // ----
         shared_ptr <GLTF::JSONObject> materialsObject = this->_converterContext.root->createObjectIfNeeded("materials");
-
         UniqueIDToEffect::const_iterator UniqueIDToEffectIterator;
         
         for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
@@ -621,8 +658,6 @@ namespace GLTF
             }
             
             sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
-            
-            shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttributesForSemantic(semantic)[indexOfSet];            
         }
         
         return semantics;
@@ -1366,7 +1401,7 @@ namespace GLTF
             // nothing to do, no texture or color
         }
     }
-    
+        
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
         GLTFProfile* profile = this->_converterContext.profile.get();

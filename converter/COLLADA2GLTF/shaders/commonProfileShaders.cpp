@@ -281,7 +281,8 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "reflective", context);
         //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
-        techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
+        if (techniqueExtras)
+            techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, context));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, context));
                 
