@@ -335,19 +335,26 @@ namespace GLTF
                     params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
                     ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                     ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    //ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
+                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
                     ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                     floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
                     nFloatAttributes++;
                     break;
                 case JOINT:
+                    /*
+                    params.SetIntAttributePredMode(nIntAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                    ifs.SetNIntAttribute(nIntAttributes, jointIDs.size() / numJointsPerVertex);
+                    ifs.SetIntAttributeDim(nIntAttributes, numJointsPerVertex);
+                    ifs.SetIntAttributeType(nIntAttributes, O3DGC_IFS_INT_ATTRIBUTE_TYPE_JOINT_ID);
+                    ifs.SetIntAttribute(nIntAttributes, (long * const ) & (jointIDs[0]));
+                    nIntAttributes++;
+                    */
                     
-                    params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
-                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                    params.SetFloatAttributeQuantBits(nFloatAttributes, 14);
+                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION);
                     ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                     ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
+                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
                     ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                     floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
                     nFloatAttributes++;
