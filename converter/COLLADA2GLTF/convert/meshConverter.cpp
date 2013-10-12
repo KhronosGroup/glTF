@@ -1364,18 +1364,20 @@ namespace GLTF
             }
         }
         
-        //https://github.com/KhronosGroup/collada2json/issues/41
-        //Goes through all texcoord and invert V
-        GLTF::IndexSetToMeshAttributeHashmap& texcoordMeshAttributes = cvtMesh->getMeshAttributesForSemantic(GLTF::TEXCOORD);
-        GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-        
-        //FIXME: consider turn this search into a method for mesh
-        for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
+        if (cvtMesh->hasSemantic(GLTF::TEXCOORD)) {
+            //https://github.com/KhronosGroup/collada2json/issues/41
+            //Goes through all texcoord and invert V
+            GLTF::IndexSetToMeshAttributeHashmap& texcoordMeshAttributes = cvtMesh->getMeshAttributesForSemantic(GLTF::TEXCOORD);
+            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
             
-            meshAttribute->apply(__InvertV, NULL);
+            //FIXME: consider turn this search into a method for mesh
+            for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
+                //(*it).first;             // the key value (of type Key)
+                //(*it).second;            // the mapped value (of type T)
+                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
+                
+                meshAttribute->apply(__InvertV, NULL);
+            }
         }
         
         if (cvtMesh->getPrimitives().size() > 0) {

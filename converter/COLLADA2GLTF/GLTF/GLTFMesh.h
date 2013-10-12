@@ -47,7 +47,9 @@ namespace GLTF
         
         bool appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive);
         
-        void setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap);        
+        bool hasSemantic(Semantic semantic);
+
+        void setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap);
         IndexSetToMeshAttributeHashmap& getMeshAttributesForSemantic(Semantic semantic); 
         
         void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute);

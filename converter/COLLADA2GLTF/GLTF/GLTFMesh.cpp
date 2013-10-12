@@ -87,6 +87,10 @@ namespace GLTF
         this->_semanticToMeshAttributes[semantic] = indexSetToMeshAttributeHashmap;
     }
     
+    bool GLTFMesh::hasSemantic(Semantic semantic) {
+        return this->_semanticToMeshAttributes.count(semantic) > 0;
+    }
+    
     IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic) {
         return this->_semanticToMeshAttributes[semantic];
     }
