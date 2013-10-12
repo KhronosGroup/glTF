@@ -34,7 +34,7 @@ using namespace o3dgc;
 #endif
 //--- X3DGC
 
-#define DUMP_O3DGC_OUTPUT 1
+#define DUMP_O3DGC_OUTPUT 0
 
 #if DUMP_O3DGC_OUTPUT
 void SaveIFSUnsignedShortArray(std::ofstream & fout, const std::string & name, unsigned int a, const unsigned short * const tab, unsigned long nElement, unsigned long dim)
