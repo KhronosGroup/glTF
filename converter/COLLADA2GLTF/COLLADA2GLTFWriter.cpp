@@ -114,13 +114,13 @@ namespace GLTF
                                                   const std::string& parameterSID,
                                                   const std::string& parameterType,
                                                   unsigned char* buffer, size_t length,
-                                                  std::ofstream &animationsOutputStream) {
+                                                  GLTFOutputStream *outputStream) {
         //setup
         shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
         
         //write
-        parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-        animationsOutputStream.write((const char*)buffer, length);
+        parameter->setByteOffset(outputStream->length());
+        outputStream->write((const char*)buffer, length);
     }
 
     
@@ -128,7 +128,8 @@ namespace GLTF
 	{
         ifstream inputVertices;
         ifstream inputIndices;
-        ifstream inputGeneric;
+        ifstream inputAnimation;
+        ifstream inputCompression;
         ofstream ouputStream;
         
         this->_extraDataHandler = new ExtraDataHandler();
@@ -143,18 +144,18 @@ namespace GLTF
         COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
         COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
         
-        std::string sharedVerticesBufferID = inputURI.getPathFileBase() + "vertices";
-        std::string sharedIndicesBufferID = inputURI.getPathFileBase() + "indices";
-        std::string sharedGenericBufferID = inputURI.getPathFileBase() + "generic";
-        std::string sharedBufferID = inputURI.getPathFileBase();
-        std::string outputVerticesFilePath = outputURI.getPathDir() + sharedVerticesBufferID + ".bin";
-        std::string outputIndicesFilePath = outputURI.getPathDir() + sharedIndicesBufferID + ".bin";
-        std::string outputGenericFilePath = outputURI.getPathDir() + sharedGenericBufferID + ".bin";
-        std::string outputFilePath = outputURI.getPathDir() + sharedBufferID + ".bin";
+        std::string folder = outputURI.getPathDir();
+        std::string fileName = inputURI.getPathFileBase();
         
-        this->_verticesOutputStream.open (outputVerticesFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        this->_indicesOutputStream.open (outputIndicesFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        this->_genericOutputStream.open (outputGenericFilePath.c_str(), ios::out | ios::ate | ios::binary);
+        std::string sharedBufferID = fileName;
+        std::string outputFilePath = outputURI.getPathDir() + fileName + ".bin";
+        
+        this->_converterContext._vertexOutputStream = new GLTFOutputStream(folder, fileName, "vertices");
+        this->_converterContext._indicesOutputStream = new GLTFOutputStream(folder, fileName, "indices");
+        this->_converterContext._animationOutputStream = new GLTFOutputStream(folder, fileName, "animations");
+        this->_converterContext._compressionOutputStream = new GLTFOutputStream(folder, fileName, "compression");
+        std::string compressedBufferID = this->_converterContext._compressionOutputStream->id();
+
         ouputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
         
         this->_converterContext.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
@@ -214,7 +215,7 @@ namespace GLTF
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)scales,
                                                       count * sizeof(float) * 3,
-                                                      this->_genericOutputStream);
+                                                      this->_converterContext._animationOutputStream);
                     __AddChannel(animation, targetID, "scale");
                     free(scales);
                 }
@@ -226,7 +227,7 @@ namespace GLTF
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)positions,
                                                       count * sizeof(float) * 3,
-                                                      this->_genericOutputStream);
+                                                      this->_converterContext._animationOutputStream);
                     __AddChannel(animation, targetID, "translation");
                     free(positions);
                 }
@@ -238,7 +239,7 @@ namespace GLTF
                                                       "FLOAT_VEC4",
                                                       (unsigned char*)rotations,
                                                       count * sizeof(float) * 4,
-                                                      this->_genericOutputStream);
+                                                      this->_converterContext._animationOutputStream);
                     __AddChannel(animation, targetID, "rotation");
                     free(rotations);
                 }
@@ -252,20 +253,22 @@ namespace GLTF
 
         
         //reopen .bin files for vertices and indices
-        size_t verticesLength = (size_t)this->_verticesOutputStream.tellp();
-        size_t indicesLength = (size_t)this->_indicesOutputStream.tellp();
-        size_t genericLength = (size_t)this->_genericOutputStream.tellp();
+        size_t verticesLength = this->_converterContext._vertexOutputStream->length();
+        size_t indicesLength = this->_converterContext._indicesOutputStream->length();
+        size_t animationLength = this->_converterContext._animationOutputStream->length();
+        size_t compressionLength = this->_converterContext._compressionOutputStream->length();
 
-        this->_verticesOutputStream.flush();
-        this->_verticesOutputStream.close();
-        this->_indicesOutputStream.flush();
-        this->_indicesOutputStream.close();
-        this->_genericOutputStream.flush();
-        this->_genericOutputStream.close();
+        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_converterContext._compressionOutputStream->id(), compressionLength));
+
+        delete this->_converterContext._vertexOutputStream;
+        delete this->_converterContext._indicesOutputStream;
+        delete this->_converterContext._animationOutputStream;
+        delete this->_converterContext._compressionOutputStream;
         
-        inputVertices.open(outputVerticesFilePath.c_str(), ios::in | ios::binary);
-        inputIndices.open(outputIndicesFilePath.c_str(), ios::in | ios::binary);
-        inputGeneric.open(outputGenericFilePath.c_str(), ios::in | ios::binary);
+        inputVertices.open(this->_converterContext._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputIndices.open(this->_converterContext._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputAnimation.open(this->_converterContext._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputCompression.open(this->_converterContext._compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
         
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
@@ -277,26 +280,27 @@ namespace GLTF
         ouputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
 
-        bufferIOStream = (char*)malloc(sizeof(char) * genericLength);
-        inputGeneric.read(bufferIOStream, genericLength);
-        ouputStream.write(bufferIOStream, genericLength);
+        bufferIOStream = (char*)malloc(sizeof(char) * animationLength);
+        inputAnimation.read(bufferIOStream, animationLength);
+        ouputStream.write(bufferIOStream, animationLength);
         free(bufferIOStream);
 
         inputVertices.close();
         inputIndices.close();
-        inputGeneric.close();
+        inputAnimation.close();
+        inputCompression.close();
+
+        remove(this->_converterContext._vertexOutputStream->outputPathCStr());
+        remove(this->_converterContext._indicesOutputStream->outputPathCStr());
+        remove(this->_converterContext._animationOutputStream->outputPathCStr());
         
-        remove(outputIndicesFilePath.c_str());
-        remove(outputVerticesFilePath.c_str());
-        remove(outputGenericFilePath.c_str());
-        
-        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + genericLength));
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationLength));
 
         //---
-        
         shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, 0, verticesLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, verticesLength, indicesLength));
-        shared_ptr <GLTFBufferView> genericBufferView(new GLTFBufferView(sharedBuffer, verticesLength + indicesLength, genericLength));
+        shared_ptr <GLTFBufferView> genericBufferView(new GLTFBufferView(sharedBuffer, verticesLength + indicesLength, animationLength));
+        shared_ptr <GLTFBufferView> compressionBufferView(new GLTFBufferView(compressionBuffer, 0, compressionLength));
         
         // ----
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
@@ -328,12 +332,17 @@ namespace GLTF
                         if (shouldSkipMesh)
                             continue;
                         
+                        bool isCompressed = false;
+                        if (mesh->getExtensions()) {
+                            isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
+                        }
+                        
                         void *serializationContext[4];
-                        serializationContext[0] = (void*)verticesBufferView.get();
-                        serializationContext[1] = (void*)indicesBufferView.get();
+                        serializationContext[0] = isCompressed ? (void*)compressionBufferView.get() : (void*)verticesBufferView.get();
+                        serializationContext[1] = isCompressed ? (void*)compressionBufferView.get() : (void*)indicesBufferView.get();
                         serializationContext[2] = (void*)genericBufferView.get();
                         serializationContext[3] = (void*)&this->_converterContext;
-                        
+
                         shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)serializationContext);
 
                         //serialize attributes
@@ -349,9 +358,7 @@ namespace GLTF
                                 //(*it).first;             // the key value (of type Key)
                                 //(*it).second;            // the mapped value (of type T)
                                 shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
-                                
                                 shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)serializationContext);
-                                
                                 attributes->setValue(meshAttribute->getID(), meshAttributeObject);
                             }
                         }
@@ -408,14 +415,10 @@ namespace GLTF
                 }
             }
             skin->setJointsIds(jointsWithOriginalSids);
-            
             shared_ptr <JSONObject> serializedSkin = serializeSkin(skin.get());
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue("inverseBindMatrices"));
-
             inverseBindMatrices->setString("bufferView", genericBufferView->getID());
-
             serializedSkin->setValue("inverseBindMatrices", inverseBindMatrices);
-            
             skins->setValue(skin->getId(), serializedSkin);
         }
         
@@ -464,22 +467,30 @@ namespace GLTF
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
         shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  0);
-        
+        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  0);
+
         this->_converterContext.root->setValue("buffers", buffersObject);
         buffersObject->setValue(sharedBufferID, bufferObject);
+        buffersObject->setValue(compressedBufferID, bufferObject1);
+
         
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
         shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
         this->_converterContext.root->setValue("bufferViews", bufferViewsObject);
         
-        shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
+        shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewGenericObject = serializeBufferView(genericBufferView.get(), 0);
+        shared_ptr <JSONObject> bufferViewCompressionObject = serializeBufferView(compressionBufferView.get(), 0);
+
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
-        if (genericLength > 0) {
+        if (animationLength > 0) {
             bufferViewsObject->setValue(genericBufferView->getID(), bufferViewGenericObject);
+        }
+        if (compressionLength > 0) {
+            bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
         }
         
         bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
@@ -663,7 +674,7 @@ namespace GLTF
                 if (meshesCount) {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
                         if ((*meshes2)[i]->getPrimitives().size() > 0) {
-                            writeAllMeshBuffers((*meshes2)[i],this->_verticesOutputStream, this->_indicesOutputStream, this->_genericOutputStream, this->_converterContext);
+                            writeAllMeshBuffers((*meshes2)[i], this->_converterContext);
                         }
                     }
                 }
@@ -704,7 +715,7 @@ namespace GLTF
                     //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
                     int materialBindingIndex = -1;
                     for (size_t k = 0; k < materialBindings.getCount() ; k++) {
-                        //                                printf("materialID in binding:%d primitveObjectID:%d\n", materialBindings[k].getMaterialId(),
+                        //printf("materialID in binding:%d primitveObjectID:%d\n", materialBindings[k].getMaterialId(),
                         //   primitive->getMaterialObjectID());
                         
                         if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
@@ -1622,7 +1633,7 @@ namespace GLTF
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
-            if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_genericOutputStream, this->_converterContext)) {
+            if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_converterContext)) {
                 this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
             }
         }
@@ -1704,9 +1715,9 @@ namespace GLTF
         inverseBindMatrices->setUnsignedInt32("byteOffset", 0);
         glTFSkin->extras()->setValue("inverseBindMatrices", inverseBindMatrices);
         
-        inverseBindMatrices->setUnsignedInt32("byteOffset",static_cast<size_t>(this->_genericOutputStream.tellp()));
+        inverseBindMatrices->setUnsignedInt32("byteOffset",this->_converterContext._animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
-        this->_genericOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
+        this->_converterContext._animationOutputStream->write(buffer);
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);

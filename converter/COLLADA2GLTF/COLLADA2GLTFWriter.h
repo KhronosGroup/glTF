@@ -178,13 +178,11 @@ namespace GLTF
 	private:
         COLLADASaxFWL::Loader _loader;
         GLTF::GLTFConverterContext _converterContext;
-        const COLLADAFW::VisualScene* _visualScene;
+        const COLLADAFW::VisualScene *_visualScene;
         GLTF::GLTFWriter _writer;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-        std::ofstream _verticesOutputStream;
-        std::ofstream _indicesOutputStream;
-        std::ofstream _genericOutputStream;
+
         std::ofstream _compressedDataOutputStream;
 	};
 } 

@@ -68,6 +68,11 @@ namespace GLTF
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
         UniqueIDToLight _uniqueIDToLight;
+        
+        GLTFOutputStream *_vertexOutputStream;
+        GLTFOutputStream *_indicesOutputStream;
+        GLTFOutputStream *_animationOutputStream;
+        GLTFOutputStream *_compressionOutputStream;
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

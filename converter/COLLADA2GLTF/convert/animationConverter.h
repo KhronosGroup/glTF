@@ -12,7 +12,6 @@ namespace GLTF
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
-                        std::ofstream &animationsOutputStream,
                         GLTF::GLTFConverterContext &converterContext);
     
     //a few helper classes to help flattening animations

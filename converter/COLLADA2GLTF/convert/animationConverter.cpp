@@ -147,14 +147,13 @@ namespace GLTF
                                                   const std::string& parameterSID,
                                                   const std::string& parameterType,
                                                   shared_ptr <GLTFBufferView> bufferView,
-                                                  std::ofstream &animationsOutputStream) {
+                                                  GLTFOutputStream* outputStream) {
         //setup
         shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
         
         //write
-        parameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-        animationsOutputStream.write((const char*)( bufferView->getBufferDataByApplyingOffset()),
-                                     bufferView->getByteLength());
+        parameter->setByteOffset(static_cast<size_t>(outputStream->length()));
+        outputStream->write(bufferView);
     }
     
     /*
@@ -166,7 +165,6 @@ namespace GLTF
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
-                        std::ofstream &animationsOutputStream,
                         GLTF::GLTFConverterContext &converterContext) {
         
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
@@ -176,9 +174,10 @@ namespace GLTF
         std::string name = "TIME";
         std::string samplerID = cvtAnimation->getSamplerIDForName(name);
         
-        timeParameter->setByteOffset(static_cast<size_t>(animationsOutputStream.tellp()));
-        animationsOutputStream.write((const char*)( timeBufferView->getBufferDataByApplyingOffset()),
-                                     timeBufferView->getByteLength());
+        GLTFOutputStream* outputStream = converterContext._animationOutputStream;
+        
+        timeParameter->setByteOffset(outputStream->length());
+        outputStream->write(timeBufferView);
         
             //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
         
@@ -239,21 +238,21 @@ namespace GLTF
                                                       "translation",
                                                       "FLOAT_VEC3",
                                                       TRSBufferViews[0],
-                                                      animationsOutputStream);
+                                                      outputStream);
                     
                     //Rotation
                     __SetupAndWriteAnimationParameter(cvtAnimation,
                                                       "rotation",
                                                       "FLOAT_VEC4",
                                                       TRSBufferViews[1],
-                                                      animationsOutputStream);
+                                                      outputStream);
                     
                     //Scale
                     __SetupAndWriteAnimationParameter(cvtAnimation,
                                                       "scale",
                                                       "FLOAT_VEC3",
                                                       TRSBufferViews[2],
-                                                      animationsOutputStream);
+                                                      outputStream);
                     
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];

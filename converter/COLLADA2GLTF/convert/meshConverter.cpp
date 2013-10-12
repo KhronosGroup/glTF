@@ -34,7 +34,9 @@ using namespace o3dgc;
 #endif
 //--- X3DGC
 
-#if 0
+#define DUMP_O3DGC_OUTPUT 1
+
+#if DUMP_O3DGC_OUTPUT
 void SaveIFSUnsignedShortArray(std::ofstream & fout, const std::string & name, unsigned int a, const unsigned short * const tab, unsigned long nElement, unsigned long dim)
 {
     if (tab)
@@ -97,7 +99,7 @@ void SaveIFSFloatArray(std::ofstream & fout, const std::string & name, unsigned 
         fout << std::endl;
     }
 }
-bool SaveIFS(const std::string & fileName, const IndexedFaceSet<Index> & ifs)
+bool SaveIFS(std::string & fileName, const IndexedFaceSet<unsigned short> & ifs)
 {
     std::ofstream fout;
     fout.open(fileName.c_str());
@@ -106,11 +108,9 @@ bool SaveIFS(const std::string & fileName, const IndexedFaceSet<Index> & ifs)
         
         
         SaveIFSUnsignedShortArray(fout, "* CoordIndex", 0, (const unsigned short * const) ifs.GetCoordIndex(), ifs.GetNCoordIndex(), 3);
-        SaveIFSIntArray(fout, "* MatID", 0, (const long * const) ifs.GetPrimitiveID(), ifs.GetNCoordIndex(), 1);
+        SaveIFSIntArray(fout, "* MatID", 0, (const long * const) ifs.GetIndexBufferID(), ifs.GetNCoordIndex(), 1);
         SaveIFSFloatArray(fout, "* Coord", 0, ifs.GetCoord(), ifs.GetNCoord(), 3);
         SaveIFSFloatArray(fout, "* Normal", 0, ifs.GetNormal(), ifs.GetNNormal(), 3);
-        SaveIFSFloatArray(fout, "* Color", 0, ifs.GetColor(), ifs.GetNColor(), 3);
-        SaveIFSFloatArray(fout, "* TexCoord", 0, ifs.GetTexCoord(), ifs.GetNTexCoord(), 2);
         for(unsigned long a = 0; a < ifs.GetNumFloatAttributes(); ++a)
         {
             SaveIFSFloatArray(fout, "* FloatAttribute", a, ifs.GetFloatAttribute(a), ifs.GetNFloatAttribute(a), ifs.GetFloatAttributeDim(a));
@@ -133,7 +133,7 @@ namespace GLTF
 {
     
 #ifdef USE_OPEN3DGC
-#if 0    
+#if 1    
     void testDecode(shared_ptr <GLTFMesh> mesh, BinaryStream &bstream)
     {
         SC3DMCDecoder <unsigned short> decoder;
@@ -144,7 +144,7 @@ namespace GLTF
         
         unsigned int vertexSize = ifs.GetNCoord() * 3 * sizeof(float);
         unsigned int normalSize = ifs.GetNNormal() * 3 * sizeof(float);
-        unsigned int texcoordSize = ifs.GetNTexCoord() * 2 * sizeof(float);
+        unsigned int texcoordSize = ifs.GetNFloatAttribute(0) * 2 * sizeof(float);
         unsigned int indicesSize = ifs.GetNCoordIndex() * 3 * sizeof(unsigned short);
         
         outputData = (unsigned char*)malloc(vertexSize + normalSize + texcoordSize + indicesSize);
@@ -159,8 +159,8 @@ namespace GLTF
         if (ifs.GetNNormal() > 0) {
             ifs.SetNormal((Real * const )(outputData + indicesSize + vertexSize));
         }
-        if (ifs.GetNTexCoord() > 0) {
-            ifs.SetTexCoord((Real * const )(outputData + indicesSize + vertexSize + normalSize));
+        if (ifs.GetNFloatAttribute(0)) {
+            ifs.SetFloatAttribute(0, (Real * const )(outputData + indicesSize + vertexSize + normalSize));
         }
         
         decoder.DecodePlayload(ifs, bstream);
@@ -210,60 +210,23 @@ namespace GLTF
     //TODO:Also check that the same buffer is not shared by 2 different semantics or set
     bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh)
     {
-        bool hasOnlyTriangles = true;
-        //bool hasSkinning = true;
-        
         PrimitiveVector primitives = mesh->getPrimitives();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
             if (primitive->getType() != "TRIANGLES") {
-                hasOnlyTriangles = false;
+                return false;
             }
         }
-        
-        bool handled = true;
-        std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
-        for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
-            GLTF::Semantic semantic  = semantics[i];
-            size_t count = mesh->getMeshAttributesCountForSemantic(semantic);
-            if (count == 0)
-                continue;
             
-            switch (semantic) {
-                case POSITION:
-                    break;
-                case NORMAL:
-                    break;
-                case TEXCOORD:
-                    break;
-                case COLOR:
-                    handled = false;
-                    break;
-                case WEIGHT:
-                    handled = false;
-                    break;
-                case JOINT:
-                    handled = false;
-                    break;
-                default:
-                    handled = false;
-                    break;
-            }
-        
-            if (handled == false)
-                break;
-        }
-    
-        return handled && hasOnlyTriangles;
+        return true;
     }
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             SC3DMCEncodeParams &params,
                             IndexedFaceSet <unsigned short> &ifs,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            std::ofstream& genericStream,
                             const GLTFConverterContext& converterContext)
     {
         //setup options
@@ -271,6 +234,10 @@ namespace GLTF
         int qtexCoord = 10;
         int qnormal   = 10;
         int qcolor   = 10;
+        int qWeights = 8;
+        
+        GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
+        size_t bufferOffset = outputStream->length();
         
         O3DGCSC3DMCPredictionMode floatAttributePrediction = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
         
@@ -326,7 +293,6 @@ namespace GLTF
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
             GLTF::Semantic semantic  = semantics[i];
-            
             shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(semantic, 0);
             vertexCount = meshAttribute->getCount();
             size_t componentsPerAttribute = meshAttribute->getComponentsPerAttribute();
@@ -365,14 +331,33 @@ namespace GLTF
                     nFloatAttributes++;
                     break;
                 case WEIGHT:
+                    params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
+                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                    //ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
+                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
+                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                    nFloatAttributes++;
                     break;
                 case JOINT:
+                    
+                    params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
+                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
+                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                    nFloatAttributes++;
                     break;
                 default:
                     break;
             }
             
         }
+        params.SetNumFloatAttributes(nFloatAttributes);
         ifs.SetNumFloatAttributes(nFloatAttributes);
         shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
         
@@ -384,7 +369,7 @@ namespace GLTF
         compressedData->setInt32("indicesCount", allIndicesCount);
         //Open3DGC binary is disabled
         params.SetStreamType(converterContext.compressionMode == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
-#if 0
+#if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
         COLLADABU::URI outputURI(converterContext.outputFilePath.c_str());
         std::string outputFilePath = outputURI.getPathDir() + GLTFUtils::toString(dumpedId) + ".txt";
@@ -396,12 +381,13 @@ namespace GLTF
         compressedData->setString("mode", converterContext.compressionMode);
         compressedData->setUnsignedInt32("count", bstream.GetSize());
         compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
-        compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
+        compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
         compressionObject->setValue("compressedData", compressedData);
         
-        genericStream.write((const char*)bstream.GetBuffer(0), bstream.GetSize());
+        //testDecode(mesh, bstream);
+        outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
         
         if (ifs.GetCoordIndex()) {
             free(ifs.GetCoordIndex());
@@ -415,9 +401,14 @@ namespace GLTF
 #endif
 
 
-    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream, const GLTFConverterContext& converterContext)
+    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, const GLTFConverterContext& converterContext)
     {
         bool shouldOGCompressMesh = false;
+        
+        GLTFOutputStream* vertexOutputStream = converterContext._vertexOutputStream;
+        GLTFOutputStream* indicesOutputStream = converterContext._indicesOutputStream;
+        GLTFOutputStream* compressionOutputStream = converterContext._compressionOutputStream;
+        
 #ifdef USE_WEBGLLOADER
 
         if (mesh->getExtensions()->contains("won-compression")) {
@@ -447,8 +438,9 @@ namespace GLTF
         IndexedFaceSet <unsigned short> ifs;
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
         shouldOGCompressMesh = (converterContext.compressionType == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
+        unsigned compressedBufferStart = compressionOutputStream->length();
         if (shouldOGCompressMesh) {
-            encodeOpen3DGCMesh(mesh, params, ifs, floatAttributeIndexMapping, genericStream, converterContext);
+            encodeOpen3DGCMesh(mesh, params, ifs, floatAttributeIndexMapping, converterContext);
         }
 #endif
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -459,9 +451,6 @@ namespace GLTF
         int vertexCount;
         unsigned int indicesCount, allIndicesCount = 0;
         PrimitiveVector primitives = mesh->getPrimitives();
-#ifdef USE_OPEN3DGC
-        unsigned bufferStart = genericStream.tellp();
-#endif
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
@@ -484,13 +473,13 @@ namespace GLTF
                     for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
                         ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
                     }
-                    uniqueIndices->setByteOffset(static_cast<size_t>(indicesOutputStream.tellp()));
-                    indicesOutputStream.write((const char*)ushortIndices, indicesLength);
+                    uniqueIndices->setByteOffset(indicesOutputStream->length());
+                    indicesOutputStream->write((const char*)ushortIndices, indicesLength);
                 }
 #ifdef USE_OPEN3DGC
                 else {
-                    uniqueIndices->setByteOffset(bufferStart);
-                    bufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
+                    uniqueIndices->setByteOffset(compressedBufferStart);
+                    compressedBufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
                 }
 #endif
                 //now that we wrote to the stream we can release the buffer.
@@ -519,13 +508,13 @@ namespace GLTF
                 attributeCount++;
 #ifdef USE_OPEN3DGC
                 if (shouldOGCompressMesh) {
-                    meshAttribute->setByteOffset(bufferStart);
-                    bufferStart += buffer->getByteLength();
+                    meshAttribute->setByteOffset(compressedBufferStart);
+                    compressedBufferStart += buffer->getByteLength();
                 } else
 #endif
                 {
-                    meshAttribute->setByteOffset(static_cast<size_t>(verticesOutputStream.tellp()));
-                    verticesOutputStream.write((const char*)(buffer->getData()), buffer->getByteLength());
+                    meshAttribute->setByteOffset(vertexOutputStream->length());
+                    vertexOutputStream->write(buffer);
                 }
                 
                 //now that we wrote to the stream we can release the buffer.
