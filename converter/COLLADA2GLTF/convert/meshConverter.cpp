@@ -293,77 +293,81 @@ namespace GLTF
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
             GLTF::Semantic semantic  = semantics[i];
-            shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(semantic, 0);
-            vertexCount = meshAttribute->getCount();
-            size_t componentsPerAttribute = meshAttribute->getComponentsPerAttribute();
-            char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
-            switch (semantic) {
-                case POSITION:
-                    params.SetCoordQuantBits(qcoord);
-                    params.SetCoordPredMode(floatAttributePrediction);
-                    ifs.SetNCoord(vertexCount);
-                    ifs.SetCoord((Real * const)buffer);
-                    break;
-                case NORMAL:
-                    params.SetNormalQuantBits(qnormal);
-                    params.SetNormalPredMode(O3DGC_SC3DMC_SURF_NORMALS_PREDICTION);
-                    ifs.SetNNormal(vertexCount);
-                    ifs.SetNormal((Real * const)buffer);
-                    break;
-                case TEXCOORD:
-                    params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
-                    params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
-                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
-                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
-                    nFloatAttributes++;
-                    break;
-                case COLOR:
-                    params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
-                    params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
-                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
-                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
-                    nFloatAttributes++;
-                    break;
-                case WEIGHT:
-                    params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
-                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
-                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
-                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
-                    nFloatAttributes++;
-                    break;
-                case JOINT:
-                    /*
-                    params.SetIntAttributePredMode(nIntAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
-                    ifs.SetNIntAttribute(nIntAttributes, jointIDs.size() / numJointsPerVertex);
-                    ifs.SetIntAttributeDim(nIntAttributes, numJointsPerVertex);
-                    ifs.SetIntAttributeType(nIntAttributes, O3DGC_IFS_INT_ATTRIBUTE_TYPE_JOINT_ID);
-                    ifs.SetIntAttribute(nIntAttributes, (long * const ) & (jointIDs[0]));
-                    nIntAttributes++;
-                    */
-                    
-                    params.SetFloatAttributeQuantBits(nFloatAttributes, 14);
-                    params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION);
-                    ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                    ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
-                    ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
-                    ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                    floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
-                    nFloatAttributes++;
-                    break;
-                default:
-                    break;
-            }
             
+            size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
+
+            for (size_t j = 0 ; j < attributesCount ; j++) {
+                shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(semantic, j);
+                vertexCount = meshAttribute->getCount();
+                size_t componentsPerAttribute = meshAttribute->getComponentsPerAttribute();
+                char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+                switch (semantic) {
+                    case POSITION:
+                        params.SetCoordQuantBits(qcoord);
+                        params.SetCoordPredMode(floatAttributePrediction);
+                        ifs.SetNCoord(vertexCount);
+                        ifs.SetCoord((Real * const)buffer);
+                        break;
+                    case NORMAL:
+                        params.SetNormalQuantBits(qnormal);
+                        params.SetNormalPredMode(O3DGC_SC3DMC_SURF_NORMALS_PREDICTION);
+                        ifs.SetNNormal(vertexCount);
+                        ifs.SetNormal((Real * const)buffer);
+                        break;
+                    case TEXCOORD:
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
+                        params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
+                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        nFloatAttributes++;
+                        break;
+                    case COLOR:
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
+                        params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
+                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        nFloatAttributes++;
+                        break;
+                    case WEIGHT:
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
+                        params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
+                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        nFloatAttributes++;
+                        break;
+                    case JOINT:
+                        /*
+                         params.SetIntAttributePredMode(nIntAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                         ifs.SetNIntAttribute(nIntAttributes, jointIDs.size() / numJointsPerVertex);
+                         ifs.SetIntAttributeDim(nIntAttributes, numJointsPerVertex);
+                         ifs.SetIntAttributeType(nIntAttributes, O3DGC_IFS_INT_ATTRIBUTE_TYPE_JOINT_ID);
+                         ifs.SetIntAttribute(nIntAttributes, (long * const ) & (jointIDs[0]));
+                         nIntAttributes++;
+                         */
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, 14);
+                        params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
+                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
+                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        nFloatAttributes++;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
+        
         params.SetNumFloatAttributes(nFloatAttributes);
         ifs.SetNumFloatAttributes(nFloatAttributes);
         shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
