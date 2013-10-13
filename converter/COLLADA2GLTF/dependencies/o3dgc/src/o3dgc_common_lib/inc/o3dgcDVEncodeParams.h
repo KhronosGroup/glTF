@@ -37,7 +37,7 @@ namespace o3dgc
                                     {
                                         m_quantBits         = 10;
                                         m_streamTypeMode    = O3DGC_STREAM_TYPE_ASCII;
-                                        m_encodeMode        = O3DGC_DYNAMIC_VECTOR_LIFT;
+                                        m_encodeMode        = O3DGC_DYNAMIC_VECTOR_ENCODE_MODE_LIFT;
                                     };
         //! Destructor.
                                     ~DVEncodeParams(void) {};

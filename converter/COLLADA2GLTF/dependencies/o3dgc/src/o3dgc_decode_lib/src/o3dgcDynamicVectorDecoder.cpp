@@ -70,7 +70,6 @@ namespace o3dgc
         const long h = (size >> 1) + (size & 1);
         long       a = h-1;
         long       b = h;
-    
         while (a > 0)
         {
             for (long i = a; i < b; i += 2)
@@ -87,16 +86,10 @@ namespace o3dgc
         unsigned long n    = size;
         unsigned long even = 0;
         unsigned long k    = 0;
-        unsigned long tmp[10];
-        unsigned long e[10];
-        tmp[k] = n;
-        e[k] = (n & 1);
         even += ((n&1) << k++);
         while(n > 1)
         {
             n = (n >> 1) + (n & 1);
-            tmp[k] = n;
-            e[k] = (n & 1);
             even += ((n&1) << k++);
         }
         for(long i = k-2; i >= 0; --i)
@@ -162,6 +155,8 @@ namespace o3dgc
 #ifdef DEBUG_VERBOSE
         g_fileDebugDVCDec = fopen("dv_dec.txt", "w");
 #endif //DEBUG_VERBOSE
+        unsigned long       start            = m_iterator;
+        unsigned long       streamSize       = bstream.ReadUInt32(m_iterator, m_streamType);        // bitsream size
 
         const unsigned long dim  = dynamicVector.GetDimVector();
         const unsigned long num  = dynamicVector.GetNVector();
@@ -175,8 +170,6 @@ namespace o3dgc
         Static_Bit_Model bModel0;
         Adaptive_Bit_Model bModel1;
         unsigned char *     buffer           = 0;
-        unsigned long       start            = m_iterator;
-        unsigned long       streamSize       = bstream.ReadUInt32(m_iterator, m_streamType);        // bitsream size
         streamSize                          -= (m_iterator - start);
         unsigned int        exp_k            = 0;
         unsigned int        M                = 0;        

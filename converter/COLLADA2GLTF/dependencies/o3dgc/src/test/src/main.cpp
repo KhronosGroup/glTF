@@ -41,6 +41,7 @@ THE SOFTWARE.
 #include "o3dgcDynamicVectorDecoder.h"
 
 //#define ADD_FAKE_ANIMATION_WEIGHTS
+//#define TEST_DYNAMIC_VECTOR_ENCODING
 
 
 #ifdef WIN32
@@ -54,7 +55,7 @@ using namespace o3dgc;
 class IVec3Cmp 
 {
    public:
-      bool operator()(const Vec3<Index> a,const Vec3<Index> b) 
+      bool operator()(const Vec3<unsigned long> a,const Vec3<unsigned long> b) 
       { 
           if (a.X() != b.X())
           {
@@ -91,7 +92,7 @@ bool LoadOBJ(const std::string & fileName,
              std::vector< Vec3<Real> > & upoints,
              std::vector< Vec2<Real> > & utexCoords,
              std::vector< Vec3<Real> > & unormals,
-             std::vector< Vec3<Index> > & triangles,
+             std::vector< Vec3<unsigned long> > & triangles,
              std::vector< unsigned long > & indexBufferIDs,
              std::vector< Material > & materials,
              std::string & materialLib);
@@ -100,14 +101,14 @@ bool LoadIFS(const std::string & fileName,
              std::vector< Vec3<Real> > & points,
              std::vector< Vec2<Real> > & texCoords,
              std::vector< Vec3<Real> > & normals,
-             std::vector< Vec3<Index> > & triangles,
+             std::vector< Vec3<unsigned long> > & triangles,
              std::vector< unsigned long > & indexBufferIDs);
 
 bool SaveOBJ(const std::string & fileName, 
              const std::vector< Vec3<Real> > & points,
              const std::vector< Vec2<Real> > & texCoords,
              const std::vector< Vec3<Real> > & normals,
-             const std::vector< Vec3<Index> > & triangles,
+             const std::vector< Vec3<unsigned long> > & triangles,
              const std::vector< Material > & materials,
              const std::vector< unsigned long > indexBufferIDs,
              const std::string & materialLib);
@@ -120,8 +121,8 @@ bool SaveMaterials(const std::string & fileName,
                    const std::vector< Material > & materials, 
                    const std::string & materialLib);
 bool SaveIFS(const std::string & fileName, 
-             const IndexedFaceSet<Index> & ifs);
-bool Check(const IndexedFaceSet<Index> & ifs);
+             const IndexedFaceSet<unsigned long> & ifs);
+bool Check(const IndexedFaceSet<unsigned long> & ifs);
 
 int testEncode(const std::string & fileName, int qcoord, int qtexCoord, int qnormal, O3DGCStreamType streamType)
 {
@@ -140,7 +141,7 @@ int testEncode(const std::string & fileName, int qcoord, int qtexCoord, int qnor
     std::vector< Vec3<Real> > points;
     std::vector< Vec3<Real> > normals;
     std::vector< Vec2<Real> > texCoords;
-    std::vector< Vec3<Index> > triangles;
+    std::vector< Vec3<unsigned long> > triangles;
     std::vector< unsigned long > indexBufferIDs;
     std::vector< Material > materials;
 
@@ -216,10 +217,10 @@ int testEncode(const std::string & fileName, int qcoord, int qtexCoord, int qnor
     
     SC3DMCEncodeParams params;
     params.SetStreamType(streamType);
-    IndexedFaceSet<Index> ifs;
+    IndexedFaceSet<unsigned long> ifs;
 
     ifs.SetNCoordIndex((unsigned long)triangles.size());
-    ifs.SetCoordIndex((Index * const ) &(triangles[0]));
+    ifs.SetCoordIndex((unsigned long * const ) &(triangles[0]));
     if (materials.size() > 1)
     {
         ifs.SetIndexBufferID((unsigned long * const ) &(indexBufferIDs[0]));
@@ -301,7 +302,7 @@ int testEncode(const std::string & fileName, int qcoord, int qtexCoord, int qnor
     BinaryStream bstream((unsigned long)points.size()*8);
 
     SaveIFS("debug_enc.txt", ifs);
-    SC3DMCEncoder<Index> encoder;
+    SC3DMCEncoder<unsigned long> encoder;
     Timer timer;
     timer.Tic();
     encoder.Encode(params, ifs, bstream);
@@ -352,7 +353,7 @@ int testDecode(std::string & fileName)
     std::vector< Vec3<Real> > points;
     std::vector< Vec3<Real> > normals;
     std::vector< Vec2<Real> > texCoords;
-    std::vector< Vec3<Index> > triangles;
+    std::vector< Vec3<unsigned long> > triangles;
     std::vector< unsigned long > indexBufferIDs;
     std::vector< Material > materials;
     std::string materialLib;
@@ -375,7 +376,7 @@ int testDecode(std::string & fileName)
     
 
     BinaryStream bstream;
-    IndexedFaceSet<Index> ifs;
+    IndexedFaceSet<unsigned long> ifs;
 
 
     FILE * fin = fopen(fileName.c_str(), "rb");
@@ -396,7 +397,7 @@ int testDecode(std::string & fileName)
     fclose(fin);
     std::cout << "Bitstream size (bytes) " << bstream.GetSize() << std::endl;
 
-    SC3DMCDecoder<Index> decoder;
+    SC3DMCDecoder<unsigned long> decoder;
     // load header
     Timer timer;
     timer.Tic();
@@ -406,7 +407,7 @@ int testDecode(std::string & fileName)
 
     // allocate memory
     triangles.resize(ifs.GetNCoordIndex());
-    ifs.SetCoordIndex((Index * const ) &(triangles[0]));
+    ifs.SetCoordIndex((unsigned long * const ) &(triangles[0]));
 
     points.resize(ifs.GetNCoord());
     ifs.SetCoord((Real * const ) &(points[0]));
@@ -521,19 +522,19 @@ int testDynamicVectorCompression()
         x += e;
     }
 
-    DynamicVector  dynamicVectorEncoder;
-    dynamicVectorEncoder.SetVectors(vectors);
-    dynamicVectorEncoder.SetDimVector(3);
-    dynamicVectorEncoder.SetMax(max);
-    dynamicVectorEncoder.SetMin(min);
-    dynamicVectorEncoder.SetNVector(N);
-    dynamicVectorEncoder.SetStride(3);
-    dynamicVectorEncoder.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
+    DynamicVector dynamicVector0;
+    dynamicVector0.SetVectors(vectors);
+    dynamicVector0.SetDimVector(3);
+    dynamicVector0.SetMax(max);
+    dynamicVector0.SetMin(min);
+    dynamicVector0.SetNVector(N);
+    dynamicVector0.SetStride(3);
+    dynamicVector0.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
 
     DVEncodeParams params;
-    params.SetQuantBits(12);
-//    params.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
-    params.SetStreamType(O3DGC_STREAM_TYPE_BINARY);
+    params.SetQuantBits(10);
+    params.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
+//    params.SetStreamType(O3DGC_STREAM_TYPE_BINARY);
     
     BinaryStream bstream(N*D*16);
 
@@ -542,26 +543,26 @@ int testDynamicVectorCompression()
     encoder.SetStreamType(O3DGC_STREAM_TYPE_BINARY);
     Timer timer;
     timer.Tic();
-    encoder.Encode(params, dynamicVectorEncoder, bstream);
+    encoder.Encode(params, dynamicVector0, bstream);
     timer.Toc();
     std::cout << "Encode time (ms) " << timer.GetElapsedTime() << std::endl;
 
 
-    DynamicVector  dynamicVectorDecoder;
+    DynamicVector  dynamicVector1;
     DynamicVectorDecoder decoder;
-    decoder.DecodeHeader(dynamicVectorDecoder, bstream);
-    dynamicVectorDecoder.SetStride(dynamicVectorDecoder.GetDimVector());
+    decoder.DecodeHeader(dynamicVector1, bstream);
+    dynamicVector1.SetStride(dynamicVector1.GetDimVector());
 
     std::vector<Real> oDV;
     std::vector<Real> oDVMin;
     std::vector<Real> oDVMax;
-    oDV.resize(dynamicVectorDecoder.GetNVector() * dynamicVectorDecoder.GetDimVector());
-    oDVMin.resize(dynamicVectorDecoder.GetDimVector());
-    oDVMax.resize(dynamicVectorDecoder.GetDimVector());
-    dynamicVectorDecoder.SetVectors(& oDV[0]);
-    dynamicVectorDecoder.SetMin(& oDVMin[0]);
-    dynamicVectorDecoder.SetMax(& oDVMax[0]);
-    decoder.DecodePlayload(dynamicVectorDecoder, bstream);
+    oDV.resize(dynamicVector1.GetNVector() * dynamicVector1.GetDimVector());
+    oDVMin.resize(dynamicVector1.GetDimVector());
+    oDVMax.resize(dynamicVector1.GetDimVector());
+    dynamicVector1.SetVectors(& oDV[0]);
+    dynamicVector1.SetMin(& oDVMin[0]);
+    dynamicVector1.SetMax(& oDVMax[0]);
+    decoder.DecodePlayload(dynamicVector1, bstream);
 
     FILE * fout = fopen(outFileName.c_str(), "wb");
     if (!fout)
@@ -570,18 +571,17 @@ int testDynamicVectorCompression()
     }
     fwrite(bstream.GetBuffer(), 1, bstream.GetSize(), fout);
     fclose(fout);
-    std::cout << "Bitstream size (bytes) " << bstream.GetSize() << " (" << bstream.GetSize() * 8.0 / dynamicVectorEncoder.GetNVector() << " bpv)" <<std::endl;
+    std::cout << "Bitstream size (bytes) " << bstream.GetSize() << " (" << bstream.GetSize() * 8.0 / dynamicVector1.GetNVector() << " bpv)" <<std::endl;
     return 0;
 }
 
-int main(int argc, char * argv[])
+int testIFSCompression(int argc, char * argv[])
 {
-//    return testDynamicVectorCompression();
-    Mode mode = UNKNOWN;
+        Mode mode = UNKNOWN;
     std::string inputFileName;
-    int qcoord    = 14;
-    int qtexCoord = 14;
-    int qnormal   = 14;
+    int qcoord    = 12;
+    int qtexCoord = 10;
+    int qnormal   = 8;
     O3DGCStreamType streamType = O3DGC_STREAM_TYPE_BINARY;
     for(int i = 1; i < argc; ++i)
     {
@@ -678,11 +678,20 @@ int main(int argc, char * argv[])
     }
     return 0;
 }
+
+int main(int argc, char * argv[])
+{
+#ifdef TEST_DYNAMIC_VECTOR_ENCODING
+    return testDynamicVectorCompression();
+#else
+    return testIFSCompression(argc, argv);
+#endif
+}
 bool LoadOBJ(const std::string & fileName, 
              std::vector< Vec3<Real> > & upoints,
              std::vector< Vec2<Real> > & utexCoords,
              std::vector< Vec3<Real> > & unormals,
-             std::vector< Vec3<Index> > & triangles,
+             std::vector< Vec3<unsigned long> > & triangles,
              std::vector< unsigned long > & indexBufferIDs,
              std::vector< Material > & materials,
              std::string & materialLib) 
@@ -695,20 +704,20 @@ bool LoadOBJ(const std::string & fileName,
     {        
         char buffer[BufferSize];
         Real  x[3];
-        Index ip[3] = {(Index)(-1), (Index)(-1), (Index)(-1)};
-        Index in[3] = {(Index)(-1), (Index)(-1), (Index)(-1)};
-        Index it[3] = {(Index)(-1), (Index)(-1), (Index)(-1)};
+        unsigned long ip[3] = {(unsigned long)(-1), (unsigned long)(-1), (unsigned long)(-1)};
+        unsigned long in[3] = {(unsigned long)(-1), (unsigned long)(-1), (unsigned long)(-1)};
+        unsigned long it[3] = {(unsigned long)(-1), (unsigned long)(-1), (unsigned long)(-1)};
         unsigned long indexBufferID = 0;
         unsigned long numMatID = 0;
         char * pch;
         char * str;
-        Index nv = 0;
-        Vec3<Index> vertex;
-        Vec3<Index> triangle;
+        unsigned long nv = 0;
+        Vec3<unsigned long> vertex;
+        Vec3<unsigned long> triangle;
         std::vector< Vec3<Real> > points;
         std::vector< Vec2<Real> > texCoords;
         std::vector< Vec3<Real> > normals;
-        std::map< Vec3<Index>, Index, IVec3Cmp > vertices;
+        std::map< Vec3<unsigned long>, unsigned long, IVec3Cmp > vertices;
         std::map< std::string, unsigned long > matMap;
         materialLib.clear();        
         indexBufferIDs.clear();
@@ -834,7 +843,7 @@ bool LoadOBJ(const std::string & fileName,
                     vertex.X() = ip[k];
                     vertex.Y() = in[k];
                     vertex.Z() = it[k];
-                    std::map< Vec3<Index>, Index, IVec3Cmp >::iterator it = vertices.find(vertex);
+                    std::map< Vec3<unsigned long>, unsigned long, IVec3Cmp >::iterator it = vertices.find(vertex);
                     if ( it == vertices.end() )
                     {
                         vertices[vertex] = nv;
@@ -866,7 +875,7 @@ bool LoadOBJ(const std::string & fileName,
         {
             utexCoords.resize(nv);
         }
-        for (std::map< Vec3<Index>, Index, IVec3Cmp >::iterator it = vertices.begin(); it != vertices.end(); ++it)
+        for (std::map< Vec3<unsigned long>, unsigned long, IVec3Cmp >::iterator it = vertices.begin(); it != vertices.end(); ++it)
         {
             if (points.size() > 0)
             {
@@ -894,7 +903,7 @@ bool SaveOBJ(const std::string & fileName,
              const std::vector< Vec3<Real> > & points,
              const std::vector< Vec2<Real> > & texCoords,
              const std::vector< Vec3<Real> > & normals,
-             const std::vector< Vec3<Index> > & triangles,
+             const std::vector< Vec3<unsigned long> > & triangles,
              const std::vector< Material > & materials,
              const std::vector< unsigned long > indexBufferIDs,
              const std::string & materialLib)
@@ -1098,7 +1107,7 @@ void SaveIFSArray(std::ofstream & fout,
         fout << std::endl;
     }
 }
-bool SaveIFS(const std::string & fileName, const IndexedFaceSet<Index> & ifs)
+bool SaveIFS(const std::string & fileName, const IndexedFaceSet<unsigned long> & ifs)
 {
     std::ofstream fout;
     fout.open(fileName.c_str());
@@ -1129,7 +1138,7 @@ bool LoadIFS(const std::string & fileName,
              std::vector< Vec3<Real> > & points,
              std::vector< Vec2<Real> > & texCoords,
              std::vector< Vec3<Real> > & normals,
-             std::vector< Vec3<Index> > & triangles,
+             std::vector< Vec3<unsigned long> > & triangles,
              std::vector< unsigned long > & indexBufferIDs)
 {
     std::ifstream fin;
@@ -1217,11 +1226,11 @@ bool LoadIFS(const std::string & fileName,
         return false;
     }
 }
-bool Check(const IndexedFaceSet<Index> & ifs)
+bool Check(const IndexedFaceSet<unsigned long> & ifs)
 {
     unsigned int nt = ifs.GetNCoordIndex() * 3;
     unsigned int nv = ifs.GetNCoord();
-    const Index * const triangles = ifs.GetCoordIndex();
+    const unsigned long * const triangles = ifs.GetCoordIndex();
     for(unsigned int i = 0; i < nt; ++i)
     {
         if ( triangles[i] < 0 || triangles[i] >= nv )

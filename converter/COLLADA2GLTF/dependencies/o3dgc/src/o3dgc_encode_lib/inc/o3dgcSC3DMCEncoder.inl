@@ -62,7 +62,7 @@ namespace o3dgc
         m_posSize = bstream.GetSize();
         bstream.WriteUInt32(0, m_streamType); // to be filled later
 
-        bstream.WriteUChar(O3DGC_SC3DMC_TFAN, m_streamType);
+        bstream.WriteUChar(O3DGC_SC3DMC_ENCODE_MODE_TFAN, m_streamType);
         bstream.WriteFloat32((float)ifs.GetCreaseAngle(), m_streamType);
           
         unsigned char mask = 0;

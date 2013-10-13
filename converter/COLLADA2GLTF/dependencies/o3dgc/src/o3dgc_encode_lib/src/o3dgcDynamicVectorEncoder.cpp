@@ -154,7 +154,6 @@ namespace o3dgc
         Static_Bit_Model bModel0;
         Adaptive_Bit_Model bModel1;
         Adaptive_Data_Model mModelValues(M+2);
-
         const unsigned int NMAX = num * dim * 8 + 100;
         if ( m_sizeBufferAC < NMAX )
         {
@@ -187,7 +186,10 @@ namespace o3dgc
         unsigned long      start = bstream.GetSize();
         const unsigned long dim  = dynamicVector.GetDimVector();
         const unsigned long num  = dynamicVector.GetNVector();
-        const unsigned long size = dim * num;        
+        const unsigned long size = dim * num;
+
+        bstream.WriteUInt32(0, m_streamType);
+
         for(unsigned long j=0 ; j<dynamicVector.GetDimVector() ; ++j)
         {
             bstream.WriteFloat32((float) dynamicVector.GetMin(j), m_streamType);
@@ -217,7 +219,6 @@ namespace o3dgc
         }
         #endif //DEBUG_VERBOSE
 
-        bstream.WriteUInt32(0, m_streamType);
         if (m_streamType == O3DGC_STREAM_TYPE_ASCII)
         {
             for(unsigned long v = 0; v < num; ++v)

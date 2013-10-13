@@ -1,5 +1,11 @@
 # Open 3D Graphics Compression (Open3DGC)
 
+ + Repository: 
+   https://github.com/amd/rest3d/tree/master/server/o3dgc
+   
+ + License:
+   https://github.com/amd/rest3d/blob/master/LICENSE.md
+
 ## Objective
   Provide an efficient implementation of patent free MPEG tools for 3D graphics compression
 

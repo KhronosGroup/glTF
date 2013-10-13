@@ -35,7 +35,6 @@ THE SOFTWARE.
 namespace o3dgc
 {
     typedef float        Real;
-    typedef unsigned int Index;
     const double O3DGC_MAX_DOUBLE       = 1.79769e+308;
     const long O3DGC_MIN_LONG           = -2147483647;
     const long O3DGC_MAX_LONG           =  2147483647;
@@ -49,7 +48,7 @@ namespace o3dgc
     const unsigned long O3DGC_SC3DMC_MAX_NUM_INT_ATTRIBUTES   = 256;
     const unsigned long O3DGC_SC3DMC_MAX_DIM_ATTRIBUTES = 32;
 
-    const unsigned long O3DGC_SC3DMC_MAX_PREDICTION_NEIGHBORS = 8;
+    const unsigned long O3DGC_SC3DMC_MAX_PREDICTION_NEIGHBORS = 2;
     const unsigned long O3DGC_SC3DMC_MAX_PREDICTION_SYMBOLS   = 257;
 
     enum O3DGCEndianness
@@ -100,13 +99,13 @@ namespace o3dgc
     };
     enum O3DGCSC3DMCEncodingMode
     {
-        O3DGC_SC3DMC_QBCR       = 0,        // not supported
-        O3DGC_SC3DMC_SVA        = 1,        // not supported
-        O3DGC_SC3DMC_TFAN       = 2,        // supported
+        O3DGC_SC3DMC_ENCODE_MODE_QBCR       = 0,        // not supported
+        O3DGC_SC3DMC_ENCODE_MODE_SVA        = 1,        // not supported
+        O3DGC_SC3DMC_ENCODE_MODE_TFAN       = 2,        // supported
     };
     enum O3DGCDVEncodingMode
     {
-        O3DGC_DYNAMIC_VECTOR_LIFT       = 0
+        O3DGC_DYNAMIC_VECTOR_ENCODE_MODE_LIFT       = 0
     };
     enum O3DGCIFSFloatAttributeType
     {
