@@ -93,19 +93,7 @@ namespace GLTF
         TRSBufferViews.push_back(scaleBufferView);
     }
     
-    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                  GLTFAnimation::Parameter *parameter) {
-        shared_ptr<JSONObject> sampler(new JSONObject());
-        std::string name = parameter->getID();
-        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
-        sampler->setString("input", "TIME");           //FIXME:harcoded for now
-        sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-        sampler->setString("output", name);
-        cvtAnimation->samplers()->setValue(samplerID, sampler);
-        
-        return samplerID;
-    }
-            
+    
     /*
      The animation creation/write is in 2 steps.
      We first create the animation, but then, we need to set the channels for every targets, and targets ids are not available when animations are created
