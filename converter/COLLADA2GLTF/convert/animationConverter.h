@@ -314,8 +314,6 @@ namespace GLTF
             COLLADAFW::Transformation::TransformationType transformationType = previousTransform->getTransformationType();
             shared_ptr<COLLADAFW::Transformation> transform(previousTransform->clone());
             
-            return transform;
-            
             switch (transformationType) {
                 case COLLADAFW::Transformation::ROTATE:
                 {
