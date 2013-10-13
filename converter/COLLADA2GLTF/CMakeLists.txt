@@ -135,8 +135,9 @@ set(GLTF_SOURCES main.cpp
     GitSHA1.h)
 
 if (USE_OPEN3DGC)
+LIST(APPEND GLTF_SOURCES
     extensions/o3dgc-compression/GLTF-Open3DGC.cpp
-    extensions/o3dgc-compression/GLTF-Open3DGC.h
+    extensions/o3dgc-compression/GLTF-Open3DGC.h)
 endif()
 
 if (WIN32)
