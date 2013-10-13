@@ -39,6 +39,7 @@ endif()
 
 if (USE_OPEN3DGC)
     add_definitions( -DUSE_OPEN3DGC )
+    include_directories(${COLLADA2GLTF_SOURCE_DIR}/extensions/o3dgc-compression)
 
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_common_lib/inc)
@@ -132,6 +133,11 @@ set(GLTF_SOURCES main.cpp
     convert/animationConverter.h
     ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
     GitSHA1.h)
+
+if (USE_OPEN3DGC)
+    extensions/o3dgc-compression/GLTF-Open3DGC.cpp
+    extensions/o3dgc-compression/GLTF-Open3DGC.h
+endif()
 
 if (WIN32)
 LIST(APPEND GLTF_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
