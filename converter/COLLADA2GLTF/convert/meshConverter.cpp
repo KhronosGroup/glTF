@@ -28,7 +28,6 @@
 
 #include "../extensions/o3dgc-compression/GLTF-Open3DGC.h"
 
-using namespace o3dgc;
 #endif
 //--- X3DGC
 
@@ -67,13 +66,11 @@ namespace GLTF
 #endif
         
 #ifdef USE_OPEN3DGC
-        SC3DMCEncodeParams params;
-        IndexedFaceSet <unsigned short> ifs;
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
         shouldOGCompressMesh = (converterContext.compressionType == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
         unsigned compressedBufferStart = compressionOutputStream->length();
         if (shouldOGCompressMesh) {
-            encodeOpen3DGCMesh(mesh, params, ifs, floatAttributeIndexMapping, converterContext);
+            encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, converterContext);
         }
 #endif
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;

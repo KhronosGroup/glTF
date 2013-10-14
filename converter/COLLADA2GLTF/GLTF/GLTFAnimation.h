@@ -48,6 +48,8 @@ namespace GLTF
 
             size_t getByteOffset();
             void setByteOffset(size_t byteOffset);
+            
+            shared_ptr <JSONObject> extensions();
         private:
             Parameter();
         private:
@@ -56,6 +58,7 @@ namespace GLTF
             size_t _byteOffset;
             size_t _count;
             shared_ptr <GLTFBufferView> _bufferView;
+            shared_ptr <JSONObject> _extensions;
         };
         
         GLTFAnimation();

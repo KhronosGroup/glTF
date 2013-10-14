@@ -26,6 +26,15 @@
 #include "../GLTFConverterContext.h"
 #include "GLTF-Open3DGC.h"
 
+#include "o3dgcSC3DMCEncodeParams.h"
+#include "o3dgcIndexedFaceSet.h"
+#include "o3dgcSC3DMCEncoder.h"
+#include "o3dgcSC3DMCDecoder.h"
+
+#include "o3dgcTimer.h"
+#include "o3dgcDVEncodeParams.h"
+#include "o3dgcDynamicVectorEncoder.h"
+
 #define DUMP_O3DGC_OUTPUT 0
 
 using namespace o3dgc;
@@ -212,11 +221,12 @@ namespace GLTF
     }
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
-                            SC3DMCEncodeParams &params,
-                            IndexedFaceSet <unsigned short> &ifs,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
                             const GLTFConverterContext& converterContext)
     {
+        o3dgc::SC3DMCEncodeParams params;
+        o3dgc::IndexedFaceSet <unsigned short> ifs;
+
         //setup options
         int qcoord    = 12;
         int qtexCoord = 10;
@@ -396,5 +406,36 @@ namespace GLTF
             free(primitiveIDs);
         }
     }
+    
+    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFOutputStream *outputStream)
+    {
+        Real max[componentsCount];
+        Real min[componentsCount];
+        
+        DynamicVector dynamicVector;
+        dynamicVector.SetVectors(buffer);
+        dynamicVector.SetDimVector(componentsCount);
+        dynamicVector.SetMax(max);
+        dynamicVector.SetMin(min);
+        dynamicVector.SetNVector(count);
+        dynamicVector.SetStride(componentsCount);
+        dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
+        
+        DVEncodeParams params;
+        params.SetQuantBits(10);
+        params.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
+        
+        DynamicVectorEncoder encoder;
+        
+        encoder.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
+        Timer timer;
+        timer.Tic();
+        BinaryStream bstream(componentsCount * count * 16);
+        encoder.Encode(params, dynamicVector, bstream);
+        timer.Toc();
+        
+        outputStream->write((const char*)bstream.GetBuffer(), bstream.GetSize());
+    }
+
 }
 

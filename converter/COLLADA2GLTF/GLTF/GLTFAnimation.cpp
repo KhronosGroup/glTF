@@ -29,7 +29,6 @@ namespace GLTF
 {
     
     //-- GLTFAnimation::Parameter
-    
     GLTFAnimation::Parameter::Parameter() {
         this->_id = GLTFUtils::generateIDForType("parameter");
     }
@@ -82,6 +81,12 @@ namespace GLTF
         this->_count = count;
     }
 
+    shared_ptr <JSONObject> GLTFAnimation::Parameter::extensions() {
+        if (!this->_extensions) {
+            this->_extensions = shared_ptr<JSONObject> (new JSONObject());
+        }
+        return this->_extensions;
+    }
 
     //-- GLTFAnimation
     

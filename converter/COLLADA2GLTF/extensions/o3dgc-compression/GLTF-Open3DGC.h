@@ -24,21 +24,15 @@
 #ifndef __GLTF_Open3DGC__
 #define __GLTF_Open3DGC__
 
-#include "o3dgcSC3DMCEncodeParams.h"
-#include "o3dgcIndexedFaceSet.h"
-#include "o3dgcSC3DMCEncoder.h"
-#include "o3dgcSC3DMCDecoder.h"
-
-namespace GLTF 
+namespace GLTF
 {
     bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh);
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
-                            o3dgc::SC3DMCEncodeParams &params,
-                            o3dgc::IndexedFaceSet <unsigned short> &ifs,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
                             const GLTFConverterContext& converterContext);
+    
+    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFOutputStream *outputStream);
 }
-
 
 #endif

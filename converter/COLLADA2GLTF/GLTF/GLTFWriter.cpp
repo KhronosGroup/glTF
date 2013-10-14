@@ -255,6 +255,11 @@ namespace GLTF
         animationParameterObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString(animationParameter->getType()));
         animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
         animationParameterObject->setUnsignedInt32("count", animationParameter->getCount());
+    
+        shared_ptr <JSONObject> extensions = animationParameter->extensions();
+        if (extensions->getKeysCount() > 0) {
+            animationParameterObject->setValue("extensions", extensions);
+        }
         
         return animationParameterObject;
     }

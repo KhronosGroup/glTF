@@ -195,6 +195,8 @@ namespace GLTF
                             }
                         }
                     }
+                    cvtAnimation->removeParameterNamed("OUTPUT");
+
                 } else {
                     //FIXME: report error
                     printf("WARNING: cannot find intermediate parameter named OUTPUT\n");

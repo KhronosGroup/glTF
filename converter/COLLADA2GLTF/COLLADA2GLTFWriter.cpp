@@ -28,6 +28,7 @@
 #include "COLLADA2GLTFWriter.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
+#include "GLTF-Open3DGC.h"
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
 
@@ -114,13 +115,35 @@ namespace GLTF
                                                   const std::string& parameterSID,
                                                   const std::string& parameterType,
                                                   unsigned char* buffer, size_t length,
-                                                  GLTFOutputStream *outputStream) {
+                                                  GLTFOutputStream *outputStream,
+                                                  GLTFConverterContext &converterContext) {
         //setup
         shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
-        
+        shared_ptr <GLTFProfile> profile = converterContext.profile;
         //write
-        parameter->setByteOffset(outputStream->length());
-        outputStream->write((const char*)buffer, length);
+        size_t byteOffset = outputStream->length();
+        parameter->setByteOffset(byteOffset);
+
+        bool shouldEncodeOpen3DGC = converterContext.compressionType == "Open3DGC";
+        if (shouldEncodeOpen3DGC) {
+            unsigned int glType = profile->getGLenumForString(parameterType);
+            size_t componentsCount = profile->getComponentsCountForType(glType);
+            if (componentsCount) {
+                encodeDynamicVector((float*)buffer, componentsCount, cvtAnimation->getCount(), outputStream);
+                
+                size_t bytesCount = outputStream->length() - byteOffset;
+                
+                shared_ptr<JSONObject> compressionObject = parameter->extensions()->createObjectIfNeeded("Open3DGC-compression");
+                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
+                
+                compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
+                compressionDataObject->setUnsignedInt32("count", bytesCount);
+                compressionDataObject->setString("mode", converterContext.compressionMode);
+                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
+            }
+        } else {
+            outputStream->write((const char*)buffer, length);
+        }
     }
 
     /*
@@ -218,7 +241,12 @@ namespace GLTF
         this->_converterContext.root->setValue("animations", animationsObject);
         
         std::map<std::string, bool> targetProcessed;
-        std::vector<unsigned int > animationsToBeRemoved;
+        std::vector<unsigned int> animationsToBeRemoved;
+        
+        bool shouldCompressAnimations = this->_converterContext.compressionType == "Open3DGC";
+        GLTFOutputStream *animationOutputStream = shouldCompressAnimations ?
+            this->_converterContext._compressionOutputStream :
+            this->_converterContext._animationOutputStream;
         
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
@@ -252,7 +280,8 @@ namespace GLTF
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)scales,
                                                       count * sizeof(float) * 3,
-                                                      this->_converterContext._animationOutputStream);
+                                                      animationOutputStream,
+                                                      this->_converterContext);
                     __AddChannel(animation, targetID, "scale");
                     free(scales);
                 }
@@ -264,7 +293,8 @@ namespace GLTF
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)positions,
                                                       count * sizeof(float) * 3,
-                                                      this->_converterContext._animationOutputStream);
+                                                      animationOutputStream,
+                                                      this->_converterContext);
                     __AddChannel(animation, targetID, "translation");
                     free(positions);
                 }
@@ -276,7 +306,8 @@ namespace GLTF
                                                       "FLOAT_VEC4",
                                                       (unsigned char*)rotations,
                                                       count * sizeof(float) * 4,
-                                                      this->_converterContext._animationOutputStream);
+                                                      animationOutputStream,
+                                                      this->_converterContext);
                     __AddChannel(animation, targetID, "rotation");
                     free(rotations);
                 }
@@ -378,7 +409,7 @@ namespace GLTF
                         void *serializationContext[4];
                         serializationContext[0] = isCompressed ? (void*)compressionBufferView.get() : (void*)verticesBufferView.get();
                         serializationContext[1] = isCompressed ? (void*)compressionBufferView.get() : (void*)indicesBufferView.get();
-                        serializationContext[2] = (void*)genericBufferView.get();
+                        serializationContext[2] = isCompressed ? (void*)compressionBufferView.get() : (void*)genericBufferView.get();
                         serializationContext[3] = (void*)&this->_converterContext;
 
                         shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)serializationContext);
@@ -387,7 +418,6 @@ namespace GLTF
                         vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
                         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
                             GLTF::Semantic semantic = allSemantics[i];
-                            
                             GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
                             GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
                             
@@ -407,8 +437,8 @@ namespace GLTF
                         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
                             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
                             shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
-                            
                             shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)serializationContext);
+                            
                             indices->setValue(uniqueIndices->getID(), serializedIndices);
                         }
                         
@@ -492,7 +522,15 @@ namespace GLTF
             
             for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
                 shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
-                parameter->setBufferView(genericBufferView);
+                
+                bool animationIsCompressed = false;
+                if (parameter->extensions()->getKeysCount() > 0) {
+                    if (parameter->extensions()->contains("Open3DGC-compression")) {
+                        animationIsCompressed = true;
+                    }
+                }
+                
+                parameter->setBufferView(animationIsCompressed ? compressionBufferView : genericBufferView);
             }
             
             if (animation->channels()->values().size() > 0) {
@@ -509,7 +547,6 @@ namespace GLTF
         this->_converterContext.root->setValue("buffers", buffersObject);
         buffersObject->setValue(sharedBufferID, bufferObject);
         buffersObject->setValue(compressedBufferID, bufferObject1);
-
         
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
