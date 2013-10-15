@@ -1,7 +1,7 @@
 {
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cadab1ae180241a1d97279f3be8f9942ead79acc"
+        "generator": "collada2gltf@195fc9350a84f0f3fc3b074a8836ee8b871bebdc"
     },
     "attributes": {
         "attribute_120": {
@@ -19,7 +19,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_122": {
             "bufferView": "bufferView_408",
@@ -36,7 +36,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_124": {
             "bufferView": "bufferView_408",
@@ -51,7 +51,7 @@
                 2.31603,
                 -0.06428
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_147": {
             "bufferView": "bufferView_408",
@@ -68,7 +68,7 @@
                 0,
                 5.5
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_149": {
             "bufferView": "bufferView_408",
@@ -85,7 +85,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_151": {
             "bufferView": "bufferView_408",
@@ -100,7 +100,7 @@
                 -1.14777,
                 -0.08885
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_174": {
             "bufferView": "bufferView_408",
@@ -117,7 +117,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_176": {
             "bufferView": "bufferView_408",
@@ -134,7 +134,7 @@
                 -0.995313,
                 -0.962469
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_178": {
             "bufferView": "bufferView_408",
@@ -149,7 +149,7 @@
                 -0.555297,
                 0.021103
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_221": {
             "bufferView": "bufferView_408",
@@ -166,7 +166,7 @@
                 34.9944,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_223": {
             "bufferView": "bufferView_408",
@@ -183,7 +183,7 @@
                 0,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_225": {
             "bufferView": "bufferView_408",
@@ -198,7 +198,7 @@
                 0.349715,
                 0.987863
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_248": {
             "bufferView": "bufferView_408",
@@ -215,7 +215,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_250": {
             "bufferView": "bufferView_408",
@@ -232,7 +232,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_252": {
             "bufferView": "bufferView_408",
@@ -247,7 +247,7 @@
                 2.31603,
                 -0.06428
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_26": {
             "bufferView": "bufferView_408",
@@ -264,7 +264,7 @@
                 0,
                 5.5
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_270": {
             "bufferView": "bufferView_408",
@@ -281,7 +281,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_272": {
             "bufferView": "bufferView_408",
@@ -298,7 +298,7 @@
                 -0.97185,
                 -0.97185
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_28": {
             "bufferView": "bufferView_408",
@@ -315,7 +315,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_295": {
             "bufferView": "bufferView_408",
@@ -332,7 +332,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_297": {
             "bufferView": "bufferView_408",
@@ -349,7 +349,7 @@
                 -0.999806,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_299": {
             "bufferView": "bufferView_408",
@@ -364,7 +364,7 @@
                 -0.595152,
                 0.013247
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_30": {
             "bufferView": "bufferView_408",
@@ -379,7 +379,7 @@
                 -1.14777,
                 -0.08885
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_317": {
             "bufferView": "bufferView_408",
@@ -396,7 +396,7 @@
                 -0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_319": {
             "bufferView": "bufferView_408",
@@ -413,7 +413,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_342": {
             "bufferView": "bufferView_408",
@@ -430,7 +430,7 @@
                 0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_344": {
             "bufferView": "bufferView_408",
@@ -447,7 +447,7 @@
                 -0.995313,
                 -0.962469
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_346": {
             "bufferView": "bufferView_408",
@@ -462,7 +462,7 @@
                 -0.555297,
                 0.021103
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_389": {
             "bufferView": "bufferView_408",
@@ -479,7 +479,7 @@
                 34.9944,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_391": {
             "bufferView": "bufferView_408",
@@ -496,7 +496,7 @@
                 0,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_393": {
             "bufferView": "bufferView_408",
@@ -511,7 +511,7 @@
                 0.349715,
                 0.987863
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         },
         "attribute_48": {
             "bufferView": "bufferView_408",
@@ -528,7 +528,7 @@
                 -0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_50": {
             "bufferView": "bufferView_408",
@@ -545,7 +545,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_68": {
             "bufferView": "bufferView_408",
@@ -562,7 +562,7 @@
                 -0,
                 0
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_70": {
             "bufferView": "bufferView_408",
@@ -579,7 +579,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_93": {
             "bufferView": "bufferView_408",
@@ -596,7 +596,7 @@
                 0,
                 2.5
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_95": {
             "bufferView": "bufferView_408",
@@ -613,7 +613,7 @@
                 -1,
                 -1
             ],
-            "type": "FLOAT_VEC3"
+            "type": 35665
         },
         "attribute_97": {
             "bufferView": "bufferView_408",
@@ -628,27 +628,38 @@
                 -0.291667,
                 0.352547
             ],
-            "type": "FLOAT_VEC2"
+            "type": 35664
         }
     },
     "bufferViews": {
         "bufferView_408": {
-            "buffer": "wine.bin",
+            "buffer": "wine",
             "byteLength": 284064,
             "byteOffset": 0,
             "target": "ARRAY_BUFFER"
         },
         "bufferView_409": {
-            "buffer": "wine.bin",
+            "buffer": "wine",
             "byteLength": 44940,
             "byteOffset": 284064,
             "target": "ELEMENT_ARRAY_BUFFER"
+        },
+        "bufferView_410": {
+            "buffer": "wine",
+            "byteLength": 0,
+            "byteOffset": 329004
         }
     },
     "buffers": {
-        "wine.bin": {
+        "wine": {
             "byteLength": 329004,
-            "path": "wine.bin"
+            "path": "wine.bin",
+            "type": "arraybuffer"
+        },
+        "winecompression": {
+            "byteLength": 0,
+            "path": "winecompression.bin",
+            "type": "text"
         }
     },
     "cameras": {
@@ -675,263 +686,185 @@
             "bufferView": "bufferView_409",
             "byteOffset": 8208,
             "count": 360,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_145": {
             "bufferView": "bufferView_409",
             "byteOffset": 8928,
             "count": 168,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_172": {
             "bufferView": "bufferView_409",
             "byteOffset": 9264,
             "count": 4740,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_216": {
             "bufferView": "bufferView_409",
             "byteOffset": 18744,
             "count": 66,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_219": {
             "bufferView": "bufferView_409",
             "byteOffset": 18876,
             "count": 66,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_24": {
             "bufferView": "bufferView_409",
             "byteOffset": 0,
             "count": 168,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_246": {
             "bufferView": "bufferView_409",
             "byteOffset": 19008,
             "count": 360,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_268": {
             "bufferView": "bufferView_409",
             "byteOffset": 19728,
             "count": 600,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_293": {
             "bufferView": "bufferView_409",
             "byteOffset": 20928,
             "count": 6918,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_315": {
             "bufferView": "bufferView_409",
             "byteOffset": 34764,
             "count": 216,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_340": {
             "bufferView": "bufferView_409",
             "byteOffset": 35196,
             "count": 4740,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_384": {
             "bufferView": "bufferView_409",
             "byteOffset": 44676,
             "count": 66,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_387": {
             "bufferView": "bufferView_409",
             "byteOffset": 44808,
             "count": 66,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_46": {
             "bufferView": "bufferView_409",
             "byteOffset": 336,
             "count": 1944,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_66": {
             "bufferView": "bufferView_409",
             "byteOffset": 4224,
             "count": 1944,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         },
         "indices_91": {
             "bufferView": "bufferView_409",
             "byteOffset": 8112,
             "count": 48,
-            "type": "UNSIGNED_SHORT"
+            "type": 5123
         }
     },
     "materials": {
-        "material.2": {
+        "ID139": {
             "instanceTechnique": {
                 "technique": "technique1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "texture_image_1"
-                    },
-                    {
-                        "parameter": "reflective",
-                        "value": [
-                            0,
-                            0,
-                            0,
-                            1
-                        ]
-                    }
-                ]
+                "values": {
+                    "ambient": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "diffuse": "texture_image_0"
+                }
             },
-            "name": "Wood_Cherry_Original_"
+            "name": "artezin_bottle"
         },
-        "material.3": {
+        "ID21": {
             "instanceTechnique": {
                 "technique": "technique2",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": [
-                            0.564706,
-                            0.972549,
-                            0.835294,
-                            0.14902
-                        ]
-                    },
-                    {
-                        "parameter": "reflective",
-                        "value": [
-                            0,
-                            0,
-                            0,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "transparency",
-                        "value": 0.14902
-                    }
-                ]
+                "values": {
+                    "ambient": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "diffuse": [
+                        0.564706,
+                        0.972549,
+                        0.835294,
+                        0.14902
+                    ],
+                    "transparency": 0.14902
+                }
             },
             "name": "material_5"
         },
-        "material.4": {
+        "ID6": {
             "instanceTechnique": {
                 "technique": "technique1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "texture_image_2"
-                    },
-                    {
-                        "parameter": "reflective",
-                        "value": [
-                            0,
-                            0,
-                            0,
-                            1
-                        ]
-                    }
-                ]
+                "values": {
+                    "ambient": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "diffuse": "texture_image_1"
+                }
+            },
+            "name": "Wood_Cherry_Original_"
+        },
+        "ID77": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "diffuse": "texture_image_2"
+                }
             },
             "name": "_2004_old_vine_zinfandel_btl_xlg"
         },
-        "material.5": {
+        "ID89": {
             "instanceTechnique": {
                 "technique": "technique3",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": [
-                            1,
-                            1,
-                            1,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "reflective",
-                        "value": [
-                            0,
-                            0,
-                            0,
-                            1
-                        ]
-                    }
-                ]
+                "values": {
+                    "ambient": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
             },
             "name": "material"
-        },
-        "material.6": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "texture_image_0"
-                    },
-                    {
-                        "parameter": "reflective",
-                        "value": [
-                            0,
-                            0,
-                            0,
-                            1
-                        ]
-                    }
-                ]
-            },
-            "name": "artezin_bottle"
         }
     },
     "meshes": {
@@ -940,7 +873,7 @@
             "primitives": [
                 {
                     "indices": "indices_24",
-                    "material": "material.2",
+                    "material": "ID6",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_28",
@@ -955,7 +888,7 @@
             "primitives": [
                 {
                     "indices": "indices_46",
-                    "material": "material.3",
+                    "material": "ID21",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_50",
@@ -969,7 +902,7 @@
             "primitives": [
                 {
                     "indices": "indices_66",
-                    "material": "material.3",
+                    "material": "ID21",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_70",
@@ -983,7 +916,7 @@
             "primitives": [
                 {
                     "indices": "indices_91",
-                    "material": "material.2",
+                    "material": "ID6",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_95",
@@ -998,7 +931,7 @@
             "primitives": [
                 {
                     "indices": "indices_118",
-                    "material": "material.2",
+                    "material": "ID6",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_122",
@@ -1013,7 +946,7 @@
             "primitives": [
                 {
                     "indices": "indices_145",
-                    "material": "material.2",
+                    "material": "ID6",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_149",
@@ -1028,7 +961,7 @@
             "primitives": [
                 {
                     "indices": "indices_172",
-                    "material": "material.4",
+                    "material": "ID77",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_176",
@@ -1043,7 +976,7 @@
             "primitives": [
                 {
                     "indices": "indices_216",
-                    "material": "material.5",
+                    "material": "ID89",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_223",
@@ -1053,7 +986,7 @@
                 },
                 {
                     "indices": "indices_219",
-                    "material": "material.4",
+                    "material": "ID77",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_223",
@@ -1068,7 +1001,7 @@
             "primitives": [
                 {
                     "indices": "indices_246",
-                    "material": "material.2",
+                    "material": "ID6",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_250",
@@ -1083,7 +1016,7 @@
             "primitives": [
                 {
                     "indices": "indices_268",
-                    "material": "material.3",
+                    "material": "ID21",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_272",
@@ -1097,7 +1030,7 @@
             "primitives": [
                 {
                     "indices": "indices_293",
-                    "material": "material.6",
+                    "material": "ID139",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_297",
@@ -1112,7 +1045,7 @@
             "primitives": [
                 {
                     "indices": "indices_315",
-                    "material": "material.3",
+                    "material": "ID21",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_319",
@@ -1126,7 +1059,7 @@
             "primitives": [
                 {
                     "indices": "indices_340",
-                    "material": "material.4",
+                    "material": "ID77",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_344",
@@ -1141,7 +1074,7 @@
             "primitives": [
                 {
                     "indices": "indices_384",
-                    "material": "material.5",
+                    "material": "ID89",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_391",
@@ -1151,7 +1084,7 @@
                 },
                 {
                     "indices": "indices_387",
-                    "material": "material.4",
+                    "material": "ID77",
                     "primitive": "TRIANGLES",
                     "semantics": {
                         "NORMAL": "attribute_391",
@@ -11651,7 +11584,7 @@
             "name": "ID88"
         }
     },
-    "profile": "WebGL 1.0",
+    "profile": "WebGL 1.0.2",
     "programs": {
         "program_0": {
             "fragmentShader": "wine0FS",
@@ -11668,10 +11601,10 @@
     },
     "samplers": {
         "sampler_0": {
-            "magFilter": "LINEAR",
-            "minFilter": "LINEAR",
-            "wrapS": "REPEAT",
-            "wrapT": "REPEAT"
+            "magFilter": 9729,
+            "minFilter": 9729,
+            "wrapS": 10497,
+            "wrapT": 10497
         }
     },
     "scene": "defaultScene",
@@ -11708,37 +11641,34 @@
         "technique1": {
             "parameters": {
                 "ambient": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35666
                 },
                 "diffuse": {
-                    "type": "SAMPLER_2D"
+                    "type": 35678
                 },
                 "normal": {
                     "semantic": "NORMAL",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "normalMatrix": {
                     "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                    "type": "FLOAT_MAT3"
+                    "type": 35675
                 },
                 "position": {
                     "semantic": "POSITION",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "projectionMatrix": {
                     "semantic": "PROJECTION",
-                    "type": "FLOAT_MAT4"
-                },
-                "reflective": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35676
                 },
                 "texcoord0": {
                     "semantic": "TEXCOORD_0",
-                    "type": "FLOAT_VEC2"
+                    "type": 35664
                 },
                 "worldViewMatrix": {
                     "semantic": "WORLDVIEW",
-                    "type": "FLOAT_MAT4"
+                    "type": 35676
                 }
             },
             "pass": "defaultPass",
@@ -11755,7 +11685,6 @@
                                 "diffuse",
                                 "normalMatrix",
                                 "projectionMatrix",
-                                "reflective",
                                 "worldViewMatrix"
                             ],
                             "texcoordBindings": {
@@ -11776,15 +11705,14 @@
                             "u_diffuse": "diffuse",
                             "u_normalMatrix": "normalMatrix",
                             "u_projectionMatrix": "projectionMatrix",
-                            "u_reflective": "reflective",
                             "u_worldViewMatrix": "worldViewMatrix"
                         }
                     },
                     "states": {
-                        "blendEnable": false,
-                        "cullFaceEnable": true,
-                        "depthMask": true,
-                        "depthTestEnable": true
+                        "blendEnable": 0,
+                        "cullFaceEnable": 1,
+                        "depthMask": 1,
+                        "depthTestEnable": 1
                     }
                 }
             }
@@ -11792,36 +11720,33 @@
         "technique2": {
             "parameters": {
                 "ambient": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35666
                 },
                 "diffuse": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35666
                 },
                 "normal": {
                     "semantic": "NORMAL",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "normalMatrix": {
                     "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                    "type": "FLOAT_MAT3"
+                    "type": 35675
                 },
                 "position": {
                     "semantic": "POSITION",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "projectionMatrix": {
                     "semantic": "PROJECTION",
-                    "type": "FLOAT_MAT4"
-                },
-                "reflective": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35676
                 },
                 "transparency": {
-                    "type": "FLOAT"
+                    "type": 5126
                 },
                 "worldViewMatrix": {
                     "semantic": "WORLDVIEW",
-                    "type": "FLOAT_MAT4"
+                    "type": 35676
                 }
             },
             "pass": "defaultPass",
@@ -11838,7 +11763,6 @@
                                 "diffuse",
                                 "normalMatrix",
                                 "projectionMatrix",
-                                "reflective",
                                 "transparency",
                                 "worldViewMatrix"
                             ]
@@ -11856,21 +11780,20 @@
                             "u_diffuse": "diffuse",
                             "u_normalMatrix": "normalMatrix",
                             "u_projectionMatrix": "projectionMatrix",
-                            "u_reflective": "reflective",
                             "u_transparency": "transparency",
                             "u_worldViewMatrix": "worldViewMatrix"
                         }
                     },
                     "states": {
-                        "blendEnable": true,
-                        "blendEquation": "FUNC_ADD",
+                        "blendEnable": 1,
+                        "blendEquation": 32774,
                         "blendFunc": {
-                            "dfactor": "ONE_MINUS_SRC_ALPHA",
-                            "sfactor": "SRC_ALPHA"
+                            "dfactor": 771,
+                            "sfactor": 770
                         },
-                        "cullFaceEnable": true,
-                        "depthMask": false,
-                        "depthTestEnable": true
+                        "cullFaceEnable": 1,
+                        "depthMask": 0,
+                        "depthTestEnable": 1
                     }
                 }
             }
@@ -11878,33 +11801,30 @@
         "technique3": {
             "parameters": {
                 "ambient": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35666
                 },
                 "diffuse": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35666
                 },
                 "normal": {
                     "semantic": "NORMAL",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "normalMatrix": {
                     "semantic": "WORLDVIEWINVERSETRANSPOSE",
-                    "type": "FLOAT_MAT3"
+                    "type": 35675
                 },
                 "position": {
                     "semantic": "POSITION",
-                    "type": "FLOAT_VEC3"
+                    "type": 35665
                 },
                 "projectionMatrix": {
                     "semantic": "PROJECTION",
-                    "type": "FLOAT_MAT4"
-                },
-                "reflective": {
-                    "type": "FLOAT_VEC4"
+                    "type": 35676
                 },
                 "worldViewMatrix": {
                     "semantic": "WORLDVIEW",
-                    "type": "FLOAT_MAT4"
+                    "type": 35676
                 }
             },
             "pass": "defaultPass",
@@ -11921,7 +11841,6 @@
                                 "diffuse",
                                 "normalMatrix",
                                 "projectionMatrix",
-                                "reflective",
                                 "worldViewMatrix"
                             ]
                         },
@@ -11938,15 +11857,14 @@
                             "u_diffuse": "diffuse",
                             "u_normalMatrix": "normalMatrix",
                             "u_projectionMatrix": "projectionMatrix",
-                            "u_reflective": "reflective",
                             "u_worldViewMatrix": "worldViewMatrix"
                         }
                     },
                     "states": {
-                        "blendEnable": false,
-                        "cullFaceEnable": true,
-                        "depthMask": true,
-                        "depthTestEnable": true
+                        "blendEnable": 0,
+                        "cullFaceEnable": 1,
+                        "depthMask": 1,
+                        "depthTestEnable": 1
                     }
                 }
             }
@@ -11954,25 +11872,25 @@
     },
     "textures": {
         "texture_image_0": {
-            "format": "RGBA",
-            "internalFormat": "RGBA",
+            "format": 6408,
+            "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_0",
-            "target": "TEXTURE_2D"
+            "target": 3553
         },
         "texture_image_1": {
-            "format": "RGBA",
-            "internalFormat": "RGBA",
+            "format": 6408,
+            "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_1",
-            "target": "TEXTURE_2D"
+            "target": 3553
         },
         "texture_image_2": {
-            "format": "RGBA",
-            "internalFormat": "RGBA",
+            "format": 6408,
+            "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_2",
-            "target": "TEXTURE_2D"
+            "target": 3553
         }
     }
 }
