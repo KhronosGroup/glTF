@@ -6,6 +6,8 @@
 #include "meshConverter.h"
 #include "../helpers/mathHelpers.h"
 
+#include "GLTF-Open3DGC.h"
+
 namespace GLTF
 {
     static void __DecomposeMatrices(float *matrices, size_t count,
@@ -111,11 +113,17 @@ namespace GLTF
         shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
         std::string name = "TIME";
         std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+                
+        cvtAnimation->removeParameterNamed("TIME");
         
-        GLTFOutputStream* outputStream = converterContext._animationOutputStream;
+        setupAndWriteAnimationParameter(cvtAnimation,
+                                             "TIME",
+                                             "FLOAT",
+                                             (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(), timeBufferView->getByteLength(),
+                                             converterContext);
         
-        timeParameter->setByteOffset(outputStream->length());
-        outputStream->write(timeBufferView);
+        //timeParameter->setByteOffset(outputStream->length());
+        //outputStream->write(timeBufferView);
         
         //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
         
@@ -231,6 +239,18 @@ namespace GLTF
                                                                                                          translations[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, translate, timeValues[k]);
                                 }
+                            } else if (path == "scale") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                    size_t offset = k * 3;
+                                    shared_ptr <COLLADAFW::Scale> scale(new COLLADAFW::Scale(scales[offset + 0],
+                                                                                                     scales[offset + 1],
+                                                                                                     scales[offset + 2]));
+                                    animationFlattener->insertTransformAtTime(transformID, scale, timeValues[k]);
+                                }
                             }
                         }
                     }
@@ -262,7 +282,7 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     animationFlattener->insertValueAtTime(transformID, rotations[k], 3, timeValues[k]);
                                 }
-                            }
+                            }                             
                         }
                     }
                 }
@@ -326,7 +346,11 @@ namespace GLTF
             case COLLADAFW::AnimationList::ARRAY_ELEMENT_2D:
             case COLLADAFW::AnimationList::FLOAT:
             default:
-                assert(0 && "unknown animation type");
+                static bool printedOnce = false;
+                if (!printedOnce) {
+                    printf("WARNING: unhandled transform type\n");
+                    printedOnce = true;
+                }
                 break;
         }
         
