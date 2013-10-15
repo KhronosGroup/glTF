@@ -351,7 +351,7 @@ namespace GLTF
                          ifs.SetIntAttribute(nIntAttributes, (long * const ) & (jointIDs[0]));
                          nIntAttributes++;
                          */
-                        params.SetFloatAttributeQuantBits(nFloatAttributes, 14);
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
                         params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
@@ -422,11 +422,10 @@ namespace GLTF
         dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
         
         DVEncodeParams params;
-        params.SetQuantBits(10);
+        params.SetQuantBits(20);
         params.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
         
         DynamicVectorEncoder encoder;
-        
         encoder.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
         Timer timer;
         timer.Tic();

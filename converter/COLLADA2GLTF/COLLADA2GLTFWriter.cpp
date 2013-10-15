@@ -139,7 +139,7 @@ namespace GLTF
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", bytesCount);
                 compressionDataObject->setString("mode", converterContext.compressionMode);
-                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
+                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
             }
         } else {
             outputStream->write((const char*)buffer, length);
@@ -523,14 +523,17 @@ namespace GLTF
             for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
                 shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
                 
-                bool animationIsCompressed = false;
                 if (parameter->extensions()->getKeysCount() > 0) {
                     if (parameter->extensions()->contains("Open3DGC-compression")) {
-                        animationIsCompressed = true;
+                        shared_ptr<JSONObject> compressionObject = parameter->extensions()->getObject("Open3DGC-compression");
+                        if (compressionObject->contains("compressedData")) {
+                            shared_ptr<JSONObject> compressedData = compressionObject->getObject("compressedData");
+                            compressedData->setString("bufferView", compressionBufferView->getID());
+                        }
                     }
                 }
                 
-                parameter->setBufferView(animationIsCompressed ? compressionBufferView : genericBufferView);
+                parameter->setBufferView(genericBufferView);
             }
             
             if (animation->channels()->values().size() > 0) {
