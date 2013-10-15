@@ -151,7 +151,7 @@ LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
 if (USE_OPEN3DGC)
-LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib)
+LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib)
 endif()
 
 if (USE_WEBGLLOADER)

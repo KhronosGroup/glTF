@@ -34,6 +34,7 @@
 #include "o3dgcTimer.h"
 #include "o3dgcDVEncodeParams.h"
 #include "o3dgcDynamicVectorEncoder.h"
+#include "o3dgcDynamicVectorDecoder.h"
 
 #define DUMP_O3DGC_OUTPUT 0
 
@@ -109,8 +110,6 @@ namespace GLTF
         fout.open(fileName.c_str());
         if (!fout.fail())
         {
-            
-            
             SaveIFSUnsignedShortArray(fout, "* CoordIndex", 0, (const unsigned short * const) ifs.GetCoordIndex(), ifs.GetNCoordIndex(), 3);
             SaveIFSIntArray(fout, "* MatID", 0, (const long * const) ifs.GetIndexBufferID(), ifs.GetNCoordIndex(), 1);
             SaveIFSFloatArray(fout, "* Coord", 0, ifs.GetCoord(), ifs.GetNCoord(), 3);
@@ -407,10 +406,12 @@ namespace GLTF
         }
     }
     
-    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFOutputStream *outputStream)
-    {
+    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, const GLTFConverterContext& converterContext) {
+        GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
         Real max[componentsCount];
         Real min[componentsCount];
+        
+        O3DGCStreamType streamType = converterContext.compressionMode == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
         DynamicVector dynamicVector;
         dynamicVector.SetVectors(buffer);
@@ -419,22 +420,121 @@ namespace GLTF
         dynamicVector.SetMin(min);
         dynamicVector.SetNVector(count);
         dynamicVector.SetStride(componentsCount);
-        dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
-        
+        dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_SEP_DIM);//O3DGC_SC3DMC_MAX_ALL_DIMS        
         DVEncodeParams params;
-        params.SetQuantBits(20);
-        params.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
+        
+        params.SetQuantBits(componentsCount == 1 ? 11 : 17); //HACK, if that's 1 component it is the TIME and 10 bits is OK
+        params.SetStreamType(streamType);
         
         DynamicVectorEncoder encoder;
-        encoder.SetStreamType(O3DGC_STREAM_TYPE_ASCII);
+        encoder.SetStreamType(streamType);
         Timer timer;
         timer.Tic();
         BinaryStream bstream(componentsCount * count * 16);
         encoder.Encode(params, dynamicVector, bstream);
         timer.Toc();
-        
         outputStream->write((const char*)bstream.GetBuffer(), bstream.GetSize());
+        
+        /*
+        if (componentsCount == 4) {
+            DynamicVector  dynamicVector1;
+            DynamicVectorDecoder decoder;
+            decoder.DecodeHeader(dynamicVector1, bstream);
+            dynamicVector1.SetStride(dynamicVector1.GetDimVector());
+            
+            std::vector<Real> oDV;
+            std::vector<Real> oDVMin;
+            std::vector<Real> oDVMax;
+            oDV.resize(dynamicVector1.GetNVector() * dynamicVector1.GetDimVector());
+            oDVMin.resize(dynamicVector1.GetDimVector());
+            oDVMax.resize(dynamicVector1.GetDimVector());
+            dynamicVector1.SetVectors(& oDV[0]);
+            dynamicVector1.SetMin(& oDVMin[0]);
+            dynamicVector1.SetMax(& oDVMax[0]);
+            decoder.DecodePlayload(dynamicVector1, bstream);
+            
+            float* dbuffer = (float*)dynamicVector1.GetVectors();
+            
+            printf("****dump axis-angle. Axis[3] / Angle[1]\n");
+            for (int i = 0 ; i < count ; i++) {
+                int offset = i * 4;
+                printf("[raw]%f %f %f %f [10bits]%f %f %f %f\n",
+                       buffer[offset+0],buffer[offset+1],buffer[offset+2],buffer[offset+3],
+                       dbuffer[offset+0],dbuffer[offset+1],dbuffer[offset+2],dbuffer[offset+3]);
+            }
+        }
+        */
     }
+    
+    /*
+     Handles Parameter creation / addition
+     */
+    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                  GLTFAnimation::Parameter *parameter) {
+        shared_ptr<JSONObject> sampler(new JSONObject());
+        std::string name = parameter->getID();
+        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
+        sampler->setString("input", "TIME");           //FIXME:harcoded for now
+        sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
+        sampler->setString("output", name);
+        cvtAnimation->samplers()->setValue(samplerID, sampler);
+        
+        return samplerID;
+    }
+    
+    static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                                           const std::string& parameterSID,
+                                                                           const std::string& parameterType) {
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
+        parameter->setCount(cvtAnimation->getCount());
+        parameter->setType(parameterType);
+        __SetupSamplerForParameter(cvtAnimation, parameter.get());
+        
+        cvtAnimation->parameters()->push_back(parameter);
+        
+        return parameter;
+    }    
+    
+    /*
+     Handles Parameter creation / addition / write
+     */
+    void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                         const std::string& parameterSID,
+                                         const std::string& parameterType,
+                                         unsigned char* buffer, size_t length,
+                                         GLTFConverterContext &converterContext) {
+        bool shouldEncodeOpen3DGC = converterContext.compressionType == "Open3DGC";
 
+        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
+        //setup
+        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
+        shared_ptr <GLTFProfile> profile = converterContext.profile;
+        //write
+        size_t byteOffset = outputStream->length();
+        parameter->setByteOffset(byteOffset);
+        
+        if (shouldEncodeOpen3DGC) {
+            unsigned int glType = profile->getGLenumForString(parameterType);
+            size_t componentsCount = profile->getComponentsCountForType(glType);
+            if (componentsCount) {
+                encodeDynamicVector((float*)buffer, componentsCount, cvtAnimation->getCount(), converterContext);
+                
+                size_t bytesCount = outputStream->length() - byteOffset;
+                
+                shared_ptr<JSONObject> compressionObject = parameter->extensions()->createObjectIfNeeded("Open3DGC-compression");
+                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
+                
+                compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
+                compressionDataObject->setUnsignedInt32("count", bytesCount);
+                compressionDataObject->setString("mode", converterContext.compressionMode);
+                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+            }
+        } else {
+            outputStream->write((const char*)buffer, length);
+        }
+    }
+    
+    
 }
 

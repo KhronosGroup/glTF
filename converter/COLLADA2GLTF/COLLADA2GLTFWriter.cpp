@@ -62,19 +62,6 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	
-    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                  GLTFAnimation::Parameter *parameter) {
-        shared_ptr<JSONObject> sampler(new JSONObject());
-        std::string name = parameter->getID();
-        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
-        sampler->setString("input", "TIME");           //FIXME:harcoded for now
-        sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
-        sampler->setString("output", name);
-        cvtAnimation->samplers()->setValue(samplerID, sampler);
-        
-        return samplerID;
-    }
-
     /*
      Handles Channel creation + additions
      */
@@ -90,62 +77,7 @@ namespace GLTF
         trTarget->setString("path", path);
         cvtAnimation->channels()->appendValue(trChannel);
     }
-    
-    /*
-     Handles Parameter creation / addition
-     */
-    static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                                           const std::string& parameterSID,
-                                                                           const std::string& parameterType) {
-        //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
-        parameter->setCount(cvtAnimation->getCount());
-        parameter->setType(parameterType);
-        __SetupSamplerForParameter(cvtAnimation, parameter.get());
         
-        cvtAnimation->parameters()->push_back(parameter);
-        
-        return parameter;
-    }
-    
-    /*
-     Handles Parameter creation / addition / write
-     */
-    static void __SetupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                  const std::string& parameterSID,
-                                                  const std::string& parameterType,
-                                                  unsigned char* buffer, size_t length,
-                                                  GLTFOutputStream *outputStream,
-                                                  GLTFConverterContext &converterContext) {
-        //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
-        shared_ptr <GLTFProfile> profile = converterContext.profile;
-        //write
-        size_t byteOffset = outputStream->length();
-        parameter->setByteOffset(byteOffset);
-
-        bool shouldEncodeOpen3DGC = converterContext.compressionType == "Open3DGC";
-        if (shouldEncodeOpen3DGC) {
-            unsigned int glType = profile->getGLenumForString(parameterType);
-            size_t componentsCount = profile->getComponentsCountForType(glType);
-            if (componentsCount) {
-                encodeDynamicVector((float*)buffer, componentsCount, cvtAnimation->getCount(), outputStream);
-                
-                size_t bytesCount = outputStream->length() - byteOffset;
-                
-                shared_ptr<JSONObject> compressionObject = parameter->extensions()->createObjectIfNeeded("Open3DGC-compression");
-                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
-                
-                compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
-                compressionDataObject->setUnsignedInt32("count", bytesCount);
-                compressionDataObject->setString("mode", converterContext.compressionMode);
-                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
-            }
-        } else {
-            outputStream->write((const char*)buffer, length);
-        }
-    }
-
     /*
     static shared_ptr <GLTFEffect> defaultEffect() {
         std::string uniqueId = "__glTF__defaultMaterial";
@@ -243,11 +175,6 @@ namespace GLTF
         std::map<std::string, bool> targetProcessed;
         std::vector<unsigned int> animationsToBeRemoved;
         
-        bool shouldCompressAnimations = this->_converterContext.compressionType == "Open3DGC";
-        GLTFOutputStream *animationOutputStream = shouldCompressAnimations ?
-            this->_converterContext._compressionOutputStream :
-            this->_converterContext._animationOutputStream;
-        
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
@@ -275,12 +202,11 @@ namespace GLTF
                 
                 if (animationFlattener->hasAnimatedScale()) {
                     //Scale
-                    __SetupAndWriteAnimationParameter(animation,
+                    setupAndWriteAnimationParameter(animation,
                                                       "scale",
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)scales,
                                                       count * sizeof(float) * 3,
-                                                      animationOutputStream,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "scale");
                     free(scales);
@@ -288,12 +214,11 @@ namespace GLTF
                 
                 if (animationFlattener->hasAnimatedTranslation()) {
                     //Translation
-                    __SetupAndWriteAnimationParameter(animation,
+                    setupAndWriteAnimationParameter(animation,
                                                       "translation",
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)positions,
                                                       count * sizeof(float) * 3,
-                                                      animationOutputStream,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "translation");
                     free(positions);
@@ -301,12 +226,11 @@ namespace GLTF
                 
                 if (animationFlattener->hasAnimatedRotation()) {
                     //Rotation
-                    __SetupAndWriteAnimationParameter(animation,
+                    setupAndWriteAnimationParameter(animation,
                                                       "rotation",
                                                       "FLOAT_VEC4",
                                                       (unsigned char*)rotations,
                                                       count * sizeof(float) * 4,
-                                                      animationOutputStream,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "rotation");
                     free(rotations);
@@ -361,6 +285,10 @@ namespace GLTF
         remove(this->_converterContext._vertexOutputStream->outputPathCStr());
         remove(this->_converterContext._indicesOutputStream->outputPathCStr());
         remove(this->_converterContext._animationOutputStream->outputPathCStr());
+        
+        if (compressionLength == 0) {
+            remove(this->_converterContext._compressionOutputStream->outputPathCStr());
+        }
         
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationLength));
 
@@ -489,26 +417,6 @@ namespace GLTF
             skins->setValue(skin->getId(), serializedSkin);
         }
         
-        
-        // ----
-        
-        /*
-        UniqueIDToAnimationFlattener::const_iterator UniqueIDToAnimationFlattenerIterator;
-        
-        for (UniqueIDToAnimationFlattenerIterator = this->_converterContext._uniqueIDToAnimationFlattener.begin() ; UniqueIDToAnimationFlattenerIterator != this->_converterContext._uniqueIDToAnimationFlattener.end() ; UniqueIDToAnimationFlattenerIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            
-            shared_ptr<GLTFAnimationFlattener> animationFlattener = (*UniqueIDToAnimationFlattenerIterator).second;
-            
-            size_t count = animationFlattener->getCount();
-            for (size_t i = 0 ; i < count ; i++) {
-                COLLADABU::Math::Matrix4 matrix;
-                animationFlattener->getTransformationMatrixAtIndex(matrix, i);
-            }
-            
-            
-        }*/
         // ----
         
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
@@ -568,9 +476,9 @@ namespace GLTF
 
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
-        if (animationLength > 0) {
+        //if (animationLength > 0) {
             bufferViewsObject->setValue(genericBufferView->getID(), bufferViewGenericObject);
-        }
+        //}
         if (compressionLength > 0) {
             bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
         }
@@ -592,7 +500,13 @@ namespace GLTF
         ouputStream.flush();
         ouputStream.close();
         
+        if (sharedBuffer->getByteLength() == 0)
+            remove(outputFilePath.c_str());
+        
         delete this->_extraDataHandler;
+        
+        printf("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        
         
 		return true;
 	}
