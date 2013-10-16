@@ -408,9 +408,8 @@ namespace GLTF
     
     void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, const GLTFConverterContext& converterContext) {
         GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
-        Real max[componentsCount];
-        Real min[componentsCount];
-        
+        Real max[32];
+        Real min[32];
         O3DGCStreamType streamType = converterContext.compressionMode == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
         DynamicVector dynamicVector;
