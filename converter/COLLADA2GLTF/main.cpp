@@ -39,6 +39,10 @@
 
 #include "COLLADA2GLTFWriter.h"
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
 #define OPTIONS_COUNT 12

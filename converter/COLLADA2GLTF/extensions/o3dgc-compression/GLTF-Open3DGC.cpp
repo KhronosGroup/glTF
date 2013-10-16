@@ -176,12 +176,10 @@ namespace GLTF
         printf("coord nb:%d\n",(int)meshAttribute->getCount());
         printf("min: %f %f %f\n", min[0], min[1], min[2]);
         printf("max: %f %f %f\n", max[0], max[1], max[2]);
-        
         float maxQuantError[3];
-        maxQuantError[0] = (max[0] - min[0]) / (float)(2^12 - 1);
-        maxQuantError[1] = (max[1] - min[1]) / (float)(2^12 - 1);
-        maxQuantError[2] = (max[2] - min[2]) / (float)(2^12 - 1);
-        
+        maxQuantError[0] = (float)(max[0] - min[0]) / (2^12 - 1);
+        maxQuantError[1] = (float)(max[1] - min[1]) / (2^12 - 1);
+        maxQuantError[2] = (float)(max[2] - min[2]) / (2^12 - 1);
         if (meshAttribute->getCount() == ifs.GetNCoord()) {
             for (size_t i = 0 ; i < (meshAttribute->getCount() * 3) ; i++ ) {
                 float error = vertices[i] - uncompressedVertices[i];

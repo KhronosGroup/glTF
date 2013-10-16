@@ -25,7 +25,9 @@ THE SOFTWARE.
 #ifndef O3DGC_COMMON_H
 #define O3DGC_COMMON_H
 
+#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include <stdio.h>
 #include <string.h>
