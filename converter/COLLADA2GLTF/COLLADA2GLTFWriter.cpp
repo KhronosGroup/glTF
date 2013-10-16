@@ -252,16 +252,17 @@ namespace GLTF
 
         shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_converterContext._compressionOutputStream->id(), compressionLength));
 
-        delete this->_converterContext._vertexOutputStream;
-        delete this->_converterContext._indicesOutputStream;
-        delete this->_converterContext._animationOutputStream;
-        delete this->_converterContext._compressionOutputStream;
         
         inputVertices.open(this->_converterContext._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
         inputIndices.open(this->_converterContext._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
         inputAnimation.open(this->_converterContext._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
         inputCompression.open(this->_converterContext._compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
         
+        this->_converterContext._vertexOutputStream->close();
+        this->_converterContext._indicesOutputStream->close();
+        this->_converterContext._animationOutputStream->close();
+        this->_converterContext._compressionOutputStream->close();
+
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
         ouputStream.write(bufferIOStream, verticesLength);
@@ -289,6 +290,11 @@ namespace GLTF
         if (compressionLength == 0) {
             remove(this->_converterContext._compressionOutputStream->outputPathCStr());
         }
+        
+        delete this->_converterContext._vertexOutputStream;
+        delete this->_converterContext._indicesOutputStream;
+        delete this->_converterContext._animationOutputStream;
+        delete this->_converterContext._compressionOutputStream;
         
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationLength));
 

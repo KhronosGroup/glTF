@@ -37,6 +37,7 @@ namespace GLTF
         this->_filename = this->_id + ".bin";
         this->_outputPath = folder + this->_filename;        
         this->_stream.open(this->_outputPath.c_str(), ios::out | ios::ate | ios::binary);
+        this->_opened = true;
     }
     
     const std::string& GLTFOutputStream::filename() {
@@ -52,11 +53,12 @@ namespace GLTF
     }
 
     size_t GLTFOutputStream::length() {
-        return static_cast<size_t> (this->_stream.tellp());
+        return this->_opened ? static_cast<size_t> (this->_stream.tellp()) : 0;
     }
     
     void GLTFOutputStream::write(const char* buffer, size_t length) {
-        this->_stream.write(buffer, length);
+        if (this->_opened)
+            this->_stream.write(buffer, length);
     }
     
     void GLTFOutputStream::write(shared_ptr<GLTFBuffer> buffer) {
@@ -67,8 +69,15 @@ namespace GLTF
         this->write((const char*)( bufferView->getBufferDataByApplyingOffset()), bufferView->getByteLength());
     }
     
+    void GLTFOutputStream::close() {
+        if (this->_opened) {
+            this->_stream.flush();
+            this->_stream.close();
+            this->_opened = false;
+        }
+    }
+    
     GLTFOutputStream::~GLTFOutputStream() {
-        this->_stream.flush();
-        this->_stream.close();
+        this->close();
     }
 }

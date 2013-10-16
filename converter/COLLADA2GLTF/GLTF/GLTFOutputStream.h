@@ -42,6 +42,8 @@ namespace GLTF
 
         const char* outputPathCStr();
         
+        void close();
+        
         virtual ~GLTFOutputStream();
         
     private:
@@ -49,6 +51,7 @@ namespace GLTF
         std::string _outputPath;
         std::string _filename;
         std::string _id;
+        bool _opened;
     };
 }
 
