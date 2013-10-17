@@ -280,9 +280,13 @@ int main (int argc, char * const argv[]) {
             delete writer;
         }
 #endif
-
+#if WIN32
+        double clocks = CLK_TCK;
+#else
+        double clocks = CLOCKS_PER_SEC;
+#endif
         std::stringstream s;
-        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / CLK_TCK;
+        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
         std::cout << "Runtime: " << s.str() << " seconds" << std::endl;
     }
     return 0;
