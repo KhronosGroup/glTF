@@ -306,7 +306,7 @@ namespace GLTF
         
         size_t getCount() { return this->_transforms.size(); };
         
-#define _INTERPOLATE(I1, I2, STEP) (I1 + (STEP / (I2-I1)))
+#define _INTERPOLATE(I1, I2, STEP) (I1 + (STEP * (I2-I1)))
         
         //TODO: might be worth checking for equality for prev & transform to be interpolated here
         shared_ptr <COLLADAFW::Transformation> _interpolateTransforms(shared_ptr<COLLADAFW::Transformation> previousTransform, shared_ptr<COLLADAFW::Transformation> nextTransform, double ratio) {
@@ -365,6 +365,13 @@ namespace GLTF
                     break;
                 }
                 default:
+                {
+                    static bool printOnce = false;
+                    if (!printOnce) {
+                        printf("WARNING: unhandled interpolation in animation flattener\n");
+                        printOnce = true;
+                    }
+                }
                     break;
             }
             
