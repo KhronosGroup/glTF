@@ -489,8 +489,8 @@ namespace GLTF
             bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
         }
         
-        bufferViewIndicesObject->setString("target", "ELEMENT_ARRAY_BUFFER");
-        bufferViewVerticesObject->setString("target", "ARRAY_BUFFER");
+        bufferViewIndicesObject->setUnsignedInt32("target", this->_converterContext.profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        bufferViewVerticesObject->setUnsignedInt32("target", this->_converterContext.profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
         this->_converterContext.root->removeValue("lightsIds");
