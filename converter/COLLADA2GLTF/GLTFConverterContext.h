@@ -26,6 +26,7 @@ namespace GLTF
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
     typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToLight;
+    typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
 
     //TODO: cleanup
     //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
@@ -68,6 +69,7 @@ namespace GLTF
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
         UniqueIDToLight _uniqueIDToLight;
+        UniqueIDToOriginalUID _uniqueIDToOriginalUID;
         
         GLTFOutputStream *_vertexOutputStream;
         GLTFOutputStream *_indicesOutputStream;

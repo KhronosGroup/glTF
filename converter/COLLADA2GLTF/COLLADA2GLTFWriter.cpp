@@ -1043,19 +1043,19 @@ namespace GLTF
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
                 shared_ptr<JSONObject> light = this->_converterContext._uniqueIDToLight[id];
-                shared_ptr<JSONString> lightUID(new JSONString(light->getString("id")));
+                std::string lightUID = this->_converterContext._uniqueIDToOriginalUID[id];
 
                 shared_ptr<JSONArray> listOfNodesPerLight;
                 if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
                     listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
-                    this->_converterContext._uniqueIDOfLightToNodes[lightUID->getString()] = listOfNodesPerLight;
+                    this->_converterContext._uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
                 } else {
-                    listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID->getString()];
+                    listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID];
                 }
                 
                 listOfNodesPerLight->appendValue(JSONSTRING(nodeUID));
-                lightsInNode->appendValue(lightUID);
-                lights->setValue(lightUID->getString(), light);
+                lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
+                lights->setValue(lightUID, light);
             }
             nodeObject->setValue("lights", lightsInNode);
         }
@@ -1610,11 +1610,11 @@ namespace GLTF
         }
         
         description->setValue("color", lightColor);
-        glTFLight->setString("id", light->getOriginalId());
         glTFLight->setValue(glTFLight->getString("type"), description);
         
         this->_converterContext._uniqueIDToLight[light->getUniqueId().toAscii()] = glTFLight;
-         
+        this->_converterContext._uniqueIDToOriginalUID[light->getUniqueId().toAscii()] = light->getOriginalId();
+        
         shared_ptr<JSONArray> lightsIds = this->_converterContext.root->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
         
