@@ -55,7 +55,7 @@ using namespace o3dgc;
 class IVec3Cmp 
 {
    public:
-      bool operator()(const Vec3<unsigned long> a,const Vec3<unsigned long> b) 
+      bool operator()(const Vec3<unsigned long> a,const Vec3<unsigned long> b) const
       { 
           if (a.X() != b.X())
           {
