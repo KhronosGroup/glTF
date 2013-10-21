@@ -40,7 +40,7 @@
 #include <vector>
 #include "assert.h"
 
-#ifdef WIN32
+#if (defined(WIN32) || defined(_LIBCPP_VERSION))
 #include <memory>
 #include <unordered_map>
 #else 
