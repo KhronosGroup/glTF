@@ -29,7 +29,12 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-// FIXME: check if this is required for osx only, looks like the standard on other platform would be just std::
+#ifdef _LIBCPP_VERSION
+namespace std{
+    namespace tr1 = std;
+}
+#endif
+
 using namespace std::tr1;
 
 namespace GLTF 

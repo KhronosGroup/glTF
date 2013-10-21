@@ -6,12 +6,18 @@
 
 #include "COLLADASaxFWLIExtraDataCallbackHandler.h"
 
-#if WIN32
+#if (defined(WIN32) || defined(_LIBCPP_VERSION))
 #include <memory>
 #include <unordered_map>
 #else
 #include <tr1/memory>
 #include <tr1/unordered_map>
+#endif
+
+#ifdef _LIBCPP_VERSION
+namespace std{
+    namespace tr1 = std;
+}
 #endif
 
 using namespace std::tr1;
