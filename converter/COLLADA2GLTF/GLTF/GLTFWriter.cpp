@@ -203,8 +203,8 @@ namespace GLTF
         
         primitiveObject->setString("material", primitive->getMaterialID());
         
-        shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
-        primitiveObject->setValue("semantics", semantics);
+        shared_ptr <GLTF::JSONObject> attributes(new GLTF::JSONObject());
+        primitiveObject->setValue("attributes", attributes);
         
         size_t count = primitive->getVertexAttributesCount();
         for (size_t j = 0 ; j < count ; j++) {
@@ -217,7 +217,7 @@ namespace GLTF
                 indexOfSet = primitive->getIndexOfSetAtIndex(j);
                 semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
             }
-            semantics->setString(semanticAndSet, mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
+            attributes->setString(semanticAndSet, mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
         }
         shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
         primitiveObject->setString("indices", uniqueIndices->getID());
