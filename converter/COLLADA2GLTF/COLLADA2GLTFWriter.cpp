@@ -1455,7 +1455,8 @@ namespace GLTF
         }
         
         shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
-        
+        shared_ptr <GLTF::JSONObject> projectionObject(new GLTF::JSONObject());
+
         std::string id = uniqueIdWithType("camera", camera->getUniqueId());
         
         camerasObject->setValue(id, cameraObject);
@@ -1463,32 +1464,32 @@ namespace GLTF
         switch (camera->getCameraType()) {
             case Camera::UNDEFINED_CAMERATYPE:
                 printf("WARNING: unknown camera type: using perspective\n");
-                cameraObject->setString("cameraType", "perspective");
                 break;
             case Camera::ORTHOGRAPHIC:
             {
-                cameraObject->setString("projection", "orthographic");
+                cameraObject->setString("type", "orthographic");
+                cameraObject->setValue("orthographic", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
                         //FIXME: handle error
                         break;
                     case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
-                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
+                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
                         break;
                     case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
-                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
+                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
                     case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
-                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
-                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
+                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
+                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
                     case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
-                        cameraObject->setDouble("xmag", camera->getXMag().getValue());
-                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
+                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                     case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        cameraObject->setDouble("ymag", camera->getYMag().getValue());
-                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
+                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                 }
                 
@@ -1496,28 +1497,29 @@ namespace GLTF
                 break;
             case Camera::PERSPECTIVE:
             {
-                cameraObject->setString("projection", "perspective");
+                cameraObject->setString("type", "perspective");
+                cameraObject->setValue("perspective", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
                         //FIXME: handle error
                         break;
                     case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
-                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
+                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
                         break;
                     case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
-                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
+                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
                         break;
                     case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
-                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
-                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
+                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
+                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
                         break;
                     case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
-                        cameraObject->setDouble("xfov", camera->getXFov().getValue());
-                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
+                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                     case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        cameraObject->setDouble("yfov", camera->getYFov().getValue());
-                        cameraObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
+                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                 }
                 
@@ -1525,8 +1527,8 @@ namespace GLTF
                 break;
         }
         
-        cameraObject->setDouble("znear", camera->getNearClippingPlane().getValue());
-        cameraObject->setDouble("zfar", camera->getFarClippingPlane().getValue());
+        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue());
+        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue());
         
 		return true;
 	}
