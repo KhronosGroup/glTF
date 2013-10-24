@@ -181,38 +181,30 @@ namespace GLTF
         }
         return !hasTransparency(parameters, context);
     }
+/*
+    From https://github.com/KhronosGroup/glTF/issues/83#issuecomment-24095883
+ 
+    MODEL - mat4 or mat3 - Transforms from model to world coordinates using the transform's node and all of its parents.
+    VIEW - mat4 or mat3 - Transforms from world to view coordinates using the active camera node.
+    PROJECTION - mat4 or mat3 - Transforms from view to clip coordinates using the active camera node.
+    MODELVIEW - mat4 or mat3 - Combined MODEL and VIEW.
+    MODELVIEWPROJECTION - mat4 or mat3 - Combined MODEL, VIEW, and PROJECTION.
+    Inverses
     
-    //support this style for semantics
-    //http://www.nvidia.com/object/using_sas.html
-    /*
-     WORLD
-     VIEW
-     PROJECTION
-     WORLDVIEW
-     VIEWPROJECTION
-     WORLDVIEWPROJECTION
-     WORLDINVERSE
-     VIEWINVERSE
-     PROJECTIONINVERSE
-     WORLDVIEWINVERSE
-     VIEWPROJECTIONINVERSE
-     WORLDVIEWPROJECTIONINVERSE
-     WORLDTRANSPOSE
-     VIEWTRANSPOSE
-     PROJECTIONTRANSPOSE
-     WORLDVIEWTRANSPOSE
-     VIEWPROJECTIONTRANSPOSE
-     WORLDVIEWPROJECTIONTRANSPOSE
-     WORLDINVERSETRANSPOSE
-     VIEWINVERSETRANSPOSE
-     PROJECTIONINVERSETRANSPOSE
-     WORLDVIEWINVERSETRANSPOSE
-     VIEWPROJECTIONINVERSETRANSPOSE
-     WORLDVIEWPROJECTIONINVERSETRANSPOSE
-     */
+    MODELINVERSE - mat4 or mat3 - Inverse of MODEL.
+    VIEWINVERSE - mat4 or mat3 - Inverse of VIEW.
+    PROJECTIONINVERSE - mat4 or mat3 - Inverse of PROJECTION.
+    MODELVIEWINVERSE - mat4 or mat3 - Inverse of MODELVIEW.
+    MODELVIEWPROJECTIONINVERSE - mat4 or mat3 - Inverse of MODELVIEWPROJECTION.
+    Inverse transposes
     
-    static std::string WORLDVIEW = "WORLDVIEW";
-    static std::string WORLDVIEWINVERSETRANSPOSE = "WORLDVIEWINVERSETRANSPOSE";
+    MODELINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODEL without the translation. This translates normals in model coordinates to world coordinates.
+    MODELVIEWINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODELVIEW without the translation. This translates normals in model coordinates to eye coordinates.
+*/
+    
+    
+    static std::string MODELVIEW = "MODELVIEW";
+    static std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
     static std::string PROJECTION = "PROJECTION";
     
     /* uniform types, derived from
@@ -565,9 +557,9 @@ namespace GLTF
         unsigned int typeForSemanticUniform(const std::string& semantic) {
             static std::map<std::string , unsigned int> typeForSemanticUniform;
             if (typeForSemanticUniform.empty()) {
-                typeForSemanticUniform["WORLDVIEWINVERSETRANSPOSE"] = _GL(FLOAT_MAT3);; //typically the normal matrix
-                typeForSemanticUniform["WORLDVIEW"] = _GL(FLOAT_MAT4);
-                typeForSemanticUniform["PROJECTION"] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform[MODELVIEWINVERSETRANSPOSE] = _GL(FLOAT_MAT3);; //typically the normal matrix
+                typeForSemanticUniform[MODELVIEW] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform[PROJECTION] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform["JOINT_MATRIX"] = _GL(FLOAT_MAT4);
             }
             return typeForSemanticUniform[semantic];
@@ -706,15 +698,15 @@ namespace GLTF
             
             //normal matrix
             addSemantic("vs", "uniform",
-                        "WORLDVIEWINVERSETRANSPOSE", "normalMatrix" , 1, false);
+                        MODELVIEWINVERSETRANSPOSE, "normalMatrix" , 1, false);
 
-            //worldview matrix
+            //modeliew matrix
             addSemantic("vs", "uniform",
-                        "WORLDVIEW", "worldViewMatrix" , 1, false);
+                        MODELVIEW, "modelViewMatrix" , 1, false);
             
             //projection matrix
             addSemantic("vs", "uniform",
-                        "PROJECTION", "projectionMatrix" , 1, false);
+                        PROJECTION, "projectionMatrix" , 1, false);
             
            
             /* 
@@ -728,7 +720,7 @@ namespace GLTF
                 vertexShader->appendCode("skinMat += a_weight.w * u_jointMat[int(a_joint.w)];\n");
                 vertexShader->appendCode("%s pos = %s * skinMat * vec4(%s,1.0);\n",
                                          vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
-                                         "u_worldViewMatrix",
+                                         "u_modelViewMatrix",
                                          "a_position");
                 vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
                                          "v_normal", "u_normalMatrix", "a_normal");
@@ -736,7 +728,7 @@ namespace GLTF
             } else {
                 vertexShader->appendCode("%s pos = %s * vec4(%s,1.0);\n",
                                          vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
-                                         "u_worldViewMatrix",
+                                         "u_modelViewMatrix",
                                          "a_position");
                 vertexShader->appendCode("%s = normalize(%s * %s);\n",
                                          "v_normal", "u_normalMatrix", "a_normal");
