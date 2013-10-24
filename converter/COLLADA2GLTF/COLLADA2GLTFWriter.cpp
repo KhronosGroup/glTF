@@ -1057,7 +1057,20 @@ namespace GLTF
                 lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
                 lights->setValue(lightUID, light);
             }
-            nodeObject->setValue("lights", lightsInNode);
+            //We just want a single light per node
+            //https://github.com/KhronosGroup/glTF/issues/13
+            //nodeObject->setValue("lights", lightsInNode);
+            nodeObject->setValue("light", lightsInNode->values()[0]);
+            if (count > 1) {
+                //FR: AFAIK no authoring tool export multiple light per node, but we'll warn if that's the case
+                //To fix this, dummy sub nodes should be created.
+                static bool printedOnce = false;
+                if (printedOnce) {
+                    printf("WARNING: some unhandled lights because some nodes carry more than a single light\n");
+                    printedOnce = false;
+                }
+                
+            }
         }
         
         return true;
