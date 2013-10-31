@@ -219,7 +219,7 @@ namespace GLTF
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            const GLTFConverterContext& converterContext)
+                            GLTFConverterContext& converterContext)
     {
         o3dgc::SC3DMCEncodeParams params;
         o3dgc::IndexedFaceSet <unsigned short> ifs;
@@ -394,7 +394,8 @@ namespace GLTF
         
         //testDecode(mesh, bstream);
         outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
-        
+        converterContext._geometryByteLength += bstream.GetSize();
+
         if (ifs.GetCoordIndex()) {
             free(ifs.GetCoordIndex());
         }
@@ -526,8 +527,10 @@ namespace GLTF
                 compressionDataObject->setUnsignedInt32("count", bytesCount);
                 compressionDataObject->setString("mode", converterContext.compressionMode);
                 compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                converterContext._animationByteLength += bytesCount;
             }
         } else {
+            converterContext._animationByteLength += length;
             outputStream->write((const char*)buffer, length);
         }
     }

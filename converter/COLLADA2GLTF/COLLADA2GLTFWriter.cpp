@@ -119,6 +119,9 @@ namespace GLTF
         ifstream inputAnimation;
         ifstream inputCompression;
         ofstream ouputStream;
+
+        this->_converterContext._geometryByteLength = 0;
+        this->_converterContext._animationByteLength = 0;
         
         this->_extraDataHandler = new ExtraDataHandler();
 
@@ -238,12 +241,10 @@ namespace GLTF
             }
         }
         
-        
         for (size_t i= 0 ; i < animationsToBeRemoved.size() ; i++) {
             this->_converterContext._uniqueIDToAnimation.erase(animationsToBeRemoved[i]);
         }
 
-        
         //reopen .bin files for vertices and indices
         size_t verticesLength = this->_converterContext._vertexOutputStream->length();
         size_t indicesLength = this->_converterContext._indicesOutputStream->length();
@@ -252,7 +253,6 @@ namespace GLTF
 
         shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_converterContext._compressionOutputStream->id(), compressionLength));
 
-        
         inputVertices.open(this->_converterContext._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
         inputIndices.open(this->_converterContext._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
         inputAnimation.open(this->_converterContext._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
@@ -510,6 +510,9 @@ namespace GLTF
             remove(outputFilePath.c_str());
         
         delete this->_extraDataHandler;
+        
+        printf("geometry:%d bytes\n", (int)this->_converterContext._geometryByteLength);
+        printf("animations:%d bytes\n", (int)this->_converterContext._animationByteLength);
         
         printf("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         

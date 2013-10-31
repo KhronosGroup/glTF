@@ -30,7 +30,7 @@ namespace GLTF
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            const GLTFConverterContext& converterContext);
+                            GLTFConverterContext& converterContext);
     
     void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, const GLTFConverterContext& converterContext);
     

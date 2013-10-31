@@ -33,7 +33,7 @@
 
 namespace GLTF
 {
-    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, const GLTFConverterContext& converterContext)
+    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, GLTFConverterContext& converterContext)
     {
         bool shouldOGCompressMesh = false;
         
@@ -105,6 +105,7 @@ namespace GLTF
                     }
                     uniqueIndices->setByteOffset(indicesOutputStream->length());
                     indicesOutputStream->write((const char*)ushortIndices, indicesLength);
+                    converterContext._geometryByteLength += indicesLength;
                 }
 #ifdef USE_OPEN3DGC
                 else {
@@ -145,8 +146,10 @@ namespace GLTF
                 {
                     meshAttribute->setByteOffset(vertexOutputStream->length());
                     vertexOutputStream->write(buffer);
+                    converterContext._geometryByteLength += buffer->getByteLength();
                 }
                 
+
                 //now that we wrote to the stream we can release the buffer.
                 meshAttribute->setBufferView(dummyBuffer);
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;

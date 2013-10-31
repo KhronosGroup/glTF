@@ -118,6 +118,8 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFInputStream.cpp
     GLTF/GLTFOutputStream.h
     GLTF/GLTFOutputStream.cpp
+    GLTF/GLTFConfig.cpp
+    GLTF/GLTFConfig.h
     profiles/webgl-1.0/webgl-idl.h
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.cpp
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h

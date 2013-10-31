@@ -75,6 +75,10 @@ namespace GLTF
         GLTFOutputStream *_indicesOutputStream;
         GLTFOutputStream *_animationOutputStream;
         GLTFOutputStream *_compressionOutputStream;
+        
+        size_t _geometryByteLength;
+        size_t _animationByteLength;
+        
     } GLTFConverterContext;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
