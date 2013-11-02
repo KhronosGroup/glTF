@@ -771,11 +771,14 @@ namespace GLTF
                 
             }
             
+            bool hasAmbientLight = false, hasDiffuseLight = false, hasSpecularLight = false;
+            
             //color to cumulate all components and light contribution
             fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 0.);\n");
             fragmentShader->appendCode("vec4 diffuse = vec4(0., 0., 0., 1.);\n");
-            if (modelContainsLights)
+            if (modelContainsLights) {
                 fragmentShader->appendCode("vec3 diffuseLight = vec3(0., 0., 0.);\n");
+            }
             
             if (slotIsContributingToLighting("emission", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 emission;\n");
@@ -786,11 +789,9 @@ namespace GLTF
             }
             if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 ambient;\n");
-                fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
             }
             if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, converterContext)) {
                 fragmentShader->appendCode("vec4 specular;\n");
-                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
             }
                                     
             /* 
@@ -828,19 +829,36 @@ namespace GLTF
                         sprintf(lightIndexCStr, "light%d", (int)lightIndex);
                         sprintf(lightColor, "%sColor", lightIndexCStr);
                         sprintf(lightTransform, "%sTransform", lightIndexCStr);
-                        fragmentShader->appendCode("{\n");
-                        
-                        shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
-                        lightColorParameter->setValue("value", description->getValue("color"));
-                        
-                        fragmentShader->appendCode("float diffuseIntensity;\n");
-                        fragmentShader->appendCode("float specularIntensity;\n");
                         
                         if (lightType == "ambient") {
+                            if (hasAmbientLight == false) {
+                                fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
+                                hasAmbientLight = true;
+                            }
+                            
+                            fragmentShader->appendCode("{\n");
+                            
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                                                        
                             //FIXME: what happens if multiple ambient light ?
                             fragmentShader->appendCode("ambientLight += u_%s;\n", lightColor);
-                            
+                            fragmentShader->appendCode("}\n");
+
                         } else if (1 /*lightType == "directional"*/) {
+                            if (!useSimpleLambert && (hasSpecularLight == false)) {
+                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
+                                hasSpecularLight = true;
+                            }
+                            
+                            fragmentShader->appendCode("{\n");
+                            
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                            
+                            fragmentShader->appendCode("float diffuseIntensity;\n");
+                            fragmentShader->appendCode("float specularIntensity;\n");
+                            
                             char varyingLightDirection[100];
                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                             
@@ -868,6 +886,7 @@ namespace GLTF
                             }
                             
                             fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
+                            fragmentShader->appendCode("}\n");
 
 
                         } else if (lightType == "spot") {
@@ -878,7 +897,6 @@ namespace GLTF
                             //FIXME: report error
                             
                         }
-                        fragmentShader->appendCode("}\n");
                     }
                 }
             }
