@@ -209,7 +209,7 @@ namespace GLTF
                                                       "scale",
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)scales,
-                                                      count * sizeof(float) * 3,
+                                                      count * sizeof(float) * 3, false,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "scale");
                     free(scales);
@@ -221,7 +221,7 @@ namespace GLTF
                                                       "translation",
                                                       "FLOAT_VEC3",
                                                       (unsigned char*)positions,
-                                                      count * sizeof(float) * 3,
+                                                      count * sizeof(float) * 3, false,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "translation");
                     free(positions);
@@ -233,7 +233,7 @@ namespace GLTF
                                                       "rotation",
                                                       "FLOAT_VEC4",
                                                       (unsigned char*)rotations,
-                                                      count * sizeof(float) * 4,
+                                                      count * sizeof(float) * 4, false,
                                                       this->_converterContext);
                     __AddChannel(animation, targetID, "rotation");
                     free(rotations);

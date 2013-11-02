@@ -119,7 +119,7 @@ namespace GLTF
         setupAndWriteAnimationParameter(cvtAnimation,
                                              "TIME",
                                              "FLOAT",
-                                             (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(), timeBufferView->getByteLength(),
+                                             (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(), timeBufferView->getByteLength(), true,
                                              converterContext);
         
         //timeParameter->setByteOffset(outputStream->length());

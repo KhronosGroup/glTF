@@ -482,12 +482,15 @@ namespace GLTF
     
     static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
                                                                            const std::string& parameterSID,
-                                                                           const std::string& parameterType) {
+                                                                           const std::string& parameterType,
+                                                                           bool isInputParameter) {
         //setup
         shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
         parameter->setCount(cvtAnimation->getCount());
         parameter->setType(parameterType);
-        __SetupSamplerForParameter(cvtAnimation, parameter.get());
+        
+        if (!isInputParameter)
+            __SetupSamplerForParameter(cvtAnimation, parameter.get());
         
         cvtAnimation->parameters()->push_back(parameter);
         
@@ -501,12 +504,13 @@ namespace GLTF
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
                                          unsigned char* buffer, size_t length,
+                                         bool isInputParameter,
                                          GLTFConverterContext &converterContext) {
         bool shouldEncodeOpen3DGC = converterContext.compressionType == "Open3DGC";
 
         GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
         //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType);
+        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType, isInputParameter);
         shared_ptr <GLTFProfile> profile = converterContext.profile;
         //write
         size_t byteOffset = outputStream->length();

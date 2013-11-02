@@ -37,7 +37,7 @@ namespace GLTF
     void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
-                                         unsigned char* buffer, size_t length,
+                                         unsigned char* buffer, size_t length, bool isInputParameter,
                                          GLTFConverterContext &converterContext);
 }
 
