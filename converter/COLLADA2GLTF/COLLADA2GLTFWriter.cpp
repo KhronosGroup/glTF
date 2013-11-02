@@ -463,12 +463,16 @@ namespace GLTF
 
         this->_converterContext.root->setValue("buffers", buffersObject);
         
-        buffersObject->setValue(sharedBufferID, bufferObject);
-        bufferObject->setString("type", "arraybuffer");
+        if (sharedBuffer->getByteLength() > 0) {
+            buffersObject->setValue(sharedBufferID, bufferObject);
+            bufferObject->setString("type", "arraybuffer");
+        }
 
-        buffersObject->setValue(compressedBufferID, bufferObject1);
-        if (this->_converterContext.compressionMode == "ascii")
-            bufferObject1->setString("type", "text");
+        if (compressionBuffer->getByteLength() > 0) {
+            buffersObject->setValue(compressedBufferID, bufferObject1);
+            if (this->_converterContext.compressionMode == "ascii")
+                bufferObject1->setString("type", "text");
+        }
 
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
