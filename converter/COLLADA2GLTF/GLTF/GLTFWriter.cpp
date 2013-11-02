@@ -199,7 +199,11 @@ namespace GLTF
         
         GLTFMesh* mesh = (GLTFMesh*)primitiveContext[0];
         
-        primitiveObject->setString("primitive", primitive->getType());
+        void** serializationContext = (void**)primitiveContext[1];
+        
+        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
+
+        primitiveObject->setUnsignedInt32("primitive", converterContext->profile->getGLenumForString(primitive->getType()));
         
         primitiveObject->setString("material", primitive->getMaterialID());
         
