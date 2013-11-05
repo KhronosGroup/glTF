@@ -1,6 +1,8 @@
 #ifndef __GLTFConverterContext__
 #define __GLTFConverterContext__
 
+#include "GLTF-OpenCOLLADA.h"
+
 namespace GLTF
 {
     class GLTFAnimationFlattener;
@@ -20,18 +22,21 @@ namespace GLTF
     typedef std::map<std::string /* openCOLLADA uniqueID */, shared_ptr<JSONObject> > UniqueIDToNode;
     typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
-    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToTrackedObject;
+    typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
     typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
     typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToLight;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
+    typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
 
-    //TODO: cleanup
-    //For now, GLTFConverterContext is just struct, but it is growing and may become eventually a class
-    typedef struct
+    
+    
+    //TODO: cleanup, this was previously a typedef. It will be mostly reworked thanks to the GLTFConfig class.
+    class GLTFConverterContext
     {
+    public:
         std::string inputFilePath;
         std::string outputFilePath;
 
@@ -61,15 +66,16 @@ namespace GLTF
         MaterialUIDToName _materialUIDToName;
         UniqueIDToAnimation _uniqueIDToAnimation;
         UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
-        UniqueIDToTrackedObject _uniqueIDToTrackedObject;
+        OriginalIDToTrackedObject _originalIDToTrackedObject;
         UniqueIDToSkin _uniqueIDToSkin;
         UniqueIDToNode _uniqueIDToNode;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
-        UniqueIDToAnimationFlattener _uniqueIDToAnimationFlattener;
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
         UniqueIDToLight _uniqueIDToLight;
-        UniqueIDToOriginalUID _uniqueIDToOriginalUID;
+        UniqueIDToOriginalUID _uniqueIDToOriginalID;
+        
+        UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
         
         GLTFOutputStream *_vertexOutputStream;
         GLTFOutputStream *_indicesOutputStream;
@@ -79,7 +85,7 @@ namespace GLTF
         size_t _geometryByteLength;
         size_t _animationByteLength;
         
-    } GLTFConverterContext;
+    } ;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
 

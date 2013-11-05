@@ -194,7 +194,7 @@ namespace GLTF
                 }
                 targetProcessed[targetID] = true;
                 
-                shared_ptr<GLTFAnimationFlattener> animationFlattener = this->_converterContext._uniqueIDToAnimationFlattener[targetID];
+                shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID, &this->_converterContext);
                 
                 size_t count = 0;
                 float* rotations = 0;
@@ -432,7 +432,14 @@ namespace GLTF
             shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
             std::vector <shared_ptr <GLTFAnimation::Parameter> > *parameters = animation->parameters();
             
-            std::vector<std::string> allTargets = animation->targets()->getAllKeys();
+            //Replace OpenCOLLADA uniqueID by Original IDs
+            shared_ptr <JSONArray> channels = animation->channels();
+            for (size_t i = 0 ; i < channels->values().size() ; i++) {
+                shared_ptr<JSONObject> channel = static_pointer_cast<JSONObject>(channels->values()[i]);
+                shared_ptr<JSONObject> target = channel->getObject("target");
+                std::string originalID = this->_converterContext._uniqueIDToOriginalID[target->getString("id")];
+                target->setString("id", originalID);
+            }
             
             for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
                 shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
@@ -592,12 +599,12 @@ namespace GLTF
         return getTransparency(effectCommon)  >= 1;
     }
     
-    void COLLADA2GLTFWriter::registerObjectWithUniqueUID(std::string objectUID, shared_ptr <JSONObject> obj, shared_ptr <JSONObject> objLib)
+    void COLLADA2GLTFWriter::registerObjectWithOriginalUID(std::string objectUID, shared_ptr <JSONObject> obj, shared_ptr <JSONObject> objLib)
     {
-        if (this->_converterContext._uniqueIDToTrackedObject.count(objectUID) == 0) {
+        if (this->_converterContext._originalIDToTrackedObject.count(objectUID) == 0) {
             if (!objLib->contains(objectUID)) {
                 objLib->setValue(objectUID, obj);
-                this->_converterContext._uniqueIDToTrackedObject[objectUID] = obj;
+                this->_converterContext._originalIDToTrackedObject[objectUID] = obj;
             } else {
                 printf("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
             }
@@ -818,17 +825,22 @@ namespace GLTF
     {
         bool shouldExportTRS = this->_converterContext.alwaysExportTRS;
         const NodePointerArray& nodes = node->getChildNodes();
-        std::string nodeUID = node->getOriginalId();
-        if (nodeUID.length() == 0) {
-            nodeUID = uniqueIdWithType("node", node->getUniqueId());
+        std::string nodeOriginalID = node->getOriginalId();
+        if (nodeOriginalID.length() == 0) {
+            nodeOriginalID = uniqueIdWithType("node", node->getUniqueId());
         }
+        
+        std::string uniqueUID = node->getUniqueId().toAscii();
         
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
         shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
         nodeObject->setString("name",node->getName());
-                
-        this->_converterContext._uniqueIDToNode[node->getUniqueId().toAscii()] = nodeObject;
+        
+        this->_converterContext._uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
+        this->_converterContext._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
+
+        this->_converterContext._uniqueIDToNode[uniqueUID] = nodeObject;
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
             nodeObject->setString("jointId",sid);
@@ -873,8 +885,6 @@ namespace GLTF
         float scale[3];
         float translation[3];
         float rotation[4];
-        
-//        Loader::AnimationSidAddressBindingList& bindingList = _loader.getAnimationSidAddressBindings();
 
         const TransformationPointerArray& transformations = node->getTransformations();
         size_t transformationsCount = transformations.getCount();
@@ -891,7 +901,7 @@ namespace GLTF
             std::string animationID = animationListID.toAscii();
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
-                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "MATRIX");
                 animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
@@ -899,7 +909,7 @@ namespace GLTF
             }
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
-                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "translation");
                 animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
@@ -907,7 +917,7 @@ namespace GLTF
             }
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
-                animatedTarget->setString("target", nodeUID);
+                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "rotation");
                 animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
@@ -915,19 +925,14 @@ namespace GLTF
             }
           
           if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
-            animatedTarget->setString("target", nodeUID);
+            animatedTarget->setString("target", uniqueUID);
             animatedTarget->setString("path", "scale");
             animatedTarget->setString("transformId", animationID);
             animatedTargets->push_back(animatedTarget);
             shouldExportTRS = true;
           }
         }
-      
-        if (shouldExportTRS) {
-            shared_ptr<GLTFAnimationFlattener> animationFlattener(new GLTFAnimationFlattener((Node*)node));
-            this->_converterContext._uniqueIDToAnimationFlattener[nodeUID] = animationFlattener;
-        }
-                
+                    
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
                 
         if (shouldExportTRS) {
@@ -1008,14 +1013,16 @@ namespace GLTF
         
         count = (unsigned int)nodes.getCount();
         for (unsigned int i = 0 ; i < count ; i++)  {
-            std::string nodeUID = nodes[i]->getOriginalId();
-            if (nodeUID.length() == 0) {
-                nodeUID = uniqueIdWithType("node", nodes[i]->getUniqueId());
+            std::string childOriginalID = nodes[i]->getOriginalId();
+            if (childOriginalID.length() == 0) {
+                childOriginalID = uniqueIdWithType("node", nodes[i]->getUniqueId());
             }
-            childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(nodeUID)));
+            childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
         }
         
-        registerObjectWithUniqueUID(nodeUID, nodeObject, nodesObject);
+        this->_converterContext._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
+        
+        registerObjectWithOriginalUID(nodeOriginalID, nodeObject, nodesObject);
         
         for (unsigned int i = 0 ; i < count ; i++)  {
             this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
@@ -1050,7 +1057,7 @@ namespace GLTF
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
                 shared_ptr<JSONObject> light = this->_converterContext._uniqueIDToLight[id];
-                std::string lightUID = this->_converterContext._uniqueIDToOriginalUID[id];
+                std::string lightUID = this->_converterContext._uniqueIDToOriginalID[id];
 
                 shared_ptr<JSONArray> listOfNodesPerLight;
                 if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
@@ -1060,7 +1067,7 @@ namespace GLTF
                     listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID];
                 }
                 
-                listOfNodesPerLight->appendValue(JSONSTRING(nodeUID));
+                listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
                 lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
                 lights->setValue(lightUID, light);
             }
@@ -1635,7 +1642,7 @@ namespace GLTF
         glTFLight->setValue(glTFLight->getString("type"), description);
         
         this->_converterContext._uniqueIDToLight[light->getUniqueId().toAscii()] = glTFLight;
-        this->_converterContext._uniqueIDToOriginalUID[light->getUniqueId().toAscii()] = light->getOriginalId();
+        this->_converterContext._uniqueIDToOriginalID[light->getUniqueId().toAscii()] = light->getOriginalId();
         
         shared_ptr<JSONArray> lightsIds = this->_converterContext.root->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
@@ -1659,11 +1666,12 @@ namespace GLTF
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
         AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
-        
+
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
             if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_converterContext)) {
+                //if an animation failed to convert, we don't want to keep track of it.
                 this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
             }
         }
@@ -1697,7 +1705,7 @@ namespace GLTF
         size_t index = 0;
         size_t bucketSize = 4;
         size_t componentSize = sizeof(float);
-        size_t skinAttributeSize = sizeof(float) * vertexCount * bucketSize;
+        size_t skinAttributeSize = componentSize * vertexCount * bucketSize;
         float *weightsPtr = (float*)malloc(skinAttributeSize);
         float *bonesIndices = (float*)malloc(skinAttributeSize);
 
@@ -1719,7 +1727,8 @@ namespace GLTF
 				}
 			}
 			else if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE ) {
-				const COLLADAFW::DoubleArray* doubleWeights = weights.getDoubleValues();
+				//in this case, cast the double to float
+                const COLLADAFW::DoubleArray* doubleWeights = weights.getDoubleValues();
 				for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
                         bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];

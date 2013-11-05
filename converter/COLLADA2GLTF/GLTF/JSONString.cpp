@@ -24,6 +24,9 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#ifndef __GLTF__
+#define __GLTF__
+
 #include "GLTF.h"
 
 namespace GLTF 
@@ -59,3 +62,5 @@ namespace GLTF
     }
     
 }
+#endif
+

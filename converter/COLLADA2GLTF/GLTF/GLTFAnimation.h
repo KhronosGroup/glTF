@@ -26,6 +26,11 @@
 
 namespace GLTF 
 {
+    class GLTFAnimationFlattener;
+    class GLTFConverterContext;
+    
+    typedef std::map<std::string , shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
+
     class GLTFAnimation {
     public:
         
@@ -50,6 +55,7 @@ namespace GLTF
             void setByteOffset(size_t byteOffset);
             
             shared_ptr <JSONObject> extensions();
+            
         private:
             Parameter();
         private:
@@ -83,6 +89,8 @@ namespace GLTF
         shared_ptr <JSONObject> targets();
 
         std::string getSamplerIDForName(std::string name);
+        
+        shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string targetUID, GLTFConverterContext *converterContext);
 
     private:
         size_t _count;
@@ -92,6 +100,7 @@ namespace GLTF
         shared_ptr <JSONArray> _channels;
         shared_ptr <JSONObject> _samplers;
         shared_ptr <JSONObject> _targets;
+        AnimationFlattenerForTargetUID _animationFlattenerForTargetUID;
     };
     
 }

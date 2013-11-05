@@ -22,6 +22,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "../GLTFConverterContext.h"
+#include "animationConverter.h"
 
 using namespace rapidjson;
 
@@ -172,5 +174,21 @@ namespace GLTF
     std::string GLTFAnimation::getSamplerIDForName(std::string name) {
         return this->_id + "_" + name + "_sampler";
     }
+    
+    shared_ptr<GLTFAnimationFlattener> GLTFAnimation::animationFlattenerForTargetUID(std::string targetUID, GLTFConverterContext *converterContext) {
+        shared_ptr<GLTFAnimationFlattener> animationFlattener;
+        if (this->_animationFlattenerForTargetUID.count(targetUID) == 0) {
+            
+            COLLADAFW::Node *node = (COLLADAFW::Node*)converterContext->_uniqueIDToOpenCOLLADAObject[targetUID].get();
+            
+            animationFlattener = shared_ptr<GLTFAnimationFlattener> (new GLTFAnimationFlattener(node));
+            this->_animationFlattenerForTargetUID[targetUID] = animationFlattener;
+        } else {
+            animationFlattener = this->_animationFlattenerForTargetUID[targetUID];
+        }
+        
+        return animationFlattener;
+    }
+
     
 }

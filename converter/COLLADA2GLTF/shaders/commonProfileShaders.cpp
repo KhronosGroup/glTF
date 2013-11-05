@@ -771,7 +771,7 @@ namespace GLTF
                 
             }
             
-            bool hasAmbientLight = false, hasDiffuseLight = false, hasSpecularLight = false;
+            bool hasAmbientLight = false, hasSpecularLight = false;
             
             //color to cumulate all components and light contribution
             fragmentShader->appendCode("vec4 color = vec4(0., 0., 0., 0.);\n");
@@ -1001,11 +1001,11 @@ namespace GLTF
             if (slotIsContributingToLighting("reflective", inputParameters, converterContext)) {
                 fragmentShader->appendCode("diffuse.xyz += reflective.xyz;\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, converterContext)) {
+            if (hasAmbientLight && lightingIsEnabled && slotIsContributingToLighting("ambient", inputParameters, converterContext)) {
                 fragmentShader->appendCode("ambient.xyz *= ambientLight;\n");
                 fragmentShader->appendCode("color.xyz += ambient.xyz;\n");
             }
-            if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, converterContext)) {
+            if (hasSpecularLight && lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, converterContext)) {
                 fragmentShader->appendCode("specular.xyz *= specularLight;\n");
                 fragmentShader->appendCode("color.xyz += specular.xyz;\n");
             }

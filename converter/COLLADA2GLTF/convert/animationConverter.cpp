@@ -100,8 +100,6 @@ namespace GLTF
      The animation creation/write is in 2 steps.
      We first create the animation, but then, we need to set the channels for every targets, and targets ids are not available when animations are created
      */
-    
-    
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
@@ -124,7 +122,6 @@ namespace GLTF
         
         //timeParameter->setByteOffset(outputStream->length());
         //outputStream->write(timeBufferView);
-        
         //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
         
         switch (animationClass) {
@@ -142,14 +139,13 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
-                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -168,7 +164,7 @@ namespace GLTF
                 }
                 cvtAnimation->removeParameterNamed("OUTPUT");
             }
-                break;
+                return true;
             case COLLADAFW::AnimationList::MATRIX4X4: {
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
@@ -182,11 +178,11 @@ namespace GLTF
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         if (animatedTarget->getString("path") == "MATRIX") {
                             std::string targetID = animatedTarget->getString("target");
-                            if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                            if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 16;
                                     float *m = matrices + offset;
@@ -211,7 +207,6 @@ namespace GLTF
                 }
             }
                 return true;
-                break;
             case COLLADAFW::AnimationList::POSITION_XYZ: {
                 GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
                 if (parameter) {
@@ -221,14 +216,13 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
-                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -241,7 +235,7 @@ namespace GLTF
                                 }
                             } else if (path == "scale") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
@@ -268,14 +262,13 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
-                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -301,13 +294,12 @@ namespace GLTF
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
                         
-                        if (converterContext._uniqueIDToTrackedObject.count(targetID) != 0) {
+                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
-                            shared_ptr<JSONObject> targetObject = converterContext._uniqueIDToTrackedObject[targetID];
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -317,7 +309,7 @@ namespace GLTF
                                 
                             } else if (path == "scale") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = converterContext._uniqueIDToAnimationFlattener[targetID];
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* scales = (float*)bufferView->getBufferDataByApplyingOffset();

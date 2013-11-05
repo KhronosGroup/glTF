@@ -4,16 +4,11 @@
 #ifndef __GLTFANIMATIONCONVERTER_H__
 #define __GLTFANIMATIONCONVERTER_H__
 
+#include "../GLTF-OpenCOLLADA.h"
 #include "mathHelpers.h"
 
 namespace GLTF
-{
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation);
-    bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
-                        const COLLADAFW::AnimationList::AnimationClass animationClass,
-                        AnimatedTargetsSharedPtr animatedTargets,
-                        GLTF::GLTFConverterContext &converterContext);
-    
+{    
     //a few helper classes to help flattening animations
     
     typedef std::map<std::string , shared_ptr<COLLADAFW::Transformation> > IDToTransform;
@@ -146,29 +141,10 @@ namespace GLTF
                 const COLLADAFW::Transformation* tr = transformations[i];
                 shared_ptr<COLLADAFW::Transformation> clonedTransform(tr->clone());
                 const COLLADAFW::UniqueId& animationListID = tr->getAnimationList();
-                if (animationListID.isValid()) {
-                    switch (tr->getTransformationType()) {
-                        case COLLADAFW::Transformation::MATRIX:
-                            this->_hasAnimatedScale = this->_hasAnimatedTranslation = this->_hasAnimatedRotation = true;
-                            break;
-                        case COLLADAFW::Transformation::TRANSLATE:
-                            this->_hasAnimatedTranslation = true;
-                            break;
-                        case COLLADAFW::Transformation::ROTATE:
-                            this->_hasAnimatedRotation = true;
-                            break;
-                        case COLLADAFW::Transformation::SCALE:
-                            this->_hasAnimatedScale = true;
-                            break;
-                        default:
-                            printf("warning: unhandled animation type");
-                            break;
-                    }
-                    
+                if (animationListID.isValid()) {                    
                     _idIndex[i] = index++;
                     _idToTransform[animationListID.toAscii()] = clonedTransform;
                     this->_transformsOrder->push_back(animationListID.toAscii());
-                    
                 } else {
                     _idIndex[i] = -1;
                 }
@@ -226,9 +202,29 @@ namespace GLTF
             }
         }
         
+        void transformWasInserted(shared_ptr<COLLADAFW::Transformation> tr) {
+            switch (tr->getTransformationType()) {
+                case COLLADAFW::Transformation::MATRIX:
+                    this->_hasAnimatedScale = this->_hasAnimatedTranslation = this->_hasAnimatedRotation = true;
+                    break;
+                case COLLADAFW::Transformation::TRANSLATE:
+                    this->_hasAnimatedTranslation = true;
+                    break;
+                case COLLADAFW::Transformation::ROTATE:
+                    this->_hasAnimatedRotation = true;
+                    break;
+                case COLLADAFW::Transformation::SCALE:
+                    this->_hasAnimatedScale = true;
+                    break;
+                default:
+                    printf("warning: unhandled animation type\n");
+                    break;
+            }
+        }
+        
         //to be used for whole matrices and angle axis
         void insertTransformAtTime(std::string transformID, shared_ptr<COLLADAFW::Transformation> transformation, double time) {
-            
+            transformWasInserted(transformation);
             if (_transforms.size() == 0) {
                 shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
@@ -251,18 +247,23 @@ namespace GLTF
                             _transforms.insert(_transforms.begin() + i, key);
                             return;
                         }
+                    } else {
+                        shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                        _transforms.insert(_transforms.begin() + i, key);
+                        return;
                     }
                 }
             }
         }
         
         void insertValueAtTime(std::string transformID, float value, size_t index, double time) {
+            shared_ptr <COLLADAFW::Transformation> transformation;
             if (_transforms.size() == 0) {
-                
-                shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
+                transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                 
                 shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
+                transformWasInserted(transformation);
                 return;
             } else {
                 for (size_t i = 0 ; i < _transforms.size() ; i++) {
@@ -275,21 +276,31 @@ namespace GLTF
                             shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             (*key->subTransforms())[transformID] = transformation;
                         }
+                        transformWasInserted(transformation);
                         return;
                     } else if (time > key->getTime()) {
                         if (i + 1 == _transforms.size()) {
-                            shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
+                            transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             
                             shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.push_back(key);
+                            transformWasInserted(transformation);
                             return;
                         } else if (time < _transforms[i+1]->getTime()) {
-                            shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
+                            transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             
                             shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.insert(_transforms.begin() + i, key);
+                            transformWasInserted(transformation);
                             return;
                         }
+                    } else {
+                        transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
+                        
+                        shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                        _transforms.insert(_transforms.begin() + i, key);
+                        transformWasInserted(transformation);
+                        return;
                     }
                 }
             }
@@ -510,6 +521,11 @@ namespace GLTF
         shared_ptr<std::vector<std::string> > _transformsOrder;
     };
     
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation);
+    bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
+                        const COLLADAFW::AnimationList::AnimationClass animationClass,
+                        AnimatedTargetsSharedPtr animatedTargets,
+                        GLTF::GLTFConverterContext &converterContext);
     
     //-------
 }
