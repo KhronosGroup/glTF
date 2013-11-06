@@ -269,6 +269,16 @@ namespace GLTF
         ouputStream.write(bufferIOStream, indicesLength);
         free(bufferIOStream);
 
+        //add padding for https://github.com/KhronosGroup/glTF/issues/167
+        //it is known that the other buffers are all FLOAT, so as a minimal fix we just have to align indices (that are short) on FLOAT when writting them.
+        size_t rem = indicesLength % 4;
+        if (rem) {
+            char pad[3];
+            size_t paddingForAlignement = 4 - rem;
+            ouputStream.write(pad, paddingForAlignement);
+            indicesLength += paddingForAlignement;
+        }
+        
         bufferIOStream = (char*)malloc(sizeof(char) * animationLength);
         inputAnimation.read(bufferIOStream, animationLength);
         ouputStream.write(bufferIOStream, animationLength);
