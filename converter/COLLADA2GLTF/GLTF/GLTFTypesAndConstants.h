@@ -41,6 +41,7 @@ namespace GLTF
     class GLTFMesh;
     class GLTFEffect;
     class JSONVertexAttribute;
+    class GLTFAnimationFlattener;
     //-- Args & Options
     typedef std::vector <shared_ptr<GLTF::GLTFIndices> > IndicesVector;
     typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
@@ -49,6 +50,10 @@ namespace GLTF
     
     typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
     typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
+
+    typedef std::map<std::string , shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
+    typedef shared_ptr<AnimationFlattenerForTargetUID> AnimationFlattenerForTargetUIDSharedPtr;
+    typedef std::map<std::string , AnimationFlattenerForTargetUIDSharedPtr > FlattenerMapsForAnimationID;
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
     

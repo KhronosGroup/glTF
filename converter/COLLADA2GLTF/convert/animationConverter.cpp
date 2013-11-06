@@ -145,7 +145,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -182,7 +182,7 @@ namespace GLTF
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 16;
                                     float *m = matrices + offset;
@@ -222,7 +222,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -235,7 +235,7 @@ namespace GLTF
                                 }
                             } else if (path == "scale") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
@@ -268,7 +268,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -299,7 +299,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -309,7 +309,7 @@ namespace GLTF
                                 
                             } else if (path == "scale") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID, &converterContext);
+                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -357,10 +357,11 @@ namespace GLTF
             
             const COLLADAFW::AnimationCurve* animationCurve = (const COLLADAFW::AnimationCurve*)animation;
             
-            std::string animationID = animation->getOriginalId();
-            if (animationID.size() == 0) {
-                animationID = uniqueIdWithType("animation", animation->getUniqueId());
-            }
+            //This needs to be fixed when re-working: https://github.com/KhronosGroup/glTF/issues/158
+            //especially, this point: "by default the converter should replicate COLLADA animations layout (not yet done), but an option should allow to have one animation per target. (this is actually the case)."
+
+            std::string animationID = uniqueIdWithType("animation", animation->getUniqueId());
+            
             cvtAnimation->setID(animationID);
             
             cvtAnimation->setCount(animationCurve->getKeyCount());

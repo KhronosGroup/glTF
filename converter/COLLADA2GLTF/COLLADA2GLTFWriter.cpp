@@ -31,7 +31,7 @@
 #include "GLTF-Open3DGC.h"
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
-
+#include <algorithm>
 
 using namespace std::tr1;
 using namespace std;
@@ -175,8 +175,7 @@ namespace GLTF
         
         this->_converterContext.root->setValue("animations", animationsObject);
         
-        std::map<std::string, bool> targetProcessed;
-        std::vector<unsigned int> animationsToBeRemoved;
+        std::vector<GLTFAnimationFlattener*> flatteners;
         
         for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
@@ -188,14 +187,15 @@ namespace GLTF
             for (size_t i = 0 ; i < allTargets.size() ; i++) {
                 std::string targetID = allTargets[i];
                 
-                if (targetProcessed.count(targetID) > 0) {
-                    animationsToBeRemoved.push_back((*UniqueIDToAnimationsIterator).first);
+                shared_ptr <JSONObject> target =  animation->targets()->getObject(targetID);
+                std::string path = target->getString("path");
+
+                shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID);
+                if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get())!=flatteners.end()) {
                     continue;
                 }
-                targetProcessed[targetID] = true;
-                
-                shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID, &this->_converterContext);
-                
+                flatteners.push_back(animationFlattener.get());
+
                 size_t count = 0;
                 float* rotations = 0;
                 float* positions = 0;
@@ -239,10 +239,6 @@ namespace GLTF
                     free(rotations);
                 }
             }
-        }
-        
-        for (size_t i= 0 ; i < animationsToBeRemoved.size() ; i++) {
-            this->_converterContext._uniqueIDToAnimation.erase(animationsToBeRemoved[i]);
         }
 
         //reopen .bin files for vertices and indices
@@ -1655,6 +1651,12 @@ namespace GLTF
 	{
         shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation);
         
+        cvtAnimation->setOriginalID(animation->getOriginalId());
+        
+        if (this->_converterContext._flattenerMapsForAnimationID.count(animation->getOriginalId()) == 0) {
+            this->_converterContext._flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
+        }
+        
         this->_converterContext._uniqueIDToAnimation[(unsigned int)animation->getUniqueId().getObjectId()] = cvtAnimation;
         
 		return true;
@@ -1666,9 +1668,24 @@ namespace GLTF
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
         AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
-
+        
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
+
+            AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_converterContext._flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
+            for (size_t j = 0 ; j < animatedTargets->size() ; j++) {
+                shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
+                shared_ptr<GLTFAnimationFlattener> animationFlattener;
+                std::string targetUID = animatedTarget->getString("target");
+                if (animationFlattenerMap->count(targetUID) == 0) {
+                    COLLADAFW::Node *node = (COLLADAFW::Node*)this->_converterContext._uniqueIDToOpenCOLLADAObject[targetUID].get();
+                    animationFlattener = shared_ptr<GLTFAnimationFlattener> (new GLTFAnimationFlattener(node));
+                    (*animationFlattenerMap)[targetUID] = animationFlattener;
+                }
+            }
+
+            cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
+            
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
             if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_converterContext)) {
                 //if an animation failed to convert, we don't want to keep track of it.

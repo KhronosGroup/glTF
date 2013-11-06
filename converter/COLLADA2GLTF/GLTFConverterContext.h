@@ -30,8 +30,6 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToLight;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
-
-    
     
     //TODO: cleanup, this was previously a typedef. It will be mostly reworked thanks to the GLTFConfig class.
     class GLTFConverterContext
@@ -76,6 +74,8 @@ namespace GLTF
         UniqueIDToOriginalUID _uniqueIDToOriginalID;
         
         UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
+        
+        FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
         
         GLTFOutputStream *_vertexOutputStream;
         GLTFOutputStream *_indicesOutputStream;

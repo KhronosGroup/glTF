@@ -28,9 +28,7 @@ namespace GLTF
 {
     class GLTFAnimationFlattener;
     class GLTFConverterContext;
-    
-    typedef std::map<std::string , shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
-
+        
     class GLTFAnimation {
     public:
         
@@ -79,6 +77,9 @@ namespace GLTF
         void setID(std::string animationID);
         std::string getID();
         
+        void setOriginalID(std::string originalID);
+        std::string getOriginalID();
+        
         std::vector <shared_ptr <Parameter> >* parameters();
         GLTFAnimation::Parameter* getParameterNamed(std::string parameter);
         void removeParameterNamed(std::string parameter);
@@ -90,17 +91,20 @@ namespace GLTF
 
         std::string getSamplerIDForName(std::string name);
         
-        shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string targetUID, GLTFConverterContext *converterContext);
+        void registerAnimationFlatteners(AnimationFlattenerForTargetUIDSharedPtr);
+        
+        shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string targetUID);
 
     private:
         size_t _count;
         double _duration;
         std::vector <shared_ptr <Parameter> > _parameters;
         std::string _id;
+        std::string _originalID;
         shared_ptr <JSONArray> _channels;
         shared_ptr <JSONObject> _samplers;
         shared_ptr <JSONObject> _targets;
-        AnimationFlattenerForTargetUID _animationFlattenerForTargetUID;
+        AnimationFlattenerForTargetUIDSharedPtr _animationFlattenerForTargetUID;
     };
     
 }

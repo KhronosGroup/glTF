@@ -270,10 +270,10 @@ namespace GLTF
                     shared_ptr<GLTFTransformKey> key = _transforms[i];
                     if (time == key->getTime()) {
                         if ( (*key->subTransforms()).count(transformID) > 0) {
-                            shared_ptr <COLLADAFW::Transformation> transformation = (*key->subTransforms())[transformID];
+                            transformation = (*key->subTransforms())[transformID];
                             this->_updateTransformByReplacingValueAtIndex(transformation, index, value);
                         } else {
-                            shared_ptr <COLLADAFW::Transformation> transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
+                            transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             (*key->subTransforms())[transformID] = transformation;
                         }
                         transformWasInserted(transformation);

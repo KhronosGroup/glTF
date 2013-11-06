@@ -175,20 +175,21 @@ namespace GLTF
         return this->_id + "_" + name + "_sampler";
     }
     
-    shared_ptr<GLTFAnimationFlattener> GLTFAnimation::animationFlattenerForTargetUID(std::string targetUID, GLTFConverterContext *converterContext) {
-        shared_ptr<GLTFAnimationFlattener> animationFlattener;
-        if (this->_animationFlattenerForTargetUID.count(targetUID) == 0) {
-            
-            COLLADAFW::Node *node = (COLLADAFW::Node*)converterContext->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-            
-            animationFlattener = shared_ptr<GLTFAnimationFlattener> (new GLTFAnimationFlattener(node));
-            this->_animationFlattenerForTargetUID[targetUID] = animationFlattener;
-        } else {
-            animationFlattener = this->_animationFlattenerForTargetUID[targetUID];
-        }
+    shared_ptr<GLTFAnimationFlattener> GLTFAnimation::animationFlattenerForTargetUID(std::string targetUID) {
         
-        return animationFlattener;
+        return (*this->_animationFlattenerForTargetUID)[targetUID];
     }
 
+    void GLTFAnimation::setOriginalID(std::string originalID) {
+        this->_originalID = originalID;
+    }
     
+    std::string GLTFAnimation::getOriginalID() {
+        return this->_originalID;
+    }
+    
+    void GLTFAnimation::registerAnimationFlatteners(AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMaps) {
+        this->_animationFlattenerForTargetUID = animationFlattenerMaps;
+    }
+
 }
