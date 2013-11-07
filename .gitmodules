@@ -4,6 +4,3 @@
 [submodule "converter/COLLADA2GLTF/dependencies/OpenCOLLADA"]
 	path = converter/COLLADA2GLTF/dependencies/OpenCOLLADA
 	url = https://github.com/KhronosGroup/OpenCOLLADA.git
-[submodule "converter/COLLADA2GLTF/dependencies/rapidjson"]
-	path = converter/COLLADA2GLTF/dependencies/rapidjson
-	url = https://github.com/kennytm/rapidjson.git
