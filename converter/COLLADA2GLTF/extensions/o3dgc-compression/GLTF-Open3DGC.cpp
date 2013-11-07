@@ -374,7 +374,7 @@ namespace GLTF
         compressedData->setInt32("verticesCount", vertexCount);
         compressedData->setInt32("indicesCount", allIndicesCount);
         //Open3DGC binary is disabled
-        params.SetStreamType(converterContext.compressionMode == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
+        params.SetStreamType(CONFIG_STRING("compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
 #if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
         COLLADABU::URI outputURI(converterContext.outputFilePath.c_str());
@@ -384,7 +384,7 @@ namespace GLTF
 #endif
         encoder.Encode(params, ifs, bstream);
         
-        compressedData->setString("mode", converterContext.compressionMode);
+        compressedData->setString("mode", CONFIG_STRING("compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
         compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
@@ -405,11 +405,11 @@ namespace GLTF
         }
     }
     
-    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, const GLTFConverterContext& converterContext) {
+    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFConverterContext& converterContext) {
         GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
         Real max[32];
         Real min[32];
-        O3DGCStreamType streamType = converterContext.compressionMode == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
+        O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
         DynamicVector dynamicVector;
         dynamicVector.SetVectors(buffer);
@@ -506,7 +506,7 @@ namespace GLTF
                                          unsigned char* buffer, size_t length,
                                          bool isInputParameter,
                                          GLTFConverterContext &converterContext) {
-        bool shouldEncodeOpen3DGC = converterContext.compressionType == "Open3DGC";
+        bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
 
         GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
         //setup
@@ -529,7 +529,7 @@ namespace GLTF
                 
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", bytesCount);
-                compressionDataObject->setString("mode", converterContext.compressionMode);
+                compressionDataObject->setString("mode", CONFIG_STRING("compressionMode"));
                 compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
                 converterContext._animationByteLength += bytesCount;
             }

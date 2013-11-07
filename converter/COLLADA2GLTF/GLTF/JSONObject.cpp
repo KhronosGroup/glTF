@@ -26,17 +26,99 @@
 
 #include "GLTF.h"
 
+#include "document.h"
+
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
+
 namespace GLTF 
 {
-    JSONObject::JSONObject(JSONValueType type):
-    JSONValue(type)
+        
+    shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string filepath, char** error)
     {
-    }
+        shared_ptr <GLTF::JSONObject> outObject(new JSONObject());
 
+        outObject->initWithContentsOfFile(filepath.c_str(), error);
+        
+        return outObject;
+    }
+        
+    void JSONObject::_parseRapidJSONObject(void *value) {
+        rapidjson::Value *rapidjsonValue = (rapidjson::Value *)value;
+        
+        for (Value::ConstMemberIterator itr = rapidjsonValue->MemberBegin(); itr != rapidjsonValue->MemberEnd(); ++itr) {
+            std::string key = itr->name.GetString();
+            rapidjson::Value *currentValue = (rapidjson::Value *)&itr->value;
+
+            switch (itr->value.GetType()) {
+                case kNullType:
+                    break;
+                case kFalseType:
+                case kTrueType:
+                    this->setBool(key, kTrueType ? true : false);
+                    break;
+                case kObjectType: {
+                    shared_ptr<JSONObject> obj(new JSONObject());
+                    obj->_parseRapidJSONObject(currentValue);
+                    this->setValue(key, obj);
+                }
+                    break;
+                case kArrayType: {
+                    shared_ptr<JSONArray> array(new JSONArray());
+                    array->_parseRapidJSONArray(currentValue);
+                    this->setValue(key, array);
+                }
+                    break;
+                case kStringType:
+                    this->setString(key, currentValue->GetString());
+                    break;
+                case kNumberType:
+                    if (rapidjsonValue->IsDouble()) {
+                        this->setDouble(key, currentValue->GetDouble());
+                    } else if (rapidjsonValue->IsInt() || currentValue->IsInt64()) {
+                        this->setInt32(key, currentValue->GetInt());
+                    } else if (currentValue->IsUint() || currentValue->IsUint64()) {
+                        this->setUnsignedInt32(key, currentValue->GetInt());
+                    }
+                    
+                    break;
+            }
+        }
+    }
+    
+    bool JSONObject::initWithContentsOfFile(const char *filepath, char **error)
+    {
+        bool status = false;
+        FILE * file = fopen(filepath, "rb");
+        if (file) {
+            fseek(file, 0, SEEK_END);
+            unsigned long size = ftell(file);
+            char* content = (char*)malloc(size + 1);
+            rewind(file);
+            unsigned int nread = (unsigned int) fread((void *) content, 1, size, file);
+            content[size] = 0;
+            if (nread == size) {
+                status = this->initWithCString(content, error);
+            }
+            fclose(file);
+        }
+        return status;
+    }
+    
+    bool JSONObject::initWithCString(const char *jsonString, char **error)
+    {
+        rapidjson::Document document;
+
+        if (document.Parse<0>(jsonString).HasParseError()) {
+            return false;
+        } else {
+            this->_parseRapidJSONObject(&document);
+        }
+        return true;
+    }
+    
     JSONObject::JSONObject():
     JSONValue(GLTF::OBJECT)
     {
@@ -44,7 +126,7 @@ namespace GLTF
     
     JSONObject::~JSONObject()
     {
-    }        
+    }
     
     shared_ptr <GLTF::JSONObject> JSONObject::createObjectIfNeeded(const std::string& key) {
         shared_ptr <GLTF::JSONObject> outObject;

@@ -5,6 +5,12 @@
 
 namespace GLTF
 {
+#define CONFIG_BOOL(X) (converterContext.converterConfig()->config()->getBool(X))
+#define CONFIG_STRING(X) (converterContext.converterConfig()->config()->getString(X))
+#define CONFIG_DOUBLE(X) (converterContext.converterConfig()->config()->getDouble(X))
+#define CONFIG_INT32(X) (converterContext.converterConfig()->config()->getInt32(X))
+#define CONFIG_UINT32(X) (converterContext.converterConfig()->config()->getUInt32(X))
+
     class GLTFAnimationFlattener;
     
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
@@ -35,23 +41,17 @@ namespace GLTF
     class GLTFConverterContext
     {
     public:
+        GLTFConverterContext() {
+            this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
+        }
+        
+        shared_ptr <GLTFConfig> converterConfig() {
+            return this->_converterConfig;
+        }
+        
+    public:
         std::string inputFilePath;
         std::string outputFilePath;
-
-        //TODO: add options here
-        bool invertTransparency;
-        bool exportAnimations;
-        bool exportPassDetails;
-        bool outputProgress;
-        bool useDefaultLight;
-        bool optimizeParameters;
-        
-        bool alwaysExportTRS;
-        bool alwaysExportFilterColor;
-        bool alwaysExportTransparency;
-        
-        std::string compressionMode;
-        std::string compressionType;
         
         shared_ptr <GLTFProfile> profile;
         shared_ptr <JSONObject> root;
@@ -85,6 +85,9 @@ namespace GLTF
         size_t _geometryByteLength;
         size_t _animationByteLength;
         
+    private:
+        shared_ptr <GLTFConfig> _converterConfig;
+
     } ;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

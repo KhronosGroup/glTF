@@ -32,7 +32,7 @@ namespace GLTF
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
                             GLTFConverterContext& converterContext);
     
-    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, const GLTFConverterContext& converterContext);
+    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFConverterContext& converterContext);
     
     void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
                                          const std::string& parameterSID,

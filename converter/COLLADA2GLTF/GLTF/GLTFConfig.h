@@ -24,19 +24,20 @@
 #ifndef __GLTF_CONFIG__
 #define __GLTF_CONFIG__
 
-#include "document.h"		// rapidjson's DOM-style API
-
-namespace GLTF 
+namespace GLTF
 {
     class GLTFConfig {
     public:        
         GLTFConfig();
-        
         bool initWithPath(const std::string& path);
         
         virtual ~GLTFConfig();
+        shared_ptr <JSONObject> config();
+
     private:
-        rapidjson::Document _document;
+        void _setupDefaultConfigOptions(shared_ptr<JSONObject> optionsRoot);
+    private:
+        shared_ptr<JSONObject> _configObject;
     };
 }
 

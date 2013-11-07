@@ -95,15 +95,15 @@ namespace GLTF
     
     
     //Not yet implemented for everything
-    static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters, const GLTFConverterContext& context) {
+    static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters,  GLTFConverterContext& converterContext) {
         if (inputParameters->contains(slot)) {
-            if (context.optimizeParameters == false)
+            if (CONFIG_BOOL("optimizeParameters") == false)
                 return true;
             
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
             
-            if (param->getUnsignedInt32("type") == context.profile->getGLenumForString("SAMPLER_2D"))
+            if (param->getUnsignedInt32("type") == converterContext.profile->getGLenumForString("SAMPLER_2D"))
                 return true; //it is a texture, so presumably yes, this slot is not neutral
             
             if (param->contains("value")) {
@@ -126,7 +126,7 @@ namespace GLTF
         return false;
     }
     
-    static double getTransparency(shared_ptr<JSONObject> parameters, const GLTFConverterContext& context) {
+    static double getTransparency(shared_ptr<JSONObject> parameters, GLTFConverterContext& converterContext) {
         //super naive for now, also need to check sketchup work-around
         //if (effectCommon->getOpacity().isTexture()) {
         //    return 1;
@@ -140,7 +140,7 @@ namespace GLTF
         
         double transparency = tr->getDouble("value");
         
-        return context.invertTransparency ? 1 - transparency : transparency;
+        return CONFIG_BOOL("invertTransparency") ? 1 - transparency : transparency;
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
@@ -148,24 +148,24 @@ namespace GLTF
         return getTransparency(parameters, context)  < 1;
     }
     
-    static bool isOpaque(shared_ptr <JSONObject> parameters, GLTFConverterContext& context) {
+    static bool isOpaque(shared_ptr <JSONObject> parameters, GLTFConverterContext& converterContext) {
 
         if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
-            if (diffuse->getUnsignedInt32("type") == context.profile->getGLenumForString("SAMPLER_2D")) {
-                shared_ptr<JSONObject> textures = context.root->createObjectIfNeeded("textures");
+            if (diffuse->getUnsignedInt32("type") == converterContext.profile->getGLenumForString("SAMPLER_2D")) {
+                shared_ptr<JSONObject> textures = converterContext.root->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
                 }
                 shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
                 std::string sourceUID = texture->getString("source");
-                shared_ptr<JSONObject> images = context.root->createObjectIfNeeded("images");
+                shared_ptr<JSONObject> images = converterContext.root->createObjectIfNeeded("images");
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     std::string imagePath = image->getString("path");
-                    COLLADABU::URI inputURI(context.inputFilePath.c_str());
+                    COLLADABU::URI inputURI(converterContext.inputFilePath.c_str());
                     std::string imageFullPath = inputURI.getPathDir() + imagePath;
                     if (imageHasAlpha(imageFullPath.c_str()))
                         return false;
@@ -179,7 +179,7 @@ namespace GLTF
                 }
             }
         }
-        return !hasTransparency(parameters, context);
+        return !hasTransparency(parameters, converterContext);
     }
 /*
     From https://github.com/KhronosGroup/glTF/issues/83#issuecomment-24095883
@@ -223,7 +223,7 @@ namespace GLTF
      GL_SAMPLER_CUBE
      */
     
-    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, const GLTFConverterContext& converterContext) {
+    static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, GLTFConverterContext& converterContext) {
         std::string hash = slot + ":";
 
         if (slotIsContributingToLighting(slot, parameters, converterContext)) {
@@ -281,9 +281,9 @@ namespace GLTF
         return techniqueHash;
     }
     
-    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& context)
+    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& converterContext)
     {
-        shared_ptr <JSONObject> shadersObject = context.root->createObjectIfNeeded("shaders");
+        shared_ptr <JSONObject> shadersObject = converterContext.root->createObjectIfNeeded("shaders");
         
         shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
         
@@ -295,12 +295,12 @@ namespace GLTF
             shaderObject->setString("path", path);
             
             //also write the file on disk
-            std::string shaderString = context.shaderIdToShaderString[shaderId];
+            std::string shaderString = converterContext.shaderIdToShaderString[shaderId];
             if (shaderString.size() > 0) {
-                COLLADABU::URI outputURI(context.outputFilePath);
+                COLLADABU::URI outputURI(converterContext.outputFilePath);
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
-                if (!context.outputProgress) {
+                if (!CONFIG_BOOL("outputProgress")) {
                     printf("[shader]: %s\n", shaderPath.c_str());
                 }
             }
@@ -757,7 +757,7 @@ namespace GLTF
             }
             
             
-            bool lightingIsEnabled = modelContainsLights || converterContext.useDefaultLight;
+            bool lightingIsEnabled = modelContainsLights || CONFIG_BOOL("useDefaultLight");
             
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
@@ -903,7 +903,7 @@ namespace GLTF
             
             //Currently the declaration of the shininess is dependent of the presence of light.
             //if we want details, we want also all parameters.
-            if (converterContext.exportPassDetails) {
+            if (CONFIG_BOOL("exportPassDetails")) {
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
                     addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess");
@@ -932,7 +932,7 @@ namespace GLTF
 
                 if ((!lightingIsEnabled) && ((slot == "ambient") || (slot == "specular"))) {
                     //as explained in https://github.com/KhronosGroup/glTF/issues/121 export all parameters when details is specified
-                    if (converterContext.exportPassDetails)
+                    if (CONFIG_BOOL("exportPassDetails"))
                         addParameter(slot, slotType);
                     continue;
                 }
@@ -1011,7 +1011,7 @@ namespace GLTF
             }
             if (modelContainsLights) {
                 fragmentShader->appendCode("diffuse.xyz *= diffuseLight;\n");
-            } else if (converterContext.useDefaultLight) {
+            } else if (CONFIG_BOOL("useDefaultLight")) {
                 fragmentShader->appendCode("diffuse.xyz *= max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
             }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
@@ -1032,7 +1032,7 @@ namespace GLTF
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a);\n");
             }
             
-            if (converterContext.alwaysExportFilterColor) {
+            if (CONFIG_BOOL("alwaysExportFilterColor")) {
                 if (inputParameters->contains("filterColor")) {
                     shared_ptr<JSONObject> filterColor = inputParameters->getObject("filterColor");
                     shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", vec4Type, 1, "filterColor");
@@ -1062,7 +1062,7 @@ namespace GLTF
         
     };
     
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFConverterContext& context) {
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFConverterContext& converterContext) {
         
         std::string lightingModel = techniqueGenerator->getString("lightingModel");
         shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
@@ -1071,8 +1071,8 @@ namespace GLTF
         shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
         
         shared_ptr <JSONObject> inputParameters = values;
-        shared_ptr <JSONObject> techniquesObject = context.root->createObjectIfNeeded("techniques");
-        std::string techniqueHash = buildTechniqueHash(values, techniqueExtras, context);
+        shared_ptr <JSONObject> techniquesObject = converterContext.root->createObjectIfNeeded("techniques");
+        std::string techniqueHash = buildTechniqueHash(values, techniqueExtras, converterContext);
 
         static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
@@ -1083,14 +1083,14 @@ namespace GLTF
         if (techniquesObject->contains(techniqueID))
             return techniqueID;
         
-        GLTF::Technique glTFTechnique(lightingModel, attributeSemantics, techniqueID, values, techniqueExtras, texcoordBindings, context);
+        GLTF::Technique glTFTechnique(lightingModel, attributeSemantics, techniqueID, values, techniqueExtras, texcoordBindings, converterContext);
         GLTF::Pass *glTFPass = glTFTechnique.getPass();
         
         std::string passName("defaultPass");
         //if the technique has not been serialized, first thing create the default pass for this technique
         shared_ptr <GLTF::JSONObject> pass(new GLTF::JSONObject());
         
-        shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(values, techniqueExtras, context);
+        shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(values, techniqueExtras, converterContext);
         pass->setValue("states", states);
         
         GLSLProgram* glTFProgram = glTFPass->instanceProgram();
@@ -1099,18 +1099,18 @@ namespace GLTF
         
         
         //create shader name made of the input file name to avoid file name conflicts
-        COLLADABU::URI outputFileURI(context.outputFilePath.c_str());
-        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(context.shaderIdToShaderString.size());
+        COLLADABU::URI outputFileURI(converterContext.outputFilePath.c_str());
+        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(converterContext.shaderIdToShaderString.size());
         std::string shaderFS = shaderBaseId + "FS";
         std::string shaderVS = shaderBaseId + "VS";
         
-        context.shaderIdToShaderString[shaderVS] = vs->source();
-        context.shaderIdToShaderString[shaderFS] = fs->source();
+        converterContext.shaderIdToShaderString[shaderVS] = vs->source();
+        converterContext.shaderIdToShaderString[shaderFS] = fs->source();
         
-        writeShaderIfNeeded(shaderVS, context);
-        writeShaderIfNeeded(shaderFS, context);
+        writeShaderIfNeeded(shaderVS, converterContext);
+        writeShaderIfNeeded(shaderFS, converterContext);
         
-        shared_ptr <JSONObject> programsObject = context.root->createObjectIfNeeded("programs");
+        shared_ptr <JSONObject> programsObject = converterContext.root->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> instanceProgram(new GLTF::JSONObject());
@@ -1134,8 +1134,8 @@ namespace GLTF
         passes->setValue(passName, pass);
         techniquesObject->setValue(techniqueID, referenceTechnique);
         
-        if (context.exportPassDetails) {
-            shared_ptr <JSONObject> details = glTFPass->getDetails(lightingModel, values, techniqueExtras, texcoordBindings, context);
+        if (CONFIG_BOOL("exportPassDetails")) {
+            shared_ptr <JSONObject> details = glTFPass->getDetails(lightingModel, values, techniqueExtras, texcoordBindings, converterContext);
             pass->setValue("details", details);
         }
         

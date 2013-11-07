@@ -30,10 +30,11 @@
 namespace GLTF 
 {
     class JSONArray : public JSONValue {
+        friend class JSONObject;
+        
     private:
 
-    public:        
-        
+    public:                
         JSONArray();
         virtual ~JSONArray();
 
@@ -42,7 +43,8 @@ namespace GLTF
         virtual void appendValue(shared_ptr <JSONValue>);
         
         std::vector <shared_ptr <JSONValue> > values();
-
+    protected:
+        void _parseRapidJSONArray(void *value);
     private:
         std::vector <shared_ptr <JSONValue> > _values;
     };

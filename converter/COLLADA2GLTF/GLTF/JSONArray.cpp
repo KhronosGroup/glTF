@@ -29,6 +29,8 @@
 
 #include "GLTF.h"
 
+#include "document.h"
+
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
@@ -36,6 +38,46 @@ using namespace std;
 namespace GLTF 
 {
     
+    void JSONArray::_parseRapidJSONArray(void *value) {
+        rapidjson::Value *rapidjsonValue = (rapidjson::Value *)value;
+        
+        for (Value::ConstValueIterator currentValue = rapidjsonValue->Begin(); currentValue != rapidjsonValue->End(); ++currentValue)
+            
+            switch (currentValue->GetType()) {
+                case kNullType:
+                    break;
+                case kFalseType:
+                case kTrueType:
+                    this->appendValue(shared_ptr<JSONNumber> (new JSONNumber(kTrueType ? true: false)));
+                    break;
+                case kObjectType: {
+                    shared_ptr<JSONObject> obj(new JSONObject());
+                    obj->_parseRapidJSONObject((void*)currentValue);
+                    this->appendValue(obj);
+                }
+                    break;
+                case kArrayType: {
+                    shared_ptr<JSONArray> obj(new JSONArray());
+                    obj->_parseRapidJSONArray((void*)currentValue);
+                    this->appendValue(obj);
+                }
+                    break;
+                case kStringType:
+                    this->appendValue(shared_ptr<JSONString> (new JSONString(currentValue->GetString())));
+                    break;
+                case kNumberType:
+                    if (rapidjsonValue->IsDouble()) {
+                        this->appendValue(shared_ptr<JSONNumber> (new JSONNumber(currentValue->GetDouble())));
+                    } else if (rapidjsonValue->IsInt() || currentValue->IsInt64()) {
+                        this->appendValue(shared_ptr<JSONNumber> (new JSONNumber(currentValue->GetInt())));
+                    } else if (currentValue->IsUint() || currentValue->IsUint64()) {
+                        this->appendValue(shared_ptr<JSONNumber> (new JSONNumber(currentValue->GetUint())));
+                    }
+                    
+                    break;
+            }
+    }
+
     JSONArray::JSONArray():
     JSONValue(GLTF::ARRAY)
     {

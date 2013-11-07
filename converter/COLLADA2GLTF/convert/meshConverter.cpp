@@ -67,7 +67,7 @@ namespace GLTF
         
 #ifdef USE_OPEN3DGC
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
-        shouldOGCompressMesh = (converterContext.compressionType == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
+        shouldOGCompressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
         unsigned compressedBufferStart = compressionOutputStream->length();
         if (shouldOGCompressMesh) {
             encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, converterContext);

@@ -120,6 +120,9 @@ namespace GLTF
         ifstream inputCompression;
         ofstream ouputStream;
 
+        //To comply with macro to access config
+        GLTFConverterContext &converterContext = this->_converterContext;
+        
         this->_converterContext._geometryByteLength = 0;
         this->_converterContext._animationByteLength = 0;
         
@@ -483,7 +486,7 @@ namespace GLTF
 
         if (compressionBuffer->getByteLength() > 0) {
             buffersObject->setValue(compressedBufferID, bufferObject1);
-            if (this->_converterContext.compressionMode == "ascii")
+            if (CONFIG_STRING("compressionMode") == "ascii")
                 bufferObject1->setString("type", "text");
         }
 
@@ -528,9 +531,8 @@ namespace GLTF
         
         delete this->_extraDataHandler;
         
-        printf("geometry:%d bytes\n", (int)this->_converterContext._geometryByteLength);
-        printf("animations:%d bytes\n", (int)this->_converterContext._animationByteLength);
-        
+        printf("[geometry] %d bytes\n", (int)this->_converterContext._geometryByteLength);
+        printf("[animations] %d bytes\n", (int)this->_converterContext._animationByteLength);
         printf("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
         
@@ -591,13 +593,14 @@ namespace GLTF
     
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
+        GLTFConverterContext &converterContext = this->_converterContext;
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
         }
         float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
         
-        return this->_converterContext.invertTransparency ? 1 - transparency : transparency;
+        return CONFIG_BOOL("invertTransparency") ? 1 - transparency : transparency;
     }
     
     float COLLADA2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon)
@@ -652,6 +655,7 @@ namespace GLTF
     bool COLLADA2GLTFWriter::writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                                    MaterialBindingArray &materialBindings,
                                                                    shared_ptr <GLTF::JSONArray> &meshesArray) {
+        GLTFConverterContext &converterContext = this->_converterContext;
         unsigned int meshUID = (unsigned int)uniqueId.getObjectId();
         shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
         
@@ -668,7 +672,7 @@ namespace GLTF
                     meshes->push_back(unifiedMesh);
                 }
 
-                if (this->_converterContext.compressionType == "won") {
+                if (CONFIG_STRING("compressionType") == "won") {
                     meshes2 = shared_ptr<MeshVector> (new MeshVector());
                     for (size_t j = 0 ; j < meshes->size() ; j++) {
                         shared_ptr<GLTFMesh> aMesh = (*meshes)[j];
@@ -682,7 +686,7 @@ namespace GLTF
                 
 #if USE_WEBGLLOADER
                 //now compress meshes
-                if (this->_converterContext.compressionType == "won") {
+                if (CONFIG_STRING("compressionType") == "won") {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
                         shared_ptr <GLTF::GLTFMesh> mesh = (*meshes2)[i];
                         compress(mesh);
@@ -829,7 +833,8 @@ namespace GLTF
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo)
     {
-        bool shouldExportTRS = this->_converterContext.alwaysExportTRS;
+        GLTFConverterContext &converterContext = this->_converterContext;
+        bool shouldExportTRS = CONFIG_BOOL("alwaysExportTRS");
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeOriginalID = node->getOriginalId();
         if (nodeOriginalID.length() == 0) {
@@ -1402,6 +1407,7 @@ namespace GLTF
         
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
+        GLTFConverterContext &converterContext = this->_converterContext;
         GLTFProfile* profile = this->_converterContext.profile.get();
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
@@ -1446,14 +1452,14 @@ namespace GLTF
             handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
             
-            if (this->_converterContext.alwaysExportFilterColor) {
+            if (CONFIG_BOOL("alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
                 slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
             
-            if (!isOpaque(effectCommon) || this->_converterContext.alwaysExportTransparency) {
+            if (!isOpaque(effectCommon) || CONFIG_BOOL("alwaysExportTransparency")) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
                 transparency->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));

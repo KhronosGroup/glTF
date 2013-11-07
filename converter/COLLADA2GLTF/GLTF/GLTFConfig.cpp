@@ -29,13 +29,42 @@ using namespace std;
 
 namespace GLTF 
 {    
-    GLTFConfig::GLTFConfig() {}
+    GLTFConfig::GLTFConfig() {
+        this->_configObject = shared_ptr<JSONObject> (new JSONObject());
+        this->_setupDefaultConfigOptions(this->_configObject);
+    }
     GLTFConfig::~GLTFConfig() {}
     
-    
+    void GLTFConfig::_setupDefaultConfigOptions(shared_ptr<JSONObject> optionsRoot) {
+        optionsRoot->setBool("invertTransparency", false);
+        optionsRoot->setBool("exportAnimations", true);
+        optionsRoot->setBool("outputProgress", false);
+        optionsRoot->setBool("exportPassDetails", true);
+        
+        optionsRoot->setBool("useDefaultLight", true);
+        optionsRoot->setBool("optimizeParameters", false);
+
+        optionsRoot->setBool("alwaysExportTRS", false);
+        optionsRoot->setBool("alwaysExportFilterColor", false);
+        optionsRoot->setBool("alwaysExportTransparency", false);
+        
+        optionsRoot->setString("compressionType", "none");
+        optionsRoot->setString("compressionMode", "ascii");
+    }
     
     bool GLTFConfig::initWithPath(const std::string& path) {
+        char *error = NULL;
+        if (this->_configObject->initWithContentsOfFile(path.c_str(), &error) == false) {
+            if (error != NULL) {
+                printf("[error] config file has parsing error: %s\n", error);
+                return false;
+            }
+        }
         return true;
+    }
+    
+    shared_ptr <JSONObject> GLTFConfig::config() {
+        return this->_configObject;
     }
 
 }

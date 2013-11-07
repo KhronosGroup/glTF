@@ -29,19 +29,24 @@
 
 namespace GLTF 
 {
+    shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string fileName);
+
     class JSONArray;
     
     typedef std::map<std::string , shared_ptr <JSONValue> > KeyToJSONValue;
     
     class JSONObject : public JSONValue {
+        friend class JSONArray;
+
     protected:
-        JSONObject(JSONValueType type);
-        
     public:        
         
         JSONObject();
         virtual ~JSONObject();
-      
+
+        bool initWithCString(const char *jsonString, char **error);
+        bool initWithContentsOfFile(const char *filepath, char **error);
+
         shared_ptr <JSONObject> createObjectIfNeeded(const std::string& key);
         shared_ptr <JSONArray> createArrayIfNeeded(const std::string& key);
         void setValue(const std::string &key, shared_ptr <JSONValue> value);
@@ -73,7 +78,8 @@ namespace GLTF
         size_t getKeysCount();
         
         bool isEmpty();
-        
+    protected:
+        void _parseRapidJSONObject(void *value);
     private:
         KeyToJSONValue _keyToJSONValue;
     };

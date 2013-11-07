@@ -38,6 +38,7 @@
 #include "GLTFConverterContext.h"
 
 #include "COLLADA2GLTFWriter.h"
+#include "JSONObject.h"
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -61,6 +62,7 @@ option* opt_options;
 std::string helpMessage = "";
 
 static const OptionDescriptor options[] = {
+    { "z",				required_argument,  "-z -> path of configuration file [string]" },
 	{ "f",				required_argument,  "-f -> path of input file, argument [string]" },
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
 	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
@@ -116,26 +118,16 @@ bool fileExists(const char * filename) {
     return false;
 }
 
-static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContext *converterArgs) {
+static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContext *converterContext) {
 	int ch;
     std::string file;
     std::string output;
     bool hasOutputPath = false;
     bool hasInputPath = false;
     bool shouldShowHelp = false;
-    converterArgs->invertTransparency = false;
-    converterArgs->exportAnimations = true;
-    converterArgs->exportPassDetails = false;
-    converterArgs->outputProgress = false;
-    converterArgs->useDefaultLight = true;
-    converterArgs->optimizeParameters = false;
-    converterArgs->alwaysExportTRS = false;
-    converterArgs->alwaysExportFilterColor = false;
-    converterArgs->alwaysExportTransparency = false;
     
-    converterArgs->compressionType = "none";
-    converterArgs->compressionMode = "ascii";
-    
+    //converterContext->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
+    //converterContext->configObject
     buildOptions();
     
     if (argc == 1) {
@@ -144,37 +136,41 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     
     if (argc == 2) {
         if (fileExists(argv[1])) {
-            converterArgs->inputFilePath = argv[1];
-            converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
+            converterContext->inputFilePath = argv[1];
+            converterContext->outputFilePath = replacePathExtensionWithJSON(converterContext->inputFilePath);
             return true;
         }
     }
     
-    while ((ch = getopt_long(argc, argv, "f:o:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
+    shared_ptr<GLTF::GLTFConfig> converterConfig = converterContext->converterConfig();
+    
+    while ((ch = getopt_long(argc, argv, "z:f:o:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
         switch (ch) {
+            case 'z': 
+                converterConfig->initWithPath(optarg);
+                break;
             case 'h':
                 dumpHelpMessage();
                 return false;
             case 'f':
-                converterArgs->inputFilePath = optarg;
+                converterContext->inputFilePath = optarg;
                 hasInputPath = true;
 				break;
             case 'o':
-                converterArgs->outputFilePath = replacePathExtensionWithJSON(optarg);
+                converterContext->outputFilePath = replacePathExtensionWithJSON(optarg);
                 hasOutputPath = true;
 				break;
             case 'i':
-                converterArgs->invertTransparency = true;
+                converterConfig->config()->setBool("invertTransparency", true);
                 break;
             case 'p':
-                converterArgs->outputProgress = true;
+                converterConfig->config()->setBool("outputProgress", true);
                 break;
                 
             case 'c':
                 //compression type
-                converterArgs->compressionType = optarg;
+                converterConfig->config()->setString("compressionType", optarg);
                 printf("[option] compression type:%s\n",optarg);
-
                 break;
                 
             case 'v':
@@ -183,38 +179,39 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 
             case 'm':
                 //compression mode
-                converterArgs->compressionMode = optarg;
+                converterConfig->config()->setString("compressionMode", optarg);
                 printf("[option] compression mode:%s\n",optarg);
-
                 break;
                 
             case 'l':
                 if (optarg != NULL) {
+                    bool useDefaultLight;
                     if (strcmp(optarg, "true") == 0) {
-                        converterArgs->useDefaultLight = true;
+                        useDefaultLight = true;
                     }
                     if (strcmp(optarg, "false") == 0) {
-                        converterArgs->useDefaultLight = false;
+                        useDefaultLight = false;
                     } else {
-                        converterArgs->useDefaultLight = atoi(optarg) != 0;
+                        useDefaultLight = atoi(optarg) != 0;
                     }
+                    converterConfig->config()->setBool("useDefaultLight", useDefaultLight);
                 }
                 
                 break;
             case 'a':
-                //converterArgs->exportAnimations = true;
+                //converterContext->exportAnimations = true;
                 break;
             case 'd':
-                converterArgs->exportPassDetails = true;
+                converterConfig->config()->setBool("exportPassDetails", true);
                 printf("[option] export pass details\n");
                 break;
             case 's':
                 //special mode - not exposed - yet.
-                converterArgs->alwaysExportTRS = true;
-                converterArgs->alwaysExportFilterColor = true;
-                converterArgs->alwaysExportTransparency = true;
-                converterArgs->useDefaultLight = false;
-                converterArgs->optimizeParameters = true;
+                converterConfig->config()->setBool("alwaysExportTRS", true);
+                converterConfig->config()->setBool("alwaysExportFilterColor", true);
+                converterConfig->config()->setBool("alwaysExportTransparency", true);
+                converterConfig->config()->setBool("useDefaultLight", false);
+                converterConfig->config()->setBool("optimizeParameters", true);
 
                 printf("[option] special mode on\n");
                 break;
@@ -231,7 +228,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     }
     
     if (!hasOutputPath & hasInputPath) {
-        converterArgs->outputFilePath = replacePathExtensionWithJSON(converterArgs->inputFilePath);
+        converterContext->outputFilePath = replacePathExtensionWithJSON(converterContext->inputFilePath);
     }
         
     return true;
@@ -261,7 +258,7 @@ int main (int argc, char * const argv[]) {
             rapidjson::FileStream s(stdout);
 #endif
             rapidjson::PrettyWriter <rapidjson::FileStream> jsonWriter(s);
-            if (converterContext.outputProgress) {
+            if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
                 printf("convertion 0%%");
                 printf("\n\033[F\033[J");
             } else {
@@ -269,7 +266,7 @@ int main (int argc, char * const argv[]) {
             }
             GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext, &jsonWriter);
             writer->write();
-            if (converterContext.outputProgress) {
+            if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
                 printf("convertion 100%%");
                 printf("\n");
             } else {
