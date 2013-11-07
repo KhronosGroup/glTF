@@ -217,19 +217,48 @@ namespace GLTF
         return true;
     }
     
+    O3DGCSC3DMCPredictionMode _predictionModeForString(const std::string &prediction)
+    {
+        O3DGCSC3DMCPredictionMode o3dPredictionMode = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
+        
+        if (prediction == "PARALLELOGRAM") {
+            o3dPredictionMode = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
+        } else if (prediction == "DIFFERENTIAL") {
+            o3dPredictionMode = O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION;
+        } else if (prediction == "NORMAL") {
+            o3dPredictionMode = O3DGC_SC3DMC_SURF_NORMALS_PREDICTION;
+        }
+        
+        return o3dPredictionMode;
+    }
+    
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
                             GLTFConverterContext& converterContext)
     {
         o3dgc::SC3DMCEncodeParams params;
         o3dgc::IndexedFaceSet <unsigned short> ifs;
-
+        shared_ptr <GLTFConfig> config = converterContext.converterConfig();
+        
         //setup options
         int qcoord    = 12;
         int qtexCoord = 10;
         int qnormal   = 10;
         int qcolor   = 10;
         int qWeights = 8;
+        
+        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION", qcoord);
+        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL", qnormal);
+        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", qtexCoord);
+        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR", qcolor);
+        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT", qWeights);
+        
+        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION", "PARALLELOGRAM"));
+        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", "PARALLELOGRAM"));
+        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL", "NORMAL"));
+        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR", "DIFFERENTIAL"));
+        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT", "PARALLELOGRAM"));
+        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT", "DIFFERENTIAL"));
         
         GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
         size_t bufferOffset = outputStream->length();
@@ -299,19 +328,20 @@ namespace GLTF
                 switch (semantic) {
                     case POSITION:
                         params.SetCoordQuantBits(qcoord);
+                        params.SetCoordPredMode(positionPrediction);
                         params.SetCoordPredMode(floatAttributePrediction);
                         ifs.SetNCoord(vertexCount);
                         ifs.SetCoord((Real * const)buffer);
                         break;
                     case NORMAL:
                         params.SetNormalQuantBits(qnormal);
-                        params.SetNormalPredMode(O3DGC_SC3DMC_SURF_NORMALS_PREDICTION);
+                        params.SetNormalPredMode(normalPrediction);
                         ifs.SetNNormal(vertexCount);
                         ifs.SetNormal((Real * const)buffer);
                         break;
                     case TEXCOORD:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
-                        params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
+                        params.SetFloatAttributePredMode(nFloatAttributes, texcoordPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
@@ -321,7 +351,7 @@ namespace GLTF
                         break;
                     case COLOR:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
-                        params.SetFloatAttributePredMode(nFloatAttributes, floatAttributePrediction);
+                        params.SetFloatAttributePredMode(nFloatAttributes, colorPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
@@ -331,7 +361,7 @@ namespace GLTF
                         break;
                     case WEIGHT:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
-                        params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_DIFFERENTIAL_PREDICTION);
+                        params.SetFloatAttributePredMode(nFloatAttributes, weightPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
@@ -349,7 +379,7 @@ namespace GLTF
                          nIntAttributes++;
                          */
                         params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
-                        params.SetFloatAttributePredMode(nFloatAttributes, O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION);
+                        params.SetFloatAttributePredMode(nFloatAttributes, jointPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
@@ -405,11 +435,13 @@ namespace GLTF
         }
     }
     
-    void encodeDynamicVector(float *buffer, size_t componentsCount, size_t count, GLTFConverterContext& converterContext) {
+    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFConverterContext& converterContext) {
         GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
         Real max[32];
         Real min[32];
         O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
+        
+        shared_ptr<GLTFConfig> config = converterContext.converterConfig();
         
         DynamicVector dynamicVector;
         dynamicVector.SetVectors(buffer);
@@ -421,7 +453,18 @@ namespace GLTF
         dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_SEP_DIM);//O3DGC_SC3DMC_MAX_ALL_DIMS        
         DVEncodeParams params;
         
-        params.SetQuantBits(componentsCount == 1 ? 11 : 17); //HACK, if that's 1 component it is the TIME and 10 bits is OK
+        int quantization = 17;
+        if (path == "TIME") {
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TIME", 10);
+        } else if (path == "translation") {
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.translation", 17);
+        } else if (path == "rotation") {
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.rotation", 17);
+        } else if (path == "scale") {
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.scale", 17);
+        }
+        
+        params.SetQuantBits(quantization);
         params.SetStreamType(streamType);
         
         DynamicVectorEncoder encoder;
@@ -520,7 +563,7 @@ namespace GLTF
             unsigned int glType = profile->getGLenumForString(parameterType);
             size_t componentsCount = profile->getComponentsCountForType(glType);
             if (componentsCount) {
-                encodeDynamicVector((float*)buffer, componentsCount, cvtAnimation->getCount(), converterContext);
+                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), converterContext);
                 
                 size_t bytesCount = outputStream->length() - byteOffset;
                 

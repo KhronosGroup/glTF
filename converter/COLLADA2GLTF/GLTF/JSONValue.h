@@ -41,6 +41,8 @@ namespace GLTF
                 
         JSONValueType getType();
         
+        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
+        
     private:
         JSONValueType _type;
     };

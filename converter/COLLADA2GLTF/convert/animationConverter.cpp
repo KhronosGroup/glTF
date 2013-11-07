@@ -241,8 +241,8 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 3;
                                     shared_ptr <COLLADAFW::Scale> scale(new COLLADAFW::Scale(scales[offset + 0],
-                                                                                                     scales[offset + 1],
-                                                                                                     scales[offset + 2]));
+                                                                                             scales[offset + 1],
+                                                                                             scales[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, scale, timeValues[k]);
                                 }
                             }

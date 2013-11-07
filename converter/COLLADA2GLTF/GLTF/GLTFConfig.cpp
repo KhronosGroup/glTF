@@ -67,4 +67,72 @@ namespace GLTF
         return this->_configObject;
     }
 
+    
+    unsigned int GLTFConfig::unsignedInt32ForKeyPath(const std::string &keyPath, unsigned int defaultValue) {
+        unsigned int resultValue = defaultValue;
+        shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
+        if (value) {
+            if (value->getType() == NUMBER) {
+                shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
+                resultValue = numberValue->getUnsignedInt32();
+            }
+        }
+        
+        return resultValue;
+    }
+    
+    int GLTFConfig::int32ForKeyPath(const std::string &keyPath, int defaultValue) {
+        int resultValue = defaultValue;
+        shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
+        if (value) {
+            if (value->getType() == NUMBER) {
+                shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
+                resultValue = numberValue->getInt32();
+            }
+        }
+        
+        return resultValue;
+
+    }
+    
+    double GLTFConfig::doubleForKeyPath(const std::string &keyPath, double defaultValue) {
+        double resultValue = defaultValue;
+        shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
+        if (value) {
+            if (value->getType() == NUMBER) {
+                shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
+                resultValue = numberValue->getDouble();
+            }
+        }
+        
+        return resultValue;
+
+    }
+    
+    bool GLTFConfig::boolForKeyPath(const std::string &keyPath, bool defaultValue) {
+        bool resultValue = defaultValue;
+        shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
+        if (value) {
+            if (value->getType() == NUMBER) {
+                shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
+                resultValue = numberValue->getBool();
+            }
+        }
+        
+        return resultValue;
+    }
+    
+    std::string GLTFConfig::stringForKeyPath(const std::string &keyPath, std::string defaultValue) {
+        std::string resultValue = defaultValue;
+        shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
+        if (value) {
+            if (value->getType() == STRING) {
+                shared_ptr<JSONString> numberValue = static_pointer_cast<JSONString>(value);
+                resultValue = numberValue->getString();
+            }
+        }
+        
+        return resultValue;
+    }
+
 }

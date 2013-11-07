@@ -76,31 +76,84 @@ namespace GLTF
     
     unsigned int JSONNumber::getUnsignedInt32() {
         unsigned int value = 0;
-        if (this->_type == UNSIGNED_INT32)
+        if (this->_type == UNSIGNED_INT32) {
             memcpy(&value, this->_value, sizeof(unsigned int));
+            return value;
+        }
+        
+        switch (this->_type) {
+            case INT32:
+                value  = (unsigned int)this->getInt32();
+                break;
+            case DOUBLE:
+                value  = (unsigned int)this->getDouble();
+                break;
+            case BOOL:
+                value  = (unsigned int)this->getBool();
+                break;
+            default:
+                break;
+        }
+        
         return value;
     }        
     
     int JSONNumber::getInt32() {
         int value = 0;
-        if (this->_type == INT32)
+        if (this->_type == INT32) {
             memcpy(&value, this->_value, sizeof(int));
+            return value;
+        }
+
+        switch (this->_type) {
+            case UNSIGNED_INT32:
+                value  = (int)this->getUnsignedInt32();
+                break;
+            case DOUBLE:
+                value  = (int)this->getDouble();
+                break;
+            case BOOL:
+                value  = (int)this->getBool();
+                break;
+            default:
+                break;
+        }
+        
         return value;
     }        
     
     double JSONNumber::getDouble() {
         double value = 0;
-        if (this->_type == DOUBLE)
+        if (this->_type == DOUBLE) {
             memcpy(&value, this->_value, sizeof(double));
+            return value;
+        }
+
+        switch (this->_type) {
+            case UNSIGNED_INT32:
+                value  = (double)this->getUnsignedInt32();
+                break;
+            case INT32:
+                value  = (double)this->getInt32();
+                break;
+            case BOOL:
+                value  = (double)this->getBool();
+                break;
+            default:
+                break;
+        }
+
         return value;
-    }      
+    }
 
     bool JSONNumber::getBool() {
         bool value = 0;
-        if (this->_type == BOOL)
+        
+        if (this->_type == BOOL) {
             memcpy(&value, this->_value, sizeof(bool));
-        return value;
-    }      
+            return value;
+        }
+    }
 
     JSONNumber::JSONNumberType JSONNumber::getType()
     {

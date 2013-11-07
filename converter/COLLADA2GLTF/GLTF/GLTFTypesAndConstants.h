@@ -76,14 +76,7 @@ namespace GLTF
         NUMBER = 1,
         OBJECT = 2,
         ARRAY = 3,
-        STRING = 4,
-        
-        ACCESSOR = 5,
-        BUFFER = 6,
-        EFFECT = 7,
-        INDICES = 8,
-        MESH = 9,
-        PRIMITIVE = 10
+        STRING = 4        
     } JSONValueType;
     
     typedef enum {

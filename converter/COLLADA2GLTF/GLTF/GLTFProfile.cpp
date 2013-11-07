@@ -27,13 +27,12 @@ namespace GLTF
 {
     GLTFProfile::~GLTFProfile() {}
     
-    void GLTFProfile::setGLenumForString(const std::string& str , unsigned int aGLEnum)
-    {
+    void GLTFProfile::setGLenumForString(const std::string& str , unsigned int aGLEnum) {
         this->_glEnumForString[str] = aGLEnum;
     }
     
-    unsigned int GLTFProfile::getGLenumForString(const std::string& str)
-    {
+    unsigned int GLTFProfile::getGLenumForString(const std::string& str) {
         return this->_glEnumForString[str];
     }
+
 }

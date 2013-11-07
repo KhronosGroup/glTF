@@ -43,5 +43,31 @@ namespace GLTF
         writer->write(this, context);
     }
     
+    shared_ptr<JSONValue> JSONValue::valueForKeyPath(std::string keyPath) {
+        std::size_t pos = keyPath.find(".");
+        if (pos == std::string::npos) {
+            if (this->_type == OBJECT) {
+                JSONObject *currentObject = (JSONObject*)this;
+                if (currentObject->contains(keyPath)) {
+                    return currentObject->getObject(keyPath);
+                }
+            }
+        } else {
+            //here we expect an object
+            if (this->_type == OBJECT) {
+                //we have an object, so we can continue parsing
+                //First, we need to get the substring after the dot
+                std::string currentPath = keyPath.substr(0,pos);
+                JSONObject *currentObject = (JSONObject*)this;
+                if (currentObject->contains(currentPath)) {
+                    shared_ptr<JSONObject> nextObject = currentObject->getObject(currentPath);
+                    pos += 1; //skip the dot
+                    std::string nextPath = keyPath.substr(pos);
+                    return nextObject->valueForKeyPath(nextPath);
+                }
+            }
+        }
+        return shared_ptr<JSONValue> ((JSONValue*)0);
+    }
     
 }
