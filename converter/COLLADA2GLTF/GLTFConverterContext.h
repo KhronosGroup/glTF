@@ -21,23 +21,23 @@ namespace GLTF
     typedef std::map<std::string /* openCOLLADA uniqueID */, GLTFMeshSharedPtr > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, COLLADAFW::UniqueId > MaterialUIDToEffectUID;
+    typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
+    
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
-    typedef std::map<std::string /* openCOLLADA uniqueID */, shared_ptr<JSONObject> > UniqueIDToNode;
     typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
     typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
     typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
-    typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
-    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToLight;
+
+    typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
-    //TODO: cleanup, this was previously a typedef. It will be mostly reworked thanks to the GLTFConfig class.
     class GLTFConverterContext
     {
     public:
@@ -66,15 +66,14 @@ namespace GLTF
         UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
         OriginalIDToTrackedObject _originalIDToTrackedObject;
         UniqueIDToSkin _uniqueIDToSkin;
-        UniqueIDToNode _uniqueIDToNode;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
-        UniqueIDToLight _uniqueIDToLight;
+        
+        UniqueIDToJSONValue _uniqueIDToJSONValue;
+
         UniqueIDToOriginalUID _uniqueIDToOriginalID;
-        
         UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
-        
         FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
         
         GLTFOutputStream *_vertexOutputStream;
