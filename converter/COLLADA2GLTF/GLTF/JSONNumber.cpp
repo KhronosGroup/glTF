@@ -153,6 +153,21 @@ namespace GLTF
             memcpy(&value, this->_value, sizeof(bool));
             return value;
         }
+        
+        switch (this->_type) {
+            case UNSIGNED_INT32:
+                value  = (bool)this->getUnsignedInt32();
+                break;
+            case INT32:
+                value  = (bool)this->getInt32();
+                break;
+            case DOUBLE:
+                value  = (bool)this->getBool();
+                break;
+            default:
+                break;
+        }
+        return value;
     }
 
     JSONNumber::JSONNumberType JSONNumber::getType()
