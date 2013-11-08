@@ -244,6 +244,7 @@ namespace GLTF
         return "";
     }
     
+    //FIXME: this is not consistent naming, we should have some other convention to return stl objects (vs JSONValue)
     vector <std::string> JSONObject::getAllKeys()
     {
         vector <std::string> allKeys;
@@ -259,6 +260,17 @@ namespace GLTF
         }
         
         return allKeys;
+    }
+    
+    shared_ptr<JSONArray> JSONObject::keys() {
+        vector <std::string> allKeys = this->getAllKeys();
+        shared_ptr<JSONArray> keys(new JSONArray());
+        
+        for (size_t i = 0 ; i < allKeys.size() ; i++) {
+            keys->appendValue(shared_ptr<JSONString> (new JSONString(allKeys[i])));
+        }
+        
+        return keys;
     }
     
     bool JSONObject::contains(const std::string &key)

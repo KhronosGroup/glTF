@@ -75,6 +75,8 @@ namespace GLTF
         
         std::vector <std::string> getAllKeys();
         
+        shared_ptr<JSONArray> keys();
+        
         size_t getKeysCount();
         
         bool isEmpty();

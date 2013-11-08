@@ -1121,6 +1121,7 @@ namespace GLTF
         instanceProgram->setString("program", programID);
         programsObject->setValue(programID, program);
         
+        program->setValue("attributes", glTFProgram->attributes()->keys());
         program->setString("vertexShader", shaderVS);
         program->setString("fragmentShader", shaderFS);
         
