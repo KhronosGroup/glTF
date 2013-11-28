@@ -320,8 +320,8 @@ namespace GLTF
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
-        shared_ptr <GLTF::JSONObject> attributes = this->_converterContext.root->createObjectIfNeeded("attributes");
-        shared_ptr <GLTF::JSONObject> indices = this->_converterContext.root->createObjectIfNeeded("indices");
+        shared_ptr <GLTF::JSONObject> attributes = this->_converterContext.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> indices = this->_converterContext.root->createObjectIfNeeded("accessors");
         
         for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)

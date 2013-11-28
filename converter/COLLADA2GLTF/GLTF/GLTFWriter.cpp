@@ -254,7 +254,7 @@ namespace GLTF
     shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter, void *context) {
         shared_ptr <JSONObject> animationParameterObject(new JSONObject());
         GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
-        
+                
         animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
         animationParameterObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString(animationParameter->getType()));
         animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
@@ -272,16 +272,24 @@ namespace GLTF
         shared_ptr <JSONObject> animationObject(new JSONObject());
         shared_ptr <JSONObject> parametersObject(new JSONObject());
         GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
-
+        
         animationObject->setUnsignedInt32("count", animation->getCount());
         animationObject->setValue("samplers", animation->samplers());
         animationObject->setValue("channels", animation->channels());
         
+        shared_ptr<JSONObject> accessors = converterContext->root->createObjectIfNeeded("accessors");
+        
         std::vector <shared_ptr <GLTFAnimation::Parameter> >  *parameters = animation->parameters();
         for (size_t i = 0 ; i < parameters->size() ; i++) {
+            //build an id based on number of accessors
+            
             shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get(), converterContext);
             
-            parametersObject->setValue((*parameters)[i]->getID(), parameterObject);
+            //build an id based on the number of accessors
+            std::string parameterUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
+            accessors->setValue(parameterUID, parameterObject);
+            
+            parametersObject->setString((*parameters)[i]->getID(), parameterUID);
         }
         animationObject->setValue("parameters", parametersObject);
         
