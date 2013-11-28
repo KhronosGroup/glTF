@@ -72,7 +72,7 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs,rapidjson::PrettyWriter <rapidjson::FileStream> *jsonWriter );
+		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -180,6 +180,7 @@ namespace GLTF
         GLTF::GLTFConverterContext _converterContext;
         const COLLADAFW::VisualScene *_visualScene;
         GLTF::GLTFWriter _writer;
+        GLTF::GLTFWriter _resultsWriter;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
 

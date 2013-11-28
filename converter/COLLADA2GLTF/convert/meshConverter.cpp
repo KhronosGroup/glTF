@@ -95,6 +95,12 @@ namespace GLTF
                 // FIXME: report error
             } else {
                 allIndicesCount += indicesCount;
+                
+                //FIXME: this is assuming triangles
+                unsigned int trianglesCount = converterContext.convertionResults()->getUnsignedInt32("trianglesCount");
+                trianglesCount += indicesCount / 3;
+                converterContext.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
+                
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = 0;
                 
@@ -133,9 +139,17 @@ namespace GLTF
             }
             
             if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
+                
                 meshAttribute->computeMinMax();
                 
                 vertexCount = meshAttribute->getCount();
+                
+                if (attributeCount == 0) {
+                    unsigned int totalVerticesCount = converterContext.convertionResults()->getUnsignedInt32("verticesCount");
+                    totalVerticesCount += vertexCount;
+                    converterContext.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
+                }
+                
                 attributeCount++;
 #ifdef USE_OPEN3DGC
                 if (shouldOGCompressMesh) {
@@ -938,7 +952,7 @@ namespace GLTF
                 
                 static bool printedOnce = false;
                 if (!printedOnce) {
-                    printf("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                    context.log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
                     printedOnce = true;
                 }
                 

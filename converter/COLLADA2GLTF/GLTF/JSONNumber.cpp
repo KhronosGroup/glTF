@@ -175,5 +175,4 @@ namespace GLTF
         return this->_type;
     }
 
-        
 }

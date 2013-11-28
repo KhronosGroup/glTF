@@ -173,7 +173,7 @@ namespace GLTF
                     static bool printedOnce = false;
                     if (!printedOnce) {
                         printedOnce = true;
-                        printf("Inconsistency error: this asset probably refers to invalid image Ids within <surface>\n");
+                        converterContext.log("Inconsistency error: this asset probably refers to invalid image Ids within <surface>\n");
                     }
                     return false;
                 }
@@ -301,7 +301,7 @@ namespace GLTF
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
                 if (!CONFIG_BOOL("outputProgress")) {
-                    printf("[shader]: %s\n", shaderPath.c_str());
+                    converterContext.log("[shader]: %s\n", shaderPath.c_str());
                 }
             }
         }
@@ -566,7 +566,7 @@ namespace GLTF
         }
         
         //FIXME: it's a bad API since we won't have at the same time a varying an uniform...
-        void addSemantic(std::string vertexOrFragment, std::string uniformOrAttribute,
+        bool addSemantic(std::string vertexOrFragment, std::string uniformOrAttribute,
                          std::string semantic,
                          std::string parameterID,
                          size_t count,
@@ -591,8 +591,7 @@ namespace GLTF
             } else if (uniformOrAttribute == "uniform") {
                 program->uniforms()->setString(symbol, parameterID);
             } else {
-                printf("cannot add semantic of unknown kind %s\n", uniformOrAttribute.c_str());
-                return;
+                return false;
             }
             
             if (uniformOrAttribute == "attribute") {
@@ -603,7 +602,9 @@ namespace GLTF
                 }
             } else {
                 shader->addUniform(symbol, type, count);
-            }            
+            }
+            
+            return true;
         }
         
         //FIXME: refactor with addSemantic
@@ -616,10 +617,11 @@ namespace GLTF
         }
         
         shared_ptr <JSONObject> addValue(std::string vertexOrFragment,
-                      std::string uniformOrAttribute,
-                      unsigned int type,
-                      size_t count,
-                      std::string parameterID) {
+                                         std::string uniformOrAttribute,
+                                         unsigned int type,
+                                         size_t count,
+                                         std::string parameterID,
+                                         GLTFConverterContext& converterContext) {
                         
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
                         
@@ -631,7 +633,7 @@ namespace GLTF
             } else if (uniformOrAttribute == "uniform") {
                 program->uniforms()->setString(symbol, parameterID);
             } else {
-                printf("cannot add semantic of unknown kind %s\n", uniformOrAttribute.c_str());
+                converterContext.log("cannot add semantic of unknown kind %s\n", uniformOrAttribute.c_str());
             }
             
             if (uniformOrAttribute == "attribute") {
@@ -838,7 +840,7 @@ namespace GLTF
                             
                             fragmentShader->appendCode("{\n");
                             
-                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, converterContext);
                             lightColorParameter->setValue("value", description->getValue("color"));
                                                         
                             //FIXME: what happens if multiple ambient light ?
@@ -853,7 +855,7 @@ namespace GLTF
                             
                             fragmentShader->appendCode("{\n");
                             
-                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor);
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, converterContext);
                             lightColorParameter->setValue("value", description->getValue("color"));
                             
                             fragmentShader->appendCode("float diffuseIntensity;\n");
@@ -862,7 +864,7 @@ namespace GLTF
                             char varyingLightDirection[100];
                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                             
-                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform);
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, converterContext);
                             
                             vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
 
@@ -872,7 +874,7 @@ namespace GLTF
                             if (!useSimpleLambert) {
                                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                                     shininessObject = inputParameters->getObject("shininess");
-                                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess");
+                                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", converterContext);
                                 }
                                 
                                 fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
@@ -906,7 +908,7 @@ namespace GLTF
             if (CONFIG_BOOL("exportPassDetails")) {
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
-                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess");
+                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess", converterContext);
                 }
             }
             
@@ -941,7 +943,7 @@ namespace GLTF
                     std::string slotColorSymbol = "u_"+slot;
                     fragmentShader->appendCode("%s = %s;\n", slot.c_str(), slotColorSymbol.c_str());
                     
-                    addValue("fs", "uniform",   slotType, 1, slot);
+                    addValue("fs", "uniform",   slotType, 1, slot, converterContext);
                 } else if (slotType == sampler2DType) {
                     std::string semantic = texcoordBindings->getString(slot);
                     if (semantic.length() == 0) {
@@ -992,7 +994,7 @@ namespace GLTF
                     //get the texture
                     shared_ptr <JSONObject> textureParameter = inputParameters->getObject(slot);
                     //FIXME:this should eventually not come from the inputParameter
-                    addValue("fs", "uniform", textureParameter->getUnsignedInt32("type"), 1, slot);
+                    addValue("fs", "uniform", textureParameter->getUnsignedInt32("type"), 1, slot, converterContext);
 
                     fragmentShader->appendCode("%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
                 }
@@ -1025,7 +1027,7 @@ namespace GLTF
                 std::string slot = "transparency";
                 shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
                 
-                addValue("fs", "uniform",   transparencyParam->getUnsignedInt32("type"), 1, slot);
+                addValue("fs", "uniform",   transparencyParam->getUnsignedInt32("type"), 1, slot, converterContext);
                 
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
             } else {
@@ -1035,7 +1037,7 @@ namespace GLTF
             if (CONFIG_BOOL("alwaysExportFilterColor")) {
                 if (inputParameters->contains("filterColor")) {
                     shared_ptr<JSONObject> filterColor = inputParameters->getObject("filterColor");
-                    shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", vec4Type, 1, "filterColor");
+                    shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", vec4Type, 1, "filterColor", converterContext);
                     filterColorParameter->setValue("value", filterColor->getValue("value"));
                     fragmentShader->appendCode("color *= u_filterColor;\n");
                 }

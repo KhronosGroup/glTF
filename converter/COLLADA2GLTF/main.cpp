@@ -146,7 +146,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     
     while ((ch = getopt_long(argc, argv, "z:f:o:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
         switch (ch) {
-            case 'z': 
+            case 'z':
                 converterConfig->initWithPath(optarg);
                 break;
             case 'h':
@@ -170,7 +170,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
             case 'c':
                 //compression type
                 converterConfig->config()->setString("compressionType", optarg);
-                printf("[option] compression type:%s\n",optarg);
                 break;
                 
             case 'v':
@@ -180,7 +179,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
             case 'm':
                 //compression mode
                 converterConfig->config()->setString("compressionMode", optarg);
-                printf("[option] compression mode:%s\n",optarg);
                 break;
                 
             case 'l':
@@ -203,7 +201,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 break;
             case 'd':
                 converterConfig->config()->setBool("exportPassDetails", true);
-                printf("[option] export pass details\n");
                 break;
             case 's':
                 //special mode - not exposed - yet.
@@ -212,8 +209,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 converterConfig->config()->setBool("alwaysExportTransparency", true);
                 converterConfig->config()->setBool("useDefaultLight", false);
                 converterConfig->config()->setBool("optimizeParameters", true);
-
-                printf("[option] special mode on\n");
                 break;
                 
 			default:
@@ -230,7 +225,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     if (!hasOutputPath & hasInputPath) {
         converterContext->outputFilePath = replacePathExtensionWithJSON(converterContext->inputFilePath);
     }
-        
+    
     return true;
 }
 
@@ -249,34 +244,20 @@ int main (int argc, char * const argv[]) {
         }
         
         clock_t start = clock();
-
-#if !STDOUT_OUTPUT
-        FILE* fd = fopen(converterContext.outputFilePath.c_str(), "w");
-        if (fd) {
-            rapidjson::FileStream s(fd);
-#else
-            rapidjson::FileStream s(stdout);
-#endif
-            rapidjson::PrettyWriter <rapidjson::FileStream> jsonWriter(s);
-            if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
-                printf("convertion 0%%");
-                printf("\n\033[F\033[J");
-            } else {
-                printf("converting:%s ... as %s \n",converterContext.inputFilePath.c_str(), converterContext.outputFilePath.c_str());
-            }
-            GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext, &jsonWriter);
-            writer->write();
-            if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
-                printf("convertion 100%%");
-                printf("\n");
-            } else {
-                printf("[completed conversion]\n");
-            }
-#if !STDOUT_OUTPUT
-            fclose(fd);
-            delete writer;
+        if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
+            converterContext.log("convertion 0%%");
+            converterContext.log("\n\033[F\033[J");
+        } else {
+            converterContext.log("converting:%s ... as %s \n",converterContext.inputFilePath.c_str(), converterContext.outputFilePath.c_str());
         }
-#endif
+        GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext);
+        writer->write();
+        if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
+            converterContext.log("convertion 100%%");
+            converterContext.log("\n");
+        } else {
+            converterContext.log("[completed conversion]\n");
+        }
 #if WIN32
         double clocks = CLK_TCK;
 #else
@@ -284,7 +265,7 @@ int main (int argc, char * const argv[]) {
 #endif
         std::stringstream s;
         s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
-        std::cout << "Runtime: " << s.str() << " seconds" << std::endl;
+        converterContext.log("Runtime: %s seconds", s.str().c_str());
     }
     return 0;
 }

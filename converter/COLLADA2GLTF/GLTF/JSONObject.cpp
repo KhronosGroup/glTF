@@ -56,8 +56,10 @@ namespace GLTF
                 case kNullType:
                     break;
                 case kFalseType:
+                    this->setBool(key, false);
+                    break;
                 case kTrueType:
-                    this->setBool(key, kTrueType ? true : false);
+                    this->setBool(key, true);
                     break;
                 case kObjectType: {
                     shared_ptr<JSONObject> obj(new JSONObject());

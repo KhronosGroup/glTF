@@ -43,10 +43,29 @@ namespace GLTF
     public:
         GLTFConverterContext() {
             this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
+            this->_convertionResults = shared_ptr<JSONObject> (new JSONObject());
         }
         
         shared_ptr <GLTFConfig> converterConfig() {
             return this->_converterConfig;
+        }
+        
+        shared_ptr <JSONObject> convertionResults() {
+            return this->_convertionResults;
+        }
+        
+        void log(const char * format, ... ) {
+            if ((this->_converterConfig->boolForKeyPath("outputProgress", false) == false) &&
+                (this->_converterConfig->boolForKeyPath("outputConvertionResults", false)) == false) {
+                
+                char buffer[1000];
+                va_list args;
+                va_start (args, format);
+                vsprintf (buffer,format, args);
+                va_end (args);
+                
+                printf("%s",buffer);
+            }
         }
         
     public:
@@ -55,7 +74,7 @@ namespace GLTF
         
         shared_ptr <GLTFProfile> profile;
         shared_ptr <JSONObject> root;
-        
+
         ShaderIdToShaderString shaderIdToShaderString;
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToMeshes _uniqueIDToMeshes;
@@ -86,7 +105,7 @@ namespace GLTF
         
     private:
         shared_ptr <GLTFConfig> _converterConfig;
-
+        shared_ptr <JSONObject> _convertionResults;
     } ;
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

@@ -46,13 +46,11 @@ namespace GLTF
         
     public:        
         
-        GLTFWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
         GLTFWriter();
         virtual ~GLTFWriter();
-        
-        void setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer);
-        rapidjson::PrettyWriter <rapidjson::FileStream>* getWriter();
 
+        bool initWithPath(const std::string &path);
+        
         //base
         void writeArray(JSONArray* array, void *context);
         void writeObject(JSONObject* object, void *context);
@@ -61,8 +59,9 @@ namespace GLTF
         void write(JSONValue* value, void *context);
 
     private:
-
+        FILE* _fd;
         rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
+        rapidjson::FileStream *_fileStream;
     };
 
 }

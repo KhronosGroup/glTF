@@ -125,7 +125,7 @@ namespace GLTF
             stream << value;
             return stream.str();
         }
-                        
+        
     };
     
 }

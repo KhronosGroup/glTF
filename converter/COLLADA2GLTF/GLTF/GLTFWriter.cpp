@@ -299,30 +299,35 @@ namespace GLTF
     
     //-- Writer
     
-    GLTFWriter::GLTFWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer):
-    _writer(writer)
-    {
-    }
-    
     GLTFWriter::GLTFWriter():
     _writer(0)
     {
+        _fd = 0;
     }
-    
+
+    bool GLTFWriter::initWithPath(const std::string &path)
+    {
+        this->_fd = fopen(path.c_str(), "w");
+        if (this->_fd) {
+            this->_fileStream = new rapidjson::FileStream(this->_fd);
+            if (this->_fileStream) {
+                this->_writer = new rapidjson::PrettyWriter <rapidjson::FileStream>(*this->_fileStream);
+                return this->_writer != 0;
+            }
+        }
+        
+        return false;
+    }
+        
     GLTFWriter::~GLTFWriter()
     {
+        if (_fd) {
+            delete this->_fileStream;
+            delete this->_writer;
+            fclose(this->_fd);
+        }
     }
-    
-    void GLTFWriter::setWriter(rapidjson::PrettyWriter <rapidjson::FileStream> *writer)
-    {
-        this->_writer = writer;
-    }
-    
-    rapidjson::PrettyWriter <rapidjson::FileStream>* GLTFWriter::getWriter()
-    {
-        return this->_writer;
-    }
-    
+        
     //base
     void GLTFWriter::writeArray(JSONArray* array, void *context)
     {

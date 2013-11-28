@@ -43,11 +43,10 @@ using namespace rapidjson;
 namespace GLTF
 {
     //--------------------------------------------------------------------
-	COLLADA2GLTFWriter::COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs, PrettyWriter <FileStream> *jsonWriter ):
+	COLLADA2GLTFWriter::COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs):
     _converterContext(converterArgs),
     _visualScene(0)
 	{
-        this->_writer.setWriter(jsonWriter);
 	}
     
 	//--------------------------------------------------------------------
@@ -122,7 +121,9 @@ namespace GLTF
 
         //To comply with macro to access config
         GLTFConverterContext &converterContext = this->_converterContext;
-        
+
+        this->_writer.initWithPath(converterContext.outputFilePath.c_str());
+
         this->_converterContext._geometryByteLength = 0;
         this->_converterContext._animationByteLength = 0;
         
@@ -514,9 +515,9 @@ namespace GLTF
         
         //---
         this->_converterContext.root->removeValue("lightsIds");
-
-        this->_converterContext.root->write(&this->_writer);
         
+        this->_converterContext.root->write(&this->_writer);
+                
         bool sceneFlatteningEnabled = false;
         if (sceneFlatteningEnabled) {
             //second pass to actually output the JSON of the node themselves (and for all sub nodes)
@@ -531,10 +532,21 @@ namespace GLTF
         
         delete this->_extraDataHandler;
         
-        printf("[geometry] %d bytes\n", (int)this->_converterContext._geometryByteLength);
-        printf("[animations] %d bytes\n", (int)this->_converterContext._animationByteLength);
-        printf("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        this->_converterContext.convertionResults()->setUnsignedInt32("geometry", this->_converterContext._geometryByteLength);
+        this->_converterContext.convertionResults()->setUnsignedInt32("animation", this->_converterContext._animationByteLength);
+        this->_converterContext.convertionResults()->setUnsignedInt32("scene", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
+        this->_converterContext.log("[geometry] %d bytes\n", (int)this->_converterContext._geometryByteLength);
+        this->_converterContext.log("[animations] %d bytes\n", (int)this->_converterContext._animationByteLength);
+        this->_converterContext.log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        
+        if (this->_converterContext.converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
+            COLLADABU::URI convertResultsURI(converterContext.outputFilePath);
+            std::string aPath = convertResultsURI.getPathDir();
+            aPath += "results.json";
+            this->_resultsWriter.initWithPath(aPath);
+            converterContext.convertionResults()->write(&this->_resultsWriter);
+        }
         
 		return true;
 	}
@@ -615,10 +627,10 @@ namespace GLTF
                 objLib->setValue(objectUID, obj);
                 this->_converterContext._originalIDToTrackedObject[objectUID] = obj;
             } else {
-                printf("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+                this->_converterContext.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
             }
         } else {
-            printf("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+            this->_converterContext.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
         }
     }
     
@@ -885,7 +897,7 @@ namespace GLTF
             
             if (nodeContainsLookAtTr && (transformationsCount > 1)) {
                 //FIXME: handle warning/error
-                printf("WARNING: node contains a look at transform combined with other transforms\n");
+                this->_converterContext.log("WARNING: node contains a look at transform combined with other transforms\n");
             }
         }
         
@@ -1091,7 +1103,7 @@ namespace GLTF
                 //To fix this, dummy sub nodes should be created.
                 static bool printedOnce = false;
                 if (printedOnce) {
-                    printf("WARNING: some unhandled lights because some nodes carry more than a single light\n");
+                    this->_converterContext.log("WARNING: some unhandled lights because some nodes carry more than a single light\n");
                     printedOnce = false;
                 }
                 
@@ -1502,7 +1514,7 @@ namespace GLTF
         
         switch (camera->getCameraType()) {
             case Camera::UNDEFINED_CAMERATYPE:
-                printf("WARNING: unknown camera type: using perspective\n");
+                this->_converterContext.log("WARNING: unknown camera type: using perspective\n");
                 break;
             case Camera::ORTHOGRAPHIC:
             {
