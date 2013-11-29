@@ -37,7 +37,7 @@ namespace GLTF
         unsigned int unsignedInt32ForKeyPath(const std::string &keyPath, unsigned int defaultValue);
         int int32ForKeyPath(const std::string &keyPath, int defaultValue);
         double doubleForKeyPath(const std::string &keyPath, double defaultValue);
-        bool boolForKeyPath(const std::string &keyPath, bool defaultValue);
+        bool boolForKeyPath(const std::string &keyPath, bool defaultValue = false);
         std::string stringForKeyPath(const std::string &keyPath, std::string defaultValue);
         
     private:

@@ -961,12 +961,24 @@ namespace GLTF
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
             
-            nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
+            bool exportDefaultValues = converterContext.converterConfig()->boolForKeyPath("exportDefaultValues");
+            
+            bool exportTranslation = !(!exportDefaultValues && ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
+            if (exportTranslation)
+                nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
+            
+            //hum what should be the identity for axis angle ? https://github.com/KhronosGroup/glTF/issues/197
             nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
-            nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
+
+            bool exportScale = !(!exportDefaultValues && ((scale[0] == 1) && (scale[1] == 1) && (scale[2] == 1)));
+            if (exportScale)
+                nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
             
         } else {
-            nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
+            //FIXME: OpenCOLLADA typo
+            bool exportMatrix = !((matrix.isIdentiy() && (converterContext.converterConfig()->boolForKeyPath("exportDefaultValues") == false) ));
+            if (exportMatrix)
+                nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
         }
         
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();

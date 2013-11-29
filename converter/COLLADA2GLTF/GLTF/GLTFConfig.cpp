@@ -48,6 +48,8 @@ namespace GLTF
         optionsRoot->setBool("alwaysExportFilterColor", false);
         optionsRoot->setBool("alwaysExportTransparency", false);
         
+        optionsRoot->setBool("exportDefaultValues", false);
+        
         optionsRoot->setString("compressionType", "none");
         optionsRoot->setString("compressionMode", "ascii");
     }
