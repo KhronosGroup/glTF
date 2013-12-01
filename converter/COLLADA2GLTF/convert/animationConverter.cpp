@@ -96,6 +96,14 @@ namespace GLTF
     }
     
     
+#define ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID) std::string targetUIDWithPath = path+targetID;\
+    if (converterContext._targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
+        animationFlattener = converterContext._targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
+    } else {\
+        animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);\
+        converterContext._targetUIDWithPathToAnimationFlattener[targetUIDWithPath] = animationFlattener;\
+    }
+    
     /*
      The animation creation/write is in 2 steps.
      We first create the animation, but then, we need to set the channels for every targets, and targets ids are not available when animations are created
@@ -120,6 +128,8 @@ namespace GLTF
                                              (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(), timeBufferView->getByteLength(), true,
                                              converterContext);
         
+        shared_ptr<GLTFAnimationFlattener> animationFlattener;
+
         //timeParameter->setByteOffset(outputStream->length());
         //outputStream->write(timeBufferView);
         //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
@@ -145,7 +155,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
+                                animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -182,7 +192,7 @@ namespace GLTF
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
+                                animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 16;
                                     float *m = matrices + offset;
@@ -222,7 +232,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "translation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
+                                animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -235,7 +245,7 @@ namespace GLTF
                                 }
                             } else if (path == "scale") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
+                                animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
@@ -268,7 +278,7 @@ namespace GLTF
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
+                                ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
                                 
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
@@ -293,32 +303,17 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        
                         if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             std::string path = animatedTarget->getString("path");
-                            if (path == "translation") {
-                                std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
-                                
-                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
-                                float* translations = (float*)bufferView->getBufferDataByApplyingOffset();
-                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
-                                    animationFlattener->insertValueAtTime(transformID, translations[k], index, timeValues[k]);
-                                }
-                                
-                            } else if (path == "scale") {
-                                std::string transformID = animatedTarget->getString("transformId");
-                                shared_ptr<GLTFAnimationFlattener> animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);
-                                
-                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
-                                float* scales = (float*)bufferView->getBufferDataByApplyingOffset();
-                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
-                                    animationFlattener->insertValueAtTime(transformID, scales[k], index, timeValues[k]);
-                                }
-                            }
-                            else {
-                                assert(0 && "unknown path name");
+                            std::string transformID = animatedTarget->getString("transformId");
+                            
+                            ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
+                            
+                            float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                            float* values = (float*)bufferView->getBufferDataByApplyingOffset();
+                            for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                animationFlattener->insertValueAtTime(transformID, values[k], index, timeValues[k]);
                             }
                         }
                     }

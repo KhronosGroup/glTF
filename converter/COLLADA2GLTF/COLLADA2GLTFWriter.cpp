@@ -960,10 +960,9 @@ namespace GLTF
                 
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
-            
             bool exportDefaultValues = converterContext.converterConfig()->boolForKeyPath("exportDefaultValues");
-            
-            bool exportTranslation = !(!exportDefaultValues && ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
+            bool exportTranslation = !(!exportDefaultValues &&
+                                       ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
             if (exportTranslation)
                 nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
             
@@ -1710,6 +1709,8 @@ namespace GLTF
         AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
+            const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+
             shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
 
             AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_converterContext._flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
@@ -1718,6 +1719,7 @@ namespace GLTF
                 shared_ptr<GLTFAnimationFlattener> animationFlattener;
                 std::string targetUID = animatedTarget->getString("target");
                 if (animationFlattenerMap->count(targetUID) == 0) {
+                    //FIXME: assuming node here is wrong
                     COLLADAFW::Node *node = (COLLADAFW::Node*)this->_converterContext._uniqueIDToOpenCOLLADAObject[targetUID].get();
                     animationFlattener = shared_ptr<GLTFAnimationFlattener> (new GLTFAnimationFlattener(node));
                     (*animationFlattenerMap)[targetUID] = animationFlattener;
@@ -1726,7 +1728,6 @@ namespace GLTF
 
             cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
             
-            const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
             if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_converterContext)) {
                 //if an animation failed to convert, we don't want to keep track of it.
                 this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));

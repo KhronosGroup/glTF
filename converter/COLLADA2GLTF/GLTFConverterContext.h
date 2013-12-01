@@ -103,6 +103,8 @@ namespace GLTF
         size_t _geometryByteLength;
         size_t _animationByteLength;
         
+        UniqueIDToAnimationFlattener _targetUIDWithPathToAnimationFlattener;
+        
     private:
         shared_ptr <GLTFConfig> _converterConfig;
         shared_ptr <JSONObject> _convertionResults;
