@@ -58,7 +58,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@d42009773b99cb8242af401409875263fab3a09a"
+        "generator": "collada2gltf@75061f683116dc0ffdad48f33c226e933132e98c"
     },
     "bufferViews": {
         "bufferView_29": {
@@ -164,6 +164,24 @@
     "nodes": {
         "LOD3sp": {
             "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
             "meshes": [
                 "LOD3spShape-lib"
             ],
