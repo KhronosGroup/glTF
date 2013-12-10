@@ -66,7 +66,7 @@ var global = window;
 }(this, function (root) {
     "use strict";
 
-    var categoriesDepsOrder = ["buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "indices", "attributes", "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
+    var categoriesDepsOrder = ["buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
 
     var glTFParser = Object.create(Object.prototype, {
 
@@ -98,9 +98,7 @@ var global = window;
                     return path;
                 }
 
-                var pathComponents = path.split("/");
-                var lastPathComponent = pathComponents.pop();
-                return this.baseURL + path;//lastPathComponent;
+                return this.baseURL + path;
             }
         },
 
@@ -211,8 +209,7 @@ var global = window;
                     "scenes" : this.handleScene,
                     "images" : this.handleImage,
                     "animations" : this.handleAnimation,
-                    "indices" : this.handleIndices,
-                    "attributes" : this.handleAttribute,
+                    "accessors" : this.handleAccessor,
                     "skins" : this.handleSkin,
                     "samplers" : this.handleSampler,
                     "textures" : this.handleTexture,
@@ -245,9 +242,6 @@ var global = window;
                             break;
                         }
                     } else {
-                        if (typeof description.type === "undefined") {
-                            description.type = type;
-                        }
 
                         if (methodForType[type]) {
                             if (methodForType[type].call(this, entryID, description, this._state.userInfo) === false) {
