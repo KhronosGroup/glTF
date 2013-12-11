@@ -1,6 +1,7 @@
 #ifndef __GLTFConverterContext__
 #define __GLTFConverterContext__
 
+#include <stdarg.h>
 #include "GLTF-OpenCOLLADA.h"
 
 namespace GLTF
