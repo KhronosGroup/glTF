@@ -325,10 +325,17 @@ namespace GLTF
         } else {            
             states->setUnsignedInt32("blendEnable", GLOne);
             states->setUnsignedInt32("depthTestEnable", GLOne);
-            states->setUnsignedInt32("depthMask", GLZero); //should be true for images, and false for plain color
+            states->setUnsignedInt32("depthMask", GLOne); //should be true for images, and false for plain color
             states->setUnsignedInt32("blendEquation", profile->getGLenumForString("FUNC_ADD"));
             shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
-            blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
+            
+            
+            if (CONFIG_BOOL("premultipliedAlpha")) {
+                blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("ONE"));
+            } else {
+                blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
+            }
+
             blendFunc->setUnsignedInt32("dfactor", profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"));
             states->setValue("blendFunc", blendFunc) ;
         }

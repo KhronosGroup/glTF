@@ -36,6 +36,7 @@ namespace GLTF
     GLTFConfig::~GLTFConfig() {}
     
     void GLTFConfig::_setupDefaultConfigOptions(shared_ptr<JSONObject> optionsRoot) {
+        optionsRoot->setBool("premultipliedAlpha", true);
         optionsRoot->setBool("invertTransparency", false);
         optionsRoot->setBool("exportAnimations", true);
         optionsRoot->setBool("outputProgress", false);

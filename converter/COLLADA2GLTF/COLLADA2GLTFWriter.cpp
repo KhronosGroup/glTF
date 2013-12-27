@@ -166,6 +166,9 @@ namespace GLTF
         shared_ptr<JSONObject> asset = this->_converterContext.root->createObjectIfNeeded("asset");
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
         asset->setString("generator",version);
+        shared_ptr<JSONObject> assetExtras = asset->createObjectIfNeeded("extras");
+        assetExtras->setBool("premultipliedAlpha", CONFIG_BOOL("premultipliedAlpha"));
+        asset->setValue("extras", assetExtras);
         
 		COLLADAFW::Root root(&this->_loader, this);
         
