@@ -24,7 +24,7 @@
         "target" : {
             "type" : "string",
             "description" : "Required target type for bindBuffer(), must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
-	        "pattern" : "^ARRAY_BUFFER$|^ELEMENT_ARRAY_BUFFER$",
+            "enum" : ["ARRAY_BUFFER", "ELEMENT_ARRAY_BUFFER"],
             "required" : true
         },
         "extra" : {
