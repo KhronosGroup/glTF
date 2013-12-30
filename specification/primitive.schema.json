@@ -5,18 +5,18 @@
     "description" : "TODO",
     "properties" : {
         "indices" : {
-	        "$ref" : "indices.schema.json",
+            "$ref" : "indices.schema.json",
             "required" : true        
         },
         "material" : {
-	        "type" : "string",
-	        "description" : "Specifies the material to apply to this primitive when rendering.",
+            "type" : "string",
+            "description" : "Specifies the material to apply to this primitive when rendering.",
             "required" : true        
         },
         "primitive" : {
-	        "type" : "string",
-	        "description" : "Specifies what kind of primitives to render.",
-	        "pattern" : "^POINTS$|^LINE_STRIP$|^LINE_LOOP$|^LINES$|^TRIANGLE_STRIP$|^TRIANGLE_FAN$|^TRIANGLES$",
+            "type" : "string",
+            "description" : "Specifies what kind of primitives to render.",
+            "enum" : ["POINTS", "LINE_STRIP", "LINE_LOOP", "LINES", "TRIANGLE_STRIP", "TRIANGLE_FAN", "TRIANGLES"],
             "required" : true
         },
         "semantics" : {
