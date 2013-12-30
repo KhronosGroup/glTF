@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "attribute",
+    "title" : "meshAttribute",
     "type" : "object",
     "description" : "compliant with vertexAttribPointer() API",
     "properties" : {
