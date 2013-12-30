@@ -31,7 +31,7 @@
         "type" : {
             "type" : "string",
             "description" : "vertexAttribPointer() type and size parameters.  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array.",
-            "pattern" : "^BYTE$|^BYTE_VEC2$|^BYTE_VEC3$|^BYTE_VEC4$|^UNSIGNED_BYTE$|^UNSIGNED_BYTE_VEC2$|^UNSIGNED_BYTE_VEC3$|^UNSIGNED_BYTE_VEC4$|^SHORT$|^SHORT_VEC2$|^SHORT_VEC3$|^SHORT_VEC4$|^UNSIGNED_SHORT$|^UNSIGNED_SHORT_VEC2$|^UNSIGNED_SHORT_VEC3$|^UNSIGNED_SHORT_VEC4$|^FLOAT$|^FLOAT_VEC2$|^FLOAT_VEC3$|^FLOAT_VEC4$",
+            "enum" : ["BYTE", "BYTE_VEC2", "BYTE_VEC3", "BYTE_VEC4", "UNSIGNED_BYTE", "UNSIGNED_BYTE_VEC2", "UNSIGNED_BYTE_VEC3", "UNSIGNED_BYTE_VEC4", "SHORT", "SHORT_VEC2", "SHORT_VEC3", "SHORT_VEC4", "UNSIGNED_SHORT", "UNSIGNED_SHORT_VEC2", "UNSIGNED_SHORT_VEC3", "UNSIGNED_SHORT_VEC4", "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4$"],
             "required" : true
         },
         "normalized" : {
