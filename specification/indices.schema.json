@@ -24,7 +24,7 @@
         "type" : {
             "type" : "string",
             "description" : "drawElements() type parameter.  Corresponding typed array: Uint16Array.",
-            "pattern" : "^UNSIGNED_SHORT$",
+            "enum" : ["UNSIGNED_SHORT"],
             "required" : true
         },
         "extra" : {
