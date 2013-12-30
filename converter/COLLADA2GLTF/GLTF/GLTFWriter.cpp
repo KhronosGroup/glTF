@@ -272,6 +272,7 @@ namespace GLTF
         shared_ptr <JSONObject> animationObject(new JSONObject());
         shared_ptr <JSONObject> parametersObject(new JSONObject());
         GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
+        shared_ptr <GLTFProfile> profile = converterContext->profile;
         
         animationObject->setUnsignedInt32("count", animation->getCount());
         animationObject->setValue("samplers", animation->samplers());
@@ -281,15 +282,29 @@ namespace GLTF
         
         std::vector <shared_ptr <GLTFAnimation::Parameter> >  *parameters = animation->parameters();
         for (size_t i = 0 ; i < parameters->size() ; i++) {
-            //build an id based on number of accessors
+            unsigned int glType = profile->getGLenumForString((*parameters)[i]->getType());
+            size_t componentsCount = profile->getComponentsCountForType(glType);
+            size_t  elementSize = componentsCount  * 4; //FIXME: for now we will just assume FLOAT (hence the *4) , which is kind of OK for TIME values since by SPEC only FLOAT is allowed.
+
+            AccessorID accessorId(((unsigned char*)(*parameters)[i]->getBufferView()->getBufferDataByApplyingOffset())+(*parameters)[i]->getByteOffset(), elementSize * (*parameters)[i]->getCount());
+            UniqueIDToAccessor::iterator it = converterContext->_uniqueIDToAccessorObject.find(accessorId);
+            if (it != converterContext->_uniqueIDToAccessorObject.end())
+            {
+                parametersObject->setString((*parameters)[i]->getID(), it->second);
+            }
+            else
+            {
+                //build an id based on number of accessors
+                shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get(), converterContext);
             
-            shared_ptr<JSONObject> parameterObject = serializeAnimationParameter((*parameters)[i].get(), converterContext);
+                //build an id based on the number of accessors
+                std::string parameterUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
+                accessors->setValue(parameterUID, parameterObject);
             
-            //build an id based on the number of accessors
-            std::string parameterUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
-            accessors->setValue(parameterUID, parameterObject);
-            
-            parametersObject->setString((*parameters)[i]->getID(), parameterUID);
+                parametersObject->setString((*parameters)[i]->getID(), parameterUID);
+
+                converterContext->_uniqueIDToAccessorObject.insert(std::make_pair(accessorId, parameterUID));
+            }
         }
         animationObject->setValue("parameters", parametersObject);
         
