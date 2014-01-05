@@ -511,9 +511,9 @@ namespace GLTF
      Handles Parameter creation / addition
      */
     static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                  GLTFAnimation::Parameter *parameter) {
+                                                  shared_ptr<JSONObject> parameter,
+                                                  const std::string &name) {
         shared_ptr<JSONObject> sampler(new JSONObject());
-        std::string name = parameter->getID();
         std::string samplerID = cvtAnimation->getSamplerIDForName(name);
         sampler->setString("input", "TIME");           //FIXME:harcoded for now
         sampler->setString("interpolation", "LINEAR"); //FIXME:harcoded for now
@@ -523,20 +523,16 @@ namespace GLTF
         return samplerID;
     }
     
-    static shared_ptr <GLTFAnimation::Parameter> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
-                                                                           const std::string& parameterSID,
-                                                                           const std::string& parameterType,
-                                                                           bool isInputParameter) {
+    static shared_ptr <JSONObject> __SetupAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+                                                             const std::string& parameterSID,
+                                                             const std::string& parameterType,
+                                                             bool isInputParameter,
+                                                             GLTFConverterContext &converterContext) {
         //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter(new GLTFAnimation::Parameter(parameterSID));
-        parameter->setCount(cvtAnimation->getCount());
-        parameter->setType(parameterType);
-        
-        if (!isInputParameter)
-            __SetupSamplerForParameter(cvtAnimation, parameter.get());
-        
-        cvtAnimation->parameters()->push_back(parameter);
-        
+        shared_ptr<JSONObject> parameter(new JSONObject());
+        parameter->setUnsignedInt32("count", cvtAnimation->getCount());
+        parameter->setUnsignedInt32("type",  converterContext.profile->getGLenumForString(parameterType));
+                        
         return parameter;
     }    
     
@@ -546,42 +542,63 @@ namespace GLTF
     void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
-                                         unsigned char* buffer, size_t length,
+                                         unsigned char* buffer, size_t byteLength,
                                          bool isInputParameter,
                                          GLTFConverterContext &converterContext) {
-        bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
-
-        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
-        //setup
-        shared_ptr <GLTFAnimation::Parameter> parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType, isInputParameter);
-        shared_ptr <GLTFProfile> profile = converterContext.profile;
-        //write
-        size_t byteOffset = outputStream->length();
-        parameter->setByteOffset(byteOffset);
         
-        if (shouldEncodeOpen3DGC) {
-            unsigned int glType = profile->getGLenumForString(parameterType);
-            size_t componentsCount = profile->getComponentsCountForType(glType);
-            if (componentsCount) {
-                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), converterContext);
-                
-                size_t bytesCount = outputStream->length() - byteOffset;
-                
-                shared_ptr<JSONObject> compressionObject = parameter->extensions()->createObjectIfNeeded("Open3DGC-compression");
-                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
-                
-                compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
-                compressionDataObject->setUnsignedInt32("count", bytesCount);
-                compressionDataObject->setString("mode", CONFIG_STRING("compressionMode"));
-                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
-                converterContext._animationByteLength += bytesCount;
-            }
+        shared_ptr <GLTF::JSONObject> accessors = converterContext.root->createObjectIfNeeded("accessors");
+        AccessorID accessorId(buffer, byteLength);
+        UniqueIDToAccessor::iterator it = converterContext._uniqueIDToAccessorObject.find(accessorId);
+        shared_ptr <JSONObject> parameter;
+        if (it != converterContext._uniqueIDToAccessorObject.end()) {
+            cvtAnimation->parameters()->setString(parameterSID, it->second);
+            parameter = accessors->getObject(it->second);
         } else {
-            converterContext._animationByteLength += length;
-            outputStream->write((const char*)buffer, length);
+            std::string accessorUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
+            //build an id based on number of accessors
+            
+            bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
+            
+            GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
+            
+            //setup
+            parameter = __SetupAnimationParameter(cvtAnimation, parameterSID, parameterType, isInputParameter, converterContext);
+            accessors->setValue(accessorUID, parameter);
+            cvtAnimation->parameters()->setString(parameterSID, accessorUID);
+            
+            shared_ptr <GLTFProfile> profile = converterContext.profile;
+            
+            //write
+            size_t byteOffset = 0;
+            byteOffset = outputStream->length();
+            parameter->setUnsignedInt32("byteOffset", byteOffset);
+            
+            if (shouldEncodeOpen3DGC) {
+                unsigned int glType = profile->getGLenumForString(parameterType);
+                size_t componentsCount = profile->getComponentsCountForType(glType);
+                if (componentsCount) {
+                    encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), converterContext);
+                    
+                    byteLength = outputStream->length() - byteOffset;
+                    
+                    shared_ptr<JSONObject> extensionsObject = parameter->createObjectIfNeeded("extensions");
+                    shared_ptr<JSONObject> compressionObject = extensionsObject->createObjectIfNeeded("Open3DGC-compression");
+                    shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
+                    
+                    compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
+                    compressionDataObject->setUnsignedInt32("count", byteLength);
+                    compressionDataObject->setString("mode", CONFIG_STRING("compressionMode"));
+                    compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                }
+            } else {
+                outputStream->write((const char*)buffer, byteLength);
+            }
+            converterContext._uniqueIDToAccessorObject.insert(std::make_pair(accessorId, accessorUID));
+            converterContext._animationByteLength += byteLength;
         }
+        if (!isInputParameter)
+            __SetupSamplerForParameter(cvtAnimation, parameter, parameterSID);
+        
     }
-    
-    
 }
 

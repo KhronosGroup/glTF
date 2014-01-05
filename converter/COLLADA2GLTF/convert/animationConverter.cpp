@@ -113,26 +113,15 @@ namespace GLTF
                         AnimatedTargetsSharedPtr animatedTargets,
                         GLTF::GLTFConverterContext &converterContext) {
         
+        std::string inputParameterName = "TIME";
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
         shared_ptr<JSONArray> channels = cvtAnimation->channels();
-        GLTFAnimation::Parameter *timeParameter = cvtAnimation->getParameterNamed("TIME");
-        shared_ptr<GLTFBufferView> timeBufferView = timeParameter->getBufferView();
-        std::string name = "TIME";
-        std::string samplerID = cvtAnimation->getSamplerIDForName(name);
-                
-        cvtAnimation->removeParameterNamed("TIME");
-        
-        setupAndWriteAnimationParameter(cvtAnimation,
-                                             "TIME",
-                                             "FLOAT",
-                                             (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(), timeBufferView->getByteLength(), true,
-                                             converterContext);
+        shared_ptr<GLTFBufferView> timeBufferView = cvtAnimation->getBufferViewForParameter(inputParameterName);
         
         shared_ptr<GLTFAnimationFlattener> animationFlattener;
 
-        //timeParameter->setByteOffset(outputStream->length());
-        //outputStream->write(timeBufferView);
-        //printf("time bufferLength: %d\n",(int)timeBufferView->getByteLength());
+        shared_ptr<GLTFBufferView> bufferView =  cvtAnimation->getBufferViewForParameter("OUTPUT");
+        cvtAnimation->unregisterBufferView("OUTPUT");
         
         switch (animationClass) {
             case COLLADAFW::AnimationList::TIME:
@@ -141,9 +130,6 @@ namespace GLTF
             }
                 break;
             case COLLADAFW::AnimationList::AXISANGLE: {
-                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
-                if (parameter) {
-                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //the angles to radians necessary convertion is done within the animationFlattener
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
@@ -172,15 +158,10 @@ namespace GLTF
                         }
                     }
                 }
-                cvtAnimation->removeParameterNamed("OUTPUT");
-            }
                 return true;
             case COLLADAFW::AnimationList::MATRIX4X4: {
-                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
-                if (parameter) {
                     std::vector< shared_ptr <GLTFBufferView> > TRSBufferViews;
                     //FIXME: we assume float here, might be double
-                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     float* matrices = (float*)bufferView->getBufferDataByApplyingOffset();
                     float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                     
@@ -209,18 +190,9 @@ namespace GLTF
                             }
                         }
                     }
-                    cvtAnimation->removeParameterNamed("OUTPUT");
-
-                } else {
-                    //FIXME: report error
-                    printf("WARNING: cannot find intermediate parameter named OUTPUT\n");
-                }
-            }
+                } 
                 return true;
             case COLLADAFW::AnimationList::POSITION_XYZ: {
-                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
-                if (parameter) {
-                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //the angles to radians necessary convertion is done within the animationFlattener
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
@@ -259,14 +231,9 @@ namespace GLTF
                         }
                     }
                 }
-                cvtAnimation->removeParameterNamed("OUTPUT");
-            }
                 
                 return true;
             case COLLADAFW::AnimationList::ANGLE: {
-                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
-                if (parameter) {
-                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
                     //the angles to radians necessary convertion is done within the animationFlattener
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
@@ -289,40 +256,31 @@ namespace GLTF
                         }
                     }
                 }
-                cvtAnimation->removeParameterNamed("OUTPUT");
-            }
                 return true;
             case COLLADAFW::AnimationList::POSITION_X:
             case COLLADAFW::AnimationList::POSITION_Y:
             case COLLADAFW::AnimationList::POSITION_Z:
             {
                 int index = animationClass - COLLADAFW::AnimationList::POSITION_X;
-                GLTFAnimation::Parameter *parameter = cvtAnimation->getParameterNamed("OUTPUT");
-                if (parameter) {
-                    shared_ptr<GLTFBufferView> bufferView = parameter->getBufferView();
-                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
-                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
-                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
-                            std::string path = animatedTarget->getString("path");
-                            std::string transformID = animatedTarget->getString("transformId");
-                            
-                            ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
-                            
-                            float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
-                            float* values = (float*)bufferView->getBufferDataByApplyingOffset();
-                            for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
-                                animationFlattener->insertValueAtTime(transformID, values[k], index, timeValues[k]);
-                            }
+                for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                    shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                    std::string targetID = animatedTarget->getString("target");
+                    if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        cvtAnimation->targets()->setValue(targetID, animatedTarget);
+                        std::string path = animatedTarget->getString("path");
+                        std::string transformID = animatedTarget->getString("transformId");
+                        
+                        ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
+                        
+                        float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                        float* values = (float*)bufferView->getBufferDataByApplyingOffset();
+                        for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                            animationFlattener->insertValueAtTime(transformID, values[k], index, timeValues[k]);
                         }
                     }
                 }
-                cvtAnimation->removeParameterNamed("OUTPUT");
-            }
                 return true;
-                
-                
+            }
             case COLLADAFW::AnimationList::COLOR_RGB:
             case COLLADAFW::AnimationList::COLOR_RGBA:
             case COLLADAFW::AnimationList::COLOR_R:
@@ -344,13 +302,13 @@ namespace GLTF
         return false;
     }
     
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation)
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFConverterContext &converterContext)
     {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
-            std::vector <shared_ptr <GLTFAnimation::Parameter> >* animationParameters = cvtAnimation->parameters();
+            shared_ptr <JSONObject> animationParameters = cvtAnimation->parameters();
             
-            const COLLADAFW::AnimationCurve* animationCurve = (const COLLADAFW::AnimationCurve*)animation;
+            const COLLADAFW::AnimationCurve *animationCurve = (const COLLADAFW::AnimationCurve*)animation;
             
             //This needs to be fixed when re-working: https://github.com/KhronosGroup/glTF/issues/158
             //especially, this point: "by default the converter should replicate COLLADA animations layout (not yet done), but an option should allow to have one animation per target. (this is actually the case)."
@@ -362,33 +320,18 @@ namespace GLTF
             cvtAnimation->setCount(animationCurve->getKeyCount());
             
             /** Returns the input values of the animation. */
-            const COLLADAFW::FloatOrDoubleArray &inputArray =  animationCurve->getInputValues();
-            const COLLADAFW::FloatOrDoubleArray &outputArray =  animationCurve->getOutputValues();
+            const COLLADAFW::FloatOrDoubleArray &inputArray = animationCurve->getInputValues();
+            const COLLADAFW::FloatOrDoubleArray &outputArray = animationCurve->getOutputValues();
             
             const std::string originalID = animationCurve->getOriginalId();
             
+            //shared_ptr <JSONObject> inputParameter(new JSONObject());
             shared_ptr <GLTFBufferView> inputBufferView = convertFloatOrDoubleArrayToGLTFBufferView(inputArray);
             shared_ptr <GLTFBufferView> outputBufferView = convertFloatOrDoubleArrayToGLTFBufferView(outputArray);
             
-            //build up input parameter, typically TIME
-            shared_ptr <GLTFAnimation::Parameter> inputParameter(new GLTFAnimation::Parameter("TIME"));
-            
-            inputParameter->setType("FLOAT");
-            inputParameter->setBufferView(inputBufferView);
-            inputParameter->setByteOffset(0);
-            inputParameter->setCount(cvtAnimation->getCount());
-            
-            animationParameters->push_back(inputParameter);
-            
-            //build up output parameter
-            shared_ptr <GLTFAnimation::Parameter> outputParameter(new GLTFAnimation::Parameter("OUTPUT"));
-            
-            outputParameter->setBufferView(outputBufferView);
-            outputParameter->setByteOffset(0);
-            
-            animationParameters->push_back(outputParameter);
+            cvtAnimation->registerBufferView("TIME", inputBufferView);
+            cvtAnimation->registerBufferView("OUTPUT", outputBufferView);            
         }
-        
         return cvtAnimation;
     }
 }

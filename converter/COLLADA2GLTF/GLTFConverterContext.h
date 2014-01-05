@@ -51,7 +51,7 @@ namespace GLTF
 
     private:
         const AccessorID& operator=(const AccessorID& rhs);
-        void *m_pData;
+        unsigned char *m_pData;
         size_t m_length;
     };
 

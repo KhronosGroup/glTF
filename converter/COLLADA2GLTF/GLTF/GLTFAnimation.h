@@ -31,40 +31,6 @@ namespace GLTF
         
     class GLTFAnimation {
     public:
-        
-        class Parameter {
-        public:
-            Parameter(std::string ID);
-            virtual ~Parameter();
-            
-            void setBufferView(shared_ptr <GLTFBufferView> bufferView);
-            shared_ptr <GLTFBufferView>  getBufferView();
-
-            void setType(std::string type);
-            std::string getType();
-            
-            void setID(std::string ID);
-            std::string getID();
-            
-            size_t getCount();
-            void setCount(size_t count);
-
-            size_t getByteOffset();
-            void setByteOffset(size_t byteOffset);
-            
-            shared_ptr <JSONObject> extensions();
-            
-        private:
-            Parameter();
-        private:
-            std::string _id;
-            std::string _type;
-            size_t _byteOffset;
-            size_t _count;
-            shared_ptr <GLTFBufferView> _bufferView;
-            shared_ptr <JSONObject> _extensions;
-        };
-        
         GLTFAnimation();
         virtual ~GLTFAnimation();
         
@@ -80,31 +46,36 @@ namespace GLTF
         void setOriginalID(std::string originalID);
         std::string getOriginalID();
         
-        std::vector <shared_ptr <Parameter> >* parameters();
-        GLTFAnimation::Parameter* getParameterNamed(std::string parameter);
+        shared_ptr <JSONObject> getParameterNamed(std::string parameter);
         void removeParameterNamed(std::string parameter);
-        int indexOfParameterNamed(std::string parameter);
         
         shared_ptr <JSONObject> samplers();
         shared_ptr <JSONArray> channels();
         shared_ptr <JSONObject> targets();
+        shared_ptr <JSONObject> parameters();
 
         std::string getSamplerIDForName(std::string name);
         
         void registerAnimationFlatteners(AnimationFlattenerForTargetUIDSharedPtr);
         
-        shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string targetUID);
+        shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string);
 
+        void registerBufferView(std::string parameterName, shared_ptr <GLTFBufferView>);
+        void unregisterBufferView(std::string parameterName);
+
+        shared_ptr<GLTFBufferView> getBufferViewForParameter(std::string);
+        
     private:
         size_t _count;
         double _duration;
-        std::vector <shared_ptr <Parameter> > _parameters;
         std::string _id;
         std::string _originalID;
         shared_ptr <JSONArray> _channels;
         shared_ptr <JSONObject> _samplers;
         shared_ptr <JSONObject> _targets;
+        shared_ptr <JSONObject> _parameters;
         AnimationFlattenerForTargetUIDSharedPtr _animationFlattenerForTargetUID;
+        std::map<std::string , shared_ptr<GLTFBufferView> > _bufferViews;
     };
     
 }

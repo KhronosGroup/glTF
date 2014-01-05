@@ -188,7 +188,18 @@ namespace GLTF
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             
+            std::string inputParameterName = "TIME";
             shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+            shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
+            
+            if (animation->parameters()->contains(inputParameterName) == false) {
+                setupAndWriteAnimationParameter(animation,
+                                                inputParameterName,
+                                                "FLOAT",
+                                                (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
+                                                timeBufferView->getByteLength(), true,
+                                                converterContext);
+            } 
             
             std::vector<std::string> allTargets = animation->targets()->getAllKeys();
             for (size_t i = 0 ; i < allTargets.size() ; i++) {
@@ -323,8 +334,7 @@ namespace GLTF
         
         this->_converterContext.root->setValue("meshes", meshesObject);
         
-        shared_ptr <GLTF::JSONObject> attributes = this->_converterContext.root->createObjectIfNeeded("accessors");
-        shared_ptr <GLTF::JSONObject> indices = this->_converterContext.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = this->_converterContext.root->createObjectIfNeeded("accessors");
         
         for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
@@ -374,7 +384,7 @@ namespace GLTF
                                 //(*it).second;            // the mapped value (of type T)
                                 shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
                                 shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)serializationContext);
-                                attributes->setValue(meshAttribute->getID(), meshAttributeObject);
+                                accessors->setValue(meshAttribute->getID(), meshAttributeObject);
                             }
                         }
                         
@@ -386,7 +396,7 @@ namespace GLTF
                             shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
                             shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)serializationContext);
                             
-                            indices->setValue(uniqueIndices->getID(), serializedIndices);
+                            accessors->setValue(uniqueIndices->getID(), serializedIndices);
                         }
                         
                         meshesObject->setValue(mesh->getID(), meshObject);
@@ -443,7 +453,7 @@ namespace GLTF
             //(*it).second;            // the mapped value (of type T)
             
             shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
-            std::vector <shared_ptr <GLTFAnimation::Parameter> > *parameters = animation->parameters();
+            shared_ptr<JSONObject> parameters = animation->parameters();
             
             //Replace OpenCOLLADA uniqueID by Original IDs
             shared_ptr <JSONArray> channels = animation->channels();
@@ -454,20 +464,19 @@ namespace GLTF
                 target->setString("id", originalID);
             }
             
-            for (size_t i = 0 ; i < animation->parameters()->size() ; i++) {
-                shared_ptr <GLTFAnimation::Parameter> parameter = (*parameters)[i];
-                
-                if (parameter->extensions()->getKeysCount() > 0) {
-                    if (parameter->extensions()->contains("Open3DGC-compression")) {
-                        shared_ptr<JSONObject> compressionObject = parameter->extensions()->getObject("Open3DGC-compression");
-                        if (compressionObject->contains("compressedData")) {
-                            shared_ptr<JSONObject> compressedData = compressionObject->getObject("compressedData");
-                            compressedData->setString("bufferView", compressionBufferView->getID());
-                        }
+            std::vector <std::string> parameterKeys = parameters->getAllKeys();
+            for (size_t i = 0 ; i <parameterKeys.size() ; i++) {
+                std::string parameterUID = parameters->getString(parameterKeys[i]);
+                shared_ptr <JSONObject> parameterObject = accessors->getObject(parameterUID);
+                if (parameterObject->contains("extensions")) {
+                    shared_ptr <JSONObject> extensions = parameterObject->getObject("extensions");
+                    shared_ptr<JSONObject> compressionObject = extensions->getObject("Open3DGC-compression");
+                    if (compressionObject->contains("compressedData")) {
+                        shared_ptr<JSONObject> compressedData = compressionObject->getObject("compressedData");
+                        compressedData->setString("bufferView", compressionBufferView->getID());
                     }
                 }
-                
-                parameter->setBufferView(genericBufferView);
+                parameterObject->setString("bufferView", genericBufferView->getID());
             }
             
             if (animation->channels()->values().size() > 0) {
@@ -1691,7 +1700,7 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation)
 	{
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation);
+        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_converterContext);
         
         cvtAnimation->setOriginalID(animation->getOriginalId());
         
