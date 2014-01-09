@@ -53,6 +53,8 @@ namespace GLTF
         
         optionsRoot->setString("compressionType", "none");
         optionsRoot->setString("compressionMode", "ascii");
+        
+        optionsRoot->setBool("shareAnimationAccessors", true);        
     }
     
     bool GLTFConfig::initWithPath(const std::string& path) {

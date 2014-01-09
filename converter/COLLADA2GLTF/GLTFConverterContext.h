@@ -12,6 +12,49 @@ namespace GLTF
 #define CONFIG_INT32(X) (converterContext.converterConfig()->config()->getInt32(X))
 #define CONFIG_UINT32(X) (converterContext.converterConfig()->config()->getUInt32(X))
 
+    class AccessorCache
+    {
+    public:
+        AccessorCache(void *pData, size_t length) :
+            m_length(length)
+        {
+            m_pData = new unsigned char[m_length];
+            memcpy(m_pData, pData, m_length);
+        }
+
+        AccessorCache(const AccessorCache& rhs) :
+            m_length(rhs.m_length)
+        {
+            m_pData = new unsigned char[m_length];
+            memcpy(m_pData, rhs.m_pData, m_length);
+        }
+
+        ~AccessorCache()
+        {
+            delete m_pData;
+        }
+
+        bool operator<(const AccessorCache& rhs) const
+        {
+            if (m_length != rhs.m_length)
+            {
+                return m_length < rhs.m_length;
+            }
+
+            if (m_pData == rhs.m_pData)
+            {
+                return false;
+            }
+
+            return memcmp(m_pData, rhs.m_pData, m_length) < 0;
+        }
+
+    private:
+        const AccessorCache& operator=(const AccessorCache& rhs);
+        unsigned char *m_pData;
+        size_t m_length;
+    };
+
     class GLTFAnimationFlattener;
     
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
@@ -38,6 +81,7 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
+    typedef std::map<AccessorCache , std::string> UniqueIDToAccessor;
     
     class GLTFConverterContext
     {
@@ -95,6 +139,7 @@ namespace GLTF
         UniqueIDToOriginalUID _uniqueIDToOriginalID;
         UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
         FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
+        UniqueIDToAccessor _uniqueIDToAccessorObject;
         
         GLTFOutputStream *_vertexOutputStream;
         GLTFOutputStream *_indicesOutputStream;
