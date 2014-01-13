@@ -148,7 +148,7 @@ namespace GLTF
         //COLLADABU::Math::Quaternion aquat = QuaternionFromMatrix(amat3);
         COLLADABU::Math::Quaternion aquat;
         aquat.fromRotationMatrix(amat3);
-        
+        aquat.normalise();
         aquat.toAngleAxis(angle, axis);
         tran[U_ROTATEX] = axis.x;
         tran[U_ROTATEY] = axis.y;
