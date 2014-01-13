@@ -37,7 +37,12 @@ namespace GLTF
         this->_filename = this->_id + ".bin";
         this->_outputPath = folder + this->_filename;        
         this->_stream.open(this->_outputPath.c_str(), ios::out | ios::ate | ios::binary);
-        this->_opened = true;
+        
+        if (this->_stream.is_open()) {
+            this->_opened = true;
+        } else {
+            printf("cannot create file :%s\n", this->_outputPath.c_str());
+        }
     }
     
     const std::string& GLTFOutputStream::filename() {
@@ -52,13 +57,14 @@ namespace GLTF
         return this->_outputPath.c_str();
     }
 
-    size_t GLTFOutputStream::length() {
+    size_t GLTFOutputStream::length() {        
         return this->_opened ? static_cast<size_t> (this->_stream.tellp()) : 0;
     }
     
     void GLTFOutputStream::write(const char* buffer, size_t length) {
-        if (this->_opened)
+        if (this->_opened) {
             this->_stream.write(buffer, length);
+        }
     }
     
     void GLTFOutputStream::write(shared_ptr<GLTFBuffer> buffer) {
