@@ -18,6 +18,8 @@ _In particular, the definition of materials are in flux, and work on animations 
 
 A [converter](https://github.com/KhronosGroup/glTF/wiki/converter) can be used to produce glTF assets out of COLLADA.
 
+You can also find binary [builds](https://github.com/KhronosGroup/glTF/wiki/Converter-builds).
+
 ## Viewer
 
 GLTF Viewer based on [montagejs](https://github.com/montagejs/montage) can be found [here](https://github.com/fabrobinet/glTF-webgl-viewer)
