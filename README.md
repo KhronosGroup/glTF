@@ -22,7 +22,7 @@ You can also find binary [builds](https://github.com/KhronosGroup/glTF/wiki/Conv
 
 ## Viewer
 
-GLTF Viewer based on [montagejs](https://github.com/montagejs/montage) can be found [here](https://github.com/fabrobinet/glTF-webgl-viewer)
+glTF Viewer based on [montagejs](https://github.com/montagejs/montage) can be found [here](https://github.com/fabrobinet/glTF-webgl-viewer)
 
 #### Workflow
 
