@@ -160,6 +160,9 @@ if (USE_WEBGLLOADER)
 LIST(APPEND TARGET_LIBS WEBGLLOADER)
 endif()
 
+IF("${CMAKE_SYSTEM}" MATCHES "Linux")
+    LIST(APPEND TARGET_LIBS rt)
+endif("${CMAKE_SYSTEM}" MATCHES "Linux")
 
 target_link_libraries (collada2gltf ${TARGET_LIBS})
 
