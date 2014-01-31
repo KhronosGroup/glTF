@@ -165,7 +165,7 @@ namespace GLTF
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     std::string imagePath = image->getString("path");
-                    COLLADABU::URI inputURI(converterContext.inputFilePath.c_str());
+                    COLLADABU::URI inputURI(converterContext.getInputFilePath().c_str());
                     std::string imageFullPath = inputURI.getPathDir() + imagePath;
                     if (imageHasAlpha(imageFullPath.c_str()))
                         return false;
@@ -292,12 +292,12 @@ namespace GLTF
             
             std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
-            shaderObject->setString("path", path);
+            shaderObject->setString("path", converterContext.resourceOuputPathForPath(path));
             
             //also write the file on disk
             std::string shaderString = converterContext.shaderIdToShaderString[shaderId];
             if (shaderString.size() > 0) {
-                COLLADABU::URI outputURI(converterContext.outputFilePath);
+                COLLADABU::URI outputURI(converterContext.getOutputFilePath());
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
                 if (!CONFIG_BOOL("outputProgress")) {
@@ -1108,7 +1108,7 @@ namespace GLTF
         
         
         //create shader name made of the input file name to avoid file name conflicts
-        COLLADABU::URI outputFileURI(converterContext.outputFilePath.c_str());
+        COLLADABU::URI outputFileURI(converterContext.getOutputFilePath().c_str());
         std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(converterContext.shaderIdToShaderString.size());
         std::string shaderFS = shaderBaseId + "FS";
         std::string shaderVS = shaderBaseId + "VS";

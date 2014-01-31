@@ -46,9 +46,9 @@
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 12
+#define OPTIONS_COUNT 13
 #else
-#define OPTIONS_COUNT 10
+#define OPTIONS_COUNT 11
 #endif
 
 
@@ -65,6 +65,7 @@ static const OptionDescriptor options[] = {
     { "z",				required_argument,  "-z -> path of configuration file [string]" },
 	{ "f",				required_argument,  "-f -> path of input file, argument [string]" },
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
+	{ "b",				required_argument,  "-b -> path of output bundle argument [string]" },
 	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
 	{ "i",              no_argument,        "-i -> invert-transparency" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
@@ -100,14 +101,14 @@ static void dumpHelpMessage() {
     printf("%s\n", helpMessage.c_str());
 }
 
-static std::string replacePathExtensionWithJSON(const std::string& inputFile)
+static std::string replacePathExtensionWith(const std::string& inputFile, const std::string& extension)
 {
     COLLADABU::URI inputFileURI(inputFile.c_str());
     
     std::string pathDir = inputFileURI.getPathDir();
     std::string fileBase = inputFileURI.getPathFileBase();
     
-    return pathDir + fileBase + ".json";
+    return pathDir + fileBase + "." + extension;
 }
 
 bool fileExists(const char * filename) {
@@ -136,15 +137,15 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     
     if (argc == 2) {
         if (fileExists(argv[1])) {
-            converterContext->inputFilePath = argv[1];
-            converterContext->outputFilePath = replacePathExtensionWithJSON(converterContext->inputFilePath);
+            converterContext->setInputFilePath(argv[1]);
+            converterContext->setOutputFilePath(replacePathExtensionWith(converterContext->getInputFilePath(), "json"));
             return true;
         }
     }
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = converterContext->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -153,11 +154,15 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 dumpHelpMessage();
                 return false;
             case 'f':
-                converterContext->inputFilePath = optarg;
+                converterContext->setInputFilePath(optarg);
                 hasInputPath = true;
 				break;
+            case 'b':
+                converterContext->setBundleOutputPath(replacePathExtensionWith(optarg, "glTF"));
+                hasOutputPath = true;
+				break;
             case 'o':
-                converterContext->outputFilePath = replacePathExtensionWithJSON(optarg);
+                converterContext->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
                 hasOutputPath = true;
 				break;
             case 'i':
@@ -223,7 +228,8 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     }
     
     if (!hasOutputPath & hasInputPath) {
-        converterContext->outputFilePath = replacePathExtensionWithJSON(converterContext->inputFilePath);
+        converterContext->setOutputFilePath(replacePathExtensionWith(converterContext->getInputFilePath(), "json"));
+        
     }
     
     return true;
@@ -233,12 +239,12 @@ int main (int argc, char * const argv[]) {
     GLTF::GLTFConverterContext converterContext;
     
     if (processArgs(argc, argv, &converterContext)) {
-        if (converterContext.inputFilePath.length() == 0) {
+        if (converterContext.getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = converterContext.inputFilePath.c_str();
+        const char* inputFilePathCStr = converterContext.getInputFilePath().c_str();
         
-        if (!fileExists(converterContext.inputFilePath.c_str())) {
+        if (!fileExists(converterContext.getInputFilePath().c_str())) {
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
@@ -248,7 +254,7 @@ int main (int argc, char * const argv[]) {
             converterContext.log("convertion 0%%");
             converterContext.log("\n\033[F\033[J");
         } else {
-            converterContext.log("converting:%s ... as %s \n",converterContext.inputFilePath.c_str(), converterContext.outputFilePath.c_str());
+            converterContext.log("converting:%s ... as %s \n",converterContext.getInputFilePath().c_str(), converterContext.getOutputFilePath().c_str());
         }
         GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext);
         writer->write();

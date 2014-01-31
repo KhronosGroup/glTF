@@ -424,7 +424,7 @@ namespace GLTF
         
         //testDecode(mesh, bstream);
         outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
-        converterContext._geometryByteLength += bstream.GetSize();
+        converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + bstream.GetSize());
 
         if (ifs.GetCoordIndex()) {
             free(ifs.GetCoordIndex());
@@ -568,7 +568,7 @@ namespace GLTF
         } else {
             outputStream->write((const char*)buffer, byteLength);
         }
-        converterContext._animationByteLength += byteLength;
+        converterContext.setAnimationByteLength(converterContext.getAnimationByteLength() + byteLength);
 
         return parameter;
     }

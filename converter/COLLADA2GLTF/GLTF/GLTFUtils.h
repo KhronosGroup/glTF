@@ -125,7 +125,25 @@ namespace GLTF
             stream << value;
             return stream.str();
         }
+
+        static bool isPathSeparator(char c) {
+#if WIN32
+            return (c == '\\');
+#else
+            return (c == '/');
+#endif
+        }
         
+        static bool isAbsolutePath(const std::string& path) {
+            if (path.length() == 0)
+                return false;
+            const char* const name = path.c_str();
+#if WIN32
+            return (path.length() >= 3) && ((name[0] >= 'a' && name[0] <= 'z') || (name[0] >= 'A' && name[0] <= 'Z')) && name[1] == ':' && isPathSeparator(name[2]);
+#else
+            return isPathSeparator(name[0]);
+#endif
+        }
     };
     
 }

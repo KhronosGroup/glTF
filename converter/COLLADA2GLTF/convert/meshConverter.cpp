@@ -111,7 +111,7 @@ namespace GLTF
                     }
                     uniqueIndices->setByteOffset(indicesOutputStream->length());
                     indicesOutputStream->write((const char*)ushortIndices, indicesLength);
-                    converterContext._geometryByteLength += indicesLength;
+                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + indicesLength);
                 }
 #ifdef USE_OPEN3DGC
                 else {
@@ -160,7 +160,7 @@ namespace GLTF
                 {
                     meshAttribute->setByteOffset(vertexOutputStream->length());
                     vertexOutputStream->write(buffer);
-                    converterContext._geometryByteLength += buffer->getByteLength();
+                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + buffer->getByteLength());
                 }
                 
 

@@ -122,10 +122,10 @@ namespace GLTF
         //To comply with macro to access config
         GLTFConverterContext &converterContext = this->_converterContext;
 
-        this->_writer.initWithPath(converterContext.outputFilePath.c_str());
+        this->_writer.initWithPath(converterContext.getOutputFilePath().c_str());
 
-        this->_converterContext._geometryByteLength = 0;
-        this->_converterContext._animationByteLength = 0;
+        this->_converterContext.setGeometryByteLength(0);
+        this->_converterContext.setAnimationByteLength(0);
         
         this->_extraDataHandler = new ExtraDataHandler();
 
@@ -134,14 +134,12 @@ namespace GLTF
 
         //shared_ptr <GLTFEffect> aDefaultEffect = defaultEffect();
         //this->_converterContext._uniqueIDToEffect[0] = aDefaultEffect;
-
-        
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
          */
-        COLLADABU::URI inputURI(this->_converterContext.inputFilePath.c_str());
-        COLLADABU::URI outputURI(this->_converterContext.outputFilePath.c_str());
+        COLLADABU::URI inputURI(this->_converterContext.getInputFilePath().c_str());
+        COLLADABU::URI outputURI(this->_converterContext.getOutputFilePath().c_str());
         
         std::string folder = outputURI.getPathDir();
         std::string fileName = inputURI.getPathFileBase();
@@ -173,7 +171,7 @@ namespace GLTF
 		COLLADAFW::Root root(&this->_loader, this);
         
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-		if (!root.loadDocument( this->_converterContext.inputFilePath))
+		if (!root.loadDocument( this->_converterContext.getInputFilePath()))
 			return false;
                 
         // ----
@@ -487,8 +485,8 @@ namespace GLTF
         }
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
-        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  0);
-        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  0);
+        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  &this->_converterContext);
+        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  &this->_converterContext);
 
         this->_converterContext.root->setValue("buffers", buffersObject);
         
@@ -544,21 +542,23 @@ namespace GLTF
         
         delete this->_extraDataHandler;
         
-        this->_converterContext.convertionResults()->setUnsignedInt32("geometry", this->_converterContext._geometryByteLength);
-        this->_converterContext.convertionResults()->setUnsignedInt32("animation", this->_converterContext._animationByteLength);
+        this->_converterContext.convertionResults()->setUnsignedInt32("geometry", this->_converterContext.getGeometryByteLength());
+        this->_converterContext.convertionResults()->setUnsignedInt32("animation", this->_converterContext.getAnimationByteLength());
         this->_converterContext.convertionResults()->setUnsignedInt32("scene", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
-        this->_converterContext.log("[geometry] %d bytes\n", (int)this->_converterContext._geometryByteLength);
-        this->_converterContext.log("[animations] %d bytes\n", (int)this->_converterContext._animationByteLength);
+        this->_converterContext.log("[geometry] %d bytes\n", (int)this->_converterContext.getGeometryByteLength());
+        this->_converterContext.log("[animations] %d bytes\n", (int)this->_converterContext.getAnimationByteLength());
         this->_converterContext.log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
         if (this->_converterContext.converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
-            COLLADABU::URI convertResultsURI(converterContext.outputFilePath);
+            COLLADABU::URI convertResultsURI(converterContext.getOutputFilePath());
             std::string aPath = convertResultsURI.getPathDir();
             aPath += "results.json";
             this->_resultsWriter.initWithPath(aPath);
             converterContext.convertionResults()->write(&this->_resultsWriter);
         }
+        
+        this->_converterContext.copyImagesInsideBundleIfNeeded();
         
 		return true;
 	}
@@ -1631,7 +1631,7 @@ namespace GLTF
         } else {
             relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
         }
-        image->setString("path", relPathFile);
+        image->setString("path", this->_converterContext.resourceOuputPathForPath(relPathFile));
 
         return true;
 	}

@@ -39,10 +39,11 @@ namespace GLTF
 
     shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context)
     {
+        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
         shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
         
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
-        bufferObject->setString("path", path);
+        bufferObject->setString("path", converterContext->resourceOuputPathForPath(path));
         
         return bufferObject;
     }
