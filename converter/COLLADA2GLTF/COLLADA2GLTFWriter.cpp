@@ -972,7 +972,8 @@ namespace GLTF
                 
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
-            bool exportDefaultValues = converterContext.converterConfig()->boolForKeyPath("exportDefaultValues");
+            
+            bool exportDefaultValues = CONFIG_BOOL("exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
                                        ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
             if (exportTranslation)
@@ -987,7 +988,7 @@ namespace GLTF
             
         } else {
             //FIXME: OpenCOLLADA typo
-            bool exportMatrix = !((matrix.isIdentiy() && (converterContext.converterConfig()->boolForKeyPath("exportDefaultValues") == false) ));
+            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL("exportDefaultValues") == false) ));
             if (exportMatrix)
                 nodeObject->setValue("matrix", this->serializeMatrix4Array(matrix));
         }
@@ -1431,7 +1432,12 @@ namespace GLTF
                 textureObject->setString("source", imageUID);
                 textureObject->setString("sampler", samplerUID);
                 textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
-                textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
+                
+                if (CONFIG_BOOL("exportDefaultValues")) {
+                    textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
+                    //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
+                    textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                }
                 textureObject->setUnsignedInt32("target", profile->getGLenumForString("TEXTURE_2D"));
                 textures->setValue(textureUID, textureObject);
             }
