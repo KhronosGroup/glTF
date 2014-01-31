@@ -513,9 +513,9 @@ namespace GLTF
 
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
-        //if (animationLength > 0) {
+        if (animationLength > 0) {
             bufferViewsObject->setValue(genericBufferView->getID(), bufferViewGenericObject);
-        //}
+        }
         if (compressionLength > 0) {
             bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
         }
