@@ -1362,7 +1362,8 @@ namespace GLTF
                                               shared_ptr <JSONObject> extras)
     {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
-        GLTFProfile* profile = this->_converterContext.profile.get();
+        GLTFConverterContext &converterContext = this->_converterContext;
+        GLTFProfile* profile = converterContext.profile.get();
 
         ColorOrTexture slot;
         
@@ -1418,7 +1419,6 @@ namespace GLTF
             slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
             
             //do we need a new sampler ?
-            GLTFProfile* profile = this->_converterContext.profile.get();
             std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
                                                                       __GetGLWrapMode(sampler->getWrapT(), profile),
                                                                       __GetFilterMode(sampler->getMinFilter(), profile),
@@ -1426,7 +1426,7 @@ namespace GLTF
             
             std::string textureUID = "texture_" + imageUID;
             
-            shared_ptr <GLTF::JSONObject> textures = this->_converterContext.root->createObjectIfNeeded("textures");
+            shared_ptr <GLTF::JSONObject> textures = converterContext.root->createObjectIfNeeded("textures");
             if (textures->contains(textureUID) == false) {
                 shared_ptr <JSONObject> textureObject(new JSONObject());
                 textureObject->setString("source", imageUID);
