@@ -1103,33 +1103,36 @@ namespace GLTF
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
                 shared_ptr<JSONObject> light = static_pointer_cast<JSONObject> (this->_converterContext._uniqueIDToJSONValue[id]);
-                std::string lightUID = this->_converterContext._uniqueIDToOriginalID[id];
-
-                shared_ptr<JSONArray> listOfNodesPerLight;
-                if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
-                    listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
-                    this->_converterContext._uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
-                } else {
-                    listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID];
+                if (light) {
+                    std::string lightUID = this->_converterContext._uniqueIDToOriginalID[id];
+                    
+                    shared_ptr<JSONArray> listOfNodesPerLight;
+                    if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
+                        listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
+                        this->_converterContext._uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
+                    } else {
+                        listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID];
+                    }
+                    
+                    listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
+                    lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
+                    lights->setValue(lightUID, light);
                 }
-                
-                listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
-                lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
-                lights->setValue(lightUID, light);
             }
             //We just want a single light per node
             //https://github.com/KhronosGroup/glTF/issues/13
             //nodeObject->setValue("lights", lightsInNode);
-            nodeObject->setValue("light", lightsInNode->values()[0]);
-            if (count > 1) {
-                //FR: AFAIK no authoring tool export multiple light per node, but we'll warn if that's the case
-                //To fix this, dummy sub nodes should be created.
-                static bool printedOnce = false;
-                if (printedOnce) {
-                    this->_converterContext.log("WARNING: some unhandled lights because some nodes carry more than a single light\n");
-                    printedOnce = false;
+            if (lightsInNode->values().size() > 0) {
+                nodeObject->setValue("light", lightsInNode->values()[0]);
+                if (count > 1) {
+                    //FR: AFAIK no authoring tool export multiple light per node, but we'll warn if that's the case
+                    //To fix this, dummy sub nodes should be created.
+                    static bool printedOnce = false;
+                    if (printedOnce) {
+                        this->_converterContext.log("WARNING: some unhandled lights because some nodes carry more than a single light\n");
+                        printedOnce = false;
+                    }
                 }
-                
             }
         }
         
