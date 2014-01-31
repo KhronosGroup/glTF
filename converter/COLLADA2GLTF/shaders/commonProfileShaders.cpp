@@ -281,7 +281,7 @@ namespace GLTF
         return techniqueHash;
     }
     
-    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& converterContext)
+    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFConverterContext& converterContext, unsigned int type)
     {
         shared_ptr <JSONObject> shadersObject = converterContext.root->createObjectIfNeeded("shaders");
         
@@ -293,7 +293,7 @@ namespace GLTF
             std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
             shaderObject->setString("path", converterContext.resourceOuputPathForPath(path));
-            
+            shaderObject->setUnsignedInt32("type", type);
             //also write the file on disk
             std::string shaderString = converterContext.shaderIdToShaderString[shaderId];
             if (shaderString.size() > 0) {
@@ -1116,8 +1116,8 @@ namespace GLTF
         converterContext.shaderIdToShaderString[shaderVS] = vs->source();
         converterContext.shaderIdToShaderString[shaderFS] = fs->source();
         
-        writeShaderIfNeeded(shaderVS, converterContext);
-        writeShaderIfNeeded(shaderFS, converterContext);
+        writeShaderIfNeeded(shaderVS, converterContext, converterContext.profile->getGLenumForString("VERTEX_SHADER"));
+        writeShaderIfNeeded(shaderFS, converterContext, converterContext.profile->getGLenumForString("FRAGMENT_SHADER"));
         
         shared_ptr <JSONObject> programsObject = converterContext.root->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
