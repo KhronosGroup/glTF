@@ -855,7 +855,7 @@ namespace GLTF
                             effect->setTechniqueGenerator(techniqueGenerator);
                             effect->setName(uniqueId);
                             
-                            this->_converterContext._uniqueIDToDefaultEffect[0] = effect;
+                            this->_converterContext._uniqueIDToDefaultEffect[effectId] = effect;
                         }
                         
                         primitive->setMaterialID(effect->getID());
