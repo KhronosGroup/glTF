@@ -249,6 +249,7 @@ namespace GLTF
         UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToMeshes _uniqueIDToMeshes;
         UniqueIDToEffect _uniqueIDToEffect;
+        UniqueIDToEffect _uniqueIDToDefaultEffect;
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
         UniqueIDToAnimation _uniqueIDToAnimation;

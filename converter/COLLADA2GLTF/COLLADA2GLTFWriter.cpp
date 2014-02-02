@@ -76,40 +76,6 @@ namespace GLTF
         trTarget->setString("path", path);
         cvtAnimation->channels()->appendValue(trChannel);
     }
-        
-    /*
-    static shared_ptr <GLTFEffect> defaultEffect() {
-        std::string uniqueId = "__glTF__defaultMaterial";
-        
-        shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(uniqueId));
-        shared_ptr <JSONObject> values(new JSONObject());
-        
-        cvtEffect->setValues(values);
-        cvtEffect->setLightingModel("Phong");
-        
-        //retrieve the type, parameterName -> symbol -> type
-        double red = 1, green = 1, blue = 1, alpha = 1;
-        shared_ptr <JSONObject> slotObject(new JSONObject());
-        slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-        slotObject->setString("type", "FLOAT_VEC4");
-        values->setValue("diffuse", slotObject);
-        
-        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
-        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
-        
-        techniqueGenerator->setString("lightingModel", cvtEffect->getLightingModel());
-        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
-        techniqueGenerator->setValue("values", cvtEffect->getValues());
-        //techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
-        //techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
-        
-        cvtEffect->setTechniqueGenerator(techniqueGenerator);
-        cvtEffect->setName(uniqueId);
-        
-        return cvtEffect;
-    }
-     */
-
     
     bool COLLADA2GLTFWriter::write()
 	{
@@ -131,9 +97,6 @@ namespace GLTF
 
         this->_converterContext.shaderIdToShaderString.clear();
         this->_converterContext._uniqueIDToMeshes.clear();
-
-        //shared_ptr <GLTFEffect> aDefaultEffect = defaultEffect();
-        //this->_converterContext._uniqueIDToEffect[0] = aDefaultEffect;
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
@@ -408,6 +371,14 @@ namespace GLTF
         UniqueIDToEffect::const_iterator UniqueIDToEffectIterator;
         
         for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
+            //(*it).first;             // the key value (of type Key)
+            //(*it).second;            // the mapped value (of type T)
+            shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
+            if (effect->getTechniqueGenerator()) {
+                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_converterContext));
+            }
+        }
+        for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToDefaultEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToDefaultEffect.end() ; UniqueIDToEffectIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
@@ -772,6 +743,7 @@ namespace GLTF
                     }
                     
                     shared_ptr<JSONObject> texcoordBindings(new JSONObject());
+                    shared_ptr <GLTFEffect> effect;
                     
                     if (materialBindingIndex != -1) {
                         unsigned int referencedMaterialID = (unsigned int)materialBindings[materialBindingIndex].getReferencedMaterial().getObjectId();
@@ -783,8 +755,11 @@ namespace GLTF
                         unsigned int effectID = (unsigned int)effectUID.getObjectId();
                         shared_ptr<JSONObject> effectExtras = this->_extraDataHandler->getExtras(effectUID);
                         
-                        std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];
-                        shared_ptr <GLTFEffect> effect = this->_converterContext._uniqueIDToEffect[effectID];
+                        std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];                        
+                        
+                        if (this->_converterContext._uniqueIDToEffect.count(effectID) > 0) {
+                            effect = this->_converterContext._uniqueIDToEffect[effectID];
+                        }
                         
                         // retrieve the semantic to be associated
                         size_t coordBindingsCount = textureCoordBindings.getCount();
@@ -837,8 +812,54 @@ namespace GLTF
                         effect->setTechniqueGenerator(techniqueGenerator);
                         effect->setName(materialName);
                         primitive->setMaterialID(effect->getID());
+                    } else {
+                        //https://github.com/KhronosGroup/glTF/issues/194
+                        //We'll deal with two cases cases of default materials
+                        //With or without NORMALS
+                        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
+                        
+                        unsigned int effectId = 0;
+                        if (attributeSemantics->contains(GLTFUtils::getStringForSemantic(GLTF::NORMAL))) {
+                            effectId = 1;
+                        } else {
+                            effectId = 0;
+                        }
+                        
+                        //we have no material, create default                        
+                        if (this->_converterContext._uniqueIDToDefaultEffect.count(effectId) > 0) {
+                            effect = this->_converterContext._uniqueIDToDefaultEffect[effectId];
+                        } else {
+                            std::string uniqueId = "__glTF__defaultMaterial" + GLTFUtils::toString(effectId);
+                            
+                            effect = shared_ptr<GLTFEffect> (new GLTFEffect(uniqueId));
+                            shared_ptr <JSONObject> values(new JSONObject());
+                            
+                            effect->setValues(values);
+                            effect->setLightingModel("Phong");
+                            
+                            //retrieve the type, parameterName -> symbol -> type
+                            double red = 1, green = 1, blue = 1, alpha = 1;
+                            shared_ptr <JSONObject> slotObject(new JSONObject());
+                            slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
+                            slotObject->setUnsignedInt32("type", this->_converterContext.profile->getGLenumForString("FLOAT_VEC4"));
+                            values->setValue("diffuse", slotObject);
+                            
+                            shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
+                            
+                            techniqueGenerator->setString("lightingModel", effect->getLightingModel());
+                            techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+                            techniqueGenerator->setValue("values", effect->getValues());
+                            techniqueGenerator->setValue("techniqueExtras", shared_ptr<JSONObject>(new JSONObject()));
+                            techniqueGenerator->setValue("texcoordBindings", shared_ptr<JSONObject>(new JSONObject()));                            
+
+                            effect->setTechniqueGenerator(techniqueGenerator);
+                            effect->setName(uniqueId);
+                            
+                            this->_converterContext._uniqueIDToDefaultEffect[0] = effect;
+                        }
+                        
+                        primitive->setMaterialID(effect->getID());
                     }
-                    //printf(":::: %s\n",primitive->getMaterialID().c_str());
                 }
                 
                 meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
@@ -1017,7 +1038,6 @@ namespace GLTF
                     
                     //looks like the only way to get the <skeleton> information from OpenCOLLADA
                     Loader::InstanceControllerDataList list = this->_loader.getInstanceControllerDataListMap()[skinDataUniqueId];
-                    
                     Loader::InstanceControllerData instanceControllerData = *list.begin();
                     
                     shared_ptr<JSONObject> instanceSkin(new JSONObject());

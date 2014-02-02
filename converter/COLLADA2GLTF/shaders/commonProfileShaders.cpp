@@ -690,9 +690,12 @@ namespace GLTF
             addSemantic("vs", "attribute",
                         "POSITION", "position" , 1, false);
             
-            //normal attribute
-            addSemantic("vs", "attribute",
-                        "NORMAL", "normal", 1, true);
+            bool hasNormals = attributeSemantics->contains("NORMAL");
+            if (hasNormals) {
+                //normal attribute
+                addSemantic("vs", "attribute",
+                            "NORMAL", "normal", 1, true);
+            }
 
             if (hasSkinning) {
                 addSemantic("vs", "attribute",
@@ -705,10 +708,11 @@ namespace GLTF
 
             }
             
-            //normal matrix
-            addSemantic("vs", "uniform",
+            if (hasNormals) {
+                //normal matrix
+                addSemantic("vs", "uniform",
                         MODELVIEWINVERSETRANSPOSE, "normalMatrix" , 1, false);
-
+            }
             //modeliew matrix
             addSemantic("vs", "uniform",
                         MODELVIEW, "modelViewMatrix" , 1, false);
@@ -731,16 +735,20 @@ namespace GLTF
                                          vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
                                          "u_modelViewMatrix",
                                          "a_position");
-                vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
-                                         "v_normal", "u_normalMatrix", "a_normal");
+                if (hasNormals) {
+                    vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
+                                             "v_normal", "u_normalMatrix", "a_normal");
+                }
                 
             } else {
                 vertexShader->appendCode("%s pos = %s * vec4(%s,1.0);\n",
                                          vertexShader->GLSLTypeForGLType(vec4Type).c_str(),
                                          "u_modelViewMatrix",
                                          "a_position");
-                vertexShader->appendCode("%s = normalize(%s * %s);\n",
-                                         "v_normal", "u_normalMatrix", "a_normal");
+                if (hasNormals) {
+                    vertexShader->appendCode("%s = normalize(%s * %s);\n",
+                                             "v_normal", "u_normalMatrix", "a_normal");
+                }
                 
             }
             
@@ -766,12 +774,14 @@ namespace GLTF
             }
             
             
-            bool lightingIsEnabled = modelContainsLights || CONFIG_BOOL("useDefaultLight");
+            bool lightingIsEnabled = hasNormals && (modelContainsLights || CONFIG_BOOL("useDefaultLight"));
             
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
-                if (techniqueExtras->getBool("double_sided")) {
-                    fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
+                if (techniqueExtras) {
+                    if (techniqueExtras->getBool("double_sided")) {
+                        fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
+                    }
                 }
             } else {
                 //https://github.com/KhronosGroup/glTF/issues/121
@@ -810,7 +820,7 @@ namespace GLTF
             shared_ptr <JSONObject> shininessObject;
             
             size_t lightIndex = 0;
-            if (modelContainsLights && converterContext.root->contains("lightsIds")) {
+            if (lightingIsEnabled && converterContext.root->contains("lightsIds")) {
                 shared_ptr<JSONArray> lightsIds = converterContext.root->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 
@@ -878,20 +888,22 @@ namespace GLTF
                             program->addVarying(varyingLightDirection, vec3Type);
                             lightTransformParameter->setValue("source", nodesIds[j]);
 
-                            if (!useSimpleLambert) {
-                                if (inputParameters->contains("shininess") && (!shininessObject)) {
-                                    shininessObject = inputParameters->getObject("shininess");
-                                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", converterContext);
+                            if (hasNormals) {
+                                if (!useSimpleLambert) {
+                                    if (inputParameters->contains("shininess") && (!shininessObject)) {
+                                        shininessObject = inputParameters->getObject("shininess");
+                                        addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", converterContext);
+                                    }
+                                    
+                                    fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
+                                    fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
+                                    fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                                    
+                                } else {
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
                                 }
-                                
-                                fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
-                                fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
-                                fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
-                                fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
-                                fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
-                                
-                            } else {
-                                fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
                             }
                             
                             fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
@@ -1020,7 +1032,7 @@ namespace GLTF
             }
             if (modelContainsLights) {
                 fragmentShader->appendCode("diffuse.xyz *= diffuseLight;\n");
-            } else if (CONFIG_BOOL("useDefaultLight")) {
+            } else if (CONFIG_BOOL("useDefaultLight") && hasNormals) {
                 fragmentShader->appendCode("diffuse.xyz *= max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
             }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
