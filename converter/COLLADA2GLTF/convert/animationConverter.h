@@ -206,11 +206,6 @@ namespace GLTF
                                 (translations != 0) ? translations + (i * 3) : 0,
                                 (rotations != 0) ? axisAngle : 0,
                                 (scales != 0) ? scales + (i * 3) : 0);
-
-                if ((i == 0) && (rotations != 0)) {
-                    
-                }
-                
                 
                 if ((i > 0) && (rotations != 0)) {
                     //each quaternions have 2 possible representations from axis angle
@@ -525,9 +520,6 @@ namespace GLTF
                         } else {
                             printf("inconsistent state: cannot interpolate keys of different types\n");
                         }
-                        
-                        
-                        std::string nodeUID = _targetUID;
                     }
                     
                     transform = (*key->subTransforms())[transformID].get();
