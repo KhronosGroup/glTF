@@ -160,7 +160,7 @@
 
                 scene = new THREE.Scene();
 
-                defaultCamera = new THREE.PerspectiveCamera( 45, container.offsetWidth / container.offsetHeight, 1, 10000 );
+                defaultCamera = new THREE.PerspectiveCamera( 45, container.offsetWidth / container.offsetHeight, 1, 20000 );
                 
                 //defaultCamera.up = new THREE.Vector3( 0, 1, 0 );
                 scene.add( defaultCamera );
@@ -168,6 +168,7 @@
 
                 var sceneInfo = sceneList[index];
 
+                var spot1 = null;
                 if (sceneInfo.addLights) {
                     
                     var ambient = new THREE.AmbientLight( 0x111111 );
@@ -177,7 +178,7 @@
                 	directionalLight.position.set( 0, -1, 1 ).normalize();
                 	scene.add( directionalLight );
                 
-	                var spot1   = new THREE.SpotLight( 0x888888, 2 );
+	                spot1   = new THREE.SpotLight( 0x888888, 2 );
 	                spot1.position.set( -100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
@@ -207,19 +208,25 @@
                 				
                 container.appendChild( renderer.domElement );
 
+                var ground = null;
 				if (sceneInfo.addGround) {
 	                var groundMaterial = new THREE.MeshPhongMaterial({
 	                        color: 0xFFFFFF,
 	                        ambient: 0x888888,
 	                        shading: THREE.SmoothShading,
 	                    });
-	                var ground = new THREE.Mesh( new THREE.PlaneGeometry(1024, 1024), groundMaterial);
+	                ground = new THREE.Mesh( new THREE.PlaneGeometry(1024, 1024), groundMaterial);
 
 	                if (sceneInfo.shadows) {
 		                ground.receiveShadow = true;
 	                }
-	                
-	                ground.position.z = -70;
+
+	                if (sceneInfo.groundPos) {
+		                ground.position.copy(sceneInfo.groundPos);
+	                }
+	                else {
+		                ground.position.z = -70;
+	                }
 	                ground.rotation.x = -Math.PI / 2;
 	                
 	                scene.add(ground);
@@ -245,12 +252,19 @@
                 	if (sceneInfo.cameraPos)
                         defaultCamera.position.copy(sceneInfo.cameraPos);
 
-                	if (sceneInfo.center)
+                	if (sceneInfo.center) {
                         orbitControls.center.copy(sceneInfo.center);
+                	}
                     
-                    if (sceneInfo.objectPosition)
+                    if (sceneInfo.objectPosition) {
                         object.position.copy(sceneInfo.objectPosition);
 
+                        if (spot1) {
+	    	                spot1.position.set(sceneInfo.objectPosition.x - 100, sceneInfo.objectPosition.y + 200, sceneInfo.objectPosition.z - 100 );
+    	                	spot1.target.position.copy(sceneInfo.objectPosition);
+                        }
+                    }
+                    
                     if (sceneInfo.objectRotation)
                         object.rotation.copy(sceneInfo.objectRotation);
 
@@ -376,8 +390,10 @@
 		                 cameraPos: new THREE.Vector3(0, 10, 50),
 		                 addGround:false },
 	                 { name : "Minebot", url : "/glTFTests/minebot/mine_bot_anim.json", 
-		                 cameraPos: new THREE.Vector3(0, 1, 20), 
+		                 cameraPos: new THREE.Vector3(3754.93, 1647.66 + 2, 10 - 5214.26), 
+		                 center: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
 		                 addLights:true,
+		                 groundPos: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
 		                 addGround:true },
 	                 { name : "Duck", url : "../../model/duck/duck.json", 
 		                 cameraPos: new THREE.Vector3(0, 30, -50),
