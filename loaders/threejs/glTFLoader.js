@@ -1018,6 +1018,30 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 			yfov = xfov / aspect_ratio;
                 			// yfov = 50;
                 		}
+                		
+                    	if (yfov)
+                    	{
+                    		camera = new THREE.PerspectiveCamera(yfov, aspect_ratio, znear, zfar);
+                    	}
+                	}
+                	
+                	if (xfov === undefined)
+                	{
+                		if (yfov)
+                		{
+                			// N.B.: if no aspect ratio supplied, assume 1?
+	                		if (!aspect_ratio)
+	                			aspect_ratio = container.offsetWidth / container.offsetHeight; // 4 / 3; // 
+	                		
+                			// According to COLLADA spec...
+                			// aspect_ratio = xfov / yfov
+                			xfov = yfov * aspect_ratio;
+                			// yfov = 50;
+                		}
+                    	if (xfov)
+                    	{
+                    		camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
+                    	}
                 	}
                 	
                 	if (yfov)
