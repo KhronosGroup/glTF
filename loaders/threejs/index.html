@@ -232,7 +232,7 @@
 	                scene.add(ground);
 				}
 				
-                loader = new THREE.glTFLoader( container );
+                loader = new THREE.glTFLoader;
                 loader.useBufferGeometry = useBufferGeometry;
                 var loadStartTime = Date.now();
                 var status = document.getElementById("status");
@@ -319,8 +319,11 @@
 
 			function onWindowResize() {
 
+				defaultCamera.aspect = container.offsetWidth / container.offsetHeight;
+				defaultCamera.updateProjectionMatrix();
+				
 				var i, len = cameras.length;
-				for (i = 0; i < 0; i++) // just do it for default
+				for (i = 0; i < len; i++) // just do it for default
 				{
 					cameras[i].aspect = container.offsetWidth / container.offsetHeight;
 					cameras[i].updateProjectionMatrix();

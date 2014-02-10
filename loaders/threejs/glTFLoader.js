@@ -3,8 +3,7 @@
  */
 
 
-THREE.glTFLoader = function ( container, showStatus ) {
-	this.container = container;
+THREE.glTFLoader = function (showStatus) {
 	this.useBufferGeometry = (THREE.glTFLoader.useBufferGeometry !== undefined ) ?
 			THREE.glTFLoader.useBufferGeometry : true;
     this.meshesRequested = 0;
@@ -39,7 +38,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return color;
     }
     
-    function convertAxisAngleToQuaternion(rotations, count, yup)
+    function convertAxisAngleToQuaternion(rotations, count)
     {
     	var q = new THREE.Quaternion;
     	var axis = new THREE.Vector3;
@@ -587,18 +586,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
         },
 
-        yup: {
-        	enumerable: true,
-        	writable: true,
-        	value : true
-        },
-
-        container: {
-        	enumerable: true,
-        	writable: true,
-        	value : null
-        },
-        
         cameras: {
         	enumerable: true,
         	writable: true,
@@ -1007,7 +994,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             		var aspect_ratio = description.perspective.aspect_ratio;
 
             		if (!aspect_ratio)
-            			aspect_ratio = container.offsetWidth / container.offsetHeight; // 4 / 3; // 
+            			aspect_ratio = 1; 
             		
                 	if (yfov === undefined)
                 	{
@@ -1016,7 +1003,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 			// According to COLLADA spec...
                 			// aspect_ratio = xfov / yfov
                 			yfov = xfov / aspect_ratio;
-                			// yfov = 50;
                 		}
                 		
                 	}
@@ -1426,7 +1412,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 		            				
 		            				if (path == "rotation")
 		            				{
-		            					convertAxisAngleToQuaternion(output.data, output.count, this.yup);
+		            					convertAxisAngleToQuaternion(output.data, output.count);
 		            				}
 		            				
 			            			var interp = {
@@ -1608,8 +1594,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     var self = this;
     
     var loader = Object.create(ThreeGLTFLoader);
-    loader.yup = this.yup;
-    loader.container = this.container;
     loader.initWithPath(url);
     loader.load(new Context(rootObj, 
     					function(obj) {
