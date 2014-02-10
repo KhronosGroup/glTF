@@ -120,6 +120,7 @@ THREE.glTFInterpolator = function(param)
 	
 	var node = param.target;
 	node.matrixAutoUpdate = true;
+	this.targetNode = node;
 	
 	switch (param.path) {
 		case "translation" :
@@ -161,7 +162,7 @@ THREE.glTFInterpolator.prototype.interp = function(t)
 	{
 		if (this.isRot) {
 			this.quat1.set(this.values[0],
-					this.values[01],
+					this.values[1],
 					this.values[2],
 					this.values[3]);
 			this.quat2.set(this.values[4],
