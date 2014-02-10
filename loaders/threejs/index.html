@@ -305,7 +305,7 @@
 	    				for (i = 0; i < len; i++) {
 	    					var animation = gltf.animations[i];
 	    					animation.loop = true;
-    						animation.play();
+//    						animation.play();
 	    				}
     				}
                                        
@@ -322,7 +322,7 @@
 				var i, len = cameras.length;
 				for (i = 0; i < 0; i++) // just do it for default
 				{
-					cameras[i].aspect = container.offsetWidth / container.offsetHeight;
+					// cameras[i].aspect = container.offsetWidth / container.offsetHeight;
 					cameras[i].updateProjectionMatrix();
 				}
 				
