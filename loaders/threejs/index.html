@@ -171,14 +171,14 @@
                 var spot1 = null;
                 if (sceneInfo.addLights) {
                     
-                    var ambient = new THREE.AmbientLight( 0x111111 );
+                    var ambient = new THREE.AmbientLight( 0x888888 );
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
                 	directionalLight.position.set( 0, -1, 1 ).normalize();
                 	scene.add( directionalLight );
                 
-	                spot1   = new THREE.SpotLight( 0x888888, 2 );
+	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
 	                spot1.position.set( -100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
@@ -305,6 +305,10 @@
 	    				for (i = 0; i < len; i++) {
 	    					var animation = gltf.animations[i];
 	    					animation.loop = true;
+	    					// There's .3333 seconds junk at the tail of the Monster animation that
+	    					// keeps it from looping cleanly. Clip it at 3 seconds
+	    					if (sceneInfo.animationTime)
+		    					animation.duration = sceneInfo.animationTime;
     						animation.play();
 	    				}
     				}
@@ -372,10 +376,11 @@
 		                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0), 
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
 		             { name : "Monster", url : "/glTFTests/monster/monster.json", 
-			                 cameraPos: new THREE.Vector3(0, 1, 100), 
+			                 cameraPos: new THREE.Vector3(30, 10, 70), 
 			                 objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
-			                 objectPosition: new THREE.Vector3(0, 0, 0),
+			                 objectPosition: new THREE.Vector3(0, 1, 0),
 			                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, -Math.PI / 2),
+			                 animationTime: 3,
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
@@ -401,9 +406,9 @@
 	                 { name : "Duck", url : "../../model/duck/duck.json", 
 		                 cameraPos: new THREE.Vector3(0, 30, -50),
 		                 objectScale: new THREE.Vector3(0.1, 0.1, 0.1),
-		                 addLights:false,
-		                 addGround:false,
-		                 shadows:false },
+		                 addLights:true,
+		                 addGround:true,
+		                 shadows:true },
 	                 { name : "Wine Rack", url : "../../model/wine/wine.json",
 		             	 cameraPos: new THREE.Vector3(60, 30, 100), 
 		             	 objectPosition: new THREE.Vector3(-60, 0, -20),
