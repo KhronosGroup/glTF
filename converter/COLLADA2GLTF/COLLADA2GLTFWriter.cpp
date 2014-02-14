@@ -305,19 +305,7 @@ namespace GLTF
                 for (size_t j = 0 ; j < meshes->size() ; j++) {
                     shared_ptr<GLTFMesh> mesh = (*meshes)[j];
                     if (mesh) {
-                        /* some exporter bring meshes not used in the scene graph,
-                         for the moment we have to remove these meshes because this involves the side effect of not having a material assigned. Which makes it incomplete.
-                         */
                         PrimitiveVector primitives = mesh->getPrimitives();
-                        /*
-                         for (size_t k = 0 ; ((shouldSkipMesh == false) && (k < primitives.size())) ; k++) {
-                         shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[k];
-                         
-                         if (primitive->getMaterialID().length() == 0) {
-                         primitive->setMaterialID(aDefaultEffect->getID());
-                         }
-                         }
-                         */
                         
                         bool isCompressed = false;
                         if (mesh->getExtensions()) {
