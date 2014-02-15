@@ -28949,7 +28949,10 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@75061f683116dc0ffdad48f33c226e933132e98c"
+        "extras": {
+            "premultipliedAlpha": true
+        },
+        "generator": "collada2gltf@8037062997389f5714154c03f692356ce78a30c0"
     },
     "bufferViews": {
         "bufferView_15637": {
@@ -28963,11 +28966,6 @@
             "byteLength": 1197492,
             "byteOffset": 10344480,
             "target": 34963
-        },
-        "bufferView_15639": {
-            "buffer": "Rambler",
-            "byteLength": 0,
-            "byteOffset": 11541972
         }
     },
     "buffers": {
@@ -43259,10 +43257,12 @@
     },
     "shaders": {
         "Rambler0FS": {
-            "path": "Rambler0FS.glsl"
+            "path": "Rambler0FS.glsl",
+            "type": 35632
         },
         "Rambler0VS": {
-            "path": "Rambler0VS.glsl"
+            "path": "Rambler0VS.glsl",
+            "type": 35633
         }
     },
     "skins": {},

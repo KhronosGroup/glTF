@@ -725,7 +725,10 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@75061f683116dc0ffdad48f33c226e933132e98c"
+        "extras": {
+            "premultipliedAlpha": true
+        },
+        "generator": "collada2gltf@8037062997389f5714154c03f692356ce78a30c0"
     },
     "bufferViews": {
         "bufferView_408": {
@@ -739,11 +742,6 @@
             "byteLength": 44940,
             "byteOffset": 284064,
             "target": 34963
-        },
-        "bufferView_410": {
-            "buffer": "wine",
-            "byteLength": 0,
-            "byteOffset": 329004
         }
     },
     "buffers": {
@@ -11626,22 +11624,28 @@
     },
     "shaders": {
         "wine0FS": {
-            "path": "wine0FS.glsl"
+            "path": "wine0FS.glsl",
+            "type": 35632
         },
         "wine0VS": {
-            "path": "wine0VS.glsl"
+            "path": "wine0VS.glsl",
+            "type": 35633
         },
         "wine2FS": {
-            "path": "wine2FS.glsl"
+            "path": "wine2FS.glsl",
+            "type": 35632
         },
         "wine2VS": {
-            "path": "wine2VS.glsl"
+            "path": "wine2VS.glsl",
+            "type": 35633
         },
         "wine4FS": {
-            "path": "wine4FS.glsl"
+            "path": "wine4FS.glsl",
+            "type": 35632
         },
         "wine4VS": {
-            "path": "wine4VS.glsl"
+            "path": "wine4VS.glsl",
+            "type": 35633
         }
     },
     "skins": {},
@@ -11797,10 +11801,10 @@
                         "blendEquation": 32774,
                         "blendFunc": {
                             "dfactor": 771,
-                            "sfactor": 770
+                            "sfactor": 1
                         },
                         "cullFaceEnable": 1,
-                        "depthMask": 0,
+                        "depthMask": 1,
                         "depthTestEnable": 1
                     }
                 }
@@ -11884,21 +11888,24 @@
             "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_0",
-            "target": 3553
+            "target": 3553,
+            "type": 5121
         },
         "texture_image_1": {
             "format": 6408,
             "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_1",
-            "target": 3553
+            "target": 3553,
+            "type": 5121
         },
         "texture_image_2": {
             "format": 6408,
             "internalFormat": 6408,
             "sampler": "sampler_0",
             "source": "image_2",
-            "target": 3553
+            "target": 3553,
+            "type": 5121
         }
     }
 }
