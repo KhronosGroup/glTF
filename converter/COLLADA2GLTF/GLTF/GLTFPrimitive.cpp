@@ -74,7 +74,7 @@ namespace GLTF
         this->_allVertexAttributes.push_back(VertexAttribute);
     }    
     
-    shared_ptr <GLTF::GLTFIndices> GLTFPrimitive::getUniqueIndices()
+    shared_ptr <GLTF::GLTFAccessor> GLTFPrimitive::getUniqueIndices()
     {
         return this->_uniqueIndices;
     }
@@ -109,12 +109,12 @@ namespace GLTF
         this->_materialObjectID = materialID;
     }
 
-    shared_ptr <GLTF::GLTFIndices>  GLTFPrimitive::getIndices()
+    shared_ptr <GLTF::GLTFAccessor>  GLTFPrimitive::getIndices()
     {
         return this->_uniqueIndices;
     }
     
-    void GLTFPrimitive::setIndices(shared_ptr <GLTF::GLTFIndices> indices)
+    void GLTFPrimitive::setIndices(shared_ptr <GLTF::GLTFAccessor> indices)
     {
         this->_uniqueIndices = indices;
     }

@@ -26,7 +26,7 @@
 
 #include "GLTF.h"
 #include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
+#include "GLTFAsset.h"
 #include "../shaders/commonProfileShaders.h"
 
 using namespace rapidjson;
@@ -39,11 +39,11 @@ namespace GLTF
 
     shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context)
     {
-        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
+        GLTF::GLTFAsset *asset= (GLTF::GLTFAsset*)context;
         shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
         
         bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
-        bufferObject->setString("path", converterContext->resourceOuputPathForPath(path));
+        bufferObject->setString("path", asset->resourceOuputPathForPath(path));
         
         return bufferObject;
     }
@@ -65,9 +65,9 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
         shared_ptr <JSONObject> techniqueGenerator = effect->getTechniqueGenerator();
         
-        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
+        GLTF::GLTFAsset *asset= (GLTF::GLTFAsset*)context;
         
-        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *converterContext);
+        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *asset);
         
         effectObject->setString("name", effect->getName());
         effectObject->setValue("instanceTechnique", instanceTechnique);
@@ -139,17 +139,17 @@ namespace GLTF
         return meshObject;
     }
     
-    shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
+    shared_ptr <JSONObject> serializeMeshAttribute(GLTFAccessor* meshAttribute, void *context)
     {
         shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
         void** serializationContext = (void**)context;
 
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
+        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
         
         meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
         meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
         meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setUnsignedInt32("type", meshAttribute->getGLType(converterContext->profile));
+        meshAttributeObject->setUnsignedInt32("type", meshAttribute->getGLType(asset->profile));
         
         GLTFBufferView *bufferView = context ? (GLTFBufferView*)serializationContext[0] : meshAttribute->getBufferView().get();
 
@@ -177,15 +177,15 @@ namespace GLTF
     }
     
     
-    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context)
+    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFAccessor* indices, void *context)
     {
         shared_ptr <GLTF::JSONObject> indicesObject(new GLTF::JSONObject());
         void** serializationContext = (void**)context;
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
+        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
 
         GLTFBufferView *bufferView = (GLTFBufferView*)serializationContext[1];
         
-        indicesObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString("UNSIGNED_SHORT"));
+        indicesObject->setUnsignedInt32("type", asset->profile->getGLenumForString("UNSIGNED_SHORT"));
         indicesObject->setString("bufferView", bufferView->getID());
         indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
         indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
@@ -202,9 +202,9 @@ namespace GLTF
         
         void** serializationContext = (void**)primitiveContext[1];
         
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
+        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
 
-        primitiveObject->setUnsignedInt32("primitive", converterContext->profile->getGLenumForString(primitive->getType()));
+        primitiveObject->setUnsignedInt32("primitive", asset->profile->getGLenumForString(primitive->getType()));
         
         primitiveObject->setString("material", primitive->getMaterialID());
         
@@ -224,7 +224,7 @@ namespace GLTF
             }
             attributes->setString(semanticAndSet, mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
         }
-        shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
+        shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getUniqueIndices();
         primitiveObject->setString("indices", uniqueIndices->getID());
 
         return primitiveObject;
@@ -255,10 +255,10 @@ namespace GLTF
     /*
     shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter, void *context) {
         shared_ptr <JSONObject> animationParameterObject(new JSONObject());
-        GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
+        GLTFAsset* asset = (GLTFAsset*)context;
                 
         animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
-        animationParameterObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString(animationParameter->getType()));
+        animationParameterObject->setUnsignedInt32("type", asset->profile->getGLenumForString(animationParameter->getType()));
         animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
         animationParameterObject->setUnsignedInt32("count", animationParameter->getCount());
     
@@ -274,7 +274,7 @@ namespace GLTF
     shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation, void *context) {
         shared_ptr <JSONObject> animationObject(new JSONObject());
         shared_ptr <JSONObject> parametersObject(new JSONObject());
-       //GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
+       //GLTFAsset* asset = (GLTFAsset*)context;
         
         animationObject->setUnsignedInt32("count", animation->getCount());
         animationObject->setValue("samplers", animation->samplers());

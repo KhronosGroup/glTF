@@ -22,8 +22,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
-#include "../GLTFConverterContext.h"
+#include "GLTFAsset.h"
 #include "animationConverter.h"
+#include "GLTF-Open3DGC.h" //FIXME: setupAndWriteAnimationParameter has to move out from this header
 
 using namespace rapidjson;
 
@@ -52,15 +53,7 @@ namespace GLTF
     void GLTFAnimation::setCount(size_t count) {
         this->_count = count;
     }
-    
-    double GLTFAnimation::getDuration() {
-        return this->_duration;
-    }
-    
-    void GLTFAnimation::setDuration(double duration) {
-        this->_duration = duration;
-    }
- 
+     
     shared_ptr <JSONObject> GLTFAnimation::parameters() {
         return this->_parameters;
     }
@@ -122,4 +115,67 @@ namespace GLTF
         return this->_bufferViews[parameterName];
     }
 
+    /*
+     Handles Channel creation + additions
+     */
+    static void __AddChannel(GLTFAnimation* cvtAnimation,
+                             const std::string &targetID,
+                             const std::string &path) {
+        shared_ptr<JSONObject> trChannel(new JSONObject());
+        shared_ptr<JSONObject> trTarget(new JSONObject());
+        
+        trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
+        trChannel->setValue("target", trTarget);
+        trTarget->setString("id", targetID);
+        trTarget->setString("path", path);
+        cvtAnimation->channels()->appendValue(trChannel);
+    }
+
+    void GLTFAnimation::writeAnimationForTargetID(const std::string &targetID, GLTFAsset& asset) {
+        shared_ptr <JSONObject> target =  this->targets()->getObject(targetID);
+        shared_ptr<GLTFAnimationFlattener> animationFlattener = this->animationFlattenerForTargetUID(targetID);
+        
+        size_t count = 0;
+        float* rotations = 0;
+        float* positions = 0;
+        float* scales = 0;
+        
+        animationFlattener->allocAndFillAffineTransformsBuffers(&positions, &rotations, &scales, count);
+        
+        if (animationFlattener->hasAnimatedScale()) {
+            //Scale
+            setupAndWriteAnimationParameter(this,
+                                            "scale",
+                                            "FLOAT_VEC3",
+                                            (unsigned char*)scales,
+                                            count * sizeof(float) * 3, false,
+                                            asset);
+            __AddChannel(this, targetID, "scale");
+            free(scales);
+        }
+        
+        if (animationFlattener->hasAnimatedTranslation()) {
+            //Translation
+            setupAndWriteAnimationParameter(this,
+                                            "translation",
+                                            "FLOAT_VEC3",
+                                            (unsigned char*)positions,
+                                            count * sizeof(float) * 3, false,
+                                            asset);
+            __AddChannel(this, targetID, "translation");
+            free(positions);
+        }
+        
+        if (animationFlattener->hasAnimatedRotation()) {
+            //Rotation
+            setupAndWriteAnimationParameter(this,
+                                            "rotation",
+                                            "FLOAT_VEC4",
+                                            (unsigned char*)rotations,
+                                            count * sizeof(float) * 4, false,
+                                            asset);
+            __AddChannel(this, targetID, "rotation");
+            free(rotations);
+        }
+    }
 }

@@ -72,39 +72,31 @@ if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
 endif()
 
-set(GLTF_SOURCES main.cpp 
+set(GLTF_SOURCES main.cpp
+
+    COLLADA2GLTFWriter.h
     COLLADA2GLTFWriter.cpp
-    GLTFConverterContext.cpp
-    GLTF/JSONArray.cpp
-    GLTF/JSONNumber.cpp
-    GLTF/JSONObject.cpp
-    GLTF/JSONString.cpp
-    GLTF/JSONValue.cpp
+    GLTF-OpenCOLLADA.h
+
+    GLTF/GLTFAccessorCache.cpp
+    GLTF/GLTFAccessorCache.h
+    GLTF/GLTFAsset.cpp
     GLTF/GLTFAnimation.cpp
-    GLTF/GLTFMeshAttribute.cpp
+    GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
-    GLTF/GLTFIndices.cpp
     GLTF/GLTFMesh.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
     GLTF/GLTFWriter.cpp
     GLTF/GLTFSkin.cpp
-    COLLADA2GLTFWriter.h
-    GLTF-OpenCOLLADA.h
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
-    GLTFConverterContext.h
-    GLTF/JSONArray.h
-    GLTF/JSONNumber.h
-    GLTF/JSONObject.h
-    GLTF/JSONString.h
-    GLTF/JSONValue.h
+    GLTF/GLTFAsset.h
     GLTF/GLTFAnimation.h
-    GLTF/GLTFMeshAttribute.h
+    GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
-    GLTF/GLTFIndices.h
     GLTF/GLTFMesh.h
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
@@ -120,19 +112,35 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFOutputStream.cpp
     GLTF/GLTFConfig.cpp
     GLTF/GLTFConfig.h
+
     profiles/webgl-1.0/webgl-idl.h
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.cpp
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h
+
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
+
     helpers/geometryHelpers.h
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+
     convert/meshConverter.cpp
     convert/meshConverter.h
     convert/animationConverter.cpp
     convert/animationConverter.h
+
+    JSON/JSONArray.cpp
+    JSON/JSONNumber.cpp
+    JSON/JSONObject.cpp
+    JSON/JSONString.cpp
+    JSON/JSONValue.cpp
+    JSON/JSONArray.h
+    JSON/JSONNumber.h
+    JSON/JSONObject.h
+    JSON/JSONString.h
+    JSON/JSONValue.h
+
     ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
     GitSHA1.h)
 

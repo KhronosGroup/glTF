@@ -27,7 +27,7 @@
 namespace GLTF 
 {
     class GLTFAnimationFlattener;
-    class GLTFConverterContext;
+    class GLTFAsset;
         
     class GLTFAnimation {
     public:
@@ -36,9 +36,6 @@ namespace GLTF
         
         size_t getCount();
         void setCount(size_t count);
-        
-        double getDuration();
-        void setDuration(double duration);
         
         void setID(std::string animationID);
         std::string getID();
@@ -65,9 +62,10 @@ namespace GLTF
 
         shared_ptr<GLTFBufferView> getBufferViewForParameter(std::string);
         
+        void writeAnimationForTargetID(const std::string &targetID, GLTFAsset& asset);
+        
     private:
         size_t _count;
-        double _duration;
         std::string _id;
         std::string _originalID;
         shared_ptr <JSONArray> _channels;

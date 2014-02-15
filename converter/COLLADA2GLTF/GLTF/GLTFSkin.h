@@ -52,11 +52,11 @@ namespace GLTF
         
         const std::string& getId();
         
-        void setJoints(shared_ptr <GLTFMeshAttribute> joints);
-        shared_ptr <GLTFMeshAttribute> getJoints();
+        void setJoints(shared_ptr <GLTFAccessor> joints);
+        shared_ptr <GLTFAccessor> getJoints();
 
-        void setWeights(shared_ptr <GLTFMeshAttribute> weights);
-        shared_ptr <GLTFMeshAttribute> getWeights();
+        void setWeights(shared_ptr <GLTFAccessor> weights);
+        shared_ptr <GLTFAccessor> getWeights();
 
         void setSourceUID(std::string uniqueId);
         std::string getSourceUID();
@@ -73,8 +73,8 @@ namespace GLTF
         shared_ptr<JSONArray> _bindShapeMatrix;
         shared_ptr<JSONArray> _jointsIds;
         
-        shared_ptr<GLTFMeshAttribute> _joints;
-        shared_ptr<GLTFMeshAttribute> _weights;
+        shared_ptr<GLTFAccessor> _joints;
+        shared_ptr<GLTFAccessor> _weights;
         
         std::string _id;
         std::string _sourceUID;

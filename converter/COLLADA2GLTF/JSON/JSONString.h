@@ -24,65 +24,33 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "GLTF.h"
-
-using namespace std::tr1;
-using namespace std;
+#ifndef __JSON_STRING_H__
+#define __JSON_STRING_H__
 
 namespace GLTF 
-{        
+{
+#define JSONSTRING(x) (shared_ptr <GLTF::JSONString> (new GLTF::JSONString(x)))
+    
+    class JSONString : public JSONValue {
+    private:
 
-    void GLTFIndices::_indicesCommonInit() 
-    {
-        this->_ID = GLTFUtils::generateIDForType("indices");
+    public:        
+        JSONString();
+        JSONString(const std::string& str);
         
-    }
-    
-    // this constructor is private and typically won't be called
-    GLTFIndices::GLTFIndices() {}
-    
-    GLTFIndices::GLTFIndices(shared_ptr <GLTFBufferView> bufferView,
-                             size_t count):
-    _count(count),
-    _byteOffset(0),
-    _bufferView(bufferView)
-    {
-        this->_indicesCommonInit();
-    }
+        virtual ~JSONString();
+        
+        virtual void write(GLTFWriter* writer, void* context);
+        
+        const char* getCString();
 
-    GLTFIndices::~GLTFIndices()
-    {
-    }
-    
-    const std::string& GLTFIndices::getID()
-    {
-        return this->_ID;
-    }
-    
-    
-    size_t GLTFIndices::getCount()
-    {
-        return this->_count;
-    }
-                
-    shared_ptr <GLTFBufferView>  const GLTFIndices::getBufferView()
-    {
-        return this->_bufferView;
-    }
-    
-    void GLTFIndices::setBufferView(shared_ptr <GLTFBufferView> bufferView)
-    {
-        this->_bufferView = bufferView;
-    }
+        const std::string& getString();
+        
+    private:
+        std::string _str;
+    };
 
-    void GLTFIndices::setByteOffset(size_t byteOffset)
-    {
-        this->_byteOffset = byteOffset;
-    }
-    
-    size_t GLTFIndices::getByteOffset()
-    {
-        return this->_byteOffset;
-    }
-            
 }
+
+
+#endif

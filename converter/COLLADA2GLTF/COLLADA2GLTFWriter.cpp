@@ -42,41 +42,30 @@ using namespace rapidjson;
 
 namespace GLTF
 {
-    //--------------------------------------------------------------------
-	COLLADA2GLTFWriter::COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs):
-    _converterContext(converterArgs),
+    
+	
+    /*
+     */
+    COLLADA2GLTFWriter::COLLADA2GLTFWriter( const GLTFAsset &converterArgs):
+    _asset(converterArgs),
     _visualScene(0)
 	{
 	}
     
-	//--------------------------------------------------------------------
+    /*
+     */
 	COLLADA2GLTFWriter::~COLLADA2GLTFWriter()
 	{
 	}
     
-	//--------------------------------------------------------------------
+    /*
+     */
 	void COLLADA2GLTFWriter::reportError( const std::string& method, const std::string& message)
 	{
-	}
-    
-	//--------------------------------------------------------------------
-	
+	}    
+	    
     /*
-     Handles Channel creation + additions
      */
-    static void __AddChannel(shared_ptr <GLTFAnimation> cvtAnimation,
-                             const std::string &targetID,
-                             const std::string &path) {
-        shared_ptr<JSONObject> trChannel(new JSONObject());
-        shared_ptr<JSONObject> trTarget(new JSONObject());
-        
-        trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
-        trChannel->setValue("target", trTarget);
-        trTarget->setString("id", targetID);
-        trTarget->setString("path", path);
-        cvtAnimation->channels()->appendValue(trChannel);
-    }
-    
     bool COLLADA2GLTFWriter::write()
 	{
         ifstream inputVertices;
@@ -86,23 +75,23 @@ namespace GLTF
         ofstream ouputStream;
 
         //To comply with macro to access config
-        GLTFConverterContext &converterContext = this->_converterContext;
+        GLTFAsset &asset = this->_asset;
 
-        this->_writer.initWithPath(converterContext.getOutputFilePath().c_str());
+        this->_writer.initWithPath(asset.getOutputFilePath().c_str());
 
-        this->_converterContext.setGeometryByteLength(0);
-        this->_converterContext.setAnimationByteLength(0);
+        this->_asset.setGeometryByteLength(0);
+        this->_asset.setAnimationByteLength(0);
         
         this->_extraDataHandler = new ExtraDataHandler();
 
-        this->_converterContext.shaderIdToShaderString.clear();
-        this->_converterContext._uniqueIDToMeshes.clear();
+        this->_asset.shaderIdToShaderString.clear();
+        this->_asset._uniqueIDToMeshes.clear();
         /*
          1. We output vertices and indices separatly in 2 different files
          2. Then output them in a single file
          */
-        COLLADABU::URI inputURI(this->_converterContext.getInputFilePath().c_str());
-        COLLADABU::URI outputURI(this->_converterContext.getOutputFilePath().c_str());
+        COLLADABU::URI inputURI(this->_asset.getInputFilePath().c_str());
+        COLLADABU::URI outputURI(this->_asset.getOutputFilePath().c_str());
         
         std::string folder = outputURI.getPathDir();
         std::string fileName = inputURI.getPathFileBase();
@@ -110,42 +99,42 @@ namespace GLTF
         std::string sharedBufferID = fileName;
         std::string outputFilePath = outputURI.getPathDir() + fileName + ".bin";
         
-        this->_converterContext._vertexOutputStream = new GLTFOutputStream(folder, fileName, "vertices");
-        this->_converterContext._indicesOutputStream = new GLTFOutputStream(folder, fileName, "indices");
-        this->_converterContext._animationOutputStream = new GLTFOutputStream(folder, fileName, "animations");
-        this->_converterContext._compressionOutputStream = new GLTFOutputStream(folder, fileName, "compression");
-        std::string compressedBufferID = this->_converterContext._compressionOutputStream->id();
+        this->_asset._vertexOutputStream = new GLTFOutputStream(folder, fileName, "vertices");
+        this->_asset._indicesOutputStream = new GLTFOutputStream(folder, fileName, "indices");
+        this->_asset._animationOutputStream = new GLTFOutputStream(folder, fileName, "animations");
+        this->_asset._compressionOutputStream = new GLTFOutputStream(folder, fileName, "compression");
+        std::string compressedBufferID = this->_asset._compressionOutputStream->id();
 
         ouputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
         
-        this->_converterContext.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
+        this->_asset.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
         
-        this->_converterContext.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-        this->_converterContext.root->setString("profile", this->_converterContext.profile->id());
-        this->_converterContext.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
+        this->_asset.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
+        this->_asset.root->setString("profile", this->_asset.profile->id());
+        this->_asset.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
         
-        shared_ptr<JSONObject> asset = this->_converterContext.root->createObjectIfNeeded("asset");
+        shared_ptr<JSONObject> assetObject = this->_asset.root->createObjectIfNeeded("asset");
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
-        asset->setString("generator",version);
-        shared_ptr<JSONObject> assetExtras = asset->createObjectIfNeeded("extras");
+        assetObject->setString("generator",version);
+        shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
         assetExtras->setBool("premultipliedAlpha", CONFIG_BOOL("premultipliedAlpha"));
-        asset->setValue("extras", assetExtras);
+        assetObject->setValue("extras", assetExtras);
         
 		COLLADAFW::Root root(&this->_loader, this);
         
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-		if (!root.loadDocument( this->_converterContext.getInputFilePath()))
+		if (!root.loadDocument( this->_asset.getInputFilePath()))
 			return false;
                 
         // ----
         UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
         shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
         
-        this->_converterContext.root->setValue("animations", animationsObject);
+        this->_asset.root->setValue("animations", animationsObject);
         
         std::vector<GLTFAnimationFlattener*> flatteners;
         
-        for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
+        for (UniqueIDToAnimationsIterator = this->_asset._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_asset._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             
@@ -154,89 +143,45 @@ namespace GLTF
             shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
             
             if (animation->parameters()->contains(inputParameterName) == false) {
-                setupAndWriteAnimationParameter(animation,
+                setupAndWriteAnimationParameter(animation.get(),
                                                 inputParameterName,
                                                 "FLOAT",
                                                 (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
                                                 timeBufferView->getByteLength(), true,
-                                                converterContext);
+                                                asset);
             } 
             
             std::vector<std::string> allTargets = animation->targets()->getAllKeys();
             for (size_t i = 0 ; i < allTargets.size() ; i++) {
                 std::string targetID = allTargets[i];
-                
-                shared_ptr <JSONObject> target =  animation->targets()->getObject(targetID);
-                std::string path = target->getString("path");
-
                 shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID);
-                if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get())!=flatteners.end()) {
+                if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get()) != flatteners.end()) {
                     continue;
                 }
                 flatteners.push_back(animationFlattener.get());
-
-                size_t count = 0;
-                float* rotations = 0;
-                float* positions = 0;
-                float* scales = 0;
-                
-                animationFlattener->allocAndFillAffineTransformsBuffers(&positions, &rotations, &scales, count);
-                
-                if (animationFlattener->hasAnimatedScale()) {
-                    //Scale
-                    setupAndWriteAnimationParameter(animation,
-                                                      "scale",
-                                                      "FLOAT_VEC3",
-                                                      (unsigned char*)scales,
-                                                      count * sizeof(float) * 3, false,
-                                                      this->_converterContext);
-                    __AddChannel(animation, targetID, "scale");
-                    free(scales);
-                }
-                
-                if (animationFlattener->hasAnimatedTranslation()) {
-                    //Translation
-                    setupAndWriteAnimationParameter(animation,
-                                                      "translation",
-                                                      "FLOAT_VEC3",
-                                                      (unsigned char*)positions,
-                                                      count * sizeof(float) * 3, false,
-                                                      this->_converterContext);
-                    __AddChannel(animation, targetID, "translation");
-                    free(positions);
-                }
-                
-                if (animationFlattener->hasAnimatedRotation()) {
-                    //Rotation
-                    setupAndWriteAnimationParameter(animation,
-                                                      "rotation",
-                                                      "FLOAT_VEC4",
-                                                      (unsigned char*)rotations,
-                                                      count * sizeof(float) * 4, false,
-                                                      this->_converterContext);
-                    __AddChannel(animation, targetID, "rotation");
-                    free(rotations);
-                }
+                animation->writeAnimationForTargetID(targetID, this->_asset);
             }
         }
 
         //reopen .bin files for vertices and indices
-        size_t verticesLength = this->_converterContext._vertexOutputStream->length();
-        size_t indicesLength = this->_converterContext._indicesOutputStream->length();
-        size_t animationLength = this->_converterContext._animationOutputStream->length();
-        size_t compressionLength = this->_converterContext._compressionOutputStream->length();
+        size_t verticesLength = this->_asset._vertexOutputStream->length();
+        size_t indicesLength = this->_asset._indicesOutputStream->length();
+        size_t animationLength = this->_asset._animationOutputStream->length();
+        size_t compressionLength = this->_asset._compressionOutputStream->length();
 
-        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_converterContext._compressionOutputStream->id(), compressionLength));
+        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_asset._compressionOutputStream->id(), compressionLength));
 
-        inputVertices.open(this->_converterContext._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
-        inputIndices.open(this->_converterContext._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
-        inputAnimation.open(this->_converterContext._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
-        inputCompression.open(this->_converterContext._compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputVertices.open(this->_asset._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputIndices.open(this->_asset._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
+        if (animationLength > 0) {
+            inputAnimation.open(this->_asset._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
+        }
+        inputCompression.open(this->_asset._compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
         
-        this->_converterContext._vertexOutputStream->close();
-        this->_converterContext._indicesOutputStream->close();
-        this->_converterContext._animationOutputStream->close();
-        this->_converterContext._compressionOutputStream->close();
+        this->_asset._vertexOutputStream->close();
+        this->_asset._indicesOutputStream->close();
+        this->_asset._animationOutputStream->close();
+        this->_asset._compressionOutputStream->close();
 
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
@@ -258,28 +203,29 @@ namespace GLTF
             indicesLength += paddingForAlignement;
         }
         
-        bufferIOStream = (char*)malloc(sizeof(char) * animationLength);
-        inputAnimation.read(bufferIOStream, animationLength);
-        ouputStream.write(bufferIOStream, animationLength);
-        free(bufferIOStream);
+        if (animationLength > 0) {
+            bufferIOStream = (char*)malloc(sizeof(char) * animationLength);
+            inputAnimation.read(bufferIOStream, animationLength);
+            ouputStream.write(bufferIOStream, animationLength);
+            free(bufferIOStream);
+        }
 
         inputVertices.close();
         inputIndices.close();
         inputAnimation.close();
         inputCompression.close();
 
-        remove(this->_converterContext._vertexOutputStream->outputPathCStr());
-        remove(this->_converterContext._indicesOutputStream->outputPathCStr());
-        remove(this->_converterContext._animationOutputStream->outputPathCStr());
-        
+        remove(this->_asset._vertexOutputStream->outputPathCStr());
+        remove(this->_asset._indicesOutputStream->outputPathCStr());
+        remove(this->_asset._animationOutputStream->outputPathCStr());
         if (compressionLength == 0) {
-            remove(this->_converterContext._compressionOutputStream->outputPathCStr());
+            remove(this->_asset._compressionOutputStream->outputPathCStr());
         }
         
-        delete this->_converterContext._vertexOutputStream;
-        delete this->_converterContext._indicesOutputStream;
-        delete this->_converterContext._animationOutputStream;
-        delete this->_converterContext._compressionOutputStream;
+        delete this->_asset._vertexOutputStream;
+        delete this->_asset._indicesOutputStream;
+        delete this->_asset._animationOutputStream;
+        delete this->_asset._compressionOutputStream;
         
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationLength));
 
@@ -293,11 +239,11 @@ namespace GLTF
         UniqueIDToMeshes::const_iterator UniqueIDToMeshesIterator;
         shared_ptr <GLTF::JSONObject> meshesObject(new GLTF::JSONObject());
         
-        this->_converterContext.root->setValue("meshes", meshesObject);
+        this->_asset.root->setValue("meshes", meshesObject);
         
-        shared_ptr <GLTF::JSONObject> accessors = this->_converterContext.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = this->_asset.root->createObjectIfNeeded("accessors");
         
-        for (UniqueIDToMeshesIterator = this->_converterContext._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_converterContext._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
+        for (UniqueIDToMeshesIterator = this->_asset._uniqueIDToMeshes.begin() ; UniqueIDToMeshesIterator != this->_asset._uniqueIDToMeshes.end() ; UniqueIDToMeshesIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             MeshVectorSharedPtr meshes = (*UniqueIDToMeshesIterator).second;
@@ -316,7 +262,7 @@ namespace GLTF
                         serializationContext[0] = isCompressed ? (void*)compressionBufferView.get() : (void*)verticesBufferView.get();
                         serializationContext[1] = isCompressed ? (void*)compressionBufferView.get() : (void*)indicesBufferView.get();
                         serializationContext[2] = isCompressed ? (void*)compressionBufferView.get() : (void*)genericBufferView.get();
-                        serializationContext[3] = (void*)&this->_converterContext;
+                        serializationContext[3] = (void*)&this->_asset;
 
                         shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)serializationContext);
 
@@ -331,7 +277,7 @@ namespace GLTF
                             for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                                 //(*it).first;             // the key value (of type Key)
                                 //(*it).second;            // the mapped value (of type T)
-                                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
+                                shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
                                 shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)serializationContext);
                                 accessors->setValue(meshAttribute->getID(), meshAttributeObject);
                             }
@@ -342,7 +288,7 @@ namespace GLTF
                         unsigned int primitivesCount =  (unsigned int)primitives.size();
                         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
                             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-                            shared_ptr <GLTF::GLTFIndices> uniqueIndices =  primitive->getUniqueIndices();
+                            shared_ptr <GLTF::GLTFAccessor> uniqueIndices =  primitive->getUniqueIndices();
                             shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)serializationContext);
                             
                             accessors->setValue(uniqueIndices->getID(), serializedIndices);
@@ -355,32 +301,32 @@ namespace GLTF
         }
         
         // ----
-        shared_ptr <GLTF::JSONObject> materialsObject = this->_converterContext.root->createObjectIfNeeded("materials");
+        shared_ptr <GLTF::JSONObject> materialsObject = this->_asset.root->createObjectIfNeeded("materials");
         UniqueIDToEffect::const_iterator UniqueIDToEffectIterator;
         
-        for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
+        for (UniqueIDToEffectIterator = this->_asset._uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_asset._uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
             if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_converterContext));
+                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_asset));
             }
         }
-        for (UniqueIDToEffectIterator = this->_converterContext._uniqueIDToDefaultEffect.begin() ; UniqueIDToEffectIterator != this->_converterContext._uniqueIDToDefaultEffect.end() ; UniqueIDToEffectIterator++) {
+        for (UniqueIDToEffectIterator = this->_asset._uniqueIDToDefaultEffect.begin() ; UniqueIDToEffectIterator != this->_asset._uniqueIDToDefaultEffect.end() ; UniqueIDToEffectIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
             if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_converterContext));
+                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_asset));
             }
         }
         
         // ----
-        shared_ptr <GLTF::JSONObject> skins = this->_converterContext.root->createObjectIfNeeded("skins");
+        shared_ptr <GLTF::JSONObject> skins = this->_asset.root->createObjectIfNeeded("skins");
         
         UniqueIDToSkin::const_iterator UniqueIDToSkinIterator;
         
-        for (UniqueIDToSkinIterator = this->_converterContext._uniqueIDToSkin.begin() ; UniqueIDToSkinIterator != this->_converterContext._uniqueIDToSkin.end() ; UniqueIDToSkinIterator++) {
+        for (UniqueIDToSkinIterator = this->_asset._uniqueIDToSkin.begin() ; UniqueIDToSkinIterator != this->_asset._uniqueIDToSkin.end() ; UniqueIDToSkinIterator++) {
             
             shared_ptr <GLTFSkin> skin = (*UniqueIDToSkinIterator).second;
             shared_ptr<JSONArray> joints = skin->getJointsIds();
@@ -390,7 +336,7 @@ namespace GLTF
             std::vector <shared_ptr <JSONValue> > values = joints->values();
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
-                shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_converterContext._uniqueIDToJSONValue[jointId->getString()]);
+                shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_asset._uniqueIDToJSONValue[jointId->getString()]);
                 if (node->contains("jointId")) {
                     jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
                 }
@@ -405,7 +351,7 @@ namespace GLTF
         
         // ----
         
-        for (UniqueIDToAnimationsIterator = this->_converterContext._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_converterContext._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
+        for (UniqueIDToAnimationsIterator = this->_asset._uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_asset._uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
             //(*it).first;             // the key value (of type Key)
             //(*it).second;            // the mapped value (of type T)
             
@@ -417,7 +363,7 @@ namespace GLTF
             for (size_t i = 0 ; i < channels->values().size() ; i++) {
                 shared_ptr<JSONObject> channel = static_pointer_cast<JSONObject>(channels->values()[i]);
                 shared_ptr<JSONObject> target = channel->getObject("target");
-                std::string originalID = this->_converterContext._uniqueIDToOriginalID[target->getString("id")];
+                std::string originalID = this->_asset._uniqueIDToOriginalID[target->getString("id")];
                 target->setString("id", originalID);
             }
             
@@ -437,17 +383,17 @@ namespace GLTF
             }
             
             if (animation->channels()->values().size() > 0) {
-                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get(), &this->_converterContext);
+                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get(), &this->_asset);
             
                 animationsObject->setValue(animation->getID(), animationObject);
             }
         }
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
-        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  &this->_converterContext);
-        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  &this->_converterContext);
+        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  &this->_asset);
+        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  &this->_asset);
 
-        this->_converterContext.root->setValue("buffers", buffersObject);
+        this->_asset.root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
             buffersObject->setValue(sharedBufferID, bufferObject);
@@ -463,7 +409,7 @@ namespace GLTF
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
         shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
-        this->_converterContext.root->setValue("bufferViews", bufferViewsObject);
+        this->_asset.root->setValue("bufferViews", bufferViewsObject);
         
         shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
         shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
@@ -479,13 +425,13 @@ namespace GLTF
             bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
         }
         
-        bufferViewIndicesObject->setUnsignedInt32("target", this->_converterContext.profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
-        bufferViewVerticesObject->setUnsignedInt32("target", this->_converterContext.profile->getGLenumForString("ARRAY_BUFFER"));
+        bufferViewIndicesObject->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        bufferViewVerticesObject->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
-        this->_converterContext.root->removeValue("lightsIds");
+        this->_asset.root->removeValue("lightsIds");
         
-        this->_converterContext.root->write(&this->_writer);
+        this->_asset.root->write(&this->_writer);
                 
         bool sceneFlatteningEnabled = false;
         if (sceneFlatteningEnabled) {
@@ -501,23 +447,23 @@ namespace GLTF
         
         delete this->_extraDataHandler;
         
-        this->_converterContext.convertionResults()->setUnsignedInt32("geometry", this->_converterContext.getGeometryByteLength());
-        this->_converterContext.convertionResults()->setUnsignedInt32("animation", this->_converterContext.getAnimationByteLength());
-        this->_converterContext.convertionResults()->setUnsignedInt32("scene", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        this->_asset.convertionResults()->setUnsignedInt32("geometry", this->_asset.getGeometryByteLength());
+        this->_asset.convertionResults()->setUnsignedInt32("animation", this->_asset.getAnimationByteLength());
+        this->_asset.convertionResults()->setUnsignedInt32("scene", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
-        this->_converterContext.log("[geometry] %d bytes\n", (int)this->_converterContext.getGeometryByteLength());
-        this->_converterContext.log("[animations] %d bytes\n", (int)this->_converterContext.getAnimationByteLength());
-        this->_converterContext.log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        this->_asset.log("[geometry] %d bytes\n", (int)this->_asset.getGeometryByteLength());
+        this->_asset.log("[animations] %d bytes\n", (int)this->_asset.getAnimationByteLength());
+        this->_asset.log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
-        if (this->_converterContext.converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
-            COLLADABU::URI convertResultsURI(converterContext.getOutputFilePath());
+        if (this->_asset.converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
+            COLLADABU::URI convertResultsURI(asset.getOutputFilePath());
             std::string aPath = convertResultsURI.getPathDir();
             aPath += "results.json";
             this->_resultsWriter.initWithPath(aPath);
-            converterContext.convertionResults()->write(&this->_resultsWriter);
+            asset.convertionResults()->write(&this->_resultsWriter);
         }
         
-        this->_converterContext.copyImagesInsideBundleIfNeeded();
+        this->_asset.copyImagesInsideBundleIfNeeded();
         
 		return true;
 	}
@@ -576,7 +522,7 @@ namespace GLTF
     
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon)
     {
-        GLTFConverterContext &converterContext = this->_converterContext;
+        GLTFAsset &asset = this->_asset;
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
@@ -593,15 +539,15 @@ namespace GLTF
     
     void COLLADA2GLTFWriter::registerObjectWithOriginalUID(std::string objectUID, shared_ptr <JSONObject> obj, shared_ptr <JSONObject> objLib)
     {
-        if (this->_converterContext._originalIDToTrackedObject.count(objectUID) == 0) {
+        if (this->_asset._originalIDToTrackedObject.count(objectUID) == 0) {
             if (!objLib->contains(objectUID)) {
                 objLib->setValue(objectUID, obj);
-                this->_converterContext._originalIDToTrackedObject[objectUID] = obj;
+                this->_asset._originalIDToTrackedObject[objectUID] = obj;
             } else {
-                this->_converterContext.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+                this->_asset.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
             }
         } else {
-            this->_converterContext.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
+            this->_asset.log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", objectUID.c_str());
         }
     }
     
@@ -638,7 +584,7 @@ namespace GLTF
     bool COLLADA2GLTFWriter::writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                                    MaterialBindingArray &materialBindings,
                                                                    shared_ptr <GLTF::JSONArray> &meshesArray) {
-        GLTFConverterContext &converterContext = this->_converterContext;
+        GLTFAsset &asset = this->_asset;
         unsigned int meshUID = (unsigned int)uniqueId.getObjectId();
         shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
         
@@ -646,11 +592,11 @@ namespace GLTF
         MeshVectorSharedPtr meshes2;
 
         size_t meshesCount = 0;
-        if (!this->_converterContext._uniqueIDToMeshes.count(meshUID)) {
-            if (this->_converterContext._uniqueIDToMesh.count(uniqueId.toAscii())) {
+        if (!this->_asset._uniqueIDToMeshes.count(meshUID)) {
+            if (this->_asset._uniqueIDToMesh.count(uniqueId.toAscii())) {
                 meshes = shared_ptr<MeshVector> (new MeshVector());
                 
-                shared_ptr<GLTFMesh> unifiedMesh = this->_converterContext._uniqueIDToMesh[uniqueId.toAscii()];
+                shared_ptr<GLTFMesh> unifiedMesh = this->_asset._uniqueIDToMesh[uniqueId.toAscii()];
                 if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, *meshes) == false) {
                     meshes->push_back(unifiedMesh);
                 }
@@ -681,17 +627,17 @@ namespace GLTF
                 if (meshesCount) {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
                         if ((*meshes2)[i]->getPrimitives().size() > 0) {
-                            writeAllMeshBuffers((*meshes2)[i], this->_converterContext);
+                            writeAllMeshBuffers((*meshes2)[i], this->_asset);
                         }
                     }
                 }
                 
                 meshes = meshes2;
                                 
-                this->_converterContext._uniqueIDToMeshes[meshUID] = meshes;
+                this->_asset._uniqueIDToMeshes[meshUID] = meshes;
             }
         } else {
-            meshes = this->_converterContext._uniqueIDToMeshes[meshUID];
+            meshes = this->_asset._uniqueIDToMeshes[meshUID];
             meshesCount = meshes->size();
         }
         
@@ -706,7 +652,7 @@ namespace GLTF
                 /*
                 if (sceneFlatteningInfo) {
                     GLTF::IndexSetToMeshAttributeHashmap& semanticMap = mesh->getMeshAttributesForSemantic(GLTF::POSITION);
-                    shared_ptr <GLTF::GLTFMeshAttribute> vertexMeshAttribute = semanticMap[0];
+                    shared_ptr <GLTF::GLTFAccessor> vertexMeshAttribute = semanticMap[0];
                     
                     BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexMeshAttribute->getMin()),
                                     COLLADABU::Math::Vector3(vertexMeshAttribute->getMax()));
@@ -739,14 +685,14 @@ namespace GLTF
                         /* will be needed to get semantic & set association to create the shader */
                         const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
                         
-                        COLLADAFW::UniqueId effectUID = this->_converterContext._materialUIDToEffectUID[referencedMaterialID];
+                        COLLADAFW::UniqueId effectUID = this->_asset._materialUIDToEffectUID[referencedMaterialID];
                         unsigned int effectID = (unsigned int)effectUID.getObjectId();
                         shared_ptr<JSONObject> effectExtras = this->_extraDataHandler->getExtras(effectUID);
                         
-                        std::string materialName = this->_converterContext._materialUIDToName[referencedMaterialID];                        
+                        std::string materialName = this->_asset._materialUIDToName[referencedMaterialID];                        
                         
-                        if (this->_converterContext._uniqueIDToEffect.count(effectID) > 0) {
-                            effect = this->_converterContext._uniqueIDToEffect[effectID];
+                        if (this->_asset._uniqueIDToEffect.count(effectID) > 0) {
+                            effect = this->_asset._uniqueIDToEffect[effectID];
                         }
                         
                         // retrieve the semantic to be associated
@@ -814,8 +760,8 @@ namespace GLTF
                         }
                         
                         //we have no material, create default                        
-                        if (this->_converterContext._uniqueIDToDefaultEffect.count(effectId) > 0) {
-                            effect = this->_converterContext._uniqueIDToDefaultEffect[effectId];
+                        if (this->_asset._uniqueIDToDefaultEffect.count(effectId) > 0) {
+                            effect = this->_asset._uniqueIDToDefaultEffect[effectId];
                         } else {
                             std::string uniqueId = "__glTF__defaultMaterial" + GLTFUtils::toString(effectId);
                             
@@ -829,7 +775,7 @@ namespace GLTF
                             double red = 1, green = 1, blue = 1, alpha = 1;
                             shared_ptr <JSONObject> slotObject(new JSONObject());
                             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-                            slotObject->setUnsignedInt32("type", this->_converterContext.profile->getGLenumForString("FLOAT_VEC4"));
+                            slotObject->setUnsignedInt32("type", this->_asset.profile->getGLenumForString("FLOAT_VEC4"));
                             values->setValue("diffuse", slotObject);
                             
                             shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
@@ -843,7 +789,7 @@ namespace GLTF
                             effect->setTechniqueGenerator(techniqueGenerator);
                             effect->setName(uniqueId);
                             
-                            this->_converterContext._uniqueIDToDefaultEffect[effectId] = effect;
+                            this->_asset._uniqueIDToDefaultEffect[effectId] = effect;
                         }
                         
                         primitive->setMaterialID(effect->getID());
@@ -866,7 +812,7 @@ namespace GLTF
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo)
     {
-        GLTFConverterContext &converterContext = this->_converterContext;
+        GLTFAsset &asset = this->_asset;
         bool shouldExportTRS = CONFIG_BOOL("alwaysExportTRS");
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeOriginalID = node->getOriginalId();
@@ -881,10 +827,10 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
         nodeObject->setString("name",node->getName());
         
-        this->_converterContext._uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
-        this->_converterContext._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
+        this->_asset._uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
+        this->_asset._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
 
-        this->_converterContext._uniqueIDToJSONValue[uniqueUID] = nodeObject;
+        this->_asset._uniqueIDToJSONValue[uniqueUID] = nodeObject;
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
             nodeObject->setString("jointId",sid);
@@ -918,7 +864,7 @@ namespace GLTF
             
             if (nodeContainsLookAtTr && (transformationsCount > 1)) {
                 //FIXME: handle warning/error
-                this->_converterContext.log("WARNING: node contains a look at transform combined with other transforms\n");
+                this->_asset.log("WARNING: node contains a look at transform combined with other transforms\n");
             }
         }
         
@@ -940,7 +886,7 @@ namespace GLTF
             
             shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
             
-            this->_converterContext._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
+            this->_asset._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
             std::string animationID = animationListID.toAscii();
             
@@ -1011,10 +957,10 @@ namespace GLTF
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 
-                if (this->_converterContext._uniqueIDToSkin.count((unsigned int)uniqueId.getObjectId()) > 0) {
+                if (this->_asset._uniqueIDToSkin.count((unsigned int)uniqueId.getObjectId()) > 0) {
                     shared_ptr <GLTF::JSONArray> skinMeshesArray(new GLTF::JSONArray());
 
-                    shared_ptr<GLTFSkin> skin = this->_converterContext._uniqueIDToSkin[(unsigned int)uniqueId.getObjectId()];
+                    shared_ptr<GLTFSkin> skin = this->_asset._uniqueIDToSkin[(unsigned int)uniqueId.getObjectId()];
                     UniqueId meshUniqueId(skin->getSourceUID());
                     writeMeshFromUIDWithMaterialBindings(meshUniqueId, materialBindings, skinMeshesArray);
                     
@@ -1075,7 +1021,7 @@ namespace GLTF
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
         }
         
-        this->_converterContext._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
+        this->_asset._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
         
         registerObjectWithOriginalUID(nodeOriginalID, nodeObject, nodesObject);
         
@@ -1089,11 +1035,11 @@ namespace GLTF
             InstanceNode* instanceNode  = instanceNodes[i];
             std::string id = instanceNode->getInstanciatedObjectId().toAscii();
             shared_ptr<JSONArray> parents;
-            if (this->_converterContext._uniqueIDToParentsOfInstanceNode.count(id) == 0) {
+            if (this->_asset._uniqueIDToParentsOfInstanceNode.count(id) == 0) {
                 parents =  shared_ptr<JSONArray> (new JSONArray());
-                this->_converterContext._uniqueIDToParentsOfInstanceNode[id] = parents;
+                this->_asset._uniqueIDToParentsOfInstanceNode[id] = parents;
             } else {
-                parents = this->_converterContext._uniqueIDToParentsOfInstanceNode[id];
+                parents = this->_asset._uniqueIDToParentsOfInstanceNode[id];
             }
             
             parents->appendValue(shared_ptr<JSONString> (new JSONString(node->getUniqueId().toAscii())));
@@ -1106,21 +1052,21 @@ namespace GLTF
         
         //For a given light, keep track of all the nodes holding it
         if (count) {
-            shared_ptr<JSONObject> lights = this->_converterContext.root->createObjectIfNeeded("lights");
+            shared_ptr<JSONObject> lights = this->_asset.root->createObjectIfNeeded("lights");
             for (unsigned int i = 0 ; i < count ; i++) {
                 InstanceLight* instanceLight  = instanceLights[i];
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
-                shared_ptr<JSONObject> light = static_pointer_cast<JSONObject> (this->_converterContext._uniqueIDToJSONValue[id]);
+                shared_ptr<JSONObject> light = static_pointer_cast<JSONObject> (this->_asset._uniqueIDToJSONValue[id]);
                 if (light) {
-                    std::string lightUID = this->_converterContext._uniqueIDToOriginalID[id];
+                    std::string lightUID = this->_asset._uniqueIDToOriginalID[id];
                     
                     shared_ptr<JSONArray> listOfNodesPerLight;
-                    if (this->_converterContext._uniqueIDOfLightToNodes.count(id) == 0) {
+                    if (this->_asset._uniqueIDOfLightToNodes.count(id) == 0) {
                         listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
-                        this->_converterContext._uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
+                        this->_asset._uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
                     } else {
-                        listOfNodesPerLight = this->_converterContext._uniqueIDOfLightToNodes[lightUID];
+                        listOfNodesPerLight = this->_asset._uniqueIDOfLightToNodes[lightUID];
                     }
                     
                     listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
@@ -1138,7 +1084,7 @@ namespace GLTF
                     //To fix this, dummy sub nodes should be created.
                     static bool printedOnce = false;
                     if (printedOnce) {
-                        this->_converterContext.log("WARNING: some unhandled lights because some nodes carry more than a single light\n");
+                        this->_asset.log("WARNING: some unhandled lights because some nodes carry more than a single light\n");
                         printedOnce = false;
                     }
                 }
@@ -1179,14 +1125,14 @@ namespace GLTF
         //FIXME: only one visual scene assumed/handled
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("nodes"));
+        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_asset.root->getValue("nodes"));
         shared_ptr <GLTF::JSONObject> rootObject(new GLTF::JSONObject());
         
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
         
-        this->_converterContext.root->setValue("scenes", scenesObject);
-        this->_converterContext.root->setString("scene", "defaultScene");
+        this->_asset.root->setValue("scenes", scenesObject);
+        this->_asset.root->setString("scene", "defaultScene");
         
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         
@@ -1225,20 +1171,20 @@ namespace GLTF
 	{
         const NodePointerArray& nodes = libraryNodes->getNodes();
         
-        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("nodes"));
+        shared_ptr <GLTF::JSONObject> nodesObject = static_pointer_cast <GLTF::JSONObject> (this->_asset.root->getValue("nodes"));
                 
         size_t count = nodes.getCount();
         for (size_t i = 0 ; i < count ; i++) {
             const COLLADAFW::Node *node = nodes[i];
             
             std::string id = node->getUniqueId().toAscii();
-            if (this->_converterContext._uniqueIDToParentsOfInstanceNode.count(id) > 0) {
-                shared_ptr<JSONArray> parents = this->_converterContext._uniqueIDToParentsOfInstanceNode[id];
+            if (this->_asset._uniqueIDToParentsOfInstanceNode.count(id) > 0) {
+                shared_ptr<JSONArray> parents = this->_asset._uniqueIDToParentsOfInstanceNode[id];
                 std::vector <shared_ptr <JSONValue> > values = parents->values();
                 for (size_t k = 0 ; k < values.size() ; k++) {
                     shared_ptr<JSONString> value = static_pointer_cast<JSONString>(values[k]);
 
-                    shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_converterContext._uniqueIDToJSONValue[value->getString()]);
+                    shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset._uniqueIDToJSONValue[value->getString()]);
                     if (parentNode) {
                         shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded("children");
                         children->appendValue(shared_ptr <JSONString>(new JSONString(node->getOriginalId())));
@@ -1262,11 +1208,11 @@ namespace GLTF
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
                 unsigned int meshID = (unsigned int)geometry->getUniqueId().getObjectId();
                 
-                if (this->_converterContext._uniqueIDToMeshes.count(meshID) == 0) {
-                        shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_converterContext);
+                if (this->_asset._uniqueIDToMeshes.count(meshID) == 0) {
+                        shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset);
                     if (cvtMesh) {
                         //here we stock the mesh with unified indices but we may have to handle additional mesh attributes
-                        this->_converterContext._uniqueIDToMesh[geometry->getUniqueId().toAscii()] = cvtMesh;
+                        this->_asset._uniqueIDToMesh[geometry->getUniqueId().toAscii()] = cvtMesh;
                     }
                 }
             }
@@ -1287,8 +1233,8 @@ namespace GLTF
 	{
         const UniqueId& effectUID = material->getInstantiatedEffect();
 		unsigned int materialID = (unsigned int)material->getUniqueId().getObjectId();
-        this->_converterContext._materialUIDToName[materialID] = material->getName();
-        this->_converterContext._materialUIDToEffectUID[materialID] = effectUID;
+        this->_asset._materialUIDToName[materialID] = material->getName();
+        this->_asset._materialUIDToEffectUID[materialID] = effectUID;
 		return true;
 	}
     
@@ -1340,12 +1286,12 @@ namespace GLTF
         bool addSampler = false;
         size_t index = 0;
         
-        if (this->_converterContext._samplerHashtoSamplerIndex.count(samplerHash) == 0) {
-            index = this->_converterContext._samplerHashtoSamplerIndex.size();
-            this->_converterContext._samplerHashtoSamplerIndex[samplerHash] = index;            
+        if (this->_asset._samplerHashtoSamplerIndex.count(samplerHash) == 0) {
+            index = this->_asset._samplerHashtoSamplerIndex.size();
+            this->_asset._samplerHashtoSamplerIndex[samplerHash] = index;            
             addSampler = true;
         } else {
-            index = this->_converterContext._samplerHashtoSamplerIndex[samplerHash];
+            index = this->_asset._samplerHashtoSamplerIndex[samplerHash];
         }
         
         std::string samplerUID = "sampler_"+GLTFUtils::toString(index);
@@ -1357,7 +1303,7 @@ namespace GLTF
             sampler2D->setUnsignedInt32("minFilter", minFilter);
             sampler2D->setUnsignedInt32("magFilter", maxFilter);
 
-            shared_ptr <GLTF::JSONObject> samplers = this->_converterContext.root->createObjectIfNeeded("samplers");
+            shared_ptr <GLTF::JSONObject> samplers = this->_asset.root->createObjectIfNeeded("samplers");
             samplers->setValue(samplerUID, sampler2D);
         }
         
@@ -1370,8 +1316,8 @@ namespace GLTF
                                               shared_ptr <JSONObject> extras)
     {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
-        GLTFConverterContext &converterContext = this->_converterContext;
-        GLTFProfile* profile = converterContext.profile.get();
+        GLTFAsset &asset = this->_asset;
+        GLTFProfile* profile = asset.profile.get();
 
         ColorOrTexture slot;
         
@@ -1434,7 +1380,7 @@ namespace GLTF
             
             std::string textureUID = "texture_" + imageUID;
             
-            shared_ptr <GLTF::JSONObject> textures = converterContext.root->createObjectIfNeeded("textures");
+            shared_ptr <GLTF::JSONObject> textures = asset.root->createObjectIfNeeded("textures");
             if (textures->contains(textureUID) == false) {
                 shared_ptr <JSONObject> textureObject(new JSONObject());
                 textureObject->setString("source", imageUID);
@@ -1459,8 +1405,8 @@ namespace GLTF
         
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect )
 	{
-        GLTFConverterContext &converterContext = this->_converterContext;
-        GLTFProfile* profile = this->_converterContext.profile.get();
+        GLTFAsset &asset = this->_asset;
+        GLTFProfile* profile = this->_asset.profile.get();
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
         if (commonEffects.getCount() > 0) {
@@ -1530,7 +1476,7 @@ namespace GLTF
                 values->setValue("shininess", shininessObject);
             }
             
-            this->_converterContext._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
+            this->_asset._uniqueIDToEffect[(unsigned int)effect->getUniqueId().getObjectId()] = cvtEffect;
             
         }
 		return true;
@@ -1539,10 +1485,10 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeCamera( const COLLADAFW::Camera* camera )
 	{
-        shared_ptr <GLTF::JSONObject> camerasObject = static_pointer_cast <GLTF::JSONObject> (this->_converterContext.root->getValue("cameras"));
+        shared_ptr <GLTF::JSONObject> camerasObject = static_pointer_cast <GLTF::JSONObject> (this->_asset.root->getValue("cameras"));
         if (!camerasObject) {
             camerasObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-            this->_converterContext.root->setValue("cameras", camerasObject);
+            this->_asset.root->setValue("cameras", camerasObject);
         }
         
         shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
@@ -1554,7 +1500,7 @@ namespace GLTF
         
         switch (camera->getCameraType()) {
             case Camera::UNDEFINED_CAMERATYPE:
-                this->_converterContext.log("WARNING: unknown camera type: using perspective\n");
+                this->_asset.log("WARNING: unknown camera type: using perspective\n");
                 break;
             case Camera::ORTHOGRAPHIC:
             {
@@ -1627,7 +1573,7 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage )
 	{
-        shared_ptr <GLTF::JSONObject> images = this->_converterContext.root->createObjectIfNeeded("images");
+        shared_ptr <GLTF::JSONObject> images = this->_asset.root->createObjectIfNeeded("images");
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
         
         std::string imageUID = uniqueIdWithType("image",openCOLLADAImage->getUniqueId());
@@ -1648,7 +1594,7 @@ namespace GLTF
         } else {
             relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
         }
-        image->setString("path", this->_converterContext.resourceOuputPathForPath(relPathFile));
+        image->setString("path", this->_asset.resourceOuputPathForPath(relPathFile));
 
         return true;
 	}
@@ -1705,10 +1651,10 @@ namespace GLTF
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString("type"), description);
         
-        this->_converterContext._uniqueIDToJSONValue[light->getUniqueId().toAscii()] = static_pointer_cast<JSONValue>(glTFLight);
-        this->_converterContext._uniqueIDToOriginalID[light->getUniqueId().toAscii()] = light->getOriginalId();
+        this->_asset._uniqueIDToJSONValue[light->getUniqueId().toAscii()] = static_pointer_cast<JSONValue>(glTFLight);
+        this->_asset._uniqueIDToOriginalID[light->getUniqueId().toAscii()] = light->getOriginalId();
         
-        shared_ptr<JSONArray> lightsIds = this->_converterContext.root->createArrayIfNeeded("lightsIds");
+        shared_ptr<JSONArray> lightsIds = this->_asset.root->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
         
 		return true;
@@ -1717,15 +1663,15 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation)
 	{
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_converterContext);
+        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset);
         
         cvtAnimation->setOriginalID(animation->getOriginalId());
         
-        if (this->_converterContext._flattenerMapsForAnimationID.count(animation->getOriginalId()) == 0) {
-            this->_converterContext._flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
+        if (this->_asset._flattenerMapsForAnimationID.count(animation->getOriginalId()) == 0) {
+            this->_asset._flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
         }
         
-        this->_converterContext._uniqueIDToAnimation[(unsigned int)animation->getUniqueId().getObjectId()] = cvtAnimation;
+        this->_asset._uniqueIDToAnimation[(unsigned int)animation->getUniqueId().getObjectId()] = cvtAnimation;
         
 		return true;
 	}
@@ -1735,21 +1681,21 @@ namespace GLTF
 	{
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
-        AnimatedTargetsSharedPtr animatedTargets = this->_converterContext._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
+        AnimatedTargetsSharedPtr animatedTargets = this->_asset._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
 
-            shared_ptr <GLTFAnimation> cvtAnimation = this->_converterContext._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
+            shared_ptr <GLTFAnimation> cvtAnimation = this->_asset._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
 
-            AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_converterContext._flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
+            AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset._flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
             for (size_t j = 0 ; j < animatedTargets->size() ; j++) {
                 shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
                 shared_ptr<GLTFAnimationFlattener> animationFlattener;
                 std::string targetUID = animatedTarget->getString("target");
                 if (animationFlattenerMap->count(targetUID) == 0) {
                     //FIXME: assuming node here is wrong
-                    COLLADAFW::Node *node = (COLLADAFW::Node*)this->_converterContext._uniqueIDToOpenCOLLADAObject[targetUID].get();
+                    COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset._uniqueIDToOpenCOLLADAObject[targetUID].get();
                     animationFlattener = shared_ptr<GLTFAnimationFlattener> (new GLTFAnimationFlattener(node));
                     (*animationFlattenerMap)[targetUID] = animationFlattener;
                 }
@@ -1757,9 +1703,9 @@ namespace GLTF
 
             cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
             
-            if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_converterContext)) {
+            if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset)) {
                 //if an animation failed to convert, we don't want to keep track of it.
-                this->_converterContext._uniqueIDToAnimation.erase(this->_converterContext._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
+                this->_asset._uniqueIDToAnimation.erase(this->_asset._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
             }
         }
         
@@ -1836,18 +1782,18 @@ namespace GLTF
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setUnsignedInt32("type", this->_converterContext.profile->getGLenumForString("FLOAT_MAT4"));
+        inverseBindMatrices->setUnsignedInt32("type", this->_asset.profile->getGLenumForString("FLOAT_MAT4"));
         inverseBindMatrices->setUnsignedInt32("count", skinControllerData->getJointsCount());
         inverseBindMatrices->setUnsignedInt32("byteOffset", 0);
         glTFSkin->extras()->setValue("inverseBindMatrices", inverseBindMatrices);
         
-        inverseBindMatrices->setUnsignedInt32("byteOffset",this->_converterContext._animationOutputStream->length());
+        inverseBindMatrices->setUnsignedInt32("byteOffset",this->_asset._animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
-        this->_converterContext._animationOutputStream->write(buffer);
+        this->_asset._animationOutputStream->write(buffer);
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFMeshAttribute> weightsAttribute(new GLTFMeshAttribute());
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor());
         
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setComponentsPerAttribute(bucketSize);
@@ -1858,7 +1804,7 @@ namespace GLTF
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFMeshAttribute> jointsAttribute(new GLTFMeshAttribute());
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor());
         
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setComponentsPerAttribute(bucketSize);
@@ -1868,15 +1814,15 @@ namespace GLTF
 
         glTFSkin->setJoints(jointsAttribute);
 
-        this->_converterContext._uniqueIDToSkin[(unsigned int)skinControllerData->getObjectId()] = glTFSkin;
+        this->_asset._uniqueIDToSkin[(unsigned int)skinControllerData->getObjectId()] = glTFSkin;
         
 		return true;
 	}
     
 	//--------------------------------------------------------------------
     
-    static shared_ptr<GLTFMeshAttribute> __CreateAttributeByApplyingRemapTable(shared_ptr<GLTFMeshAttribute> meshAttribute, size_t vertexCount, unsigned int* remapTableForPositions) {
-        shared_ptr <GLTFMeshAttribute> targetAttribute(new GLTFMeshAttribute());
+    static shared_ptr<GLTFAccessor> __CreateAttributeByApplyingRemapTable(shared_ptr<GLTFAccessor> meshAttribute, size_t vertexCount, unsigned int* remapTableForPositions) {
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor());
         unsigned char* sourcePtr = (unsigned char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
         size_t bufferSize = meshAttribute->getVertexAttributeByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
@@ -1905,8 +1851,8 @@ namespace GLTF
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
             
             //Now we get the skin and the mesh, and
-            shared_ptr <GLTFSkin> glTFSkin = this->_converterContext._uniqueIDToSkin[(unsigned int)skinController->getSkinControllerData().getObjectId()];
-            shared_ptr<GLTFMesh> mesh = this->_converterContext._uniqueIDToMesh[skinController->getSource().toAscii()];
+            shared_ptr <GLTFSkin> glTFSkin = this->_asset._uniqueIDToSkin[(unsigned int)skinController->getSkinControllerData().getObjectId()];
+            shared_ptr<GLTFMesh> mesh = this->_asset._uniqueIDToMesh[skinController->getSource().toAscii()];
             
             glTFSkin->setSourceUID(skinController->getSource().toAscii());
             UniqueId test(glTFSkin->getSourceUID());
@@ -1915,12 +1861,12 @@ namespace GLTF
             size_t vertexCount = mesh->getMeshAttributesForSemantic(GLTF::POSITION)[0]->getCount();
             //Now we remap the bone indices and weight attribute in respect of deindexing we have
             
-            shared_ptr<GLTFMeshAttribute> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions);
+            shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions);
             GLTF::IndexSetToMeshAttributeHashmap& weightsAttributes = mesh->getMeshAttributesForSemantic(GLTF::WEIGHT);
             weightsAttributes[0] = weightsAttribute;
             mesh->setMeshAttributesForSemantic(GLTF::WEIGHT, weightsAttributes);
             
-            shared_ptr<GLTFMeshAttribute> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions);
+            shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions);
             GLTF::IndexSetToMeshAttributeHashmap& jointsAttributes = mesh->getMeshAttributesForSemantic(GLTF::JOINT);
             jointsAttributes[0] = jointsAttribute;
             mesh->setMeshAttributesForSemantic(GLTF::JOINT, jointsAttributes);

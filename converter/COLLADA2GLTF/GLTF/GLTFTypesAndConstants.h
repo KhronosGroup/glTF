@@ -37,20 +37,28 @@ namespace std{
 
 using namespace std::tr1;
 
-namespace GLTF 
+const std::string kCount = "count";
+const std::string kByteOffset = "byteOffset";
+const std::string kByteStride = "byteStride";
+const std::string kType = "type";
+const std::string kBufferView = "bufferView";
+const std::string kMin = "min";
+const std::string kMax = "max";
+
+namespace GLTF
 {
     class JSONObject;
-    class GLTFIndices;
+    class GLTFAccessor;
     class GLTFPrimitive;
-    class GLTFMeshAttribute;
+    class GLTFAccessor;
     class GLTFMesh;
     class GLTFEffect;
     class JSONVertexAttribute;
     class GLTFAnimationFlattener;
     //-- Args & Options
-    typedef std::vector <shared_ptr<GLTF::GLTFIndices> > IndicesVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
     typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFMeshAttribute> > MeshAttributeVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
     typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     
     typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;

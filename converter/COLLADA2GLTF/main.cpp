@@ -35,7 +35,7 @@
 #include "GitSHA1.h"
 #include "GLTF.h"
 #include "GLTF-OpenCOLLADA.h"
-#include "GLTFConverterContext.h"
+#include "GLTFAsset.h"
 
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
@@ -119,7 +119,7 @@ bool fileExists(const char * filename) {
     return false;
 }
 
-static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContext *converterContext) {
+static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 	int ch;
     std::string file;
     std::string output;
@@ -127,8 +127,8 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     bool hasInputPath = false;
     bool shouldShowHelp = false;
     
-    //converterContext->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
-    //converterContext->configObject
+    //asset->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
+    //asset->configObject
     buildOptions();
     
     if (argc == 1) {
@@ -137,13 +137,13 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     
     if (argc == 2) {
         if (fileExists(argv[1])) {
-            converterContext->setInputFilePath(argv[1]);
-            converterContext->setOutputFilePath(replacePathExtensionWith(converterContext->getInputFilePath(), "json"));
+            asset->setInputFilePath(argv[1]);
+            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
             return true;
         }
     }
     
-    shared_ptr<GLTF::GLTFConfig> converterConfig = converterContext->converterConfig();
+    shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
     while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
         switch (ch) {
@@ -154,15 +154,15 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 dumpHelpMessage();
                 return false;
             case 'f':
-                converterContext->setInputFilePath(optarg);
+                asset->setInputFilePath(optarg);
                 hasInputPath = true;
 				break;
             case 'b':
-                converterContext->setBundleOutputPath(replacePathExtensionWith(optarg, "glTF"));
+                asset->setBundleOutputPath(replacePathExtensionWith(optarg, "glTF"));
                 hasOutputPath = true;
 				break;
             case 'o':
-                converterContext->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
+                asset->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
                 hasOutputPath = true;
 				break;
             case 'i':
@@ -202,7 +202,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
                 
                 break;
             case 'a':
-                //converterContext->exportAnimations = true;
+                //asset->exportAnimations = true;
                 break;
             case 'd':
                 converterConfig->config()->setBool("exportPassDetails", true);
@@ -228,7 +228,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
     }
     
     if (!hasOutputPath & hasInputPath) {
-        converterContext->setOutputFilePath(replacePathExtensionWith(converterContext->getInputFilePath(), "json"));
+        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
         
     }
     
@@ -236,33 +236,33 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFConverterContex
 }
 
 int main (int argc, char * const argv[]) {
-    GLTF::GLTFConverterContext converterContext;
+    GLTF::GLTFAsset asset;
     
-    if (processArgs(argc, argv, &converterContext)) {
-        if (converterContext.getInputFilePath().length() == 0) {
+    if (processArgs(argc, argv, &asset)) {
+        if (asset.getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = converterContext.getInputFilePath().c_str();
+        const char* inputFilePathCStr = asset.getInputFilePath().c_str();
         
-        if (!fileExists(converterContext.getInputFilePath().c_str())) {
+        if (!fileExists(asset.getInputFilePath().c_str())) {
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
         
         clock_t start = clock();
-        if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
-            converterContext.log("convertion 0%%");
-            converterContext.log("\n\033[F\033[J");
+        if (asset.converterConfig()->config()->getBool("outputProgress")) {
+            asset.log("convertion 0%%");
+            asset.log("\n\033[F\033[J");
         } else {
-            converterContext.log("converting:%s ... as %s \n",converterContext.getInputFilePath().c_str(), converterContext.getOutputFilePath().c_str());
+            asset.log("converting:%s ... as %s \n",asset.getInputFilePath().c_str(), asset.getOutputFilePath().c_str());
         }
-        GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(converterContext);
+        GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(asset);
         writer->write();
-        if (converterContext.converterConfig()->config()->getBool("outputProgress")) {
-            converterContext.log("convertion 100%%");
-            converterContext.log("\n");
+        if (asset.converterConfig()->config()->getBool("outputProgress")) {
+            asset.log("convertion 100%%");
+            asset.log("\n");
         } else {
-            converterContext.log("[completed conversion]\n");
+            asset.log("[completed conversion]\n");
         }
 #if WIN32
         double clocks = CLK_TCK;
@@ -271,7 +271,7 @@ int main (int argc, char * const argv[]) {
 #endif
         std::stringstream s;
         s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
-        converterContext.log("Runtime: %s seconds", s.str().c_str());
+        asset.log("Runtime: %s seconds", s.str().c_str());
     }
     return 0;
 }

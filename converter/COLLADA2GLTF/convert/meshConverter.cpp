@@ -1,6 +1,6 @@
 #include "GLTF.h"
 #include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
+#include "GLTFAsset.h"
 
 #include "meshConverter.h"
 #include "../helpers/mathHelpers.h"
@@ -33,13 +33,13 @@
 
 namespace GLTF
 {
-    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, GLTFConverterContext& converterContext)
+    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, GLTFAsset& asset)
     {
         bool shouldOGCompressMesh = false;
         
-        GLTFOutputStream* vertexOutputStream = converterContext._vertexOutputStream;
-        GLTFOutputStream* indicesOutputStream = converterContext._indicesOutputStream;
-        GLTFOutputStream* compressionOutputStream = converterContext._compressionOutputStream;
+        GLTFOutputStream* vertexOutputStream = asset._vertexOutputStream;
+        GLTFOutputStream* indicesOutputStream = asset._indicesOutputStream;
+        GLTFOutputStream* compressionOutputStream = asset._compressionOutputStream;
         
 #ifdef USE_WEBGLLOADER
 
@@ -50,14 +50,14 @@ namespace GLTF
             
             shared_ptr<JSONObject> compressedData(new JSONObject());
             compressedData->setUnsignedInt32("count", buffer->getByteLength());
-            compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
+            compressedData->setUnsignedInt32("type", asset.profile->getGLenumForString("UNSIGNED_BYTE"));
             compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
             compressionObject->setValue("compressedData", compressedData);
             genericStream.write((const char*)buffer->getData(), buffer->getByteLength());
             
             shared_ptr <MeshAttributeVector> attributes = mesh->meshAttributes();
             for (size_t i = 0 ; i < attributes->size() ; i++) {
-                shared_ptr <GLTFMeshAttribute> meshAttribute = (*attributes)[i];
+                shared_ptr <GLTFAccessor> meshAttribute = (*attributes)[i];
                 meshAttribute->computeMinMax();
             }
             //bufferView will be set when the mesh is serialized
@@ -70,7 +70,7 @@ namespace GLTF
         shouldOGCompressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
         unsigned compressedBufferStart = compressionOutputStream->length();
         if (shouldOGCompressMesh) {
-            encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, converterContext);
+            encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, asset);
         }
 #endif
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -84,7 +84,7 @@ namespace GLTF
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getUniqueIndices();
             /*
              Convert the indices to unsigned short and write the blob
              */
@@ -97,9 +97,9 @@ namespace GLTF
                 allIndicesCount += indicesCount;
                 
                 //FIXME: this is assuming triangles
-                unsigned int trianglesCount = converterContext.convertionResults()->getUnsignedInt32("trianglesCount");
+                unsigned int trianglesCount = asset.convertionResults()->getUnsignedInt32("trianglesCount");
                 trianglesCount += indicesCount / 3;
-                converterContext.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
+                asset.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
                 
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = 0;
@@ -111,7 +111,7 @@ namespace GLTF
                     }
                     uniqueIndices->setByteOffset(indicesOutputStream->length());
                     indicesOutputStream->write((const char*)ushortIndices, indicesLength);
-                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + indicesLength);
+                    asset.setGeometryByteLength(asset.getGeometryByteLength() + indicesLength);
                 }
 #ifdef USE_OPEN3DGC
                 else {
@@ -129,7 +129,7 @@ namespace GLTF
         
         int attributeCount = 0;
         for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
-            shared_ptr <GLTFMeshAttribute> meshAttribute = (*allMeshAttributes)[j];
+            shared_ptr <GLTFAccessor> meshAttribute = (*allMeshAttributes)[j];
             shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
             shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
             
@@ -145,9 +145,9 @@ namespace GLTF
                 vertexCount = meshAttribute->getCount();
                 
                 if (attributeCount == 0) {
-                    unsigned int totalVerticesCount = converterContext.convertionResults()->getUnsignedInt32("verticesCount");
+                    unsigned int totalVerticesCount = asset.convertionResults()->getUnsignedInt32("verticesCount");
                     totalVerticesCount += vertexCount;
-                    converterContext.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
+                    asset.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
                 }
                 
                 attributeCount++;
@@ -160,7 +160,7 @@ namespace GLTF
                 {
                     meshAttribute->setByteOffset(vertexOutputStream->length());
                     vertexOutputStream->write(buffer);
-                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + buffer->getByteLength());
+                    asset.setGeometryByteLength(asset.getGeometryByteLength() + buffer->getByteLength());
                 }
                 
 
@@ -221,15 +221,15 @@ namespace GLTF
         WavefrontObjFile dummyObj;
         
         AttribList *positions = dummyObj.positions();
-        shared_ptr <GLTFMeshAttribute> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
+        shared_ptr <GLTFAccessor> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
         positionAttrib->apply(__FeedAttribs, positions);
         
         AttribList *normals = dummyObj.normals();
-        shared_ptr <GLTFMeshAttribute> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
+        shared_ptr <GLTFAccessor> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
         normalAttrib->apply(__FeedAttribs, normals);
         
         AttribList *texcoords = dummyObj.texcoords();
-        shared_ptr <GLTFMeshAttribute> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
+        shared_ptr <GLTFAccessor> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
         texcoordAttrib->apply(__FeedAttribs, texcoords);
         
         DrawBatch* drawBatch = dummyObj.drawBatch();
@@ -245,7 +245,7 @@ namespace GLTF
         
         for (size_t i = 0 ; i < primitives.size(); i++) {
             shared_ptr <GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTFIndices> indices = primitive->getUniqueIndices();
+            shared_ptr <GLTFAccessor> indices = primitive->getUniqueIndices();
             
             //FIXME: assume triangles
             size_t count = indices->getCount();
@@ -397,15 +397,15 @@ namespace GLTF
         WavefrontObjFile dummyObj;
         
         AttribList *positions = dummyObj.positions();
-        shared_ptr <GLTFMeshAttribute> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
+        shared_ptr <GLTFAccessor> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
         positionAttrib->apply(__FeedAttribs, positions);
         
         AttribList *normals = dummyObj.normals();
-        shared_ptr <GLTFMeshAttribute> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
+        shared_ptr <GLTFAccessor> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
         normalAttrib->apply(__FeedAttribs, normals);
         
         AttribList *texcoords = dummyObj.texcoords();
-        shared_ptr <GLTFMeshAttribute> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
+        shared_ptr <GLTFAccessor> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
         texcoordAttrib->apply(__FeedAttribs, texcoords);
         
         DrawBatch* drawBatch = dummyObj.drawBatch();
@@ -426,7 +426,7 @@ namespace GLTF
         
         for (size_t i = 0 ; i < primitives.size(); i++) {
             shared_ptr <GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTFIndices> indices = primitive->getUniqueIndices();
+            shared_ptr <GLTFAccessor> indices = primitive->getUniqueIndices();
             
             //FIXME: assume triangles
             size_t count = indices->getCount();
@@ -609,7 +609,7 @@ namespace GLTF
     }
     
     
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, size_t allowedComponentsPerAttribute)
+    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, size_t allowedComponentsPerAttribute)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -711,7 +711,7 @@ namespace GLTF
             
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(id, sourceData, 0, sourceSize, meshAttributeOwnsBuffer);
-            shared_ptr <GLTFMeshAttribute> cvtMeshAttribute(new GLTFMeshAttribute());
+            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor());
             
             cvtMeshAttribute->setBufferView(cvtBufferView);
             cvtMeshAttribute->setComponentsPerAttribute(componentsPerAttribute);
@@ -725,7 +725,7 @@ namespace GLTF
         return (unsigned int)setCount;
     }
     
-    static void __AppendIndices(shared_ptr <GLTF::GLTFPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <GLTF::GLTFIndices> &indices, GLTF::Semantic semantic, unsigned int indexOfSet)
+    static void __AppendIndices(shared_ptr <GLTF::GLTFPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <GLTF::GLTFAccessor> &indices, GLTF::Semantic semantic, unsigned int indexOfSet)
     {
         primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(semantic,indexOfSet)));
         primitiveIndicesVector.push_back(indices);
@@ -771,8 +771,14 @@ namespace GLTF
         
         shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
         
-        shared_ptr <GLTFIndices> jsonIndices(new GLTFIndices(uvBuffer, count));
-        __AppendIndices(cvtPrimitive, primitiveIndicesVector, jsonIndices, semantic, idx);
+        shared_ptr <GLTFAccessor> accessor(new GLTFAccessor());
+        
+        accessor->setBufferView(uvBuffer);
+        accessor->setCount(count);
+        accessor->setComponentsPerAttribute(1);
+        accessor->setComponentType(UNSIGNED_SHORT);
+        
+        __AppendIndices(cvtPrimitive, primitiveIndicesVector, accessor, semantic, idx);
     }
     
     static shared_ptr <GLTF::GLTFPrimitive> ConvertOpenCOLLADAMeshPrimitive(
@@ -851,7 +857,12 @@ namespace GLTF
         
         shared_ptr <GLTFBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
         
-        shared_ptr <GLTF::GLTFIndices> positionIndices(new GLTF::GLTFIndices(positionBuffer,count));
+        shared_ptr <GLTF::GLTFAccessor> positionIndices(new GLTF::GLTFAccessor());
+        
+        positionIndices->setBufferView(positionBuffer);
+        positionIndices->setCount(count);
+        positionIndices->setComponentsPerAttribute(1);
+        positionIndices->setComponentType(UNSIGNED_SHORT);
         
         __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, POSITION, 0);
         
@@ -864,8 +875,13 @@ namespace GLTF
             }
             
             shared_ptr <GLTF::GLTFBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <GLTF::GLTFIndices> normalIndices(new GLTF::GLTFIndices(normalBuffer,
-                                                                               count));
+            shared_ptr <GLTF::GLTFAccessor> normalIndices(new GLTF::GLTFAccessor());
+            
+            normalIndices->setBufferView(normalBuffer);
+            normalIndices->setCount(count);
+            normalIndices->setComponentsPerAttribute(1);
+            normalIndices->setComponentType(UNSIGNED_SHORT);
+            
             __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices, NORMAL, 0);
         }
         
@@ -929,7 +945,7 @@ namespace GLTF
         }
     }
     
-    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFConverterContext& context) {
+    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFAsset& context) {
         shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
         
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
@@ -969,27 +985,27 @@ namespace GLTF
             primitiveIndicesVector = allPrimitiveIndicesVectors[allPrimitiveIndicesVectors.size()-1];
             
             // once we got a primitive, keep track of its meshAttributes
-            std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices = *primitiveIndicesVector;
+            std::vector< shared_ptr<GLTF::GLTFAccessor> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
-                shared_ptr<GLTF::GLTFIndices> indices = allIndices[k];
+                shared_ptr<GLTF::GLTFAccessor> indices = allIndices[k];
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 GLTF::IndexSetToMeshAttributeHashmap& meshAttributes = cvtMesh->getMeshAttributesForSemantic(semantic);
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getPositions(), meshAttributes, 3);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), meshAttributes, 3);
                         break;
                         
                     case GLTF::NORMAL:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getNormals(), meshAttributes, 3);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), meshAttributes, 3);
                         break;
                         
                     case GLTF::TEXCOORD:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getUVCoords(), meshAttributes,2);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), meshAttributes,2);
                         break;
                         
                     case GLTF::COLOR:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getColors(), meshAttributes, 4);
+                        ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), meshAttributes, 4);
                         break;
                         
                     default:
@@ -1010,7 +1026,7 @@ namespace GLTF
             for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
                 
                 meshAttribute->apply(__InvertV, NULL);
             }

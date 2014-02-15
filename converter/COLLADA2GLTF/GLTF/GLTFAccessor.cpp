@@ -32,12 +32,12 @@ using namespace std;
 
 namespace GLTF 
 {
-    void GLTFMeshAttribute::_generateID() 
+    void GLTFAccessor::_generateID() 
     {
-        this->_ID = GLTFUtils::generateIDForType("attribute");
+        this->_ID = GLTFUtils::generateIDForType("accessor");
     }
     
-    GLTFMeshAttribute::GLTFMeshAttribute(): _min(0), _max(0) 
+    GLTFAccessor::GLTFAccessor(): _min(0), _max(0) 
     {
         this->setComponentType(NOT_AN_ELEMENT_TYPE);
         this->setByteStride(0);
@@ -47,7 +47,7 @@ namespace GLTF
         this->setCount(0);
     }
         
-    GLTFMeshAttribute::GLTFMeshAttribute(GLTFMeshAttribute* meshAttribute): 
+    GLTFAccessor::GLTFAccessor(GLTFAccessor* meshAttribute): 
     _bufferView(meshAttribute->getBufferView()), _min(0), _max(0)
     {
         assert(meshAttribute);
@@ -60,7 +60,7 @@ namespace GLTF
         this->setCount(meshAttribute->getCount());
     }
         
-    GLTFMeshAttribute::~GLTFMeshAttribute()
+    GLTFAccessor::~GLTFAccessor()
     {
         if (this->_min) {
             delete [] this->_min;
@@ -70,72 +70,72 @@ namespace GLTF
         }
     }
         
-    void GLTFMeshAttribute::setBufferView(shared_ptr <GLTFBufferView> bufferView)
+    void GLTFAccessor::setBufferView(shared_ptr <GLTFBufferView> bufferView)
     {
         this->_bufferView = bufferView;
     }
         
-    shared_ptr <GLTFBufferView> GLTFMeshAttribute::getBufferView()
+    shared_ptr <GLTFBufferView> GLTFAccessor::getBufferView()
     {
         return this->_bufferView;
     }
         
-    void GLTFMeshAttribute::setComponentsPerAttribute(size_t componentsPerAttribute)
+    void GLTFAccessor::setComponentsPerAttribute(size_t componentsPerAttribute)
     {
         this->_componentsPerAttribute = componentsPerAttribute;
     }
         
-    size_t GLTFMeshAttribute::getComponentsPerAttribute()
+    size_t GLTFAccessor::getComponentsPerAttribute()
     {
         return this->_componentsPerAttribute;
     }
         
-    void GLTFMeshAttribute::setByteStride(size_t byteStride)
+    void GLTFAccessor::setByteStride(size_t byteStride)
     {
         this->_byteStride = byteStride;
     }
         
-    size_t GLTFMeshAttribute::getByteStride()
+    size_t GLTFAccessor::getByteStride()
     {
         return this->_byteStride;
     }
         
-    void GLTFMeshAttribute::setComponentType(ComponentType componentType)
+    void GLTFAccessor::setComponentType(ComponentType componentType)
     {
         this->_componentType = componentType;
     }
         
-    ComponentType GLTFMeshAttribute::getComponentType()
+    ComponentType GLTFAccessor::getComponentType()
     {
         return this->_componentType;
     }
         
-    void GLTFMeshAttribute::setByteOffset(size_t byteOffset)
+    void GLTFAccessor::setByteOffset(size_t byteOffset)
     {
         this->_byteOffset = byteOffset;
     }
         
-    size_t GLTFMeshAttribute::getByteOffset()
+    size_t GLTFAccessor::getByteOffset()
     {
         return this->_byteOffset;
     }
         
-    size_t GLTFMeshAttribute::getCount()
+    size_t GLTFAccessor::getCount()
     {
         return this->_count;
     }
     
-    void GLTFMeshAttribute::setCount(size_t count)
+    void GLTFAccessor::setCount(size_t count)
     {
         this->_count = count;
     }
  
-    const std::string& GLTFMeshAttribute::getID()
+    const std::string& GLTFAccessor::getID()
     {
         return this->_ID;
     }
         
-    size_t GLTFMeshAttribute::getVertexAttributeByteLength()
+    size_t GLTFAccessor::getVertexAttributeByteLength()
     {
         size_t componentsPerAttribute = this->getComponentsPerAttribute();
         ComponentType type = this->getComponentType();
@@ -160,11 +160,11 @@ namespace GLTF
         return 0;
     }
     
-    const double* GLTFMeshAttribute::getMin() {
+    const double* GLTFAccessor::getMin() {
         return this->_min;
     }
 
-    const double* GLTFMeshAttribute::getMax() {
+    const double* GLTFAccessor::getMax() {
         return this->_max;
     }
     
@@ -200,7 +200,7 @@ namespace GLTF
         }
     }
     
-    void GLTFMeshAttribute::computeMinMax() 
+    void GLTFAccessor::computeMinMax() 
     {
         //size_t byteStride = this->getByteStride();
         size_t componentsPerAttribute = this->getComponentsPerAttribute();
@@ -227,7 +227,7 @@ namespace GLTF
         apply(__ComputeMinMax, &minMaxApplierInfo);
     }
     
-    void GLTFMeshAttribute::apply(GLTFMeshAttributeApplierFunc applierFunc, void* context)
+    void GLTFAccessor::apply(GLTFAccessorApplierFunc applierFunc, void* context)
     {
         size_t byteStride = this->getByteStride();
         size_t componentsPerAttribute = this->getComponentsPerAttribute();
@@ -241,7 +241,7 @@ namespace GLTF
         }
     }
     
-    bool GLTFMeshAttribute::matchesLayout(GLTFMeshAttribute* meshAttribute)
+    bool GLTFAccessor::matchesLayout(GLTFAccessor* meshAttribute)
     {
         assert(meshAttribute);
         
@@ -251,7 +251,7 @@ namespace GLTF
                 (meshAttribute->getVertexAttributeByteLength() == this->getVertexAttributeByteLength()));
     }
     
-    unsigned int GLTFMeshAttribute::getGLType(shared_ptr<GLTFProfile> profile) {
+    unsigned int GLTFAccessor::getGLType(shared_ptr<GLTFProfile> profile) {
         return profile->getGLTypeForComponentType(this->_componentType, this->getComponentsPerAttribute());
     }
 

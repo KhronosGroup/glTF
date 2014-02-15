@@ -29,7 +29,7 @@
 
 #include "GLTF.h"
 #include "GLTF-OpenCOLLADA.h"
-#include "GLTFConverterContext.h"
+#include "GLTFAsset.h"
 
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
@@ -72,7 +72,7 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs);
+		COLLADA2GLTFWriter( const GLTFAsset &converterArgs);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -177,7 +177,7 @@ namespace GLTF
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        GLTF::GLTFConverterContext _converterContext;
+        GLTF::GLTFAsset _asset;
         const COLLADAFW::VisualScene *_visualScene;
         GLTF::GLTFWriter _writer;
         GLTF::GLTFWriter _resultsWriter;

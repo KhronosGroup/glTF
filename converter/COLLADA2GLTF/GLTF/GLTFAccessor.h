@@ -28,30 +28,30 @@
 #define __JSON_ACCESSOR_H__
 
 /* 
-    A GLTFMeshAttribute contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
+    A GLTFAccessor contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
      
     Its design is very inspired by COLLADA (http://www.khronos.org/files/collada_spec_1_4.pdf )but was adapted for consistent naming and requirements (like byte sizes) to be consistent with typed arrays.
  
  */
 namespace GLTF 
 {
-    typedef void (*GLTFMeshAttributeApplierFunc)(void* /* value */,
+    typedef void (*GLTFAccessorApplierFunc)(void* /* value */,
         ComponentType /* type */,
         size_t /* elementsPerValue */,
         size_t /* index */,
         size_t /* vertexAttributeByteSize*/,
         void* /* context */);
     
-    class GLTFMeshAttribute {
+    class GLTFAccessor {
     private:
         void _generateID();
 
     public:
         
-        GLTFMeshAttribute();
-        GLTFMeshAttribute(GLTFMeshAttribute *meshAttribute);
+        GLTFAccessor();
+        GLTFAccessor(GLTFAccessor *meshAttribute);
         
-        virtual ~GLTFMeshAttribute();
+        virtual ~GLTFAccessor();
         
         void setBufferView(shared_ptr <GLTFBufferView> buffer);
         shared_ptr <GLTFBufferView> getBufferView();
@@ -74,7 +74,7 @@ namespace GLTF
         void setCount(size_t length);
         size_t getCount();
         
-        void apply(GLTFMeshAttributeApplierFunc applierFunc, void* context);
+        void apply(GLTFAccessorApplierFunc applierFunc, void* context);
         
         const std::string& getID();
         
@@ -85,7 +85,7 @@ namespace GLTF
         const double* getMin();
         const double* getMax();
         
-        bool matchesLayout(GLTFMeshAttribute* meshAttribute);
+        bool matchesLayout(GLTFAccessor* meshAttribute);
 
     private:
         shared_ptr <GLTFBufferView> _bufferView;

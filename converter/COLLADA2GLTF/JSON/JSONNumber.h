@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,6 +9,9 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
+//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
+//    contributors may be used to endorse or promote products derived from this
+//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -21,24 +24,47 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_Open3DGC__
-#define __GLTF_Open3DGC__
+#ifndef __JSON_NUMBER_H__
+#define __JSON_NUMBER_H__
 
-namespace GLTF
+namespace GLTF 
 {
-    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh);
-    
-    void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
-                            shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFAsset& asset);
-    
-    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset);
-    
-    void setupAndWriteAnimationParameter(GLTFAnimation *cvtAnimation,
-                                         const std::string& parameterSID,
-                                         const std::string& parameterType,
-                                         unsigned char* buffer, size_t length, bool isInputParameter,
-                                         GLTFAsset &asset);
+    class JSONNumber : public JSONValue {
+    private:
+        JSONNumber():JSONValue(GLTF::NUMBER), _type(NOT_A_NUMBER) {}
+        
+    public:        
+        typedef enum 
+        {
+            NOT_A_NUMBER = 0,
+            UNSIGNED_INT32 = 1,
+            INT32 = 2,
+            DOUBLE = 3,
+            BOOL = 4
+        } JSONNumberType;
+                
+        explicit JSONNumber(unsigned int value);
+        explicit JSONNumber(int value);
+        explicit JSONNumber(double value);
+        explicit JSONNumber(bool value);
+
+        virtual ~JSONNumber();
+        
+        virtual void write(GLTFWriter* writer, void* context = 0);
+        
+        unsigned int getUnsignedInt32();
+        int getInt32();
+        double getDouble();
+        bool getBool();
+        
+        JSONNumber::JSONNumberType getType();
+
+    private:
+        void* _value;
+        JSONNumberType _type;
+    };
+
 }
+
 
 #endif

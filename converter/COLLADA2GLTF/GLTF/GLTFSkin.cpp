@@ -78,19 +78,19 @@ namespace GLTF
         return this->_id;
     }
     
-    void GLTFSkin::setJoints(shared_ptr <GLTFMeshAttribute> joints) {
+    void GLTFSkin::setJoints(shared_ptr <GLTFAccessor> joints) {
         this->_joints = joints;
     }
     
-    shared_ptr <GLTFMeshAttribute> GLTFSkin::getJoints() {
+    shared_ptr <GLTFAccessor> GLTFSkin::getJoints() {
         return this->_joints;
     }
     
-    void GLTFSkin::setWeights(shared_ptr <GLTFMeshAttribute> weights) {
+    void GLTFSkin::setWeights(shared_ptr <GLTFAccessor> weights) {
         this->_weights = weights;
     }
 
-    shared_ptr <GLTFMeshAttribute> GLTFSkin::getWeights() {
+    shared_ptr <GLTFAccessor> GLTFSkin::getWeights() {
         return this->_weights;
     }
     

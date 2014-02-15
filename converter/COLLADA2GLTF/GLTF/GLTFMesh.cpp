@@ -65,7 +65,7 @@ namespace GLTF
             for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
                 //(*it).first;             // the key value (of type Key)
                 //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFMeshAttribute> selectedMeshAttribute = (*meshAttributeIterator).second;
+                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
                 unsigned int indexSet = (*meshAttributeIterator).first;
                 GLTF::Semantic semantic = allSemantics[i];
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
@@ -99,12 +99,12 @@ namespace GLTF
         return this->_semanticToMeshAttributes[semantic].size();
     }
     
-    shared_ptr<GLTFMeshAttribute> GLTFMesh::getMeshAttribute(Semantic semantic, size_t indexOfSet) {
+    shared_ptr<GLTFAccessor> GLTFMesh::getMeshAttribute(Semantic semantic, size_t indexOfSet) {
         IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
         return hasmap[indexOfSet];
     }
 
-    void GLTFMesh::setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute) {
+    void GLTFMesh::setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFAccessor> meshAttribute) {
         IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
         hasmap[indexOfSet] = meshAttribute;
     }
