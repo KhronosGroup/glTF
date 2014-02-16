@@ -24,8 +24,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_ACCESSOR_H__
-#define __JSON_ACCESSOR_H__
+#ifndef __GLTF_ACCESSOR_H__
+#define __GLTF_ACCESSOR_H__
 
 /* 
     A GLTFAccessor contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
@@ -42,31 +42,28 @@ namespace GLTF
         size_t /* vertexAttributeByteSize*/,
         void* /* context */);
     
-    class GLTFAccessor {
+    class GLTFAccessor : public JSONObject {
     private:
         void _generateID();
 
     public:
         
-        GLTFAccessor();
-        GLTFAccessor(GLTFAccessor *meshAttribute);
+        GLTFAccessor(shared_ptr<GLTFProfile>, unsigned int glType);
+        GLTFAccessor(GLTFAccessor *);
         
         virtual ~GLTFAccessor();
         
         void setBufferView(shared_ptr <GLTFBufferView> buffer);
         shared_ptr <GLTFBufferView> getBufferView();
-        
-        void setComponentsPerAttribute(size_t componentsPerAttribute);         
-        size_t getComponentsPerAttribute();
-        
+                
         void setByteStride(size_t stride);
         size_t getByteStride();
         
-        void setComponentType(ComponentType type);
-        ComponentType getComponentType();
+        size_t componentsPerElement();
+        ComponentType componentType();
         
-        //return a string that represents the GL Type,by taking into account componentType and componentsPerAttribute
-        unsigned int getGLType(shared_ptr<GLTFProfile> profile);
+        //return a string that represents the GL Type,by taking into account componentType and componentsPerElement
+        unsigned int type();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
@@ -80,7 +77,7 @@ namespace GLTF
         
         void computeMinMax();
         
-        size_t getVertexAttributeByteLength();
+        size_t elementByteLength();
         
         const double* getMin();
         const double* getMax();
@@ -89,11 +86,9 @@ namespace GLTF
 
     private:
         shared_ptr <GLTFBufferView> _bufferView;
-        size_t              _componentsPerAttribute;
-        size_t              _count;
-        size_t              _byteStride;
-        size_t              _byteOffset;
-        ComponentType         _componentType;
+        size_t              _componentsPerElement;
+        ComponentType       _componentType;
+        size_t              _elementByteLength;
         std::string         _ID;
         double              *_min;
         double              *_max;

@@ -31,7 +31,7 @@ namespace GLTF
 {
     class GLTFMesh;
     
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
+    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector, shared_ptr<GLTFProfile> profile);
     
     typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
     typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;

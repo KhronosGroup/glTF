@@ -597,7 +597,7 @@ namespace GLTF
                 meshes = shared_ptr<MeshVector> (new MeshVector());
                 
                 shared_ptr<GLTFMesh> unifiedMesh = this->_asset._uniqueIDToMesh[uniqueId.toAscii()];
-                if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, *meshes) == false) {
+                if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(unifiedMesh.get(), 65535, *meshes, this->_asset.profile) == false) {
                     meshes->push_back(unifiedMesh);
                 }
 
@@ -605,7 +605,7 @@ namespace GLTF
                     meshes2 = shared_ptr<MeshVector> (new MeshVector());
                     for (size_t j = 0 ; j < meshes->size() ; j++) {
                         shared_ptr<GLTFMesh> aMesh = (*meshes)[j];
-                        if (!createMeshesFromMeshPrimitives(aMesh.get(), *meshes2)) {
+                        if (!createMeshesFromMeshPrimitives(aMesh.get(), *meshes2,  this->_asset.profile)) {
                             meshes2->push_back(aMesh);
                         }
                     }
@@ -1793,23 +1793,19 @@ namespace GLTF
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor());
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(this->_asset.profile, this->_asset.profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
         
         weightsAttribute->setBufferView(weightsView);
-        weightsAttribute->setComponentsPerAttribute(bucketSize);
         weightsAttribute->setByteStride(componentSize * bucketSize);
-        weightsAttribute->setComponentType(GLTF::FLOAT);
         weightsAttribute->setCount(vertexCount);
 
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor());
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(this->_asset.profile, this->_asset.profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
         
         jointsAttribute->setBufferView(jointsView);
-        jointsAttribute->setComponentsPerAttribute(bucketSize);
         jointsAttribute->setByteStride(componentSize * bucketSize);
-        jointsAttribute->setComponentType(GLTF::FLOAT);
         jointsAttribute->setCount(vertexCount);
 
         glTFSkin->setJoints(jointsAttribute);
@@ -1821,15 +1817,13 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
     
-    static shared_ptr<GLTFAccessor> __CreateAttributeByApplyingRemapTable(shared_ptr<GLTFAccessor> meshAttribute, size_t vertexCount, unsigned int* remapTableForPositions) {
-        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor());
+    static shared_ptr<GLTFAccessor> __CreateAttributeByApplyingRemapTable(shared_ptr<GLTFAccessor> meshAttribute, size_t vertexCount, unsigned int* remapTableForPositions, shared_ptr<GLTFProfile> profile) {
         unsigned char* sourcePtr = (unsigned char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
-        size_t bufferSize = meshAttribute->getVertexAttributeByteLength() * vertexCount;
+        size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
 
-        targetAttribute->setComponentsPerAttribute(meshAttribute->getComponentsPerAttribute());
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(        profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
         targetAttribute->setByteStride(meshAttribute->getByteStride());
-        targetAttribute->setComponentType(meshAttribute->getComponentType());
         targetAttribute->setCount(vertexCount);
 
         for (size_t i = 0 ; i < vertexCount  ; i++) {
@@ -1837,7 +1831,7 @@ namespace GLTF
             
             void *ptrSrc = sourcePtr + (rindex * meshAttribute->getByteStride());
             void *ptrDst = destinationPtr + (i * targetAttribute->getByteStride());
-            memcpy(ptrDst, ptrSrc , meshAttribute->getVertexAttributeByteLength());
+            memcpy(ptrDst, ptrSrc , meshAttribute->elementByteLength());
         }
         
         shared_ptr<GLTFBufferView> targetView = createBufferViewWithAllocatedBuffer(destinationPtr, 0, bufferSize, true);
@@ -1861,12 +1855,12 @@ namespace GLTF
             size_t vertexCount = mesh->getMeshAttributesForSemantic(GLTF::POSITION)[0]->getCount();
             //Now we remap the bone indices and weight attribute in respect of deindexing we have
             
-            shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions);
+            shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions, this->_asset.profile);
             GLTF::IndexSetToMeshAttributeHashmap& weightsAttributes = mesh->getMeshAttributesForSemantic(GLTF::WEIGHT);
             weightsAttributes[0] = weightsAttribute;
             mesh->setMeshAttributesForSemantic(GLTF::WEIGHT, weightsAttributes);
             
-            shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions);
+            shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions, this->_asset.profile);
             GLTF::IndexSetToMeshAttributeHashmap& jointsAttributes = mesh->getMeshAttributesForSemantic(GLTF::JOINT);
             jointsAttributes[0] = jointsAttribute;
             mesh->setMeshAttributesForSemantic(GLTF::JOINT, jointsAttributes);

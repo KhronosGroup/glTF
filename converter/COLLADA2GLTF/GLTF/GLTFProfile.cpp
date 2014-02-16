@@ -34,5 +34,34 @@ namespace GLTF
     unsigned int GLTFProfile::getGLenumForString(const std::string& str) {
         return this->_glEnumForString[str];
     }
+    
+    size_t GLTFProfile::getComponentsCountForType(const std::string &type) {
+        
+        static std::map<std::string , unsigned int> componentsCountForType;
+        if (componentsCountForType.empty()) {
+            componentsCountForType["FLOAT"] = 1;
+            componentsCountForType["INT"] = 1;
+            componentsCountForType["BOOL"] = 1;
+            
+            componentsCountForType["FLOAT_VEC2"] = 2;
+            componentsCountForType["INT_VEC2"] = 2;
+            componentsCountForType["BOOL_VEC2"] = 2;
+
+            componentsCountForType["FLOAT_VEC3"] = 3;
+            componentsCountForType["INT_VEC3"] = 3;
+            componentsCountForType["BOOL_VEC3"] = 3;
+
+            componentsCountForType["FLOAT_VEC4"] = 4;
+            componentsCountForType["INT_VEC4"] = 4;
+            componentsCountForType["BOOL_VEC4"] = 4;
+            componentsCountForType["FLOAT_MAT2"] = 4;
+            
+            componentsCountForType["FLOAT_MAT3"] = 9;
+            
+            componentsCountForType["FLOAT_MAT4"] = 16;
+        }
+        
+        return componentsCountForType[type];
+    }
 
 }

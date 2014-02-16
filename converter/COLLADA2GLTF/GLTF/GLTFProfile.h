@@ -34,14 +34,15 @@ namespace GLTF
         virtual ~GLTFProfile();
         virtual unsigned int getGLTypeForComponentType(ComponentType componentType, size_t) = 0;
         virtual std::string getGLSLTypeForGLType(unsigned int glType) = 0;
-        virtual size_t getComponentsCountForType(unsigned int glType) = 0;
+        virtual size_t getComponentsCountForGLType(unsigned int glType) = 0;
         virtual std::string id() = 0;
-        
+        virtual size_t sizeOfGLType(unsigned int glType) = 0;
+        virtual ComponentType getComponentTypeForGLType(unsigned int glType) = 0;
+        static size_t getComponentsCountForType(const std::string &type);
     public:
-        void setGLenumForString(const std::string& , unsigned int);
         unsigned int getGLenumForString(const std::string&);
-        
-        
+    protected:
+        void setGLenumForString(const std::string& , unsigned int);
     private:
         GLEnumForString _glEnumForString;
     };

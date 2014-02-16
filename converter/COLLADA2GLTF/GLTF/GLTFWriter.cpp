@@ -144,22 +144,20 @@ namespace GLTF
         shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
         void** serializationContext = (void**)context;
 
-        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
-        
-        meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
-        meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
-        meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setUnsignedInt32("type", meshAttribute->getGLType(asset->profile));
+        meshAttributeObject->setUnsignedInt32(kByteStride, (unsigned int)meshAttribute->getByteStride());
+        meshAttributeObject->setUnsignedInt32(kByteOffset, (unsigned int)meshAttribute->getByteOffset());
+        meshAttributeObject->setUnsignedInt32(kCount, (unsigned int)meshAttribute->getCount());
+        meshAttributeObject->setUnsignedInt32(kType, meshAttribute->type());
         
         GLTFBufferView *bufferView = context ? (GLTFBufferView*)serializationContext[0] : meshAttribute->getBufferView().get();
 
-        meshAttributeObject->setString("bufferView", bufferView->getID());
+        meshAttributeObject->setString(kBufferView, bufferView->getID());
         
         const double* min = meshAttribute->getMin();
         if (min) {
             shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
             meshAttributeObject->setValue("min", minArray);
-            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
+            for (size_t i = 0 ; i < meshAttribute->componentsPerElement() ; i++) {
                 minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
             }
         }
@@ -168,7 +166,7 @@ namespace GLTF
         if (max) {
             shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
             meshAttributeObject->setValue("max", maxArray);
-            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
+            for (size_t i = 0 ; i < meshAttribute->componentsPerElement() ; i++) {
                 maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
             }
         }

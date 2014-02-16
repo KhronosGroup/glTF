@@ -194,7 +194,7 @@ namespace GLTF
             shared_ptr <GLTF::GLTFAccessor> remappedMeshAttribute = allRemappedMeshAttributes[indicesInRemapping[meshAttributeIndex]];
             shared_ptr <GLTF::GLTFAccessor> originalMeshAttribute = allOriginalMeshAttributes[indicesInRemapping[meshAttributeIndex]];
             
-            if (originalMeshAttribute->getVertexAttributeByteLength() != remappedMeshAttribute->getVertexAttributeByteLength()) {
+            if (originalMeshAttribute->elementByteLength() != remappedMeshAttribute->elementByteLength()) {
                 // FIXME : report error
                 free(allBufferInfos);
                 return 0;
@@ -205,7 +205,7 @@ namespace GLTF
             bufferInfos->originalBufferData = (unsigned char*)originalMeshAttribute->getBufferView()->getBufferDataByApplyingOffset();;
             bufferInfos->originalMeshAttributeByteStride = originalMeshAttribute->getByteStride();
             
-            bufferInfos->elementByteLength = remappedMeshAttribute->getVertexAttributeByteLength();
+            bufferInfos->elementByteLength = remappedMeshAttribute->elementByteLength();
         }
         
         return allBufferInfos;
@@ -266,12 +266,13 @@ namespace GLTF
     
     
     shared_ptr<GLTF::GLTFPrimitiveRemapInfos> __BuildPrimitiveUniqueIndexes(shared_ptr<GLTF::GLTFPrimitive> primitive,
-                                                                                  std::vector< shared_ptr<GLTF::GLTFAccessor> > allIndices,
-                                                                                  RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
-                                                                                  unsigned int* indicesInRemapping,
-                                                                                  size_t startIndex,
-                                                                                  unsigned int meshAttributesCount,
-                                                                                  size_t &endIndex)
+                                                                            std::vector< shared_ptr<GLTF::GLTFAccessor> > allIndices,
+                                                                            RemappedMeshIndexesHashmap& remappedMeshIndexesMap,
+                                                                            unsigned int* indicesInRemapping,
+                                                                            size_t startIndex,
+                                                                            unsigned int meshAttributesCount,
+                                                                            size_t &endIndex,
+                                                                            shared_ptr<GLTFProfile> profile)
     {
         unsigned int generatedIndicesCount = 0;
 
@@ -317,12 +318,10 @@ namespace GLTF
         shared_ptr <GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos(new GLTF::GLTFPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
         shared_ptr <GLTF::GLTFBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexIndicesCount * sizeof(unsigned int), true);
         
-        shared_ptr <GLTF::GLTFAccessor> indices = shared_ptr <GLTF::GLTFAccessor> (new GLTF::GLTFAccessor());
+        shared_ptr <GLTF::GLTFAccessor> indices = shared_ptr <GLTF::GLTFAccessor> (new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
         
         indices->setBufferView(indicesBufferView);
         indices->setCount(vertexIndicesCount);
-        indices->setComponentsPerAttribute(1);
-        indices->setComponentType(UNSIGNED_SHORT);
         
         primitive->setIndices(indices);
         
@@ -333,7 +332,9 @@ namespace GLTF
 
 #define DUMP_UNIFIED_INDEXES_INFO 0
     
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector)
+    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh( GLTFMesh *sourceMesh,
+                                                            std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector,
+                                                            shared_ptr<GLTFProfile> profile)
     {
         MeshAttributeVector originalMeshAttributes;
         MeshAttributeVector remappedMeshAttributes;
@@ -400,7 +401,7 @@ namespace GLTF
                 indicesInRemapping[k] = idx;
             }
             
-            shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitives[i], *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex);
+            shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitives[i], *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex, profile);
             
             free(indicesInRemapping);
             
@@ -432,7 +433,7 @@ namespace GLTF
                 //(*it).second;            // the mapped value (of type T)
                 shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
                 
-                size_t sourceSize = vertexCount * selectedMeshAttribute->getVertexAttributeByteLength();
+                size_t sourceSize = vertexCount * selectedMeshAttribute->elementByteLength();
                 void* sourceData = malloc(sourceSize);
                 
                 shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
@@ -529,7 +530,7 @@ namespace GLTF
     
     static void __RemapMeshAttribute(void *value,
                           GLTF::ComponentType type,
-                          size_t componentsPerAttribute,
+                          size_t componentsPerElement,
                           size_t index,
                           size_t vertexAttributeByteSize,
                           void *context) {
@@ -566,7 +567,7 @@ namespace GLTF
                 unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
                 
                 //FIXME: this won't work with interleaved
-                unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedMeshAttribute->getVertexAttributeByteLength() * vertexAttributeCount);
+                unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedMeshAttribute->elementByteLength() * vertexAttributeCount);
                 
                 void *context[2];
                 context[0] = targetBufferPtr;
@@ -574,7 +575,7 @@ namespace GLTF
                 selectedMeshAttribute->apply(__RemapMeshAttribute, (void*)context);
                                         
                 shared_ptr <GLTFBufferView> remappedBufferView =
-                createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedMeshAttribute->getVertexAttributeByteLength() * vertexAttributeCount, true);
+                createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedMeshAttribute->elementByteLength() * vertexAttributeCount, true);
                 
                 shared_ptr <GLTFAccessor> remappedMeshAttribute(new GLTF::GLTFAccessor(selectedMeshAttribute.get()));
                 remappedMeshAttribute->setBufferView(remappedBufferView);
@@ -585,7 +586,7 @@ namespace GLTF
         }
     }
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes)
+    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes, shared_ptr<GLTFProfile> profile)
     {
         bool splitNeeded = false;
         
@@ -703,12 +704,10 @@ namespace GLTF
                 
                 shared_ptr <GLTFBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
                 
-                shared_ptr <GLTFAccessor> indices(new GLTFAccessor());
+                shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
 
                 indices->setBufferView(targetBufferView);
                 indices->setCount(targetIndicesCount);
-                indices->setComponentsPerAttribute(1);
-                indices->setComponentType(UNSIGNED_SHORT);
                 
                 targetPrimitive->setIndices(indices);
                 
@@ -738,7 +737,7 @@ namespace GLTF
         return true;
     }
 
-    bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes) {
+    bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes, shared_ptr<GLTFProfile> profile) {
         if (sourceMesh->getPrimitives().size() == 1) {
             return false;
         }
@@ -770,12 +769,10 @@ namespace GLTF
             
             shared_ptr <GLTFBufferView> targetIndicesView = createBufferViewWithAllocatedBuffer(targetIndices, 0,indicesCount * sizeof(unsigned int), true);
             
-            shared_ptr <GLTFAccessor> indices(new GLTFAccessor());
+            shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
             
             indices->setBufferView(targetIndicesView);
             indices->setCount(indicesCount);
-            indices->setComponentsPerAttribute(1);
-            indices->setComponentType(UNSIGNED_SHORT);
             
             targetPrimitive->setIndices(indices);
 
@@ -792,13 +789,13 @@ namespace GLTF
                 unsigned char *sourcePtr = (unsigned char *)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
                 
                 shared_ptr<GLTFAccessor> targetAttribute = shared_ptr<GLTFAccessor> (new GLTFAccessor(meshAttribute.get()));
-                size_t targetAttributeSize = targetVertexCount * meshAttribute->getVertexAttributeByteLength();
+                size_t targetAttributeSize = targetVertexCount * meshAttribute->elementByteLength();
                 unsigned char *targetAttributePtr = (unsigned char*)malloc(targetAttributeSize);
                 shared_ptr <GLTFBufferView> targetAttributeBufferView = createBufferViewWithAllocatedBuffer(targetAttributePtr, 0, targetAttributeSize, true);
                 targetAttribute->setCount(targetVertexCount);
                 targetAttribute->setBufferView(targetAttributeBufferView);
 
-                size_t vertexAttributeByteSize = meshAttribute->getVertexAttributeByteLength();
+                size_t vertexAttributeByteSize = meshAttribute->elementByteLength();
 
                 IndicesMap::const_iterator indicesIterator;                
                 for (indicesIterator = remappedIndices.begin() ; indicesIterator != remappedIndices.end() ; indicesIterator++) {

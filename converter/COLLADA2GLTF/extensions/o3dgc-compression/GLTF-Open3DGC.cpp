@@ -323,7 +323,7 @@ namespace GLTF
             for (size_t j = 0 ; j < attributesCount ; j++) {
                 shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
                 vertexCount = meshAttribute->getCount();
-                size_t componentsPerAttribute = meshAttribute->getComponentsPerAttribute();
+                size_t componentsPerElement = meshAttribute->componentsPerElement();
                 char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
                 switch (semantic) {
                     case POSITION:
@@ -343,7 +343,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
                         params.SetFloatAttributePredMode(nFloatAttributes, texcoordPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -353,7 +353,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
                         params.SetFloatAttributePredMode(nFloatAttributes, colorPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -363,7 +363,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
                         params.SetFloatAttributePredMode(nFloatAttributes, weightPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -381,7 +381,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
                         params.SetFloatAttributePredMode(nFloatAttributes, jointPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -550,7 +550,7 @@ namespace GLTF
         
         if (shouldEncodeOpen3DGC) {
             unsigned int glType = parameter->getUnsignedInt32("type");
-            size_t componentsCount = profile->getComponentsCountForType(glType);
+            size_t componentsCount = profile->getComponentsCountForGLType(glType);
             if (componentsCount) {
                 encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), asset);
                 
@@ -596,12 +596,12 @@ namespace GLTF
                 parameter = accessors->getObject(it->second);
             } else {
                 //build an id based on number of accessors
-                std::string accessorUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
+                std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
                 parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
                 asset._uniqueIDToAccessorObject.insert(std::make_pair(accessorCache, accessorUID));
             }
         } else {
-            std::string accessorUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
+            std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
             parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
         }        
         if (!isInputParameter)
