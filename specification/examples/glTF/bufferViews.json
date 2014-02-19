@@ -11,7 +11,5 @@
             "byteOffset": 76768,
 		    "target": "ELEMENT_ARRAY_BUFFER"
         }        
-    },
-    "version" : "0.1",
-    "profile" : "WebGL 1.0"
+    }
 }

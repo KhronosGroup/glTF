@@ -1,0 +1,57 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "buffer",
+    "type" : "object",
+    "description" : "A typed accessor into a buffer view.  Used to call vertexAttribPointer() in WebGL.",
+    "properties" : {
+        "bufferView" : {
+            "type" : "string",
+            "description" : "The id (JSON property name) of the buffer view referenced by this accessor.",
+            "required" : true
+        },
+        "byteOffset" : {
+            "type" : "number",
+            "description" : "The offset relative to the buffer view in bytes.  Similar to vertexAttribPointer() pointer (ES) / offset (WebGL) parameter.",
+            "minimum" : 0,
+            "required" : true
+        },
+        "byteStride" : {
+            "type" : "number",
+            "description" : "The stride, in bytes, between attributes referenced by this accessor.  vertexAttribPointer() stride parameter.",
+            "minimum" : 0,
+            "maximum" : 255,
+            "required" : true
+        },
+        "count" : {
+            "type" : "number",
+            "description" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.",
+            "minimum" : 0,
+            "required" : true
+        },
+        "type" : {
+            "type" : "number",
+            "description" : "vertexAttribPointer() type and size parameters.  Valid values are BYTE (5120), BYTE_VEC2, BYTE_VEC3, BYTE_VEC4, UNSIGNED_BYTE (5121) UNSIGNED_BYTE_VEC2, UNSIGNED_BYTE_VEC3, UNSIGNED_BYTE_VEC4, SHORT (5122), SHORT_VEC2, SHORT_VEC3, SHORT_VEC4, UNSIGNED_SHORT (5123), UNSIGNED_SHORT_VEC2, UNSIGNED_SHORT_VEC3, UNSIGNED_SHORT_VEC4, FLOAT (5126), FLOAT_VEC2 (35664), FLOAT_VEC3 (35665), FLOAT_VEC4 (35666).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array.",
+            "enum" : [5120, 5121, 5122, 5123, 5126, 35664, 35665, 35666],
+            "required" : true
+        },
+        "max" : {
+            "type" : "array",
+            "description" : "Maximum value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            }
+        },
+        "min" : {
+            "type" : "array",
+            "description" : "Minimum value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            }
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

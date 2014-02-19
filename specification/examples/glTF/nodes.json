@@ -9,7 +9,5 @@
             "matrix" : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
             "meshes" : ["anotherMesh_id"]
         }
-    },
-    "version" : "0.1",
-    "profile" : "WebGL 1.0"
+    }
 }
