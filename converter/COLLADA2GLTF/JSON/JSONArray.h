@@ -42,11 +42,12 @@ namespace GLTF
 
         virtual void appendValue(shared_ptr <JSONValue>);
         
-        std::vector <shared_ptr <JSONValue> > values();
+        JSONValueVectorRef values();
     protected:
         void _parseRapidJSONArray(void *value);
     private:
-        std::vector <shared_ptr <JSONValue> > _values;
+        JSONValueVectorRef _values;
+        JSONValueVector _allvalues;
     };
 
 }

@@ -34,10 +34,6 @@ namespace GLTF
     shared_ptr <JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context);
     shared_ptr <JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
     shared_ptr <JSONObject> serializeEffect(GLTFEffect* effect, void *context);
-    shared_ptr <JSONObject> serializeMesh(GLTFMesh* mesh, void *context);
-    shared_ptr <JSONObject> serializeMeshAttribute(GLTFAccessor* meshAttribute, void *context);
-    shared_ptr <JSONObject> serializeIndices(GLTFAccessor* indices, void *context);
-    shared_ptr <JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context);
     shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation, void *context);
     shared_ptr<JSONObject> serializeSkin(GLTFSkin* skin);
 

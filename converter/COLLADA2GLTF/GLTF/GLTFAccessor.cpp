@@ -37,9 +37,8 @@ namespace GLTF
     }
     
     GLTFAccessor::GLTFAccessor(shared_ptr<GLTFProfile> profile, unsigned int glType):
-    JSONObject(),
-    _min(0),
-    _max(0) {
+    JSONObject() {
+        this->_minMaxDirty = true;
         this->setUnsignedInt32(kType, glType);
         this->_componentsPerElement = profile->getComponentsCountForGLType(glType);
         this->_elementByteLength = profile->sizeOfGLType(glType);
@@ -53,10 +52,10 @@ namespace GLTF
         
     GLTFAccessor::GLTFAccessor(GLTFAccessor* accessor):
     JSONObject(),
-    _bufferView(accessor->getBufferView()),
-    _min(0),
-    _max(0) {
+    _bufferView(accessor->getBufferView())
+   {
         assert(accessor);
+        this->_minMaxDirty = true;
         this->setUnsignedInt32(kType, accessor->type());
         this->_componentsPerElement = accessor->componentsPerElement();
         this->_elementByteLength = accessor->elementByteLength();
@@ -68,16 +67,12 @@ namespace GLTF
     }
         
     GLTFAccessor::~GLTFAccessor() {
-        if (this->_min) {
-            delete [] this->_min;
-        }
-        if (this->_max) {
-            delete [] this->_max;
-        }
     }
         
     void GLTFAccessor::setBufferView(shared_ptr <GLTFBufferView> bufferView) {
         this->_bufferView = bufferView;
+        this->_minMaxDirty = true;
+        this->setString(kBufferView, bufferView->getID());
     }
         
     shared_ptr <GLTFBufferView> GLTFAccessor::getBufferView() {
@@ -124,11 +119,13 @@ namespace GLTF
         return this->_elementByteLength;
     }
     
-    const double* GLTFAccessor::getMin() {
+    shared_ptr<JSONArray> GLTFAccessor::min() {
+        this->_computeMinMaxIfNeeded();        
         return this->_min;
     }
 
-    const double* GLTFAccessor::getMax() {
+    shared_ptr<JSONArray> GLTFAccessor::max() {
+        this->_computeMinMaxIfNeeded();
         return this->_max;
     }
     
@@ -164,31 +161,37 @@ namespace GLTF
         }
     }
     
-    void GLTFAccessor::computeMinMax()  {
-        size_t componentsPerElement = this->_componentsPerElement;
+    void GLTFAccessor::_computeMinMaxIfNeeded()  {
+        if (this->_minMaxDirty == true) {
+            double min[32];
+            double max[32];
 
-        //realloc
-        if (this->_min) {
-            delete [] this->_min;
+            size_t componentsPerElement = this->_componentsPerElement;
+            shared_ptr<JSONArray> minObject = this->createArrayIfNeeded("min");
+            shared_ptr<JSONArray> maxObject = this->createArrayIfNeeded("max");
+            
+            __MinMaxApplierInfo minMaxApplierInfo;
+            minMaxApplierInfo.min = min;
+            minMaxApplierInfo.max = max;
+            for (size_t i = 0 ; i < componentsPerElement ; i++) {
+                min[i] = DBL_MAX;
+                max[i] = -DBL_MAX;
+            }
+            
+            apply(__ComputeMinMax, &minMaxApplierInfo);
+            
+            for (size_t i = 0 ; i < this->_componentsPerElement ; i++) {
+                minObject->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
+                maxObject->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
+            }
+            this->_minMaxDirty = false;
         }
-        if (this->_max) {
-            delete [] this->_max;
-        }
-        this->_min = new double[componentsPerElement];
-        this->_max = new double[componentsPerElement];
-
-        __MinMaxApplierInfo minMaxApplierInfo;
-        minMaxApplierInfo.min = this->_min;
-        minMaxApplierInfo.max = this->_max;
-        
-        for (size_t i = 0 ; i < componentsPerElement ; i++) {
-            this->_min[i] = DBL_MAX;
-            this->_max[i] = -DBL_MAX;
-        }
-        
-        apply(__ComputeMinMax, &minMaxApplierInfo);
     }
     
+    void GLTFAccessor::exposeMinMax() {
+        this->_computeMinMaxIfNeeded();
+    }
+
     void GLTFAccessor::apply(GLTFAccessorApplierFunc applierFunc, void* context) {
         size_t byteStride = this->getByteStride();
         size_t componentsPerElement = this->_componentsPerElement;

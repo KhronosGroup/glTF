@@ -79,7 +79,7 @@ namespace GLTF
     }
 
     JSONArray::JSONArray():
-    JSONValue(GLTF::ARRAY)
+    JSONValue(GLTF::ARRAY),  _values(_allvalues)
     {
     }
         
@@ -92,7 +92,7 @@ namespace GLTF
         writer->writeArray(this, context);
     }
     
-    vector <shared_ptr <JSONValue> > JSONArray::values()
+    JSONValueVectorRef JSONArray::values()
     {
         return this->_values;
     }

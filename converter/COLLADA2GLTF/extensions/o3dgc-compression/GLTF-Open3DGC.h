@@ -26,7 +26,7 @@
 
 namespace GLTF
 {
-    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh);
+    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh, shared_ptr <GLTFProfile> profile);
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,

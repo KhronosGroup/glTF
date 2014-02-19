@@ -169,10 +169,16 @@ namespace GLTF
         return this->_keyToJSONValue[key];
     }
     
-    shared_ptr <JSONObject> JSONObject::getObject(std::string key)
+    shared_ptr <JSONObject> JSONObject::getObject(const std::string &key)
     {
         shared_ptr <JSONValue> value = this->_keyToJSONValue[key];
         return static_pointer_cast <JSONObject> (value);
+    }
+
+    shared_ptr <JSONArray> JSONObject::getArray(const std::string &key)
+    {
+        shared_ptr <JSONValue> value = this->_keyToJSONValue[key];
+        return static_pointer_cast <JSONArray> (value);
     }
 
     void JSONObject::setUnsignedInt32(const std::string &key, unsigned int value)

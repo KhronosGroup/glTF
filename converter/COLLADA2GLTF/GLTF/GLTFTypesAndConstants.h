@@ -44,6 +44,13 @@ const std::string kType = "type";
 const std::string kBufferView = "bufferView";
 const std::string kMin = "min";
 const std::string kMax = "max";
+const std::string kIndices = "indices";
+const std::string kMaterial = "material";
+const std::string kPrimitive = "primitive";
+const std::string kName = "name";
+const std::string kExtensions = "extensions";
+const std::string kPrimitives = "primitives";
+const std::string kAttributes = "attributes";
 
 namespace GLTF
 {
@@ -51,13 +58,16 @@ namespace GLTF
     class GLTFAccessor;
     class GLTFPrimitive;
     class GLTFAccessor;
+    class JSONValue;
     class GLTFMesh;
     class GLTFEffect;
     class JSONVertexAttribute;
     class GLTFAnimationFlattener;
     //-- Args & Options
+    typedef std::vector <shared_ptr <GLTF::JSONValue> > JSONValueVector;
+    typedef JSONValueVector& JSONValueVectorRef;
+    typedef std::vector <shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
     typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
     typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
     typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     

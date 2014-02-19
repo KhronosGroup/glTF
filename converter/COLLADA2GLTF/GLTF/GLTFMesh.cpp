@@ -34,7 +34,7 @@ using namespace std;
 
 namespace GLTF
 {
-    GLTFMesh::GLTFMesh() {
+    GLTFMesh::GLTFMesh() : JSONObject() {
         this->_remapTableForPositions = 0;
         this->_extensions = shared_ptr<JSONObject>(new JSONObject());
         this->_ID = GLTFUtils::generateIDForType("mesh");
@@ -45,12 +45,14 @@ namespace GLTF
             free(this->_remapTableForPositions);
     }
 
-    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) {
+    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) : JSONObject() {
         this->_remapTableForPositions = 0;
-        this->_primitives = mesh._primitives;
+        //FIXME: ... didn't feel like propageted const everywhere yet
+        GLTFMesh *meshPtr = (GLTFMesh*)&mesh;
+        this->setPrimitives(meshPtr->getPrimitives());  //Is a single assignment here ok ? Need to check if a deep copy would be needed
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
-        this->_name = mesh._name;
+        this->setName(meshPtr->getName());
         this->_extensions = shared_ptr<JSONObject>(new JSONObject());
     }
     
@@ -79,7 +81,8 @@ namespace GLTF
     }
     
     bool GLTFMesh::appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive) {
-        this->_primitives.push_back(primitive);
+        shared_ptr<JSONArray> primitives = this->createArrayIfNeeded(kPrimitives);
+        primitives->appendValue(primitive);
         return true;
     }
     
@@ -133,17 +136,21 @@ namespace GLTF
     }
     
     std::string GLTFMesh::getName() {
-        return _name;
+        return this->getString(kName);
     }
 
     void GLTFMesh::setName(std::string name) {
-        this->_name = name;
+        this->setString(kName, name);
     }
     
-    PrimitiveVector const GLTFMesh::getPrimitives() {
-        return this->_primitives;
+    shared_ptr<JSONArray> GLTFMesh::getPrimitives() {
+        return this->getArray(kPrimitives);
     }
-    
+
+    void GLTFMesh::setPrimitives(shared_ptr<JSONArray> primitives) {
+        this->setValue(kPrimitives, primitives);
+    }
+
     //TODO: allocate extras lazily
     shared_ptr<JSONObject> GLTFMesh::getExtensions() {
         return _extensions;
@@ -155,6 +162,32 @@ namespace GLTF
     
     unsigned int* GLTFMesh::getRemapTableForPositions() {
         return this->_remapTableForPositions;
+    }
+    
+    void GLTFMesh::resolveAttributes() {
+        shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
+        JSONValueVector primitives = this->getPrimitives()->values();
+        unsigned int primitivesCount =  (unsigned int)primitives.size();
+        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+                        
+            shared_ptr <GLTF::JSONObject> attributes(new GLTF::JSONObject());
+            primitive->setValue(kAttributes, attributes);
+            
+            size_t count = primitive->getVertexAttributesCount();
+            for (size_t j = 0 ; j < count ; j++) {
+                GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
+                std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
+                unsigned int indexOfSet = 0;
+                if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL)) {
+                    indexOfSet = primitive->getIndexOfSetAtIndex(j);
+                    semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
+                }
+                attributes->setString(semanticAndSet, this->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
+            }
+            
+            primitivesArray->appendValue(primitive);
+        }
     }
     
 #ifdef USE_WEBGLLOADER

@@ -340,8 +340,8 @@ namespace GLTF
         MeshAttributeVector remappedMeshAttributes;
         shared_ptr <GLTFMesh> targetMesh(new GLTFMesh(*sourceMesh));
         
-        PrimitiveVector sourcePrimitives = sourceMesh->getPrimitives();
-        PrimitiveVector targetPrimitives = targetMesh->getPrimitives();
+        GLTF::JSONValueVector sourcePrimitives = sourceMesh->getPrimitives()->values();
+        GLTF::JSONValueVector targetPrimitives = targetMesh->getPrimitives()->values();
         
 #if DUMP_UNIFIED_INDEXES_INFO
         {
@@ -392,7 +392,8 @@ namespace GLTF
             IndicesVector *allIndices = allIndicesSharedPtr.get();
             unsigned int* indicesInRemapping = (unsigned int*)malloc(sizeof(unsigned int) * allIndices->size());
             
-            VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
+            shared_ptr<GLTFPrimitive> sourcePrimitive = static_pointer_cast<GLTFPrimitive>(sourcePrimitives[i]);
+            VertexAttributeVector vertexAttributes = sourcePrimitive->getVertexAttributes();
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
@@ -401,7 +402,9 @@ namespace GLTF
                 indicesInRemapping[k] = idx;
             }
             
-            shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitives[i], *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex, profile);
+            shared_ptr<GLTFPrimitive> targetPrimitive = static_pointer_cast<GLTFPrimitive>(targetPrimitives[i]);
+            
+            shared_ptr<GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos = __BuildPrimitiveUniqueIndexes(targetPrimitive, *allIndices, remappedMeshIndexesMap, indicesInRemapping, startIndex, maxVertexAttributes, endIndex, profile);
             
             free(indicesInRemapping);
             
@@ -460,7 +463,8 @@ namespace GLTF
             shared_ptr<IndicesVector>  allIndicesSharedPtr = vectorOfIndicesVector[i];
             IndicesVector *allIndices = allIndicesSharedPtr.get();
             unsigned int* indicesInRemapping = (unsigned int*)calloc(sizeof(unsigned int) * (*allIndices).size(), 1);
-            VertexAttributeVector vertexAttributes = sourcePrimitives[i]->getVertexAttributes();
+            shared_ptr<GLTFPrimitive> sourcePrimitive = static_pointer_cast<GLTFPrimitive>(sourcePrimitives[i]);
+            VertexAttributeVector vertexAttributes = sourcePrimitive->getVertexAttributes();
             
             for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
@@ -470,7 +474,8 @@ namespace GLTF
                 indicesInRemapping[k] = idx;
             }
             
-            bool status = __RemapPrimitiveVertices(targetPrimitives[i],
+            shared_ptr<GLTFPrimitive> targetPrimitive = static_pointer_cast<GLTFPrimitive>(targetPrimitives[i]);
+            bool status = __RemapPrimitiveVertices(targetPrimitive,
                                                    (*allIndices),
                                                    originalMeshAttributes ,
                                                    remappedMeshAttributes,
@@ -592,10 +597,11 @@ namespace GLTF
         
         //First, check every primitive indices count to figure out if we really need to split anything at all.
         //TODO: what about making a sanity check, to ensure we don't have points not referenced by any primitive. (I wonder if that's would be considered compliant with the SPEC. need to check.
-        PrimitiveVector primitives = sourceMesh->getPrimitives();
+        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
         
         for (size_t i = 0 ; i < primitives.size() ; i++) {
-            if (primitives[i]->getIndices()->getCount() >= maxiumIndicesCount) {
+            shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            if (primitive->getIndices()->getCount() >= maxiumIndicesCount) {
                 splitNeeded = true;
                 break;
             }
@@ -636,12 +642,12 @@ namespace GLTF
             
             shared_ptr <GLTFPrimitive> targetPrimitive;
             //when we are done with a primitive we mark its nextIndice with a -1
+            shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive> (primitives[i]);
 
-            targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*primitives[i])));
+            targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*primitive)));
             
             unsigned int nextPrimitiveIndex = (unsigned int)allNextPrimitiveIndices[i];
             
-            shared_ptr<GLTFPrimitive> &primitive = primitives[i];
             shared_ptr<GLTFAccessor> indices = primitive->getIndices();
             
             unsigned int* indicesPtr = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
@@ -668,7 +674,7 @@ namespace GLTF
             size_t j = 0;
             unsigned int primitiveCount = 0;
             unsigned int targetIndicesCount = 0;
-            if (primitive->getType() == "TRIANGLES") {
+            if (primitive->getPrimitive() == profile->getGLenumForString("TRIANGLES")) {
                 unsigned int indicesPerElementCount = 3;
                 primitiveCount = indices->getCount() / indicesPerElementCount;
                 for (j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
@@ -738,22 +744,23 @@ namespace GLTF
     }
 
     bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes, shared_ptr<GLTFProfile> profile) {
-        if (sourceMesh->getPrimitives().size() == 1) {
+        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
+        if (primitives.size() == 1) {
             return false;
         }
         
-        PrimitiveVector primitives = sourceMesh->getPrimitives();
         size_t primitiveCount = primitives.size();
         
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             IndicesMap remappedIndices;
             shared_ptr <GLTFMesh> targetMesh = shared_ptr <GLTFMesh> (new GLTFMesh());
-            shared_ptr <GLTFPrimitive> targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*primitives[i])));
+            shared_ptr <GLTFPrimitive> refPrimitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr <GLTFPrimitive> targetPrimitive = shared_ptr <GLTFPrimitive> (new GLTFPrimitive((*refPrimitive)));
 
             targetMesh->appendPrimitive(targetPrimitive);
             
-            unsigned int* originalIndices = (unsigned int*)primitives[i]->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
-            size_t indicesCount = primitives[i]->getIndices()->getCount();
+            unsigned int* originalIndices = (unsigned int*)refPrimitive->getIndices()->getBufferView()->getBufferDataByApplyingOffset();
+            size_t indicesCount = refPrimitive->getIndices()->getCount();
             unsigned int* targetIndices = (unsigned int*)malloc(indicesCount * sizeof(unsigned int));
             
             //perform remapping of indices
@@ -778,7 +785,8 @@ namespace GLTF
 
             
             // Now for each mesh attribute in the mesh, create another one just for the primitive
-            VertexAttributeVector vertexAttributes = primitives[i]->getVertexAttributes();
+            shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
             for (size_t j = 0 ; j < vertexAttributes.size() ; j++) {
                 Semantic semantic = vertexAttributes[j]->getSemantic();
                 size_t indexOfSet = vertexAttributes[j]->getIndexOfSet();

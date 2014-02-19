@@ -88,41 +88,26 @@ namespace GLTF
         return effectObject;
     }
     
+    /*
     shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
     {
         shared_ptr <GLTF::JSONObject> meshObject(new GLTF::JSONObject());
-        
-        meshObject->setString("name", mesh->getName());
-        
+        meshObject->setString(kName, mesh->getName());
+
+        mesh->resolveAttributes();
+                
         //primitives
-        shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
-        meshObject->setValue("primitives", primitivesArray);
-        
-        PrimitiveVector primitives = mesh->getPrimitives();
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            
-            void *primitiveContext[2];
-            
-            primitiveContext[0] = mesh;
-            primitiveContext[1] = context;
-            
-            shared_ptr <GLTF::JSONObject> primitiveObject = serializePrimitive(primitive.get(), primitiveContext);
-            
-            primitivesArray->appendValue(primitiveObject);
-        }
-        
+        meshObject->setValue(kPrimitives, mesh->getPrimitives());
+
         if (mesh->getExtensions()->getKeysCount() > 0) {
-            meshObject->setValue("extensions", mesh->getExtensions());
+            meshObject->setValue(kExtensions, mesh->getExtensions());
             if (mesh->getExtensions()->contains("won-compression")) {
                 shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("won-compression"));
                 if (compressionObject->contains("compressedData")) {
                     shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
                     GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[0];
-                    compressionData->setString("bufferView", bufferView->getID());
+                    compressionData->setString(kBufferView, bufferView->getID());
                 }
-                
             }
             
             if (mesh->getExtensions()->contains("Open3DGC-compression")) {
@@ -130,103 +115,14 @@ namespace GLTF
                 if (compressionObject->contains("compressedData")) {
                     shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
                     GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[0];
-                    compressionData->setString("bufferView", bufferView->getID());
+                    compressionData->setString(kBufferView, bufferView->getID());
                 }
-                
             }
         }
         
         return meshObject;
     }
-    
-    shared_ptr <JSONObject> serializeMeshAttribute(GLTFAccessor* meshAttribute, void *context)
-    {
-        shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
-        void** serializationContext = (void**)context;
-
-        meshAttributeObject->setUnsignedInt32(kByteStride, (unsigned int)meshAttribute->getByteStride());
-        meshAttributeObject->setUnsignedInt32(kByteOffset, (unsigned int)meshAttribute->getByteOffset());
-        meshAttributeObject->setUnsignedInt32(kCount, (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setUnsignedInt32(kType, meshAttribute->type());
-        
-        GLTFBufferView *bufferView = context ? (GLTFBufferView*)serializationContext[0] : meshAttribute->getBufferView().get();
-
-        meshAttributeObject->setString(kBufferView, bufferView->getID());
-        
-        const double* min = meshAttribute->getMin();
-        if (min) {
-            shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
-            meshAttributeObject->setValue("min", minArray);
-            for (size_t i = 0 ; i < meshAttribute->componentsPerElement() ; i++) {
-                minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
-            }
-        }
-        
-        const double* max = meshAttribute->getMax();
-        if (max) {
-            shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
-            meshAttributeObject->setValue("max", maxArray);
-            for (size_t i = 0 ; i < meshAttribute->componentsPerElement() ; i++) {
-                maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
-            }
-        }
-        
-        return meshAttributeObject;
-    }
-    
-    
-    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFAccessor* indices, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> indicesObject(new GLTF::JSONObject());
-        void** serializationContext = (void**)context;
-        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
-
-        GLTFBufferView *bufferView = (GLTFBufferView*)serializationContext[1];
-        
-        indicesObject->setUnsignedInt32("type", asset->profile->getGLenumForString("UNSIGNED_SHORT"));
-        indicesObject->setString("bufferView", bufferView->getID());
-        indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
-        indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
-        
-        return indicesObject;
-    }
-    
-    shared_ptr <GLTF::JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context)
-    {
-        void** primitiveContext = (void**)context;
-        shared_ptr <GLTF::JSONObject> primitiveObject(new GLTF::JSONObject());
-        
-        GLTFMesh* mesh = (GLTFMesh*)primitiveContext[0];
-        
-        void** serializationContext = (void**)primitiveContext[1];
-        
-        GLTFAsset *asset = (GLTFAsset*)serializationContext[3];
-
-        primitiveObject->setUnsignedInt32("primitive", asset->profile->getGLenumForString(primitive->getType()));
-        
-        primitiveObject->setString("material", primitive->getMaterialID());
-        
-        shared_ptr <GLTF::JSONObject> attributes(new GLTF::JSONObject());
-        primitiveObject->setValue("attributes", attributes);
-        
-        size_t count = primitive->getVertexAttributesCount();
-        for (size_t j = 0 ; j < count ; j++) {
-            GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
-            
-            std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
-            
-            unsigned int indexOfSet = 0;
-            if (semantic == GLTF::TEXCOORD) {
-                indexOfSet = primitive->getIndexOfSetAtIndex(j);
-                semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
-            }
-            attributes->setString(semanticAndSet, mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
-        }
-        shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getUniqueIndices();
-        primitiveObject->setString("indices", uniqueIndices->getID());
-
-        return primitiveObject;
-    }
+    */
     
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z) {
         shared_ptr <JSONArray> vec3(new GLTF::JSONArray());
@@ -249,25 +145,6 @@ namespace GLTF
 
         return vec4;
     }
-
-    /*
-    shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter, void *context) {
-        shared_ptr <JSONObject> animationParameterObject(new JSONObject());
-        GLTFAsset* asset = (GLTFAsset*)context;
-                
-        animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
-        animationParameterObject->setUnsignedInt32("type", asset->profile->getGLenumForString(animationParameter->getType()));
-        animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
-        animationParameterObject->setUnsignedInt32("count", animationParameter->getCount());
-    
-        shared_ptr <JSONObject> extensions = animationParameter->extensions();
-        if (extensions->getKeysCount() > 0) {
-            animationParameterObject->setValue("extensions", extensions);
-        }
-        
-        return animationParameterObject;
-    }
-     */
     
     shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation, void *context) {
         shared_ptr <JSONObject> animationObject(new JSONObject());

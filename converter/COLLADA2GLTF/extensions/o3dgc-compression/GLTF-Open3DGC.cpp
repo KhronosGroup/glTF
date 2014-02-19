@@ -131,7 +131,7 @@ namespace GLTF
         }
         return true;
     }
-    
+#if 0
     void testDecode(shared_ptr <GLTFMesh> mesh, BinaryStream &bstream)
     {
         SC3DMCDecoder <unsigned short> decoder;
@@ -167,7 +167,6 @@ namespace GLTF
         
         shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(POSITION, 0);
         
-        meshAttribute->computeMinMax();
         const double* min = meshAttribute->getMin();
         const double* max = meshAttribute->getMax();
         
@@ -198,18 +197,18 @@ namespace GLTF
         
         free(outputData);
     }
-    
+#endif 
     //All these limitations will be fixed in coming iterations:
     //Do we have only triangles, only one set of texcoord and no skinning ?
     //TODO:Also check that the same buffer is not shared by 2 different semantics or set
-    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh)
+    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh, shared_ptr<GLTFProfile> profile)
     {
-        PrimitiveVector primitives = mesh->getPrimitives();
+        JSONValueVector primitives = mesh->getPrimitives()->values();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            if (primitive->getType() != "TRIANGLES") {
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            if (primitive->getType() != profile->getGLenumForString("TRIANGLES")) {
                 return false;
             }
         }
@@ -267,7 +266,7 @@ namespace GLTF
         
         unsigned int nFloatAttributes = 0;
         
-        PrimitiveVector primitives = mesh->getPrimitives();
+        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         unsigned int allIndicesCount = 0;
         unsigned int allTrianglesCount = 0;
@@ -276,8 +275,8 @@ namespace GLTF
         
         //First run through primitives to gather the number of indices and infer the number of triangles.
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
             unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
             //FIXME: assumes triangles, but we are guarded from issues by canEncodeOpen3DGCMesh
             allIndicesCount += indicesCount;
@@ -297,8 +296,8 @@ namespace GLTF
             }
             primitiveIDsPtr += trianglesCount;
             allTrianglesCount += trianglesCount;
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
             unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
             unsigned int* indicesPtr = (unsigned int*)uniqueIndices->getBufferView()->getBufferDataByApplyingOffset();
             for (unsigned int j = 0 ; j < indicesCount ; j++) {

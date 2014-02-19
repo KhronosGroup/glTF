@@ -75,25 +75,26 @@ namespace GLTF
         
         const std::string& getID();
         
-        void computeMinMax();
-        
         size_t elementByteLength();
         
-        const double* getMin();
-        const double* getMax();
+        shared_ptr<JSONArray> min();
+        shared_ptr<JSONArray> max();
         
         bool matchesLayout(GLTFAccessor* meshAttribute);
-
+        void exposeMinMax();
+    private:
+        void _computeMinMaxIfNeeded();
+        
     private:
         shared_ptr <GLTFBufferView> _bufferView;
-        size_t              _componentsPerElement;
-        ComponentType       _componentType;
-        size_t              _elementByteLength;
-        std::string         _ID;
-        double              *_min;
-        double              *_max;
+        size_t                  _componentsPerElement;
+        ComponentType           _componentType;
+        size_t                  _elementByteLength;
+        std::string             _ID;
+        shared_ptr<JSONArray>   _min;
+        shared_ptr<JSONArray>   _max;
+        bool                    _minMaxDirty;
     };
-
 }
 
 #endif

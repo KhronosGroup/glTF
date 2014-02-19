@@ -36,7 +36,7 @@ namespace GLTF
     typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
     typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;
     
-    class GLTFMesh {
+    class GLTFMesh : public JSONObject {
     public:
         GLTFMesh();
         GLTFMesh(const GLTFMesh &mesh);
@@ -70,9 +70,12 @@ namespace GLTF
         void setRemapTableForPositions(unsigned int* remapTableForPositions);
         unsigned int* getRemapTableForPositions();
 
-        PrimitiveVector const getPrimitives();
+        shared_ptr<JSONArray> getPrimitives();
+        void setPrimitives(shared_ptr<JSONArray>);
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);
+        
+        void resolveAttributes();
         
 #ifdef USE_WEBGLLOADER
         void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
@@ -80,15 +83,14 @@ namespace GLTF
 #endif
         
     private:
-        PrimitiveVector _primitives;
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
-        std::string _ID, _name;
-
+        std::string _ID;
         shared_ptr<JSONObject> _extensions;
         
+#ifdef USE_WEBGLLOADER
         //WEBGLLOADER
         shared_ptr<GLTFBuffer> _compressedBuffer;
-        
+#endif
         //This is unfortunate that we need to keep this information,
         //but since we get skinning weights and bone indices after the mesh and the openCOLLADA mesh is not available anymore, we need to keep
         //the remap table to build the weights and bone indices as mesh attributes.

@@ -251,7 +251,7 @@ namespace GLTF
                 for (size_t j = 0 ; j < meshes->size() ; j++) {
                     shared_ptr<GLTFMesh> mesh = (*meshes)[j];
                     if (mesh) {
-                        PrimitiveVector primitives = mesh->getPrimitives();
+                        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
                         
                         bool isCompressed = false;
                         if (mesh->getExtensions()) {
@@ -264,7 +264,7 @@ namespace GLTF
                         serializationContext[2] = isCompressed ? (void*)compressionBufferView.get() : (void*)genericBufferView.get();
                         serializationContext[3] = (void*)&this->_asset;
 
-                        shared_ptr <GLTF::JSONObject> meshObject = serializeMesh(mesh.get(), (void*)serializationContext);
+                        mesh->resolveAttributes();
 
                         //serialize attributes
                         vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
@@ -278,23 +278,30 @@ namespace GLTF
                                 //(*it).first;             // the key value (of type Key)
                                 //(*it).second;            // the mapped value (of type T)
                                 shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
-                                shared_ptr <GLTF::JSONObject> meshAttributeObject = serializeMeshAttribute(meshAttribute.get(), (void*)serializationContext);
+                                shared_ptr <GLTF::JSONObject> meshAttributeObject = meshAttribute;
+                                
+                                meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
+                                
                                 accessors->setValue(meshAttribute->getID(), meshAttributeObject);
                             }
                         }
                         
                         //serialize indices
-                        primitives = mesh->getPrimitives();
+                        primitives = mesh->getPrimitives()->values();
                         unsigned int primitivesCount =  (unsigned int)primitives.size();
                         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-                            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-                            shared_ptr <GLTF::GLTFAccessor> uniqueIndices =  primitive->getUniqueIndices();
-                            shared_ptr <GLTF::JSONObject> serializedIndices = serializeIndices(uniqueIndices.get(), (void*)serializationContext);
+                            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+                            shared_ptr <GLTF::GLTFAccessor> uniqueIndices =  primitive->getIndices();
                             
-                            accessors->setValue(uniqueIndices->getID(), serializedIndices);
+                            GLTFBufferView *bufferView = (GLTFBufferView*)serializationContext[1];
+                            
+                            uniqueIndices->setString(kBufferView, bufferView->getID());
+                            uniqueIndices->setUnsignedInt32(kType, this->_asset.profile->getGLenumForString("UNSIGNED_SHORT"));
+                            
+                            accessors->setValue(uniqueIndices->getID(), uniqueIndices);
                         }
                         
-                        meshesObject->setValue(mesh->getID(), meshObject);
+                        meshesObject->setValue(mesh->getID(), static_pointer_cast<JSONValue>(mesh));
                     }
                 }
             }
@@ -407,7 +414,7 @@ namespace GLTF
         }
 
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
-        //Fabrice: Other pipeline tools should be built on top of the format manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
+        //Fabrice: Other pipeline tools should be built on top of the format & manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
         shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
         this->_asset.root->setValue("bufferViews", bufferViewsObject);
         
@@ -418,7 +425,7 @@ namespace GLTF
 
         bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
         bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
-        if (animationLength > 0) {
+        if ((animationLength > 0) || (compressionLength >0)) {
             bufferViewsObject->setValue(genericBufferView->getID(), bufferViewGenericObject);
         }
         if (compressionLength > 0) {
@@ -553,7 +560,7 @@ namespace GLTF
     
     shared_ptr <GLTF::JSONObject> serializeAttributeSemanticsForPrimitiveAtIndex(GLTFMesh* mesh, unsigned int idx)
     {
-        shared_ptr <GLTFPrimitive> primitive = mesh->getPrimitives()[idx];
+        shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(mesh->getPrimitives()->values()[idx]);
                                 
         shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
         shared_ptr<JSONArray> sets(new JSONArray());
@@ -626,7 +633,7 @@ namespace GLTF
                 meshesCount = meshes2->size();
                 if (meshesCount) {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
-                        if ((*meshes2)[i]->getPrimitives().size() > 0) {
+                        if ((*meshes2)[i]->getPrimitives()->values().size() > 0) {
                             writeAllMeshBuffers((*meshes2)[i], this->_asset);
                         }
                     }
@@ -661,9 +668,9 @@ namespace GLTF
                     sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
                 }
                 */
-                PrimitiveVector primitives = mesh->getPrimitives();
+                GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
                 for (size_t j = 0 ; j < primitives.size() ; j++) {
-                    shared_ptr <GLTF::GLTFPrimitive> primitive = primitives[j];
+                    shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
                     
                     //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
                     int materialBindingIndex = -1;
@@ -1865,10 +1872,9 @@ namespace GLTF
             jointsAttributes[0] = jointsAttribute;
             mesh->setMeshAttributesForSemantic(GLTF::JOINT, jointsAttributes);
             
-            //FIXME: find a way around this... the JSONVertexAttribute qualifies the semantic and set for Mesh Attribute but this could use renaming cleanup... since it is exported as "semantics", GLTFSemantic would probably be a better choice.
-            GLTF::PrimitiveVector primitives = mesh->getPrimitives();
+            GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             for (size_t i = 0 ; i < primitives.size() ; i++) {
-                shared_ptr<GLTFPrimitive> primitive = primitives[i];
+                shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
                 primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::JOINT,0)));
                 primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::WEIGHT,0)));
             }

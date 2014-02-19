@@ -20,6 +20,7 @@ if (NOT WIN32)
 endif()
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
