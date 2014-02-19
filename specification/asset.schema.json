@@ -8,9 +8,6 @@
             "type" : "string",
             "description" : "A copyright message suitable for display to credit the model author."
         },
-        "geographicLocation" : {
-            "$ref" : "geographicLocation.schema.json"
-        },
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."
