@@ -8,7 +8,7 @@
             "$ref" : "asset.schema.json"
         },
         "buffers" : {
-            "description" : "The buffers used in this model.",
+            "description" : "The buffers used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -16,7 +16,7 @@
             }
         },
         "bufferViews" : {
-            "description" : "The buffer views used in this model.",
+            "description" : "The buffer views used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -24,7 +24,7 @@
             }
         },
         "cameras" : {
-            "description" : "The cameras available to this model.",
+            "description" : "The cameras available to this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -32,7 +32,7 @@
             }
         },
         "images" : {
-            "description" : "The images used in this model.",
+            "description" : "The images used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -40,7 +40,7 @@
             }
         },
         "materials" : {
-            "description" : "The materials used in this model.",
+            "description" : "The materials used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -48,7 +48,7 @@
             }
         },
         "meshes" : {
-            "description" : "The meshes that make up this model.",
+            "description" : "The meshes that make up this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -56,7 +56,7 @@
             }
         },
         "nodes" : {
-            "description" : "The nodes that make up this model.",
+            "description" : "The nodes that make up this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -64,7 +64,7 @@
             }
         },
         "shaders" : {
-            "description" : "The shaders used in this model.",
+            "description" : "The shaders used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -72,23 +72,23 @@
             }
         },
         "techniques" : {
-            "description" : "The techniques used in this model.",
+            "description" : "The techniques used in this asset.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.schema.json"
             }
         },
-        "version" : {
-            "type" : "string",
-            "description" : "The glTF version.",
-            "required" : true
-        },
         "profile" : {
             "type" : "string",
             "description" : "The glTF profile used for this asset.",
-            "required" : true
+            "default" : "WebGL 1.0.2"
         },        
+        "version" : {
+            "type" : "string",
+            "description" : "The glTF version.",
+            "default" : "1.0"
+        },
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."
