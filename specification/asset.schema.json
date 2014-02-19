@@ -6,7 +6,16 @@
     "properties" : {
         "copyright" : {
             "type" : "string",
-            "description" : "A copyright message suitable for display to credit the model author."
+            "description" : "A copyright message suitable for display to credit the asset author."
+        },
+        "generator" : {
+            "type" : "string",
+            "description" : "Tool that generated this glTF asset.  Useful for debugging."
+        },
+        "premultipliedAlpha" : {
+            "type" : "boolean",
+            "description" : "getContext() with premultipliedAlpha",
+            "default" : false
         },
         "extra" : {
             "type" : "any",
