@@ -1,23 +1,26 @@
 {
     "materials" : {
-        "material_id" : {
-		    "name" : "application-visible globally-unique name",
-		    "technique" : "technique_id",
-		    "techniques" : {
-				"technique_id" : {
-				    "pass" : {
-					    "program" : {
-							"attributes" : [{
-                                "semantic" : "POSITION",
-						    	"symbol" : "position",
-						    	"type" : "FLOAT_VEC3"
-							}],
-							"fragmentShader" : "fragmentShader_id",
-							"vertexShader" : "vertexShader_id"
-					    }
-					}
-				}
-		    }
+        "material_id": {
+            "instanceTechnique": {
+                "technique": "technique_id",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": "texture_image_0",
+                    "shininess": 38.4
+                },
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
+            },
+            "name": "material name",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
         }
     }
 }

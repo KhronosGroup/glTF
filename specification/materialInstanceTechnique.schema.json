@@ -1,15 +1,17 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "material",
+    "title" : "instanceTechnique",
     "type" : "object",
     "description" : "TODO",
     "properties": {    
-        "name" : {
+        "technique" : {
             "type" : "string",
-            "description" : "The artist-created name of this material.  This is not necessarily globally unique."
+            "description" : "The artist-created name of this material.  This is not necessarily globally unique.",
+            "required" : true
         },
-        "instanceTechnique" : {
-	    "$ref" : "materialInstanceTechnique.schema.json"
+        "values" : {
+            "type" : "any",
+            "description" : "Parameter values that override the values in the technique."
         },
         "extra" : {
             "type" : "any",
