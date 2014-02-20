@@ -31,11 +31,7 @@ namespace GLTF
 {
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
     shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
-    shared_ptr <JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context);
-    shared_ptr <JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context);
     shared_ptr <JSONObject> serializeEffect(GLTFEffect* effect, void *context);
-    shared_ptr <JSONObject> serializeAnimation(GLTFAnimation* animation, void *context);
-    shared_ptr<JSONObject> serializeSkin(GLTFSkin* skin);
 
     class GLTFWriter {
     private:

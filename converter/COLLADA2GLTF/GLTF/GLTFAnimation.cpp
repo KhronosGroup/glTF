@@ -30,14 +30,14 @@ using namespace rapidjson;
 
 namespace GLTF 
 {
-
     //-- GLTFAnimation
     
-    GLTFAnimation::GLTFAnimation() {
-        this->_samplers = shared_ptr<JSONObject> (new JSONObject());
-        this->_channels = shared_ptr<JSONArray> (new JSONArray());
+    GLTFAnimation::GLTFAnimation() : JSONObject() {
+        this->createObjectIfNeeded(kSamplers);
+        this->createArrayIfNeeded(kChannels);
+        this->createObjectIfNeeded(kParameters);
+        
         this->_targets = shared_ptr<JSONObject> (new JSONObject());
-        this->_parameters = shared_ptr<JSONObject> (new JSONObject());
     }
 
     GLTFAnimation::~GLTFAnimation() {}
@@ -47,23 +47,23 @@ namespace GLTF
     }
 
     size_t GLTFAnimation::getCount() {
-        return this->_count;
+        return this->getUnsignedInt32(kCount);
     }
     
     void GLTFAnimation::setCount(size_t count) {
-        this->_count = count;
+        this->setUnsignedInt32(kCount, count);
     }
      
     shared_ptr <JSONObject> GLTFAnimation::parameters() {
-        return this->_parameters;
+        return this->getObject(kParameters);
     }
 
     shared_ptr <JSONObject>  GLTFAnimation::getParameterNamed(std::string parameter) {
-        return this->_parameters->getObject(parameter);
+        return this->parameters()->getObject(parameter);
     }
 
     void GLTFAnimation::removeParameterNamed(std::string parameter) {
-        this->_parameters->removeValue(parameter);
+        this->parameters()->removeValue(parameter);
     }
 
     void GLTFAnimation::setID(std::string animationID) {
@@ -75,11 +75,11 @@ namespace GLTF
     }
     
     shared_ptr <JSONObject> GLTFAnimation::samplers() {
-        return this->_samplers;
+        return this->getObject(kSamplers);
     }
 
     shared_ptr <JSONArray> GLTFAnimation::channels() {
-        return this->_channels;
+        return this->getArray(kChannels);
     }
 
     std::string GLTFAnimation::getSamplerIDForName(std::string name) {

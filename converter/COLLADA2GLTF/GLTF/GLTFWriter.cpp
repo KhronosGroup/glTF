@@ -37,30 +37,7 @@ namespace GLTF
 {
     //-- Serializers
 
-    shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context)
-    {
-        GLTF::GLTFAsset *asset= (GLTF::GLTFAsset*)context;
-        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
-        
-        bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
-        bufferObject->setString("path", asset->resourceOuputPathForPath(path));
-        
-        return bufferObject;
-    }
-    
-    shared_ptr <GLTF::JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
-        
-        bufferObject->setUnsignedInt32("byteLength", (unsigned int)bufferView->getByteLength());
-        bufferObject->setUnsignedInt32("byteOffset", (unsigned int)bufferView->getByteOffset());
-        bufferObject->setString("buffer", bufferView->getBuffer()->getID());
-        
-        return bufferObject;
-    }
-
-    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context)
-    {
+    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context) {
         shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
         shared_ptr <JSONObject> techniqueGenerator = effect->getTechniqueGenerator();
@@ -145,40 +122,15 @@ namespace GLTF
 
         return vec4;
     }
-    
-    shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation, void *context) {
-        shared_ptr <JSONObject> animationObject(new JSONObject());
-        shared_ptr <JSONObject> parametersObject(new JSONObject());
-       //GLTFAsset* asset = (GLTFAsset*)context;
-        
-        animationObject->setUnsignedInt32("count", animation->getCount());
-        animationObject->setValue("samplers", animation->samplers());
-        animationObject->setValue("channels", animation->channels());
-                        
-        animationObject->setValue("parameters", animation->parameters());
-        
-        return animationObject;
-    }
-        
-    shared_ptr<JSONObject> serializeSkin(GLTFSkin* skin) {
-        shared_ptr <JSONObject> skinObject(new JSONObject());
-        
-        skinObject->setValue("joints", skin->getJointsIds());
-        skinObject->setValue("bindShapeMatrix", skin->getBindShapeMatrix());
-        
-        return skinObject;
-    }
-    
+
     //-- Writer
     
     GLTFWriter::GLTFWriter():
-    _writer(0)
-    {
+    _writer(0) {
         _fd = 0;
     }
 
-    bool GLTFWriter::initWithPath(const std::string &path)
-    {
+    bool GLTFWriter::initWithPath(const std::string &path) {
         this->_fd = fopen(path.c_str(), "w");
         if (this->_fd) {
             this->_fileStream = new rapidjson::FileStream(this->_fd);
@@ -191,8 +143,7 @@ namespace GLTF
         return false;
     }
         
-    GLTFWriter::~GLTFWriter()
-    {
+    GLTFWriter::~GLTFWriter() {
         if (_fd) {
             delete this->_fileStream;
             delete this->_writer;
@@ -201,8 +152,7 @@ namespace GLTF
     }
         
     //base
-    void GLTFWriter::writeArray(JSONArray* array, void *context)
-    {
+    void GLTFWriter::writeArray(JSONArray* array, void *context) {
         this->_writer->StartArray();
         
         vector <shared_ptr <JSONValue> > values = array->values();
@@ -214,8 +164,7 @@ namespace GLTF
         this->_writer->EndArray();
     }
     
-    void GLTFWriter::writeObject(JSONObject* object, void *context)
-    {
+    void GLTFWriter::writeObject(JSONObject* object, void *context) {
         this->_writer->StartObject(); 
 
         vector <std::string> keys = object->getAllKeys();
@@ -232,8 +181,7 @@ namespace GLTF
         this->_writer->EndObject(); 
     }
     
-    void GLTFWriter::writeNumber(JSONNumber* number, void *context)
-    {
+    void GLTFWriter::writeNumber(JSONNumber* number, void *context) {
         JSONNumber::JSONNumberType type = number->getType();
         
         switch (type) {
@@ -261,13 +209,11 @@ namespace GLTF
         }
     }
         
-    void GLTFWriter::writeString(JSONString* str, void *context)
-    {
+    void GLTFWriter::writeString(JSONString* str, void *context) {
         this->_writer->String(str->getCString());
     }
     
-    void GLTFWriter::write(JSONValue* value, void* context)
-    {
+    void GLTFWriter::write(JSONValue* value, void* context) {
         switch (value->getType()) {
             case GLTF::NUMBER:
                 this->writeNumber((JSONNumber*)value, context);

@@ -34,7 +34,7 @@
 
 namespace GLTF 
 {
-    class GLTFBuffer {
+    class GLTFBuffer : public JSONObject {
     private:
         GLTFBuffer();
     public:
@@ -48,14 +48,15 @@ namespace GLTF
         std::string const getID();
         const void* getData();
         
+        virtual void evaluate(void*);
+        
     private:
         std::string  _ID;
-        size_t _byteLength;
         unsigned char* _data;
         bool _ownData;
     };
     
-    class GLTFBufferView {
+    class GLTFBufferView : public JSONObject {
     public:
         GLTFBufferView();
         GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
@@ -74,11 +75,10 @@ namespace GLTF
         std::string const getID();
     
         void* getBufferDataByApplyingOffset();
-
+    private:
+        void _setBuffer(shared_ptr <GLTFBuffer>);
     private:
         std::string  _ID;
-        size_t _byteLength;
-        size_t _byteOffset;
         shared_ptr<GLTFBuffer> _buffer;
     };
     

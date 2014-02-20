@@ -271,7 +271,7 @@ int main (int argc, char * const argv[]) {
 #endif
         std::stringstream s;
         s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
-        asset.log("Runtime: %s seconds", s.str().c_str());
+        asset.log("Runtime: %s seconds\n", s.str().c_str());
     }
     return 0;
 }

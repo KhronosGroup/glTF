@@ -86,11 +86,6 @@ namespace GLTF
     JSONArray::~JSONArray()
     {
     }        
-
-    void JSONArray::write(GLTFWriter* writer, void* context)
-    {        
-        writer->writeArray(this, context);
-    }
     
     JSONValueVectorRef JSONArray::values()
     {

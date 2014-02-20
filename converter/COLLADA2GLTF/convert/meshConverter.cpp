@@ -861,7 +861,7 @@ namespace GLTF
             }
         }
         
-        if (cvtMesh->getPrimitives()->values().size() > 0) {
+        if (cvtMesh->getPrimitivesCount() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
             return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset.profile);
         }

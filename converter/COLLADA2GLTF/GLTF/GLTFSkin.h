@@ -26,7 +26,7 @@
 
 namespace GLTF 
 {
-    class GLTFController {
+    class GLTFController : public JSONObject {
     public:
         GLTFController();
         virtual ~GLTFController();
@@ -69,10 +69,7 @@ namespace GLTF
         
     private:
         shared_ptr <GLTFBufferView> _inverseBindMatrices;
-        
-        shared_ptr<JSONArray> _bindShapeMatrix;
-        shared_ptr<JSONArray> _jointsIds;
-        
+                
         shared_ptr<GLTFAccessor> _joints;
         shared_ptr<GLTFAccessor> _weights;
         

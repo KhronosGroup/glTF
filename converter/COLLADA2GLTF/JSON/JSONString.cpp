@@ -45,12 +45,7 @@ namespace GLTF
     JSONString::~JSONString()
     {
     }        
-    
-    void JSONString::write(GLTFWriter* writer, void* context)
-    {        
-        writer->writeString(this, context);
-    }
-    
+        
     const char* JSONString::getCString()
     {
         return this->_str.c_str();

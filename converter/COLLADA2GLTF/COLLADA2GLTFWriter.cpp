@@ -349,11 +349,10 @@ namespace GLTF
                 }
             }
             skin->setJointsIds(jointsWithOriginalSids);
-            shared_ptr <JSONObject> serializedSkin = serializeSkin(skin.get());
-            shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue("inverseBindMatrices"));
-            inverseBindMatrices->setString("bufferView", genericBufferView->getID());
-            serializedSkin->setValue("inverseBindMatrices", inverseBindMatrices);
-            skins->setValue(skin->getId(), serializedSkin);
+            shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
+            inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
+            skin->setValue(kInverseBindMatrices, inverseBindMatrices);
+            skins->setValue(skin->getId(), skin);
         }
         
         // ----
@@ -390,27 +389,27 @@ namespace GLTF
             }
             
             if (animation->channels()->values().size() > 0) {
-                shared_ptr <JSONObject> animationObject = serializeAnimation(animation.get(), &this->_asset);
-            
-                animationsObject->setValue(animation->getID(), animationObject);
+                animationsObject->setValue(animation->getID(), animation);
             }
         }
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
-        shared_ptr <JSONObject> bufferObject = serializeBuffer(sharedBuffer.get(), sharedBufferID+".bin",  &this->_asset);
-        shared_ptr <JSONObject> bufferObject1 = serializeBuffer(compressionBuffer.get(), compressedBufferID+".bin",  &this->_asset);
 
         this->_asset.root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            buffersObject->setValue(sharedBufferID, bufferObject);
-            bufferObject->setString("type", "arraybuffer");
+            sharedBuffer->setString(kPath, sharedBufferID + ".bin");
+            sharedBuffer->setString(kType, "arraybuffer");
+            buffersObject->setValue(sharedBufferID, sharedBuffer);
         }
 
         if (compressionBuffer->getByteLength() > 0) {
-            buffersObject->setValue(compressedBufferID, bufferObject1);
+            buffersObject->setValue(compressedBufferID, compressionBuffer);
+            compressionBuffer->setString(kPath, compressedBufferID + ".bin");
             if (CONFIG_STRING("compressionMode") == "ascii")
-                bufferObject1->setString("type", "text");
+                compressionBuffer->setString(kType, "text");
+            else
+                compressionBuffer->setString(kType, "arraybuffer");
         }
 
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
@@ -418,27 +417,22 @@ namespace GLTF
         shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
         this->_asset.root->setValue("bufferViews", bufferViewsObject);
         
-        shared_ptr <JSONObject> bufferViewVerticesObject = serializeBufferView(verticesBufferView.get(), 0);
-        shared_ptr <JSONObject> bufferViewIndicesObject = serializeBufferView(indicesBufferView.get(), 0);
-        shared_ptr <JSONObject> bufferViewGenericObject = serializeBufferView(genericBufferView.get(), 0);
-        shared_ptr <JSONObject> bufferViewCompressionObject = serializeBufferView(compressionBufferView.get(), 0);
-
-        bufferViewsObject->setValue(indicesBufferView->getID(), bufferViewIndicesObject);
-        bufferViewsObject->setValue(verticesBufferView->getID(), bufferViewVerticesObject);
+        bufferViewsObject->setValue(indicesBufferView->getID(), indicesBufferView);
+        bufferViewsObject->setValue(verticesBufferView->getID(), verticesBufferView);
         if ((animationLength > 0) || (compressionLength >0)) {
-            bufferViewsObject->setValue(genericBufferView->getID(), bufferViewGenericObject);
+            bufferViewsObject->setValue(genericBufferView->getID(), genericBufferView);
         }
         if (compressionLength > 0) {
-            bufferViewsObject->setValue(compressionBufferView->getID(), bufferViewCompressionObject);
+            bufferViewsObject->setValue(compressionBufferView->getID(), compressionBufferView);
         }
         
-        bufferViewIndicesObject->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
-        bufferViewVerticesObject->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ARRAY_BUFFER"));
+        indicesBufferView->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        verticesBufferView->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
         this->_asset.root->removeValue("lightsIds");
         
-        this->_asset.root->write(&this->_writer);
+        this->_asset.root->write(&this->_writer, &this->_asset);
                 
         bool sceneFlatteningEnabled = false;
         if (sceneFlatteningEnabled) {
@@ -1789,12 +1783,12 @@ namespace GLTF
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setUnsignedInt32("type", this->_asset.profile->getGLenumForString("FLOAT_MAT4"));
-        inverseBindMatrices->setUnsignedInt32("count", skinControllerData->getJointsCount());
-        inverseBindMatrices->setUnsignedInt32("byteOffset", 0);
-        glTFSkin->extras()->setValue("inverseBindMatrices", inverseBindMatrices);
+        inverseBindMatrices->setUnsignedInt32(kType, this->_asset.profile->getGLenumForString("FLOAT_MAT4"));
+        inverseBindMatrices->setUnsignedInt32(kCount, skinControllerData->getJointsCount());
+        inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
+        glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
         
-        inverseBindMatrices->setUnsignedInt32("byteOffset",this->_asset._animationOutputStream->length());
+        inverseBindMatrices->setUnsignedInt32(kByteOffset,this->_asset._animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
         this->_asset._animationOutputStream->write(buffer);
 

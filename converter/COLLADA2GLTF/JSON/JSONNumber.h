@@ -50,8 +50,6 @@ namespace GLTF
 
         virtual ~JSONNumber();
         
-        virtual void write(GLTFWriter* writer, void* context = 0);
-        
         unsigned int getUnsignedInt32();
         int getInt32();
         double getDouble();

@@ -30,7 +30,7 @@
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
 #ifdef _LIBCPP_VERSION
-namespace std{
+namespace std {
     namespace tr1 = std;
 }
 #endif
@@ -40,6 +40,8 @@ using namespace std::tr1;
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
 const std::string kByteStride = "byteStride";
+const std::string kByteLength = "byteLength";
+const std::string kPath = "path";
 const std::string kType = "type";
 const std::string kBufferView = "bufferView";
 const std::string kMin = "min";
@@ -51,6 +53,13 @@ const std::string kName = "name";
 const std::string kExtensions = "extensions";
 const std::string kPrimitives = "primitives";
 const std::string kAttributes = "attributes";
+const std::string kJoints = "joints";
+const std::string kBindShapeMatrix = "bindShapeMatrix";
+const std::string kInverseBindMatrices = "inverseBindMatrices";
+const std::string kSamplers = "samplers";
+const std::string kChannels = "channels";
+const std::string kParameters = "parameters";
+const std::string kBuffer = "buffer";
 
 namespace GLTF
 {

@@ -38,8 +38,6 @@ namespace GLTF
         JSONArray();
         virtual ~JSONArray();
 
-        virtual void write(GLTFWriter *writer, void* context = 0);
-
         virtual void appendValue(shared_ptr <JSONValue>);
         
         JSONValueVectorRef values();

@@ -142,6 +142,16 @@ namespace GLTF
     void GLTFMesh::setName(std::string name) {
         this->setString(kName, name);
     }
+
+    size_t GLTFMesh::getPrimitivesCount() {
+        size_t count = 0;
+        shared_ptr<JSONArray> primitives = this->getPrimitives();
+        if (primitives) {
+            JSONValueVectorRef values = primitives->values();
+            count = values.size();
+        }
+        return count;
+    }
     
     shared_ptr<JSONArray> GLTFMesh::getPrimitives() {
         return this->getArray(kPrimitives);
@@ -179,7 +189,9 @@ namespace GLTF
                 GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
                 std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
                 unsigned int indexOfSet = 0;
-                if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL)) {
+                if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL) &&
+                    //FIXME: should not be required for JOINT and WEIGHT
+                    (semantic != GLTF::JOINT) && (semantic != GLTF::WEIGHT)) {
                     indexOfSet = primitive->getIndexOfSetAtIndex(j);
                     semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
                 }

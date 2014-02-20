@@ -40,6 +40,7 @@ namespace GLTF
     
     void JSONValue::write(GLTFWriter* writer, void* context)
     {
+        this->evaluate(context);
         writer->write(this, context);
     }
     
@@ -69,5 +70,9 @@ namespace GLTF
         }
         return shared_ptr<JSONValue> ((JSONValue*)0);
     }
+    
+    void JSONValue::evaluate(void*) {
+    }
+
     
 }

@@ -72,6 +72,7 @@ namespace GLTF
 
         shared_ptr<JSONArray> getPrimitives();
         void setPrimitives(shared_ptr<JSONArray>);
+        size_t getPrimitivesCount();
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);
         

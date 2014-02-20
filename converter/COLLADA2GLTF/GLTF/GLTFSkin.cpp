@@ -28,7 +28,7 @@ using namespace rapidjson;
 namespace GLTF 
 {
     //--- Controller
-    GLTFController::GLTFController() {
+    GLTFController::GLTFController() : JSONObject() {
         this->_extras = shared_ptr<JSONObject>(new JSONObject());
     }
     
@@ -42,11 +42,11 @@ namespace GLTF
 
     //--- Skin
     
-    GLTFSkin::GLTFSkin() {
+    GLTFSkin::GLTFSkin() : GLTFController() {
         this->_id = GLTFUtils::generateIDForType("skin");
     }
 
-    GLTFSkin::GLTFSkin(std::string id) {
+    GLTFSkin::GLTFSkin(std::string id) : GLTFController() {
         this->_id = id;
     }
 
@@ -59,19 +59,19 @@ namespace GLTF
     }
     
     shared_ptr<JSONArray> GLTFSkin::getBindShapeMatrix() {
-        return _bindShapeMatrix;
+        return this->getArray(kBindShapeMatrix);
     }
     
     void GLTFSkin::setBindShapeMatrix(shared_ptr<JSONArray>  bindShapeMatrix) {
-        this->_bindShapeMatrix = bindShapeMatrix;
+        this->setValue(kBindShapeMatrix, bindShapeMatrix);
     }
     
     shared_ptr<JSONArray> GLTFSkin::getJointsIds() {
-        return this->_jointsIds;
+        return this->getArray(kJoints);
     }
     
     void GLTFSkin::setJointsIds(shared_ptr<JSONArray> jointIds) {
-        this->_jointsIds = jointIds;
+        this->setValue(kJoints, jointIds);
     }
     
     const std::string& GLTFSkin::getId() {

@@ -40,8 +40,6 @@ namespace GLTF
         
         virtual ~JSONString();
         
-        virtual void write(GLTFWriter* writer, void* context);
-        
         const char* getCString();
 
         const std::string& getString();

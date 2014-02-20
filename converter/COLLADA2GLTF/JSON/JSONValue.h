@@ -43,6 +43,8 @@ namespace GLTF
         
         shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
         
+        virtual void evaluate(void*);
+        
     private:
         JSONValueType _type;
     };

@@ -68,12 +68,7 @@ namespace GLTF
     {
         free(this->_value);
     }
-    
-    void JSONNumber::write(GLTFWriter* writer, void* context)
-    {
-        writer->writeNumber(this, context);
-    }
-    
+        
     unsigned int JSONNumber::getUnsignedInt32() {
         unsigned int value = 0;
         if (this->_type == UNSIGNED_INT32) {

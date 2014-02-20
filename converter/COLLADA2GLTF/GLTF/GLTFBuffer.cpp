@@ -25,12 +25,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "GLTFAsset.h"
 
 using namespace rapidjson;
 
 namespace GLTF 
 {    
-    GLTFBuffer::GLTFBuffer() {}     //private
+    GLTFBuffer::GLTFBuffer() : JSONObject() {}     //private
 
     GLTFBuffer::~GLTFBuffer() {
         if (this->_ownData && this->_data)
@@ -38,120 +39,115 @@ namespace GLTF
     }    
 
     //FIXME:This one just should be removed, but some code depends on it.
-    GLTFBuffer::GLTFBuffer(std::string ID, size_t byteLength):
+    GLTFBuffer::GLTFBuffer(std::string ID, size_t byteLength): JSONObject(),
     _ID(ID),
-    _byteLength(byteLength),
     _data(0),
-    _ownData(false)
-    {
+    _ownData(false) {
+        this->setUnsignedInt32(kByteLength, byteLength);
     }
     
-    GLTFBuffer::GLTFBuffer(void *data, size_t byteLength, bool ownData):
-    _byteLength(byteLength),
+    GLTFBuffer::GLTFBuffer(void *data, size_t byteLength, bool ownData): JSONObject(),
     _data((unsigned char*)data),
-    _ownData(ownData)
-    {
+    _ownData(ownData) {
+        this->setUnsignedInt32(kByteLength, byteLength);
         this->_ID = GLTFUtils::generateIDForType("buffer");
     }
     
-    GLTFBuffer::GLTFBuffer(std::string ID,void *data, size_t byteLength, bool ownData):
+    GLTFBuffer::GLTFBuffer(std::string ID,void *data, size_t byteLength, bool ownData): JSONObject(),
     _ID(ID),
-    _byteLength(byteLength),
     _data((unsigned char*)data),
-    _ownData(ownData)
-    {
+    _ownData(ownData) {
+        this->setUnsignedInt32(kByteLength, byteLength);
     }
 
-    size_t GLTFBuffer::getByteLength()
-    {
-        return this->_byteLength;
+    void GLTFBuffer::evaluate(void* context) {
+        //FIXME:this would be better somewhere else..
+        GLTFAsset* asset = (GLTFAsset*)context;
+        
+        this->setString(kPath, asset->resourceOuputPathForPath(this->getString(kPath)));
+    }
+    
+    size_t GLTFBuffer::getByteLength() {
+        return this->getUnsignedInt32(kByteLength);
     }
         
-    std::string const GLTFBuffer::getID()
-    {
+    std::string const GLTFBuffer::getID() {
         return this->_ID;
     }
     
-    const void* GLTFBuffer::getData()
-    {
+    const void* GLTFBuffer::getData() {
         return this->_data;
     }
     
     //--- GLTFBufferView    
     
-    GLTFBufferView::~GLTFBufferView()
-    {
+    
+    
+    GLTFBufferView::~GLTFBufferView() {
     }
     
-    GLTFBufferView::GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength)
-    {
+    void GLTFBufferView::_setBuffer(shared_ptr <GLTFBuffer> buffer) {
+        this->_buffer = buffer;
+        this->setString(kBuffer, buffer->getID());
+    }
+    
+    GLTFBufferView::GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength) : JSONObject() {
         this->_ID = GLTFUtils::generateIDForType("bufferView");
-        this->_buffer = buffer;
-        this->_byteLength = byteLength;
-        this->_byteOffset = byteOffset;
+        
+        this->_setBuffer(buffer);
+        this->setByteLength(byteLength);
+        this->setByteOffset(byteOffset);
     }
     
-    GLTFBufferView::GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength)
-    {
-        this->_buffer = buffer;
-        this->_byteLength = byteLength;
-        this->_byteOffset = byteOffset;
+    GLTFBufferView::GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength) : JSONObject() {
+        this->_setBuffer(buffer);
+        this->setByteLength(byteLength);
+        this->setByteOffset(byteOffset);
     }
         
-    GLTFBufferView::GLTFBufferView()
-    {
+    GLTFBufferView::GLTFBufferView() {
         this->_ID = GLTFUtils::generateIDForType("bufferView");
-        this->_byteLength = 0;
-        this->_byteOffset = 0;
+        this->setByteLength(0);
+        this->setByteOffset(0);
     }
     
-    void GLTFBufferView::setByteLength(size_t byteLength)
-    {
-        this->_byteLength = byteLength;
+    void GLTFBufferView::setByteLength(size_t byteLength) {
+        this->setUnsignedInt32(kByteLength, byteLength);
     }
     
-    size_t GLTFBufferView::getByteLength()
-    {
-        return this->_byteLength;
+    size_t GLTFBufferView::getByteLength() {
+        return this->getUnsignedInt32(kByteLength);
     }
     
-    void GLTFBufferView::setByteOffset(size_t byteOffset)
-    {
-        this->_byteOffset = byteOffset;
+    void GLTFBufferView::setByteOffset(size_t byteOffset) {
+        this->setUnsignedInt32(kByteOffset, byteOffset);
     }
     
-    size_t GLTFBufferView::getByteOffset()
-    {
-        return this->_byteOffset;
+    size_t GLTFBufferView::getByteOffset() {
+        return this->getUnsignedInt32(kByteOffset);
     }
 
-    std::string const GLTFBufferView::getID()
-    {
+    std::string const GLTFBufferView::getID() {
         return this->_ID;
     }
     
-    shared_ptr <GLTFBuffer> GLTFBufferView::getBuffer()
-    {
+    shared_ptr <GLTFBuffer> GLTFBufferView::getBuffer() {
         return this->_buffer;
     }
     
-    void* GLTFBufferView::getBufferDataByApplyingOffset()
-    {
+    void* GLTFBufferView::getBufferDataByApplyingOffset() {
         unsigned char *data = (unsigned char*)this->_buffer->getData();
-        
         return (void*)(data + this->getByteOffset());
     }
 
-    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData)
-    {
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData) {
         shared_ptr<GLTFBuffer> buffer(new GLTFBuffer(data, byteLength, ownData));
         shared_ptr<GLTFBufferView> bufferView(new GLTFBufferView(ID, buffer, byteOffset, byteLength));
 
         return bufferView;
     }
     
-    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData)
-    {
+    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData) {
         shared_ptr<GLTFBuffer> buffer(new GLTFBuffer(data, byteLength, ownData));
         shared_ptr<GLTFBufferView> bufferView(new GLTFBufferView(buffer, byteOffset, byteLength));
         
