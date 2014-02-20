@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "buffer",
     "type" : "object",
-    "description" : "A buffer with vertex or index data.",
+    "description" : "A buffer with geometry, animation, or skin data.",
     "properties" : {
         "path" : {
             "type" : "string",
@@ -15,7 +15,13 @@
             "description" : "The length of the buffer in bytes.",
             "minimum" : 0,
             "required" : true
-        },        
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "TODO",
+            "enum" : ["arraybuffer"],
+            "default" : "arraybuffer"
+        },
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."

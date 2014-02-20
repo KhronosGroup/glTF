@@ -1,8 +1,12 @@
 {
     "buffers" : {
         "verticesBuffer_id" : {
-		    "path" : "vertices.bin",
-		    "byteLength": 1024
+            "path" : "vertices.bin",
+            "byteLength": 1024,
+            "type" : "arraybuffer",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         }
     }
 }
