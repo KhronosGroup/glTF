@@ -22,10 +22,9 @@
             "required" : true
         },
         "target" : {
-            "type" : "string",
-            "description" : "Required target type for bindBuffer(), must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
-            "enum" : ["ARRAY_BUFFER", "ELEMENT_ARRAY_BUFFER"],
-            "required" : true
+            "type" : "number",
+            "description" : "Target type for bindBuffer(), either 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer view contains animation or skin data.",
+            "enum" : [34962, 34963]
         },
         "extra" : {
             "type" : "any",

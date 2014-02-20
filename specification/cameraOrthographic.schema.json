@@ -1,29 +1,29 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "perspective",
+    "title" : "orthographic",
     "type" : "object",
-    "description" : "A perspective camera.  These properties are used to create a perspective projection matrix.",
+    "description" : "An orthographic camera.  These properties are used to create an orthographic projection matrix.",
     "properties" : {
-        "aspectRatio" : {
+        "xmag" : {
             "type" : "number",
-            "description" : "The floating-point aspect ratio of the field of view.",
-            "required" : true,
-            "minimum" : 0.0
+            "description" : "The floating-point horizontal magnification of the view.",
+            "required" : true
         },
-        "yfov" : {
+        "ymag" : {
             "type" : "number",
-            "description" : "The floating-point vertical field of view in radians.",
-            "required" : true,
-            "minimum" : 0.0
+            "description" : "The floating-point vertical magnification of the view.",
+            "required" : true
         },
         "zfar" : {
             "type" : "number",
             "description" : "The floating-point distance to the far clipping plane.",
+            "required" : true,
             "minimum" : 0.0
         },
         "znear" : {
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
+            "required" : true,
             "minimum" : 0.0
         },
         "extra" : {

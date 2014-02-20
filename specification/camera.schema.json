@@ -4,15 +4,17 @@
     "type" : "object",
     "description" : "A view into the scene.  The camera describes the projection, but not the camera's position and direction.",
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },    
         "orthographic" : {
-            "$ref" : "orthographic.schema.json"
+            "$ref" : "cameraOrthographic.schema.json"
         },
         "perspective" : {
-            "$ref" : "perspective.schema.json"
+            "$ref" : "cameraPerspective.schema.json"
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Perspective or orthographic camera",
+            "enum" : ["perspective", "orthographic"],
+            "required" : true
         },
         "extra" : {
             "type" : "any",

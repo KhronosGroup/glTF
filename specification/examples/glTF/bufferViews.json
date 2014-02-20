@@ -1,15 +1,21 @@
 {
     "bufferViews" : {
         "vertices_id" : {
-		    "buffer" : "buffer_id",
+            "buffer" : "buffer_id",
             "byteLength": 76768,
-		    "target": "ARRAY_BUFFER"
+            "target": 34962,
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         },
         "indices_id" : {
-		    "buffer" : "buffer_id",
+            "buffer" : "buffer_id",
             "byteLength": 25272,
             "byteOffset": 76768,
-		    "target": "ELEMENT_ARRAY_BUFFER"
+            "target": 34963,
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         }        
     }
 }

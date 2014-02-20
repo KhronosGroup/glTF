@@ -6,7 +6,11 @@
                 "yfov" : 0.7854,
                 "zfar" : 1000,
                 "znear" : 1
-            }    
+            },
+            "type" : "perspective",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         },
         "orthographicCamera_id" : {
             "orthographic" : {
@@ -14,7 +18,11 @@
                 "ymag" : 0.5,
                 "zfar" : 1000,
                 "znear" : 1
-            }    
+            },
+            "type" : "orthographic",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         }
     }
 }
