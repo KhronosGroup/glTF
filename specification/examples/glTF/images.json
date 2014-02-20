@@ -1,11 +1,7 @@
 {
     "images" : {
         "image_id" : {
-            "path" : "image.png"
-        },
-        "anotherImage_id" : {
-            "path" : "anotherImage.png",
-            "generateMipmap" : false,
+            "path" : "image.png",
             "extra" : {
                 "Application specific" : "The extra object can contain any properties."
             }

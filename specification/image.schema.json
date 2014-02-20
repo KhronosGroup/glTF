@@ -10,15 +10,6 @@
             "format" : "uri",
             "required" : true
         },
-        "generateMipmap" : {
-            "type" : "boolean",
-            "description" : "generateMipmap()",
-            "default" : true
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },        
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."
