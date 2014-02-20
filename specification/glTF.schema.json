@@ -49,6 +49,13 @@
                 "$ref" : "image.schema.json"
             }
         },
+        "lights" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "light.schema.json"
+            }
+        },
         "materials" : {
             "properties" : {
             },

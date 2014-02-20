@@ -1,6 +1,7 @@
 {
     "cameras" : {
         "perspectiveCamera_id" : {
+            "name" : "artist-created name",
             "perspective" : {
                 "aspectRatio" : 1.77,
                 "yfov" : 0.7854,
@@ -13,6 +14,7 @@
             }
         },
         "orthographicCamera_id" : {
+            "name" : "another artist-created name",
             "orthographic" : {
                 "xmag" : 0.5,
                 "ymag" : 0.5,

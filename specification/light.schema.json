@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "light",
+    "type" : "object",
+    "description" : "light",
+    "properties" : {
+        "ambient" : {
+            "$ref" : "lightAmbient.schema.json"
+        },
+        "directional" : {
+            "$ref" : "lightDirectional.schema.json"
+        },
+        "name" : {
+            "type" : "string",
+            "description" : "The artist-created name of this light.  This is not necessarily globally unique."
+        },
+        "point" : {
+            "$ref" : "lightPoint.schema.json"
+        },
+        "spot" : {
+            "$ref" : "lightSpot.schema.json"
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Type of light",
+            "enum" : ["ambient", "directional", "point", "spot"],
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

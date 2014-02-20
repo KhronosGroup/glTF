@@ -1,0 +1,22 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "ambient",
+    "type" : "object",
+    "description" : "Ambient light source.",
+    "properties" : {
+        "color" : {
+            "type" : "array",
+            "description" : "RGB color of the light source.  Each element is floating-point between 0.0 and 1.0.  Element 0 corresponds to R, 1 to G, and 2 to B.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

@@ -1,0 +1,80 @@
+{
+    "lights" : {
+        "ambient_light_id": {
+            "ambient": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
+            },
+            "name": "name of ambient light",
+            "type": "ambient",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        },
+        "directional_light_id": {
+            "directional": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
+            },
+            "name": "name of directional light",
+            "type": "directional",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        },
+        "point_light_id": {
+            "name": "name of point light",
+            "point": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "constantAttenuation": 1.0,
+                "linearAttenuation": 0.5,
+                "quadraticAttenuation": 0.25,
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
+            },
+            "type": "point",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        },
+        "spot_light_id": {
+            "name": "name of spot light",
+            "spot": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "constantAttenuation": 1.0,
+                "fallOffAngle": 40,
+                "fallOffExponent": 0.0,
+                "linearAttenuation": 0.5,
+                "quadraticAttenuation": 0.25,
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
+            },
+            "type": "spot",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}
