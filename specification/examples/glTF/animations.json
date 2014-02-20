@@ -1,0 +1,39 @@
+{
+    "animations" : {
+        "an_animation": {
+            "channels": [
+                {
+                    "sampler": "a_sampler",
+                    "target": {
+                        "id": "node_id",
+                        "path": "rotation",
+                        "extra" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "extra" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            ],
+            "count": 7,
+            "parameters": {
+                "TIME": "time_accessor",
+                "rotation": "rotation_accessor"
+            },
+            "samplers": {
+                "a_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation",
+                    "extra" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            },
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}

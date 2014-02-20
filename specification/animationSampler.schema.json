@@ -1,0 +1,30 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "animation sampler",
+    "type" : "object",
+    "description" : "Combines input and output parameters with an interpolation algorithm.",
+    "required" : true,
+    "properties" : {
+        "input" : {
+            "type" : "string",
+            "description" : "Reference to animation parameter to use as keyframe input, e.g., time.",
+            "required" : true
+        },
+        "interpolation" : {
+            "type" : "string",
+            "description" : "Interpolation algorithm",
+            "enum" : ["LINEAR"],
+            "default" : "LINEAR"
+        },
+        "output" : {
+            "type" : "string",
+            "description" : "Reference to animation parameter to use as keyframe output, e.g., translation, rotation, or scale.",
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

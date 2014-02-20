@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "animation channel target",
+    "type" : "object",
+    "description" : "The glTF property to target from an animation channel.",
+    "properties" : {
+        "id" : {
+            "type" : "string",
+            "description" : "Reference to a glTF node id (property name).",
+            "required" : true
+        },
+        "path" : {
+            "type" : "string",
+            "description" : "The property in the glTF node that is targeted.",
+            "enum" : ["translation", "rotation", "scale"],
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

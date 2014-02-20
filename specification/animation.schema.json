@@ -1,0 +1,39 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "animation",
+    "type" : "object",
+    "description" : "animation",
+    "properties" : {
+        "channels" : {
+            "type" : "array",
+            "items" : {
+                "$ref" : "animationChannel.schema.json"
+            }
+        },
+        "count" : {
+            "type" : "number",
+            "description" : "Number of keyframes (samples); the length of each parameter.",
+            "minimum" : 0,
+            "required" : true
+        },
+        "parameters" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animationParameter.schema.json"
+            }        
+        },
+        "samplers" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animationSampler.schema.json"
+            }        
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
