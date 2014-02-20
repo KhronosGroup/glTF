@@ -27,7 +27,6 @@
 #include "GLTF.h"
 #include "../GLTF-OpenCOLLADA.h"
 #include "GLTFAsset.h"
-#include "../shaders/commonProfileShaders.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
@@ -36,6 +35,7 @@ using namespace std;
 namespace GLTF 
 {
     //-- Serializers
+    /*
 
     shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context) {
         shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
@@ -61,10 +61,9 @@ namespace GLTF
             }
         }
         instanceTechnique->setValue("values", outputs);
-    
         return effectObject;
     }
-    
+     */
     /*
     shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
     {
@@ -182,7 +181,7 @@ namespace GLTF
     }
     
     void GLTFWriter::writeNumber(JSONNumber* number, void *context) {
-        JSONNumber::JSONNumberType type = number->getType();
+        JSONNumber::JSONNumberType type = number->getNumberType();
         
         switch (type) {
             case JSONNumber::UNSIGNED_INT32:
@@ -214,23 +213,18 @@ namespace GLTF
     }
     
     void GLTFWriter::write(JSONValue* value, void* context) {
-        switch (value->getType()) {
-            case GLTF::NUMBER:
-                this->writeNumber((JSONNumber*)value, context);
-                break;
-            case GLTF::OBJECT:
-                this->writeObject((JSONObject*)value, context);
-                break;
-            case GLTF::ARRAY:
-                this->writeArray((JSONArray*)value, context);
-                break;
-            case GLTF::STRING:
-                this->writeString((JSONString*)value, context);
-                break;
-            default:
-                //FIXME: report error, should not reach
-                break;
-        }
+        JSONType jsonType = value->getJSONType();
+        
+        if (jsonType == kJSONNumber) {
+            this->writeNumber((JSONNumber*)value, context);
+        } else if (jsonType == kJSONObject) {
+            this->writeObject((JSONObject*)value, context);
+        } else if (jsonType == kJSONArray) {
+            this->writeArray((JSONArray*)value, context);
+        } else if (jsonType == kJSONString) {
+            this->writeString((JSONString*)value, context);
+        } 
+        
     }
         
 }

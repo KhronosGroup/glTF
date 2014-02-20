@@ -857,7 +857,7 @@ namespace GLTF
                 //(*it).second;            // the mapped value (of type T)
                 shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
                 
-                meshAttribute->apply(__InvertV, NULL);
+                meshAttribute->applyOnAccessor(__InvertV, NULL);
             }
         }
         

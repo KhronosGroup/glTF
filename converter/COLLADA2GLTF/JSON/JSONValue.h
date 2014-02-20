@@ -29,24 +29,30 @@
 
 namespace GLTF 
 {
+    class JSONValue;
+    typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
+    
     class GLTFWriter;
     class JSONValue {
     private:
 
     public:        
-                        
-        JSONValue(JSONValueType type);
+        JSONValue();
+        virtual ~JSONValue();
         
         virtual void write(GLTFWriter* , void* context = 0);
                 
-        JSONValueType getType();
+        JSONType getType();
         
         shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
         
         virtual void evaluate(void*);
         
+        virtual JSONType getJSONType() = 0;
+        
+        virtual void apply(JSONValueApplierFunc, void* context);
+        
     private:
-        JSONValueType _type;
     };
 
 }

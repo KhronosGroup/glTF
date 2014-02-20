@@ -28,26 +28,20 @@
 
 namespace GLTF 
 {
-    JSONValue::JSONValue(JSONValueType type) 
-    {
-        this->_type = type;
+    JSONValue::JSONValue() {
     }
-    
-    JSONValueType JSONValue::getType() 
-    {
-        return this->_type;
-    }    
-    
-    void JSONValue::write(GLTFWriter* writer, void* context)
-    {
-        this->evaluate(context);
+
+    JSONValue::~JSONValue() {
+    }
+
+    void JSONValue::write(GLTFWriter* writer, void* context) {
         writer->write(this, context);
     }
     
     shared_ptr<JSONValue> JSONValue::valueForKeyPath(std::string keyPath) {
         std::size_t pos = keyPath.find(".");
         if (pos == std::string::npos) {
-            if (this->_type == OBJECT) {
+            if (this->getJSONType() == kJSONObject) {
                 JSONObject *currentObject = (JSONObject*)this;
                 if (currentObject->contains(keyPath)) {
                     return currentObject->getObject(keyPath);
@@ -55,7 +49,7 @@ namespace GLTF
             }
         } else {
             //here we expect an object
-            if (this->_type == OBJECT) {
+            if (this->getJSONType() == kJSONObject) {
                 //we have an object, so we can continue parsing
                 //First, we need to get the substring after the dot
                 std::string currentPath = keyPath.substr(0,pos);
@@ -74,5 +68,8 @@ namespace GLTF
     void JSONValue::evaluate(void*) {
     }
 
+    void JSONValue::apply(JSONValueApplierFunc func, void* context) {
+        (*func)(this, context);
+    }
     
 }

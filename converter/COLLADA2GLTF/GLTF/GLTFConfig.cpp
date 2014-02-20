@@ -77,7 +77,7 @@ namespace GLTF
         unsigned int resultValue = defaultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
-            if (value->getType() == NUMBER) {
+            if (value->getJSONType() == kJSONNumber) {
                 shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
                 resultValue = numberValue->getUnsignedInt32();
             }
@@ -90,7 +90,7 @@ namespace GLTF
         int resultValue = defaultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
-            if (value->getType() == NUMBER) {
+            if (value->getJSONType() == kJSONNumber) {
                 shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
                 resultValue = numberValue->getInt32();
             }
@@ -104,7 +104,7 @@ namespace GLTF
         double resultValue = defaultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
-            if (value->getType() == NUMBER) {
+            if (value->getJSONType() == kJSONNumber) {
                 shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
                 resultValue = numberValue->getDouble();
             }
@@ -118,7 +118,7 @@ namespace GLTF
         bool resultValue = defaultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
-            if (value->getType() == NUMBER) {
+            if (value->getJSONType() == kJSONNumber) {
                 shared_ptr<JSONNumber> numberValue = static_pointer_cast<JSONNumber>(value);
                 resultValue = numberValue->getBool();
             }
@@ -131,7 +131,7 @@ namespace GLTF
         std::string resultValue = defaultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
-            if (value->getType() == STRING) {
+            if (value->getJSONType() == kJSONString) {
                 shared_ptr<JSONString> numberValue = static_pointer_cast<JSONString>(value);
                 resultValue = numberValue->getString();
             }

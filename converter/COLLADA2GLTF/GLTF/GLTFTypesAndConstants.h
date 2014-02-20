@@ -60,6 +60,10 @@ const std::string kSamplers = "samplers";
 const std::string kChannels = "channels";
 const std::string kParameters = "parameters";
 const std::string kBuffer = "buffer";
+const std::string kInstanceTechnique = "instanceTechnique";
+const std::string kTechnique = "technique";
+const std::string kValues = "values";
+const std::string kValue = "value";
 
 namespace GLTF
 {
@@ -98,13 +102,12 @@ namespace GLTF
         JOINT = 6
     } Semantic;    
 
-    typedef enum {
-        NOT_A_JSON_TYPE = 0,
-        NUMBER = 1,
-        OBJECT = 2,
-        ARRAY = 3,
-        STRING = 4        
-    } JSONValueType;
+    typedef std::string JSONType;
+    
+    const std::string kJSONNumber = "number";
+    const std::string kJSONObject = "object";
+    const std::string kJSONArray = "array";
+    const std::string kJSONString = "string";    
     
     typedef enum {
         NOT_AN_ELEMENT_TYPE = 0,

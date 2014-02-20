@@ -178,7 +178,7 @@ namespace GLTF
                 max[i] = -DBL_MAX;
             }
             
-            apply(__ComputeMinMax, &minMaxApplierInfo);
+            applyOnAccessor(__ComputeMinMax, &minMaxApplierInfo);
             
             for (size_t i = 0 ; i < this->_componentsPerElement ; i++) {
                 minObject->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
@@ -192,7 +192,7 @@ namespace GLTF
         this->_computeMinMaxIfNeeded();
     }
 
-    void GLTFAccessor::apply(GLTFAccessorApplierFunc applierFunc, void* context) {
+    void GLTFAccessor::applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context) {
         size_t byteStride = this->getByteStride();
         size_t componentsPerElement = this->_componentsPerElement;
         size_t vertexAttributeByteSize = this->_elementByteLength;

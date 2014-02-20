@@ -41,6 +41,11 @@ namespace GLTF
         virtual void appendValue(shared_ptr <JSONValue>);
         
         JSONValueVectorRef values();
+
+        virtual JSONType getJSONType();
+
+        void apply(JSONValueApplierFunc func, void* context);
+
     protected:
         void _parseRapidJSONArray(void *value);
     private:

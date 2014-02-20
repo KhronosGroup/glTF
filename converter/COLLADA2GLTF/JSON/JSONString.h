@@ -44,6 +44,8 @@ namespace GLTF
 
         const std::string& getString();
         
+        virtual JSONType getJSONType();
+        
     private:
         std::string _str;
     };

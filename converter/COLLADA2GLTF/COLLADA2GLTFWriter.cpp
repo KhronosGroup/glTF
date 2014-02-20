@@ -63,7 +63,12 @@ namespace GLTF
 	void COLLADA2GLTFWriter::reportError( const std::string& method, const std::string& message)
 	{
 	}    
-	    
+	   
+    
+    static void __eval(JSONValue* value, void *context) {
+        value->evaluate(context);
+    }
+    
     /*
      */
     bool COLLADA2GLTFWriter::write()
@@ -316,7 +321,7 @@ namespace GLTF
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
             if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_asset));
+                materialsObject->setValue(effect->getID(), effect);
             }
         }
         for (UniqueIDToEffectIterator = this->_asset._uniqueIDToDefaultEffect.begin() ; UniqueIDToEffectIterator != this->_asset._uniqueIDToDefaultEffect.end() ; UniqueIDToEffectIterator++) {
@@ -324,7 +329,7 @@ namespace GLTF
             //(*it).second;            // the mapped value (of type T)
             shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
             if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), serializeEffect(effect.get(), &this->_asset));
+                materialsObject->setValue(effect->getID(), effect);
             }
         }
         
@@ -343,7 +348,7 @@ namespace GLTF
             std::vector <shared_ptr <JSONValue> > values = joints->values();
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
-                shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_asset._uniqueIDToJSONValue[jointId->getString()]);
+                shared_ptr<JSONObject> node = this->_asset._uniqueIDToJSONObject[jointId->getString()];
                 if (node->contains("jointId")) {
                     jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
                 }
@@ -430,6 +435,8 @@ namespace GLTF
         verticesBufferView->setUnsignedInt32("target", this->_asset.profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
+        //this apply MUST be before the removeValue lightsIds that follows
+        this->_asset.root->apply(__eval, &this->_asset);
         this->_asset.root->removeValue("lightsIds");
         
         this->_asset.root->write(&this->_writer, &this->_asset);
@@ -456,6 +463,7 @@ namespace GLTF
         this->_asset.log("[animations] %d bytes\n", (int)this->_asset.getAnimationByteLength());
         this->_asset.log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
+                
         if (this->_asset.converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
             COLLADABU::URI convertResultsURI(asset.getOutputFilePath());
             std::string aPath = convertResultsURI.getPathDir();
@@ -831,7 +839,7 @@ namespace GLTF
         this->_asset._uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
         this->_asset._uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
 
-        this->_asset._uniqueIDToJSONValue[uniqueUID] = nodeObject;
+        this->_asset._uniqueIDToJSONObject[uniqueUID] = nodeObject;
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
             nodeObject->setString("jointId",sid);
@@ -1058,7 +1066,7 @@ namespace GLTF
                 InstanceLight* instanceLight  = instanceLights[i];
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
-                shared_ptr<JSONObject> light = static_pointer_cast<JSONObject> (this->_asset._uniqueIDToJSONValue[id]);
+                shared_ptr<JSONObject> light = this->_asset._uniqueIDToJSONObject[id];
                 if (light) {
                     std::string lightUID = this->_asset._uniqueIDToOriginalID[id];
                     
@@ -1185,7 +1193,7 @@ namespace GLTF
                 for (size_t k = 0 ; k < values.size() ; k++) {
                     shared_ptr<JSONString> value = static_pointer_cast<JSONString>(values[k]);
 
-                    shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset._uniqueIDToJSONValue[value->getString()]);
+                    shared_ptr<JSONObject> parentNode = this->_asset._uniqueIDToJSONObject[value->getString()];
                     if (parentNode) {
                         shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded("children");
                         children->appendValue(shared_ptr <JSONString>(new JSONString(node->getOriginalId())));
@@ -1652,8 +1660,9 @@ namespace GLTF
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString("type"), description);
         
-        this->_asset._uniqueIDToJSONValue[light->getUniqueId().toAscii()] = static_pointer_cast<JSONValue>(glTFLight);
-        this->_asset._uniqueIDToOriginalID[light->getUniqueId().toAscii()] = light->getOriginalId();
+        const std::string &lightId = light->getUniqueId().toAscii();
+        this->_asset._uniqueIDToJSONObject[lightId] = glTFLight;
+        this->_asset._uniqueIDToOriginalID[lightId] = light->getOriginalId();
         
         shared_ptr<JSONArray> lightsIds = this->_asset.root->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));

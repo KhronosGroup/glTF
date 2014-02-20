@@ -20,26 +20,31 @@ namespace GLTF
 
     typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
-    typedef std::map<std::string /* openCOLLADA uniqueID */, GLTFMeshSharedPtr > UniqueIDToMesh;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, COLLADAFW::UniqueId > MaterialUIDToEffectUID;
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
     typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
-    typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
     typedef std::map<std::string , shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
-
-    typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
+    
+    typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
-    typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
+    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToJSONObject;
+
+    //TODO: these to be moved as UniqueIDToJSONObject
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
+    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
+    typedef std::map<std::string /* openCOLLADA uniqueID */, GLTFMeshSharedPtr > UniqueIDToMesh;
+    
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
+
+    //should be outside of asset
+    typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
     class GLTFAsset
     {
@@ -91,7 +96,7 @@ namespace GLTF
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
         
-        UniqueIDToJSONValue _uniqueIDToJSONValue;
+        UniqueIDToJSONObject _uniqueIDToJSONObject;
 
         UniqueIDToOriginalUID _uniqueIDToOriginalID;
         UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;

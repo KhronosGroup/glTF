@@ -33,7 +33,7 @@ namespace GLTF
     typedef shared_ptr<SemanticArray> SemanticArrayPtr;
     typedef std::map<std::string /* texcoord */, SemanticArrayPtr > TexCoordToSemanticsArrayPtr;
     
-    class GLTFEffect {
+    class GLTFEffect : public JSONObject {
         
     public:
         GLTFEffect(const std::string &ID);
@@ -45,7 +45,7 @@ namespace GLTF
         shared_ptr <JSONObject> getTechniqueGenerator();
 
         void setName(const std::string& name);
-        const std::string& getName();
+        std::string getName();
         
         void setLightingModel(const std::string& lightingModel);
         const std::string& getLightingModel();
@@ -56,9 +56,10 @@ namespace GLTF
         void addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic);
         SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
         
+        void evaluate(void *context);
+        
     private:
         std::string _ID;
-        std::string _name;
         std::string _lightingModel;
         shared_ptr <JSONObject> _techniqueGenerator;
         shared_ptr <JSONObject> _values;

@@ -577,7 +577,7 @@ namespace GLTF
                 void *context[2];
                 context[0] = targetBufferPtr;
                 context[1] = subMesh;
-                selectedMeshAttribute->apply(__RemapMeshAttribute, (void*)context);
+                selectedMeshAttribute->applyOnAccessor(__RemapMeshAttribute, (void*)context);
                                         
                 shared_ptr <GLTFBufferView> remappedBufferView =
                 createBufferViewWithAllocatedBuffer(referenceBufferView->getID(), targetBufferPtr, 0, selectedMeshAttribute->elementByteLength() * vertexAttributeCount, true);

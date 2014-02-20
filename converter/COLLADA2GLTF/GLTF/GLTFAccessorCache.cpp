@@ -36,5 +36,4 @@ namespace GLTF
         
         return memcmp(m_pData, rhs.m_pData, this->m_length) < 0;
     }
-    
 }

@@ -33,23 +33,18 @@ using namespace std;
 namespace GLTF 
 {    
     JSONNumber::JSONNumber(unsigned int value):
-    JSONValue(GLTF::NUMBER),
-    _type(UNSIGNED_INT32)        
-    {
+    _type(UNSIGNED_INT32) {
         this->_value = malloc(sizeof(unsigned int));
         memcpy(this->_value, &value, sizeof(unsigned int));
     }
     
     JSONNumber::JSONNumber(int value):
-    JSONValue(GLTF::NUMBER),
-    _type(INT32)        
-    {
+    _type(INT32) {
         this->_value = malloc(sizeof(int));
         memcpy(this->_value, &value, sizeof(int));
     }
     
     JSONNumber::JSONNumber(double value):
-    JSONValue(GLTF::NUMBER),
     _type(DOUBLE)        
     {
         this->_value = malloc(sizeof(double));
@@ -57,7 +52,6 @@ namespace GLTF
     }
 
     JSONNumber::JSONNumber(bool value):
-    JSONValue(GLTF::NUMBER),
     _type(BOOL)        
     {
         this->_value = malloc(sizeof(bool));
@@ -165,9 +159,13 @@ namespace GLTF
         return value;
     }
 
-    JSONNumber::JSONNumberType JSONNumber::getType()
+    JSONNumber::JSONNumberType JSONNumber::getNumberType()
     {
         return this->_type;
+    }
+    
+    JSONType JSONNumber::getJSONType() {
+        return kJSONNumber;
     }
 
 }

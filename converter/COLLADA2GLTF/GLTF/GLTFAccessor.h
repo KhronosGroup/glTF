@@ -35,6 +35,7 @@
  */
 namespace GLTF 
 {
+    /* this has not been updated to use GL Types */
     typedef void (*GLTFAccessorApplierFunc)(void* /* value */,
         ComponentType /* type */,
         size_t /* elementsPerValue */,
@@ -71,7 +72,7 @@ namespace GLTF
         void setCount(size_t length);
         size_t getCount();
         
-        void apply(GLTFAccessorApplierFunc applierFunc, void* context);
+        virtual void applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context);
         
         const std::string& getID();
         

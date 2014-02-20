@@ -31,7 +31,7 @@ namespace GLTF
 {
     class JSONNumber : public JSONValue {
     private:
-        JSONNumber():JSONValue(GLTF::NUMBER), _type(NOT_A_NUMBER) {}
+        JSONNumber():JSONValue(), _type(NOT_A_NUMBER) {}
         
     public:        
         typedef enum 
@@ -55,7 +55,9 @@ namespace GLTF
         double getDouble();
         bool getBool();
         
-        JSONNumber::JSONNumberType getType();
+        JSONNumber::JSONNumberType getNumberType();
+
+        virtual JSONType getJSONType();
 
     private:
         void* _value;

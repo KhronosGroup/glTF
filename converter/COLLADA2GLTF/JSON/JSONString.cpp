@@ -31,29 +31,26 @@
 
 namespace GLTF 
 {
-    JSONString::JSONString():
-    JSONValue(GLTF::STRING)
-    {
+    JSONString::JSONString() : JSONValue() {
     }
 
-    JSONString::JSONString(const std::string& str):
-    JSONValue(GLTF::STRING)
-    {
+    JSONString::JSONString(const std::string& str) : JSONValue() {
         this->_str = str;
     }
 
-    JSONString::~JSONString()
-    {
+    JSONString::~JSONString() {
     }        
         
-    const char* JSONString::getCString()
-    {
+    const char* JSONString::getCString() {
         return this->_str.c_str();
     }
     
-    const std::string& JSONString::getString()
-    {
+    const std::string& JSONString::getString() {
         return this->_str;
+    }
+    
+    JSONType JSONString::getJSONType() {
+        return kJSONString;
     }
     
 }

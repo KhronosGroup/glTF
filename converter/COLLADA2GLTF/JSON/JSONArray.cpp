@@ -79,22 +79,30 @@ namespace GLTF
     }
 
     JSONArray::JSONArray():
-    JSONValue(GLTF::ARRAY),  _values(_allvalues)
-    {
+    JSONValue(),  _values(_allvalues) {
     }
         
-    JSONArray::~JSONArray()
-    {
+    JSONArray::~JSONArray() {
     }        
     
-    JSONValueVectorRef JSONArray::values()
-    {
+    JSONValueVectorRef JSONArray::values() {
         return this->_values;
     }
     
-    void JSONArray::appendValue(shared_ptr <JSONValue> value)
-    {
+    void JSONArray::appendValue(shared_ptr <JSONValue> value) {
         this->_values.push_back(value);
+    }
+
+    JSONType JSONArray::getJSONType() {
+        return kJSONArray;
+    }
+    
+    void JSONArray::apply(JSONValueApplierFunc func, void* context) {
+        vector <shared_ptr <JSONValue> > values = this->values();
+        size_t count = values.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            values[i]->apply(func, context);
+        }
     }
 
 }

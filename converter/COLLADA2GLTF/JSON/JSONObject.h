@@ -80,7 +80,12 @@ namespace GLTF
         
         size_t getKeysCount();
         
+        virtual JSONType getJSONType();
+        
         bool isEmpty();
+        
+        void apply(JSONValueApplierFunc func, void* context);
+        
     protected:
         void _parseRapidJSONObject(void *value);
     private:
