@@ -84,6 +84,13 @@
                 "$ref" : "program.schema.json"
             }
         },
+        "samplers" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "sampler.schema.json"
+            }
+        },
         "shaders" : {
             "properties" : {
             },
