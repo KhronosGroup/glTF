@@ -36,35 +36,6 @@ namespace GLTF
 {
     //-- Serializers
     /*
-
-    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context) {
-        shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
-        shared_ptr <JSONObject> techniqueGenerator = effect->getTechniqueGenerator();
-        
-        GLTF::GLTFAsset *asset= (GLTF::GLTFAsset*)context;
-        
-        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *asset);
-        
-        effectObject->setString("name", effect->getName());
-        effectObject->setValue("instanceTechnique", instanceTechnique);
-        instanceTechnique->setString("technique", techniqueID);
-        shared_ptr<JSONObject> outputs(new JSONObject());
-        shared_ptr <JSONObject> values = effect->getValues();
-        std::vector <std::string> keys = values->getAllKeys();
-        for (size_t i = 0 ; i < keys.size() ; i++) {
-            shared_ptr <JSONObject> parameter = static_pointer_cast <JSONObject> (values->getValue(keys[i]));
-            shared_ptr <JSONObject> parameterValue = static_pointer_cast <JSONObject> (parameter->getValue("value"));
-            shared_ptr<JSONObject> output(new JSONObject());
-            if (parameterValue) {
-                outputs->setValue(keys[i], parameterValue);
-            }
-        }
-        instanceTechnique->setValue("values", outputs);
-        return effectObject;
-    }
-     */
-    /*
     shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
     {
         shared_ptr <GLTF::JSONObject> meshObject(new GLTF::JSONObject());

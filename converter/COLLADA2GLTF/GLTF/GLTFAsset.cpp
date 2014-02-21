@@ -10,7 +10,6 @@ namespace GLTF
         id += type + "_" + GLTF::GLTFUtils::toString(uniqueId.getObjectId());
         return id;
     }
-
     
     GLTFAsset::GLTFAsset():_isBundle(false) {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
@@ -20,8 +19,44 @@ namespace GLTF
         this->_prefix = 0;
         this->_geometryByteLength = 0;
         this->_animationByteLength = 0;
+        this->setGeometryByteLength(0);
+        this->setAnimationByteLength(0);
+        this->shaderIdToShaderString.clear();
+        this->_uniqueIDToMeshes.clear();
     }
     
+    shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
+
+        if (this->_nameToOutputStream.count(streamName) == 0) {
+            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
+            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+            
+            std::string folder = outputURI.getPathDir();
+            std::string fileName = inputURI.getPathFileBase();
+            
+            shared_ptr<GLTFOutputStream> outputStream = shared_ptr <GLTFOutputStream> (new GLTFOutputStream(folder, fileName, streamName));
+            this->_nameToOutputStream[streamName] = outputStream;
+        }
+        
+        return this->_nameToOutputStream[streamName];
+    }
+    
+    void GLTFAsset::closeOutputStream(const std::string& streamName, bool removeFile) {
+        
+        if (this->_nameToOutputStream.count(streamName) > 0) {
+            shared_ptr<GLTFOutputStream> outputStream = this->_nameToOutputStream[streamName];
+            
+            outputStream->close();
+            if (removeFile) {
+                remove(outputStream->outputPathCStr());
+            }
+            
+            //FIXME: We keep it around as it's informations are still accessed once close
+            //Would be better to remove the entry from the map when closed...
+            //this->_nameToOutputStream.erase(streamName);
+        }
+    }
+
     shared_ptr <GLTFConfig> GLTFAsset::converterConfig() {
         return this->_converterConfig;
     }

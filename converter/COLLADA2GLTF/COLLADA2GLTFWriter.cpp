@@ -73,26 +73,36 @@ namespace GLTF
      */
     bool COLLADA2GLTFWriter::write()
 	{
+        this->_extraDataHandler = new ExtraDataHandler();
+        //To comply with macro to access config
+        GLTFAsset &asset = this->_asset;
+
         ifstream inputVertices;
         ifstream inputIndices;
         ifstream inputAnimation;
         ifstream inputCompression;
         ofstream ouputStream;
 
-        //To comply with macro to access config
-        GLTFAsset &asset = this->_asset;
 
-        this->_writer.initWithPath(asset.getOutputFilePath().c_str());
-
-        this->_asset.setGeometryByteLength(0);
-        this->_asset.setAnimationByteLength(0);
+        this->_asset.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
+        this->_asset.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
+        this->_asset.root->setString("profile", this->_asset.profile->id());
+        this->_asset.root->createObjectIfNeeded("nodes");
         
-        this->_extraDataHandler = new ExtraDataHandler();
+        this->_writer.initWithPath(asset.getOutputFilePath().c_str());
+        
+		COLLADAFW::Root root(&this->_loader, this);
+        this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
+		if (!root.loadDocument( this->_asset.getInputFilePath()))
+			return false;
 
-        this->_asset.shaderIdToShaderString.clear();
-        this->_asset._uniqueIDToMeshes.clear();
+        shared_ptr<GLTFOutputStream> verticesOutputStream = this->_asset.createOutputStreamIfNeeded(kVerticesOutputStream);
+        shared_ptr<GLTFOutputStream> indicesOutputStream = this->_asset.createOutputStreamIfNeeded(kIndicesOutputStream);
+        shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset.createOutputStreamIfNeeded(kAnimationOutputStream);
+        shared_ptr<GLTFOutputStream> compressionOutputStream = this->_asset.createOutputStreamIfNeeded(kCompressionOutputStream);
+
         /*
-         1. We output vertices and indices separatly in 2 different files
+         1. We output vertices and indices separately in 2 different files
          2. Then output them in a single file
          */
         COLLADABU::URI inputURI(this->_asset.getInputFilePath().c_str());
@@ -100,24 +110,12 @@ namespace GLTF
         
         std::string folder = outputURI.getPathDir();
         std::string fileName = inputURI.getPathFileBase();
-        
+                                
         std::string sharedBufferID = fileName;
         std::string outputFilePath = outputURI.getPathDir() + fileName + ".bin";
         
-        this->_asset._vertexOutputStream = new GLTFOutputStream(folder, fileName, "vertices");
-        this->_asset._indicesOutputStream = new GLTFOutputStream(folder, fileName, "indices");
-        this->_asset._animationOutputStream = new GLTFOutputStream(folder, fileName, "animations");
-        this->_asset._compressionOutputStream = new GLTFOutputStream(folder, fileName, "compression");
-        std::string compressedBufferID = this->_asset._compressionOutputStream->id();
-
         ouputStream.open (outputFilePath.c_str(), ios::out | ios::ate | ios::binary);
-        
-        this->_asset.profile = shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile());
-        
-        this->_asset.root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-        this->_asset.root->setString("profile", this->_asset.profile->id());
-        this->_asset.root->setValue("nodes", shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject()));
-        
+                        
         shared_ptr<JSONObject> assetObject = this->_asset.root->createObjectIfNeeded("asset");
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
         assetObject->setString("generator",version);
@@ -125,12 +123,6 @@ namespace GLTF
         assetExtras->setBool("premultipliedAlpha", CONFIG_BOOL("premultipliedAlpha"));
         assetObject->setValue("extras", assetExtras);
         
-		COLLADAFW::Root root(&this->_loader, this);
-        
-        this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-		if (!root.loadDocument( this->_asset.getInputFilePath()))
-			return false;
-                
         // ----
         UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
         shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
@@ -167,27 +159,24 @@ namespace GLTF
                 animation->writeAnimationForTargetID(targetID, this->_asset);
             }
         }
-
-        //reopen .bin files for vertices and indices
-        size_t verticesLength = this->_asset._vertexOutputStream->length();
-        size_t indicesLength = this->_asset._indicesOutputStream->length();
-        size_t animationLength = this->_asset._animationOutputStream->length();
-        size_t compressionLength = this->_asset._compressionOutputStream->length();
-
-        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(this->_asset._compressionOutputStream->id(), compressionLength));
-
-        inputVertices.open(this->_asset._vertexOutputStream->outputPathCStr(), ios::in | ios::binary);
-        inputIndices.open(this->_asset._indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
-        if (animationLength > 0) {
-            inputAnimation.open(this->_asset._animationOutputStream->outputPathCStr(), ios::in | ios::binary);
-        }
-        inputCompression.open(this->_asset._compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
         
-        this->_asset._vertexOutputStream->close();
-        this->_asset._indicesOutputStream->close();
-        this->_asset._animationOutputStream->close();
-        this->_asset._compressionOutputStream->close();
+        //reopen .bin files for vertices and indices
+        size_t verticesLength = verticesOutputStream->length();
+        size_t indicesLength = indicesOutputStream->length();
+        size_t animationLength = animationOutputStream->length();
+        size_t compressionLength = compressionOutputStream->length();
 
+        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(compressionOutputStream->id(), compressionLength));
+
+        inputVertices.open(verticesOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputIndices.open(indicesOutputStream->outputPathCStr(), ios::in | ios::binary);
+        inputCompression.open(compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
+        
+        this->_asset.closeOutputStream(kVerticesOutputStream, false);
+        this->_asset.closeOutputStream(kIndicesOutputStream, false);
+        this->_asset.closeOutputStream(kAnimationOutputStream, false);
+        this->_asset.closeOutputStream(kCompressionOutputStream, false);
+        
         char* bufferIOStream = (char*)malloc(sizeof(char) * verticesLength);
         inputVertices.read(bufferIOStream, verticesLength);
         ouputStream.write(bufferIOStream, verticesLength);
@@ -209,6 +198,7 @@ namespace GLTF
         }
         
         if (animationLength > 0) {
+            inputAnimation.open(animationOutputStream->outputPathCStr(), ios::in | ios::binary);
             bufferIOStream = (char*)malloc(sizeof(char) * animationLength);
             inputAnimation.read(bufferIOStream, animationLength);
             ouputStream.write(bufferIOStream, animationLength);
@@ -220,17 +210,12 @@ namespace GLTF
         inputAnimation.close();
         inputCompression.close();
 
-        remove(this->_asset._vertexOutputStream->outputPathCStr());
-        remove(this->_asset._indicesOutputStream->outputPathCStr());
-        remove(this->_asset._animationOutputStream->outputPathCStr());
+        remove(verticesOutputStream->outputPathCStr());
+        remove(indicesOutputStream->outputPathCStr());
+        remove(animationOutputStream->outputPathCStr());
         if (compressionLength == 0) {
-            remove(this->_asset._compressionOutputStream->outputPathCStr());
+            remove(compressionOutputStream->outputPathCStr());
         }
-        
-        delete this->_asset._vertexOutputStream;
-        delete this->_asset._indicesOutputStream;
-        delete this->_asset._animationOutputStream;
-        delete this->_asset._compressionOutputStream;
         
         shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(sharedBufferID, verticesLength + indicesLength + animationLength));
 
@@ -409,6 +394,7 @@ namespace GLTF
         }
 
         if (compressionBuffer->getByteLength() > 0) {
+            std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
             compressionBuffer->setString(kPath, compressedBufferID + ".bin");
             if (CONFIG_STRING("compressionMode") == "ascii")
@@ -898,38 +884,32 @@ namespace GLTF
             this->_asset._uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
             std::string animationID = animationListID.toAscii();
-            
+            animatedTarget->setString("target", uniqueUID);
+            animatedTarget->setString("transformId", animationID);
+
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
-                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "MATRIX");
-                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
-                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "translation");
-                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
             
             if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
-                animatedTarget->setString("target", uniqueUID);
                 animatedTarget->setString("path", "rotation");
-                animatedTarget->setString("transformId", animationID);
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
           
-          if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
-            animatedTarget->setString("target", uniqueUID);
-            animatedTarget->setString("path", "scale");
-            animatedTarget->setString("transformId", animationID);
-            animatedTargets->push_back(animatedTarget);
-            shouldExportTRS = true;
-          }
+            if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
+                animatedTarget->setString("path", "scale");
+                animatedTargets->push_back(animatedTarget);
+                shouldExportTRS = true;
+            }
         }
                     
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
@@ -1797,9 +1777,10 @@ namespace GLTF
         inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
         
-        inverseBindMatrices->setUnsignedInt32(kByteOffset,this->_asset._animationOutputStream->length());
+        shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset.createOutputStreamIfNeeded(kAnimationOutputStream);
+        inverseBindMatrices->setUnsignedInt32(kByteOffset,animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
-        this->_asset._animationOutputStream->write(buffer);
+        animationOutputStream->write(buffer);
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);

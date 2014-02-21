@@ -13,6 +13,11 @@ namespace GLTF
 #define CONFIG_INT32(X) (asset.converterConfig()->config()->getInt32(X))
 #define CONFIG_UINT32(X) (asset.converterConfig()->config()->getUInt32(X))
 
+    const std::string kVerticesOutputStream = "vertices";
+    const std::string kIndicesOutputStream = "indices";
+    const std::string kAnimationOutputStream = "animations";
+    const std::string kCompressionOutputStream = "compression";
+    
     class GLTFAnimationFlattener;
     
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
@@ -46,6 +51,8 @@ namespace GLTF
     //should be outside of asset
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
+    typedef std::map<std::string , shared_ptr<GLTFOutputStream> > NameToOutputStream;
+    
     class GLTFAsset
     {
     public:
@@ -55,12 +62,14 @@ namespace GLTF
         shared_ptr <JSONObject> convertionResults();
         
         const std::string resourceOuputPathForPath(const std::string& resourcePath);
-        
-        void setBundleOutputPath(const std::string& bundleOutputPath);
-        
-        const std::string& getBundleOutputPath();
+
+        shared_ptr<GLTFOutputStream> createOutputStreamIfNeeded(const std::string& streamName);
+        void closeOutputStream(const std::string& streamName, bool removeFile);
         
         void log(const char * format, ... );
+
+        void setBundleOutputPath(const std::string& bundleOutputPath);
+        const std::string& getBundleOutputPath();
         
         void setGeometryByteLength(size_t geometryByteLength);
         size_t getGeometryByteLength();
@@ -103,12 +112,6 @@ namespace GLTF
         FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
         UniqueIDToAccessor _uniqueIDToAccessorObject;
         
-        GLTFOutputStream *_vertexOutputStream;
-        GLTFOutputStream *_indicesOutputStream;
-        GLTFOutputStream *_animationOutputStream;
-        GLTFOutputStream *_compressionOutputStream;
-        
-        
         UniqueIDToAnimationFlattener    _targetUIDWithPathToAnimationFlattener;
     private:
         shared_ptr <GLTFConfig>         _converterConfig;
@@ -122,6 +125,13 @@ namespace GLTF
         size_t                          _animationByteLength;
         std::string                     _bundleOutputPath;
         bool                            _isBundle;
+        
+        GLTFOutputStream *_vertexOutputStream;
+        GLTFOutputStream *_indicesOutputStream;
+        GLTFOutputStream *_animationOutputStream;
+        GLTFOutputStream *_compressionOutputStream;
+        
+        NameToOutputStream _nameToOutputStream;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

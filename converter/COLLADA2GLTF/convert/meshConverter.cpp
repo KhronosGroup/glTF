@@ -37,9 +37,9 @@ namespace GLTF
     {
         bool shouldOGCompressMesh = false;
         
-        GLTFOutputStream* vertexOutputStream = asset._vertexOutputStream;
-        GLTFOutputStream* indicesOutputStream = asset._indicesOutputStream;
-        GLTFOutputStream* compressionOutputStream = asset._compressionOutputStream;
+        GLTFOutputStream* vertexOutputStream = asset.createOutputStreamIfNeeded(kVerticesOutputStream).get();
+        GLTFOutputStream* indicesOutputStream = asset.createOutputStreamIfNeeded(kIndicesOutputStream).get();
+        GLTFOutputStream* compressionOutputStream = asset.createOutputStreamIfNeeded(kCompressionOutputStream).get();
         
 #ifdef USE_WEBGLLOADER
 

@@ -259,7 +259,7 @@ namespace GLTF
         O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT", "PARALLELOGRAM"));
         O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT", "DIFFERENTIAL"));
         
-        GLTFOutputStream *outputStream = asset._compressionOutputStream;
+        GLTFOutputStream *outputStream = asset.createOutputStreamIfNeeded(kCompressionOutputStream).get();
         size_t bufferOffset = outputStream->length();
         
         O3DGCSC3DMCPredictionMode floatAttributePrediction = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
@@ -435,7 +435,7 @@ namespace GLTF
     }
     
     void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset) {
-        GLTFOutputStream *outputStream = asset._compressionOutputStream;
+        GLTFOutputStream *outputStream = asset.createOutputStreamIfNeeded(kCompressionOutputStream).get();
         Real max[32];
         Real min[32];
         O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
@@ -543,7 +543,7 @@ namespace GLTF
         //write
         size_t byteOffset = 0;
         bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
-        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset._compressionOutputStream : asset._animationOutputStream;
+        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset.createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset.createOutputStreamIfNeeded(kAnimationOutputStream).get();;
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         
