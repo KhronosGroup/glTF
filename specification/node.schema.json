@@ -2,28 +2,44 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node",
     "type" : "object",
-    "description" : "A node in the model's node hierarchy.  Node can reference meshes, cameras, or lights.",
+    "description" : "A node in the model's node hierarchy.  Node can reference meshes, cameras, lights, or skins.",
     "properties" : {
+        "camera" : {
+            "type" : "string",
+            "description" : "The id (property name) of the camera referenced by this node.  A node will have either camera, light, or meshes."
+        },
         "children" : {
             "type" : "array",
-            "description" : "The node's children.  Each string in the array must match an existing id (JSON property name) in this model's nodes.  Children are affected by the node's matrix.",
+            "description" : "The node's children.  Each string in the array must match an existing id (property name) in this model's nodes.  Children are affected by the node's matrix.",
             "items" : {
                 "type" : "string"
             },
             "uniqueItems" : true
         },
+        "instanceSkin" : {
+	    "$ref" : "nodeInstanceSkin.schema.json"
+        },
+        "jointId" : {
+            "type" : "string",
+            "description" : "ID used when this node is a joint in a skin."
+        },
+        "light" : {
+            "type" : "string",
+            "description" : "The id (property name) of the light referenced by this node.  A node will have either camera, light, or meshes."
+        },
         "matrix" : {
             "type" : "array",
-            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  It is directly usable by uniformMatrix4fv with transpose equal to false.",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  It is directly usable by uniformMatrix4fv with transpose equal to false.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
             "minItems" : 16,
-            "maxItems" : 16
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id (JSON property name) in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
+            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id (property name) in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.  A node will have either camera, light, or meshes.",
             "items" : {
                 "type" : "string"
             },
@@ -31,7 +47,37 @@
         },
         "name" : {
             "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
+            "description" : "The artist-created name of this node.  This is not necessarily globally unique."
+        },
+        "rotation" : {
+            "type" : "array",
+            "description" : "The node's quaternion rotation.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [ 1.0, 0.0, 0.0, 0.0 ]
+        },
+        "scale" : {
+            "type" : "array",
+            "description" : "The node's non-uniform scale.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 1.0, 1.0, 1.0 ]
+        },
+        "translation" : {
+            "type" : "array",
+            "description" : "The node's translation.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 0.0, 0.0, 0.0 ]
         },
         "extra" : {
             "type" : "any",

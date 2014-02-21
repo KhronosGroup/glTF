@@ -1,0 +1,36 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "instanceSkin",
+    "type" : "object",
+    "description" : "instanceSkin",
+    "properties": {    
+        "skeletons" : {
+            "type" : "array",
+            "description" : "jointIds (right?) of skeleton nodes.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "required" : true
+        },
+        "skin" : {
+            "type" : "string",
+            "description" : "The id (property name) of the skin referenced by this node.",
+            "required" : true
+        },
+        "sources" : {
+            "type" : "array",
+            "description" : "IDs (property names) of source meshes.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "required" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
