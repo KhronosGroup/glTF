@@ -1,0 +1,15 @@
+{
+    "programs" : {
+        "program_id": {
+            "attributes": [
+                "a_normal",
+                "a_position"
+            ],
+            "fragmentShader": "fs_id",
+            "vertexShader": "vs_id",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}

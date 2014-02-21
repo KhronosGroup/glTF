@@ -77,6 +77,13 @@
                 "$ref" : "node.schema.json"
             }
         },
+        "programs" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "program.schema.json"
+            }
+        },
         "shaders" : {
             "properties" : {
             },

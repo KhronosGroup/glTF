@@ -2,32 +2,23 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "program",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "program",
     "properties": {
         "attributes" : {
             "type" : "array",
-            "description" : "TODO",
+            "description" : "Names of GLSL vertex shader attributes.  For use with bindAttribLocation().",
             "items" : {
-                "$ref" : "attribute.schema.json"
-            },
-            "minItems" : 1,
-            "required" : true
+                "type" : "string"
+            }
         },
         "fragmentShader" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the fragment shader referenced by this program.",
+            "description" : "The id (property name) of the fragment shader referenced by this program.",
             "required" : true
-        },
-        "uniforms" : {
-            "type" : "array",
-            "description" : "TODO",
-            "items" : {
-                "$ref" : "uniform.schema.json"
-            }
         },
         "vertexShader" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the vertex shader referenced by this program.",
+            "description" : "The id (property name) of the vertex shader referenced by this program.",
             "required" : true
         },
         "extra" : {

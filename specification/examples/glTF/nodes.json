@@ -6,7 +6,10 @@
             "meshes": [
                 "mesh_id"
             ],
-            "name": "name of meshes node"
+            "name": "name of meshes node",
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
         },
         "trs_node_id": {
             "children": ["meshes_node_id"],
@@ -39,7 +42,10 @@
                 "skin": "skin_id",
                 "sources": [
                     "skin_mesh_id"
-                ]
+                ],
+                "extra" : {
+                    "Application specific" : "The extra object can contain any properties."
+                }     
             },
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "name of skin node"
