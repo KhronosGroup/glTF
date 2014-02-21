@@ -1,32 +1,25 @@
 {
     "meshes" : {
-        "mesh_id" : {
-		    "attributes" : {
-			    "attribute_id" : {
-				    "bufferView" : "bufferViewWithVertices_id",
-				    "byteOffset" : 0,
-				    "byteStride" : 3,
-				    "count" : 1024,
-				    "type" : "FLOAT_VEC3",
-				    "normalized" : false,
-				    "max" : [-1.0, -1.0, -1.0],
-				    "min" : [1.0, 1.0, 1.0]
-				}
-		    },
-		    "name" : "application-visible globally-unique name",
-		    "primitives" : [{
-			    "indices" : {
-			        "bufferView" : "bufferViewWithIndices_id",
-			        "byteOffset" : 0,
-			        "count" : 1024,
-			        "type" : "UNSIGNED_SHORT"
-			    },
-			    "material" : "material_id",
-			    "primitive" : "TRIANGLES",
-			    "semantics" : {    
-			        "POSITION" : "attribute_id"
-			    }
-			}]
-		}
+        "mesh_id": {
+            "name": "name of mesh",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_id0",
+                        "POSITION": "accessor_id1",
+                        "TEXCOORD_0": "accessor_id2"
+                    },
+                    "indices": "accessor_id3",
+                    "material": "material_id",
+                    "primitive": 4,
+                    "extra" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            ],
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
     }
 }
