@@ -1,10 +1,19 @@
 {
     "shaders" : {
-        "lambertVS_id" : {
-            "path" : "lambertVS.glsl"
+        "vs_id" : {
+            "path" : "vertexshader.glsl",
+            "type": 35633,
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
         },
-        "lambertFS_id" : {
-            "path" : "lambertFS.glsl"
+        "fs_id" : {
+            "path" : "fragmentshader.glsl",
+            "type": 35632
+        },
+        "fs_data_uri_id" : {
+            "path" : "data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B",
+            "type": 35632
         }
     }
 }

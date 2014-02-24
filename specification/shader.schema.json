@@ -4,14 +4,16 @@
     "type" : "object",
     "description" : "A vertex or fragment shader.",
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },    
         "path" : {
             "type" : "string",
             "description" : "The URL of the GLSL source.  Relative URLs are relative to the .json file that references the shader.  Instead of referencing an external shader, the URL can also be a text/plain data URI.",
             "format" : "uri",
+            "required" : true
+        },
+        "type" : {
+            "type" : "number",
+            "description" : "Specifies the shader stage.  Allowed values are 35632 (FRAGMENT_SHADER) and 35633 (VERTEX_SHADER).",
+            "enum" : [35632, 35633],
             "required" : true
         },
         "extra" : {
