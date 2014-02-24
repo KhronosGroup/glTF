@@ -1,0 +1,15 @@
+{
+    "scene" : "defaultScene",
+    "scenes" : {
+        "defaultScene": {
+            "nodes": [
+                "mesh_node_id",
+                "camera_node_id",
+                "light_node_id"
+            ],
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
+        }
+    }
+}

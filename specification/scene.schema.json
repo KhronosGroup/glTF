@@ -1,0 +1,21 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "scene",
+    "type" : "object",
+    "description" : "The root nodes of the scene.",
+    "properties" : {
+        "nodes" : {
+            "type" : "array",
+            "description" : "ids (property names) for each root node in the scene.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

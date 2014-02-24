@@ -91,6 +91,17 @@
                 "$ref" : "sampler.schema.json"
             }
         },
+        "scene" : {
+            "type" : "string",
+            "description" : "The scene to use for this asset."
+        },
+        "scenes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "scene.schema.json"
+            }
+        },
         "shaders" : {
             "properties" : {
             },
