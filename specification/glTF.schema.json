@@ -109,6 +109,13 @@
                 "$ref" : "shader.schema.json"
             }
         },
+        "skins" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "skin.schema.json"
+            }
+        },
         "techniques" : {
             "properties" : {
             },

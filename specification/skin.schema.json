@@ -1,0 +1,37 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "skin",
+    "type" : "object",
+    "description" : "skin",
+    "properties" : {
+        "bindShapeMatrix" : {
+            "type" : "array",
+            "description" : "Floating-point 4x4 transformation matrix stored in column-major order.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "inverseBindMatrices" : {
+            "type" : "string",
+            "description" : "Specifies the accessor id (property name) with the inverse-bind matrices.",
+            "required" : true        
+        },
+        "joints" : {
+            "type" : "array",
+            "description" : "jointIds of the joints (nodes with a jointId property) in this skin.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "required" : true        
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
