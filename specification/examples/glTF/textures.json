@@ -1,0 +1,15 @@
+{
+    "textures" : {
+        "texture_id": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_id",
+            "source": "image_id",
+            "target": 3553,
+            "type": 5121,
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}
