@@ -1,15 +1,15 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "pass",
+    "title" : "technique pass",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "technique pass",
     "properties": { 
-        "program" : {
-            "$ref" : "program.schema.json",
+        "instanceProgram" : {
+            "$ref" : "techniquePassInstanceProgram.schema.json",
             "required" : true
         },   
         "states" : {
-            "$ref" : "states.schema.json"
+            "$ref" : "techniquePassStates.schema.json"
         },
         "extra" : {
             "type" : "any",

@@ -1,0 +1,32 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique pass instance program",
+    "type" : "object",
+    "description" : "technique pass instance program",
+    "properties" : {
+        "attributes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePassInstanceProgramAttribute.schema.json"
+            }        
+        },
+        "program" : {
+            "type" : "string",
+            "description" : "Specifies the program id (property name).",
+            "required" : true        
+        },
+        "uniforms" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePassInstanceProgramUniform.schema.json"
+            }        
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

@@ -1,8 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "mesh primitive attribute",
+    "title" : "mesh/primitive/attribute",
     "type" : "string",
-    "description" : "References to accessors for attributes.",
-    "required" : true,
-    "additionalProperties" : false
+    "description" : "References to accessors for attributes."
 }

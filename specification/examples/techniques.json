@@ -1,0 +1,101 @@
+{
+    "techniques" : {
+        "technique_id" : {
+            "parameters": {
+                "ambient": {
+                    "type": 35666,
+                    "extra" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "lightColor": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "lightTransform": {
+                    "source": "directional_light_node_id",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "texcoord": {
+                    "semantic": "TEXCOORD_0",
+                    "type": 35664
+                },
+
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": 35666
+                },
+                "jointMatrix": {
+                    "semantic": "JOINT_MATRIX",
+                    "type": 35676
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": 35666
+                }
+            },
+            "pass" : "pass_id",
+            "passes" : {
+                "pass_id" : {
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_position": "position",
+                            "a_normal": "normal",
+                            "a_texcoord0": "texcoord0",
+                            "a_joint": "joint",
+                            "a_jointMatrix": "jointMatrix",
+                            "a_weight": "weight"
+                        },
+                        "program": "program_id",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_diffuse": "diffuse",
+                            "u_lightColor": "lightColor",
+                            "u_lightTransformMatrix": "lightTransform",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_normalMatrix": "normalMatrix"
+                        },
+                        "extra" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "extra" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            },
+            "extra" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}
