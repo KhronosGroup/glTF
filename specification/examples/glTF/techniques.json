@@ -1,17 +1,64 @@
 {
     "techniques" : {
         "technique_id" : {
-		    "pass" : {
-			    "program" : {
-					"attributes" : [{
-                        "semantic" : "POSITION",
-				    	"symbol" : "position",
-				    	"type" : "FLOAT_VEC3"
-					}],
-					"fragmentShader" : "fragmentShader_id",
-					"vertexShader" : "vertexShader_id"
-			    }
-			}
+            "parameters": {
+                "ambient": {
+                    "type": 35666
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "lightColor": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "lightTransform": {
+                    "source": "directional_light_node_id",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "texcoord": {
+                    "semantic": "TEXCOORD_0",
+                    "type": 35664
+                },
+
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": 35666
+                },
+                "jointMatrix": {
+                    "semantic": "JOINT_MATRIX",
+                    "type": 35676
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": 35666
+                }
+            }
         }
     }
 }

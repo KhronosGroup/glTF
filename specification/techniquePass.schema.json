@@ -1,0 +1,20 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "pass",
+    "type" : "object",
+    "description" : "TODO",
+    "properties": { 
+        "program" : {
+            "$ref" : "program.schema.json",
+            "required" : true
+        },   
+        "states" : {
+            "$ref" : "states.schema.json"
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

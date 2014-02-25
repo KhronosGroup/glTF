@@ -2,14 +2,25 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique",
     "type" : "object",
-    "description" : "TODO",
-    "properties": {    
+    "description" : "technique",
+    "properties": {
         "parameters" : {
-	        "$ref" : "parameters.schema.json"
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniqueParameters.schema.json"
+            }
         },
         "pass" : {
-            "$ref" : "pass.schema.json",
-            "required" : true
+            "type" : "string",
+            "description" : "The pass to use for this technique."
+        },
+        "passes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePass.schema.json"
+            }
         },
         "extra" : {
             "type" : "any",
