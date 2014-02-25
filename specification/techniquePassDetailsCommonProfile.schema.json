@@ -1,0 +1,32 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique/pass/details/commonProfile",
+    "type" : "object",
+    "description" : "technique/pass/details/commonProfile",
+    "properties" : {
+        "lightingModel" : {
+            "type" : "string",
+            "description" : "TODO",
+            "required" : true        
+        },
+        "parameters" : {
+            "type" : "array",
+            "description" : "TODO",
+            "items" : {
+                "type" : "string"
+            }
+        },
+        "texcoordBindings" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePassDetailsCommonProfileTexcoordBindings.schema.json"
+            }  
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}

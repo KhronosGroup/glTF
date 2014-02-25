@@ -1,8 +1,8 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "technique pass instance program",
+    "title" : "technique/pass/instanceProgram",
     "type" : "object",
-    "description" : "technique pass instance program",
+    "description" : "technique/pass/instanceProgram",
     "properties" : {
         "attributes" : {
             "properties" : {

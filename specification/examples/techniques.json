@@ -65,6 +65,30 @@
             "pass" : "pass_id",
             "passes" : {
                 "pass_id" : {
+                    "details": {
+                        "commonProfile": {
+                            "lightingModel": "Blinn",
+                            "parameters": [
+                                "ambient",
+                                "diffuse",
+                                "lightColor",
+                                "lightTransform",
+                                "modelViewMatrix",
+                                "projectionMatrix",
+                                "normalMatrix"
+                            ],
+                            "texcoordBindings": {
+                                "diffuse": "TEXCOORD_0"
+                            },
+                            "extra": {
+                                "doubleSided": false
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile",
+                        "extra" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }
+                    },
                     "instanceProgram": {
                         "attributes": {
                             "a_position": "position",
@@ -86,7 +110,7 @@
                         },
                         "extra" : {
                             "Application specific" : "The extra object can contain any properties."
-                        }     
+                        }
                     },
                     "extra" : {
                         "Application specific" : "The extra object can contain any properties."

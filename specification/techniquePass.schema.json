@@ -4,6 +4,9 @@
     "type" : "object",
     "description" : "technique pass",
     "properties": { 
+        "details" : {
+            "$ref" : "techniquePassDetails.schema.json"
+        },
         "instanceProgram" : {
             "$ref" : "techniquePassInstanceProgram.schema.json",
             "required" : true

@@ -1,0 +1,21 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique/pass/details",
+    "type" : "object",
+    "description" : "technique/pass/details",
+    "properties" : {
+        "commonProfile" : {
+            "$ref" : "techniquePassDetailsCommonProfile.schema.json"
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "TODO",
+            "required" : true        
+        },
+        "extra" : {
+            "type" : "any",
+            "description" : "Optional application-specific data."
+        }
+    },
+    "additionalProperties" : false
+}
