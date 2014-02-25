@@ -124,6 +124,13 @@
             "type" : "string",
             "default" : "1.0"
         },
+        "textures" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "texture.schema.json"
+            }
+        },
         "extra" : {
             "type" : "any",
             "description" : "Optional application-specific data."
