@@ -64,6 +64,9 @@ const std::string kInstanceTechnique = "instanceTechnique";
 const std::string kTechnique = "technique";
 const std::string kValues = "values";
 const std::string kValue = "value";
+const std::string kPremultipliedAlpha = "premultipliedAlpha";
+const std::string kProfile = "profile";
+const std::string kNodes = "nodes";
 
 namespace GLTF
 {

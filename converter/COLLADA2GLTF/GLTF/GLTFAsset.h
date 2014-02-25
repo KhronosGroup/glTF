@@ -61,6 +61,8 @@ namespace GLTF
         shared_ptr <GLTFConfig> converterConfig();
         shared_ptr <JSONObject> convertionResults();
         
+        void write();
+        
         const std::string resourceOuputPathForPath(const std::string& resourcePath);
 
         shared_ptr<GLTFOutputStream> createOutputStreamIfNeeded(const std::string& streamName);
@@ -86,6 +88,8 @@ namespace GLTF
         std::string pathRelativeToInputPath(const std::string& path);
         void copyImagesInsideBundleIfNeeded();
         
+        void prepareForProfile(shared_ptr<GLTFProfile> profile);
+
     public:
         shared_ptr <GLTFProfile> profile;
         shared_ptr <JSONObject> root;
@@ -126,12 +130,8 @@ namespace GLTF
         std::string                     _bundleOutputPath;
         bool                            _isBundle;
         
-        GLTFOutputStream *_vertexOutputStream;
-        GLTFOutputStream *_indicesOutputStream;
-        GLTFOutputStream *_animationOutputStream;
-        GLTFOutputStream *_compressionOutputStream;
-        
         NameToOutputStream _nameToOutputStream;
+        GLTF::GLTFWriter _writer;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
