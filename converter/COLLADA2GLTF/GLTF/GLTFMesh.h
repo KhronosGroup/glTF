@@ -78,20 +78,11 @@ namespace GLTF
         
         void resolveAttributes();
         
-#ifdef USE_WEBGLLOADER
-        void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
-        shared_ptr<GLTFBuffer> getCompressedBuffer();
-#endif
-        
     private:
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID;
         shared_ptr<JSONObject> _extensions;
         
-#ifdef USE_WEBGLLOADER
-        //WEBGLLOADER
-        shared_ptr<GLTFBuffer> _compressedBuffer;
-#endif
         //This is unfortunate that we need to keep this information,
         //but since we get skinning weights and bone indices after the mesh and the openCOLLADA mesh is not available anymore, we need to keep
         //the remap table to build the weights and bone indices as mesh attributes.

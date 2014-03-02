@@ -201,14 +201,4 @@ namespace GLTF
             primitivesArray->appendValue(primitive);
         }
     }
-    
-#ifdef USE_WEBGLLOADER
-    void GLTFMesh::setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer) {
-        this->_compressedBuffer = compressedBuffer;
-    }
-    
-    shared_ptr<GLTFBuffer> GLTFMesh::getCompressedBuffer() {
-        return this->_compressedBuffer;
-    }
-#endif
 }

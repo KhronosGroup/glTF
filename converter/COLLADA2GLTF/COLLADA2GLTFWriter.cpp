@@ -227,17 +227,7 @@ namespace GLTF
                 } else {
                     meshes2 = meshes;
                 }
-                
-#if USE_WEBGLLOADER
-                //now compress meshes
-                if (CONFIG_STRING("compressionType") == "won") {
-                    for (size_t i = 0 ; i < meshes2->size() ; i++) {
-                        shared_ptr <GLTF::GLTFMesh> mesh = (*meshes2)[i];
-                        compress(mesh);
-                    }
-                }
-#endif
-                
+                                
                 meshesCount = meshes2->size();
                 if (meshesCount) {
                     for (size_t i = 0 ; i < meshes2->size() ; i++) {
