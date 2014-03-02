@@ -1,7 +1,7 @@
 #ifndef __GLTF_ACCESSOR_CACHE__
 #define __GLTF_ACCESSOR_CACHE__
 
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 
 namespace GLTF
 {

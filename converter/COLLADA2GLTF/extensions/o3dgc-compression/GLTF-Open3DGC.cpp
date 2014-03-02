@@ -22,7 +22,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 #include "GLTF-Open3DGC.h"
 

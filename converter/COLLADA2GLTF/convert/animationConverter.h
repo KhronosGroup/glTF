@@ -4,7 +4,7 @@
 #ifndef __GLTFANIMATIONCONVERTER_H__
 #define __GLTFANIMATIONCONVERTER_H__
 
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "mathHelpers.h"
 
 namespace GLTF

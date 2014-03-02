@@ -77,7 +77,9 @@ set(GLTF_SOURCES main.cpp
 
     COLLADA2GLTFWriter.h
     COLLADA2GLTFWriter.cpp
-    GLTF-OpenCOLLADA.h
+    GLTFOpenCOLLADA.h
+    GLTFOpenCOLLADAUtils.h
+    GLTFOpenCOLLADAUtils.cpp
 
     GLTF/GLTFAccessorCache.cpp
     GLTF/GLTFAccessorCache.h

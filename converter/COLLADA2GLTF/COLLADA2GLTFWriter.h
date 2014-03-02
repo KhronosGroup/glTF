@@ -28,7 +28,7 @@
 #define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
-#include "GLTF-OpenCOLLADA.h"
+#include "GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 
 #include "helpers/geometryHelpers.h"
@@ -77,7 +77,6 @@ namespace GLTF
     private:
 		static void reportError(const std::string& method, const std::string& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
-        shared_ptr <GLTF::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);

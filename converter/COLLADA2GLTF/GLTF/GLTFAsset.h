@@ -2,7 +2,7 @@
 #define __GLTFAsset__
 
 #include <stdarg.h>
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "GLTFAccessorCache.h"
 
 namespace GLTF
@@ -26,10 +26,10 @@ namespace GLTF
     typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, COLLADAFW::UniqueId > MaterialUIDToEffectUID;
+    typedef std::map<std::string /* openCOLLADA uniqueID */, COLLADAFW::UniqueId > MaterialUIDToEffectUID;
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
+    typedef std::map<std::string /* openCOLLADA uniqueID */, std::string > MaterialUIDToName;
     typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string  , std::string > ImageIdToImagePath;
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
@@ -44,7 +44,6 @@ namespace GLTF
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
-    typedef std::map<std::string /* openCOLLADA uniqueID */, GLTFMeshSharedPtr > UniqueIDToMesh;
     
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
 
@@ -88,6 +87,10 @@ namespace GLTF
         std::string pathRelativeToInputPath(const std::string& path);
         void copyImagesInsideBundleIfNeeded();
         
+        void setObjectForUniqueId(const std::string& uniqueId, shared_ptr<JSONObject> obj);
+        shared_ptr<JSONObject> getObjectForUniqueId(const std::string& uniqueId);
+        bool containsObjectForUniqueId(const std::string& uniqueId);
+        
         void prepareForProfile(shared_ptr<GLTFProfile> profile);
 
     public:
@@ -95,10 +98,8 @@ namespace GLTF
         shared_ptr <JSONObject> root;
 
         ShaderIdToShaderString shaderIdToShaderString;
-        UniqueIDToMesh _uniqueIDToMesh;
         UniqueIDToMeshes _uniqueIDToMeshes;
-        UniqueIDToEffect _uniqueIDToEffect;
-        UniqueIDToEffect _uniqueIDToDefaultEffect;
+        
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
         UniqueIDToAnimation _uniqueIDToAnimation;
@@ -109,8 +110,6 @@ namespace GLTF
         SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
         
-        UniqueIDToJSONObject _uniqueIDToJSONObject;
-
         UniqueIDToOriginalUID _uniqueIDToOriginalID;
         UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
         FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
@@ -129,7 +128,9 @@ namespace GLTF
         size_t                          _animationByteLength;
         std::string                     _bundleOutputPath;
         bool                            _isBundle;
-        
+
+        UniqueIDToJSONObject            _uniqueIDToJSONObject;
+
         NameToOutputStream _nameToOutputStream;
         GLTF::GLTFWriter _writer;
     };

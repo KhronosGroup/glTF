@@ -34,7 +34,7 @@
 
 #include "GitSHA1.h"
 #include "GLTF.h"
-#include "GLTF-OpenCOLLADA.h"
+#include "GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 
 #include "COLLADA2GLTFWriter.h"

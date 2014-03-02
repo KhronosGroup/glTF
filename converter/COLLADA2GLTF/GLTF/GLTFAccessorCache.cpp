@@ -1,5 +1,5 @@
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 #include "GLTFAccessorCache.h"
 

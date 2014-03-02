@@ -1,5 +1,5 @@
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 #include "../GitSHA1.h"
 #include "GLTF-Open3DGC.h"
@@ -30,6 +30,18 @@ namespace GLTF
         this->_uniqueIDToMeshes.clear();
     }
     
+    void GLTFAsset::setObjectForUniqueId(const std::string& uniqueId, shared_ptr<JSONObject> obj) {
+        this->_uniqueIDToJSONObject[uniqueId] = obj;
+    }
+
+    shared_ptr<JSONObject> GLTFAsset::getObjectForUniqueId(const std::string& uniqueId) {
+        return this->_uniqueIDToJSONObject[uniqueId];
+    }
+    
+    bool GLTFAsset::containsObjectForUniqueId(const std::string& uniqueId) {
+        return this->_uniqueIDToJSONObject.count(uniqueId) > 0;
+    }
+
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
         if (this->_nameToOutputStream.count(streamName) == 0) {
@@ -427,26 +439,16 @@ namespace GLTF
         }
         
         // ----
-        shared_ptr <GLTF::JSONObject> materialsObject = this->root->createObjectIfNeeded("materials");
-        UniqueIDToEffect::const_iterator UniqueIDToEffectIterator;
         
-        for (UniqueIDToEffectIterator = this->_uniqueIDToEffect.begin() ; UniqueIDToEffectIterator != this->_uniqueIDToEffect.end() ; UniqueIDToEffectIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
-            if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), effect);
+        shared_ptr <GLTF::JSONObject> materials = this->root->createObjectIfNeeded("materials");
+        vector <std::string> materialUIDs = materials->getAllKeys();
+        for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
+            shared_ptr <GLTF::GLTFEffect> effect = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
+            if (!effect->getTechniqueGenerator()) {
+                materials->removeValue(effect->getID());
             }
         }
-        for (UniqueIDToEffectIterator = this->_uniqueIDToDefaultEffect.begin() ; UniqueIDToEffectIterator != this->_uniqueIDToDefaultEffect.end() ; UniqueIDToEffectIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            shared_ptr <GLTF::GLTFEffect> effect = (*UniqueIDToEffectIterator).second;
-            if (effect->getTechniqueGenerator()) {
-                materialsObject->setValue(effect->getID(), effect);
-            }
-        }
-        
+                
         // ----
         shared_ptr <GLTF::JSONObject> skins = this->root->createObjectIfNeeded("skins");
         
