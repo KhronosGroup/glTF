@@ -13,9 +13,7 @@ namespace GLTF
 #define CONFIG_INT32(X) (asset.converterConfig()->config()->getInt32(X))
 #define CONFIG_UINT32(X) (asset.converterConfig()->config()->getUInt32(X))
 
-    const std::string kVerticesOutputStream = "vertices";
-    const std::string kIndicesOutputStream = "indices";
-    const std::string kAnimationOutputStream = "animations";
+    const std::string kRawOutputStream = "rawOutputStream";
     const std::string kCompressionOutputStream = "compression";
     
     class GLTFAnimationFlattener;
@@ -23,9 +21,7 @@ namespace GLTF
     typedef std::vector <shared_ptr<JSONObject> > AnimatedTargets;
     typedef shared_ptr <AnimatedTargets> AnimatedTargetsSharedPtr;
 
-    typedef shared_ptr <MeshVector> MeshVectorSharedPtr;
     typedef std::map<std::string  , std::string > ShaderIdToShaderString;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, MeshVectorSharedPtr > UniqueIDToMeshes;
     typedef std::map<std::string /* openCOLLADA uniqueID */, COLLADAFW::UniqueId > MaterialUIDToEffectUID;
     typedef std::map<std::string , unsigned int> SamplerHashtoSamplerIndex;
     
@@ -38,7 +34,7 @@ namespace GLTF
     
     typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
-    typedef std::map<std::string , shared_ptr<JSONObject> > UniqueIDToJSONObject;
+    typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
 
     //TODO: these to be moved as UniqueIDToJSONObject
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
@@ -87,19 +83,19 @@ namespace GLTF
         std::string pathRelativeToInputPath(const std::string& path);
         void copyImagesInsideBundleIfNeeded();
         
-        void setObjectForUniqueId(const std::string& uniqueId, shared_ptr<JSONObject> obj);
-        shared_ptr<JSONObject> getObjectForUniqueId(const std::string& uniqueId);
-        bool containsObjectForUniqueId(const std::string& uniqueId);
+        void setValueForUniqueId(const std::string& uniqueId, shared_ptr<JSONValue> obj);
+        shared_ptr<JSONValue> getValueForUniqueId(const std::string& uniqueId);
+        bool containsValueForUniqueId(const std::string& uniqueId);
         
         void prepareForProfile(shared_ptr<GLTFProfile> profile);
+
+        std::string getSharedBufferId();
 
     public:
         shared_ptr <GLTFProfile> profile;
         shared_ptr <JSONObject> root;
 
-        ShaderIdToShaderString shaderIdToShaderString;
-        UniqueIDToMeshes _uniqueIDToMeshes;
-        
+        ShaderIdToShaderString shaderIdToShaderString;        
         MaterialUIDToEffectUID _materialUIDToEffectUID;
         MaterialUIDToName _materialUIDToName;
         UniqueIDToAnimation _uniqueIDToAnimation;
@@ -129,10 +125,11 @@ namespace GLTF
         std::string                     _bundleOutputPath;
         bool                            _isBundle;
 
-        UniqueIDToJSONObject            _uniqueIDToJSONObject;
+        UniqueIDToJSONValue            _uniqueIDToJSONValue;
 
         NameToOutputStream _nameToOutputStream;
         GLTF::GLTFWriter _writer;
+        std::string _sharedBufferId;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

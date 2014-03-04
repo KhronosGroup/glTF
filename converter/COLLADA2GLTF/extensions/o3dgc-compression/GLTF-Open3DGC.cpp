@@ -543,7 +543,7 @@ namespace GLTF
         //write
         size_t byteOffset = 0;
         bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
-        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset.createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset.createOutputStreamIfNeeded(kAnimationOutputStream).get();;
+        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset.createOutputStreamIfNeeded(asset.getSharedBufferId()).get() : asset.createOutputStreamIfNeeded(asset.getSharedBufferId()).get();;
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         

@@ -591,7 +591,7 @@ namespace GLTF
         }
     }
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes, shared_ptr<GLTFProfile> profile)
+    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile)
     {
         bool splitNeeded = false;
         
@@ -623,7 +623,7 @@ namespace GLTF
             
             if (subMesh == 0) {
                 subMesh = __CreateSubMeshContext();
-                meshes.push_back(subMesh->targetMesh);
+                meshes->appendValue(subMesh->targetMesh);
                 std::string meshID = "";
                 std::string meshName = "";
                 
@@ -743,6 +743,9 @@ namespace GLTF
         return true;
     }
 
+    //Not required anymore since Open3DGC supports now sharing same vertex buffer and WebGL is disabled
+    //DO NOT REMOVE - might be useful again someday
+    /*
     bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes, shared_ptr<GLTFProfile> profile) {
         GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
         if (primitives.size() == 1) {
@@ -818,11 +821,12 @@ namespace GLTF
                 
                 targetMesh->setMeshAttribute(semantic, indexOfSet, targetAttribute);
             }
-            meshes.push_back(targetMesh);
+            meshes->appendValue(targetMesh);
             
         }
 
         return true;
     }
+    */
     
 }

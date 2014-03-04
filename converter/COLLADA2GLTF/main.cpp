@@ -72,7 +72,7 @@ static const OptionDescriptor options[] = {
 	{ "p",              no_argument,        "-p -> output progress" },
 	{ "l",              required_argument,  "-l -> enable default lighting (if no lights in scene) [bool], default:true" },
 #if USE_OPEN3DGC
-	{ "c",              required_argument,  "-c -> compression type: available: Open3DGC and won [string]" },
+	{ "c",              required_argument,  "-c -> compression type: available: Open3DGC [string]" },
 	{ "m",              required_argument,  "-m -> compression mode: for Open3DGC can be \"ascii\"(default) or \"binary\" [string]" },
 #endif
     { "v",              no_argument,        "-v -> print version" },
