@@ -103,7 +103,7 @@ namespace GLTF
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
             
-            if (param->getUnsignedInt32("type") == asset.profile->getGLenumForString("SAMPLER_2D"))
+            if (param->getUnsignedInt32("type") == asset.profile()->getGLenumForString("SAMPLER_2D"))
                 return true; //it is a texture, so presumably yes, this slot is not neutral
             
             if (param->contains("value")) {
@@ -153,14 +153,14 @@ namespace GLTF
         if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
-            if (diffuse->getUnsignedInt32("type") == asset.profile->getGLenumForString("SAMPLER_2D")) {
-                shared_ptr<JSONObject> textures = asset.root->createObjectIfNeeded("textures");
+            if (diffuse->getUnsignedInt32("type") == asset.profile()->getGLenumForString("SAMPLER_2D")) {
+                shared_ptr<JSONObject> textures = asset.root()->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
                 }
                 shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
                 std::string sourceUID = texture->getString("source");
-                shared_ptr<JSONObject> images = asset.root->createObjectIfNeeded("images");
+                shared_ptr<JSONObject> images = asset.root()->createObjectIfNeeded("images");
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
@@ -283,7 +283,7 @@ namespace GLTF
     
     bool writeShaderIfNeeded(const std::string& shaderId,  GLTFAsset& asset, unsigned int type)
     {
-        shared_ptr <JSONObject> shadersObject = asset.root->createObjectIfNeeded("shaders");
+        shared_ptr <JSONObject> shadersObject = asset.root()->createObjectIfNeeded("shaders");
         
         shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
         
@@ -295,7 +295,7 @@ namespace GLTF
             shaderObject->setString("path", asset.resourceOuputPathForPath(path));
             shaderObject->setUnsignedInt32("type", type);
             //also write the file on disk
-            std::string shaderString = asset.shaderIdToShaderString[shaderId];
+            std::string shaderString = asset._shaderIdToShaderString[shaderId];
             if (shaderString.size() > 0) {
                 COLLADABU::URI outputURI(asset.getOutputFilePath());
                 std::string shaderPath =  outputURI.getPathDir() + path;
@@ -312,7 +312,7 @@ namespace GLTF
     static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset& asset)
     {
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
-        shared_ptr <GLTFProfile> profile = asset.profile;
+        shared_ptr <GLTFProfile> profile = asset.profile();
         unsigned int GLZero = 0;
         unsigned int GLOne = 1;
         
@@ -660,7 +660,7 @@ namespace GLTF
                   shared_ptr<JSONObject> texcoordBindings,
                   GLTFAsset& asset) {
             
-            this->_profile = asset.profile;
+            this->_profile = asset.profile();
             
             unsigned int vec3Type =  _GL(FLOAT_VEC3);
             unsigned int vec4Type = _GL(FLOAT_VEC4);
@@ -753,15 +753,15 @@ namespace GLTF
             }
             
             bool modelContainsLights = false;
-            if (asset.root->contains("lightsIds")) {
-                shared_ptr<JSONArray> lightsIds = asset.root->createArrayIfNeeded("lightsIds");
+            if (asset.root()->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = asset.root()->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 if (ids.size() > 0) {
                     if (ids.size() == 1) {
                         shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[0]);
                         shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset._uniqueIDOfLightToNodes[lightUID->getString()]);
                         
-                        shared_ptr<JSONObject> lights = asset.root->createObjectIfNeeded("lights");
+                        shared_ptr<JSONObject> lights = asset.root()->createObjectIfNeeded("lights");
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                         std::string lightType = light->getString("type");
                         
@@ -820,15 +820,15 @@ namespace GLTF
             shared_ptr <JSONObject> shininessObject;
             
             size_t lightIndex = 0;
-            if (lightingIsEnabled && asset.root->contains("lightsIds")) {
-                shared_ptr<JSONArray> lightsIds = asset.root->createArrayIfNeeded("lightsIds");
+            if (lightingIsEnabled && asset.root()->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = asset.root()->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 
                 for (size_t i = 0 ; i < ids.size() ; i++) {
                     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset._uniqueIDOfLightToNodes[lightUID->getString()]);
                     
-                    shared_ptr<JSONObject> lights = asset.root->createObjectIfNeeded("lights");
+                    shared_ptr<JSONObject> lights = asset.root()->createObjectIfNeeded("lights");
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());                    
                     std::string lightType = light->getString("type");
                     
@@ -1092,7 +1092,7 @@ namespace GLTF
         shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
         
         shared_ptr <JSONObject> inputParameters = values;
-        shared_ptr <JSONObject> techniquesObject = asset.root->createObjectIfNeeded("techniques");
+        shared_ptr <JSONObject> techniquesObject = asset.root()->createObjectIfNeeded("techniques");
         std::string techniqueHash = buildTechniqueHash(values, techniqueExtras, asset);
 
         static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
@@ -1121,17 +1121,17 @@ namespace GLTF
         
         //create shader name made of the input file name to avoid file name conflicts
         COLLADABU::URI outputFileURI(asset.getOutputFilePath().c_str());
-        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(asset.shaderIdToShaderString.size());
+        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(asset._shaderIdToShaderString.size());
         std::string shaderFS = shaderBaseId + "FS";
         std::string shaderVS = shaderBaseId + "VS";
         
-        asset.shaderIdToShaderString[shaderVS] = vs->source();
-        asset.shaderIdToShaderString[shaderFS] = fs->source();
+        asset._shaderIdToShaderString[shaderVS] = vs->source();
+        asset._shaderIdToShaderString[shaderFS] = fs->source();
         
-        writeShaderIfNeeded(shaderVS, asset, asset.profile->getGLenumForString("VERTEX_SHADER"));
-        writeShaderIfNeeded(shaderFS, asset, asset.profile->getGLenumForString("FRAGMENT_SHADER"));
+        writeShaderIfNeeded(shaderVS, asset, asset.profile()->getGLenumForString("VERTEX_SHADER"));
+        writeShaderIfNeeded(shaderFS, asset, asset.profile()->getGLenumForString("FRAGMENT_SHADER"));
         
-        shared_ptr <JSONObject> programsObject = asset.root->createObjectIfNeeded("programs");
+        shared_ptr <JSONObject> programsObject = asset.root()->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> instanceProgram(new GLTF::JSONObject());

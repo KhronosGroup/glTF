@@ -55,7 +55,10 @@ namespace GLTF
         
         shared_ptr <GLTFConfig> converterConfig();
         shared_ptr <JSONObject> convertionResults();
-        
+
+        shared_ptr <GLTFProfile> profile();
+        shared_ptr <JSONObject> root();
+
         void write();
         
         const std::string resourceOuputPathForPath(const std::string& resourcePath);
@@ -92,27 +95,27 @@ namespace GLTF
         std::string getSharedBufferId();
 
     public:
-        shared_ptr <GLTFProfile> profile;
-        shared_ptr <JSONObject> root;
-
-        ShaderIdToShaderString shaderIdToShaderString;        
-        MaterialUIDToEffectUID _materialUIDToEffectUID;
-        MaterialUIDToName _materialUIDToName;
-        UniqueIDToAnimation _uniqueIDToAnimation;
-        UniqueIDToAnimatedTargets _uniqueIDToAnimatedTargets;
-        OriginalIDToTrackedObject _originalIDToTrackedObject;
-        UniqueIDToSkin _uniqueIDToSkin;
+        ShaderIdToShaderString          _shaderIdToShaderString;
+        MaterialUIDToEffectUID          _materialUIDToEffectUID;
+        MaterialUIDToName               _materialUIDToName;
+        UniqueIDToAnimation             _uniqueIDToAnimation;
+        UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
+        OriginalIDToTrackedObject       _originalIDToTrackedObject;
+        UniqueIDToSkin                  _uniqueIDToSkin;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
-        SamplerHashtoSamplerIndex _samplerHashtoSamplerIndex;
-        UniqueIDTOfLightToNodes _uniqueIDOfLightToNodes;
+        SamplerHashtoSamplerIndex       _samplerHashtoSamplerIndex;
+        UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
         
-        UniqueIDToOriginalUID _uniqueIDToOriginalID;
-        UniqueIDToOpenCOLLADAObject _uniqueIDToOpenCOLLADAObject;
-        FlattenerMapsForAnimationID _flattenerMapsForAnimationID;
-        UniqueIDToAccessor _uniqueIDToAccessorObject;
-        
+        UniqueIDToOriginalUID           _uniqueIDToOriginalID;
+        UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
+        FlattenerMapsForAnimationID     _flattenerMapsForAnimationID;
+        UniqueIDToAccessor              _uniqueIDToAccessorObject;
         UniqueIDToAnimationFlattener    _targetUIDWithPathToAnimationFlattener;
+
     private:
+        shared_ptr <GLTFProfile>        _profile;
+        shared_ptr <JSONObject>         _root;
+
         shared_ptr <GLTFConfig>         _converterConfig;
         shared_ptr <JSONObject>         _convertionResults;
         shared_ptr<JSONObject>          _trackedResourcesPath;
@@ -126,7 +129,8 @@ namespace GLTF
         bool                            _isBundle;
 
         UniqueIDToJSONValue            _uniqueIDToJSONValue;
-
+        
+        
         NameToOutputStream _nameToOutputStream;
         GLTF::GLTFWriter _writer;
         std::string _sharedBufferId;

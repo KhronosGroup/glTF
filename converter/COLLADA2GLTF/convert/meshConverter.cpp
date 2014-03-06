@@ -447,7 +447,7 @@ namespace GLTF
             shared_ptr <GLTF::IndicesVector> primitiveIndicesVector(new GLTF::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
             
-            shared_ptr <GLTF::GLTFPrimitive> primitive = __ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector, asset.profile);
+            shared_ptr <GLTF::GLTFPrimitive> primitive = __ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector, asset.profile());
             cvtMesh->appendPrimitive(primitive);
             
             VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
@@ -462,19 +462,19 @@ namespace GLTF
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), meshAttributes, 3, asset.profile);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), meshAttributes, 3, asset.profile());
                         break;
                         
                     case GLTF::NORMAL:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), meshAttributes, 3, asset.profile);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), meshAttributes, 3, asset.profile());
                         break;
                         
                     case GLTF::TEXCOORD:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), meshAttributes,2, asset.profile);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), meshAttributes,2, asset.profile());
                         break;
                         
                     case GLTF::COLOR:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), meshAttributes, 4, asset.profile);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), meshAttributes, 4, asset.profile());
                         break;
                         
                     default:
@@ -503,7 +503,7 @@ namespace GLTF
         
         if (cvtMesh->getPrimitivesCount() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
-            return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset.profile);
+            return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset.profile());
         }
 
         return shared_ptr <GLTF::GLTFMesh> ((GLTFMesh*)0);

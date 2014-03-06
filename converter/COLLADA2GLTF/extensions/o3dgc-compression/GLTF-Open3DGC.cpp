@@ -415,7 +415,7 @@ namespace GLTF
         
         compressedData->setString("mode", CONFIG_STRING("compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
-        compressedData->setUnsignedInt32("type", asset.profile->getGLenumForString("UNSIGNED_BYTE"));
+        compressedData->setUnsignedInt32("type", asset.profile()->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
@@ -530,15 +530,15 @@ namespace GLTF
                                                              bool isInputParameter,
                                                              GLTFAsset &asset) {
         //setup
-        shared_ptr <GLTF::JSONObject> accessors = asset.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTFProfile> profile = asset.profile();
+        shared_ptr <GLTF::JSONObject> accessors = asset.root()->createObjectIfNeeded("accessors");
         shared_ptr<JSONObject> parameter(new JSONObject());
         parameter->setUnsignedInt32("count", cvtAnimation->getCount());
-        parameter->setUnsignedInt32("type",  asset.profile->getGLenumForString(parameterType));
+        parameter->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
 
         accessors->setValue(accessorUID, parameter);
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
         
-        shared_ptr <GLTFProfile> profile = asset.profile;
         
         //write
         size_t byteOffset = 0;
@@ -586,7 +586,7 @@ namespace GLTF
                                          GLTFAsset &asset) {
         
         shared_ptr <JSONObject> parameter;
-        shared_ptr <GLTF::JSONObject> accessors = asset.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = asset.root()->createObjectIfNeeded("accessors");
         if (CONFIG_BOOL("shareAnimationAccessors")) {
             GLTFAccessorCache accessorCache(buffer, byteLength);
             UniqueIDToAccessor::iterator it = asset._uniqueIDToAccessorObject.find(accessorCache);

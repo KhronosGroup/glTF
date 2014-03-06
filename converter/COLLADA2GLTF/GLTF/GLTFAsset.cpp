@@ -154,7 +154,7 @@ namespace GLTF
         this->_animationByteLength = 0;
         this->setGeometryByteLength(0);
         this->setAnimationByteLength(0);
-        this->shaderIdToShaderString.clear();
+        this->_shaderIdToShaderString.clear();
     }
     
     void GLTFAsset::setValueForUniqueId(const std::string& uniqueId, shared_ptr<JSONValue> obj) {
@@ -207,6 +207,14 @@ namespace GLTF
     
     shared_ptr <JSONObject> GLTFAsset::convertionResults() {
         return this->_convertionResults;
+    }
+    
+    shared_ptr <GLTFProfile> GLTFAsset::profile() {
+        return this->_profile;
+    }
+    
+    shared_ptr <JSONObject> GLTFAsset::root() {
+        return this->_root;
     }
     
     const std::string GLTFAsset::resourceOuputPathForPath(const std::string& resourcePath) {
@@ -321,7 +329,7 @@ namespace GLTF
     
     void GLTFAsset::copyImagesInsideBundleIfNeeded() {
         if (this->_isBundle == true) {
-            shared_ptr<JSONObject> images = this->root->createObjectIfNeeded("images");
+            shared_ptr<JSONObject> images = this->_root->createObjectIfNeeded("images");
             size_t imagesCount = images->getKeysCount();
             if (imagesCount > 0) {
                 std::vector <std::string> keys = images->getAllKeys();
@@ -347,10 +355,10 @@ namespace GLTF
     }
     
     void GLTFAsset::prepareForProfile(shared_ptr<GLTFProfile> profile) {
-        this->profile = profile;
-        this->root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-        this->root->setString(kProfile, profile->id());
-        this->root->createObjectIfNeeded(kNodes);
+        this->_profile = profile;
+        this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
+        this->_root->setString(kProfile, profile->id());
+        this->_root->createObjectIfNeeded(kNodes);
         
         this->_writer.initWithPath(this->getOutputFilePath().c_str());
     }
@@ -379,7 +387,7 @@ namespace GLTF
          *
          */
         shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
-        this->root->setValue("animations", animationsObject);
+        this->_root->setValue("animations", animationsObject);
                 
         UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
         for (UniqueIDToAnimationsIterator = this->_uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
@@ -418,15 +426,15 @@ namespace GLTF
         size_t animationLength = rawOutputStream->length();
         size_t previousLength = animationLength;
                 
-        shared_ptr <GLTF::JSONObject> meshes = this->root->createObjectIfNeeded("meshes");
-        shared_ptr <GLTF::JSONObject> accessors = this->root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded("meshes");
+        shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded("accessors");
         
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (compressMesh)
                 writeCompressedMesh(mesh, *this);
         }
@@ -436,7 +444,7 @@ namespace GLTF
         //save all indices
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
                 writeMeshIndices(mesh, previousLength, *this);
         }
@@ -457,7 +465,7 @@ namespace GLTF
         //save all mesh attributes
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
                 writeMeshAttributes(mesh, previousLength, *this);
         }
@@ -511,7 +519,7 @@ namespace GLTF
                 GLTFBufferView *bufferView = isCompressed ? (GLTFBufferView*)compressionBufferView.get() : (GLTFBufferView*)indicesBufferView.get();
                 
                 uniqueIndices->setString(kBufferView, bufferView->getID());
-                uniqueIndices->setUnsignedInt32(kType, this->profile->getGLenumForString("UNSIGNED_SHORT"));
+                uniqueIndices->setUnsignedInt32(kType, this->_profile->getGLenumForString("UNSIGNED_SHORT"));
                 accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
             
@@ -530,7 +538,7 @@ namespace GLTF
 
         // ----
 
-        shared_ptr <GLTF::JSONObject> materials = this->root->createObjectIfNeeded("materials");
+        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded("materials");
         vector <std::string> materialUIDs = materials->getAllKeys();
         for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
             shared_ptr <GLTF::GLTFEffect> effect = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
@@ -540,7 +548,7 @@ namespace GLTF
         }
 
         // ----
-        shared_ptr <GLTF::JSONObject> skins = this->root->createObjectIfNeeded("skins");
+        shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");
 
         UniqueIDToSkin::const_iterator UniqueIDToSkinIterator;
         
@@ -606,7 +614,7 @@ namespace GLTF
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());
         
-        this->root->setValue("buffers", buffersObject);
+        this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
             sharedBuffer->setString(kPath, this->getSharedBufferId() + ".bin");
@@ -627,7 +635,7 @@ namespace GLTF
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format & manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
         shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
-        this->root->setValue("bufferViews", bufferViewsObject);
+        this->_root->setValue("bufferViews", bufferViewsObject);
         
         bufferViewsObject->setValue(indicesBufferView->getID(), indicesBufferView);
         bufferViewsObject->setValue(verticesBufferView->getID(), verticesBufferView);
@@ -638,15 +646,15 @@ namespace GLTF
             bufferViewsObject->setValue(compressionBufferView->getID(), compressionBufferView);
         }
         
-        indicesBufferView->setUnsignedInt32("target", this->profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
-        verticesBufferView->setUnsignedInt32("target", this->profile->getGLenumForString("ARRAY_BUFFER"));
+        indicesBufferView->setUnsignedInt32("target", this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        verticesBufferView->setUnsignedInt32("target", this->_profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
         //this apply MUST be before the removeValue lightsIds that follows
-        this->root->apply(__eval, this);
-        this->root->removeValue("lightsIds");
+        this->_root->apply(__eval, this);
+        this->_root->removeValue("lightsIds");
         
-        this->root->write(&this->_writer, this);
+        this->_root->write(&this->_writer, this);
         
         rawOutputStream->close();
         if (compressionLength == 0) {
