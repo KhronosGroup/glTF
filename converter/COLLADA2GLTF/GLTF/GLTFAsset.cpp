@@ -382,19 +382,12 @@ namespace GLTF
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
 
-        /*
-         *
-         */
-        shared_ptr <GLTF::JSONObject> animationsObject(new GLTF::JSONObject());
-        this->_root->setValue("animations", animationsObject);
-                
-        UniqueIDToAnimation::const_iterator UniqueIDToAnimationsIterator;
-        for (UniqueIDToAnimationsIterator = this->_uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            
+        shared_ptr <GLTF::JSONObject> animations = this->_root->createObjectIfNeeded("animations");
+        std::vector <std::string> animationsUIDs = animations->getAllKeys();
+        
+        for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
             std::string inputParameterName = "TIME";
-            shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+            shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
             shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
             
             if (animation->parameters()->contains(inputParameterName) == false) {
@@ -575,11 +568,8 @@ namespace GLTF
         
         // ----
         
-        for (UniqueIDToAnimationsIterator = this->_uniqueIDToAnimation.begin() ; UniqueIDToAnimationsIterator != this->_uniqueIDToAnimation.end() ; UniqueIDToAnimationsIterator++) {
-            //(*it).first;             // the key value (of type Key)
-            //(*it).second;            // the mapped value (of type T)
-            
-            shared_ptr<GLTFAnimation> animation = (*UniqueIDToAnimationsIterator).second;
+        for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
+            shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
             shared_ptr<JSONObject> parameters = animation->parameters();
             
             //Replace OpenCOLLADA uniqueID by Original IDs
@@ -604,11 +594,7 @@ namespace GLTF
                     }
                 }
                 parameterObject->setString("bufferView", genericBufferView->getID());
-            }
-            
-            if (animation->channels()->values().size() > 0) {
-                animationsObject->setValue(animation->getID(), animation);
-            }
+            }            
         }
         
         shared_ptr <JSONObject> buffersObject(new JSONObject());

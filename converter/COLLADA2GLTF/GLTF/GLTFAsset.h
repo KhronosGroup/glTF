@@ -38,7 +38,6 @@ namespace GLTF
 
     //TODO: these to be moved as UniqueIDToJSONObject
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFAnimation> > UniqueIDToAnimation;
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
     
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
@@ -93,10 +92,12 @@ namespace GLTF
         void prepareForProfile(shared_ptr<GLTFProfile> profile);
 
         std::string getSharedBufferId();
+
+    
+    //TODO: all those still need cleanup and should be moved to private
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;
-        UniqueIDToAnimation             _uniqueIDToAnimation;
         UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
         OriginalIDToTrackedObject       _originalIDToTrackedObject;
         UniqueIDToSkin                  _uniqueIDToSkin;
@@ -127,6 +128,8 @@ namespace GLTF
         bool                            _isBundle;
 
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
+        
+
         
         NameToOutputStream              _nameToOutputStream;
         GLTF::GLTFWriter                _writer;

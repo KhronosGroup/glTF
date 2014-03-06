@@ -1216,7 +1216,8 @@ namespace GLTF
             this->_asset._flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
         }
         
-        this->_asset._uniqueIDToAnimation[(unsigned int)animation->getUniqueId().getObjectId()] = cvtAnimation;
+        shared_ptr<JSONObject> animations = this->_asset.root()->createObjectIfNeeded("animations");
+        animations->setValue(animation->getUniqueId().toAscii(), cvtAnimation);
         
 		return true;
 	}
@@ -1225,12 +1226,13 @@ namespace GLTF
 	bool COLLADA2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList ) {
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         
+        shared_ptr<JSONObject> animations = this->_asset.root()->createObjectIfNeeded("animations");
         AnimatedTargetsSharedPtr animatedTargets = this->_asset._uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
         for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
             const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
 
-            shared_ptr <GLTFAnimation> cvtAnimation = this->_asset._uniqueIDToAnimation[(unsigned int)animationBindings[i].animation.getObjectId()];
+            shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
 
             AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset._flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
             for (size_t j = 0 ; j < animatedTargets->size() ; j++) {
@@ -1249,7 +1251,7 @@ namespace GLTF
             
             if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset)) {
                 //if an animation failed to convert, we don't want to keep track of it.
-                this->_asset._uniqueIDToAnimation.erase(this->_asset._uniqueIDToAnimation.find((const unsigned int)animationBindings[i].animation.getObjectId()));
+                animations->removeValue(animationBindings[i].animation.toAscii());
             }
         }
         
