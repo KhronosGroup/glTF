@@ -154,7 +154,6 @@ namespace GLTF
         this->_animationByteLength = 0;
         this->setGeometryByteLength(0);
         this->setAnimationByteLength(0);
-        this->_shaderIdToShaderString.clear();
     }
     
     void GLTFAsset::setValueForUniqueId(const std::string& uniqueId, shared_ptr<JSONValue> obj) {

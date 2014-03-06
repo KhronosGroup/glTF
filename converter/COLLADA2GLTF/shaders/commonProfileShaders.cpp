@@ -281,13 +281,12 @@ namespace GLTF
         return techniqueHash;
     }
     
-    bool writeShaderIfNeeded(const std::string& shaderId,  GLTFAsset& asset, unsigned int type)
+    bool writeShaderIfNeeded(const std::string& shaderId,  const std::string& shaderString, GLTFAsset& asset, unsigned int type)
     {
         shared_ptr <JSONObject> shadersObject = asset.root()->createObjectIfNeeded("shaders");
         
-        shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
-        
-        if (!shaderObject) {
+        if (shadersObject->contains(shaderId) == false) {
+            shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
             shaderObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             
             std::string path = shaderId+".glsl";
@@ -295,7 +294,6 @@ namespace GLTF
             shaderObject->setString("path", asset.resourceOuputPathForPath(path));
             shaderObject->setUnsignedInt32("type", type);
             //also write the file on disk
-            std::string shaderString = asset._shaderIdToShaderString[shaderId];
             if (shaderString.size() > 0) {
                 COLLADABU::URI outputURI(asset.getOutputFilePath());
                 std::string shaderPath =  outputURI.getPathDir() + path;
@@ -1118,18 +1116,16 @@ namespace GLTF
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
         
-        
         //create shader name made of the input file name to avoid file name conflicts
         COLLADABU::URI outputFileURI(asset.getOutputFilePath().c_str());
-        std::string shaderBaseId = outputFileURI.getPathFileBase()+GLTFUtils::toString(asset._shaderIdToShaderString.size());
+        shared_ptr <JSONObject> shaders = asset.root()->createObjectIfNeeded("shaders");
+        
+        std::string shaderBaseId = outputFileURI.getPathFileBase() + GLTFUtils::toString(shaders->getKeysCount() / 2);
         std::string shaderFS = shaderBaseId + "FS";
         std::string shaderVS = shaderBaseId + "VS";
         
-        asset._shaderIdToShaderString[shaderVS] = vs->source();
-        asset._shaderIdToShaderString[shaderFS] = fs->source();
-        
-        writeShaderIfNeeded(shaderVS, asset, asset.profile()->getGLenumForString("VERTEX_SHADER"));
-        writeShaderIfNeeded(shaderFS, asset, asset.profile()->getGLenumForString("FRAGMENT_SHADER"));
+        writeShaderIfNeeded(shaderVS, vs->source(), asset, asset.profile()->getGLenumForString("VERTEX_SHADER"));
+        writeShaderIfNeeded(shaderFS, fs->source(), asset, asset.profile()->getGLenumForString("FRAGMENT_SHADER"));
         
         shared_ptr <JSONObject> programsObject = asset.root()->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());

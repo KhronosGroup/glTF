@@ -93,9 +93,7 @@ namespace GLTF
         void prepareForProfile(shared_ptr<GLTFProfile> profile);
 
         std::string getSharedBufferId();
-
     public:
-        ShaderIdToShaderString          _shaderIdToShaderString;
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;
         UniqueIDToAnimation             _uniqueIDToAnimation;
@@ -128,12 +126,11 @@ namespace GLTF
         std::string                     _bundleOutputPath;
         bool                            _isBundle;
 
-        UniqueIDToJSONValue            _uniqueIDToJSONValue;
+        UniqueIDToJSONValue             _uniqueIDToJSONValue;
         
-        
-        NameToOutputStream _nameToOutputStream;
-        GLTF::GLTFWriter _writer;
-        std::string _sharedBufferId;
+        NameToOutputStream              _nameToOutputStream;
+        GLTF::GLTFWriter                _writer;
+        std::string                     _sharedBufferId;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
