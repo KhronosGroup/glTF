@@ -60,7 +60,8 @@ namespace GLTF
     /*
      */
 	void COLLADA2GLTFWriter::reportError( const std::string& method, const std::string& message) {
-	}    
+        printf("ERROR: method:%s message:%s\n", method.c_str(), message.c_str());
+	}
 
     /*
      */
@@ -91,6 +92,7 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	void COLLADA2GLTFWriter::cancel( const std::string& errorMessage ) {
+        printf("CONVERTION ABORTED: message:%s\n", errorMessage.c_str());
 	}
     
 	//--------------------------------------------------------------------
