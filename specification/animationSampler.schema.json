@@ -21,7 +21,7 @@
             "description" : "Reference to animation parameter to use as keyframe output, e.g., translation, rotation, or scale.",
             "required" : true
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

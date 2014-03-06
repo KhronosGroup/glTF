@@ -25,7 +25,7 @@
             "enum" : ["absolute", "relativeToGround"],
             "default" : "relativeToGround"
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

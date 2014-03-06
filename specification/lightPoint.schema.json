@@ -28,7 +28,7 @@
             "description" : "Quadratic attenuation factor.",
             "default" : 0.0
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

@@ -23,7 +23,7 @@
                 "$ref" : "techniquePassInstanceProgramUniform.schema.json"
             }        
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

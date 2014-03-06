@@ -7,11 +7,11 @@
                     "target": {
                         "id": "node_id",
                         "path": "rotation",
-                        "extra" : {
+                        "extras" : {
                             "Application specific" : "The extra object can contain any properties."
                         }     
                     },
-                    "extra" : {
+                    "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
@@ -26,12 +26,12 @@
                     "input": "TIME",
                     "interpolation": "LINEAR",
                     "output": "rotation",
-                    "extra" : {
+                    "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
             },
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

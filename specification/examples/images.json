@@ -2,7 +2,7 @@
     "images" : {
         "image_id" : {
             "path" : "image.png",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         }

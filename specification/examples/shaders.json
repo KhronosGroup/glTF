@@ -3,7 +3,7 @@
         "vs_id" : {
             "path" : "vertexshader.glsl",
             "type": 35633,
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         },

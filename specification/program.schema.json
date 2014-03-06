@@ -21,7 +21,7 @@
             "description" : "The id (property name) of the vertex shader referenced by this program.",
             "required" : true
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

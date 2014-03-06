@@ -22,7 +22,7 @@
             "type" : "any",
             "description" : "Depending on type, this is a scalar or an array, and a number or boolean.  Material overrides this value."
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

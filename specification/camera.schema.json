@@ -20,7 +20,7 @@
             "enum" : ["perspective", "orthographic"],
             "required" : true
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

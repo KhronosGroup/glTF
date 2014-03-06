@@ -13,7 +13,7 @@
             "minItems" : 3,
             "maxItems" : 3
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

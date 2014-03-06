@@ -4,7 +4,7 @@
             "parameters": {
                 "ambient": {
                     "type": 35666,
-                    "extra" : {
+                    "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 },
@@ -80,12 +80,12 @@
                             "texcoordBindings": {
                                 "diffuse": "TEXCOORD_0"
                             },
-                            "extra": {
+                            "extras": {
                                 "doubleSided": false
                             }
                         },
                         "type": "COLLADA-1.4.1/commonProfile",
-                        "extra" : {
+                        "extras" : {
                             "Application specific" : "The extra object can contain any properties."
                         }
                     },
@@ -108,16 +108,16 @@
                             "u_projectionMatrix": "projectionMatrix",
                             "u_normalMatrix": "normalMatrix"
                         },
-                        "extra" : {
+                        "extras" : {
                             "Application specific" : "The extra object can contain any properties."
                         }
                     },
-                    "extra" : {
+                    "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
             },
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

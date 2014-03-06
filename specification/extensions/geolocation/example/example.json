@@ -4,7 +4,7 @@
         "latitude" : 0.0,
         "altitude" : 20.0,
         "altitudeMode" : "relativeToGround",
-        "extra" : {
+        "extras" : {
            "Application specific" : "The extra object can contain any properties."
         }    
     }

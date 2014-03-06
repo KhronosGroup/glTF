@@ -369,7 +369,7 @@
             "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
             "default" : false
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

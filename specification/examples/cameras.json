@@ -9,7 +9,7 @@
                 "znear" : 1
             },
             "type" : "perspective",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         },
@@ -22,7 +22,7 @@
                 "znear" : 1
             },
             "type" : "orthographic",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         }

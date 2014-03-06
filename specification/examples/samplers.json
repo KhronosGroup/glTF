@@ -5,7 +5,7 @@
             "minFilter": 9987,
             "wrapS": 10497,
             "wrapT": 10497,
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

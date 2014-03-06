@@ -4,7 +4,7 @@
             "buffer" : "buffer_id",
             "byteLength": 76768,
             "target": 34962,
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         },
@@ -13,7 +13,7 @@
             "byteLength": 25272,
             "byteOffset": 76768,
             "target": 34963,
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         }        

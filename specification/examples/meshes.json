@@ -12,12 +12,12 @@
                     "indices": "accessor_id3",
                     "material": "material_id",
                     "primitive": 4,
-                    "extra" : {
+                    "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
             ],
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

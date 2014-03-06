@@ -7,7 +7,7 @@
                 "camera_node_id",
                 "light_node_id"
             ],
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
         }

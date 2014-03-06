@@ -16,7 +16,7 @@
             "enum" : [35632, 35633],
             "required" : true
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

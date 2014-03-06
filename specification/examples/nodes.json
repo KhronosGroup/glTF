@@ -7,7 +7,7 @@
                 "mesh_id"
             ],
             "name": "name of meshes node",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         },
@@ -43,7 +43,7 @@
                 "sources": [
                     "skin_mesh_id"
                 ],
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },

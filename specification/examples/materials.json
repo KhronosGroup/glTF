@@ -13,12 +13,12 @@
                     "diffuse": "texture_image_0",
                     "shininess": 38.4
                 },
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "material name",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

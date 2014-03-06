@@ -15,7 +15,7 @@
             "enum" : ["translation", "rotation", "scale"],
             "required" : true
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

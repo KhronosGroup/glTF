@@ -22,7 +22,7 @@
             "enum" : ["arraybuffer", "text"],
             "default" : "arraybuffer"
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

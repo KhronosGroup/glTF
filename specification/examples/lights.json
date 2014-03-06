@@ -7,13 +7,13 @@
                     1.0,
                     1.0
                 ],
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "name of ambient light",
             "type": "ambient",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         },
@@ -24,13 +24,13 @@
                     1.0,
                     1.0
                 ],
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "name of directional light",
             "type": "directional",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         },
@@ -45,12 +45,12 @@
                 "constantAttenuation": 1.0,
                 "linearAttenuation": 0.5,
                 "quadraticAttenuation": 0.25,
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "type": "point",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         },
@@ -67,12 +67,12 @@
                 "fallOffExponent": 0.0,
                 "linearAttenuation": 0.5,
                 "quadraticAttenuation": 0.25,
-                "extra" : {
+                "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "type": "spot",
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

@@ -24,7 +24,7 @@
                 "joint_id",
                 "another_joint_id"
             ],
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }

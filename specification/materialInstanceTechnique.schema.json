@@ -13,7 +13,7 @@
             "type" : "any",
             "description" : "Parameter values that override the values in the technique."
         },
-        "extra" : {
+        "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
         }

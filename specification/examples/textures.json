@@ -7,7 +7,7 @@
             "source": "image_id",
             "target": 3553,
             "type": 5121,
-            "extra" : {
+            "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
         }
