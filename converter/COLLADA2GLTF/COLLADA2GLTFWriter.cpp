@@ -493,15 +493,17 @@ namespace GLTF
         shared_ptr <GLTF::JSONArray> meshesArray(new GLTF::JSONArray());
         unsigned int count = instanceControllers.getCount();
         if (count > 0) {
+            shared_ptr<JSONObject> skins = this->_asset.root()->createObjectIfNeeded("skins");
             for (unsigned int i = 0 ; i < count; i++) {
                 InstanceController* instanceController = instanceControllers[i];
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 
-                if (this->_asset._uniqueIDToSkin.count((unsigned int)uniqueId.getObjectId()) > 0) {
+                if (skins->contains(uniqueId.toAscii())) {
                     shared_ptr <GLTF::JSONArray> skinMeshesArray(new GLTF::JSONArray());
 
-                    shared_ptr<GLTFSkin> skin = this->_asset._uniqueIDToSkin[(unsigned int)uniqueId.getObjectId()];
+                    shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(uniqueId.toAscii()));
+                    
                     UniqueId meshUniqueId(skin->getSourceUID());
                     writeMeshFromUIDWithMaterialBindings(meshUniqueId, materialBindings, skinMeshesArray);
                     
@@ -1357,7 +1359,8 @@ namespace GLTF
 
         glTFSkin->setJoints(jointsAttribute);
 
-        this->_asset._uniqueIDToSkin[(unsigned int)skinControllerData->getObjectId()] = glTFSkin;
+        shared_ptr<JSONObject> skins = this->_asset.root()->createObjectIfNeeded("skins");
+        skins->setValue(skinControllerData->getUniqueId().toAscii() , glTFSkin);
         
 		return true;
 	}
@@ -1392,7 +1395,9 @@ namespace GLTF
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
             
             //Now we get the skin and the mesh, and
-            shared_ptr <GLTFSkin> glTFSkin = this->_asset._uniqueIDToSkin[(unsigned int)skinController->getSkinControllerData().getObjectId()];
+            shared_ptr<JSONObject> skins = this->_asset.root()->createObjectIfNeeded("skins");
+            
+            shared_ptr <GLTFSkin> glTFSkin = static_pointer_cast<GLTFSkin>(skins->getValue(skinController->getSkinControllerData().toAscii()));
             shared_ptr<JSONArray> meshes = static_pointer_cast<JSONArray>(this->_asset.getValueForUniqueId(skinController->getSource().toAscii()));
             
             JSONValueVectorRef meshesVector = meshes->values();

@@ -541,12 +541,11 @@ namespace GLTF
 
         // ----
         shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");
-
-        UniqueIDToSkin::const_iterator UniqueIDToSkinIterator;
+        std::vector <std::string> skinsUIDs = skins->getAllKeys();
         
-        for (UniqueIDToSkinIterator = this->_uniqueIDToSkin.begin() ; UniqueIDToSkinIterator != this->_uniqueIDToSkin.end() ; UniqueIDToSkinIterator++) {
+        for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
             
-            shared_ptr <GLTFSkin> skin = (*UniqueIDToSkinIterator).second;
+            shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
             shared_ptr<JSONArray> joints = skin->getJointsIds();
             shared_ptr<JSONArray> jointsWithOriginalSids(new JSONArray());
             

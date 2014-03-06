@@ -38,7 +38,6 @@ namespace GLTF
 
     //TODO: these to be moved as UniqueIDToJSONObject
     typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFSkin> > UniqueIDToSkin;
     
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
 
@@ -100,7 +99,6 @@ namespace GLTF
         MaterialUIDToName               _materialUIDToName;
         UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
         OriginalIDToTrackedObject       _originalIDToTrackedObject;
-        UniqueIDToSkin                  _uniqueIDToSkin;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         SamplerHashtoSamplerIndex       _samplerHashtoSamplerIndex;
         UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
