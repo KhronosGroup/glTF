@@ -11,7 +11,7 @@
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset relative to the buffer view in bytes.  Similar to vertexAttribPointer() pointer (ES) / offset (WebGL) parameter.",
+            "description" : "The offset relative to the buffer view in bytes.  Similar to vertexAttribPointer() pointer (ES) / offset (WebGL) parameter.  Must be a multiple of the size of the data type.",
             "minimum" : 0,
             "required" : true
         },

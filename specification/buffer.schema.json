@@ -18,8 +18,8 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "TODO",
-            "enum" : ["arraybuffer"],
+            "description" : "XMLHttpRequest responseType.",
+            "enum" : ["arraybuffer", "text"],
             "default" : "arraybuffer"
         },
         "extra" : {
