@@ -11,7 +11,7 @@
             }
         },
         "count" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "Number of keyframes (samples); the length of each parameter.",
             "minimum" : 0,
             "required" : true

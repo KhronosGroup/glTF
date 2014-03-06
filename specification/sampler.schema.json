@@ -5,25 +5,25 @@
     "description" : "Texture sampler properties. texParameterf().",
     "properties" : {
         "magFilter": {
-            "type" : "number",
+            "type" : "integer",
             "description" : "9728 (NEAREST) or 9729 (LINEAR).",
             "enum" : [9728, 9729],
             "default" : 9729
         },
         "minFilter": {
-            "type" : "number",
+            "type" : "integer",
             "description" : "9728 (NEAREST), 9729 (LINEAR), 9984 (NEAREST_MIPMAP_NEAREST), 9985 (LINEAR_MIPMAP_NEAREST), 9986 (NEAREST_MIPMAP_LINEAR), or 9987 (LINEAR_MIPMAP_LINEAR).",
             "enum" : [9728, 9729, 9984, 9985, 9986, 9987],
             "default" : 9986
         },
         "wrapS": {
-            "type" : "number",
+            "type" : "integer",
             "description" : "33071 (CLAMP_TO_EDGE), 33648 (MIRRORED_REPEAT), or 10497 (REPEAT).",
             "enum" : [33071, 33648, 10497],
             "default" : 10497
         },
         "wrapT": {
-            "type" : "number",
+            "type" : "integer",
             "description" : "33071 (CLAMP_TO_EDGE), 33648 (MIRRORED_REPEAT), or 10497 (REPEAT).",
             "enum" : [33071, 33648, 10497],
             "default" : 10497

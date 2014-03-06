@@ -11,7 +11,7 @@
             "required" : true
         },
         "byteLength" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "The length of the buffer in bytes.",
             "minimum" : 0,
             "required" : true

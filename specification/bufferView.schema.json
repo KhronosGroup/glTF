@@ -10,19 +10,19 @@
             "required" : true
         },
         "byteOffset" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "The offset into the buffer, in bytes.",
             "minimum" : 0,
             "default" : 0
         },
         "byteLength" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "The length of the buffer view, in bytes.",
             "minimum" : 0,
             "required" : true
         },
         "target" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "Target type for bindBuffer(), either 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer view contains animation or skin data.",
             "enum" : [34962, 34963]
         },

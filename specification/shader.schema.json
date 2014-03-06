@@ -11,7 +11,7 @@
             "required" : true
         },
         "type" : {
-            "type" : "number",
+            "type" : "integer",
             "description" : "Specifies the shader stage.  Allowed values are 35632 (FRAGMENT_SHADER) and 35633 (VERTEX_SHADER).",
             "enum" : [35632, 35633],
             "required" : true
