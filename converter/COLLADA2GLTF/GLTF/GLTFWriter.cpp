@@ -33,35 +33,7 @@ using namespace std::tr1;
 using namespace std;
 
 namespace GLTF 
-{
-    //-- Serializers
-    /*
-    shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> meshObject(new GLTF::JSONObject());
-        meshObject->setString(kName, mesh->getName());
-
-        mesh->resolveAttributes();
-                
-        //primitives
-        meshObject->setValue(kPrimitives, mesh->getPrimitives());
-
-        if (mesh->getExtensions()->getKeysCount() > 0) {
-            meshObject->setValue(kExtensions, mesh->getExtensions());            
-            if (mesh->getExtensions()->contains("Open3DGC-compression")) {
-                shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("Open3DGC-compression"));
-                if (compressionObject->contains("compressedData")) {
-                    shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
-                    GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[0];
-                    compressionData->setString(kBufferView, bufferView->getID());
-                }
-            }
-        }
-        
-        return meshObject;
-    }
-    */
-    
+{    
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z) {
         shared_ptr <JSONArray> vec3(new GLTF::JSONArray());
         

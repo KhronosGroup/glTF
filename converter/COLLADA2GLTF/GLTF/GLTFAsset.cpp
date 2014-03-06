@@ -81,9 +81,7 @@ namespace GLTF
         return true;
     }
     
-    //shouldOGCompressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,asset.profile);
-
-    bool writeCompressedMesh(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset& asset) {
+    bool writeCompressedMesh(shared_ptr <GLTFMesh> mesh, GLTFAsset& asset) {
         GLTFOutputStream* compressionOutputStream = asset.createOutputStreamIfNeeded(kCompressionOutputStream).get();
         
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
@@ -140,8 +138,7 @@ namespace GLTF
         return true;
     }
 
-    std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId)
-    {
+    std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId) {
         std::string id = "";
         id += type + "_" + GLTF::GLTFUtils::toString(uniqueId.getObjectId());
         return id;
@@ -374,20 +371,10 @@ namespace GLTF
     void GLTFAsset::write() {
         ifstream inputCompression;
         
+        GLTFAsset& asset = *this;
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
-        
-        /*
-         * 1. We output vertices and indices separately in 2 different files
-         * 2. Then output them in a single file
-         */
-        shared_ptr<JSONObject> assetObject = this->root->createObjectIfNeeded("asset");
-        std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
-        assetObject->setString("generator",version);
-        shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
-        assetExtras->setBool(kPremultipliedAlpha, converterConfig()->config()->getBool(kPremultipliedAlpha));
-        assetObject->setValue("extras", assetExtras);
-        
+
         /*
          *
          */
@@ -430,26 +417,30 @@ namespace GLTF
         size_t indicesLength = 0;
         size_t animationLength = rawOutputStream->length();
         size_t previousLength = animationLength;
-        size_t compressionLength = compressionOutputStream->length();
-        
-        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(compressionOutputStream->id(), compressionLength));
-        this->closeOutputStream(kCompressionOutputStream, false);
-        inputCompression.open(compressionOutputStream->outputPathCStr(), ios::in | ios::binary);
-        inputCompression.close();
-        if (compressionLength == 0) {
-            remove(compressionOutputStream->outputPathCStr());
-        }
-        
+                
         shared_ptr <GLTF::JSONObject> meshes = this->root->createObjectIfNeeded("meshes");
         shared_ptr <GLTF::JSONObject> accessors = this->root->createObjectIfNeeded("accessors");
         
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
+        //save all meshes as compressed
+        for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
+            shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            if (compressMesh)
+                writeCompressedMesh(mesh, *this);
+        }
+        size_t compressionLength = compressionOutputStream->length();
+        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(compressionOutputStream->id(), compressionLength));
+        
         //save all indices
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            writeMeshIndices(mesh, previousLength, *this);
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            if (!compressMesh)
+                writeMeshIndices(mesh, previousLength, *this);
         }
+        
         indicesLength = rawOutputStream->length() - previousLength;
         previousLength = rawOutputStream->length();
         //add padding for https://github.com/KhronosGroup/glTF/issues/167
@@ -466,7 +457,9 @@ namespace GLTF
         //save all mesh attributes
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            writeMeshAttributes(mesh, previousLength, *this);
+            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->profile);
+            if (!compressMesh)
+                writeMeshAttributes(mesh, previousLength, *this);
         }
         verticesLength = rawOutputStream->length() - previousLength;
         previousLength = rawOutputStream->length();
@@ -521,6 +514,18 @@ namespace GLTF
                 uniqueIndices->setUnsignedInt32(kType, this->profile->getGLenumForString("UNSIGNED_SHORT"));
                 accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
+            
+            //set the compression buffer view
+            if (mesh->getExtensions()->getKeysCount() > 0) {
+                if (mesh->getExtensions()->contains("Open3DGC-compression")) {
+                    shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("Open3DGC-compression"));
+                    if (compressionObject->contains("compressedData")) {
+                        shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
+                        compressionData->setString(kBufferView, compressionBufferView->getID());
+                    }
+                }
+            }
+            
         }
 
         // ----
@@ -644,6 +649,9 @@ namespace GLTF
         this->root->write(&this->_writer, this);
         
         rawOutputStream->close();
+        if (compressionLength == 0) {
+            this->closeOutputStream(kCompressionOutputStream, true);
+        }
         
         if (sharedBuffer->getByteLength() == 0)
             remove(rawOutputStream->outputPathCStr());

@@ -36,7 +36,7 @@ namespace GLTF
 {
     GLTFMesh::GLTFMesh() : JSONObject() {
         this->_remapTableForPositions = 0;
-        this->_extensions = shared_ptr<JSONObject>(new JSONObject());
+        this->setValue(kExtensions, shared_ptr<JSONObject>(new JSONObject()));
         this->_ID = GLTFUtils::generateIDForType("mesh");
     }
     
@@ -53,7 +53,7 @@ namespace GLTF
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->setName(meshPtr->getName());
-        this->_extensions = shared_ptr<JSONObject>(new JSONObject());
+        this->setValue(kExtensions, shared_ptr<JSONObject>(new JSONObject()));
     }
     
     shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes() {
@@ -163,7 +163,7 @@ namespace GLTF
 
     //TODO: allocate extras lazily
     shared_ptr<JSONObject> GLTFMesh::getExtensions() {
-        return _extensions;
+        return this->getObject(kExtensions);
     }
     
     void GLTFMesh::setRemapTableForPositions(unsigned int* remapTableForPositions) {

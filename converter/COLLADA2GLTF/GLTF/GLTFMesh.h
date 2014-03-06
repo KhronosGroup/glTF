@@ -81,7 +81,6 @@ namespace GLTF
     private:
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID;
-        shared_ptr<JSONObject> _extensions;
         
         //This is unfortunate that we need to keep this information,
         //but since we get skinning weights and bone indices after the mesh and the openCOLLADA mesh is not available anymore, we need to keep
