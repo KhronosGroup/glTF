@@ -13,6 +13,13 @@
             "minItems" : 3,
             "maxItems" : 3
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

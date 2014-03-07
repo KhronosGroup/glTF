@@ -4,6 +4,11 @@
             "buffer" : "buffer_id",
             "byteLength": 76768,
             "target": 34962,
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }
@@ -13,6 +18,11 @@
             "byteLength": 25272,
             "byteOffset": 76768,
             "target": 34963,
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }

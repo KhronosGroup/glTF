@@ -26,6 +26,13 @@
             "description" : "Target type for bindBuffer(), either 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer view contains animation or skin data.",
             "enum" : [34962, 34963]
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

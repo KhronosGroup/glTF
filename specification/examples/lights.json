@@ -7,12 +7,22 @@
                     1.0,
                     1.0
                 ],
+	            "extensions" : {
+	               "extension_name" : {
+	                  "extension_specific_property" : "value"
+	               }
+	            },
                 "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "name of ambient light",
             "type": "ambient",
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
@@ -24,12 +34,22 @@
                     1.0,
                     1.0
                 ],
+	            "extensions" : {
+	               "extension_name" : {
+	                  "extension_specific_property" : "value"
+	               }
+	            },
                 "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "name of directional light",
             "type": "directional",
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
@@ -45,11 +65,21 @@
                 "constantAttenuation": 1.0,
                 "linearAttenuation": 0.5,
                 "quadraticAttenuation": 0.25,
+	            "extensions" : {
+	               "extension_name" : {
+	                  "extension_specific_property" : "value"
+	               }
+	            },
                 "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "type": "point",
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     
@@ -67,11 +97,21 @@
                 "fallOffExponent": 0.0,
                 "linearAttenuation": 0.5,
                 "quadraticAttenuation": 0.25,
+	            "extensions" : {
+	               "extension_name" : {
+	                  "extension_specific_property" : "value"
+	               }
+	            },
                 "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "type": "spot",
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     

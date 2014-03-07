@@ -20,6 +20,13 @@
             "enum" : ["perspective", "orthographic"],
             "required" : true
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

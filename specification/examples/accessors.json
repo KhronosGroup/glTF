@@ -8,6 +8,11 @@
             "type" : 35665,
             "max" : [-1.0, -1.0, -1.0],
             "min" : [1.0, 1.0, 1.0],
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     

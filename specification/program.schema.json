@@ -21,6 +21,13 @@
             "description" : "The id (property name) of the vertex shader referenced by this program.",
             "required" : true
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

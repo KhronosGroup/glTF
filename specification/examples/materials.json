@@ -13,11 +13,21 @@
                     "diffuse": "texture_image_0",
                     "shininess": 38.4
                 },
+	            "extensions" : {
+	               "extension_name" : {
+	                  "extension_specific_property" : "value"
+	               }
+	            },
                 "extras" : {
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
             "name": "material name",
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     

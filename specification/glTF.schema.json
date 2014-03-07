@@ -42,6 +42,14 @@
                 "$ref" : "camera.schema.json"
             }
         },
+        "extensions" : {
+            "type" : "array",
+            "description" : "Names of extensions used by this model.  Related WebGL functions: getExtension.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true
+        },
         "images" : {
             "properties" : {
             },

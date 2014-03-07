@@ -38,6 +38,13 @@
             "enum" : [5121, 33635, 32819, 32820],
             "default" : 5121
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

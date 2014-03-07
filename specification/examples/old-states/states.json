@@ -76,6 +76,11 @@
         "zpass" : "KEEP"
     },
     "stencilTestEnable" : false,
+    "extensions" : {
+       "extension_name" : {
+          "extension_specific_property" : "value"
+       }
+    },
     "extras" : {
        "Application specific" : "The extra object can contain any properties."
     }    

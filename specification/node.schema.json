@@ -79,6 +79,13 @@
             "maxItems" : 3,
             "default" : [ 0.0, 0.0, 0.0 ]
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."

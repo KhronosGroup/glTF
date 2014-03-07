@@ -12,11 +12,21 @@
                     "indices": "accessor_id3",
                     "material": "material_id",
                     "primitive": 4,
+		            "extensions" : {
+		               "extension_name" : {
+		                  "extension_specific_property" : "value"
+		               }
+		            },
                     "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
             ],
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
+            },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }     

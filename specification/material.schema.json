@@ -9,7 +9,14 @@
             "description" : "The artist-created name of this material.  This is not necessarily globally unique."
         },
         "instanceTechnique" : {
-	    "$ref" : "materialInstanceTechnique.schema.json"
+	        "$ref" : "materialInstanceTechnique.schema.json"
+        },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
         },
         "extras" : {
             "type" : "any",

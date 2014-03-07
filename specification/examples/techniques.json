@@ -4,6 +4,11 @@
             "parameters": {
                 "ambient": {
                     "type": 35666,
+		            "extensions" : {
+		               "extension_name" : {
+		                  "extension_specific_property" : "value"
+		               }
+		            },
                     "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
@@ -80,11 +85,21 @@
                             "texcoordBindings": {
                                 "diffuse": "TEXCOORD_0"
                             },
+				            "extensions" : {
+				               "extension_name" : {
+				                  "extension_specific_property" : "value"
+				               }
+				            },
                             "extras": {
                                 "doubleSided": false
                             }
                         },
                         "type": "COLLADA-1.4.1/commonProfile",
+			            "extensions" : {
+			               "extension_name" : {
+			                  "extension_specific_property" : "value"
+			               }
+			            },
                         "extras" : {
                             "Application specific" : "The extra object can contain any properties."
                         }
@@ -108,14 +123,29 @@
                             "u_projectionMatrix": "projectionMatrix",
                             "u_normalMatrix": "normalMatrix"
                         },
+			            "extensions" : {
+			               "extension_name" : {
+			                  "extension_specific_property" : "value"
+			               }
+			            },
                         "extras" : {
                             "Application specific" : "The extra object can contain any properties."
                         }
                     },
+		            "extensions" : {
+		               "extension_name" : {
+		                  "extension_specific_property" : "value"
+		               }
+		            },
                     "extras" : {
                         "Application specific" : "The extra object can contain any properties."
                     }     
                 }
+            },
+            "extensions" : {
+               "extension_name" : {
+                  "extension_specific_property" : "value"
+               }
             },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."

@@ -15,6 +15,13 @@
             "enum" : ["translation", "rotation", "scale"],
             "required" : true
         },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }        
+        },
         "extras" : {
             "type" : "any",
             "description" : "Optional application-specific data."
