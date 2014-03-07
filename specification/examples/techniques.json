@@ -59,7 +59,7 @@
                     "type": 35666
                 },
                 "jointMatrix": {
-                    "semantic": "JOINT_MATRIX",
+                    "semantic": "JOINTMATRIX",
                     "type": 35676
                 },
                 "weight": {
