@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/details/commonProfile",
     "type" : "object",
-    "description" : "technique/pass/details/commonProfile",
+    "description" : "TODO",
     "properties" : {
         "lightingModel" : {
             "type" : "string",

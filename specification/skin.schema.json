@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "skin",
     "type" : "object",
-    "description" : "skin",
+    "description" : "Joints and matrices defining a skin.",
     "properties" : {
         "bindShapeMatrix" : {
             "type" : "array",
@@ -16,7 +16,7 @@
         },
         "inverseBindMatrices" : {
             "type" : "string",
-            "description" : "Specifies the accessor id (property name) with the inverse-bind matrices.",
+            "description" : "Specifies the accessor id (JSON property name) containing the 4x4 inverse-bind matrices.",
             "required" : true        
         },
         "joints" : {

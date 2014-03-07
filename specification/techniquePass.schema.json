@@ -1,8 +1,8 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "technique pass",
+    "title" : "technique/pass",
     "type" : "object",
-    "description" : "technique pass",
+    "description" : "The shader program and render states for a rendering pass.",
     "properties": { 
         "details" : {
             "$ref" : "techniquePassDetails.schema.json"

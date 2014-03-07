@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/instanceProgram",
     "type" : "object",
-    "description" : "technique/pass/instanceProgram",
+    "description" : "Shader program and attribute and uniform inputs.",
     "properties" : {
         "attributes" : {
             "properties" : {

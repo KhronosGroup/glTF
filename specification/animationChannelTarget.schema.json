@@ -6,12 +6,12 @@
     "properties" : {
         "id" : {
             "type" : "string",
-            "description" : "Reference to a glTF node id (property name).",
+            "description" : "The id (JSON property name) of the node to target.",
             "required" : true
         },
         "path" : {
             "type" : "string",
-            "description" : "The property in the glTF node that is targeted.",
+            "description" : "The node (specified by id) property name to modify.",
             "enum" : ["translation", "rotation", "scale"],
             "required" : true
         },

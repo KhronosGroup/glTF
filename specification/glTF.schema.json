@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "glTF",
     "type" : "object",
-    "description" : "The glTF model.",
+    "description" : "Top-level glTF property.",
     "properties" : {
         "asset" : {
             "$ref" : "asset.schema.json"
@@ -44,7 +44,7 @@
         },
         "extensions" : {
             "type" : "array",
-            "description" : "Names of extensions used by this model.  Related WebGL functions: getExtension.",
+            "description" : "Names of extensions used by this model.  WebGL: see getSupportedExtensions() and getExtension().",
             "items" : {
                 "type" : "string"
             },
@@ -101,7 +101,7 @@
         },
         "scene" : {
             "type" : "string",
-            "description" : "The scene to use for this asset."
+            "description" : "The id (JSON property name) of the default scene."
         },
         "scenes" : {
             "properties" : {
@@ -133,10 +133,12 @@
         },
         "profile" : {
             "type" : "string",
+            "description" : "Specifies the target rendering API and version, e.g., WebGL 1.0.2.",
             "default" : "WebGL 1.0.2"
         },        
         "version" : {
             "type" : "string",
+            "description" : "The glTF version.",
             "default" : "1.0"
         },
         "textures" : {

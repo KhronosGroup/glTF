@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique",
     "type" : "object",
-    "description" : "technique",
+    "description" : "Specifies shading and its inputs.",
     "properties": {
         "parameters" : {
             "properties" : {
@@ -13,7 +13,7 @@
         },
         "pass" : {
             "type" : "string",
-            "description" : "The pass to use for this technique."
+            "description" : "The id (JSON property name) of the default pass to use."
         },
         "passes" : {
             "properties" : {

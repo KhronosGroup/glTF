@@ -2,19 +2,19 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "asset",
     "type" : "object",
-    "description" : "Asset-management information for this model.",
+    "description" : "Asset-management information.",
     "properties" : {
         "copyright" : {
             "type" : "string",
-            "description" : "A copyright message suitable for display to credit the asset author."
+            "description" : "A copyright message suitable for display to credit the content creator."
         },
         "generator" : {
             "type" : "string",
-            "description" : "Tool that generated this glTF asset.  Useful for debugging."
+            "description" : "Tool that generated this glTF model.  Useful for debugging."
         },
         "premultipliedAlpha" : {
             "type" : "boolean",
-            "description" : "getContext() with premultipliedAlpha",
+            "description" : "Specifies if the shaders were generated with premultiplied alpha.  WebGL: see getContext() with premultipliedAlpha",
             "default" : false
         },
         "extensions" : {

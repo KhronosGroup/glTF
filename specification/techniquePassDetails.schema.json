@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/details",
     "type" : "object",
-    "description" : "technique/pass/details",
+    "description" : "Information to reconstruct a shader program.",
     "properties" : {
         "commonProfile" : {
             "$ref" : "techniquePassDetailsCommonProfile.schema.json"

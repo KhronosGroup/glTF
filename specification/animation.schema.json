@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "animation",
     "type" : "object",
-    "description" : "animation",
+    "description" : "Keyframe animation.",
     "properties" : {
         "channels" : {
             "type" : "array",

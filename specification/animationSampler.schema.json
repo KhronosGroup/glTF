@@ -7,18 +7,18 @@
     "properties" : {
         "input" : {
             "type" : "string",
-            "description" : "Reference to animation parameter to use as keyframe input, e.g., time.  If a parameter is input to sampler it must be FLOAT.",
+            "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe input, e.g., time.  This parameter must have type FLOAT.",
             "required" : true
         },
         "interpolation" : {
             "type" : "string",
-            "description" : "Interpolation algorithm",
+            "description" : "Interpolation algorithm.",
             "enum" : ["LINEAR"],
             "default" : "LINEAR"
         },
         "output" : {
             "type" : "string",
-            "description" : "Reference to animation parameter to use as keyframe output, e.g., translation, rotation, or scale.",
+            "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe output.",
             "required" : true
         },
         "extensions" : {

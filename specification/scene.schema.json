@@ -6,7 +6,7 @@
     "properties" : {
         "nodes" : {
             "type" : "array",
-            "description" : "ids (property names) for each root node in the scene.",
+            "description" : "The ids (JSON property names) for each root node.",
             "items" : {
                 "type" : "string"
             },

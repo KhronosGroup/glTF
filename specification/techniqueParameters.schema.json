@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique parameter",
     "type" : "object",
-    "description" : "technique parameter",
+    "description" : "Uniform and attribute inputs to a technique.",
     "properties" : {
         "type" : {
             "type" : "integer",
@@ -16,11 +16,11 @@
         },
         "source" : {
             "type" : "string",
-            "description" : "Specifies the node id (property name) of the node whose transform is used as the parameter's value."
+            "description" : "Specifies the id (JSON property name) of the node whose transform is used as the parameter's value."
         },
         "value" : {
             "type" : "any",
-            "description" : "Depending on type, this is a scalar or an array, and a number or boolean.  Material overrides this value."
+            "description" : "Depending on type, this is a scalar or an array, and a number or boolean.  Material values, when specified, override this."
         },
         "extensions" : {
             "properties" : {

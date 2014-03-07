@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "animation parameter",
     "type" : "string",
-    "description" : "References to accessors for sampled keyframes used by this animation.",
+    "description" : "The id (JSON property name) of the accessor containing keyframes (samples) for this parameter.",
     "required" : true,
     "additionalProperties" : false
 }
