@@ -10,12 +10,6 @@
                 "$ref" : "animationChannel.schema.json"
             }
         },
-        "count" : {
-            "type" : "integer",
-            "description" : "Number of keyframes (samples); the length of each parameter.",
-            "minimum" : 0,
-            "required" : true
-        },
         "parameters" : {
             "properties" : {
             },

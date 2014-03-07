@@ -7,7 +7,7 @@
     "properties" : {
         "input" : {
             "type" : "string",
-            "description" : "Reference to animation parameter to use as keyframe input, e.g., time.",
+            "description" : "Reference to animation parameter to use as keyframe input, e.g., time.  If a parameter is input to sampler it must be FLOAT.",
             "required" : true
         },
         "interpolation" : {
