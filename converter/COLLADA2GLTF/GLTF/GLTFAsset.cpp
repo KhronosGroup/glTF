@@ -9,8 +9,8 @@ using namespace std;
 
 namespace GLTF
 {
-    bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset& asset) {
-        GLTFOutputStream* indicesOutputStream = asset.createOutputStreamIfNeeded(asset.getSharedBufferId()).get();
+    bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
+        GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         
@@ -28,9 +28,9 @@ namespace GLTF
             if (indicesCount > 0) {
                 allIndicesCount += indicesCount;
                 //FIXME: this is assuming triangles
-                unsigned int trianglesCount = asset.convertionResults()->getUnsignedInt32("trianglesCount");
+                unsigned int trianglesCount = asset->convertionResults()->getUnsignedInt32("trianglesCount");
                 trianglesCount += indicesCount / 3;
-                asset.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
+                asset->convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 unsigned short* ushortIndices = 0;
                 
@@ -40,7 +40,7 @@ namespace GLTF
                 }
                 uniqueIndices->setByteOffset(indicesOutputStream->length() - startOffset);
                 indicesOutputStream->write((const char*)ushortIndices, indicesLength);
-                asset.setGeometryByteLength(asset.getGeometryByteLength() + indicesLength);
+                asset->setGeometryByteLength(asset->getGeometryByteLength() + indicesLength);
                 free(ushortIndices);
             }
         }
@@ -48,8 +48,8 @@ namespace GLTF
     }
     
     
-    bool writeMeshAttributes(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset& asset) {
-        GLTFOutputStream* vertexOutputStream = asset.createOutputStreamIfNeeded(asset.getSharedBufferId()).get();
+    bool writeMeshAttributes(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
+        GLTFOutputStream* vertexOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
@@ -57,9 +57,9 @@ namespace GLTF
         
         shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
         size_t vertexCount = positionAttribute->getCount();
-        unsigned int totalVerticesCount = asset.convertionResults()->getUnsignedInt32("verticesCount");
+        unsigned int totalVerticesCount = asset->convertionResults()->getUnsignedInt32("verticesCount");
         totalVerticesCount += vertexCount;
-        asset.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
+        asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
 
         for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
             shared_ptr <GLTFAccessor> meshAttribute = (*allMeshAttributes)[j];
@@ -75,14 +75,14 @@ namespace GLTF
                 meshAttribute->setByteOffset(vertexOutputStream->length() - startOffset);
                 vertexOutputStream->write(buffer);
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-                asset.setGeometryByteLength(asset.getGeometryByteLength() + buffer->getByteLength());
+                asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
             }
         }
         return true;
     }
     
-    bool writeCompressedMesh(shared_ptr <GLTFMesh> mesh, GLTFAsset& asset) {
-        GLTFOutputStream* compressionOutputStream = asset.createOutputStreamIfNeeded(kCompressionOutputStream).get();
+    bool writeCompressedMesh(shared_ptr <GLTFMesh> mesh, GLTFAsset* asset) {
+        GLTFOutputStream* compressionOutputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
         unsigned compressedBufferStart = compressionOutputStream->length();
@@ -105,9 +105,9 @@ namespace GLTF
             if (indicesCount > 0) {
                 allIndicesCount += indicesCount;                
                 //FIXME: this is assuming triangles
-                unsigned int trianglesCount = asset.convertionResults()->getUnsignedInt32("trianglesCount");
+                unsigned int trianglesCount = asset->convertionResults()->getUnsignedInt32("trianglesCount");
                 trianglesCount += indicesCount / 3;
-                asset.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
+                asset->convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 uniqueIndices->setByteOffset(compressedBufferStart);
                 compressedBufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
@@ -116,9 +116,9 @@ namespace GLTF
         
         shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
         vertexCount = positionAttribute->getCount();
-        unsigned int totalVerticesCount = asset.convertionResults()->getUnsignedInt32("verticesCount");
+        unsigned int totalVerticesCount = asset->convertionResults()->getUnsignedInt32("verticesCount");
         totalVerticesCount += vertexCount;
-        asset.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
+        asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
 
         for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
             shared_ptr <GLTFAccessor> meshAttribute = (*allMeshAttributes)[j];
@@ -375,10 +375,20 @@ namespace GLTF
         return this->_sharedBufferId;
     }
     
+    void GLTFAsset::launchModifiers() {
+        for (size_t i = 0 ; i < this->_assetModifiers.size() ; i++) {
+            shared_ptr<GLTFAssetModifier> assetModifier = this->_assetModifiers[i];
+            
+            assetModifier->init();
+            assetModifier->modify(this->_root);
+            assetModifier->cleanup();
+        }
+    }
+    
     void GLTFAsset::write() {
         ifstream inputCompression;
         
-        GLTFAsset& asset = *this;
+        GLTFAsset *asset = this;
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
 
@@ -396,7 +406,7 @@ namespace GLTF
                                                 "FLOAT",
                                                 (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
                                                 timeBufferView->getByteLength(), true,
-                                                *this);
+                                                this);
             }
             
             std::vector<std::string> allTargets = animation->targets()->getAllKeys();
@@ -408,29 +418,47 @@ namespace GLTF
                     continue;
                 }
                 flatteners.push_back(animationFlattener.get());
-                animation->writeAnimationForTargetID(targetID, *this);
+                animation->writeAnimationForTargetID(targetID, this);
             }
             animations->setValue(animation->getID(), animation);
             animations->removeValue(animationsUIDs[animationIndex]);
         }
         
-        //reopen .bin files for vertices and indices
+        shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded("meshes");
+        shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded("accessors");
+        
+        std::vector <std::string> meshesUIDs = meshes->getAllKeys();
+        
+        //WORK-AROUND: we don't want meshes without material, which can happen if a mesh is not associated with a node.
+        //In this case, the material binding - isn't resolved.
+        for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
+            shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
+            GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
+            unsigned int primitivesCount =  (unsigned int)primitives.size();
+            for (unsigned int k = 0 ; k < primitivesCount ; k++) {
+                shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[k]);
+                if (primitive->contains("material") ==  false) {
+                    meshes->removeValue(mesh->getID());
+                    break;
+                }
+            }
+        }
+        meshesUIDs = meshes->getAllKeys();
+        
+        this->launchModifiers();
+        
         size_t verticesLength = 0;
         size_t indicesLength = 0;
         size_t animationLength = rawOutputStream->length();
         size_t previousLength = animationLength;
                 
-        shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded("meshes");
-        shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded("accessors");
-        
-        std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
             bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (compressMesh)
-                writeCompressedMesh(mesh, *this);
+                writeCompressedMesh(mesh, this);
         }
         size_t compressionLength = compressionOutputStream->length();
         shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(compressionOutputStream->id(), compressionLength));
@@ -440,7 +468,7 @@ namespace GLTF
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
             bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
-                writeMeshIndices(mesh, previousLength, *this);
+                writeMeshIndices(mesh, previousLength, this);
         }
         
         indicesLength = rawOutputStream->length() - previousLength;
@@ -461,7 +489,7 @@ namespace GLTF
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
             bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
-                writeMeshAttributes(mesh, previousLength, *this);
+                writeMeshAttributes(mesh, previousLength, this);
         }
         verticesLength = rawOutputStream->length() - previousLength;
         previousLength = rawOutputStream->length();

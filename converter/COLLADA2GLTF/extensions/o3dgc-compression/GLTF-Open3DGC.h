@@ -30,7 +30,7 @@ namespace GLTF
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFAsset& asset);
+                            GLTFAsset* asset);
     
     void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset);
     
@@ -38,7 +38,7 @@ namespace GLTF
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
                                          unsigned char* buffer, size_t length, bool isInputParameter,
-                                         GLTFAsset &asset);
+                                         GLTFAsset *asset);
 }
 
 #endif

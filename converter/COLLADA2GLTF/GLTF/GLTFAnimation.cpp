@@ -131,7 +131,7 @@ namespace GLTF
         cvtAnimation->channels()->appendValue(trChannel);
     }
 
-    void GLTFAnimation::writeAnimationForTargetID(const std::string &targetID, GLTFAsset& asset) {
+    void GLTFAnimation::writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset) {
         shared_ptr <JSONObject> target =  this->targets()->getObject(targetID);
         shared_ptr<GLTFAnimationFlattener> animationFlattener = this->animationFlattenerForTargetUID(targetID);
         

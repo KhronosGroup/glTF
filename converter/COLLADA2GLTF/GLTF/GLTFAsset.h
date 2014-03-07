@@ -7,11 +7,11 @@
 
 namespace GLTF
 {
-#define CONFIG_BOOL(X) (asset.converterConfig()->config()->getBool(X))
-#define CONFIG_STRING(X) (asset.converterConfig()->config()->getString(X))
-#define CONFIG_DOUBLE(X) (asset.converterConfig()->config()->getDouble(X))
-#define CONFIG_INT32(X) (asset.converterConfig()->config()->getInt32(X))
-#define CONFIG_UINT32(X) (asset.converterConfig()->config()->getUInt32(X))
+#define CONFIG_BOOL(X) (asset->converterConfig()->config()->getBool(X))
+#define CONFIG_STRING(X) (asset->converterConfig()->config()->getString(X))
+#define CONFIG_DOUBLE(X) (asset->converterConfig()->config()->getDouble(X))
+#define CONFIG_INT32(X) (asset->converterConfig()->config()->getInt32(X))
+#define CONFIG_UINT32(X) (asset->converterConfig()->config()->getUInt32(X))
 
     const std::string kRawOutputStream = "rawOutputStream";
     const std::string kCompressionOutputStream = "compression";
@@ -36,15 +36,26 @@ namespace GLTF
     typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
     typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
 
-    //TODO: these to be moved as UniqueIDToJSONObject
-    typedef std::map<unsigned int /* openCOLLADA uniqueID */, shared_ptr<GLTFEffect> > UniqueIDToEffect;
-    
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
 
-    //should be outside of asset
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
     typedef std::map<std::string , shared_ptr<GLTFOutputStream> > NameToOutputStream;
+    
+    /* Abstract
+     *
+     *
+     */
+    class GLTFAssetModifier {
+    public:
+        GLTFAssetModifier();
+        virtual ~GLTFAssetModifier();
+        
+        virtual bool init() { return true; };
+        virtual void modify(shared_ptr<JSONObject> glTFAsset) = 0;
+        virtual const std::string& modifierId() = 0;
+        virtual void cleanup() { };
+    };
     
     class GLTFAsset
     {
@@ -92,8 +103,11 @@ namespace GLTF
 
         std::string getSharedBufferId();
 
+        std::vector <shared_ptr<GLTFAssetModifier> > &assetModifiers() { return this->_assetModifiers; };
     
     //TODO: all those still need cleanup and should be moved to private
+    protected:
+        void launchModifiers();
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;
@@ -127,11 +141,11 @@ namespace GLTF
 
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
         
-
-        
         NameToOutputStream              _nameToOutputStream;
         GLTF::GLTFWriter                _writer;
         std::string                     _sharedBufferId;
+        
+        std::vector <shared_ptr<GLTFAssetModifier> > _assetModifiers;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

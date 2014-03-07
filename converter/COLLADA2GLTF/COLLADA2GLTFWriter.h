@@ -72,7 +72,7 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter( const GLTFAsset &converterArgs);
+		COLLADA2GLTFWriter(shared_ptr<GLTF::GLTFAsset> asset);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
@@ -99,7 +99,7 @@ namespace GLTF
 		/** Remove all objects that don't have an object. Deletes unused visual scenes.*/
 		void finish();;
         
-		/** When this method is called, the writer must write the global document asset.
+		/** When this method is called, the writer must write the global document asset->
          @return The writer should return true, if writing succeeded, false otherwise.*/
 		virtual bool writeGlobalAsset ( const COLLADAFW::FileInfo* asset );
         
@@ -176,7 +176,7 @@ namespace GLTF
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        GLTF::GLTFAsset _asset;
+        shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
         GLTF::GLTFWriter _resultsWriter;
         SceneFlatteningInfo _sceneFlatteningInfo;

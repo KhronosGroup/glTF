@@ -236,33 +236,33 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 }
 
 int main (int argc, char * const argv[]) {
-    GLTF::GLTFAsset asset;
+    shared_ptr <GLTF::GLTFAsset> asset(new GLTF::GLTFAsset());
     
-    if (processArgs(argc, argv, &asset)) {
-        if (asset.getInputFilePath().length() == 0) {
+    if (processArgs(argc, argv, asset.get())) {
+        if (asset->getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = asset.getInputFilePath().c_str();
+        const char* inputFilePathCStr = asset->getInputFilePath().c_str();
         
-        if (!fileExists(asset.getInputFilePath().c_str())) {
+        if (!fileExists(asset->getInputFilePath().c_str())) {
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
         
         clock_t start = clock();
-        if (asset.converterConfig()->config()->getBool("outputProgress")) {
-            asset.log("convertion 0%%");
-            asset.log("\n\033[F\033[J");
+        if (asset->converterConfig()->config()->getBool("outputProgress")) {
+            asset->log("convertion 0%%");
+            asset->log("\n\033[F\033[J");
         } else {
-            asset.log("converting:%s ... as %s \n",asset.getInputFilePath().c_str(), asset.getOutputFilePath().c_str());
+            asset->log("converting:%s ... as %s \n",asset->getInputFilePath().c_str(), asset->getOutputFilePath().c_str());
         }
         GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(asset);
         writer->write();
-        if (asset.converterConfig()->config()->getBool("outputProgress")) {
-            asset.log("convertion 100%%");
-            asset.log("\n");
+        if (asset->converterConfig()->config()->getBool("outputProgress")) {
+            asset->log("convertion 100%%");
+            asset->log("\n");
         } else {
-            asset.log("[completed conversion]\n");
+            asset->log("[completed conversion]\n");
         }
 #if WIN32
         double clocks = CLK_TCK;
@@ -271,7 +271,7 @@ int main (int argc, char * const argv[]) {
 #endif
         std::stringstream s;
         s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
-        asset.log("Runtime: %s seconds\n", s.str().c_str());
+        asset->log("Runtime: %s seconds\n", s.str().c_str());
     }
     return 0;
 }

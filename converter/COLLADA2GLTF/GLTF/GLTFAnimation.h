@@ -62,7 +62,7 @@ namespace GLTF
 
         shared_ptr<GLTFBufferView> getBufferViewForParameter(std::string);
         
-        void writeAnimationForTargetID(const std::string &targetID, GLTFAsset& asset);
+        void writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset);
         
     private:
         std::string _id;

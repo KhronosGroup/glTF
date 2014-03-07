@@ -12,11 +12,11 @@ namespace GLTF
 {    
     
 #define ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID) std::string targetUIDWithPath = path+targetID;\
-    if (asset._targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
-        animationFlattener = asset._targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
+    if (asset->_targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
+        animationFlattener = asset->_targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
     } else {\
         animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);\
-        asset._targetUIDWithPathToAnimationFlattener[targetUIDWithPath] = animationFlattener;\
+        asset->_targetUIDWithPathToAnimationFlattener[targetUIDWithPath] = animationFlattener;\
     }
     
     /*
@@ -26,7 +26,7 @@ namespace GLTF
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
-                        GLTF::GLTFAsset &asset) {
+                        GLTF::GLTFAsset *asset) {
         
         std::string inputParameterName = "TIME";
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
@@ -50,7 +50,7 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (asset._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -84,7 +84,7 @@ namespace GLTF
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         if (animatedTarget->getString("path") == "MATRIX") {
                             std::string targetID = animatedTarget->getString("target");
-                            if (asset._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                            if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
                                 std::string transformID = animatedTarget->getString("transformId");
@@ -113,7 +113,7 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (asset._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -154,7 +154,7 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString("target");
-                        if (asset._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -180,7 +180,7 @@ namespace GLTF
                 for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                     shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                     std::string targetID = animatedTarget->getString("target");
-                    if (asset._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                    if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                         cvtAnimation->targets()->setValue(targetID, animatedTarget);
                         std::string path = animatedTarget->getString("path");
                         std::string transformID = animatedTarget->getString("transformId");
@@ -217,7 +217,7 @@ namespace GLTF
         return false;
     }
     
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset &asset)
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset)
     {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {

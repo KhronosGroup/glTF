@@ -95,7 +95,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
         shared_ptr <JSONObject> techniqueGenerator = this->getTechniqueGenerator();
                 
-        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *asset);
+        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, asset);
         
         this->setValue(kInstanceTechnique, instanceTechnique);
         instanceTechnique->setString(kTechnique, techniqueID);
