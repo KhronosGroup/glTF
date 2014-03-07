@@ -499,11 +499,12 @@ namespace GLTF
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 
+                //FIXME: need to check in more details what's going on here  (we always had this issue, but it was hidden by the fact we were using just the objectId and not the full uniqueId
+                uniqueId = UniqueId(COLLADAFW::COLLADA_TYPE::SKIN_DATA, uniqueId.getObjectId(), uniqueId.getFileId());
                 if (skins->contains(uniqueId.toAscii())) {
                     shared_ptr <GLTF::JSONArray> skinMeshesArray(new GLTF::JSONArray());
 
                     shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(uniqueId.toAscii()));
-                    
                     UniqueId meshUniqueId(skin->getSourceUID());
                     writeMeshFromUIDWithMaterialBindings(meshUniqueId, materialBindings, skinMeshesArray);
                     
@@ -1360,7 +1361,18 @@ namespace GLTF
         glTFSkin->setJoints(jointsAttribute);
 
         shared_ptr<JSONObject> skins = this->_asset.root()->createObjectIfNeeded("skins");
-        skins->setValue(skinControllerData->getUniqueId().toAscii() , glTFSkin);
+         
+        //Also we work around here what looks to be a bug in OpenCOLLADA with a fileId == 0
+        COLLADAFW::UniqueId uniqueId = skinControllerData->getUniqueId();
+        if (uniqueId.getFileId() == 0) {
+            uniqueId = UniqueId(uniqueId.getClassId(), uniqueId.getObjectId(), 1);
+        }
+        if (uniqueId.getClassId() != COLLADAFW::COLLADA_TYPE::SKIN_DATA) {
+            uniqueId = UniqueId(COLLADAFW::COLLADA_TYPE::SKIN_DATA, uniqueId.getObjectId(), uniqueId.getFileId());
+        }        
+        
+        std::string skinUID = uniqueId.toAscii();
+        skins->setValue(skinUID , glTFSkin);
         
 		return true;
 	}
@@ -1397,7 +1409,12 @@ namespace GLTF
             //Now we get the skin and the mesh, and
             shared_ptr<JSONObject> skins = this->_asset.root()->createObjectIfNeeded("skins");
             
-            shared_ptr <GLTFSkin> glTFSkin = static_pointer_cast<GLTFSkin>(skins->getValue(skinController->getSkinControllerData().toAscii()));
+            COLLADAFW::UniqueId uniqueId = skinController->getSkinControllerData().toAscii();
+            if (uniqueId.getFileId() == 0) {
+                uniqueId = UniqueId(uniqueId.getClassId(), uniqueId.getObjectId(), 1);
+            }
+
+            shared_ptr <GLTFSkin> glTFSkin = static_pointer_cast<GLTFSkin>(skins->getValue(uniqueId.toAscii()));
             shared_ptr<JSONArray> meshes = static_pointer_cast<JSONArray>(this->_asset.getValueForUniqueId(skinController->getSource().toAscii()));
             
             JSONValueVectorRef meshesVector = meshes->values();

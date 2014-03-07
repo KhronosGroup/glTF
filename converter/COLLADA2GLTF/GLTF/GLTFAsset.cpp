@@ -410,6 +410,8 @@ namespace GLTF
                 flatteners.push_back(animationFlattener.get());
                 animation->writeAnimationForTargetID(targetID, *this);
             }
+            animations->setValue(animation->getID(), animation);
+            animations->removeValue(animationsUIDs[animationIndex]);
         }
         
         //reopen .bin files for vertices and indices
@@ -533,9 +535,9 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded("materials");
         vector <std::string> materialUIDs = materials->getAllKeys();
         for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
-            shared_ptr <GLTF::GLTFEffect> effect = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
-            if (!effect->getTechniqueGenerator()) {
-                materials->removeValue(effect->getID());
+            shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
+            if (!material->getTechniqueGenerator()) {
+                materials->removeValue(material->getID());
             }
         }
 
@@ -563,10 +565,11 @@ namespace GLTF
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
             skin->setValue(kInverseBindMatrices, inverseBindMatrices);
             skins->setValue(skin->getId(), skin);
+            skins->removeValue(skinsUIDs[skinIndex]);
         }
         
         // ----
-        
+        animationsUIDs = animations->getAllKeys();
         for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
             shared_ptr<JSONObject> parameters = animation->parameters();
