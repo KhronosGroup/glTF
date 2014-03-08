@@ -72,5 +72,6 @@
 #include "GLTFInputStream.h"
 #include "GLTFOutputStream.h"
 #include "GLTFConfig.h"
+#include "GLTFAssetModifier.h"
 
 #endif 

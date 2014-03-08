@@ -3,6 +3,7 @@
 #include "GLTFAsset.h"
 #include "../GitSHA1.h"
 #include "GLTF-Open3DGC.h"
+#include "GLTFFlipUVModifier.h"
 
 using namespace std::tr1;
 using namespace std;
@@ -424,8 +425,8 @@ namespace GLTF
             animations->removeValue(animationsUIDs[animationIndex]);
         }
         
-        shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded("meshes");
-        shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded(kMeshes);
+        shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded(kAccessors);
         
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
@@ -433,6 +434,7 @@ namespace GLTF
         //In this case, the material binding - isn't resolved.
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
+            mesh->resolveAttributes();
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             unsigned int primitivesCount =  (unsigned int)primitives.size();
             for (unsigned int k = 0 ; k < primitivesCount ; k++) {
@@ -443,7 +445,22 @@ namespace GLTF
                 }
             }
         }
+        
+        //Meshes may have changed ids here, get keys again.
         meshesUIDs = meshes->getAllKeys();
+
+        // ----
+        
+        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded("materials");
+        vector <std::string> materialUIDs = materials->getAllKeys();
+        for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
+            shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
+            if (!material->getTechniqueGenerator()) {
+                materials->removeValue(material->getID());
+            }
+        }
+        
+        this->assetModifiers().push_back(shared_ptr<GLTFFlipUVMofifier> (new GLTFFlipUVMofifier()));
         
         this->launchModifiers();
         
@@ -452,7 +469,6 @@ namespace GLTF
         size_t animationLength = rawOutputStream->length();
         size_t previousLength = animationLength;
                 
-        
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
@@ -513,8 +529,6 @@ namespace GLTF
                 isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
             }
             
-            mesh->resolveAttributes();
-
             //serialize attributes
             vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
             for (size_t k = 0 ; k < allSemantics.size() ; k++) {
@@ -558,16 +572,6 @@ namespace GLTF
             
         }
 
-        // ----
-
-        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded("materials");
-        vector <std::string> materialUIDs = materials->getAllKeys();
-        for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
-            shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
-            if (!material->getTechniqueGenerator()) {
-                materials->removeValue(material->getID());
-            }
-        }
 
         // ----
         shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");

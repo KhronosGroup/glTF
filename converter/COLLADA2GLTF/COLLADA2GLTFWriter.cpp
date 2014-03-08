@@ -552,7 +552,7 @@ namespace GLTF
         }
         
         if (meshesArray->values().size() > 0)
-            nodeObject->setValue("meshes", meshesArray);
+            nodeObject->setValue(kMeshes, meshesArray);
 
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
         nodeObject->setValue("children", childrenArray);
@@ -759,7 +759,7 @@ namespace GLTF
                         JSONValueVectorRef meshesVector = meshes->values();
                         size_t meshesCount = meshesVector.size();
                         if (meshesCount > 0) {
-                            shared_ptr<JSONObject> serializedMeshes = this->_asset->root()->createObjectIfNeeded("meshes");
+                            shared_ptr<JSONObject> serializedMeshes = this->_asset->root()->createObjectIfNeeded(kMeshes);
                             for (size_t i = 0 ; i < meshesCount ; i++) {
                                 cvtMesh = static_pointer_cast<GLTFMesh>(meshesVector[i]);
                                 serializedMeshes->setValue(cvtMesh->getID(), cvtMesh);

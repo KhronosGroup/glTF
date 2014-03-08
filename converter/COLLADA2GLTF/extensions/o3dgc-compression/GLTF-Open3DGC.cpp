@@ -531,7 +531,7 @@ namespace GLTF
                                                              GLTFAsset *asset) {
         //setup
         shared_ptr <GLTFProfile> profile = asset->profile();
-        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         shared_ptr<JSONObject> parameter(new JSONObject());
         parameter->setUnsignedInt32("count", cvtAnimation->getCount());
         parameter->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
@@ -586,7 +586,7 @@ namespace GLTF
                                          GLTFAsset *asset) {
         
         shared_ptr <JSONObject> parameter;
-        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         if (CONFIG_BOOL("shareAnimationAccessors")) {
             GLTFAccessorCache accessorCache(buffer, byteLength);
             UniqueIDToAccessor::iterator it = asset->_uniqueIDToAccessorObject.find(accessorCache);

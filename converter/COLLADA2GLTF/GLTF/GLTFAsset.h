@@ -41,22 +41,7 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
     typedef std::map<std::string , shared_ptr<GLTFOutputStream> > NameToOutputStream;
-    
-    /* Abstract
-     *
-     *
-     */
-    class GLTFAssetModifier {
-    public:
-        GLTFAssetModifier();
-        virtual ~GLTFAssetModifier();
         
-        virtual bool init() { return true; };
-        virtual void modify(shared_ptr<JSONObject> glTFAsset) = 0;
-        virtual const std::string& modifierId() = 0;
-        virtual void cleanup() { };
-    };
-    
     class GLTFAsset
     {
     public:

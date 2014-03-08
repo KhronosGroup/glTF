@@ -67,6 +67,9 @@ const std::string kValue = "value";
 const std::string kPremultipliedAlpha = "premultipliedAlpha";
 const std::string kProfile = "profile";
 const std::string kNodes = "nodes";
+const std::string kMeshes = "meshes";
+const std::string kAccessors = "accessors";
+
 
 namespace GLTF
 {

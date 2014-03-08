@@ -23,6 +23,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/assetModifiers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/json/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
@@ -133,6 +134,10 @@ set(GLTF_SOURCES main.cpp
     JSON/JSONObject.h
     JSON/JSONString.h
     JSON/JSONValue.h
+    
+    assetModifiers/GLTFAssetModifier.h
+    assetModifiers/GLTFFlipUVModifier.h
+    assetModifiers/GLTFFlipUVModifier.cpp
 
     ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
     GitSHA1.h)

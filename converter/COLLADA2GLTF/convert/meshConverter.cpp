@@ -484,23 +484,7 @@ namespace GLTF
                 cvtMesh->setMeshAttributesForSemantic(semantic, meshAttributes);
             }
         }
-        
-        if (cvtMesh->hasSemantic(GLTF::TEXCOORD)) {
-            //https://github.com/KhronosGroup/collada2json/issues/41
-            //Goes through all texcoord and invert V
-            GLTF::IndexSetToMeshAttributeHashmap& texcoordMeshAttributes = cvtMesh->getMeshAttributesForSemantic(GLTF::TEXCOORD);
-            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            
-            //FIXME: consider turn this search into a method for mesh
-            for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
                 
-                meshAttribute->applyOnAccessor(__InvertV, NULL);
-            }
-        }
-        
         if (cvtMesh->getPrimitivesCount() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
             return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset->profile());
