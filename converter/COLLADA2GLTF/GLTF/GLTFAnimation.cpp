@@ -125,7 +125,7 @@ namespace GLTF
         shared_ptr<JSONObject> trTarget(new JSONObject());
         
         trChannel->setString("sampler", cvtAnimation->getSamplerIDForName(path));
-        trChannel->setValue("target", trTarget);
+        trChannel->setValue(kTarget, trTarget);
         trTarget->setString("id", targetID);
         trTarget->setString("path", path);
         cvtAnimation->channels()->appendValue(trChannel);

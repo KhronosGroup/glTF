@@ -255,7 +255,7 @@ namespace GLTF
                     
                     shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                     shared_ptr <GLTFEffect> effect;
-                    shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded("materials");
+                    shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
                     
                     if (materialBindingIndex != -1) {
                         std::string referencedMaterialID = materialBindings[materialBindingIndex].getReferencedMaterial().toAscii();
@@ -437,7 +437,7 @@ namespace GLTF
             this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
             std::string animationID = animationListID.toAscii();
-            animatedTarget->setString("target", uniqueUID);
+            animatedTarget->setString(kTarget, uniqueUID);
             animatedTarget->setString("transformId", animationID);
 
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
@@ -667,13 +667,12 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded("nodes");
-        shared_ptr <GLTF::JSONObject> rootObject(new GLTF::JSONObject());
         
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
         
         this->_asset->root()->setValue("scenes", scenesObject);
-        this->_asset->root()->setString("scene", "defaultScene");
+        this->_asset->root()->setString(kScene, "defaultScene");
         
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         
@@ -690,9 +689,7 @@ namespace GLTF
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
             childrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (nodeIDValue));
         }
-        
-        rootObject->setValue("children", childrenArray);
-        
+                
         for (size_t i = 0 ; i < nodeCount ; i++) {
             //FIXME: &this->_sceneFlatteningInfo
             this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, NULL);
@@ -944,7 +941,7 @@ namespace GLTF
                     //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
                     textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
                 }
-                textureObject->setUnsignedInt32("target", profile->getGLenumForString("TEXTURE_2D"));
+                textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
                 textures->setValue(textureUID, textureObject);
             }
 
@@ -1027,7 +1024,7 @@ namespace GLTF
                 values->setValue("shininess", shininessObject);
             }
             
-            shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded("materials");
+            shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
             materials->setValue(cvtEffect->getID(), cvtEffect);
             this->_asset->setValueForUniqueId(effect->getUniqueId().toAscii(), cvtEffect);
             
@@ -1243,7 +1240,7 @@ namespace GLTF
             for (size_t j = 0 ; j < animatedTargets->size() ; j++) {
                 shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
                 shared_ptr<GLTFAnimationFlattener> animationFlattener;
-                std::string targetUID = animatedTarget->getString("target");
+                std::string targetUID = animatedTarget->getString(kTarget);
                 if (animationFlattenerMap->count(targetUID) == 0) {
                     //FIXME: assuming node here is wrong
                     COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();

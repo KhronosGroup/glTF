@@ -160,10 +160,7 @@ namespace GLTF
     }
 
     shared_ptr<JSONObject> GLTFMesh::getExtensions() {
-        if (this->contains(kExtensions) == false) {
-            this->setValue(kExtensions, shared_ptr<JSONObject>(new JSONObject()));
-        }
-        return this->getObject(kExtensions);
+        return this->createObjectIfNeeded(kExtensions);
     }
     
     void GLTFMesh::setRemapTableForPositions(unsigned int* remapTableForPositions) {

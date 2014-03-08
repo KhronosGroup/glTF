@@ -49,7 +49,7 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
+                        std::string targetID = animatedTarget->getString(kTarget);
                         if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
@@ -83,7 +83,7 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         if (animatedTarget->getString("path") == "MATRIX") {
-                            std::string targetID = animatedTarget->getString("target");
+                            std::string targetID = animatedTarget->getString(kTarget);
                             if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
@@ -112,7 +112,7 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
+                        std::string targetID = animatedTarget->getString(kTarget);
                         if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
@@ -153,7 +153,7 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
+                        std::string targetID = animatedTarget->getString(kTarget);
                         if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
@@ -179,7 +179,7 @@ namespace GLTF
                 int index = animationClass - COLLADAFW::AnimationList::POSITION_X;
                 for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                     shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                    std::string targetID = animatedTarget->getString("target");
+                    std::string targetID = animatedTarget->getString(kTarget);
                     if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                         cvtAnimation->targets()->setValue(targetID, animatedTarget);
                         std::string path = animatedTarget->getString("path");
@@ -228,7 +228,7 @@ namespace GLTF
             //This needs to be fixed when re-working: https://github.com/KhronosGroup/glTF/issues/158
             //especially, this point: "by default the converter should replicate COLLADA animations layout (not yet done), but an option should allow to have one animation per target. (this is actually the case)."
 
-            std::string animationID = uniqueIdWithType("animation", animation->getUniqueId());
+            std::string animationID = uniqueIdWithType(kAnimation, animation->getUniqueId());
             
             cvtAnimation->setID(animationID);
             

@@ -92,7 +92,7 @@ namespace GLTF
     }
     
     GLTFBufferView::GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength) : JSONObject() {
-        this->_ID = GLTFUtils::generateIDForType("bufferView");
+        this->_ID = GLTFUtils::generateIDForType(kBufferView.c_str());
         
         this->_setBuffer(buffer);
         this->setByteLength(byteLength);
@@ -106,7 +106,7 @@ namespace GLTF
     }
         
     GLTFBufferView::GLTFBufferView() {
-        this->_ID = GLTFUtils::generateIDForType("bufferView");
+        this->_ID = GLTFUtils::generateIDForType(kBufferView.c_str());
         this->setByteLength(0);
         this->setByteOffset(0);
     }

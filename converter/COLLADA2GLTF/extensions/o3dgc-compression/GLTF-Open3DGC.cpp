@@ -555,7 +555,7 @@ namespace GLTF
                 
                 byteLength = outputStream->length() - byteOffset;
                 
-                shared_ptr<JSONObject> extensionsObject = parameter->createObjectIfNeeded("extensions");
+                shared_ptr<JSONObject> extensionsObject = parameter->createObjectIfNeeded(kExtensions);
                 shared_ptr<JSONObject> compressionObject = extensionsObject->createObjectIfNeeded("Open3DGC-compression");
                 shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
                 

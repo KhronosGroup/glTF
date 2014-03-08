@@ -44,10 +44,12 @@ const std::string kByteLength = "byteLength";
 const std::string kPath = "path";
 const std::string kType = "type";
 const std::string kBufferView = "bufferView";
+const std::string kBufferViews = "bufferViews";
 const std::string kMin = "min";
 const std::string kMax = "max";
 const std::string kIndices = "indices";
 const std::string kMaterial = "material";
+const std::string kMaterials = "materials";
 const std::string kPrimitive = "primitive";
 const std::string kName = "name";
 const std::string kExtensions = "extensions";
@@ -69,6 +71,10 @@ const std::string kProfile = "profile";
 const std::string kNodes = "nodes";
 const std::string kMeshes = "meshes";
 const std::string kAccessors = "accessors";
+const std::string kTarget = "target";
+const std::string kGeometry = "geometry";
+const std::string kAnimation = "animation";
+const std::string kScene = "scene";
 
 
 namespace GLTF

@@ -451,7 +451,7 @@ namespace GLTF
 
         // ----
         
-        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded("materials");
+        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded(kMaterials);
         vector <std::string> materialUIDs = materials->getAllKeys();
         for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
             shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));
@@ -525,7 +525,7 @@ namespace GLTF
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             
             bool isCompressed = false;
-            if (mesh->getExtensions()) {
+            if (mesh->contains(kExtensions)) {
                 isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
             }
             
@@ -560,13 +560,10 @@ namespace GLTF
             }
             
             //set the compression buffer view
-            if (mesh->getExtensions()->getKeysCount() > 0) {
-                if (mesh->getExtensions()->contains("Open3DGC-compression")) {
-                    shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("Open3DGC-compression"));
-                    if (compressionObject->contains("compressedData")) {
-                        shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
-                        compressionData->setString(kBufferView, compressionBufferView->getID());
-                    }
+            if (mesh->contains(kExtensions)) {
+                shared_ptr<JSONObject> compressionData = static_pointer_cast<JSONObject>(mesh->valueForKeyPath("extensions.Open3DGC-compression.compressedData"));
+                if (compressionData) {
+                    compressionData->setString(kBufferView, compressionBufferView->getID());
                 }
             }
             
@@ -610,7 +607,7 @@ namespace GLTF
             shared_ptr <JSONArray> channels = animation->channels();
             for (size_t i = 0 ; i < channels->values().size() ; i++) {
                 shared_ptr<JSONObject> channel = static_pointer_cast<JSONObject>(channels->values()[i]);
-                shared_ptr<JSONObject> target = channel->getObject("target");
+                shared_ptr<JSONObject> target = channel->getObject(kTarget);
                 std::string originalID = this->_uniqueIDToOriginalID[target->getString("id")];
                 target->setString("id", originalID);
             }
@@ -619,15 +616,11 @@ namespace GLTF
             for (size_t i = 0 ; i <parameterKeys.size() ; i++) {
                 std::string parameterUID = parameters->getString(parameterKeys[i]);
                 shared_ptr <JSONObject> parameterObject = accessors->getObject(parameterUID);
-                if (parameterObject->contains("extensions")) {
-                    shared_ptr <JSONObject> extensions = parameterObject->getObject("extensions");
-                    shared_ptr<JSONObject> compressionObject = extensions->getObject("Open3DGC-compression");
-                    if (compressionObject->contains("compressedData")) {
-                        shared_ptr<JSONObject> compressedData = compressionObject->getObject("compressedData");
-                        compressedData->setString("bufferView", compressionBufferView->getID());
-                    }
+                shared_ptr <JSONObject> compressedData = static_pointer_cast<JSONObject>(parameterObject->valueForKeyPath("extensions.Open3DGC-compression.compressedData"));
+                if (compressedData) {
+                    compressedData->setString(kBufferView, compressionBufferView->getID());
                 }
-                parameterObject->setString("bufferView", genericBufferView->getID());
+                parameterObject->setString(kBufferView, genericBufferView->getID());
             }            
         }
         
@@ -653,20 +646,19 @@ namespace GLTF
         
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format & manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
-        shared_ptr <JSONObject> bufferViewsObject(new JSONObject());
-        this->_root->setValue("bufferViews", bufferViewsObject);
+        shared_ptr <JSONObject> bufferViews = this->_root->createObjectIfNeeded(kBufferViews);
         
-        bufferViewsObject->setValue(indicesBufferView->getID(), indicesBufferView);
-        bufferViewsObject->setValue(verticesBufferView->getID(), verticesBufferView);
+        bufferViews->setValue(indicesBufferView->getID(), indicesBufferView);
+        bufferViews->setValue(verticesBufferView->getID(), verticesBufferView);
         if ((animationLength > 0) || (compressionLength > 0)) {
-            bufferViewsObject->setValue(genericBufferView->getID(), genericBufferView);
+            bufferViews->setValue(genericBufferView->getID(), genericBufferView);
         }
         if (compressionLength > 0) {
-            bufferViewsObject->setValue(compressionBufferView->getID(), compressionBufferView);
+            bufferViews->setValue(compressionBufferView->getID(), compressionBufferView);
         }
         
-        indicesBufferView->setUnsignedInt32("target", this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
-        verticesBufferView->setUnsignedInt32("target", this->_profile->getGLenumForString("ARRAY_BUFFER"));
+        indicesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
         //this apply MUST be before the removeValue lightsIds that follows
@@ -683,9 +675,9 @@ namespace GLTF
         if (sharedBuffer->getByteLength() == 0)
             remove(rawOutputStream->outputPathCStr());
                 
-        this->convertionResults()->setUnsignedInt32("geometry", this->getGeometryByteLength());
-        this->convertionResults()->setUnsignedInt32("animation", this->getAnimationByteLength());
-        this->convertionResults()->setUnsignedInt32("scene", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        this->convertionResults()->setUnsignedInt32(kGeometry, this->getGeometryByteLength());
+        this->convertionResults()->setUnsignedInt32(kAnimation, this->getAnimationByteLength());
+        this->convertionResults()->setUnsignedInt32(kScene, (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
         this->log("[geometry] %d bytes\n", (int)this->getGeometryByteLength());
         this->log("[animations] %d bytes\n", (int)this->getAnimationByteLength());
