@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2013, Fabrice Robinet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,43 +21,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF__
-#define __GLTF__
-
 #include "GLTF.h"
+#include "GLTFOpenCOLLADA.h"
+#include "GLTFOpenCOLLADAUtils.h"
 
-namespace GLTF 
-{
-    JSONString::JSONString():
-    JSONValue(GLTF::STRING)
-    {
-    }
-
-    JSONString::JSONString(const std::string& str):
-    JSONValue(GLTF::STRING)
-    {
-        this->_str = str;
-    }
-
-    JSONString::~JSONString()
-    {
-    }        
+void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m) {
+    shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
     
-    void JSONString::write(GLTFWriter* writer, void* context)
-    {        
-        writer->writeString(this, context);
-    }
+    COLLADABU::Math::Matrix4 transpose = matrix.transpose();
     
-    const char* JSONString::getCString()
-    {
-        return this->_str.c_str();
+    for (int i = 0 ; i < 4 ; i++)  {
+        const COLLADABU::Math::Real * real = transpose[i];
+        
+        m[(i*4) + 0] = (float)real[0];
+        m[(i*4) + 1] = (float)real[1];
+        m[(i*4) + 2] = (float)real[2];
+        m[(i*4) + 3] = (float)real[3];
     }
-    
-    const std::string& JSONString::getString()
-    {
-        return this->_str;
-    }
-    
 }
-#endif
+
+shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix) {
+    float m[16];
+    shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
+    
+    fillFloatPtrFromOpenCOLLADAMatrix4(matrix, m);
+    
+    for (int i = 0 ; i < 16; i++)  {
+        array->appendValue(shared_ptr <GLTF::JSONValue> (new GLTF::JSONNumber(m[i])));
+    }
+    
+    return array;
+}
 

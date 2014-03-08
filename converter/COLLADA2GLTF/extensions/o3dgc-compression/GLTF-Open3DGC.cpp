@@ -22,8 +22,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
+#include "../GLTFOpenCOLLADA.h"
+#include "GLTFAsset.h"
 #include "GLTF-Open3DGC.h"
 
 #include "o3dgcSC3DMCEncodeParams.h"
@@ -131,7 +131,7 @@ namespace GLTF
         }
         return true;
     }
-    
+#if 0
     void testDecode(shared_ptr <GLTFMesh> mesh, BinaryStream &bstream)
     {
         SC3DMCDecoder <unsigned short> decoder;
@@ -165,9 +165,8 @@ namespace GLTF
         
         //---
         
-        shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(POSITION, 0);
+        shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(POSITION, 0);
         
-        meshAttribute->computeMinMax();
         const double* min = meshAttribute->getMin();
         const double* max = meshAttribute->getMax();
         
@@ -198,18 +197,18 @@ namespace GLTF
         
         free(outputData);
     }
-    
+#endif 
     //All these limitations will be fixed in coming iterations:
     //Do we have only triangles, only one set of texcoord and no skinning ?
     //TODO:Also check that the same buffer is not shared by 2 different semantics or set
-    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh)
+    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh, shared_ptr<GLTFProfile> profile)
     {
-        PrimitiveVector primitives = mesh->getPrimitives();
+        JSONValueVector primitives = mesh->getPrimitives()->values();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            if (primitive->getType() != "TRIANGLES") {
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            if (primitive->getPrimitive() != profile->getGLenumForString("TRIANGLES")) {
                 return false;
             }
         }
@@ -234,11 +233,11 @@ namespace GLTF
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFConverterContext& converterContext)
+                            GLTFAsset* asset)
     {
         o3dgc::SC3DMCEncodeParams params;
         o3dgc::IndexedFaceSet <unsigned short> ifs;
-        shared_ptr <GLTFConfig> config = converterContext.converterConfig();
+        shared_ptr <GLTFConfig> config = asset->converterConfig();
         
         //setup options
         int qcoord    = 12;
@@ -260,14 +259,14 @@ namespace GLTF
         O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT", "PARALLELOGRAM"));
         O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT", "DIFFERENTIAL"));
         
-        GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
+        GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         size_t bufferOffset = outputStream->length();
         
         O3DGCSC3DMCPredictionMode floatAttributePrediction = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
         
         unsigned int nFloatAttributes = 0;
         
-        PrimitiveVector primitives = mesh->getPrimitives();
+        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
         unsigned int allIndicesCount = 0;
         unsigned int allTrianglesCount = 0;
@@ -276,8 +275,8 @@ namespace GLTF
         
         //First run through primitives to gather the number of indices and infer the number of triangles.
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
             unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
             //FIXME: assumes triangles, but we are guarded from issues by canEncodeOpen3DGCMesh
             allIndicesCount += indicesCount;
@@ -297,8 +296,8 @@ namespace GLTF
             }
             primitiveIDsPtr += trianglesCount;
             allTrianglesCount += trianglesCount;
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
             unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
             unsigned int* indicesPtr = (unsigned int*)uniqueIndices->getBufferView()->getBufferDataByApplyingOffset();
             for (unsigned int j = 0 ; j < indicesCount ; j++) {
@@ -321,9 +320,9 @@ namespace GLTF
             size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
             
             for (size_t j = 0 ; j < attributesCount ; j++) {
-                shared_ptr <GLTFMeshAttribute> meshAttribute = mesh->getMeshAttribute(semantic, j);
+                shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
                 vertexCount = meshAttribute->getCount();
-                size_t componentsPerAttribute = meshAttribute->getComponentsPerAttribute();
+                size_t componentsPerElement = meshAttribute->componentsPerElement();
                 char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
                 switch (semantic) {
                     case POSITION:
@@ -343,7 +342,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
                         params.SetFloatAttributePredMode(nFloatAttributes, texcoordPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -353,7 +352,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
                         params.SetFloatAttributePredMode(nFloatAttributes, colorPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -363,7 +362,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
                         params.SetFloatAttributePredMode(nFloatAttributes, weightPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -381,7 +380,7 @@ namespace GLTF
                         params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
                         params.SetFloatAttributePredMode(nFloatAttributes, jointPrediction);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerAttribute);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -407,7 +406,7 @@ namespace GLTF
         params.SetStreamType(CONFIG_STRING("compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
 #if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
-        COLLADABU::URI outputURI(converterContext.outputFilePath.c_str());
+        COLLADABU::URI outputURI(asset->outputFilePath.c_str());
         std::string outputFilePath = outputURI.getPathDir() + GLTFUtils::toString(dumpedId) + ".txt";
         dumpedId++;
         SaveIFS(outputFilePath, ifs);
@@ -416,7 +415,7 @@ namespace GLTF
         
         compressedData->setString("mode", CONFIG_STRING("compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
-        compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
+        compressedData->setUnsignedInt32("type", asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
@@ -424,7 +423,7 @@ namespace GLTF
         
         //testDecode(mesh, bstream);
         outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
-        converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + bstream.GetSize());
+        asset->setGeometryByteLength(asset->getGeometryByteLength() + bstream.GetSize());
 
         if (ifs.GetCoordIndex()) {
             free(ifs.GetCoordIndex());
@@ -435,13 +434,13 @@ namespace GLTF
         }
     }
     
-    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFConverterContext& converterContext) {
-        GLTFOutputStream *outputStream = converterContext._compressionOutputStream;
+    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset* asset) {
+        GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         Real max[32];
         Real min[32];
         O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
-        shared_ptr<GLTFConfig> config = converterContext.converterConfig();
+        shared_ptr<GLTFConfig> config = asset->converterConfig();
         
         DynamicVector dynamicVector;
         dynamicVector.SetVectors(buffer);
@@ -510,7 +509,7 @@ namespace GLTF
     /*
      Handles Parameter creation / addition
      */
-    static std::string __SetupSamplerForParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+    static std::string __SetupSamplerForParameter(GLTFAnimation *cvtAnimation,
                                                   shared_ptr<JSONObject> parameter,
                                                   const std::string &name) {
         shared_ptr<JSONObject> sampler(new JSONObject());
@@ -523,36 +522,36 @@ namespace GLTF
         return samplerID;
     }
     
-    static shared_ptr <JSONObject> __WriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+    static shared_ptr <JSONObject> __WriteAnimationParameter(GLTFAnimation *cvtAnimation,
                                                              const std::string& parameterSID,
                                                              const std::string& accessorUID,
                                                              const std::string& parameterType,
                                                              unsigned char* buffer, size_t byteLength,
                                                              bool isInputParameter,
-                                                             GLTFConverterContext &converterContext) {
+                                                             GLTFAsset *asset) {
         //setup
-        shared_ptr <GLTF::JSONObject> accessors = converterContext.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTFProfile> profile = asset->profile();
+        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         shared_ptr<JSONObject> parameter(new JSONObject());
         parameter->setUnsignedInt32("count", cvtAnimation->getCount());
-        parameter->setUnsignedInt32("type",  converterContext.profile->getGLenumForString(parameterType));
+        parameter->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
 
         accessors->setValue(accessorUID, parameter);
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
         
-        shared_ptr <GLTFProfile> profile = converterContext.profile;
         
         //write
         size_t byteOffset = 0;
         bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
-        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? converterContext._compressionOutputStream : converterContext._animationOutputStream;
+        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset->createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();;
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         
         if (shouldEncodeOpen3DGC) {
             unsigned int glType = parameter->getUnsignedInt32("type");
-            size_t componentsCount = profile->getComponentsCountForType(glType);
+            size_t componentsCount = profile->getComponentsCountForGLType(glType);
             if (componentsCount) {
-                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), converterContext);
+                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), asset);
                 
                 byteLength = outputStream->length() - byteOffset;
                 
@@ -568,7 +567,7 @@ namespace GLTF
         } else {
             outputStream->write((const char*)buffer, byteLength);
         }
-        converterContext.setAnimationByteLength(converterContext.getAnimationByteLength() + byteLength);
+        asset->setAnimationByteLength(asset->getAnimationByteLength() + byteLength);
 
         return parameter;
     }
@@ -579,30 +578,30 @@ namespace GLTF
      
      Handles Parameter creation / addition / write
      */
-    void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+    void setupAndWriteAnimationParameter(GLTFAnimation *cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
                                          unsigned char* buffer, size_t byteLength,
                                          bool isInputParameter,
-                                         GLTFConverterContext &converterContext) {
+                                         GLTFAsset *asset) {
         
         shared_ptr <JSONObject> parameter;
-        shared_ptr <GLTF::JSONObject> accessors = converterContext.root->createObjectIfNeeded("accessors");
+        shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         if (CONFIG_BOOL("shareAnimationAccessors")) {
-            AccessorCache accessorCache(buffer, byteLength);
-            UniqueIDToAccessor::iterator it = converterContext._uniqueIDToAccessorObject.find(accessorCache);
-            if (it != converterContext._uniqueIDToAccessorObject.end()) {
+            GLTFAccessorCache accessorCache(buffer, byteLength);
+            UniqueIDToAccessor::iterator it = asset->_uniqueIDToAccessorObject.find(accessorCache);
+            if (it != asset->_uniqueIDToAccessorObject.end()) {
                 cvtAnimation->parameters()->setString(parameterSID, it->second);
                 parameter = accessors->getObject(it->second);
             } else {
                 //build an id based on number of accessors
-                std::string accessorUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
-                parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, converterContext);
-                converterContext._uniqueIDToAccessorObject.insert(std::make_pair(accessorCache, accessorUID));
+                std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
+                parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
+                asset->_uniqueIDToAccessorObject.insert(std::make_pair(accessorCache, accessorUID));
             }
         } else {
-            std::string accessorUID = "accessor_" + GLTFUtils::toString(accessors->getKeysCount());
-            parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, converterContext);
+            std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
+            parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
         }        
         if (!isInputParameter)
             __SetupSamplerForParameter(cvtAnimation, parameter, parameterSID);

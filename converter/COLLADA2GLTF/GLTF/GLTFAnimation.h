@@ -27,18 +27,15 @@
 namespace GLTF 
 {
     class GLTFAnimationFlattener;
-    class GLTFConverterContext;
+    class GLTFAsset;
         
-    class GLTFAnimation {
+    class GLTFAnimation : public JSONObject {
     public:
         GLTFAnimation();
         virtual ~GLTFAnimation();
         
         size_t getCount();
         void setCount(size_t count);
-        
-        double getDuration();
-        void setDuration(double duration);
         
         void setID(std::string animationID);
         std::string getID();
@@ -65,15 +62,12 @@ namespace GLTF
 
         shared_ptr<GLTFBufferView> getBufferViewForParameter(std::string);
         
+        void writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset);
+        
     private:
-        size_t _count;
-        double _duration;
         std::string _id;
         std::string _originalID;
-        shared_ptr <JSONArray> _channels;
-        shared_ptr <JSONObject> _samplers;
         shared_ptr <JSONObject> _targets;
-        shared_ptr <JSONObject> _parameters;
         AnimationFlattenerForTargetUIDSharedPtr _animationFlattenerForTargetUID;
         std::map<std::string , shared_ptr<GLTFBufferView> > _bufferViews;
     };

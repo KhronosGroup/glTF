@@ -51,7 +51,7 @@ namespace o3dgc
         O3DGCStreamType             GetStreamType() const { return m_streamType; }
         void                        SetStreamType(O3DGCStreamType streamType) { m_streamType = streamType; }
         unsigned long               GetIterator() const { return m_iterator;}
-        O3DGCErrorCode              SetIterator(unsigned long iterator) { m_iterator = iterator;}
+        O3DGCErrorCode              SetIterator(unsigned long iterator) { m_iterator = iterator; return O3DGC_OK; }
 
         private:
         O3DGCErrorCode              IQuantize(Real * const floatArray, 

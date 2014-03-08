@@ -24,49 +24,47 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_ACCESSOR_H__
-#define __JSON_ACCESSOR_H__
+#ifndef __GLTF_ACCESSOR_H__
+#define __GLTF_ACCESSOR_H__
 
 /* 
-    A GLTFMeshAttribute contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
+    A GLTFAccessor contains all the properties required to describe a buffer to be handled by WebGL (http://www.khronos.org/registry/webgl/specs/latest/ )
      
     Its design is very inspired by COLLADA (http://www.khronos.org/files/collada_spec_1_4.pdf )but was adapted for consistent naming and requirements (like byte sizes) to be consistent with typed arrays.
  
  */
 namespace GLTF 
 {
-    typedef void (*GLTFMeshAttributeApplierFunc)(void* /* value */,
+    /* this has not been updated to use GL Types */
+    typedef void (*GLTFAccessorApplierFunc)(void* /* value */,
         ComponentType /* type */,
         size_t /* elementsPerValue */,
         size_t /* index */,
         size_t /* vertexAttributeByteSize*/,
         void* /* context */);
     
-    class GLTFMeshAttribute {
+    class GLTFAccessor : public JSONObject {
     private:
         void _generateID();
 
     public:
         
-        GLTFMeshAttribute();
-        GLTFMeshAttribute(GLTFMeshAttribute *meshAttribute);
+        GLTFAccessor(shared_ptr<GLTFProfile>, unsigned int glType);
+        GLTFAccessor(GLTFAccessor *);
         
-        virtual ~GLTFMeshAttribute();
+        virtual ~GLTFAccessor();
         
         void setBufferView(shared_ptr <GLTFBufferView> buffer);
         shared_ptr <GLTFBufferView> getBufferView();
-        
-        void setComponentsPerAttribute(size_t componentsPerAttribute);         
-        size_t getComponentsPerAttribute();
-        
+                
         void setByteStride(size_t stride);
         size_t getByteStride();
         
-        void setComponentType(ComponentType type);
-        ComponentType getComponentType();
+        size_t componentsPerElement();
+        ComponentType componentType();
         
-        //return a string that represents the GL Type,by taking into account componentType and componentsPerAttribute
-        unsigned int getGLType(shared_ptr<GLTFProfile> profile);
+        //return a string that represents the GL Type,by taking into account componentType and componentsPerElement
+        unsigned int type();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
@@ -74,31 +72,30 @@ namespace GLTF
         void setCount(size_t length);
         size_t getCount();
         
-        void apply(GLTFMeshAttributeApplierFunc applierFunc, void* context);
+        virtual void applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context);
         
         const std::string& getID();
         
-        void computeMinMax();
+        size_t elementByteLength();
         
-        size_t getVertexAttributeByteLength();
+        shared_ptr<JSONArray> min();
+        shared_ptr<JSONArray> max();
         
-        const double* getMin();
-        const double* getMax();
+        bool matchesLayout(GLTFAccessor* meshAttribute);
+        void exposeMinMax();
+    private:
+        void _computeMinMaxIfNeeded();
         
-        bool matchesLayout(GLTFMeshAttribute* meshAttribute);
-
     private:
         shared_ptr <GLTFBufferView> _bufferView;
-        size_t              _componentsPerAttribute;
-        size_t              _count;
-        size_t              _byteStride;
-        size_t              _byteOffset;
-        ComponentType         _componentType;
-        std::string         _ID;
-        double              *_min;
-        double              *_max;
+        size_t                  _componentsPerElement;
+        ComponentType           _componentType;
+        size_t                  _elementByteLength;
+        std::string             _ID;
+        shared_ptr<JSONArray>   _min;
+        shared_ptr<JSONArray>   _max;
+        bool                    _minMaxDirty;
     };
-
 }
 
 #endif

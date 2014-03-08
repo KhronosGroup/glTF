@@ -1,19 +1,10 @@
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
+#include "../GLTFOpenCOLLADA.h"
+#include "GLTFAsset.h"
 
 #include "meshConverter.h"
 #include "../helpers/mathHelpers.h"
 #include "../helpers/geometryHelpers.h"
-
-#ifdef USE_WEBGLLOADER
-//WebGL Loader..
-#include "bounds.h"
-#include "compress.h"
-#include "mesh.h"
-#include "optimize.h"
-#include "stream.h"
-#endif
 
 //--- X3DGC
 #include <time.h>
@@ -33,524 +24,6 @@
 
 namespace GLTF
 {
-    bool writeAllMeshBuffers(shared_ptr <GLTFMesh> mesh, GLTFConverterContext& converterContext)
-    {
-        bool shouldOGCompressMesh = false;
-        
-        GLTFOutputStream* vertexOutputStream = converterContext._vertexOutputStream;
-        GLTFOutputStream* indicesOutputStream = converterContext._indicesOutputStream;
-        GLTFOutputStream* compressionOutputStream = converterContext._compressionOutputStream;
-        
-#ifdef USE_WEBGLLOADER
-
-        if (mesh->getExtensions()->contains("won-compression")) {
-            shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("won-compression"));
-            
-            shared_ptr<GLTFBuffer> buffer = mesh->getCompressedBuffer();
-            
-            shared_ptr<JSONObject> compressedData(new JSONObject());
-            compressedData->setUnsignedInt32("count", buffer->getByteLength());
-            compressedData->setUnsignedInt32("type", converterContext.profile->getGLenumForString("UNSIGNED_BYTE"));
-            compressedData->setUnsignedInt32("byteOffset", static_cast<size_t>(genericStream.tellp()));
-            compressionObject->setValue("compressedData", compressedData);
-            genericStream.write((const char*)buffer->getData(), buffer->getByteLength());
-            
-            shared_ptr <MeshAttributeVector> attributes = mesh->meshAttributes();
-            for (size_t i = 0 ; i < attributes->size() ; i++) {
-                shared_ptr <GLTFMeshAttribute> meshAttribute = (*attributes)[i];
-                meshAttribute->computeMinMax();
-            }
-            //bufferView will be set when the mesh is serialized
-            return true;
-        }
-#endif
-        
-#ifdef USE_OPEN3DGC
-        shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
-        shouldOGCompressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh);
-        unsigned compressedBufferStart = compressionOutputStream->length();
-        if (shouldOGCompressMesh) {
-            encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, converterContext);
-        }
-#endif
-        typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
-        IDToBufferDef IDToBuffer;
-        
-        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
-        shared_ptr <GLTFBufferView> dummyBuffer(new GLTFBufferView());
-        int vertexCount;
-        unsigned int indicesCount, allIndicesCount = 0;
-        PrimitiveVector primitives = mesh->getPrimitives();
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
-            /*
-             Convert the indices to unsigned short and write the blob
-             */
-            indicesCount = (unsigned int)uniqueIndices->getCount();
-            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
-            unsigned int* uniqueIndicesBuffer = (unsigned int*) indicesBufferView->getBufferDataByApplyingOffset();
-            if (indicesCount <= 0) {
-                // FIXME: report error
-            } else {
-                allIndicesCount += indicesCount;
-                
-                //FIXME: this is assuming triangles
-                unsigned int trianglesCount = converterContext.convertionResults()->getUnsignedInt32("trianglesCount");
-                trianglesCount += indicesCount / 3;
-                converterContext.convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
-                
-                size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                unsigned short* ushortIndices = 0;
-                
-                if (!shouldOGCompressMesh) {
-                    ushortIndices = (unsigned short*)calloc(indicesLength, 1);
-                    for (unsigned int idx = 0 ; idx < indicesCount ; idx++) {
-                        ushortIndices[idx] = (unsigned short)uniqueIndicesBuffer[idx];
-                    }
-                    uniqueIndices->setByteOffset(indicesOutputStream->length());
-                    indicesOutputStream->write((const char*)ushortIndices, indicesLength);
-                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + indicesLength);
-                }
-#ifdef USE_OPEN3DGC
-                else {
-                    uniqueIndices->setByteOffset(compressedBufferStart);
-                    compressedBufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
-                }
-#endif
-                //now that we wrote to the stream we can release the buffer.
-                uniqueIndices->setBufferView(dummyBuffer);
-                
-                if (!shouldOGCompressMesh)
-                    free(ushortIndices);
-            }
-        }
-        
-        int attributeCount = 0;
-        for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
-            shared_ptr <GLTFMeshAttribute> meshAttribute = (*allMeshAttributes)[j];
-            shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
-            shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
-            
-            if (!bufferView.get()) {
-                // FIXME: report error
-                return false;
-            }
-            
-            if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
-                
-                meshAttribute->computeMinMax();
-                
-                vertexCount = meshAttribute->getCount();
-                
-                if (attributeCount == 0) {
-                    unsigned int totalVerticesCount = converterContext.convertionResults()->getUnsignedInt32("verticesCount");
-                    totalVerticesCount += vertexCount;
-                    converterContext.convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
-                }
-                
-                attributeCount++;
-#ifdef USE_OPEN3DGC
-                if (shouldOGCompressMesh) {
-                    meshAttribute->setByteOffset(compressedBufferStart);
-                    compressedBufferStart += buffer->getByteLength();
-                } else
-#endif
-                {
-                    meshAttribute->setByteOffset(vertexOutputStream->length());
-                    vertexOutputStream->write(buffer);
-                    converterContext.setGeometryByteLength(converterContext.getGeometryByteLength() + buffer->getByteLength());
-                }
-                
-
-                //now that we wrote to the stream we can release the buffer.
-                meshAttribute->setBufferView(dummyBuffer);
-                IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-            }
-        }
-        
-        return true;
-    }
-
-    
-    
-#ifdef USE_WEBGLLOADER
-    //webgl-loader compression
-    static void __FeedAttribs(void *value,
-                              GLTF::ComponentType type,
-                              size_t componentsPerAttribute,
-                              size_t index,
-                              size_t vertexAttributeByteSize,
-                              void *context) {
-        char* bufferData = (char*)value;
-        AttribList *attribList = (AttribList*)context;
-        
-        switch (type) {
-            case GLTF::FLOAT: {
-                float* vector = (float*)bufferData;
-                for (int  i = 0; i < componentsPerAttribute ; i++) {
-                    attribList->push_back(vector[i]);
-                }
-            }
-                break;
-            default:
-                break;
-        }
-    }
-    
-    static shared_ptr<JSONObject> getDecodeParams(webgl_loader::BoundsParams& bp) {
-        shared_ptr<JSONObject> decodeParams(new JSONObject());
-        shared_ptr<JSONArray> decodeOffsets(new JSONArray());
-        shared_ptr<JSONArray> decodeScales(new JSONArray());
-
-        for (size_t i = 0 ; i < 8 ; i++) {
-            decodeOffsets->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)bp.decodeOffsets[i])));
-            decodeScales->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)bp.decodeScales[i])));
-        }
-        
-        decodeParams->setValue("decodeOffsets", decodeOffsets);
-        decodeParams->setValue("decodeScales", decodeScales);
-        
-        return decodeParams;
-    }
-    
-    
-    bool compress(shared_ptr <GLTF::GLTFMesh> mesh) {
-        //Compresss wavefront
-        WavefrontObjFile dummyObj;
-        
-        AttribList *positions = dummyObj.positions();
-        shared_ptr <GLTFMeshAttribute> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
-        positionAttrib->apply(__FeedAttribs, positions);
-        
-        AttribList *normals = dummyObj.normals();
-        shared_ptr <GLTFMeshAttribute> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
-        normalAttrib->apply(__FeedAttribs, normals);
-        
-        AttribList *texcoords = dummyObj.texcoords();
-        shared_ptr <GLTFMeshAttribute> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
-        texcoordAttrib->apply(__FeedAttribs, texcoords);
-        
-        DrawBatch* drawBatch = dummyObj.drawBatch();
-        
-        PrimitiveVector primitives = mesh->getPrimitives();
-        int dummyIndices[9];
-        
-        //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
-        //webgl_loader::FileSink utf8_sink(utf8_out_fp);
-        
-        std::vector<char> compressedOutput;
-        webgl_loader::VectorSink utf8_sink(&compressedOutput);
-        
-        for (size_t i = 0 ; i < primitives.size(); i++) {
-            shared_ptr <GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTFIndices> indices = primitive->getUniqueIndices();
-            
-            //FIXME: assume triangles
-            size_t count = indices->getCount();
-            
-            unsigned int* intIndices = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
-            
-            for (size_t k = 0 ; k < count ; k += 3) {
-                unsigned int i1 = intIndices[k];
-                unsigned int i2 = intIndices[k + 1];
-                unsigned int i3 = intIndices[k + 2];
-                
-                //simulate OBJ files 1-based indexing
-                i1 += 1;
-                i2 += 1;
-                i3 += 1;
-                
-                dummyIndices[0] = dummyIndices[1] = dummyIndices[2] = (int)i1;
-                dummyIndices[3] = dummyIndices[4] = dummyIndices[5] = (int)i2;
-                dummyIndices[6] = dummyIndices[7] = dummyIndices[8] = (int)i3;
-                
-                drawBatch->AddTriangle(0, dummyIndices);
-            }
-            
-            const MaterialBatches& batches = dummyObj.material_batches();
-            
-            // Pass 1: compute bounds.
-            webgl_loader::Bounds bounds;
-            bounds.Clear();
-            for (MaterialBatches::const_iterator iter = batches.begin();
-                 iter != batches.end(); ++iter) {
-                const DrawBatch& draw_batch = iter->second;
-                bounds.Enclose(draw_batch.draw_mesh().attribs);
-            }
-            FILE* json_out = stdout;
-            
-            webgl_loader::BoundsParams bounds_params =
-            webgl_loader::BoundsParams::FromBounds(bounds);
-            
-            shared_ptr<JSONObject> decodeParams = getDecodeParams(bounds_params);
-            
-            fputs("  \"decodeParams\": ", json_out);
-            bounds_params.DumpJson(json_out);
-            fputs(", \"urls\": {\n", json_out);
-            // Pass 2: quantize, optimize, compress, report.
-            //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
-            //CHECK(utf8_out_fp != NULL);
-            fprintf(json_out, "    \"%s\": [\n", "testglloader.bin");
-            
-            size_t offset = 0;
-            MaterialBatches::const_iterator iter = batches.begin();
-            while (iter != batches.end()) {
-                const DrawMesh& draw_mesh = iter->second.draw_mesh();
-                if (draw_mesh.indices.empty()) {
-                    ++iter;
-                    continue;
-                }
-                QuantizedAttribList quantized_attribs;
-                webgl_loader::AttribsToQuantizedAttribs(draw_mesh.attribs, bounds_params,&quantized_attribs);
-                VertexOptimizer vertex_optimizer(quantized_attribs);
-                const std::vector<GroupStart>& group_starts = iter->second.group_starts();
-                WebGLMeshList webgl_meshes;
-                std::vector<size_t> group_lengths;
-                for (size_t i = 1; i < group_starts.size(); ++i) {
-                    const size_t here = group_starts[i-1].offset;
-                    const size_t length = group_starts[i].offset - here;
-                    group_lengths.push_back(length);
-                    vertex_optimizer.AddTriangles(&draw_mesh.indices[here], length,&webgl_meshes);
-                }
-                const size_t here = group_starts.back().offset;
-                const size_t length = draw_mesh.indices.size() - here;
-                CHECK(length % 3 == 0);
-                group_lengths.push_back(length);
-                vertex_optimizer.AddTriangles(&draw_mesh.indices[here], length,&webgl_meshes);
-                
-                std::vector<std::string> material;
-                std::vector<size_t> attrib_start, attrib_length, index_start, index_length;
-                for (size_t i = 0; i < webgl_meshes.size(); ++i) {
-                    const size_t num_attribs = webgl_meshes[i].attribs.size();
-                    const size_t num_indices = webgl_meshes[i].indices.size();
-                    CHECK(num_attribs % 8 == 0);
-                    CHECK(num_indices % 3 == 0);
-                    webgl_loader::CompressQuantizedAttribsToUtf8(webgl_meshes[i].attribs, &utf8_sink);
-                    webgl_loader::CompressIndicesToUtf8(webgl_meshes[i].indices, &utf8_sink);
-                    material.push_back(iter->first);
-                    attrib_start.push_back(offset);
-                    attrib_length.push_back(num_attribs / 8);
-                    index_start.push_back(offset + num_attribs);
-                    index_length.push_back(num_indices / 3);
-                    offset += num_attribs + num_indices;
-                }
-                
-                int meshIndex = 0;
-                
-                shared_ptr<JSONArray> attribs(new JSONArray());
-                shared_ptr<JSONArray> indices(new JSONArray());
-                attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_start[meshIndex])));
-                attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_length[meshIndex])));
-                indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_start[meshIndex])));
-                indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_length[meshIndex])));
-                
-                decodeParams->setValue("attribRange", attribs);
-                decodeParams->setValue("indexRange", indices);
-                
-                mesh->getExtensions()->setValue("won-compression", decodeParams);
-                
-                for (size_t i = 0; i < webgl_meshes.size(); ++i) {
-                    fprintf(json_out,
-                            "      { \"material\": \"%s\",\n"
-                            "        \"attribRange\": [" PRIuS ", " PRIuS "],\n"
-                            "        \"indexRange\": [" PRIuS ", " PRIuS "]\n"
-                            "      }",
-                            material[i].c_str(),
-                            attrib_start[i], attrib_length[i],
-                            index_start[i], index_length[i]);
-                    if (i != webgl_meshes.size() - 1) {
-                        fputs(",\n", json_out);
-                    }
-                }
-                const bool last = (++iter == batches.end());
-                fputs(",\n" + last, json_out);
-                
-                
-            }
-            fputs("    ]\n", json_out);
-            fputs("  }\n}", json_out);
-            
-            printf("compressed output size:%d\n",compressedOutput.size());
-            
-            //FIXME: remove that crappy copy here
-            char *bufferPtr = ( char*)malloc(compressedOutput.size());
-            for (size_t idx = 0 ; idx < compressedOutput.size() ; idx++) {
-                bufferPtr[idx] = compressedOutput[idx];
-            }
-            shared_ptr<GLTFBuffer> compressedBuffer(new GLTFBuffer(bufferPtr, compressedOutput.size(), true));
-            
-            mesh->setCompressedBuffer(compressedBuffer);
-            
-        }
-        
-        return true;
-    }
-    
-    
-    
-    
-#if 0
-    bool compress(shared_ptr <GLTF::GLTFMesh> mesh) {
-        //Compresss wavefront
-        WavefrontObjFile dummyObj;
-        
-        AttribList *positions = dummyObj.positions();
-        shared_ptr <GLTFMeshAttribute> positionAttrib = mesh->getMeshAttributesForSemantic(POSITION)[0];
-        positionAttrib->apply(__FeedAttribs, positions);
-        
-        AttribList *normals = dummyObj.normals();
-        shared_ptr <GLTFMeshAttribute> normalAttrib = mesh->getMeshAttributesForSemantic(NORMAL)[0];
-        normalAttrib->apply(__FeedAttribs, normals);
-        
-        AttribList *texcoords = dummyObj.texcoords();
-        shared_ptr <GLTFMeshAttribute> texcoordAttrib = mesh->getMeshAttributesForSemantic(TEXCOORD)[0];
-        texcoordAttrib->apply(__FeedAttribs, texcoords);
-        
-        DrawBatch* drawBatch = dummyObj.drawBatch();
-        
-        PrimitiveVector primitives = mesh->getPrimitives();
-        int dummyIndices[9];
-        
-        //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
-        //webgl_loader::FileSink utf8_sink(utf8_out_fp);
-        
-        std::vector<char> compressedOutput;
-        webgl_loader::VectorSink utf8_sink(&compressedOutput);
-        
-        const DrawMesh& draw_mesh = drawBatch->draw_mesh();
-    
-        QuantizedAttribList quantized_attribs;
-        
-        
-        for (size_t i = 0 ; i < primitives.size(); i++) {
-            shared_ptr <GLTFPrimitive> primitive = primitives[i];
-            shared_ptr <GLTFIndices> indices = primitive->getUniqueIndices();
-            
-            //FIXME: assume triangles
-            size_t count = indices->getCount();
-            
-            unsigned int* intIndices = (unsigned int*)indices->getBufferView()->getBufferDataByApplyingOffset();
-            
-            for (size_t k = 0 ; k < count ; k += 3) {
-                unsigned int i1 = intIndices[k];
-                unsigned int i2 = intIndices[k + 1];
-                unsigned int i3 = intIndices[k + 2];
-                
-                //simulate OBJ files 1-based indexing
-                i1 += 1;
-                i2 += 1;
-                i3 += 1;
-                
-                dummyIndices[0] = dummyIndices[1] = dummyIndices[2] = (int)i1;
-                dummyIndices[3] = dummyIndices[4] = dummyIndices[5] = (int)i2;
-                dummyIndices[6] = dummyIndices[7] = dummyIndices[8] = (int)i3;
-                
-                drawBatch->AddTriangle(0, dummyIndices);
-            }
-        }
-        
-        WebGLMeshList webgl_meshes;
-        
-        webgl_meshes.push_back(WebGLMesh());
-
-        // Pass 1: compute bounds.
-        webgl_loader::Bounds bounds;
-        bounds.Clear();
-        bounds.Enclose(drawBatch->draw_mesh().attribs);
-        FILE* json_out = stdout;
-        
-        webgl_loader::BoundsParams bounds_params =
-        webgl_loader::BoundsParams::FromBounds(bounds);
-        
-        shared_ptr<JSONObject> decodeParams = getDecodeParams(bounds_params);
-        
-        webgl_loader::AttribsToQuantizedAttribs(draw_mesh.attribs, bounds_params,
-                                                &quantized_attribs);
-        
-        fputs("  \"decodeParams\": ", json_out);
-        bounds_params.DumpJson(json_out);
-        fputs(", \"urls\": {\n", json_out);
-        // Pass 2: quantize, optimize, compress, report.
-        //FILE* utf8_out_fp = fopen("testglloader.bin", "wb");
-        //CHECK(utf8_out_fp != NULL);
-        fprintf(json_out, "    \"%s\": [\n", "testglloader.bin");
-        
-        size_t offset = 0;
-        
-        VertexOptimizer vertex_optimizer(quantized_attribs);
-        const size_t length = draw_mesh.indices.size();
-        CHECK(length % 3 == 0);
-        
-        bool *knownIndices = (bool*)malloc(sizeof(bool) * quantized_attribs.size());
-        memset(knownIndices, 0, sizeof(bool) * quantized_attribs.size());
-        
-        const int* drawMeshIndices = &draw_mesh.indices[0];
-        for (size_t k = 0 ; k <  length ; k++) {            
-            webgl_meshes[0].indices.push_back(drawMeshIndices[k]);
-            if (knownIndices[drawMeshIndices[k]] == false) {
-                for (size_t j = 0; j < 8; ++j) {
-                    webgl_meshes[0].attribs.push_back(quantized_attribs[8*drawMeshIndices[k] + j]);
-                }
-                knownIndices[drawMeshIndices[k]] = true;
-            }
-        }
-        free(knownIndices);
-        
-        webgl_loader::CompressQuantizedAttribsToUtf8(webgl_meshes[0].attribs, &utf8_sink);
-
-        std::vector<std::string> material;
-        std::vector<size_t> attrib_start, attrib_length, index_start, index_length;
-        
-        vertex_optimizer.AddTriangles(&draw_mesh.indices[0], length, &webgl_meshes);
-        
-        
-        for (size_t i = 0; i < webgl_meshes.size(); ++i) {
-            const size_t num_attribs = webgl_meshes[i].attribs.size();
-            const size_t num_indices = webgl_meshes[i].indices.size();
-            CHECK(num_attribs % 8 == 0);
-            CHECK(num_indices % 3 == 0);
-            webgl_loader::CompressIndicesToUtf8(webgl_meshes[i].indices, &utf8_sink);
-            attrib_start.push_back(offset);
-            attrib_length.push_back(num_attribs / 8);
-            index_start.push_back(offset + num_attribs);
-            index_length.push_back(num_indices / 3);
-            offset += num_attribs + num_indices;
-        }
-        
-        int meshIndex = 0;
-        
-        shared_ptr<JSONArray> attribs(new JSONArray());
-        shared_ptr<JSONArray> indices(new JSONArray());
-        attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_start[meshIndex])));
-        attribs->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)attrib_length[meshIndex])));
-        indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_start[meshIndex])));
-        indices->appendValue(shared_ptr<JSONNumber>(new JSONNumber((double)index_length[meshIndex])));
-        
-        decodeParams->setValue("attribRange", attribs);
-        decodeParams->setValue("indexRange", indices);
-        
-        mesh->getExtensions()->setValue("won-compression", decodeParams);
-        
-        printf("compressed output size:%d\n",(int)compressedOutput.size());
-        
-        //FIXME: remove that crappy copy here
-        char *bufferPtr = ( char*)malloc(compressedOutput.size());
-        for (size_t idx = 0 ; idx < compressedOutput.size() ; idx++) {
-            bufferPtr[idx] = compressedOutput[idx];
-        }
-        shared_ptr<GLTFBuffer> compressedBuffer(new GLTFBuffer(bufferPtr, compressedOutput.size(), true));
-        
-        mesh->setCompressedBuffer(compressedBuffer);
-        
-        
-        return true;
-    }
-#endif
-    
-#endif
-    //
     /*
      Convert an OpenCOLLADA's FloatOrDoubleArray type to a GLTFBufferView
      Note: the resulting GLTFBufferView is not typed, it's the call responsability to keep track of the type if needed.
@@ -609,7 +82,10 @@ namespace GLTF
     }
     
     
-    static unsigned int ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(const COLLADAFW::MeshVertexData &vertexData, GLTF::IndexSetToMeshAttributeHashmap &meshAttributes, size_t allowedComponentsPerAttribute)
+    static unsigned int __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData,
+                                                                        GLTF::IndexSetToMeshAttributeHashmap &meshAttributes,
+                                                                        size_t allowedComponentsPerAttribute,
+                                                                        shared_ptr<GLTFProfile> profile)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -618,7 +94,7 @@ namespace GLTF
         std::string id;
         size_t length, elementsCount;
         size_t stride = 0;
-        size_t componentsPerAttribute = 0;
+        size_t componentsPerElement = 0;
         size_t byteOffset = 0;
         size_t inputLength = 0;
         
@@ -633,17 +109,17 @@ namespace GLTF
 
             if (!unpatchedOpenCOLLADA) {
                 id = vertexData.getName(indexOfSet);
-                componentsPerAttribute = vertexData.getStride(indexOfSet);
+                componentsPerElement = vertexData.getStride(indexOfSet);
                 inputLength = vertexData.getLength(indexOfSet);
             } else {
                 // for unpatched version of OpenCOLLADA we need this work-around.
                 id = GLTF::GLTFUtils::generateIDForType("buffer").c_str();
-                componentsPerAttribute = 3; //only normal and positions should reach this code
+                componentsPerElement = 3; //only normal and positions should reach this code
                 inputLength = vertexData.getLength(0);
             }
             
             length = inputLength ? inputLength : vertexData.getValuesCount();
-            elementsCount = length / componentsPerAttribute;
+            elementsCount = length / componentsPerElement;
             unsigned char *sourceData = 0;
             size_t sourceSize = 0;
             
@@ -651,7 +127,7 @@ namespace GLTF
             switch (vertexData.getType()) {
                 case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
                     componentType = GLTF::FLOAT;
-                    stride = sizeof(float) * componentsPerAttribute;
+                    stride = sizeof(float) * componentsPerElement;
                     const COLLADAFW::FloatArray* array = vertexData.getFloatValues();
                     
                     sourceData = (unsigned char*)array->getData() + byteOffset;
@@ -681,17 +157,17 @@ namespace GLTF
             }
             
             //FIXME: this is assuming float
-            if (allowedComponentsPerAttribute != componentsPerAttribute) {
+            if (allowedComponentsPerAttribute != componentsPerElement) {
                 sourceSize = elementsCount * sizeof(float) * allowedComponentsPerAttribute;
                 
                 float *adjustedSource = (float*)malloc(sourceSize);
                 float *originalSource = (float*)sourceData;
                 size_t adjustedStride = sizeof(float) * allowedComponentsPerAttribute;
                 
-                if (allowedComponentsPerAttribute < componentsPerAttribute) {
+                if (allowedComponentsPerAttribute < componentsPerElement) {
                     for (size_t i = 0 ; i < elementsCount ; i++) {
                         for (size_t j= 0 ; j < allowedComponentsPerAttribute ; j++) {
-                            adjustedSource[(i*allowedComponentsPerAttribute) + j] = originalSource[(i*componentsPerAttribute) + j];
+                            adjustedSource[(i*allowedComponentsPerAttribute) + j] = originalSource[(i*componentsPerElement) + j];
                         }
                     }
                 } else {
@@ -703,7 +179,7 @@ namespace GLTF
                     free(sourceData);
                 }
                 
-                componentsPerAttribute = allowedComponentsPerAttribute;
+                componentsPerElement = allowedComponentsPerAttribute;
                 meshAttributeOwnsBuffer = true;
                 sourceData = (unsigned char*)adjustedSource;
                 stride = adjustedStride;
@@ -711,12 +187,10 @@ namespace GLTF
             
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(id, sourceData, 0, sourceSize, meshAttributeOwnsBuffer);
-            shared_ptr <GLTFMeshAttribute> cvtMeshAttribute(new GLTFMeshAttribute());
+            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(componentType, componentsPerElement)));
             
             cvtMeshAttribute->setBufferView(cvtBufferView);
-            cvtMeshAttribute->setComponentsPerAttribute(componentsPerAttribute);
             cvtMeshAttribute->setByteStride(stride);
-            cvtMeshAttribute->setComponentType(componentType);
             cvtMeshAttribute->setCount(elementsCount);
             
             meshAttributes[(unsigned int)indexOfSet] = cvtMeshAttribute;
@@ -725,7 +199,7 @@ namespace GLTF
         return (unsigned int)setCount;
     }
     
-    static void __AppendIndices(shared_ptr <GLTF::GLTFPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <GLTF::GLTFIndices> &indices, GLTF::Semantic semantic, unsigned int indexOfSet)
+    static void __AppendIndices(shared_ptr <GLTF::GLTFPrimitive> &primitive, IndicesVector &primitiveIndicesVector, shared_ptr <GLTF::GLTFAccessor> &indices, GLTF::Semantic semantic, unsigned int indexOfSet)
     {
         primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(semantic,indexOfSet)));
         primitiveIndicesVector.push_back(indices);
@@ -739,8 +213,8 @@ namespace GLTF
                                   unsigned int vcount,
                                   unsigned int *verticesCountArray,
                                   shared_ptr <GLTF::GLTFPrimitive> cvtPrimitive,
-                                  IndicesVector &primitiveIndicesVector
-                                  )
+                                  IndicesVector &primitiveIndicesVector,
+                                  shared_ptr<GLTFProfile> profile)
     {
         unsigned int triangulatedIndicesCount = 0;
         bool ownData = false;
@@ -770,14 +244,17 @@ namespace GLTF
         }
         
         shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
+        shared_ptr <GLTFAccessor> accessor(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
         
-        shared_ptr <GLTFIndices> jsonIndices(new GLTFIndices(uvBuffer, count));
-        __AppendIndices(cvtPrimitive, primitiveIndicesVector, jsonIndices, semantic, idx);
+        accessor->setBufferView(uvBuffer);
+        accessor->setCount(count);
+        
+        __AppendIndices(cvtPrimitive, primitiveIndicesVector, accessor, semantic, idx);
     }
     
-    static shared_ptr <GLTF::GLTFPrimitive> ConvertOpenCOLLADAMeshPrimitive(
-                                                                            COLLADAFW::MeshPrimitive *openCOLLADAMeshPrimitive,
-                                                                            IndicesVector &primitiveIndicesVector)
+    static shared_ptr <GLTF::GLTFPrimitive> __ConvertOpenCOLLADAMeshPrimitive(COLLADAFW::MeshPrimitive *openCOLLADAMeshPrimitive,
+                                                                              IndicesVector &primitiveIndicesVector,
+                                                                              shared_ptr<GLTFProfile> profile)
     {
         shared_ptr <GLTF::GLTFPrimitive> cvtPrimitive(new GLTF::GLTFPrimitive());
         
@@ -823,7 +300,7 @@ namespace GLTF
         }
         
         cvtPrimitive->setMaterialObjectID((unsigned int)openCOLLADAMeshPrimitive->getMaterialId());
-        cvtPrimitive->setType(type);
+        cvtPrimitive->setPrimitive(profile->getGLenumForString(type));
         
         //count of indices , it must be the same for all kind of indices
         size_t count = openCOLLADAMeshPrimitive->getPositionIndices().getCount();
@@ -851,7 +328,10 @@ namespace GLTF
         
         shared_ptr <GLTFBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
         
-        shared_ptr <GLTF::GLTFIndices> positionIndices(new GLTF::GLTFIndices(positionBuffer,count));
+        shared_ptr <GLTF::GLTFAccessor> positionIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+        
+        positionIndices->setBufferView(positionBuffer);
+        positionIndices->setCount(count);
         
         __AppendIndices(cvtPrimitive, primitiveIndicesVector, positionIndices, POSITION, 0);
         
@@ -864,8 +344,11 @@ namespace GLTF
             }
             
             shared_ptr <GLTF::GLTFBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <GLTF::GLTFIndices> normalIndices(new GLTF::GLTFIndices(normalBuffer,
-                                                                               count));
+            shared_ptr <GLTF::GLTFAccessor> normalIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            
+            normalIndices->setBufferView(normalBuffer);
+            normalIndices->setCount(count);
+            
             __AppendIndices(cvtPrimitive, primitiveIndicesVector, normalIndices, NORMAL, 0);
         }
         
@@ -881,7 +364,8 @@ namespace GLTF
                                   vcount,
                                   verticesCountArray,
                                   cvtPrimitive,
-                                  primitiveIndicesVector);
+                                  primitiveIndicesVector,
+                                  profile);
             }
         }
         
@@ -897,7 +381,8 @@ namespace GLTF
                                   vcount,
                                   verticesCountArray,
                                   cvtPrimitive,
-                                  primitiveIndicesVector);
+                                  primitiveIndicesVector,
+                                  profile);
             }
         }
         
@@ -910,13 +395,13 @@ namespace GLTF
     
     static void __InvertV(void *value,
                           GLTF::ComponentType type,
-                          size_t componentsPerAttribute,
+                          size_t componentsPerElement,
                           size_t index,
                           size_t vertexAttributeByteSize,
                           void *context) {
         char* bufferData = (char*)value;
         
-        if (componentsPerAttribute > 1) {
+        if (componentsPerElement > 1) {
             switch (type) {
                 case GLTF::FLOAT: {
                     float* vector = (float*)bufferData;
@@ -929,7 +414,7 @@ namespace GLTF
         }
     }
     
-    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFConverterContext& context) {
+    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFAsset* asset) {
         shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
         
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
@@ -952,7 +437,7 @@ namespace GLTF
                 
                 static bool printedOnce = false;
                 if (!printedOnce) {
-                    context.log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                    asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
                     printedOnce = true;
                 }
                 
@@ -962,34 +447,34 @@ namespace GLTF
             shared_ptr <GLTF::IndicesVector> primitiveIndicesVector(new GLTF::IndicesVector());
             allPrimitiveIndicesVectors.push_back(primitiveIndicesVector);
             
-            shared_ptr <GLTF::GLTFPrimitive> primitive = ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector);
+            shared_ptr <GLTF::GLTFPrimitive> primitive = __ConvertOpenCOLLADAMeshPrimitive(primitives[i],*primitiveIndicesVector, asset->profile());
             cvtMesh->appendPrimitive(primitive);
             
             VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
             primitiveIndicesVector = allPrimitiveIndicesVectors[allPrimitiveIndicesVectors.size()-1];
             
             // once we got a primitive, keep track of its meshAttributes
-            std::vector< shared_ptr<GLTF::GLTFIndices> > allIndices = *primitiveIndicesVector;
+            std::vector< shared_ptr<GLTF::GLTFAccessor> > allIndices = *primitiveIndicesVector;
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
-                shared_ptr<GLTF::GLTFIndices> indices = allIndices[k];
+                shared_ptr<GLTF::GLTFAccessor> indices = allIndices[k];
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
                 GLTF::IndexSetToMeshAttributeHashmap& meshAttributes = cvtMesh->getMeshAttributesForSemantic(semantic);
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getPositions(), meshAttributes, 3);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), meshAttributes, 3, asset->profile());
                         break;
                         
                     case GLTF::NORMAL:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getNormals(), meshAttributes, 3);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), meshAttributes, 3, asset->profile());
                         break;
                         
                     case GLTF::TEXCOORD:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getUVCoords(), meshAttributes,2);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), meshAttributes,2, asset->profile());
                         break;
                         
                     case GLTF::COLOR:
-                        ConvertOpenCOLLADAMeshVertexDataToGLTFMeshAttributes(openCOLLADAMesh->getColors(), meshAttributes, 4);
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), meshAttributes, 4, asset->profile());
                         break;
                         
                     default:
@@ -999,26 +484,10 @@ namespace GLTF
                 cvtMesh->setMeshAttributesForSemantic(semantic, meshAttributes);
             }
         }
-        
-        if (cvtMesh->hasSemantic(GLTF::TEXCOORD)) {
-            //https://github.com/KhronosGroup/collada2json/issues/41
-            //Goes through all texcoord and invert V
-            GLTF::IndexSetToMeshAttributeHashmap& texcoordMeshAttributes = cvtMesh->getMeshAttributesForSemantic(GLTF::TEXCOORD);
-            GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            
-            //FIXME: consider turn this search into a method for mesh
-            for (meshAttributeIterator = texcoordMeshAttributes.begin() ; meshAttributeIterator != texcoordMeshAttributes.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFMeshAttribute> meshAttribute = (*meshAttributeIterator).second;
                 
-                meshAttribute->apply(__InvertV, NULL);
-            }
-        }
-        
-        if (cvtMesh->getPrimitives().size() > 0) {
+        if (cvtMesh->getPrimitivesCount() > 0) {
             //After this point cvtMesh should be referenced anymore and will be deallocated
-            return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors);
+            return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset->profile());
         }
 
         return shared_ptr <GLTF::GLTFMesh> ((GLTFMesh*)0);

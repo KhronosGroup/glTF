@@ -35,7 +35,9 @@ namespace GLTF
         std::string id();
         unsigned int getGLTypeForComponentType(ComponentType componentType, size_t);
         std::string getGLSLTypeForGLType(unsigned int glType);
-        size_t getComponentsCountForType(unsigned int glType);
+        size_t getComponentsCountForGLType(unsigned int glType);
+        size_t sizeOfGLType(unsigned int glType);
+        ComponentType getComponentTypeForGLType(unsigned int glType);
 
     private:
     };

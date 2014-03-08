@@ -26,19 +26,19 @@
 
 namespace GLTF
 {
-    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh);
+    bool canEncodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh, shared_ptr <GLTFProfile> profile);
     
     void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
                             shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFConverterContext& converterContext);
+                            GLTFAsset* asset);
     
-    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFConverterContext& converterContext);
+    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset);
     
-    void setupAndWriteAnimationParameter(shared_ptr <GLTFAnimation> cvtAnimation,
+    void setupAndWriteAnimationParameter(GLTFAnimation *cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
                                          unsigned char* buffer, size_t length, bool isInputParameter,
-                                         GLTFConverterContext &converterContext);
+                                         GLTFAsset *asset);
 }
 
 #endif

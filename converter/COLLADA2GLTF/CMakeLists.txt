@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 project(COLLADA2GLTF)
 
 set(USE_OPEN3DGC "ON")
-set(USE_WEBGLLOADER "OFF")
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
 set(BUILD_SHARED_LIBS "OFF")
@@ -20,9 +19,11 @@ if (NOT WIN32)
 endif()
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/assetModifiers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/json/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
@@ -30,11 +31,6 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAS
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/GeneratedSaxParser/include)
 if (WIN32)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc)
-endif()
-
-if (USE_WEBGLLOADER)
-    add_definitions( -DUSE_WEBGLLOADER )
-    include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/webgl-loader/src)
 endif()
 
 if (USE_OPEN3DGC)
@@ -64,47 +60,37 @@ endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
 
-if (USE_WEBGLLOADER)
-    add_subdirectory(dependencies/webgl-loader)
-endif()
-
 if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
 endif()
 
-set(GLTF_SOURCES main.cpp 
+set(GLTF_SOURCES main.cpp
+
+    COLLADA2GLTFWriter.h
     COLLADA2GLTFWriter.cpp
-    GLTFConverterContext.cpp
-    GLTF/JSONArray.cpp
-    GLTF/JSONNumber.cpp
-    GLTF/JSONObject.cpp
-    GLTF/JSONString.cpp
-    GLTF/JSONValue.cpp
+    GLTFOpenCOLLADA.h
+    GLTFOpenCOLLADAUtils.h
+    GLTFOpenCOLLADAUtils.cpp
+
+    GLTF/GLTFAccessorCache.cpp
+    GLTF/GLTFAccessorCache.h
+    GLTF/GLTFAsset.cpp
     GLTF/GLTFAnimation.cpp
-    GLTF/GLTFMeshAttribute.cpp
+    GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
-    GLTF/GLTFIndices.cpp
     GLTF/GLTFMesh.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
     GLTF/GLTFWriter.cpp
     GLTF/GLTFSkin.cpp
-    COLLADA2GLTFWriter.h
-    GLTF-OpenCOLLADA.h
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
-    GLTFConverterContext.h
-    GLTF/JSONArray.h
-    GLTF/JSONNumber.h
-    GLTF/JSONObject.h
-    GLTF/JSONString.h
-    GLTF/JSONValue.h
+    GLTF/GLTFAsset.h
     GLTF/GLTFAnimation.h
-    GLTF/GLTFMeshAttribute.h
+    GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
-    GLTF/GLTFIndices.h
     GLTF/GLTFMesh.h
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
@@ -120,19 +106,39 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFOutputStream.cpp
     GLTF/GLTFConfig.cpp
     GLTF/GLTFConfig.h
+
     profiles/webgl-1.0/webgl-idl.h
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.cpp
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h
+
     shaders/commonProfileShaders.h
     shaders/commonProfileShaders.cpp
+
     helpers/geometryHelpers.h
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+
     convert/meshConverter.cpp
     convert/meshConverter.h
     convert/animationConverter.cpp
     convert/animationConverter.h
+
+    JSON/JSONArray.cpp
+    JSON/JSONNumber.cpp
+    JSON/JSONObject.cpp
+    JSON/JSONString.cpp
+    JSON/JSONValue.cpp
+    JSON/JSONArray.h
+    JSON/JSONNumber.h
+    JSON/JSONObject.h
+    JSON/JSONString.h
+    JSON/JSONValue.h
+    
+    assetModifiers/GLTFAssetModifier.h
+    assetModifiers/GLTFFlipUVModifier.h
+    assetModifiers/GLTFFlipUVModifier.cpp
+
     ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
     GitSHA1.h)
 
@@ -154,10 +160,6 @@ endif()
 
 if (USE_OPEN3DGC)
 LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib)
-endif()
-
-if (USE_WEBGLLOADER)
-LIST(APPEND TARGET_LIBS WEBGLLOADER)
 endif()
 
 IF("${CMAKE_SYSTEM}" MATCHES "Linux")

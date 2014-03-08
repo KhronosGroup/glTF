@@ -30,27 +30,64 @@
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
 #ifdef _LIBCPP_VERSION
-namespace std{
+namespace std {
     namespace tr1 = std;
 }
 #endif
 
 using namespace std::tr1;
 
-namespace GLTF 
+const std::string kCount = "count";
+const std::string kByteOffset = "byteOffset";
+const std::string kByteStride = "byteStride";
+const std::string kByteLength = "byteLength";
+const std::string kPath = "path";
+const std::string kType = "type";
+const std::string kBufferView = "bufferView";
+const std::string kMin = "min";
+const std::string kMax = "max";
+const std::string kIndices = "indices";
+const std::string kMaterial = "material";
+const std::string kPrimitive = "primitive";
+const std::string kName = "name";
+const std::string kExtensions = "extensions";
+const std::string kPrimitives = "primitives";
+const std::string kAttributes = "attributes";
+const std::string kJoints = "joints";
+const std::string kBindShapeMatrix = "bindShapeMatrix";
+const std::string kInverseBindMatrices = "inverseBindMatrices";
+const std::string kSamplers = "samplers";
+const std::string kChannels = "channels";
+const std::string kParameters = "parameters";
+const std::string kBuffer = "buffer";
+const std::string kInstanceTechnique = "instanceTechnique";
+const std::string kTechnique = "technique";
+const std::string kValues = "values";
+const std::string kValue = "value";
+const std::string kPremultipliedAlpha = "premultipliedAlpha";
+const std::string kProfile = "profile";
+const std::string kNodes = "nodes";
+const std::string kMeshes = "meshes";
+const std::string kAccessors = "accessors";
+
+
+namespace GLTF
 {
     class JSONObject;
-    class GLTFIndices;
+    class GLTFAccessor;
     class GLTFPrimitive;
-    class GLTFMeshAttribute;
+    class GLTFAccessor;
+    class JSONValue;
     class GLTFMesh;
     class GLTFEffect;
     class JSONVertexAttribute;
     class GLTFAnimationFlattener;
     //-- Args & Options
-    typedef std::vector <shared_ptr<GLTF::GLTFIndices> > IndicesVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFPrimitive> > PrimitiveVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFMeshAttribute> > MeshAttributeVector;
+    typedef std::vector <shared_ptr <GLTF::JSONValue> > JSONValueVector;
+    typedef JSONValueVector& JSONValueVectorRef;
+    typedef std::vector <shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
+    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
     typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     
     typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
@@ -71,13 +108,12 @@ namespace GLTF
         JOINT = 6
     } Semantic;    
 
-    typedef enum {
-        NOT_A_JSON_TYPE = 0,
-        NUMBER = 1,
-        OBJECT = 2,
-        ARRAY = 3,
-        STRING = 4        
-    } JSONValueType;
+    typedef std::string JSONType;
+    
+    const std::string kJSONNumber = "number";
+    const std::string kJSONObject = "object";
+    const std::string kJSONArray = "array";
+    const std::string kJSONString = "string";    
     
     typedef enum {
         NOT_AN_ELEMENT_TYPE = 0,

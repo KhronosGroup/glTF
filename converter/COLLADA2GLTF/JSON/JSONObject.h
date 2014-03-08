@@ -54,7 +54,8 @@ namespace GLTF
 
         void removeValue(const std::string &key);
         
-        shared_ptr <JSONObject> getObject(std::string);
+        shared_ptr <JSONObject> getObject(const std::string&);
+        shared_ptr <JSONArray> getArray(const std::string&);
 
         bool contains(const std::string &key);
         
@@ -79,7 +80,12 @@ namespace GLTF
         
         size_t getKeysCount();
         
+        virtual JSONType getJSONType();
+        
         bool isEmpty();
+        
+        void apply(JSONValueApplierFunc func, void* context);
+        
     protected:
         void _parseRapidJSONObject(void *value);
     private:

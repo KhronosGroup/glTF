@@ -28,9 +28,9 @@ namespace GLTF
 {
     std::string keyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet);
 
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
+    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector, shared_ptr<GLTFProfile> profile);
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, MeshVector &meshes);
+    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile);
     
     unsigned int* createTrianglesFromPolylist(unsigned int *verticesCount /* array containing the count for each array of indices per face */,
                                               unsigned int *polylist /* array containing the indices of a face */,
@@ -38,7 +38,8 @@ namespace GLTF
                                               unsigned int *triangulatedIndicesCount /* number of indices in returned array */);
 
     //helper only required to facilitate compression as Open3DGC and WebGLLoader do not allow (yet) to share the same vertex buffer with multiple index buffer
-    bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes);
+    //Not required anymore since Open3DGC supports now sharing same vertex buffer and WebGL is disabled
+    //bool createMeshesFromMeshPrimitives(GLTFMesh *sourceMesh, MeshVector &meshes, shared_ptr<GLTFProfile> profile);
 
 }
 

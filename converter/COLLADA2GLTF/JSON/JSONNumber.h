@@ -24,27 +24,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_VALUE_H__
-#define __JSON_VALUE_H__
+#ifndef __JSON_NUMBER_H__
+#define __JSON_NUMBER_H__
 
 namespace GLTF 
 {
-    class GLTFWriter;
-    class JSONValue {
+    class JSONNumber : public JSONValue {
     private:
-
+        JSONNumber():JSONValue(), _type(NOT_A_NUMBER) {}
+        
     public:        
-                        
-        JSONValue(JSONValueType type);
-        
-        virtual void write(GLTFWriter* , void* context = 0);
+        typedef enum 
+        {
+            NOT_A_NUMBER = 0,
+            UNSIGNED_INT32 = 1,
+            INT32 = 2,
+            DOUBLE = 3,
+            BOOL = 4
+        } JSONNumberType;
                 
-        JSONValueType getType();
+        explicit JSONNumber(unsigned int value);
+        explicit JSONNumber(int value);
+        explicit JSONNumber(double value);
+        explicit JSONNumber(bool value);
+
+        virtual ~JSONNumber();
         
-        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
+        unsigned int getUnsignedInt32();
+        int getInt32();
+        double getDouble();
+        bool getBool();
         
+        JSONNumber::JSONNumberType getNumberType();
+
+        virtual JSONType getJSONType();
+
     private:
-        JSONValueType _type;
+        void* _value;
+        JSONNumberType _type;
     };
 
 }

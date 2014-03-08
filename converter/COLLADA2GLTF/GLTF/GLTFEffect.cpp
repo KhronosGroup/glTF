@@ -25,12 +25,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "../shaders/commonProfileShaders.h"
 
 using namespace rapidjson;
 
 namespace GLTF
 {
-    GLTFEffect::GLTFEffect(const std::string& ID):
+    GLTFEffect::GLTFEffect(const std::string& ID): JSONObject(),
     _ID(ID) {
     }
 
@@ -50,11 +51,11 @@ namespace GLTF
     }
         
     void GLTFEffect::setName(const std::string& name) {
-        this->_name = name;
+        this->setString(kName, name);
     }
     
-    const std::string& GLTFEffect::getName() {
-        return this->_name;
+    std::string GLTFEffect::getName() {
+        return this->getString(kName);
     }
     
     void GLTFEffect::setValues(shared_ptr <JSONObject> values) {
@@ -87,6 +88,29 @@ namespace GLTF
     
     SemanticArrayPtr GLTFEffect::getSemanticsForTexcoordName(const std::string &texcoord) {
         return this->_texcoordToSemantics[texcoord];
+    }
+    
+    void GLTFEffect::evaluate(void *context) {
+        GLTFAsset* asset = (GLTFAsset*)context;
+        shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
+        shared_ptr <JSONObject> techniqueGenerator = this->getTechniqueGenerator();
+                
+        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, asset);
+        
+        this->setValue(kInstanceTechnique, instanceTechnique);
+        instanceTechnique->setString(kTechnique, techniqueID);
+        shared_ptr<JSONObject> outputs(new JSONObject());
+        shared_ptr <JSONObject> values = this->getValues();
+        std::vector <std::string> keys = values->getAllKeys();
+        for (size_t i = 0 ; i < keys.size() ; i++) {
+            shared_ptr <JSONObject> parameter = static_pointer_cast <JSONObject> (values->getValue(keys[i]));
+            shared_ptr <JSONObject> parameterValue = static_pointer_cast <JSONObject> (parameter->getValue(kValue));
+            shared_ptr<JSONObject> output(new JSONObject());
+            if (parameterValue) {
+                outputs->setValue(keys[i], parameterValue);
+            }
+        }
+        instanceTechnique->setValue(kValues, outputs);
     }
 
 }

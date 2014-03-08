@@ -24,50 +24,38 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "GLTF.h"
+#ifndef __JSON_VALUE_H__
+#define __JSON_VALUE_H__
 
 namespace GLTF 
 {
-    JSONValue::JSONValue(JSONValueType type) 
-    {
-        this->_type = type;
-    }
+    class JSONValue;
+    typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
     
-    JSONValueType JSONValue::getType() 
-    {
-        return this->_type;
-    }    
-    
-    void JSONValue::write(GLTFWriter* writer, void* context)
-    {
-        writer->write(this, context);
-    }
-    
-    shared_ptr<JSONValue> JSONValue::valueForKeyPath(std::string keyPath) {
-        std::size_t pos = keyPath.find(".");
-        if (pos == std::string::npos) {
-            if (this->_type == OBJECT) {
-                JSONObject *currentObject = (JSONObject*)this;
-                if (currentObject->contains(keyPath)) {
-                    return currentObject->getObject(keyPath);
-                }
-            }
-        } else {
-            //here we expect an object
-            if (this->_type == OBJECT) {
-                //we have an object, so we can continue parsing
-                //First, we need to get the substring after the dot
-                std::string currentPath = keyPath.substr(0,pos);
-                JSONObject *currentObject = (JSONObject*)this;
-                if (currentObject->contains(currentPath)) {
-                    shared_ptr<JSONObject> nextObject = currentObject->getObject(currentPath);
-                    pos += 1; //skip the dot
-                    std::string nextPath = keyPath.substr(pos);
-                    return nextObject->valueForKeyPath(nextPath);
-                }
-            }
-        }
-        return shared_ptr<JSONValue> ((JSONValue*)0);
-    }
-    
+    class GLTFWriter;
+    class JSONValue {
+    private:
+
+    public:        
+        JSONValue();
+        virtual ~JSONValue();
+        
+        virtual void write(GLTFWriter* , void* context = 0);
+                
+        JSONType getType();
+        
+        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
+        
+        virtual void evaluate(void*);
+        
+        virtual JSONType getJSONType() = 0;
+        
+        virtual void apply(JSONValueApplierFunc, void* context);
+        
+    private:
+    };
+
 }
+
+
+#endif

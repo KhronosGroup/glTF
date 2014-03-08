@@ -249,7 +249,6 @@ namespace o3dgc
         const AdjacencyInfo & v2T            = m_triangleListDecoder.GetVertexToTriangle();
         const T * const     triangles        = ifs.GetCoordIndex();
         const long          nvert            = (long) numIntArray;
-        const unsigned long size             = numIntArray * dimIntArray;
         unsigned char *     buffer           = 0;
         unsigned long       start            = m_iterator;
         unsigned long       streamSize       = bstream.ReadUInt32(m_iterator, m_streamType);        // bitsream size
