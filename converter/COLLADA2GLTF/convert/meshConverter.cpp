@@ -393,27 +393,6 @@ namespace GLTF
         return cvtPrimitive;
     }
     
-    static void __InvertV(void *value,
-                          GLTF::ComponentType type,
-                          size_t componentsPerElement,
-                          size_t index,
-                          size_t vertexAttributeByteSize,
-                          void *context) {
-        char* bufferData = (char*)value;
-        
-        if (componentsPerElement > 1) {
-            switch (type) {
-                case GLTF::FLOAT: {
-                    float* vector = (float*)bufferData;
-                    vector[1] = (float) (1.0 - vector[1]);
-                }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    
     shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFAsset* asset) {
         shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
         
