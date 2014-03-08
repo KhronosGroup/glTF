@@ -460,7 +460,7 @@ namespace GLTF
             }
         }
         
-        this->assetModifiers().push_back(shared_ptr<GLTFFlipUVMofifier> (new GLTFFlipUVMofifier()));
+        this->assetModifiers().push_back(shared_ptr<GLTFFlipUVModifier> (new GLTFFlipUVModifier()));
         
         this->launchModifiers();
         

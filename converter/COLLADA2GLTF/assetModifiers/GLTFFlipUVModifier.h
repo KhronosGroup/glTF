@@ -26,10 +26,10 @@
 
 namespace GLTF
 {
-    class GLTFFlipUVMofifier : public GLTFAssetModifier {
+    class GLTFFlipUVModifier : public GLTFAssetModifier {
     public:
-        GLTFFlipUVMofifier();
-        virtual ~GLTFFlipUVMofifier();
+        GLTFFlipUVModifier();
+        virtual ~GLTFFlipUVModifier();
         
         virtual bool init();
         virtual void modify(shared_ptr<JSONObject> glTFAsset);

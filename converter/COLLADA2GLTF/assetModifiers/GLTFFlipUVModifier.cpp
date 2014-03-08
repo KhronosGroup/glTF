@@ -26,15 +26,15 @@
 
 namespace GLTF
 {
-    GLTFFlipUVMofifier::GLTFFlipUVMofifier() {
+    GLTFFlipUVModifier::GLTFFlipUVModifier() {
         
     }
     
-    GLTFFlipUVMofifier::~GLTFFlipUVMofifier() {
+    GLTFFlipUVModifier::~GLTFFlipUVModifier() {
         
     }
 
-    bool GLTFFlipUVMofifier::init() {
+    bool GLTFFlipUVModifier::init() {
         return true;
     };
     
@@ -59,7 +59,7 @@ namespace GLTF
         }
     }
     
-    void GLTFFlipUVMofifier::modify(shared_ptr<JSONObject> glTFAsset) {
+    void GLTFFlipUVModifier::modify(shared_ptr<JSONObject> glTFAsset) {
         if (glTFAsset->contains(kMeshes) == false)
             return;
         
@@ -80,7 +80,7 @@ namespace GLTF
         }
     }
     
-    void GLTFFlipUVMofifier::cleanup() {
+    void GLTFFlipUVModifier::cleanup() {
     }
     
 }
