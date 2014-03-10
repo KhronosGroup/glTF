@@ -19,21 +19,21 @@
             },
             "additionalProperties" : {
                 "$ref" : "animationParameter.schema.json"
-            }        
+            }
         },
         "samplers" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "animationSampler.schema.json"
-            }        
+            }
         },
         "extensions" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "extension.schema.json"
-            }        
+            }
         },
         "extras" : {
             "type" : "any",

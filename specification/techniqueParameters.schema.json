@@ -27,7 +27,7 @@
             },
             "additionalProperties" : {
                 "$ref" : "extension.schema.json"
-            }        
+            }
         },
         "extras" : {
             "type" : "any",
