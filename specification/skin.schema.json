@@ -21,7 +21,7 @@
         },
         "joints" : {
             "type" : "array",
-            "description" : "jointIds of the joints (nodes with a jointId property) in this skin.",
+            "description" : "Joint ids of the joints (nodes with a joint property) in this skin.",
             "items" : {
                 "type" : "string"
             },

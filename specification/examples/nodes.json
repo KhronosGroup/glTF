@@ -42,7 +42,7 @@
             "children": [],
             "instanceSkin": {
                 "skeletons": [
-                    "jointId_in_skin"
+                    "joint id in skin"
                 ],
                 "skin": "skin_id",
                 "sources": [
@@ -62,7 +62,7 @@
         },
         "joint_node_id": {
             "children": [],
-            "jointId": "a_jointId",
+            "joint": "joint id",
             "name": "user-defined name of joint node",
             "rotation" : [ 1.0, 0.0, 0.0, 0.0 ],
             "scale" : [ 1.0, 1.0, 1.0 ],

@@ -19,9 +19,9 @@
         "instanceSkin" : {
 	        "$ref" : "nodeInstanceSkin.schema.json"
         },
-        "jointId" : {
+        "joint" : {
             "type" : "string",
-            "description" : "ID used when this node is a joint in a skin."
+            "description" : "id used when this node is a joint in a skin."
         },
         "light" : {
             "type" : "string",

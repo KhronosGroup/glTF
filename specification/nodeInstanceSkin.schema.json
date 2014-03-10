@@ -6,7 +6,7 @@
     "properties": {    
         "skeletons" : {
             "type" : "array",
-            "description" : "jointIds (right?) of skeleton nodes.",
+            "description" : "Joint id (joint property) of skeleton nodes.",
             "items" : {
                 "type" : "string"
             },
