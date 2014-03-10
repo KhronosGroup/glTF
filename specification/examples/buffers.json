@@ -1,7 +1,7 @@
 {
     "buffers" : {
         "verticesBuffer_id" : {
-            "path" : "vertices.bin",
+            "uri" : "vertices.bin",
             "byteLength": 1024,
             "name": "user-defined buffer name",
             "type" : "arraybuffer",

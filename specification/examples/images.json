@@ -2,7 +2,7 @@
     "images" : {
         "image_id" : {
             "name": "user-defined image name",
-            "path" : "image.png",
+            "uri" : "image.png",
             "extensions" : {
                "extension_name" : {
                   "extension_specific_property" : "value"
