@@ -24,6 +24,7 @@
                 "joint_id",
                 "another_joint_id"
             ],
+            "name": "user-defined skin name",
             "extensions" : {
                "extension_name" : {
                   "extension_specific_property" : "value"

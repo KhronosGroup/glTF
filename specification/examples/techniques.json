@@ -1,6 +1,7 @@
 {
     "techniques" : {
         "technique_id" : {
+            "name": "user-defined technique name",
             "parameters": {
                 "ambient": {
                     "type": 35666,

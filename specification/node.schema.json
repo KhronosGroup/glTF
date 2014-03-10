@@ -17,7 +17,7 @@
             "uniqueItems" : true
         },
         "instanceSkin" : {
-	    "$ref" : "nodeInstanceSkin.schema.json"
+	        "$ref" : "nodeInstanceSkin.schema.json"
         },
         "jointId" : {
             "type" : "string",
@@ -47,7 +47,7 @@
         },
         "name" : {
             "type" : "string",
-            "description" : "The artist-created name of this node.  This is not necessarily globally unique."
+            "description" : "The user-defined name of this node.  This is not necessarily unique among nodes."
         },
         "rotation" : {
             "type" : "array",

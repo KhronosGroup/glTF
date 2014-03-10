@@ -10,6 +10,10 @@
                 "$ref" : "animationChannel.schema.json"
             }
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this animation.  This is not necessarily unique among animations."
+        },
         "parameters" : {
             "properties" : {
             },

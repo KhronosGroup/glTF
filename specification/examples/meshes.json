@@ -1,7 +1,7 @@
 {
     "meshes" : {
         "mesh_id": {
-            "name": "name of mesh",
+            "name": "user-defined name of mesh",
             "primitives": [
                 {
                     "attributes": {

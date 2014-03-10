@@ -28,6 +28,10 @@
             "uniqueItems" : true,
             "required" : true        
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this skin.  This is not necessarily unique among skins."
+        },
         "extensions" : {
             "properties" : {
             },

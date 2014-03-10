@@ -6,7 +6,7 @@
     "properties" : {
         "name" : {
             "type" : "string",
-            "description" : "The artist-created name of this mesh.  This is not necessarily globally unique."
+            "description" : "The user-defined name of this mesh.  This is not necessarily unique among meshes."
         },
         "primitives" : {
             "type" : "array",

@@ -3,6 +3,7 @@
         "texture_id": {
             "format": 6408,
             "internalFormat": 6408,
+            "name": "user-defined texture name",
             "sampler": "sampler_id",
             "source": "image_id",
             "target": 3553,

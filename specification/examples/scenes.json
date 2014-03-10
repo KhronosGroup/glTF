@@ -2,6 +2,7 @@
     "scene" : "defaultScene",
     "scenes" : {
         "defaultScene": {
+            "name": "user-defined scene name",
             "nodes": [
                 "mesh_node_id",
                 "camera_node_id",

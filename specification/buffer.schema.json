@@ -16,6 +16,10 @@
             "minimum" : 0,
             "required" : true
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this buffer.  This is not necessarily unique among buffers."
+        },
         "type" : {
             "type" : "string",
             "description" : "XMLHttpRequest responseType.",

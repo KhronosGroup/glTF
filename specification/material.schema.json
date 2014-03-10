@@ -4,12 +4,12 @@
     "type" : "object",
     "description" : "TODO",
     "properties": {    
-        "name" : {
-            "type" : "string",
-            "description" : "The artist-created name of this material.  This is not necessarily globally unique."
-        },
         "instanceTechnique" : {
 	        "$ref" : "materialInstanceTechnique.schema.json"
+        },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this material.  This is not necessarily unique among materials."
         },
         "extensions" : {
             "properties" : {

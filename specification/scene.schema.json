@@ -4,6 +4,10 @@
     "type" : "object",
     "description" : "The root nodes of the scene.",
     "properties" : {
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this scene.  This is not necessarily unique among scenes."
+        },
         "nodes" : {
             "type" : "array",
             "description" : "The ids (JSON property names) for each root node.",

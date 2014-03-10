@@ -1,6 +1,7 @@
 {
     "images" : {
         "image_id" : {
+            "name": "user-defined image name",
             "path" : "image.png",
             "extensions" : {
                "extension_name" : {

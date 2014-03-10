@@ -4,6 +4,10 @@
     "type" : "object",
     "description" : "Specifies shading and its inputs.",
     "properties": {
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this technique.  This is not necessarily unique among techniques."
+        },
         "parameters" : {
             "properties" : {
             },

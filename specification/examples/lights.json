@@ -16,7 +16,7 @@
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
-            "name": "name of ambient light",
+            "name": "user-defined name of ambient light",
             "type": "ambient",
             "extensions" : {
                "extension_name" : {
@@ -43,7 +43,7 @@
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
-            "name": "name of directional light",
+            "name": "user-defined name of directional light",
             "type": "directional",
             "extensions" : {
                "extension_name" : {
@@ -55,7 +55,7 @@
             }     
         },
         "point_light_id": {
-            "name": "name of point light",
+            "name": "user-defined name of point light",
             "point": {
                 "color": [
                     1.0,
@@ -85,7 +85,7 @@
             }     
         },
         "spot_light_id": {
-            "name": "name of spot light",
+            "name": "user-defined name of spot light",
             "spot": {
                 "color": [
                     1.0,

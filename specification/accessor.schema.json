@@ -48,6 +48,10 @@
                 "type" : "number"
             }
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this accessor.  This is not necessarily unique among accessors."
+        },
         "extensions" : {
             "properties" : {
             },

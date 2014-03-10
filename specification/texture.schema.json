@@ -16,6 +16,10 @@
             "enum" : [6406, 6407, 6408, 6409, 6410],
             "default" : 6408
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this texture.  This is not necessarily unique among textures."
+        },
         "sampler" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the sampler used by this texture.",

@@ -21,6 +21,10 @@
             "minimum" : 0,
             "required" : true
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this buffer-view.  This is not necessarily unique among buffer-view."
+        },
         "target" : {
             "type" : "integer",
             "description" : "34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.  WebGL: see bindBuffer().",

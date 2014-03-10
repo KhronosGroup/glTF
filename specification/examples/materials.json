@@ -22,7 +22,7 @@
                     "Application specific" : "The extra object can contain any properties."
                 }     
             },
-            "name": "material name",
+            "name": "user-defined material name",
             "extensions" : {
                "extension_name" : {
                   "extension_specific_property" : "value"

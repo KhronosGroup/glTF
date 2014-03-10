@@ -12,7 +12,7 @@
         },
         "name" : {
             "type" : "string",
-            "description" : "The artist-created name of this light.  This is not necessarily globally unique."
+            "description" : "The user-defined name of this light.  This is not necessarily unique among lights."
         },
         "point" : {
             "$ref" : "lightPoint.schema.json"

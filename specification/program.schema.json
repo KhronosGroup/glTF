@@ -16,6 +16,10 @@
             "description" : "The id (property name) of the fragment shader referenced by this program.",
             "required" : true
         },
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this program.  This is not necessarily unique among programs."
+        },
         "vertexShader" : {
             "type" : "string",
             "description" : "The id (property name) of the vertex shader referenced by this program.",

@@ -6,6 +6,7 @@
             "byteStride" : 3,
             "count" : 1024,
             "type" : 35665,
+            "name": "user-defined accessor name",
             "max" : [-1.0, -1.0, -1.0],
             "min" : [1.0, 1.0, 1.0],
             "extensions" : {

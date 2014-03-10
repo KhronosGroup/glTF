@@ -4,6 +4,10 @@
     "type" : "object",
     "description" : "A vertex or fragment shader.  WebGL: see createShader(), deleteShader(), shaderSource(), compileShader(), getShaderParameter(), and getShaderInfoLog().",
     "properties" : {
+        "name" : {
+            "type" : "string",
+            "description" : "The user-defined name of this shader.  This is not necessarily unique among shaders."
+        },
         "path" : {
             "type" : "string",
             "description" : "The uri of the GLSL source.  Relative paths are relative to the .json file.  Instead of referencing an external file, the uri can also be a data-uri.",
