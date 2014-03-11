@@ -10,7 +10,7 @@
             "vertexShader": "vs_id",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {

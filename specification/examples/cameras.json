@@ -11,7 +11,7 @@
             "type" : "perspective",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -29,7 +29,7 @@
             "type" : "orthographic",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {

@@ -78,7 +78,7 @@
     "stencilTestEnable" : false,
     "extensions" : {
        "extension_name" : {
-          "extension_specific_property" : "value"
+          "extension specific" : "value"
        }
     },
     "extras" : {

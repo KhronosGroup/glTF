@@ -7,7 +7,7 @@
             "target": 34962,
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -22,7 +22,7 @@
             "target": 34963,
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {

@@ -9,7 +9,7 @@
                 ],
 	            "extensions" : {
 	               "extension_name" : {
-	                  "extension_specific_property" : "value"
+	                  "extension specific" : "value"
 	               }
 	            },
                 "extras" : {
@@ -20,7 +20,7 @@
             "type": "ambient",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -36,7 +36,7 @@
                 ],
 	            "extensions" : {
 	               "extension_name" : {
-	                  "extension_specific_property" : "value"
+	                  "extension specific" : "value"
 	               }
 	            },
                 "extras" : {
@@ -47,7 +47,7 @@
             "type": "directional",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -67,7 +67,7 @@
                 "quadraticAttenuation": 0.25,
 	            "extensions" : {
 	               "extension_name" : {
-	                  "extension_specific_property" : "value"
+	                  "extension specific" : "value"
 	               }
 	            },
                 "extras" : {
@@ -77,7 +77,7 @@
             "type": "point",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -99,7 +99,7 @@
                 "quadraticAttenuation": 0.25,
 	            "extensions" : {
 	               "extension_name" : {
-	                  "extension_specific_property" : "value"
+	                  "extension specific" : "value"
 	               }
 	            },
                 "extras" : {
@@ -109,7 +109,7 @@
             "type": "spot",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {

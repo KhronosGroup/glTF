@@ -9,7 +9,7 @@
             "name": "user-defined name of meshes node",
             "extensions" : {
                "extension_name" : {
-                  "extension_specific_property" : "value"
+                  "extension specific" : "value"
                }
             },
             "extras" : {
@@ -50,7 +50,7 @@
                 ],
 	            "extensions" : {
 	               "extension_name" : {
-	                  "extension_specific_property" : "value"
+	                  "extension specific" : "value"
 	               }
 	            },
                 "extras" : {

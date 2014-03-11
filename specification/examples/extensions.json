@@ -2,7 +2,7 @@
     "allExtensions" : ["EXT_texture_filter_anisotropic", "Example root-level extension"],
     "extensions" : {
         "Example root-level extension" : {
-            "extension_specific_property" : "value"
+            "extension specific" : "value"
         }
     },
     "samplers" : {
