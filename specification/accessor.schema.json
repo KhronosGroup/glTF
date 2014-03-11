@@ -22,6 +22,12 @@
             "maximum" : 255,
             "default" : 0
         },
+        "componentType" : {
+            "type" : "integer",
+            "description" : "Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array. WebGL: see vertexAttribPointer() type parameter.",
+            "enum" : [5120, 5121, 5122, 5123, 5126],
+            "required" : true
+        },
         "count" : {
             "type" : "integer",
             "description" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.",
@@ -29,11 +35,11 @@
             "required" : true
         },
         "type" : {
-            "type" : "integer",
-            "description" : "Valid values are BYTE (5120), BYTE_VEC2, BYTE_VEC3, BYTE_VEC4, UNSIGNED_BYTE (5121) UNSIGNED_BYTE_VEC2, UNSIGNED_BYTE_VEC3, UNSIGNED_BYTE_VEC4, SHORT (5122), SHORT_VEC2, SHORT_VEC3, SHORT_VEC4, UNSIGNED_SHORT (5123), UNSIGNED_SHORT_VEC2, UNSIGNED_SHORT_VEC3, UNSIGNED_SHORT_VEC4, FLOAT (5126), FLOAT_VEC2 (35664), FLOAT_VEC3 (35665), FLOAT_VEC4 (35666).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array. WebGL: see vertexAttribPointer() type and size parameters.",
-            "enum" : [5120, 5121, 5122, 5123, 5126, 35664, 35665, 35666],
+            "type" : "string",
+            "description" : "Specifies if the attribute is a scale, vector, or matrix.  WebGL: see vertexAttribPointer() size parameter.",
+            "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
             "required" : true
-        },
+        },        
         "max" : {
             "type" : "array",
             "description" : "Maximum value of each component in this attribute.",
