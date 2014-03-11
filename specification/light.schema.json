@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "light",
     "type" : "object",
-    "description" : "light",
+    "description" : "An ambient, directional, point, or spot light.",
     "properties" : {
         "ambient" : {
             "$ref" : "lightAmbient.schema.json"
@@ -22,7 +22,7 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "Type of light",
+            "description" : "Specifies the light type.",
             "enum" : ["ambient", "directional", "point", "spot"],
             "required" : true
         },

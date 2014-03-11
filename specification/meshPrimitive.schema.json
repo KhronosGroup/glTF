@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "primitive",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "Geometry and material.  WebGL: see drawElements() and drawArrays().",
     "properties" : {
         "attributes" : {
             "properties" : {
@@ -13,17 +13,17 @@
         },
         "indices" : {
             "type" : "string",
-            "description" : "Specifies the accessor id (property name) storing indices for this primitive.",
+            "description" : "The id (JSON property name) of the accessor that contains the indices.",
             "required" : true        
         },
         "material" : {
             "type" : "string",
-            "description" : "Specifies the material id (property name) to apply to this primitive when rendering.",
+            "description" : "The id (JSON property name) of the material to apply to this primitive when rendering.",
             "required" : true        
         },
         "primitive" : {
             "type" : "integer",
-            "description" : "Specifies what kind of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).",
+            "description" : "The type of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).",
             "enum" : [0, 1, 2, 3, 4, 5, 6],
             "default" : 4
         },

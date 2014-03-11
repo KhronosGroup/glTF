@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "instanceTechnique",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "An instance of a technique with parameter value overrides.",
     "properties": {    
         "technique" : {
             "type" : "string",
@@ -11,7 +11,7 @@
         },
         "values" : {
             "type" : "any",
-            "description" : "Parameter values that override the values in the technique."
+            "description" : "Parameter values that override the values in the technique with the same parameter name."
         },
         "extensions" : {
             "properties" : {

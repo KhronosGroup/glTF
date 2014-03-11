@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "instanceSkin",
     "type" : "object",
-    "description" : "instanceSkin",
+    "description" : "An instance of a skin.",
     "properties": {    
         "skeletons" : {
             "type" : "array",
@@ -15,12 +15,12 @@
         },
         "skin" : {
             "type" : "string",
-            "description" : "The id (property name) of the skin referenced by this node.",
+            "description" : "The id (JSON property name) of the skin referenced by this node.",
             "required" : true
         },
         "sources" : {
             "type" : "array",
-            "description" : "IDs (property names) of source meshes.",
+            "description" : "The ids (JSON property names) of source meshes.",
             "items" : {
                 "type" : "string"
             },

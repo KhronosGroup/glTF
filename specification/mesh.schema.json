@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "mesh",
     "type" : "object",
-    "description" : "mesh",
+    "description" : "An array of primitives defining geometry and material.",
     "properties" : {
         "name" : {
             "type" : "string",
@@ -10,7 +10,7 @@
         },
         "primitives" : {
             "type" : "array",
-            "description" : "Primitives that form the geometry in this mesh.",
+            "description" : "Primitives that define geometry and material.",
             "items" : {
                 "$ref" : "meshPrimitive.schema.json"
             }

@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "material",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "An instance of a technique with parameter value overrides.",
     "properties": {    
         "instanceTechnique" : {
 	        "$ref" : "materialInstanceTechnique.schema.json"

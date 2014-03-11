@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "mesh/primitive/attribute",
     "type" : "string",
-    "description" : "References to accessors for attributes."
+    "description" : "The id (JSON property name) of the accessor that contains the attribute."
 }

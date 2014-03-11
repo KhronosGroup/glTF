@@ -2,15 +2,15 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node",
     "type" : "object",
-    "description" : "A node in the model's node hierarchy.  Node can reference meshes, cameras, lights, or skins.",
+    "description" : "A node in the node hierarchy.  Nodes can reference meshes, cameras, lights, or skins.",
     "properties" : {
         "camera" : {
             "type" : "string",
-            "description" : "The id (property name) of the camera referenced by this node.  A node will have either camera, light, or meshes."
+            "description" : "The id (JSON property name) of the camera referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
         },
         "children" : {
             "type" : "array",
-            "description" : "The node's children.  Each string in the array must match an existing id (property name) in this model's nodes.  Children are affected by the node's matrix.",
+            "description" : "The ids (JSON property name) of this node's children.",
             "items" : {
                 "type" : "string"
             },
@@ -25,11 +25,11 @@
         },
         "light" : {
             "type" : "string",
-            "description" : "The id (property name) of the light referenced by this node.  A node will have either camera, light, or meshes."
+            "description" : "The id (JSON property name) of the light referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
         },
         "matrix" : {
             "type" : "array",
-            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  It is directly usable by uniformMatrix4fv with transpose equal to false.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.  WebGL: see uniformMatrix4fv with the transpose parameter equal to false.",
             "items" : {
                 "type": "number"
             },
@@ -39,7 +39,7 @@
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id (property name) in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.  A node will have either camera, light, or meshes.",
+            "description" : "The ids (JSON property name) of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix.  A node will have either the camera, light, meshes, or instanceSkin property defined.",
             "items" : {
                 "type" : "string"
             },
@@ -51,7 +51,7 @@
         },
         "rotation" : {
             "type" : "array",
-            "description" : "The node's quaternion rotation.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
@@ -61,7 +61,7 @@
         },
         "scale" : {
             "type" : "array",
-            "description" : "The node's non-uniform scale.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "description" : "The node's non-uniform scale.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
@@ -71,7 +71,7 @@
         },
         "translation" : {
             "type" : "array",
-            "description" : "The node's translation.  A node will have either a matrix or rotation, scale, and translation properties.  If none are provided, the transform is the identity.",
+            "description" : "The node's translation.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },

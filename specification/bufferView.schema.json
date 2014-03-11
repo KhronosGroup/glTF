@@ -11,23 +11,23 @@
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset into the buffer, in bytes.",
+            "description" : "The offset into the buffer in bytes.",
             "minimum" : 0,
             "default" : 0
         },
         "byteLength" : {
             "type" : "integer",
-            "description" : "The length of the buffer-view, in bytes.",
+            "description" : "The length of the buffer-view in bytes.",
             "minimum" : 0,
             "required" : true
         },
         "name" : {
             "type" : "string",
-            "description" : "The user-defined name of this buffer-view.  This is not necessarily unique among buffer-view."
+            "description" : "The user-defined name of this buffer-view.  This is not necessarily unique among buffer-views."
         },
         "target" : {
             "type" : "integer",
-            "description" : "34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.  WebGL: see bindBuffer().",
+            "description" : "Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.  WebGL: see bindBuffer().",
             "enum" : [34962, 34963]
         },
         "extensions" : {

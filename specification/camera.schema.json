@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "camera",
     "type" : "object",
-    "description" : "A view into the scene.  The camera describes the projection, but not the camera's position and direction.",
+    "description" : "A camera's projection.",
     "properties" : {
         "orthographic" : {
             "$ref" : "cameraOrthographic.schema.json"
@@ -16,7 +16,7 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "Perspective or orthographic camera",
+            "description" : "Specifies if the camera uses a perspective or orthographic projection.",
             "enum" : ["perspective", "orthographic"],
             "required" : true
         },

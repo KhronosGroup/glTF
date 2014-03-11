@@ -1,8 +1,8 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "orthographic",
+    "title" : "orthographic camera",
     "type" : "object",
-    "description" : "An orthographic camera.  These properties are used to create an orthographic projection matrix.",
+    "description" : "An orthographic camera containing properties to create an orthographic projection matrix.",
     "properties" : {
         "xmag" : {
             "type" : "number",

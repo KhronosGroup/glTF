@@ -2,18 +2,18 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "program",
     "type" : "object",
-    "description" : "program",
+    "description" : "A shader program.  WebGL: see attachShader(), bindAttribLocation(), createProgram(), deleteProgram(), getProgramParameter(), getProgramInfoLog(), linkProgram(), useProgram(), and validateProgram().",
     "properties": {
         "attributes" : {
             "type" : "array",
-            "description" : "Names of GLSL vertex shader attributes.  For use with bindAttribLocation().",
+            "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
             "items" : {
                 "type" : "string"
             }
         },
         "fragmentShader" : {
             "type" : "string",
-            "description" : "The id (property name) of the fragment shader referenced by this program.",
+            "description" : "The id (JSON property name) of the fragment shader.",
             "required" : true
         },
         "name" : {
@@ -22,7 +22,7 @@
         },
         "vertexShader" : {
             "type" : "string",
-            "description" : "The id (property name) of the vertex shader referenced by this program.",
+            "description" : "The id (JSON property name) of the vertex shader.",
             "required" : true
         },
         "extensions" : {
