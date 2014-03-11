@@ -1,5 +1,10 @@
 {
-    "extensions" : ["EXT_texture_filter_anisotropic"],
+    "allExtensions" : ["EXT_texture_filter_anisotropic", "Example root-level extension"],
+    "extensions" : {
+        "Example root-level extension" : {
+            "extension_specific_property" : "value"
+        }
+    },
     "samplers" : {
         "sampler_id": {
             "magFilter": 9729,

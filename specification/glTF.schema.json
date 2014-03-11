@@ -4,6 +4,14 @@
     "type" : "object",
     "description" : "Top-level glTF property.",
     "properties" : {
+        "allExtensions" : {
+            "type" : "array",
+            "description" : "Names of extensions used throughout model.  WebGL: see getSupportedExtensions() and getExtension().",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true
+        },
         "asset" : {
             "$ref" : "asset.schema.json"
         },
@@ -43,12 +51,11 @@
             }
         },
         "extensions" : {
-            "type" : "array",
-            "description" : "Names of extensions used by this model.  WebGL: see getSupportedExtensions() and getExtension().",
-            "items" : {
-                "type" : "string"
+            "properties" : {
             },
-            "uniqueItems" : true
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }
         },
         "images" : {
             "properties" : {
