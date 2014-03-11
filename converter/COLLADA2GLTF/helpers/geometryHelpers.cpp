@@ -285,7 +285,7 @@ namespace GLTF
         
         unsigned int *uniqueIndexes = (unsigned int*)calloc( vertexIndicesCount , sizeof(unsigned int));
         unsigned int *generatedIndices = (unsigned int*) calloc (vertexIndicesCount , sizeof(unsigned int)); //owned by PrimitiveRemapInfos
-        unsigned int currentIndex = startIndex;
+		unsigned int currentIndex = (unsigned int)startIndex;
         
         unsigned int** allIndicesPtr = (unsigned int**) malloc(sizeof(unsigned int*) * allIndicesSize);
         for (unsigned int i = 0 ; i < allIndicesSize ; i++) {
@@ -396,7 +396,7 @@ namespace GLTF
             VertexAttributeVector vertexAttributes = sourcePrimitive->getVertexAttributes();
             for (unsigned int k = 0 ; k < allIndices->size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
-                unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
+				unsigned int indexSet = (unsigned int)vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
@@ -419,7 +419,7 @@ namespace GLTF
         
         // now we got not only the uniqueIndexes but also the number of different indexes, i.e the number of vertex attributes count
         // we can allocate the buffer to hold vertex attributes
-        unsigned int vertexCount = endIndex;
+		unsigned int vertexCount = (unsigned int)endIndex;
         //just allocate it now, will be filled later
         unsigned int* remapTableForPositions = (unsigned int*)malloc(sizeof(unsigned int) * vertexCount);
         targetMesh->setRemapTableForPositions(remapTableForPositions);
@@ -468,7 +468,7 @@ namespace GLTF
             
             for (unsigned int k = 0 ; k < (*allIndices).size() ; k++) {
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
-                unsigned int indexSet = vertexAttributes[k]->getIndexOfSet();
+				unsigned int indexSet = (unsigned int)vertexAttributes[k]->getIndexOfSet();
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int idx = semanticAndSetToIndex[semanticIndexSetKey];
                 indicesInRemapping[k] = idx;
@@ -526,7 +526,7 @@ namespace GLTF
             
             bool shouldRemap = subMesh->indexToRemappedIndex.count(index) == 0;
             if (shouldRemap) {
-                unsigned int remappedIndex = subMesh->indexToRemappedIndex.size();
+				unsigned int remappedIndex = (unsigned int)subMesh->indexToRemappedIndex.size();
                 
                 subMesh->indexToRemappedIndex[index] = remappedIndex;
             } 
@@ -543,8 +543,8 @@ namespace GLTF
         void **remapContext = (void**)context;
         unsigned char *targetBufferPtr = (unsigned char*)remapContext[0];
         SubMeshContext *subMesh = (SubMeshContext*)remapContext[1];
-        if (subMesh->indexToRemappedIndex.count(index) > 0) {
-            size_t remappedIndex = subMesh->indexToRemappedIndex[index];
+		if (subMesh->indexToRemappedIndex.count((unsigned int)index) > 0) {
+			size_t remappedIndex = subMesh->indexToRemappedIndex[(unsigned int)index];
             memcpy(&targetBufferPtr[vertexAttributeByteSize * remappedIndex], value, vertexAttributeByteSize);
         }
     }
@@ -569,7 +569,7 @@ namespace GLTF
                 
                 shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 
-                unsigned int vertexAttributeCount = subMesh->indexToRemappedIndex.size();
+				unsigned int vertexAttributeCount = (unsigned int)subMesh->indexToRemappedIndex.size();
                 
                 //FIXME: this won't work with interleaved
                 unsigned int *targetBufferPtr = (unsigned int*)malloc(selectedMeshAttribute->elementByteLength() * vertexAttributeCount);
@@ -676,7 +676,7 @@ namespace GLTF
             unsigned int targetIndicesCount = 0;
             if (primitive->getPrimitive() == profile->getGLenumForString("TRIANGLES")) {
                 unsigned int indicesPerElementCount = 3;
-                primitiveCount = indices->getCount() / indicesPerElementCount;
+				primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
                 for (j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
                     unsigned int *indicesPtrAtPrimitiveIndex = indicesPtr + (j * indicesPerElementCount);
                     //will we still have room to store coming indices from this mesh ?

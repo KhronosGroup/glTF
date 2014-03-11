@@ -154,7 +154,7 @@ namespace GLTF
         
         size_t count = primitive->getVertexAttributesCount();
         for (size_t j = 0 ; j < count ; j++) {
-            Semantic semantic = primitive->getSemanticAtIndex(j);
+            Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
             std::string semanticString = GLTFUtils::getStringForSemantic(semantic);
 
             shared_ptr<JSONObject> semanticInfo;
@@ -165,7 +165,7 @@ namespace GLTF
             
             unsigned int indexOfSet = 0;
             if (semantic == GLTF::TEXCOORD) {
-                indexOfSet = primitive->getIndexOfSetAtIndex(j);
+				indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
             }
             
             sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
@@ -311,7 +311,7 @@ namespace GLTF
                         }
                         
                         //generate shaders if needed
-                        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
+						shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
                     
                         shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
                         
@@ -328,7 +328,7 @@ namespace GLTF
                         //https://github.com/KhronosGroup/glTF/issues/194
                         //We'll deal with two cases cases of default materials
                         //With or without NORMALS
-                        shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(),j);
+						shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
                         
                         static shared_ptr<GLTFEffect> defaultEffectNoNormal = createDefaultEffect(this->_asset.get(), attributeSemantics, false);
                         static shared_ptr<GLTFEffect> defaultEffectWithNormal = createDefaultEffect(this->_asset.get(), attributeSemantics, true);
@@ -492,7 +492,7 @@ namespace GLTF
         
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
         shared_ptr <GLTF::JSONArray> meshesArray(new GLTF::JSONArray());
-        unsigned int count = instanceControllers.getCount();
+		unsigned int count = (unsigned int)instanceControllers.getCount();
         if (count > 0) {
             shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
             for (unsigned int i = 0 ; i < count; i++) {
@@ -838,7 +838,7 @@ namespace GLTF
         
         if (this->_asset->_samplerHashtoSamplerIndex.count(samplerHash) == 0) {
             index = this->_asset->_samplerHashtoSamplerIndex.size();
-            this->_asset->_samplerHashtoSamplerIndex[samplerHash] = index;            
+			this->_asset->_samplerHashtoSamplerIndex[samplerHash] = (unsigned int)index;
             addSampler = true;
         } else {
             index = this->_asset->_samplerHashtoSamplerIndex[samplerHash];
@@ -1331,12 +1331,12 @@ namespace GLTF
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
         inverseBindMatrices->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_MAT4"));
-        inverseBindMatrices->setUnsignedInt32(kCount, skinControllerData->getJointsCount());
+		inverseBindMatrices->setUnsignedInt32(kCount, (unsigned int)skinControllerData->getJointsCount());
         inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
         
         shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset->createOutputStreamIfNeeded(this->_asset->getSharedBufferId());
-        inverseBindMatrices->setUnsignedInt32(kByteOffset,animationOutputStream->length());
+		inverseBindMatrices->setUnsignedInt32(kByteOffset, (unsigned int)animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
         animationOutputStream->write(buffer);
 

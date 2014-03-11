@@ -5,7 +5,7 @@
 
 namespace GLTF
 {
-    class GLTFAccessorCache
+	class GLTFAccessorCache
     {
     public:
         GLTFAccessorCache(void *pData, size_t length);

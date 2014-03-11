@@ -102,12 +102,12 @@ namespace GLTF
     
     shared_ptr<GLTFAccessor> GLTFMesh::getMeshAttribute(Semantic semantic, size_t indexOfSet) {
         IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
-        return hasmap[indexOfSet];
+		return hasmap[(unsigned int)indexOfSet];
     }
 
     void GLTFMesh::setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFAccessor> meshAttribute) {
         IndexSetToMeshAttributeHashmap& hasmap = this->_semanticToMeshAttributes[semantic];
-        hasmap[indexOfSet] = meshAttribute;
+		hasmap[(unsigned int)indexOfSet] = meshAttribute;
     }
     
     vector <GLTF::Semantic> GLTFMesh::allSemantics() {
@@ -183,13 +183,13 @@ namespace GLTF
             
             size_t count = primitive->getVertexAttributesCount();
             for (size_t j = 0 ; j < count ; j++) {
-                GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
+				GLTF::Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
                 std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
                 unsigned int indexOfSet = 0;
                 if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL) &&
                     //FIXME: should not be required for JOINT and WEIGHT
                     (semantic != GLTF::JOINT) && (semantic != GLTF::WEIGHT)) {
-                    indexOfSet = primitive->getIndexOfSetAtIndex(j);
+					indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
                     semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
                 }
                 attributes->setString(semanticAndSet, this->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
