@@ -186,7 +186,6 @@ namespace o3dgc
         unsigned long      start = bstream.GetSize();
         const unsigned long dim  = dynamicVector.GetDimVector();
         const unsigned long num  = dynamicVector.GetNVector();
-        const unsigned long size = dim * num;
 
         bstream.WriteUInt32(0, m_streamType);
 

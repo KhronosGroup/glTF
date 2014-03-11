@@ -25,211 +25,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
-#include "../shaders/commonProfileShaders.h"
+#include "../GLTFOpenCOLLADA.h"
+#include "GLTFAsset.h"
 
 using namespace rapidjson;
 using namespace std::tr1;
 using namespace std;
 
 namespace GLTF 
-{
-    //-- Serializers
-
-    shared_ptr <GLTF::JSONObject> serializeBuffer(GLTFBuffer* buffer, std::string path, void *context)
-    {
-        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
-        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
-        
-        bufferObject->setUnsignedInt32("byteLength", (unsigned int)buffer->getByteLength());
-        bufferObject->setString("path", converterContext->resourceOuputPathForPath(path));
-        
-        return bufferObject;
-    }
-    
-    shared_ptr <GLTF::JSONObject> serializeBufferView(GLTFBufferView* bufferView, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> bufferObject(new GLTF::JSONObject());
-        
-        bufferObject->setUnsignedInt32("byteLength", (unsigned int)bufferView->getByteLength());
-        bufferObject->setUnsignedInt32("byteOffset", (unsigned int)bufferView->getByteOffset());
-        bufferObject->setString("buffer", bufferView->getBuffer()->getID());
-        
-        return bufferObject;
-    }
-
-    shared_ptr <GLTF::JSONObject> serializeEffect(GLTFEffect* effect, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> effectObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> instanceTechnique(new GLTF::JSONObject());
-        shared_ptr <JSONObject> techniqueGenerator = effect->getTechniqueGenerator();
-        
-        GLTF::GLTFConverterContext *converterContext= (GLTF::GLTFConverterContext*)context;
-        
-        std::string techniqueID = GLTF::getReferenceTechniqueID(techniqueGenerator, *converterContext);
-        
-        effectObject->setString("name", effect->getName());
-        effectObject->setValue("instanceTechnique", instanceTechnique);
-        instanceTechnique->setString("technique", techniqueID);
-        shared_ptr<JSONObject> outputs(new JSONObject());
-        shared_ptr <JSONObject> values = effect->getValues();
-        std::vector <std::string> keys = values->getAllKeys();
-        for (size_t i = 0 ; i < keys.size() ; i++) {
-            shared_ptr <JSONObject> parameter = static_pointer_cast <JSONObject> (values->getValue(keys[i]));
-            shared_ptr <JSONObject> parameterValue = static_pointer_cast <JSONObject> (parameter->getValue("value"));
-            shared_ptr<JSONObject> output(new JSONObject());
-            if (parameterValue) {
-                outputs->setValue(keys[i], parameterValue);
-            }
-        }
-        instanceTechnique->setValue("values", outputs);
-    
-        return effectObject;
-    }
-    
-    shared_ptr <GLTF::JSONObject> serializeMesh(GLTFMesh* mesh, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> meshObject(new GLTF::JSONObject());
-        
-        meshObject->setString("name", mesh->getName());
-        
-        //primitives
-        shared_ptr <GLTF::JSONArray> primitivesArray(new GLTF::JSONArray());
-        meshObject->setValue("primitives", primitivesArray);
-        
-        PrimitiveVector primitives = mesh->getPrimitives();
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = primitives[i];
-            
-            void *primitiveContext[2];
-            
-            primitiveContext[0] = mesh;
-            primitiveContext[1] = context;
-            
-            shared_ptr <GLTF::JSONObject> primitiveObject = serializePrimitive(primitive.get(), primitiveContext);
-            
-            primitivesArray->appendValue(primitiveObject);
-        }
-        
-        if (mesh->getExtensions()->getKeysCount() > 0) {
-            meshObject->setValue("extensions", mesh->getExtensions());
-            if (mesh->getExtensions()->contains("won-compression")) {
-                shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("won-compression"));
-                if (compressionObject->contains("compressedData")) {
-                    shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
-                    GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[0];
-                    compressionData->setString("bufferView", bufferView->getID());
-                }
-                
-            }
-            
-            if (mesh->getExtensions()->contains("Open3DGC-compression")) {
-                shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->getValue("Open3DGC-compression"));
-                if (compressionObject->contains("compressedData")) {
-                    shared_ptr<JSONObject> compressionData = compressionObject->getObject("compressedData");
-                    GLTFBufferView *bufferView = (GLTFBufferView*)((void**)context)[0];
-                    compressionData->setString("bufferView", bufferView->getID());
-                }
-                
-            }
-        }
-        
-        return meshObject;
-    }
-    
-    shared_ptr <JSONObject> serializeMeshAttribute(GLTFMeshAttribute* meshAttribute, void *context)
-    {
-        shared_ptr <JSONObject> meshAttributeObject = shared_ptr<JSONObject>(new JSONObject());
-        void** serializationContext = (void**)context;
-
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
-        
-        meshAttributeObject->setUnsignedInt32("byteStride", (unsigned int)meshAttribute->getByteStride());
-        meshAttributeObject->setUnsignedInt32("byteOffset", (unsigned int)meshAttribute->getByteOffset());
-        meshAttributeObject->setUnsignedInt32("count", (unsigned int)meshAttribute->getCount());
-        meshAttributeObject->setUnsignedInt32("type", meshAttribute->getGLType(converterContext->profile));
-        
-        GLTFBufferView *bufferView = context ? (GLTFBufferView*)serializationContext[0] : meshAttribute->getBufferView().get();
-
-        meshAttributeObject->setString("bufferView", bufferView->getID());
-        
-        const double* min = meshAttribute->getMin();
-        if (min) {
-            shared_ptr <GLTF::JSONArray> minArray(new GLTF::JSONArray());
-            meshAttributeObject->setValue("min", minArray);
-            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
-                minArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
-            }
-        }
-        
-        const double* max = meshAttribute->getMax();
-        if (max) {
-            shared_ptr <GLTF::JSONArray> maxArray(new GLTF::JSONArray());
-            meshAttributeObject->setValue("max", maxArray);
-            for (size_t i = 0 ; i < meshAttribute->getComponentsPerAttribute() ; i++) {
-                maxArray->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(max[i])));
-            }
-        }
-        
-        return meshAttributeObject;
-    }
-    
-    
-    shared_ptr <GLTF::JSONObject> serializeIndices(GLTFIndices* indices, void *context)
-    {
-        shared_ptr <GLTF::JSONObject> indicesObject(new GLTF::JSONObject());
-        void** serializationContext = (void**)context;
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
-
-        GLTFBufferView *bufferView = (GLTFBufferView*)serializationContext[1];
-        
-        indicesObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString("UNSIGNED_SHORT"));
-        indicesObject->setString("bufferView", bufferView->getID());
-        indicesObject->setUnsignedInt32("byteOffset", (unsigned int)indices->getByteOffset());
-        indicesObject->setUnsignedInt32("count", (unsigned int)indices->getCount());
-        
-        return indicesObject;
-    }
-    
-    shared_ptr <GLTF::JSONObject> serializePrimitive(GLTFPrimitive* primitive, void *context)
-    {
-        void** primitiveContext = (void**)context;
-        shared_ptr <GLTF::JSONObject> primitiveObject(new GLTF::JSONObject());
-        
-        GLTFMesh* mesh = (GLTFMesh*)primitiveContext[0];
-        
-        void** serializationContext = (void**)primitiveContext[1];
-        
-        GLTFConverterContext *converterContext = (GLTFConverterContext*)serializationContext[3];
-
-        primitiveObject->setUnsignedInt32("primitive", converterContext->profile->getGLenumForString(primitive->getType()));
-        
-        primitiveObject->setString("material", primitive->getMaterialID());
-        
-        shared_ptr <GLTF::JSONObject> attributes(new GLTF::JSONObject());
-        primitiveObject->setValue("attributes", attributes);
-        
-        size_t count = primitive->getVertexAttributesCount();
-        for (size_t j = 0 ; j < count ; j++) {
-            GLTF::Semantic semantic = primitive->getSemanticAtIndex(j);
-            
-            std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
-            
-            unsigned int indexOfSet = 0;
-            if (semantic == GLTF::TEXCOORD) {
-                indexOfSet = primitive->getIndexOfSetAtIndex(j);
-                semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
-            }
-            attributes->setString(semanticAndSet, mesh->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
-        }
-        shared_ptr <GLTF::GLTFIndices> uniqueIndices = primitive->getUniqueIndices();
-        primitiveObject->setString("indices", uniqueIndices->getID());
-
-        return primitiveObject;
-    }
-    
+{    
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z) {
         shared_ptr <JSONArray> vec3(new GLTF::JSONArray());
         
@@ -252,58 +56,14 @@ namespace GLTF
         return vec4;
     }
 
-    /*
-    shared_ptr<JSONObject> serializeAnimationParameter(GLTFAnimation::Parameter* animationParameter, void *context) {
-        shared_ptr <JSONObject> animationParameterObject(new JSONObject());
-        GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
-                
-        animationParameterObject->setString("bufferView", animationParameter->getBufferView()->getID());
-        animationParameterObject->setUnsignedInt32("type", converterContext->profile->getGLenumForString(animationParameter->getType()));
-        animationParameterObject->setUnsignedInt32("byteOffset", animationParameter->getByteOffset());
-        animationParameterObject->setUnsignedInt32("count", animationParameter->getCount());
-    
-        shared_ptr <JSONObject> extensions = animationParameter->extensions();
-        if (extensions->getKeysCount() > 0) {
-            animationParameterObject->setValue("extensions", extensions);
-        }
-        
-        return animationParameterObject;
-    }
-     */
-    
-    shared_ptr<JSONObject> serializeAnimation(GLTFAnimation* animation, void *context) {
-        shared_ptr <JSONObject> animationObject(new JSONObject());
-        shared_ptr <JSONObject> parametersObject(new JSONObject());
-       //GLTFConverterContext* converterContext = (GLTFConverterContext*)context;
-        
-        animationObject->setUnsignedInt32("count", animation->getCount());
-        animationObject->setValue("samplers", animation->samplers());
-        animationObject->setValue("channels", animation->channels());
-                        
-        animationObject->setValue("parameters", animation->parameters());
-        
-        return animationObject;
-    }
-        
-    shared_ptr<JSONObject> serializeSkin(GLTFSkin* skin) {
-        shared_ptr <JSONObject> skinObject(new JSONObject());
-        
-        skinObject->setValue("joints", skin->getJointsIds());
-        skinObject->setValue("bindShapeMatrix", skin->getBindShapeMatrix());
-        
-        return skinObject;
-    }
-    
     //-- Writer
     
     GLTFWriter::GLTFWriter():
-    _writer(0)
-    {
+    _writer(0) {
         _fd = 0;
     }
 
-    bool GLTFWriter::initWithPath(const std::string &path)
-    {
+    bool GLTFWriter::initWithPath(const std::string &path) {
         this->_fd = fopen(path.c_str(), "w");
         if (this->_fd) {
             this->_fileStream = new rapidjson::FileStream(this->_fd);
@@ -316,8 +76,7 @@ namespace GLTF
         return false;
     }
         
-    GLTFWriter::~GLTFWriter()
-    {
+    GLTFWriter::~GLTFWriter() {
         if (_fd) {
             delete this->_fileStream;
             delete this->_writer;
@@ -326,8 +85,7 @@ namespace GLTF
     }
         
     //base
-    void GLTFWriter::writeArray(JSONArray* array, void *context)
-    {
+    void GLTFWriter::writeArray(JSONArray* array, void *context) {
         this->_writer->StartArray();
         
         vector <shared_ptr <JSONValue> > values = array->values();
@@ -339,8 +97,7 @@ namespace GLTF
         this->_writer->EndArray();
     }
     
-    void GLTFWriter::writeObject(JSONObject* object, void *context)
-    {
+    void GLTFWriter::writeObject(JSONObject* object, void *context) {
         this->_writer->StartObject(); 
 
         vector <std::string> keys = object->getAllKeys();
@@ -357,9 +114,8 @@ namespace GLTF
         this->_writer->EndObject(); 
     }
     
-    void GLTFWriter::writeNumber(JSONNumber* number, void *context)
-    {
-        JSONNumber::JSONNumberType type = number->getType();
+    void GLTFWriter::writeNumber(JSONNumber* number, void *context) {
+        JSONNumber::JSONNumberType type = number->getNumberType();
         
         switch (type) {
             case JSONNumber::UNSIGNED_INT32:
@@ -386,30 +142,23 @@ namespace GLTF
         }
     }
         
-    void GLTFWriter::writeString(JSONString* str, void *context)
-    {
+    void GLTFWriter::writeString(JSONString* str, void *context) {
         this->_writer->String(str->getCString());
     }
     
-    void GLTFWriter::write(JSONValue* value, void* context)
-    {
-        switch (value->getType()) {
-            case GLTF::NUMBER:
-                this->writeNumber((JSONNumber*)value, context);
-                break;
-            case GLTF::OBJECT:
-                this->writeObject((JSONObject*)value, context);
-                break;
-            case GLTF::ARRAY:
-                this->writeArray((JSONArray*)value, context);
-                break;
-            case GLTF::STRING:
-                this->writeString((JSONString*)value, context);
-                break;
-            default:
-                //FIXME: report error, should not reach
-                break;
-        }
+    void GLTFWriter::write(JSONValue* value, void* context) {
+        JSONType jsonType = value->getJSONType();
+        
+        if (jsonType == kJSONNumber) {
+            this->writeNumber((JSONNumber*)value, context);
+        } else if (jsonType == kJSONObject) {
+            this->writeObject((JSONObject*)value, context);
+        } else if (jsonType == kJSONArray) {
+            this->writeArray((JSONArray*)value, context);
+        } else if (jsonType == kJSONString) {
+            this->writeString((JSONString*)value, context);
+        } 
+        
     }
         
 }

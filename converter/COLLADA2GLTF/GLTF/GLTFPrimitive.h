@@ -47,17 +47,15 @@ namespace GLTF
         size_t _indexOfSet;
     };
         
-    class GLTFPrimitive
+    class GLTFPrimitive : public JSONObject
     {
     public:
         GLTFPrimitive();
         GLTFPrimitive(const GLTFPrimitive& primitive);
         virtual ~GLTFPrimitive();
-        
-        shared_ptr <GLTF::GLTFIndices> getUniqueIndices();
-        
-        std::string getType();
-        void setType(std::string type);
+                
+        unsigned int getPrimitive();
+        void setPrimitive(unsigned int type);
 
         std::string getMaterialID();
         void setMaterialID(std::string materialID);
@@ -74,14 +72,12 @@ namespace GLTF
         VertexAttributeVector getVertexAttributes();
         void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);
         
-        shared_ptr <GLTF::GLTFIndices>  getIndices();
-        void setIndices(shared_ptr <GLTF::GLTFIndices> indices);
+        shared_ptr <GLTF::GLTFAccessor>  getIndices();
+        void setIndices(shared_ptr <GLTF::GLTFAccessor> indices);
         
     private:                
-        std::string _type;
-        std::string _materialID;
         unsigned int _materialObjectID;
-        shared_ptr <GLTF::GLTFIndices> _uniqueIndices;
+        shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
         VertexAttributeVector _allVertexAttributes;
     };
 

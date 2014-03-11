@@ -40,11 +40,14 @@ namespace GLTF
     {
     }
     
-    GLTFPrimitive::GLTFPrimitive(const GLTFPrimitive &primitive)
+    GLTFPrimitive::GLTFPrimitive(const GLTFPrimitive &primitive) : JSONObject()
     {
         this->_allVertexAttributes = primitive._allVertexAttributes;
-        this->_type = primitive._type;
-        this->_materialID = primitive._materialID;
+        //FIXME: ... didn't feel like propageted const everywhere yet
+        GLTFPrimitive *pr = (GLTFPrimitive*)&primitive;
+        
+        this->setPrimitive(pr->getPrimitive());
+        this->setMaterialID(pr->getMaterialID());
         this->_materialObjectID = primitive._materialObjectID;
         this->_uniqueIndices = primitive._uniqueIndices;
     }
@@ -73,51 +76,38 @@ namespace GLTF
     {
         this->_allVertexAttributes.push_back(VertexAttribute);
     }    
-    
-    shared_ptr <GLTF::GLTFIndices> GLTFPrimitive::getUniqueIndices()
-    {
-        return this->_uniqueIndices;
+        
+    unsigned int GLTFPrimitive::getPrimitive() {
+        return this->getUnsignedInt32(kPrimitive);
     }
     
-    std::string GLTFPrimitive::getType()
-    {
-        return _type;
+    void GLTFPrimitive::setPrimitive(unsigned int type) {
+        this->setUnsignedInt32(kPrimitive, type);
     }
     
-    void GLTFPrimitive::setType(std::string type)
-    {
-        this->_type = type;
+    std::string GLTFPrimitive::getMaterialID() {
+        return this->getString(kMaterial);
     }
     
-    std::string GLTFPrimitive::getMaterialID()
-    {
-        return this->_materialID;
+    void GLTFPrimitive::setMaterialID(std::string materialID) {
+        this->setString(kMaterial, materialID);
     }
     
-    void GLTFPrimitive::setMaterialID(std::string materialID)
-    {
-        this->_materialID = materialID;
-    }
-    
-    unsigned int GLTFPrimitive::getMaterialObjectID()
-    {
+    unsigned int GLTFPrimitive::getMaterialObjectID() {
         return this->_materialObjectID;
     }
     
-    void GLTFPrimitive::setMaterialObjectID(unsigned int materialID)
-    {
+    void GLTFPrimitive::setMaterialObjectID(unsigned int materialID) {
         this->_materialObjectID = materialID;
     }
-
-    shared_ptr <GLTF::GLTFIndices>  GLTFPrimitive::getIndices()
-    {
+    
+    shared_ptr <GLTF::GLTFAccessor>  GLTFPrimitive::getIndices() {
         return this->_uniqueIndices;
     }
     
-    void GLTFPrimitive::setIndices(shared_ptr <GLTF::GLTFIndices> indices)
-    {
+    void GLTFPrimitive::setIndices(shared_ptr <GLTF::GLTFAccessor> indices) {
+        this->setString(kIndices, indices->getID());
         this->_uniqueIndices = indices;
     }
-    
     
 };

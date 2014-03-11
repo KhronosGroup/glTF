@@ -31,12 +31,12 @@ namespace GLTF
 {
     class GLTFMesh;
     
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector);
+    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector, shared_ptr<GLTFProfile> profile);
     
-    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFMeshAttribute> > IndexSetToMeshAttributeHashmap;
+    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
     typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;
     
-    class GLTFMesh {
+    class GLTFMesh : public JSONObject {
     public:
         GLTFMesh();
         GLTFMesh(const GLTFMesh &mesh);
@@ -52,8 +52,8 @@ namespace GLTF
         void setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap);
         IndexSetToMeshAttributeHashmap& getMeshAttributesForSemantic(Semantic semantic); 
         
-        void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFMeshAttribute> meshAttribute);
-        shared_ptr<GLTFMeshAttribute> getMeshAttribute(Semantic semantic, size_t indexOfSet);
+        void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFAccessor> meshAttribute);
+        shared_ptr<GLTFAccessor> getMeshAttribute(Semantic semantic, size_t indexOfSet);
         
         size_t getMeshAttributesCountForSemantic(Semantic semantic);
         
@@ -70,27 +70,20 @@ namespace GLTF
         void setRemapTableForPositions(unsigned int* remapTableForPositions);
         unsigned int* getRemapTableForPositions();
 
-        PrimitiveVector const getPrimitives();
+        shared_ptr<JSONArray> getPrimitives();
+        void setPrimitives(shared_ptr<JSONArray>);
+        size_t getPrimitivesCount();
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);
         
-#ifdef USE_WEBGLLOADER
-        void setCompressedBuffer(shared_ptr<GLTFBuffer> compressedBuffer);
-        shared_ptr<GLTFBuffer> getCompressedBuffer();
-#endif
+        void resolveAttributes();
         
     private:
-        PrimitiveVector _primitives;
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
-        std::string _ID, _name;
-
-        shared_ptr<JSONObject> _extensions;
-        
-        //WEBGLLOADER
-        shared_ptr<GLTFBuffer> _compressedBuffer;
+        std::string _ID;
         
         //This is unfortunate that we need to keep this information,
-        //but since we get skinning weights and bone indices after the mesh and the openCOLLADA is not available anymore, we need to keep
+        //but since we get skinning weights and bone indices after the mesh and the openCOLLADA mesh is not available anymore, we need to keep
         //the remap table to build the weights and bone indices as mesh attributes.
         unsigned int *_remapTableForPositions;
     };    

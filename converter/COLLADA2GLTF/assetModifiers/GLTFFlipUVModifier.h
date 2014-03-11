@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2013, Fabrice Robinet.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,30 +21,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_VALUE_H__
-#define __JSON_VALUE_H__
+#ifndef __GLTFFLIPUVMODIFIER__
+#define __GLTFFLIPUVMODIFIER__
 
-namespace GLTF 
+namespace GLTF
 {
-    class GLTFWriter;
-    class JSONValue {
-    private:
-
-    public:        
-                        
-        JSONValue(JSONValueType type);
+    class GLTFFlipUVModifier : public GLTFAssetModifier {
+    public:
+        GLTFFlipUVModifier();
+        virtual ~GLTFFlipUVModifier();
         
-        virtual void write(GLTFWriter* , void* context = 0);
-                
-        JSONValueType getType();
-        
-        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
-        
-    private:
-        JSONValueType _type;
+        virtual bool init();
+        virtual void modify(shared_ptr<JSONObject> glTFAsset);
+        virtual void cleanup();
     };
-
 }
-
 
 #endif

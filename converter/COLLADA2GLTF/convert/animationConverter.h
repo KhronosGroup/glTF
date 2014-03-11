@@ -4,7 +4,7 @@
 #ifndef __GLTFANIMATIONCONVERTER_H__
 #define __GLTFANIMATIONCONVERTER_H__
 
-#include "../GLTF-OpenCOLLADA.h"
+#include "../GLTFOpenCOLLADA.h"
 #include "mathHelpers.h"
 
 namespace GLTF
@@ -584,11 +584,11 @@ namespace GLTF
         shared_ptr<std::vector<std::string> > _transformsOrder;
     };
     
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFConverterContext &converterContext);
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset);
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
-                        GLTF::GLTFConverterContext &converterContext);
+                        GLTF::GLTFAsset *asset);
     
     //-------
 }

@@ -1,6 +1,6 @@
 #include "GLTF.h"
-#include "../GLTF-OpenCOLLADA.h"
-#include "../GLTFConverterContext.h"
+#include "../GLTFOpenCOLLADA.h"
+#include "GLTFAsset.h"
 
 #include "animationConverter.h"
 #include "meshConverter.h"
@@ -9,99 +9,14 @@
 #include "GLTF-Open3DGC.h"
 
 namespace GLTF
-{
-    static void __DecomposeMatrices(float *matrices, size_t count,
-                                    std::vector< shared_ptr <GLTFBufferView> > &TRSBufferViews) {
-        
-        size_t translationBufferSize = sizeof(float) * 3 * count;
-        size_t rotationBufferSize = sizeof(float) * 4 * count;
-        size_t scaleBufferSize = sizeof(float) * 3 * count;
-        
-        float *translationData = (float*)malloc(translationBufferSize);
-        float *rotationData = (float*)malloc(rotationBufferSize);
-        float *scaleData = (float*)malloc(scaleBufferSize);
-        
-        shared_ptr <GLTF::GLTFBufferView> translationBufferView = createBufferViewWithAllocatedBuffer(translationData, 0, translationBufferSize, true);
-        shared_ptr <GLTF::GLTFBufferView> rotationBufferView = createBufferViewWithAllocatedBuffer(rotationData, 0, rotationBufferSize, true);
-        shared_ptr <GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(scaleData, 0, scaleBufferSize, true);
-        
-        float *previousRotation = 0;
-        
-        for (size_t i = 0 ; i < count ; i++) {
-            
-            float *m = matrices;
-            COLLADABU::Math::Matrix4 mat;
-            mat.setAllElements(m[0], m[1], m[2], m[3],
-                               m[4], m[5], m[6], m[7],
-                               m[8], m[9], m[10], m[11],
-                               m[12], m[13], m[14], m[15] );
-            
-            decomposeMatrix(mat, translationData, rotationData, scaleData);
-            
-            //make sure we export the short path from orientations
-            if (0 != previousRotation) {
-                COLLADABU::Math::Vector3 axis1(previousRotation[0], previousRotation[1], previousRotation[2]);
-                COLLADABU::Math::Vector3 axis2(rotationData[0], rotationData[1], rotationData[2]);
-                
-                COLLADABU::Math::Quaternion key1;
-                COLLADABU::Math::Quaternion key2;
-                
-                key1.fromAngleAxis(previousRotation[3], axis1);
-                key2.fromAngleAxis(rotationData[3], axis2);
-                
-                COLLADABU::Math::Real cosHalfTheta = key1.dot(key2);
-                if (cosHalfTheta < 0) {
-                    key2.x = -key2.x;
-                    key2.y = -key2.y;
-                    key2.z = -key2.z;
-                    key2.w = -key2.w;
-                    
-                    COLLADABU::Math::Real angle;
-                    key2.toAngleAxis(angle, axis2);
-                    rotationData[3] = (float)angle;
-                    rotationData[0] = (float)axis2.x;
-                    rotationData[1] = (float)axis2.y;
-                    rotationData[2] = (float)axis2.z;
-                    
-                    key2.fromAngleAxis(rotationData[3], axis2);
-                    
-                    //FIXME: this needs to be refined, we ensure continuity here, but assume in clockwise order
-                    cosHalfTheta = key1.dot(key2);
-                    if (cosHalfTheta < 0) {
-                        rotationData[3] += (float)(2. * 3.14159265359);
-                        key2.fromAngleAxis(rotationData[3], axis2);
-                    }
-                }
-                
-            }
-            
-            previousRotation = rotationData;
-            translationData += 3;
-            rotationData += 4;
-            scaleData += 3;
-            matrices += 16;
-        }
-        /*
-         rotationData = (float*)rotationBufferView->getBufferDataByApplyingOffset();
-         for (size_t i = 0 ; i < count ; i++) {
-         printf("rotation at:%d %f %f %f %f\n",  i,
-         rotationData[0],rotationData[1],rotationData[2],rotationData[3]);
-         
-         rotationData += 4;
-         }
-         */
-        TRSBufferViews.push_back(translationBufferView);
-        TRSBufferViews.push_back(rotationBufferView);
-        TRSBufferViews.push_back(scaleBufferView);
-    }
-    
+{    
     
 #define ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID) std::string targetUIDWithPath = path+targetID;\
-    if (converterContext._targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
-        animationFlattener = converterContext._targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
+    if (asset->_targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
+        animationFlattener = asset->_targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
     } else {\
         animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);\
-        converterContext._targetUIDWithPathToAnimationFlattener[targetUIDWithPath] = animationFlattener;\
+        asset->_targetUIDWithPathToAnimationFlattener[targetUIDWithPath] = animationFlattener;\
     }
     
     /*
@@ -111,7 +26,7 @@ namespace GLTF
     bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
-                        GLTF::GLTFConverterContext &converterContext) {
+                        GLTF::GLTFAsset *asset) {
         
         std::string inputParameterName = "TIME";
         shared_ptr<JSONObject> samplers = cvtAnimation->samplers();
@@ -134,8 +49,8 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        std::string targetID = animatedTarget->getString(kTarget);
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -168,8 +83,8 @@ namespace GLTF
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         if (animatedTarget->getString("path") == "MATRIX") {
-                            std::string targetID = animatedTarget->getString("target");
-                            if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                            std::string targetID = animatedTarget->getString(kTarget);
+                            if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                                 cvtAnimation->targets()->setValue(targetID, animatedTarget);
                                 
                                 std::string transformID = animatedTarget->getString("transformId");
@@ -197,8 +112,8 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        std::string targetID = animatedTarget->getString(kTarget);
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -238,8 +153,8 @@ namespace GLTF
                     //but it might be better to make it before...
                     for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                        std::string targetID = animatedTarget->getString("target");
-                        if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                        std::string targetID = animatedTarget->getString(kTarget);
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
                             
                             std::string path = animatedTarget->getString("path");
@@ -264,8 +179,8 @@ namespace GLTF
                 int index = animationClass - COLLADAFW::AnimationList::POSITION_X;
                 for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
                     shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                    std::string targetID = animatedTarget->getString("target");
-                    if (converterContext._uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                    std::string targetID = animatedTarget->getString(kTarget);
+                    if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                         cvtAnimation->targets()->setValue(targetID, animatedTarget);
                         std::string path = animatedTarget->getString("path");
                         std::string transformID = animatedTarget->getString("transformId");
@@ -302,7 +217,7 @@ namespace GLTF
         return false;
     }
     
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFConverterContext &converterContext)
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset)
     {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
@@ -313,7 +228,7 @@ namespace GLTF
             //This needs to be fixed when re-working: https://github.com/KhronosGroup/glTF/issues/158
             //especially, this point: "by default the converter should replicate COLLADA animations layout (not yet done), but an option should allow to have one animation per target. (this is actually the case)."
 
-            std::string animationID = uniqueIdWithType("animation", animation->getUniqueId());
+            std::string animationID = uniqueIdWithType(kAnimation, animation->getUniqueId());
             
             cvtAnimation->setID(animationID);
             

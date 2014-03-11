@@ -28,8 +28,8 @@
 #define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
-#include "GLTF-OpenCOLLADA.h"
-#include "GLTFConverterContext.h"
+#include "GLTFOpenCOLLADA.h"
+#include "GLTFAsset.h"
 
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
@@ -72,12 +72,11 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter( const GLTFConverterContext &converterArgs);
+		COLLADA2GLTFWriter(shared_ptr<GLTF::GLTFAsset> asset);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
         bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
-        shared_ptr <GLTF::JSONArray> serializeMatrix4Array  (const COLLADABU::Math::Matrix4 &matrix);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
@@ -100,7 +99,7 @@ namespace GLTF
 		/** Remove all objects that don't have an object. Deletes unused visual scenes.*/
 		void finish();;
         
-		/** When this method is called, the writer must write the global document asset.
+		/** When this method is called, the writer must write the global document asset->
          @return The writer should return true, if writing succeeded, false otherwise.*/
 		virtual bool writeGlobalAsset ( const COLLADAFW::FileInfo* asset );
         
@@ -177,9 +176,8 @@ namespace GLTF
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        GLTF::GLTFConverterContext _converterContext;
+        shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
-        GLTF::GLTFWriter _writer;
         GLTF::GLTFWriter _resultsWriter;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;

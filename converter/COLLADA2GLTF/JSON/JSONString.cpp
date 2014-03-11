@@ -24,38 +24,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_INDICES_H__
-#define __JSON_INDICES_H__
+#ifndef __GLTF__
+#define __GLTF__
+
+#include "GLTF.h"
 
 namespace GLTF 
 {
-    //we should specify in indices the type. SHORT or BYTE
-    class GLTFIndices {
-    private:
-        GLTFIndices();
-        void _indicesCommonInit();
-    public:
-        GLTFIndices(shared_ptr <GLTFBufferView> bufferView, size_t count);
-        
-        virtual ~GLTFIndices();
-        
-        size_t getCount();
+    JSONString::JSONString() : JSONValue() {
+    }
 
-        shared_ptr <GLTFBufferView> const getBufferView();
-        void setBufferView(shared_ptr <GLTFBufferView>);
+    JSONString::JSONString(const std::string& str) : JSONValue() {
+        this->_str = str;
+    }
 
-        void setByteOffset(size_t byteOffset);
-        size_t getByteOffset();
+    JSONString::~JSONString() {
+    }        
         
-        const std::string& getID();
-
-    private:
-        size_t _count;
-        size_t _byteOffset;
-        shared_ptr <GLTFBufferView> _bufferView;
-        std::string _ID;
-    };
+    const char* JSONString::getCString() {
+        return this->_str.c_str();
+    }
+    
+    const std::string& JSONString::getString() {
+        return this->_str;
+    }
+    
+    JSONType JSONString::getJSONType() {
+        return kJSONString;
+    }
+    
 }
-
-
 #endif
+

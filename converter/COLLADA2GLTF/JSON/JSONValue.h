@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,6 +9,9 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
+//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
+//    contributors may be used to endorse or promote products derived from this
+//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -21,31 +24,38 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_PROFILE__
-#define __GLTF_PROFILE__
+#ifndef __JSON_VALUE_H__
+#define __JSON_VALUE_H__
 
-typedef unordered_map<std::string ,unsigned int> GLEnumForString;
-
-namespace GLTF
+namespace GLTF 
 {
-    class GLTFProfile
-    {
-    public:
-        virtual ~GLTFProfile();
-        virtual unsigned int getGLTypeForComponentType(ComponentType componentType, size_t) = 0;
-        virtual std::string getGLSLTypeForGLType(unsigned int glType) = 0;
-        virtual size_t getComponentsCountForGLType(unsigned int glType) = 0;
-        virtual std::string id() = 0;
-        virtual size_t sizeOfGLType(unsigned int glType) = 0;
-        virtual ComponentType getComponentTypeForGLType(unsigned int glType) = 0;
-        static size_t getComponentsCountForType(const std::string &type);
-    public:
-        unsigned int getGLenumForString(const std::string&);
-    protected:
-        void setGLenumForString(const std::string& , unsigned int);
+    class JSONValue;
+    typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
+    
+    class GLTFWriter;
+    class JSONValue {
     private:
-        GLEnumForString _glEnumForString;
+
+    public:        
+        JSONValue();
+        virtual ~JSONValue();
+        
+        virtual void write(GLTFWriter* , void* context = 0);
+                
+        JSONType getType();
+        
+        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
+        
+        virtual void evaluate(void*);
+        
+        virtual JSONType getJSONType() = 0;
+        
+        virtual void apply(JSONValueApplierFunc, void* context);
+        
+    private:
     };
+
 }
+
 
 #endif

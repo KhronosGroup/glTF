@@ -36,8 +36,7 @@ using namespace std;
 namespace GLTF 
 {
         
-    shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string filepath, char** error)
-    {
+    shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string filepath, char** error) {
         shared_ptr <GLTF::JSONObject> outObject(new JSONObject());
 
         outObject->initWithContentsOfFile(filepath.c_str(), error);
@@ -90,8 +89,7 @@ namespace GLTF
         }
     }
     
-    bool JSONObject::initWithContentsOfFile(const char *filepath, char **error)
-    {
+    bool JSONObject::initWithContentsOfFile(const char *filepath, char **error) {
         bool status = false;
         FILE * file = fopen(filepath, "rb");
         if (file) {
@@ -109,8 +107,7 @@ namespace GLTF
         return status;
     }
     
-    bool JSONObject::initWithCString(const char *jsonString, char **error)
-    {
+    bool JSONObject::initWithCString(const char *jsonString, char **error) {
         rapidjson::Document document;
 
         if (document.Parse<0>(jsonString).HasParseError()) {
@@ -121,8 +118,7 @@ namespace GLTF
         return true;
     }
     
-    JSONObject::JSONObject():
-    JSONValue(GLTF::OBJECT)
+    JSONObject::JSONObject() : JSONValue()
     {
     }
     
@@ -153,35 +149,34 @@ namespace GLTF
     }
 
     
-    void JSONObject::setValue(const std::string &key, shared_ptr <JSONValue> value)
-    {
+    void JSONObject::setValue(const std::string &key, shared_ptr <JSONValue> value) {
         this->_keyToJSONValue[key] = value;
     }
     
-    void JSONObject::removeValue(const std::string &key)
-    {
+    void JSONObject::removeValue(const std::string &key) {
         this->_keyToJSONValue.erase(key);
     }
 
     
-    shared_ptr <JSONValue> JSONObject::getValue(std::string key)
-    {
+    shared_ptr <JSONValue> JSONObject::getValue(std::string key) {
         return this->_keyToJSONValue[key];
     }
     
-    shared_ptr <JSONObject> JSONObject::getObject(std::string key)
-    {
+    shared_ptr <JSONObject> JSONObject::getObject(const std::string &key) {
         shared_ptr <JSONValue> value = this->_keyToJSONValue[key];
         return static_pointer_cast <JSONObject> (value);
     }
 
-    void JSONObject::setUnsignedInt32(const std::string &key, unsigned int value)
-    {
+    shared_ptr <JSONArray> JSONObject::getArray(const std::string &key) {
+        shared_ptr <JSONValue> value = this->_keyToJSONValue[key];
+        return static_pointer_cast <JSONArray> (value);
+    }
+
+    void JSONObject::setUnsignedInt32(const std::string &key, unsigned int value) {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber((unsigned int)value)));
     }
 
-    unsigned int JSONObject::getUnsignedInt32(const std::string &key)
-    {
+    unsigned int JSONObject::getUnsignedInt32(const std::string &key) {
         if (this->contains(key)) {
             shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
             return number->getUnsignedInt32();
@@ -189,13 +184,11 @@ namespace GLTF
         return 0;
     }
     
-    void JSONObject::setBool(const std::string &key, bool value)
-    {
+    void JSONObject::setBool(const std::string &key, bool value) {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber(value)));
     }
     
-    bool JSONObject::getBool(const std::string &key)
-    {
+    bool JSONObject::getBool(const std::string &key) {
         if (this->contains(key)) {
             shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
             
@@ -204,13 +197,11 @@ namespace GLTF
         return false;
     }
     
-    void JSONObject::setInt32(const std::string &key, int value)
-    {
+    void JSONObject::setInt32(const std::string &key, int value) {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber((int)value)));
     }
     
-    int JSONObject::getInt32(const std::string &key)
-    {
+    int JSONObject::getInt32(const std::string &key) {
         if (this->contains(key)) {
             shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
             return number->getInt32();
@@ -218,13 +209,11 @@ namespace GLTF
         return 0;
     }
     
-    void JSONObject::setDouble(const std::string &key, double value)
-    {
+    void JSONObject::setDouble(const std::string &key, double value) {
         this->setValue(key, shared_ptr <JSONNumber> (new JSONNumber((double)value)));
     }
     
-    double JSONObject::getDouble(const std::string &key)
-    {
+    double JSONObject::getDouble(const std::string &key) {
         if (this->contains(key)) {
             shared_ptr <JSONNumber> number = static_pointer_cast <JSONNumber> (this->getValue(key));
             return number->getDouble();
@@ -232,13 +221,11 @@ namespace GLTF
         return 0;
     }
     
-    void JSONObject::setString(const std::string &key, const std::string &value)
-    {
+    void JSONObject::setString(const std::string &key, const std::string &value) {
         this->setValue(key, shared_ptr <JSONString> (new JSONString(value)));
     }
 
-    const std::string JSONObject::getString(const std::string &key)
-    {
+    const std::string JSONObject::getString(const std::string &key) {
         if (this->contains(key)) {
             shared_ptr <JSONString> str = static_pointer_cast <JSONString> (this->getValue(key));
             return str->getString();
@@ -247,8 +234,7 @@ namespace GLTF
     }
     
     //FIXME: this is not consistent naming, we should have some other convention to return stl objects (vs JSONValue)
-    vector <std::string> JSONObject::getAllKeys()
-    {
+    vector <std::string> JSONObject::getAllKeys() {
         vector <std::string> allKeys;
             
         KeyToJSONValue::const_iterator KeyToJSONValueIterator;
@@ -275,18 +261,33 @@ namespace GLTF
         return keys;
     }
     
-    bool JSONObject::contains(const std::string &key)
-    {
+    bool JSONObject::contains(const std::string &key) {
         return this->_keyToJSONValue.count(key) > 0;
     }
     
-    bool JSONObject::isEmpty() 
-    {
+    bool JSONObject::isEmpty() {
         return this->_keyToJSONValue.empty();
     }
     
     size_t JSONObject::getKeysCount() {
         return this->_keyToJSONValue.size();
     }
+    
+    JSONType JSONObject::getJSONType() {
+        return kJSONObject;
+    }
+    
+    void JSONObject::apply(JSONValueApplierFunc func, void* context) {
+        JSONValue::apply(func, context);
+        
+        vector <std::string> keys = this->getAllKeys();
+        size_t count = keys.size();        
+        for (size_t i = 0 ; i < count ; i++) {
+            shared_ptr <JSONValue> value = this->getValue(keys[i]);
+            if (value)
+                value->apply(func, context);
+        }
+    }
+
     
 }

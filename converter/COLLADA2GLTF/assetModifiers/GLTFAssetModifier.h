@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet
+// Copyright (c) 2013, Fabrice Robinet.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,30 +21,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_PROFILE__
-#define __GLTF_PROFILE__
-
-typedef unordered_map<std::string ,unsigned int> GLEnumForString;
+#ifndef __GLTFASSETMODIFIER__
+#define __GLTFASSETMODIFIER__
 
 namespace GLTF
 {
-    class GLTFProfile
-    {
+    /* Abstract
+     *
+     *
+     */
+    class GLTFAssetModifier {
     public:
-        virtual ~GLTFProfile();
-        virtual unsigned int getGLTypeForComponentType(ComponentType componentType, size_t) = 0;
-        virtual std::string getGLSLTypeForGLType(unsigned int glType) = 0;
-        virtual size_t getComponentsCountForGLType(unsigned int glType) = 0;
-        virtual std::string id() = 0;
-        virtual size_t sizeOfGLType(unsigned int glType) = 0;
-        virtual ComponentType getComponentTypeForGLType(unsigned int glType) = 0;
-        static size_t getComponentsCountForType(const std::string &type);
-    public:
-        unsigned int getGLenumForString(const std::string&);
-    protected:
-        void setGLenumForString(const std::string& , unsigned int);
-    private:
-        GLEnumForString _glEnumForString;
+        virtual bool init() { return true; };
+        virtual void modify(shared_ptr<JSONObject> glTFAsset) = 0;
+        virtual void cleanup() { };
     };
 }
 

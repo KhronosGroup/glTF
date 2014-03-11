@@ -62,8 +62,7 @@
 #include "JSONArray.h"
 #include "GLTFUtils.h"
 #include "GLTFBuffer.h"
-#include "GLTFMeshAttribute.h"
-#include "GLTFIndices.h"
+#include "GLTFAccessor.h"
 #include "GLTFEffect.h"
 #include "GLTFPrimitive.h"
 #include "GLTFMesh.h"
@@ -73,5 +72,6 @@
 #include "GLTFInputStream.h"
 #include "GLTFOutputStream.h"
 #include "GLTFConfig.h"
+#include "GLTFAssetModifier.h"
 
 #endif 

@@ -24,50 +24,47 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "GLTF.h"
+#ifndef __JSON_NUMBER_H__
+#define __JSON_NUMBER_H__
 
 namespace GLTF 
 {
-    JSONValue::JSONValue(JSONValueType type) 
-    {
-        this->_type = type;
-    }
-    
-    JSONValueType JSONValue::getType() 
-    {
-        return this->_type;
-    }    
-    
-    void JSONValue::write(GLTFWriter* writer, void* context)
-    {
-        writer->write(this, context);
-    }
-    
-    shared_ptr<JSONValue> JSONValue::valueForKeyPath(std::string keyPath) {
-        std::size_t pos = keyPath.find(".");
-        if (pos == std::string::npos) {
-            if (this->_type == OBJECT) {
-                JSONObject *currentObject = (JSONObject*)this;
-                if (currentObject->contains(keyPath)) {
-                    return currentObject->getObject(keyPath);
-                }
-            }
-        } else {
-            //here we expect an object
-            if (this->_type == OBJECT) {
-                //we have an object, so we can continue parsing
-                //First, we need to get the substring after the dot
-                std::string currentPath = keyPath.substr(0,pos);
-                JSONObject *currentObject = (JSONObject*)this;
-                if (currentObject->contains(currentPath)) {
-                    shared_ptr<JSONObject> nextObject = currentObject->getObject(currentPath);
-                    pos += 1; //skip the dot
-                    std::string nextPath = keyPath.substr(pos);
-                    return nextObject->valueForKeyPath(nextPath);
-                }
-            }
-        }
-        return shared_ptr<JSONValue> ((JSONValue*)0);
-    }
-    
+    class JSONNumber : public JSONValue {
+    private:
+        JSONNumber():JSONValue(), _type(NOT_A_NUMBER) {}
+        
+    public:        
+        typedef enum 
+        {
+            NOT_A_NUMBER = 0,
+            UNSIGNED_INT32 = 1,
+            INT32 = 2,
+            DOUBLE = 3,
+            BOOL = 4
+        } JSONNumberType;
+                
+        explicit JSONNumber(unsigned int value);
+        explicit JSONNumber(int value);
+        explicit JSONNumber(double value);
+        explicit JSONNumber(bool value);
+
+        virtual ~JSONNumber();
+        
+        unsigned int getUnsignedInt32();
+        int getInt32();
+        double getDouble();
+        bool getBool();
+        
+        JSONNumber::JSONNumberType getNumberType();
+
+        virtual JSONType getJSONType();
+
+    private:
+        void* _value;
+        JSONNumberType _type;
+    };
+
 }
+
+
+#endif

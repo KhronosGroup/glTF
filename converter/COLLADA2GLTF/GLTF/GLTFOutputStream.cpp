@@ -67,7 +67,7 @@ namespace GLTF
         }
     }
     
-    void GLTFOutputStream::write(shared_ptr<GLTFBuffer> buffer) {
+    void GLTFOutputStream::write(shared_ptr<GLTFBuffer> buffer) {        
         this->write((const char*)(buffer->getData()), buffer->getByteLength());
     }
 
