@@ -228,7 +228,7 @@ namespace GLTF
         
         //Why is OpenCOLLADA doing this ? why adding an offset the indices ??
         //We need to offset it backward here.
-        unsigned int initialIndex = indexList->getInitialIndex();
+		unsigned int initialIndex = (unsigned int)indexList->getInitialIndex();
         if (initialIndex != 0) {
             unsigned int *bufferDestination = 0;
             if (!ownData) {
@@ -356,11 +356,11 @@ namespace GLTF
             COLLADAFW::IndexListArray& colorListArray = openCOLLADAMeshPrimitive->getColorIndicesArray();
             for (size_t i = 0 ; i < colorListArray.getCount() ; i++) {
                 COLLADAFW::IndexList* indexList = openCOLLADAMeshPrimitive->getColorIndices(i);
-                __HandleIndexList(i,
+				__HandleIndexList((unsigned int)i,
                                   indexList,
                                   GLTF::COLOR,
                                   shouldTriangulate,
-                                  count,
+								  (unsigned int)count,
                                   vcount,
                                   verticesCountArray,
                                   cvtPrimitive,
@@ -373,11 +373,11 @@ namespace GLTF
             COLLADAFW::IndexListArray& uvListArray = openCOLLADAMeshPrimitive->getUVCoordIndicesArray();
             for (size_t i = 0 ; i < uvListArray.getCount() ; i++) {
                 COLLADAFW::IndexList* indexList = openCOLLADAMeshPrimitive->getUVCoordIndices(i);
-                __HandleIndexList(i,
+				__HandleIndexList((unsigned int)i,
                                   indexList,
                                   GLTF::TEXCOORD,
                                   shouldTriangulate,
-                                  count,
+								  (unsigned int)count,
                                   vcount,
                                   verticesCountArray,
                                   cvtPrimitive,

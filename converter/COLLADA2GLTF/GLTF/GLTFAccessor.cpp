@@ -88,7 +88,7 @@ namespace GLTF
     }
 
     void GLTFAccessor::setByteStride(size_t byteStride) {
-        this->setUnsignedInt32(kByteStride, byteStride);
+		this->setUnsignedInt32(kByteStride, (unsigned int)byteStride);
     }
         
     size_t GLTFAccessor::getByteStride() {
@@ -96,7 +96,7 @@ namespace GLTF
     }
             
     void GLTFAccessor::setByteOffset(size_t byteOffset) {
-        this->setUnsignedInt32(kByteOffset, byteOffset);
+		this->setUnsignedInt32(kByteOffset, (unsigned int)byteOffset);
     }
         
     size_t GLTFAccessor::getByteOffset() {
@@ -108,7 +108,7 @@ namespace GLTF
     }
     
     void GLTFAccessor::setCount(size_t count) {
-        this->setUnsignedInt32(kCount, count);
+		this->setUnsignedInt32(kCount, (unsigned int)count);
     }
  
     const std::string& GLTFAccessor::getID() {

@@ -59,7 +59,7 @@ namespace GLTF
         shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
         size_t vertexCount = positionAttribute->getCount();
         unsigned int totalVerticesCount = asset->convertionResults()->getUnsignedInt32("verticesCount");
-        totalVerticesCount += vertexCount;
+		totalVerticesCount += (unsigned int)vertexCount;
         asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
 
         for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
@@ -86,7 +86,7 @@ namespace GLTF
         GLTFOutputStream* compressionOutputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         
         shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
-        unsigned compressedBufferStart = compressionOutputStream->length();
+		unsigned compressedBufferStart = (unsigned int)compressionOutputStream->length();
         encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, asset);
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
@@ -111,12 +111,12 @@ namespace GLTF
                 asset->convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
                 size_t indicesLength = sizeof(unsigned short) * indicesCount;
                 uniqueIndices->setByteOffset(compressedBufferStart);
-                compressedBufferStart += indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
+				compressedBufferStart += (unsigned int)indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
             }
         }
         
         shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
-        vertexCount = positionAttribute->getCount();
+		vertexCount = (unsigned int)positionAttribute->getCount();
         unsigned int totalVerticesCount = asset->convertionResults()->getUnsignedInt32("verticesCount");
         totalVerticesCount += vertexCount;
         asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
@@ -131,7 +131,7 @@ namespace GLTF
             if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
                 meshAttribute->exposeMinMax();
                 meshAttribute->setByteOffset(compressedBufferStart);
-                compressedBufferStart += buffer->getByteLength();
+				compressedBufferStart += (unsigned int)buffer->getByteLength();
                 IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
             }
         }
@@ -675,8 +675,8 @@ namespace GLTF
         if (sharedBuffer->getByteLength() == 0)
             remove(rawOutputStream->outputPathCStr());
                 
-        this->convertionResults()->setUnsignedInt32(kGeometry, this->getGeometryByteLength());
-        this->convertionResults()->setUnsignedInt32(kAnimation, this->getAnimationByteLength());
+		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
+		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());
         this->convertionResults()->setUnsignedInt32(kScene, (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
         this->log("[geometry] %d bytes\n", (int)this->getGeometryByteLength());

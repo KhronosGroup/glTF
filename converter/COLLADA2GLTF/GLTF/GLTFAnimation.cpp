@@ -51,7 +51,7 @@ namespace GLTF
     }
     
     void GLTFAnimation::setCount(size_t count) {
-        this->setUnsignedInt32(kCount, count);
+		this->setUnsignedInt32(kCount, (unsigned int)count);
     }
      
     shared_ptr <JSONObject> GLTFAnimation::parameters() {
