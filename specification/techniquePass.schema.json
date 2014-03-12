@@ -9,8 +9,7 @@
         },
         "instanceProgram" : {
             "$ref" : "techniquePassInstanceProgram.schema.json",
-            "required" : true
-        },   
+        },
         "states" : {
             "$ref" : "techniquePassStates.schema.json"
         },

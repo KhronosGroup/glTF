@@ -3,6 +3,7 @@
     "title" : "technique/pass/instanceProgram",
     "type" : "object",
     "description" : "Shader program and attribute and uniform inputs.",
+    "required" : true,
     "properties" : {
         "attributes" : {
             "properties" : {
