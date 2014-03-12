@@ -13,7 +13,8 @@
             "description" : "Primitives that define geometry and material.",
             "items" : {
                 "$ref" : "meshPrimitive.schema.json"
-            }
+            },
+            "default" : []
         },
         "extensions" : {
             "properties" : {
@@ -23,7 +24,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

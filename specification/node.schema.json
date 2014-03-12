@@ -14,14 +14,15 @@
             "items" : {
                 "type" : "string"
             },
-            "uniqueItems" : true
+            "uniqueItems" : true,
+            "default" : []
         },
         "instanceSkin" : {
 	        "$ref" : "nodeInstanceSkin.schema.json"
         },
         "joint" : {
             "type" : "string",
-            "description" : "id used when this node is a joint in a skin."
+            "description" : "id used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined."
         },
         "light" : {
             "type" : "string",
@@ -87,7 +88,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

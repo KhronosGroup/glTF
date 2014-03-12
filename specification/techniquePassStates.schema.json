@@ -3,6 +3,7 @@
     "title" : "states",
     "type" : "object",
     "description" : "Contains all rendering states to set up for the parent pass.",
+    "default" : {},
     "properties" : {
         "blendEnable" : {
             "type" : "boolean",
@@ -377,8 +378,7 @@
             }
         },
         "extras" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

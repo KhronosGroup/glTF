@@ -10,21 +10,24 @@
             "items" : {
                 "type" : "string"
             },
-            "uniqueItems" : true
+            "uniqueItems" : true,
+            "default" : []
         },
         "accessors" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "accessor.schema.json"
-            }
+            },
+            "default" : {}
         },
         "animations" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "animation.schema.json"
-            }
+            },
+            "default" : {}
         },
         "asset" : {
             "$ref" : "asset.schema.json"
@@ -34,77 +37,80 @@
             },
             "additionalProperties" : {
                 "$ref" : "buffer.schema.json"
-            }
+            },
+            "default" : {}
         },
         "bufferViews" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "bufferView.schema.json"
-            }
+            },
+            "default" : {}
         },
         "cameras" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "camera.schema.json"
-            }
-        },
-        "extensions" : {
-            "properties" : {
             },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
+            "default" : {}
         },
         "images" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "image.schema.json"
-            }
+            },
+            "default" : {}
         },
         "lights" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "light.schema.json"
-            }
+            },
+            "default" : {}
         },
         "materials" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "material.schema.json"
-            }
+            },
+            "default" : {}
         },
         "meshes" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "mesh.schema.json"
-            }
+            },
+            "default" : {}
         },
         "nodes" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "node.schema.json"
-            }
+            },
+            "default" : {}
         },
         "programs" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "program.schema.json"
-            }
+            },
+            "default" : {}
         },
         "samplers" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "sampler.schema.json"
-            }
+            },
+            "default" : {}
         },
         "scene" : {
             "type" : "string",
@@ -115,28 +121,32 @@
             },
             "additionalProperties" : {
                 "$ref" : "scene.schema.json"
-            }
+            },
+            "default" : {}
         },
         "shaders" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "shader.schema.json"
-            }
+            },
+            "default" : {}
         },
         "skins" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "skin.schema.json"
-            }
+            },
+            "default" : {}
         },
         "techniques" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.schema.json"
-            }
+            },
+            "default" : {}
         },
         "profile" : {
             "type" : "string",
@@ -153,10 +163,18 @@
             },
             "additionalProperties" : {
                 "$ref" : "texture.schema.json"
+            },
+            "default" : {}
+        },
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

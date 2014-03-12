@@ -24,7 +24,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

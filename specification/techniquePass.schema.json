@@ -3,12 +3,13 @@
     "title" : "technique/pass",
     "type" : "object",
     "description" : "The shader program and render states for a rendering pass.",
+    "required" : true,
     "properties": { 
         "details" : {
             "$ref" : "techniquePassDetails.schema.json"
         },
         "instanceProgram" : {
-            "$ref" : "techniquePassInstanceProgram.schema.json",
+            "$ref" : "techniquePassInstanceProgram.schema.json"
         },
         "states" : {
             "$ref" : "techniquePassStates.schema.json"
@@ -21,8 +22,7 @@
             }
         },
         "extras" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

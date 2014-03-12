@@ -3,7 +3,6 @@
     "title" : "animation sampler",
     "type" : "object",
     "description" : "Combines input and output parameters with an interpolation algorithm.",
-    "required" : true,
     "properties" : {
         "input" : {
             "type" : "string",
@@ -29,7 +28,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

@@ -13,11 +13,13 @@
             },
             "additionalProperties" : {
                 "$ref" : "techniqueParameters.schema.json"
-            }
+            },
+            "default" : {}
         },
         "pass" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the default pass to use."
+            "description" : "The id (JSON property name) of the default pass to use.",
+            "required" : true
         },
         "passes" : {
             "properties" : {
@@ -34,8 +36,7 @@
             }
         },
         "extras" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

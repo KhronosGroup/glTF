@@ -12,7 +12,8 @@
         },
         "values" : {
             "type" : "any",
-            "description" : "Parameter values that override the values in the technique with the same parameter name."
+            "description" : "Parameter values that override the values in the technique with the same parameter name.",
+            "default" : {}
         },
         "extensions" : {
             "properties" : {
@@ -22,7 +23,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

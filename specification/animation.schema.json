@@ -8,7 +8,8 @@
             "type" : "array",
             "items" : {
                 "$ref" : "animationChannel.schema.json"
-            }
+            },
+            "default" : []
         },
         "name" : {
             "type" : "string",
@@ -19,14 +20,16 @@
             },
             "additionalProperties" : {
                 "$ref" : "animationParameter.schema.json"
-            }
+            },
+            "default" : {}
         },
         "samplers" : {
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "animationSampler.schema.json"
-            }
+            },
+            "default" : {}
         },
         "extensions" : {
             "properties" : {
@@ -36,7 +39,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

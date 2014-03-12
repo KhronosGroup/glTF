@@ -9,7 +9,8 @@
             "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
             "items" : {
                 "type" : "string"
-            }
+            },
+            "default" : []
         },
         "fragmentShader" : {
             "type" : "string",
@@ -33,8 +34,7 @@
             }
         },
         "extras" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

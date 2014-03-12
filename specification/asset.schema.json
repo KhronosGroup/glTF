@@ -3,6 +3,7 @@
     "title" : "asset",
     "type" : "object",
     "description" : "Asset-management information.",
+    "default" : {},
     "properties" : {
         "copyright" : {
             "type" : "string",
@@ -25,7 +26,7 @@
             }
         },
         "extras" : {
-            "$ref" : "extra.schema.json"
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

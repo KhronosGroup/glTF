@@ -10,7 +10,8 @@
             },
             "additionalProperties" : {
                 "$ref" : "techniquePassInstanceProgramAttribute.schema.json"
-            }
+            },
+            "default" : {}
         },
         "program" : {
             "type" : "string",
@@ -22,7 +23,8 @@
             },
             "additionalProperties" : {
                 "$ref" : "techniquePassInstanceProgramUniform.schema.json"
-            }
+            },
+            "default" : {}
         },
         "extensions" : {
             "properties" : {
@@ -32,8 +34,7 @@
             }
         },
         "extras" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false
