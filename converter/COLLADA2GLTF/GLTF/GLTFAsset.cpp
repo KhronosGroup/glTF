@@ -533,13 +533,10 @@ namespace GLTF
             vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
             for (size_t k = 0 ; k < allSemantics.size() ; k++) {
                 GLTF::Semantic semantic = allSemantics[k];
-                GLTF::IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-                GLTF::IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = mesh->getMeshAttributesForSemantic(semantic);
+                size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
                 
-                for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                    //(*it).first;             // the key value (of type Key)
-                    //(*it).second;            // the mapped value (of type T)
-                    shared_ptr <GLTF::GLTFAccessor> meshAttribute = (*meshAttributeIterator).second;
+                for (size_t j = 0 ; j < attributesCount ; j++) {
+                    shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
                     
                     meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
                     accessors->setValue(meshAttribute->getID(), meshAttribute);

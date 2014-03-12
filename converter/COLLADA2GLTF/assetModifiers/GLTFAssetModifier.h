@@ -35,6 +35,7 @@ namespace GLTF
         virtual bool init() { return true; };
         virtual void modify(shared_ptr<JSONObject> glTFAsset) = 0;
         virtual void cleanup() { };
+        virtual ~GLTFAssetModifier() {};
     };
 }
 

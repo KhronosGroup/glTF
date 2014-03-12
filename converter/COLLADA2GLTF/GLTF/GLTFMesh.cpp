@@ -60,14 +60,11 @@ namespace GLTF
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = this->getMeshAttributesForSemantic(allSemantics[i]);
-            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
-                unsigned int indexSet = (*meshAttributeIterator).first;
-                GLTF::Semantic semantic = allSemantics[i];
+            GLTF::Semantic semantic = allSemantics[i];
+            size_t attributesCount = this->getMeshAttributesCountForSemantic(semantic);
+            for (size_t j = 0 ; j < attributesCount ; j++) {
+                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = this->getMeshAttribute(semantic, j);
+                unsigned int indexSet = j;
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)meshAttributes->size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
@@ -84,16 +81,8 @@ namespace GLTF
         return true;
     }
     
-    void GLTFMesh::setMeshAttributesForSemantic(GLTF::Semantic semantic, IndexSetToMeshAttributeHashmap& indexSetToMeshAttributeHashmap) {
-        this->_semanticToMeshAttributes[semantic] = indexSetToMeshAttributeHashmap;
-    }
-    
     bool GLTFMesh::hasSemantic(Semantic semantic) {
         return this->_semanticToMeshAttributes.count(semantic) > 0;
-    }
-    
-    IndexSetToMeshAttributeHashmap& GLTFMesh::getMeshAttributesForSemantic(Semantic semantic) {
-        return this->_semanticToMeshAttributes[semantic];
     }
     
     size_t GLTFMesh::getMeshAttributesCountForSemantic(Semantic semantic) {
@@ -192,7 +181,7 @@ namespace GLTF
 					indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
                     semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
                 }
-                attributes->setString(semanticAndSet, this->getMeshAttributesForSemantic(semantic)[indexOfSet]->getID());
+                attributes->setString(semanticAndSet, this->getMeshAttribute(semantic, indexOfSet)->getID());
             }
             
             primitivesArray->appendValue(primitive);

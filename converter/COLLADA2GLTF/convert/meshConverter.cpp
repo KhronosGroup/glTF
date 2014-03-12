@@ -83,9 +83,10 @@ namespace GLTF
     
     
     static unsigned int __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData,
-                                                                        GLTF::IndexSetToMeshAttributeHashmap &meshAttributes,
-                                                                        size_t allowedComponentsPerAttribute,
-                                                                        shared_ptr<GLTFProfile> profile)
+                                                                          GLTFMesh* mesh,
+                                                                          GLTF::Semantic semantic,
+                                                                          size_t allowedComponentsPerAttribute,
+                                                                          shared_ptr<GLTFProfile> profile)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -193,7 +194,7 @@ namespace GLTF
             cvtMeshAttribute->setByteStride(stride);
             cvtMeshAttribute->setCount(elementsCount);
             
-            meshAttributes[(unsigned int)indexOfSet] = cvtMeshAttribute;
+            mesh->setMeshAttribute(semantic, indexOfSet, cvtMeshAttribute);
         }
         
         return (unsigned int)setCount;
@@ -437,30 +438,27 @@ namespace GLTF
             for (size_t k = 0 ; k < allIndices.size() ; k++) {
                 shared_ptr<GLTF::GLTFAccessor> indices = allIndices[k];
                 GLTF::Semantic semantic = vertexAttributes[k]->getSemantic();
-                GLTF::IndexSetToMeshAttributeHashmap& meshAttributes = cvtMesh->getMeshAttributesForSemantic(semantic);
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), meshAttributes, 3, asset->profile());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), cvtMesh.get(), GLTF::POSITION, 3, asset->profile());
                         break;
                         
                     case GLTF::NORMAL:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), meshAttributes, 3, asset->profile());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getNormals(), cvtMesh.get(), GLTF::NORMAL, 3, asset->profile());
                         break;
                         
                     case GLTF::TEXCOORD:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), meshAttributes,2, asset->profile());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getUVCoords(), cvtMesh.get(), GLTF::TEXCOORD, 2, asset->profile());
                         break;
                         
                     case GLTF::COLOR:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), meshAttributes, 4, asset->profile());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), cvtMesh.get(), GLTF::COLOR, 4, asset->profile());
                         break;
                         
                     default:
                         break;
                 }
-                
-                cvtMesh->setMeshAttributesForSemantic(semantic, meshAttributes);
             }
         }
                 

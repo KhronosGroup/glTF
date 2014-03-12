@@ -365,14 +365,11 @@ namespace GLTF
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
-            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
-                unsigned int indexSet = (*meshAttributeIterator).first;
-                GLTF::Semantic semantic = allSemantics[i];
+            GLTF::Semantic semantic = allSemantics[i];
+            size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
+            for (size_t j = 0 ; j < attributesCount ; j ++) {
+                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
+                unsigned int indexSet = j;
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)originalMeshAttributes.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
@@ -425,17 +422,10 @@ namespace GLTF
         targetMesh->setRemapTableForPositions(remapTableForPositions);
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            Semantic semantic = allSemantics[i];
-            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(semantic);
-            IndexSetToMeshAttributeHashmap& destinationIndexSetToMeshAttribute = targetMesh->getMeshAttributesForSemantic(semantic);
-            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            
-            //FIXME: consider turn this search into a method for mesh
-            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
-                
+            GLTF::Semantic semantic = allSemantics[i];
+            size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
+            for (size_t j = 0 ; j < attributesCount ; j ++) {
+                shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
                 size_t sourceSize = vertexCount * selectedMeshAttribute->elementByteLength();
                 void* sourceData = malloc(sourceSize);
                 
@@ -446,7 +436,7 @@ namespace GLTF
                 remappedMeshAttribute->setBufferView(remappedBufferView);
                 remappedMeshAttribute->setCount(vertexCount);
                 
-                destinationIndexSetToMeshAttribute[(*meshAttributeIterator).first] = remappedMeshAttribute;
+                targetMesh->setMeshAttribute(semantic, j, remappedMeshAttribute);
                 
                 remappedMeshAttributes.push_back(remappedMeshAttribute);
             }
@@ -558,14 +548,11 @@ namespace GLTF
         std::map<string, unsigned int> semanticAndSetToIndex;
         
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
-            IndexSetToMeshAttributeHashmap& indexSetToMeshAttribute = sourceMesh->getMeshAttributesForSemantic(allSemantics[i]);
-            IndexSetToMeshAttributeHashmap& targetIndexSetToMeshAttribute = subMesh->targetMesh->getMeshAttributesForSemantic(allSemantics[i]);
-            IndexSetToMeshAttributeHashmap::const_iterator meshAttributeIterator;
-            for (meshAttributeIterator = indexSetToMeshAttribute.begin() ; meshAttributeIterator != indexSetToMeshAttribute.end() ; meshAttributeIterator++) {
-                //(*it).first;             // the key value (of type Key)
-                //(*it).second;            // the mapped value (of type T)
-                shared_ptr <GLTFAccessor> selectedMeshAttribute = (*meshAttributeIterator).second;
-                unsigned int indexSet = (*meshAttributeIterator).first;
+            GLTF::Semantic semantic = allSemantics[i];
+            size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
+            for (size_t j = 0 ; j < attributesCount ; j ++) {
+                shared_ptr <GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
+                unsigned int indexSet = j;
                 
                 shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 
@@ -586,7 +573,7 @@ namespace GLTF
                 remappedMeshAttribute->setBufferView(remappedBufferView);
                 remappedMeshAttribute->setCount(vertexAttributeCount);
                 
-                targetIndexSetToMeshAttribute[indexSet] = remappedMeshAttribute;
+                subMesh->targetMesh->setMeshAttribute(semantic, j, remappedMeshAttribute);
             }
         }
     }

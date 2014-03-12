@@ -1424,18 +1424,17 @@ namespace GLTF
                 glTFSkin->setSourceUID(skinController->getSource().toAscii());
                 
                 unsigned int *remapTableForPositions = mesh->getRemapTableForPositions();
-                size_t vertexCount = mesh->getMeshAttributesForSemantic(GLTF::POSITION)[0]->getCount();
+                size_t vertexCount = mesh->getMeshAttribute(GLTF::POSITION, 0)->getCount();
                 //Now we remap the bone indices and weight attribute in respect of deindexing we have
                 
                 shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions, this->_asset->profile());
-                GLTF::IndexSetToMeshAttributeHashmap& weightsAttributes = mesh->getMeshAttributesForSemantic(GLTF::WEIGHT);
-                weightsAttributes[0] = weightsAttribute;
-                mesh->setMeshAttributesForSemantic(GLTF::WEIGHT, weightsAttributes);
+                
+                mesh->setMeshAttribute(GLTF::WEIGHT, 0, weightsAttribute);
                 
                 shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions, this->_asset->profile());
-                GLTF::IndexSetToMeshAttributeHashmap& jointsAttributes = mesh->getMeshAttributesForSemantic(GLTF::JOINT);
-                jointsAttributes[0] = jointsAttribute;
-                mesh->setMeshAttributesForSemantic(GLTF::JOINT, jointsAttributes);
+                
+                mesh->setMeshAttribute(GLTF::JOINT, 0, jointsAttribute);
+
                 
                 GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
                 for (size_t i = 0 ; i < primitives.size() ; i++) {
