@@ -12,9 +12,6 @@
             },
             "uniqueItems" : true
         },
-        "asset" : {
-            "$ref" : "asset.schema.json"
-        },
         "accessors" : {
             "properties" : {
             },
@@ -28,6 +25,9 @@
             "additionalProperties" : {
                 "$ref" : "animation.schema.json"
             }
+        },
+        "asset" : {
+            "$ref" : "asset.schema.json"
         },
         "buffers" : {
             "properties" : {

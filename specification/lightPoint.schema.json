@@ -11,7 +11,8 @@
                 "type": "number"
             },
             "minItems" : 3,
-            "maxItems" : 3
+            "maxItems" : 3,
+            "default" : [1.0, 1.0, 1.0]
         },
         "constantAttenuation" : {
             "type" : "number",

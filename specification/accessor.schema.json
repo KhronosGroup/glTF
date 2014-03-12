@@ -17,7 +17,7 @@
         },
         "byteStride" : {
             "type" : "integer",
-            "description" : "The stride, in bytes, between attributes referenced by this accessor.  WebGL: see vertexAttribPointer() stride parameter.",
+            "description" : "The stride, in bytes, between attributes referenced by this accessor.  When 0, the attributes are tightly packed.  WebGL: see vertexAttribPointer() stride parameter.",
             "minimum" : 0,
             "maximum" : 255,
             "default" : 0

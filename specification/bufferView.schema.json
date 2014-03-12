@@ -13,7 +13,7 @@
             "type" : "integer",
             "description" : "The offset into the buffer in bytes.",
             "minimum" : 0,
-            "default" : 0
+            "required" : true
         },
         "byteLength" : {
             "type" : "integer",
