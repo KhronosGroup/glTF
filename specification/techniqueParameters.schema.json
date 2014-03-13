@@ -19,7 +19,7 @@
             "description" : "Specifies the id (JSON property name) of the node whose transform is used as the parameter's value."
         },
         "value" : {
-            "type" : ["number", "array", "boolean", "string"],
+            "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
             "description" : "Material values, when specified, override this."
         },
         "extensions" : {
