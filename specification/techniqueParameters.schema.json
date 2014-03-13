@@ -19,8 +19,8 @@
             "description" : "Specifies the id (JSON property name) of the node whose transform is used as the parameter's value."
         },
         "value" : {
-            "type" : "any",
-            "description" : "Depending on type, this is a scalar or an array, and a number or boolean.  Material values, when specified, override this."
+            "type" : ["number", "array", "boolean", "string"],
+            "description" : "Material values, when specified, override this."
         },
         "extensions" : {
             "properties" : {

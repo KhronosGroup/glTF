@@ -11,8 +11,11 @@
             "required" : true
         },
         "values" : {
-            "type" : "any",
-            "description" : "Parameter values that override the values in the technique with the same parameter name.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "materialInstanceTechniqueValues.schema.json"
+            },
             "default" : {}
         },
         "extensions" : {
