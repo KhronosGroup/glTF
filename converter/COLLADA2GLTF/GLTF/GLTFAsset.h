@@ -42,7 +42,7 @@ namespace GLTF
     
     typedef std::map<std::string , shared_ptr<GLTFOutputStream> > NameToOutputStream;
         
-    class GLTFAsset
+	class GLTFAsset
     {
     public:
         GLTFAsset();

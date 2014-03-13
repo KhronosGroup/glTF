@@ -59,7 +59,7 @@ namespace GLTF
     
     unsigned int GLTFPrimitive::getIndexOfSetAtIndex(unsigned int index)
     {
-        return this->_allVertexAttributes[index]->getIndexOfSet();
+		return (unsigned int)this->_allVertexAttributes[index]->getIndexOfSet();
     }
 
     size_t GLTFPrimitive::getVertexAttributesCount()

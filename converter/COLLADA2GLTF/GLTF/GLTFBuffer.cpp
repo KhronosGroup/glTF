@@ -43,13 +43,13 @@ namespace GLTF
     _ID(ID),
     _data(0),
     _ownData(false) {
-        this->setUnsignedInt32(kByteLength, byteLength);
+		this->setUnsignedInt32(kByteLength, (unsigned int)byteLength);
     }
     
     GLTFBuffer::GLTFBuffer(void *data, size_t byteLength, bool ownData): JSONObject(),
     _data((unsigned char*)data),
     _ownData(ownData) {
-        this->setUnsignedInt32(kByteLength, byteLength);
+		this->setUnsignedInt32(kByteLength, (unsigned int)byteLength);
         this->_ID = GLTFUtils::generateIDForType("buffer");
     }
     
@@ -57,7 +57,7 @@ namespace GLTF
     _ID(ID),
     _data((unsigned char*)data),
     _ownData(ownData) {
-        this->setUnsignedInt32(kByteLength, byteLength);
+		this->setUnsignedInt32(kByteLength, (unsigned int)byteLength);
     }
 
     void GLTFBuffer::evaluate(void* context) {
@@ -112,7 +112,7 @@ namespace GLTF
     }
     
     void GLTFBufferView::setByteLength(size_t byteLength) {
-        this->setUnsignedInt32(kByteLength, byteLength);
+		this->setUnsignedInt32(kByteLength, (unsigned int)byteLength);
     }
     
     size_t GLTFBufferView::getByteLength() {
@@ -120,7 +120,7 @@ namespace GLTF
     }
     
     void GLTFBufferView::setByteOffset(size_t byteOffset) {
-        this->setUnsignedInt32(kByteOffset, byteOffset);
+		this->setUnsignedInt32(kByteOffset, (unsigned int)byteOffset);
     }
     
     size_t GLTFBufferView::getByteOffset() {

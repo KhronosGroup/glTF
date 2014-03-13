@@ -249,15 +249,15 @@ namespace GLTF
                     key2.toAngleAxis ( destAngle2, destAxis2 );
                     
                     if ((skip == false) && (angle1 > angle2)) {
-                        axisAngle[0] = destAxis2[0];
-                        axisAngle[1] = destAxis2[1];
-                        axisAngle[2] = destAxis2[2];
-                        axisAngle[3] = destAngle2;
+                        axisAngle[0] = (float)destAxis2[0];
+						axisAngle[1] = (float)destAxis2[1];
+						axisAngle[2] = (float)destAxis2[2];
+						axisAngle[3] = (float)destAngle2;
                     } else {
-                        axisAngle[0] = destAxis1[0];
-                        axisAngle[1] = destAxis1[1];
-                        axisAngle[2] = destAxis1[2];
-                        axisAngle[3] = destAngle1;
+						axisAngle[0] = (float)destAxis1[0];
+						axisAngle[1] = (float)destAxis1[1];
+						axisAngle[2] = (float)destAxis1[2];
+						axisAngle[3] = (float)destAngle1;
                     }
                 }
                 
@@ -477,7 +477,7 @@ namespace GLTF
                         
                         bool found = false;
                         if (index > 0) {
-                            int previousIndex = index - 1;
+                            int previousIndex = (int)index - 1;
                             do {
                                 previousKey = this->_transforms[previousIndex--];
                                 if ((*previousKey->subTransforms()).count(transformID) != 0) {
