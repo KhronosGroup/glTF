@@ -3,11 +3,8 @@
     "title" : "scene",
     "type" : "object",
     "description" : "The root nodes of the scene.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this scene.  This is not necessarily unique among scenes."
-        },
         "nodes" : {
             "type" : "array",
             "description" : "The ids (JSON property names) for each root node.",
@@ -17,16 +14,6 @@
             },
             "uniqueItems" : true,
             "default" : []
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

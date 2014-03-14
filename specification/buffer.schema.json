@@ -3,6 +3,7 @@
     "title" : "buffer",
     "type" : "object",
     "description" : "Buffers contain geometry, animation, or skins.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "uri" : {
             "type" : "string",
@@ -16,25 +17,11 @@
             "minimum" : 0,
             "required" : true
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this buffer.  This is not necessarily unique among buffers."
-        },
         "type" : {
             "type" : "string",
             "description" : "XMLHttpRequest responseType.",
             "enum" : ["arraybuffer", "text"],
             "default" : "arraybuffer"
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

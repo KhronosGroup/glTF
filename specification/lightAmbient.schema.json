@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "ambient",
+    "title" : "light/ambient",
     "type" : "object",
     "description" : "Ambient light source.",
     "properties" : {

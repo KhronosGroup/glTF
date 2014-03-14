@@ -3,6 +3,7 @@
     "title" : "camera",
     "type" : "object",
     "description" : "A camera's projection.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "orthographic" : {
             "$ref" : "cameraOrthographic.schema.json"
@@ -10,25 +11,11 @@
         "perspective" : {
             "$ref" : "cameraPerspective.schema.json"
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this camera.  This is not necessarily unique among cameras."
-        },
         "type" : {
             "type" : "string",
             "description" : "Specifies if the camera uses a perspective or orthographic projection.",
             "enum" : ["perspective", "orthographic"],
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

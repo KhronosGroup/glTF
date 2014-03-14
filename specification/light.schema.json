@@ -3,16 +3,13 @@
     "title" : "light",
     "type" : "object",
     "description" : "An ambient, directional, point, or spot light.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "ambient" : {
             "$ref" : "lightAmbient.schema.json"
         },
         "directional" : {
             "$ref" : "lightDirectional.schema.json"
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this light.  This is not necessarily unique among lights."
         },
         "point" : {
             "$ref" : "lightPoint.schema.json"
@@ -25,16 +22,6 @@
             "description" : "Specifies the light type.",
             "enum" : ["ambient", "directional", "point", "spot"],
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

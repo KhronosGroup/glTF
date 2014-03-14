@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "animation parameter",
+    "title" : "animation/parameter",
     "type" : "string",
     "description" : "The id (JSON property name) of the accessor containing keyframes (samples) for this parameter.",
     "minLength" : 1,

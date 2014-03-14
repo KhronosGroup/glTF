@@ -3,11 +3,8 @@
     "title" : "mesh",
     "type" : "object",
     "description" : "An array of primitives defining geometry and material.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this mesh.  This is not necessarily unique among meshes."
-        },
         "primitives" : {
             "type" : "array",
             "description" : "Primitives that define geometry and material.",
@@ -15,16 +12,6 @@
                 "$ref" : "meshPrimitive.schema.json"
             },
             "default" : []
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

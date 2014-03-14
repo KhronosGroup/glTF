@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "point",
+    "title" : "light/point",
     "type" : "object",
     "description" : "Point light source.",
     "properties" : {

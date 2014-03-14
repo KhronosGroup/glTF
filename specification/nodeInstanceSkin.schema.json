@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "instanceSkin",
+    "title" : "node/instanceSkin",
     "type" : "object",
     "description" : "An instance of a skin.",
     "properties": {    

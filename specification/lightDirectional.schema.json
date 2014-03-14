@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "directional",
+    "title" : "light/directional",
     "type" : "object",
     "description" : "Directional light source.",
     "properties" : {

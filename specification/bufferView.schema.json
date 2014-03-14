@@ -1,8 +1,9 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "buffer-view",
+    "title" : "bufferView",
     "type" : "object",
     "description" : "A view into a buffer.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "buffer" : {
             "type" : "string",
@@ -22,24 +23,10 @@
             "minimum" : 0,
             "required" : true
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this buffer-view.  This is not necessarily unique among buffer-views."
-        },
         "target" : {
             "type" : "integer",
             "description" : "Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.  WebGL: see bindBuffer().",
             "enum" : [34962, 34963]
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

@@ -3,6 +3,7 @@
     "title" : "node",
     "type" : "object",
     "description" : "A node in the node hierarchy.  Nodes can reference meshes, cameras, lights, or skins.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "camera" : {
             "type" : "string",
@@ -51,10 +52,6 @@
             },
             "uniqueItems" : true
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this node.  This is not necessarily unique among nodes."
-        },
         "rotation" : {
             "type" : "array",
             "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
@@ -84,16 +81,6 @@
             "minItems" : 3,
             "maxItems" : 3,
             "default" : [ 0.0, 0.0, 0.0 ]
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

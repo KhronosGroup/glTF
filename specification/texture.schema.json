@@ -3,6 +3,7 @@
     "title" : "texture",
     "type" : "object",
     "description" : "A texture and its sampler.  WebGL: see createTexture(), deleteTexture(), bindTexture(), texImage2D(), and texParameterf().",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "format": {
             "type" : "integer",
@@ -15,10 +16,6 @@
             "description" : "6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  Defaults to same value as format.  WebGL: see internalFormat() format parameter.",
             "enum" : [6406, 6407, 6408, 6409, 6410],
             "default" : 6408
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this texture.  This is not necessarily unique among textures."
         },
         "sampler" : {
             "type" : "string",
@@ -43,16 +40,6 @@
             "description" : "5121 (UNSIGNED_BYTE), 33635 (UNSIGNED_SHORT_5_6_5), 32819 (UNSIGNED_SHORT_4_4_4_4), and 32820 (UNSIGNED_SHORT_5_5_5_1). WebGL: see texImage2D() type property.",
             "enum" : [5121, 33635, 32819, 32820],
             "default" : 5121
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

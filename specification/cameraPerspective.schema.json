@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "perspective camera",
+    "title" : "camera/perspective",
     "type" : "object",
     "description" : "A perspective camera containing properties to create a perspective projection matrix.",
     "properties" : {

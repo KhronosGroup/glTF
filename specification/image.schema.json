@@ -3,26 +3,13 @@
     "title" : "image",
     "type" : "object",
     "description" : "Image data used to create a texture.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this image.  This is not necessarily unique among images."
-        },
         "uri" : {
             "type" : "string",
             "description" : "The uri of the image.  Relative paths are relative to the .json file.  Instead of referencing an external file, the uri can also be a data-uri.  WebGL 1.0.2 Profile: allows only .png and .jpg.",
             "format" : "uri",
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

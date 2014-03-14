@@ -3,6 +3,7 @@
     "title" : "sampler",
     "type" : "object",
     "description" : "Texture sampler properties. WebGL: see texParameterf().",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "magFilter": {
             "type" : "integer",
@@ -16,10 +17,6 @@
             "enum" : [9728, 9729, 9984, 9985, 9986, 9987],
             "default" : 9986
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this sampler.  This is not necessarily unique among samplers."
-        },
         "wrapS": {
             "type" : "integer",
             "description" : "33071 (CLAMP_TO_EDGE), 33648 (MIRRORED_REPEAT), or 10497 (REPEAT).  WebGL: see texParameterf() when pname is TEXTURE_WRAP_S.",
@@ -31,16 +28,6 @@
             "description" : "33071 (CLAMP_TO_EDGE), 33648 (MIRRORED_REPEAT), or 10497 (REPEAT).  WebGL: see texParameterf() when pname is TEXTURE_WRAP_T.",
             "enum" : [33071, 33648, 10497],
             "default" : 10497
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

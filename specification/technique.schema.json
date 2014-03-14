@@ -3,11 +3,8 @@
     "title" : "technique",
     "type" : "object",
     "description" : "Specifies shading and its inputs.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties": {
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this technique.  This is not necessarily unique among techniques."
-        },
         "parameters" : {
             "properties" : {
             },
@@ -28,16 +25,6 @@
             "additionalProperties" : {
                 "$ref" : "techniquePass.schema.json"
             }
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

@@ -3,6 +3,7 @@
     "title" : "animation",
     "type" : "object",
     "description" : "Keyframe animation.",
+    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "channels" : {
             "type" : "array",
@@ -10,10 +11,6 @@
                 "$ref" : "animationChannel.schema.json"
             },
             "default" : []
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The user-defined name of this animation.  This is not necessarily unique among animations."
         },
         "parameters" : {
             "properties" : {
@@ -30,16 +27,6 @@
                 "$ref" : "animationSampler.schema.json"
             },
             "default" : {}
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

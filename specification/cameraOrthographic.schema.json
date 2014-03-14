@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "orthographic camera",
+    "title" : "camera/orthographic",
     "type" : "object",
     "description" : "An orthographic camera containing properties to create an orthographic projection matrix.",
     "properties" : {

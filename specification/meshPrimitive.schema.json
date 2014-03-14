@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "primitive",
+    "title" : "mesh/primitive",
     "type" : "object",
     "description" : "Geometry and material.  WebGL: see drawElements() and drawArrays().",
     "properties" : {
