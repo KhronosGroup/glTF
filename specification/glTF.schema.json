@@ -156,7 +156,7 @@
         "version" : {
             "type" : "string",
             "description" : "The glTF version.",
-            "default" : "1.0"
+            "default" : "0.6"
         },
         "textures" : {
             "properties" : {

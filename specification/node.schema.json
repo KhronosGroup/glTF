@@ -30,7 +30,7 @@
         },
         "matrix" : {
             "type" : "array",
-            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.  WebGL: see uniformMatrix4fv with the transpose parameter equal to false.",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.  WebGL: see uniformMatrix4fv with the transpose parameter equal to false.",
             "items" : {
                 "type": "number"
             },
@@ -52,7 +52,7 @@
         },
         "rotation" : {
             "type" : "array",
-            "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
@@ -62,7 +62,7 @@
         },
         "scale" : {
             "type" : "array",
-            "description" : "The node's non-uniform scale.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "description" : "The node's non-uniform scale.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
@@ -72,7 +72,7 @@
         },
         "translation" : {
             "type" : "array",
-            "description" : "The node's translation.  A node will have either a matrix property defined or rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "description" : "The node's translation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
