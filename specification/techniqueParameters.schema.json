@@ -16,7 +16,8 @@
         },
         "node" : {
             "type" : "string",
-            "description" : "Specifies the id (JSON property name) of the node whose transform is used as the parameter's value."
+            "description" : "The id (JSON property name) of the node whose transform is used as the parameter's value.",
+            "minLength" : 1
         },
         "value" : {
             "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],

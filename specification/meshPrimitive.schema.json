@@ -15,12 +15,14 @@
         "indices" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the accessor that contains the indices.",
-            "required" : true        
+            "minLength" : 1,
+            "required" : true
         },
         "material" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the material to apply to this primitive when rendering.",
-            "required" : true        
+            "minLength" : 1,
+            "required" : true
         },
         "primitive" : {
             "type" : "integer",

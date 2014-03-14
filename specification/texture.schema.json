@@ -23,11 +23,13 @@
         "sampler" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the sampler used by this texture.",
+            "minLength" : 1,
             "required" : true
         },
         "source" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the image used by this texture.",
+            "minLength" : 1,
             "required" : true
         },
         "target": {

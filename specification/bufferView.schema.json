@@ -7,6 +7,7 @@
         "buffer" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the buffer.",
+            "minLength" : 1,
             "required" : true
         },
         "byteOffset" : {

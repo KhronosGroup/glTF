@@ -7,6 +7,7 @@
         "input" : {
             "type" : "string",
             "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe input, e.g., time.  This parameter must have type FLOAT.  The values represents time in seconds with time[0] >= 0.0, and monotonically increasing values, i.e. time[n + 1] >= time[n].",
+            "minLength" : 1,
             "required" : true
         },
         "interpolation" : {
@@ -18,6 +19,7 @@
         "output" : {
             "type" : "string",
             "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe output.",
+            "minLength" : 1,
             "required" : true
         },
         "extensions" : {

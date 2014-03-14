@@ -12,7 +12,8 @@
             "type" : "array",
             "description" : "The ids (JSON property names) for each root node.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "minLength" : 1
             },
             "uniqueItems" : true,
             "default" : []

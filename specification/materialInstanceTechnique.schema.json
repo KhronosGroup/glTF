@@ -1,13 +1,14 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "instanceTechnique",
+    "title" : "material/instanceTechnique",
     "type" : "object",
     "description" : "An instance of a technique with parameter value overrides.",
     "required" : true,
     "properties": {
         "technique" : {
             "type" : "string",
-            "description" : "The user-defined name of this material.  This is not necessarily globally unique.",
+            "description" : "The id (JSON property name) of the technique.",
+            "minLength" : 1,
             "required" : true
         },
         "values" : {

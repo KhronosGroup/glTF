@@ -16,7 +16,8 @@
         "program" : {
             "type" : "string",
             "description" : "Specifies the program id (property name).",
-            "required" : true        
+            "minLength" : 1,
+            "required" : true
         },
         "uniforms" : {
             "properties" : {

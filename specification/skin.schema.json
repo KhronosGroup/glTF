@@ -16,7 +16,8 @@
         },
         "inverseBindMatrices" : {
             "type" : "string",
-            "description" : "Specifies the accessor id (JSON property name) containing the 4x4 inverse-bind matrices.",
+            "description" : "Accessor id (JSON property name) containing the 4x4 inverse-bind matrices.",
+            "minLength" : 1,
             "required" : true        
         },
         "joints" : {

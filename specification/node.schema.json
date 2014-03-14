@@ -6,13 +6,15 @@
     "properties" : {
         "camera" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the camera referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
+            "description" : "The id (JSON property name) of the camera referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined.",
+            "minLength" : 1
         },
         "children" : {
             "type" : "array",
             "description" : "The ids (JSON property name) of this node's children.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "minLength" : 1
             },
             "uniqueItems" : true,
             "default" : []
@@ -22,11 +24,13 @@
         },
         "joint" : {
             "type" : "string",
-            "description" : "id used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined."
+            "description" : "id used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined.",
+            "minLength" : 1
         },
         "light" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the light referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
+            "description" : "The id (JSON property name) of the light referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined.",
+            "minLength" : 1
         },
         "matrix" : {
             "type" : "array",
@@ -42,7 +46,8 @@
             "type" : "array",
             "description" : "The ids (JSON property name) of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix.  A node will have either the camera, light, meshes, or instanceSkin property defined.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "minLength" : 1
             },
             "uniqueItems" : true
         },

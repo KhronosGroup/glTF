@@ -7,6 +7,7 @@
         "bufferView" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the buffer-view.",
+            "minLength" : 1,
             "required" : true
         },
         "byteOffset" : {

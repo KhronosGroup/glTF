@@ -8,7 +8,8 @@
             "type" : "array",
             "description" : "Joint id (joint property) of skeleton nodes.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "minLength" : 1
             },
             "uniqueItems" : true,
             "required" : true
@@ -16,13 +17,15 @@
         "skin" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the skin referenced by this node.",
+            "minLength" : 1,
             "required" : true
         },
         "sources" : {
             "type" : "array",
             "description" : "The ids (JSON property names) of source meshes.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "minLength" : 1
             },
             "uniqueItems" : true,
             "required" : true

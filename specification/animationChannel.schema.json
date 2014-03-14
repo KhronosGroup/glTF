@@ -7,6 +7,7 @@
         "sampler" : {
             "type" : "string",
             "description" : "The id (JSON property name) of a sampler in this animation to use to compute the value for the target, e.g., translation, rotation, or scale.",
+            "minLength" : 1,
             "required" : true
         },
         "target" : {

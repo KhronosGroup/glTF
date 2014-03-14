@@ -8,13 +8,15 @@
             "type" : "array",
             "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "maxLength" : "256"
             },
             "default" : []
         },
         "fragmentShader" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the fragment shader.",
+            "minLength" : 1,
             "required" : true
         },
         "name" : {
@@ -24,6 +26,7 @@
         "vertexShader" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the vertex shader.",
+            "minLength" : 1,
             "required" : true
         },
         "extensions" : {

@@ -114,7 +114,8 @@
         },
         "scene" : {
             "type" : "string",
-            "description" : "The id (JSON property name) of the default scene."
+            "description" : "The id (JSON property name) of the default scene.",
+            "minLength" : 1
         },
         "scenes" : {
             "properties" : {
