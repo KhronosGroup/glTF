@@ -172,6 +172,6 @@
     "dependencies" : {
         "scene" : "scenes",
         "scenes" : "scene"
-    }
+    },
     "additionalProperties" : false
 }
