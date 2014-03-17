@@ -2,8 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "material/instanceTechnique",
     "type" : "object",
-    "description" : "An instance of a technique with parameter value overrides.",
-    "required" : true,
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties": {
         "technique" : {

@@ -2,8 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "asset",
     "type" : "object",
-    "description" : "Asset-management information.",
-    "default" : {},
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "copyright" : {

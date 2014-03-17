@@ -2,7 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "light/spot",
     "type" : "object",
-    "description" : "Spot light source.",
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "color" : {

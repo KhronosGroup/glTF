@@ -2,7 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node/instanceSkin",
     "type" : "object",
-    "description" : "An instance of a skin.",
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties": {
         "skeletons" : {

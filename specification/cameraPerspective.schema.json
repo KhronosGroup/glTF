@@ -2,7 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "camera/perspective",
     "type" : "object",
-    "description" : "A perspective camera containing properties to create a perspective projection matrix.",
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "aspectRatio" : {

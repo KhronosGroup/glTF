@@ -31,7 +31,9 @@
             "default" : {}
         },
         "asset" : {
-            "$ref" : "asset.schema.json"
+            "extends" : { "$ref": "asset.schema.json" },
+            "description" : "Asset-management information.",
+            "default" : {}
         },
         "buffers" : {
             "properties" : {

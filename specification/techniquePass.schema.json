@@ -6,13 +6,18 @@
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties": {
         "details" : {
-            "$ref" : "techniquePassDetails.schema.json"
+            "extends" : { "$ref": "techniquePassDetails.schema.json" },
+            "description" : "Information to reconstruct a shader program."
         },
         "instanceProgram" : {
-            "$ref" : "techniquePassInstanceProgram.schema.json"
+            "extends" : { "$ref": "techniquePassInstanceProgram.schema.json" },
+            "description" : "Shader program and attribute and uniform inputs.",
+            "required" : true
         },
         "states" : {
-            "$ref" : "techniquePassStates.schema.json"
+            "extends" : { "$ref": "techniquePassStates.schema.json" },
+            "description" : "Fixed-function rendering states.",
+            "default" : {}
         }
     },
     "additionalProperties" : false

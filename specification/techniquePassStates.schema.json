@@ -2,8 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "states",
     "type" : "object",
-    "description" : "Contains all rendering states to set up for the parent pass.",
-    "default" : {},
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "blendEnable" : {

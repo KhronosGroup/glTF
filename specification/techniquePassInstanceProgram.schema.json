@@ -2,8 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/instanceProgram",
     "type" : "object",
-    "description" : "Shader program and attribute and uniform inputs.",
-    "required" : true,
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {

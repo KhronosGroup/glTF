@@ -2,8 +2,6 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "animation/channel/target",
     "type" : "object",
-    "description" : "The glTF property to target from an animation channel.",
-    "required" : true,
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "id" : {
