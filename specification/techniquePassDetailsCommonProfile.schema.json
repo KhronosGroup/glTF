@@ -3,7 +3,7 @@
     "title" : "technique/pass/details/commonProfile",
     "type" : "object",
     "description" : "TODO",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "lightingModel" : {
             "type" : "string",

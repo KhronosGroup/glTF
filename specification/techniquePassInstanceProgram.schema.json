@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/instanceProgram",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {
             "properties" : {
@@ -13,9 +13,8 @@
             "default" : {}
         },
         "program" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "Specifies the program id (property name).",
-            "minLength" : 1,
             "required" : true
         },
         "uniforms" : {

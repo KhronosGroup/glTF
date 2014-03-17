@@ -2,12 +2,11 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "animation/channel/target",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "id" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the node to target.",
-            "minLength" : 1,
             "required" : true
         },
         "path" : {

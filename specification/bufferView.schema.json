@@ -3,12 +3,11 @@
     "title" : "bufferView",
     "type" : "object",
     "description" : "A view into a buffer.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "buffer" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the buffer.",
-            "minLength" : 1,
             "required" : true
         },
         "byteOffset" : {

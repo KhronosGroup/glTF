@@ -3,12 +3,11 @@
     "title" : "accessor",
     "type" : "object",
     "description" : "A typed accessor into a buffer-view.  WebGL: see vertexAttribPointer().",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bufferView" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the buffer-view.",
-            "minLength" : 1,
             "required" : true
         },
         "byteOffset" : {

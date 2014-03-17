@@ -3,7 +3,7 @@
     "title" : "technique",
     "type" : "object",
     "description" : "Specifies shading and its inputs.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "parameters" : {
             "properties" : {
@@ -14,9 +14,8 @@
             "default" : {}
         },
         "pass" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the default pass to use.",
-            "minLength" : 1,
             "required" : true
         },
         "passes" : {

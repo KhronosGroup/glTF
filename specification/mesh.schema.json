@@ -3,7 +3,7 @@
     "title" : "mesh",
     "type" : "object",
     "description" : "An array of primitives defining geometry and material.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "primitives" : {
             "type" : "array",

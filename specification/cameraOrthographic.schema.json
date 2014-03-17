@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "camera/orthographic",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "xmag" : {
             "type" : "number",

@@ -1,7 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "mesh/primitive/attribute",
-    "type" : "string",
-    "description" : "The id (JSON property name) of the accessor that contains the attribute.",
-    "minLength" : 1
+    "extends" : { "$ref" : "glTFid.schema.json" },
+    "description" : "The id (JSON property name) of the accessor that contains the attribute."
 }

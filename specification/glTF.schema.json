@@ -3,7 +3,7 @@
     "title" : "glTF",
     "type" : "object",
     "description" : "Root glTF property.",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "allExtensions" : {
             "type" : "array",
@@ -31,7 +31,7 @@
             "default" : {}
         },
         "asset" : {
-            "extends" : { "$ref": "asset.schema.json" },
+            "extends" : { "$ref" : "asset.schema.json" },
             "description" : "Asset-management information.",
             "default" : {}
         },
@@ -116,9 +116,8 @@
             "default" : {}
         },
         "scene" : {
-            "type" : "string",
-            "description" : "The id (JSON property name) of the default scene.",
-            "minLength" : 1
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the default scene."
         },
         "scenes" : {
             "properties" : {

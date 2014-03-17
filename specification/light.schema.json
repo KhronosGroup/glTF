@@ -3,22 +3,22 @@
     "title" : "light",
     "type" : "object",
     "description" : "An ambient, directional, point, or spot light.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "ambient" : {
-            "extends" : { "$ref": "lightAmbient.schema.json" },
+            "extends" : { "$ref" : "lightAmbient.schema.json" },
             "description" : "Ambient light source."
         },
         "directional" : {
-            "extends" : { "$ref": "lightDirectional.schema.json" },
+            "extends" : { "$ref" : "lightDirectional.schema.json" },
             "description" : "Directional light source."
         },
         "point" : {
-            "extends" : { "$ref": "lightPoint.schema.json" },
+            "extends" : { "$ref" : "lightPoint.schema.json" },
             "description" : "Point light source."
         },
         "spot" : {
-            "extends" : { "$ref": "lightSpot.schema.json" },
+            "extends" : { "$ref" : "lightSpot.schema.json" },
             "description" : "Spot light source."
         },
         "type" : {

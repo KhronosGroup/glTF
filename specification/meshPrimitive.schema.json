@@ -3,7 +3,7 @@
     "title" : "mesh/primitive",
     "type" : "object",
     "description" : "Geometry and material.  WebGL: see drawElements() and drawArrays().",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {
             "properties" : {
@@ -14,15 +14,13 @@
             "default" : {}
         },
         "indices" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the accessor that contains the indices.",
-            "minLength" : 1,
             "required" : true
         },
         "material" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the material to apply to this primitive when rendering.",
-            "minLength" : 1,
             "required" : true
         },
         "primitive" : {

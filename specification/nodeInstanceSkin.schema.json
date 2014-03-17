@@ -2,30 +2,27 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node/instanceSkin",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties": {
         "skeletons" : {
             "type" : "array",
             "description" : "Joint id (joint property) of skeleton nodes.",
             "items" : {
-                "type" : "string",
-                "minLength" : 1
+                "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
             "required" : true
         },
         "skin" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the skin referenced by this node.",
-            "minLength" : 1,
             "required" : true
         },
         "sources" : {
             "type" : "array",
             "description" : "The ids (JSON property names) of source meshes.",
             "items" : {
-                "type" : "string",
-                "minLength" : 1
+                "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
             "required" : true

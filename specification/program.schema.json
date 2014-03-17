@@ -3,7 +3,7 @@
     "title" : "program",
     "type" : "object",
     "description" : "A shader program.  WebGL: see attachShader(), bindAttribLocation(), createProgram(), deleteProgram(), getProgramParameter(), getProgramInfoLog(), linkProgram(), useProgram(), and validateProgram().",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "attributes" : {
             "type" : "array",
@@ -16,15 +16,13 @@
             "default" : []
         },
         "fragmentShader" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the fragment shader.",
-            "minLength" : 1,
             "required" : true
         },
         "vertexShader" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the vertex shader.",
-            "minLength" : 1,
             "required" : true
         }
     },

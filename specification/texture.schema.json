@@ -3,7 +3,7 @@
     "title" : "texture",
     "type" : "object",
     "description" : "A texture and its sampler.  WebGL: see createTexture(), deleteTexture(), bindTexture(), texImage2D(), and texParameterf().",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "format": {
             "type" : "integer",
@@ -18,15 +18,13 @@
             "default" : 6408
         },
         "sampler" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the sampler used by this texture.",
-            "minLength" : 1,
             "required" : true
         },
         "source" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the image used by this texture.",
-            "minLength" : 1,
             "required" : true
         },
         "target": {

@@ -3,19 +3,19 @@
     "title" : "technique/pass",
     "type" : "object",
     "description" : "The shader program and render states for a rendering pass.",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties": {
         "details" : {
-            "extends" : { "$ref": "techniquePassDetails.schema.json" },
+            "extends" : { "$ref" : "techniquePassDetails.schema.json" },
             "description" : "Information to reconstruct a shader program."
         },
         "instanceProgram" : {
-            "extends" : { "$ref": "techniquePassInstanceProgram.schema.json" },
+            "extends" : { "$ref" : "techniquePassInstanceProgram.schema.json" },
             "description" : "Shader program and attribute and uniform inputs.",
             "required" : true
         },
         "states" : {
-            "extends" : { "$ref": "techniquePassStates.schema.json" },
+            "extends" : { "$ref" : "techniquePassStates.schema.json" },
             "description" : "Fixed-function rendering states.",
             "default" : {}
         }

@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique/pass/details",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "commonProfile" : {
             "$ref" : "techniquePassDetailsCommonProfile.schema.json"

@@ -2,12 +2,11 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "material/instanceTechnique",
     "type" : "object",
-    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties": {
         "technique" : {
-            "type" : "string",
+            "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id (JSON property name) of the technique.",
-            "minLength" : 1,
             "required" : true
         },
         "values" : {

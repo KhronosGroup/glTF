@@ -3,7 +3,7 @@
     "title" : "shader",
     "type" : "object",
     "description" : "A vertex or fragment shader.  WebGL: see createShader(), deleteShader(), shaderSource(), compileShader(), getShaderParameter(), and getShaderInfoLog().",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "uri" : {
             "type" : "string",

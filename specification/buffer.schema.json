@@ -3,7 +3,7 @@
     "title" : "buffer",
     "type" : "object",
     "description" : "Buffers contain geometry, animation, or skins.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "uri" : {
             "type" : "string",

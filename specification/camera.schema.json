@@ -3,14 +3,14 @@
     "title" : "camera",
     "type" : "object",
     "description" : "A camera's projection.",
-    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "orthographic" : {
-            "extends" : { "$ref": "cameraOrthographic.schema.json" },
+            "extends" : { "$ref" : "cameraOrthographic.schema.json" },
             "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
         },
         "perspective" : {
-            "extends" : { "$ref": "cameraPerspective.schema.json" },
+            "extends" : { "$ref" : "cameraPerspective.schema.json" },
             "description" : "A perspective camera containing properties to create a perspective projection matrix."
         },
         "type" : {
