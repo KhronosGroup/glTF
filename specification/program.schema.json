@@ -10,6 +10,7 @@
             "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
             "items" : {
                 "type" : "string",
+                "minLength" : "1",
                 "maxLength" : "256"
             },
             "default" : []

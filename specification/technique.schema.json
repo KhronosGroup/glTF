@@ -24,7 +24,8 @@
             },
             "additionalProperties" : {
                 "$ref" : "techniquePass.schema.json"
-            }
+            },
+            "required" : true
         }
     },
     "additionalProperties" : false

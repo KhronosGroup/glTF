@@ -21,13 +21,13 @@
             "type" : "number",
             "description" : "The floating-point distance to the far clipping plane.",
             "required" : true,
-            "minimum" : 0.0
+            "exclusiveMinimum" : 0.0
         },
         "znear" : {
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
             "required" : true,
-            "minimum" : 0.0
+            "exclusiveMinimum" : 0.0
         }
     },
     "additionalProperties" : false

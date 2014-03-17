@@ -3,7 +3,6 @@
     "title" : "technique/pass",
     "type" : "object",
     "description" : "The shader program and render states for a rendering pass.",
-    "required" : true,
     "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties": {
         "details" : {

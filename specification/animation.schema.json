@@ -29,5 +29,9 @@
             "default" : {}
         }
     },
+    "dependencies" : {
+        "channels" : "samplers",
+        "samplers" : "parameters"
+    },
     "additionalProperties" : false
 }
