@@ -3,6 +3,7 @@
     "title" : "animation/sampler",
     "type" : "object",
     "description" : "Combines input and output parameters with an interpolation algorithm.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "input" : {
             "type" : "string",
@@ -21,16 +22,6 @@
             "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe output.",
             "minLength" : 1,
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

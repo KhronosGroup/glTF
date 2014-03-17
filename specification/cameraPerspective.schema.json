@@ -3,6 +3,7 @@
     "title" : "camera/perspective",
     "type" : "object",
     "description" : "A perspective camera containing properties to create a perspective projection matrix.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "aspectRatio" : {
             "type" : "number",
@@ -27,16 +28,6 @@
             "description" : "The floating-point distance to the near clipping plane.",
             "required" : true,
             "minimum" : 0.0
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

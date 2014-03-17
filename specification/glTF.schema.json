@@ -2,7 +2,8 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "glTF",
     "type" : "object",
-    "description" : "Top-level glTF property.",
+    "description" : "Root glTF property.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "allExtensions" : {
             "type" : "array",
@@ -166,16 +167,6 @@
                 "$ref" : "texture.schema.json"
             },
             "default" : {}
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

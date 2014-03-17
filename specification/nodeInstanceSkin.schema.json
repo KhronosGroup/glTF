@@ -3,7 +3,8 @@
     "title" : "node/instanceSkin",
     "type" : "object",
     "description" : "An instance of a skin.",
-    "properties": {    
+    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "properties": {
         "skeletons" : {
             "type" : "array",
             "description" : "Joint id (joint property) of skeleton nodes.",
@@ -29,16 +30,6 @@
             },
             "uniqueItems" : true,
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

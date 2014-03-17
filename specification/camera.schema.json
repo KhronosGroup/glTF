@@ -3,7 +3,7 @@
     "title" : "camera",
     "type" : "object",
     "description" : "A camera's projection.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "orthographic" : {
             "$ref" : "cameraOrthographic.schema.json"

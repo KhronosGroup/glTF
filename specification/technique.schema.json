@@ -3,7 +3,7 @@
     "title" : "technique",
     "type" : "object",
     "description" : "Specifies shading and its inputs.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "parameters" : {
             "properties" : {

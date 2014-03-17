@@ -3,6 +3,7 @@
     "title" : "light/ambient",
     "type" : "object",
     "description" : "Ambient light source.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "color" : {
             "type" : "array",
@@ -15,16 +16,6 @@
             "minItems" : 3,
             "maxItems" : 3,
             "default" : [1.0, 1.0, 1.0]
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

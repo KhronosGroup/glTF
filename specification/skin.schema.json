@@ -3,7 +3,7 @@
     "title" : "skin",
     "type" : "object",
     "description" : "Joints and matrices defining a skin.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bindShapeMatrix" : {
             "type" : "array",

@@ -3,7 +3,7 @@
     "title" : "sampler",
     "type" : "object",
     "description" : "Texture sampler properties. WebGL: see texParameterf().",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "magFilter": {
             "type" : "integer",

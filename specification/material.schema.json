@@ -3,7 +3,7 @@
     "title" : "material",
     "type" : "object",
     "description" : "An instance of a technique with parameter value overrides.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "instanceTechnique" : {
 	        "$ref" : "materialInstanceTechnique.schema.json"

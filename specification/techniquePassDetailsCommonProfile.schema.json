@@ -3,6 +3,7 @@
     "title" : "technique/pass/details/commonProfile",
     "type" : "object",
     "description" : "TODO",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "lightingModel" : {
             "type" : "string",
@@ -22,16 +23,6 @@
             "additionalProperties" : {
                 "$ref" : "techniquePassDetailsCommonProfileTexcoordBindings.schema.json"
             }  
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

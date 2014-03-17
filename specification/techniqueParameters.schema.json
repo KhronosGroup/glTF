@@ -3,6 +3,7 @@
     "title" : "technique/parameter",
     "type" : "object",
     "description" : "Uniform and attribute inputs to a technique.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "type" : {
             "type" : "integer",
@@ -22,16 +23,6 @@
         "value" : {
             "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
             "description" : "Material values, when specified, override this."
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

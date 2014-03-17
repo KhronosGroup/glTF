@@ -3,7 +3,7 @@
     "title" : "animation",
     "type" : "object",
     "description" : "Keyframe animation.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "channels" : {
             "type" : "array",

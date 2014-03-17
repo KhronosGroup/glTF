@@ -3,6 +3,7 @@
     "title" : "light/spot",
     "type" : "object",
     "description" : "Spot light source.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "color" : {
             "type" : "array",
@@ -40,16 +41,6 @@
             "type" : "number",
             "description" : "Quadratic attenuation factor.",
             "default" : 0.0
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

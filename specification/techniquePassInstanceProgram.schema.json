@@ -4,6 +4,7 @@
     "type" : "object",
     "description" : "Shader program and attribute and uniform inputs.",
     "required" : true,
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {
             "properties" : {
@@ -26,16 +27,6 @@
                 "$ref" : "techniquePassInstanceProgramUniform.schema.json"
             },
             "default" : {}
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

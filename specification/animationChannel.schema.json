@@ -3,6 +3,7 @@
     "title" : "animation/channel",
     "type" : "object",
     "description" : "Targets a sampler at a glTF property.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "sampler" : {
             "type" : "string",
@@ -12,16 +13,6 @@
         },
         "target" : {
             "$ref" : "animationChannelTarget.schema.json"
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

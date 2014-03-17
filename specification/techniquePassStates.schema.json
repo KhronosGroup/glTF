@@ -4,6 +4,7 @@
     "type" : "object",
     "description" : "Contains all rendering states to set up for the parent pass.",
     "default" : {},
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "blendEnable" : {
             "type" : "boolean",
@@ -369,16 +370,6 @@
             "type" : "boolean",
             "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
             "default" : false
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

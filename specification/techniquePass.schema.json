@@ -4,7 +4,8 @@
     "type" : "object",
     "description" : "The shader program and render states for a rendering pass.",
     "required" : true,
-    "properties": { 
+    "extends" : { "$ref": "glTFProperty.schema.json" },
+    "properties": {
         "details" : {
             "$ref" : "techniquePassDetails.schema.json"
         },
@@ -13,16 +14,6 @@
         },
         "states" : {
             "$ref" : "techniquePassStates.schema.json"
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

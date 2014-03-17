@@ -3,7 +3,7 @@
     "title" : "node",
     "type" : "object",
     "description" : "A node in the node hierarchy.  Nodes can reference meshes, cameras, lights, or skins.",
-    "extends": { "$ref": "glTFChildOfRootProperty.schema.json" },
+    "extends" : { "$ref": "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "camera" : {
             "type" : "string",

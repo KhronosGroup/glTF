@@ -3,6 +3,7 @@
     "title" : "technique/pass/details",
     "type" : "object",
     "description" : "Information to reconstruct a shader program.",
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "commonProfile" : {
             "$ref" : "techniquePassDetailsCommonProfile.schema.json"
@@ -11,16 +12,6 @@
             "type" : "string",
             "description" : "TODO",
             "required" : true        
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false

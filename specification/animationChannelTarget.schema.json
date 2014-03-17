@@ -4,6 +4,7 @@
     "type" : "object",
     "description" : "The glTF property to target from an animation channel.",
     "required" : true,
+    "extends" : { "$ref": "glTFProperty.schema.json" },
     "properties" : {
         "id" : {
             "type" : "string",
@@ -16,16 +17,6 @@
             "description" : "The node (specified by id) property name to modify.",
             "enum" : ["translation", "rotation", "scale"],
             "required" : true
-        },
-        "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
-        },
-        "extras" : {
-            "$ref" : "extras.schema.json"
         }
     },
     "additionalProperties" : false
