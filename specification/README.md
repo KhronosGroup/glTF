@@ -1,8 +1,10 @@
-# glTF - the runtime asset format for WebGL, OpenGL ES, and OpenGL
+<p align="center">
+<img src="figures/glTF_300.jpg" />
+</p>
+
+glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.
 
 _This is a draft specification; it is incomplete and may change before ratification.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
-
-_In particular, the definition of materials are in flux, and work on animations and texture and geometry compression are still in the early stages.  We are also initially focusing on WebGL.  OpenGL ES and OpenGL need additional considerations._
 
 Editors
 
@@ -14,6 +16,54 @@ Editors
 # Contents
 
 * <a href="#motivation">Motivation</a>
+* Schema
+   * <a href="accessor.schema.json">`accessor`</a>
+   * <a href="animation.schema.json">`animation`</a>
+   * <a href="animationChannel.schema.json">`animation/channel`</a>
+   * <a href="animationChannelTarget.schema.json">`animation/channel/target`</a>
+   * <a href="animationParameter.schema.json">`animation/parameter`</a>
+   * <a href="animationSampler.schema.json">`animation/sampler`</a>
+   * <a href="asset.schema.json">`asset`</a>
+   * <a href="buffer.schema.json">`buffer`</a>
+   * <a href="bufferView.schema.json">`bufferView`</a>
+   * <a href="camera.schema.json">`camera`</a>
+   * <a href="cameraOrthographic.schema.json">`camera/orthographic`</a>
+   * <a href="cameraPerspective.schema.json">`camera/perspective`</a>
+   * <a href="extension.schema.json">`extension`</a>
+   * <a href="extras.schema.json">`extras`</a>
+   * <a href="glTF.schema.json">`glTF`</a> (root property for model)
+   * <a href="image.schema.json">`image`</a>
+   * <a href="light.schema.json">`light`</a>
+   * <a href="lightAmbient.schema.json">`light/ambient`</a>
+   * <a href="lightDirectional.schema.json">`light/directional`</a>
+   * <a href="lightPoint.schema.json">`light/point`</a>
+   * <a href="lightSpot.schema.json">`light/spot`</a>
+   * <a href="material.schema.json">`material`</a>
+   * <a href="materialInstanceTechnique.schema.json">`material/instanceTechnique`</a>
+   * <a href="materialInstanceTechniqueValues.schema.json">`material/instanceTechnique/values`</a>
+   * <a href="mesh.schema.json">`mesh`</a>
+   * <a href="meshPrimitive.schema.json">`mesh/primitive`</a>
+   * <a href="meshPrimitiveAttribute.schema.json">`mesh/primitive/attribute`</a>
+   * <a href="node.schema.json">`node`</a>
+   * <a href="nodeInstanceSkin.schema.json">`node/instanceSkin`</a>
+   * <a href="program.schema.json">`program`</a>
+   * <a href="sampler.schema.json">`sampler`</a>
+   * <a href="scene.schema.json">`scene`</a>
+   * <a href="shader.schema.json">`shader`</a>
+   * <a href="skin.schema.json">`skin`</a>
+   * <a href="technique.schema.json">`technique`</a>
+   * <a href="techniqueParameters.schema.json">`technique/parameters`</a>
+   * <a href="techniquePass.schema.json">`technique/pass`</a>
+   * <a href="techniquePassDetails.schema.json">`technique/pass/details`</a>
+   * <a href="techniquePassDetailsCommonProfile.schema.json">`technique/pass/details/commonProfile`</a>
+   * <a href="techniquePassDetailsCommonProfileTexcoordBindings.schema.json">`technique/pass/details/commonProfile/texcoordBindings`</a>
+   * <a href="techniquePassInstanceProgram.schema.json">`technique/pass/instanceProgram`</a>
+   * <a href="techniquePassInstanceProgramAttribute.schema.json">`technique/pass/instanceProgram/attribute`</a>
+   * <a href="techniquePassInstanceProgramUniform.schema.json">`technique/pass/instanceProgram/uniform`</a>
+   * <a href="techniquePassStates.schema.json">`technique/pass/states`</a>
+   * <a href="texture.schema.json">`texture`</a>
+
+<!--TODO
 * <a href="#designprinciples">Design Principles</a>
 * <a href="#conventions">Conventions</a>
 * <a href="#schema">Schema</a> - by category
@@ -44,7 +94,7 @@ Editors
       * <a href="#mesh">`mesh`</a>
       * <a href="#node">`node`</a>
       * <a href="#primitive">`primitive`</a>  
-      * <a href="#semantics">`semantics`</a>  
+      * <a href="#semantics">`semantics`</a>
 * <a href="#schema">Schema</a> - alphabetical
    * <a href="#meshAttribute">`attribute (mesh)`</a>
    * <a href="#asset">`asset`</a>
@@ -70,19 +120,20 @@ Editors
    * <a href="#states">`states`</a>
    * <a href="#technique">`technique`</a>
    * <a href="#uniform">`uniform`</a>
-   * <a href="#version">`version`</a>   
+   * <a href="#version">`version`</a>
 * <a href="#about_shaders">Note about shaders</a>
 * <a href="#assetvalidation">Asset Validation</a>
 * <a href="#comparison">Comparison between COLLADA and glTF</a>
 * <a href="#acknowledgments">Acknowledgments</a>
 * <a href="#references">References</a>
+-->
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="motivation">
 
 # Motivation
 
-glTF, the **GL** **T**ransmission **F**ormat, is the runtime asset format for the GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
+glTF, the GL Transmission Format, is the runtime asset format for the GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between formats used by modeling tools and the GL APIs.
 
 There are industry-standard interchange formats, namely COLLADA, that allow sharing assets between modeling tools and within the content pipeline in general.  However, these formats are not optimized for size or runtime use and neither are modeling-tool-specific formats.  At runtime, an application wishing to render an asset needs to do a significant amount of processing to transform the asset's content into data appropriate for the GL APIs.
 
@@ -108,7 +159,8 @@ For a simple example, see the converted [COLLADA duck model](https://github.com/
 
 Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 
-<!-- ----------------------------------------------------------------------- -->
+<!--TODO
+
 <a name="designprinciples">
 
 # Design Principles
@@ -245,7 +297,6 @@ glTF is often human-readable, but doesn't strive to be.  Without minification an
 
 However, glTF assets aren't always readable.  For example, a simple shader embedded in JSON with a data URI becomes hard to read: `"data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B"`.  Once minification occurs, the JSON and GLSL become unreadable.
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="conventions">
 # Conventions
 
@@ -299,11 +350,9 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
    * _Needs to pass through `extra` objects_.
    * _Should fill out all optional properties so that the user receives complete objects with default values, e.g., render state._
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="schema">
 # Schema
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="meshAttribute">
 ## `attribute (mesh)`
 
@@ -325,7 +374,6 @@ Alternatively, glTF could allow application-specific properties anywhere, but th
 * _COLLADA2JSON_
    * _Add checking for Sections 6.3 and 6.9 above._
    
-<!-- ----------------------------------------------------------------------- -->
 <a name="asset">
 ## `asset`
 
@@ -348,7 +396,6 @@ None.
 * [#23](https://github.com/KhronosGroup/glTF/issues/23) - should glTF specify unit property?
 * [#24](https://github.com/KhronosGroup/glTF/issues/24) - glTF should specify more aspects of assets
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="attribute">
 ## `attribute`
 
@@ -373,7 +420,6 @@ _TODO_
 * _COLLADA2JSON_
    * 
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="buffer">
 ## `buffer`
 
@@ -406,7 +452,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
    * Use `int_array` attributes `minInclusive` or `maxInclusive` to determine WebGL int datatype?
    
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="bufferView">
 ## `bufferView`
 
@@ -421,7 +466,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 
 * [`ArrayBufferView`](http://www.khronos.org/registry/typedarray/specs/latest/#6)
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="camera">
 ## `camera`
 
@@ -454,7 +498,6 @@ See <a href="#orthographic">`orthographic`</a> and <a href="#perspective">`persp
    * _Loader and writer need to be updated to reflect the new organization and required properties, not all COLLADA properties._
    * _`yfov` is degrees; it should be radians since this is a final-stage format._
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="geographicLocation">
 ## `geographicLocation`
 
@@ -473,7 +516,6 @@ None.
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="image">
 ## `image`
 
@@ -502,7 +544,6 @@ For compatibility with modern web browsers, the following image formats are supp
 * [#17](https://github.com/KhronosGroup/glTF/issues/17) - Supprot for render targets
 * [#18](https://github.com/KhronosGroup/glTF/issues/18) - convert images for destination Profile
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="indices">
 ## `indices`
 
@@ -523,7 +564,6 @@ Also see <a href="#buffer">buffer</a>.
 
 * [#14](https://github.com/KhronosGroup/glTF/issues/14) - support for models without indices ?
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="material">
 ## `material`
 
@@ -545,7 +585,6 @@ See <a name="parameters">`parameters`</a>.
 * _Schema_
    * _Write schema for `parameters`._
    
-<!-- ----------------------------------------------------------------------- -->
 <a name="mesh">
 ## `mesh`
 
@@ -564,7 +603,6 @@ See <a href="#meshAttribute">`attributes (mesh)`</a> and <a href="#primitives">`
 
 * [#11](https://github.com/KhronosGroup/glTF/issues/11) - Splines should be converted
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="node">
 ## `node`
 
@@ -589,7 +627,6 @@ Also see <a href="#mesh">`mesh`</a> subproperties See <a href="#accessors">`acce
 * [#12](https://github.com/KhronosGroup/glTF/issues/12) - Convert all transformation elements to matrices
 * [#13](https://github.com/KhronosGroup/glTF/issues/13) - Should we keep one or more mesh,camera,light per node.
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="orthographic">
 ## `orthographic`
 
@@ -608,7 +645,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="parameters">
 ## `parameters`
 
@@ -633,7 +669,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="pass">
 ## `pass`
 
@@ -655,7 +690,6 @@ See <a href="#program">`program`</a> and <a href="#states">`states`</a>.
 * _COLLADA2JSON_
    *
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="perspective">
 ## `perspective`
 
@@ -674,7 +708,6 @@ _TODO_
 
 _TODO_
    
-<!-- ----------------------------------------------------------------------- -->
 <a name="primitive">
 ## `primitive`
 
@@ -701,13 +734,11 @@ Also see:
 * _COLLADA2JSON_
    * _Add checking for Section 6.3 above._
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="profile">
 ## `profile`
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="program">
 ## `program`
 
@@ -733,7 +764,6 @@ Also see <a href="#attributes">`attributes`</a> and <a href="#uniforms">`uniform
 
 * [#25](https://github.com/KhronosGroup/glTF/issues/25) - naming for vertex and fragment shaders
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="semantics">
 ## `semantics`
 
@@ -790,7 +820,6 @@ Other
 | `TEXBINORMAL` |  | Texture binormal (bitangent) vector. |
 | `TEXTANGENT` |  | Texture tangent vector  |
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="shader">
 ## `shader`
 
@@ -815,7 +844,6 @@ _TODO: Even though data URIs are part of the [spec](https://dvcs.w3.org/hg/xhr/r
 
 Also see <a href="#program">`program`</a>.
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="states">
 ## `states`
 
@@ -874,7 +902,6 @@ To satisfy Section 6.10 (Viewport Depth Range) of [WebGL 1.0](https://www.khrono
 * _COLLADA2JSON_
    * _Add to loader and writer.  Writer needs to derive state from common profile._
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="technique">
 ## `technique`
 
@@ -896,7 +923,6 @@ See <a name="parameters">`parameters`</a>.
 * [#7](https://github.com/KhronosGroup/glTF/issues/7) - Add Schema for parameter
 
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="uniform">
 ## `uniform`
 
@@ -920,13 +946,11 @@ _TODO_
 
 * Create list of built-in semantics. [#45](https://github.com/KhronosGroup/collada2json/issues/45).
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="version">
 ## `version`
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="about_shaders">
 # Note about About shaders 
 
@@ -974,7 +998,6 @@ For instance, the diffuse component of the lighting might be a color or a textur
 
 [TODO]example:
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="assetvalidation">
 # Asset Validation
 
@@ -1009,7 +1032,6 @@ http://localhost/specification/?schema=states.schema.json&json=examples/states/t
 
 Also, JSON in general can be valdiated with [JSONLint](http://jsonlint.com/), which can be useful for validating the glTF schema itself.
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="comparison">
 # Comparison between COLLADA and glTF
 
@@ -1050,10 +1072,8 @@ becomes
 TODO: What's in COLLADA, but not in this version of glTF
 * No `profile`.  Instead, this can be negotiated via a REST API.  (platform, product name, etc.)
 
-<!-- ----------------------------------------------------------------------- -->
 ## Schema
 
-<!-- ----------------------------------------------------------------------- -->
 ### `accessor`
 
 Minor
@@ -1062,7 +1082,6 @@ Minor
 
 * `accessor`. Pages 5-5 to 5-10.
    
-<!-- ----------------------------------------------------------------------- -->
 ### `asset`
 
 * `asset` is only defined on the root glTF property; in COLLADA, it is available as a child of many elements.  In practice, it is usually only a child of the `COLLADA` root node.
@@ -1074,7 +1093,6 @@ Minor
 * `contributor`. Pages 5-27 to 5-28.
 * `geographic_location`. Pages 5-40 to 5-41.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `attribute`
 
 _TODO_
@@ -1083,7 +1101,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `buffer`
 
 * Vertices and indices are stored in binary, not XML.
@@ -1102,7 +1119,6 @@ _TODO_
 * `float_array`. Page 5-37.
 * `int_array`. Page 5-69.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `camera`
 
 In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
@@ -1118,7 +1134,6 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 * `orthographic`.  Pages 5-102 to 5-103.
 * `perspective`.  Pages 5-108 to 5-109.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `geographicLocation`
 
 _TODO_
@@ -1127,7 +1142,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `image`
 
 glTF 1.0 does not support:
@@ -1140,7 +1154,6 @@ glTF 1.0 does not support:
 * `image`.  Page 8-58 to 8-60.
 * `init_from`.  Pages 8-62 to 8-63.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `indices`
 
 _TODO_
@@ -1149,7 +1162,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `material`
 
 _TODO_
@@ -1158,7 +1170,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `node`
 
 In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
@@ -1168,7 +1179,6 @@ In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLAD
 
 * `node`.  Pages 5-98 to 5-99.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `orthographic`
 
 _TODO_
@@ -1177,7 +1187,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `parameters`
 
 _TODO_
@@ -1186,7 +1195,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `pass`
 
 _TODO_
@@ -1195,7 +1203,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `perspective`
 
 _TODO_
@@ -1204,7 +1211,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `primitive`
 
 TODO
@@ -1213,7 +1219,6 @@ TODO
 
 * 
 
-<!-- ----------------------------------------------------------------------- -->
 ### `program`
 
 _TODO_
@@ -1222,7 +1227,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `shader`
 
 _TODO_
@@ -1231,7 +1235,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `states`
 
 Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos.org/files/collada_spec_1_5.pdf), Pages 8-120 to 8-125.  In order to better map to OpenGL, OpenGL ES, and WebGL, glTF differs from COLLADA in the following ways:
@@ -1245,7 +1248,6 @@ Render states are based on the GLES2 profile in [COLLADA 1.5](http://www.khronos
 
 * `states`. Pages 8-120 to 8-125.
 
-<!-- ----------------------------------------------------------------------- -->
 ### `technique`
 
 _TODO_
@@ -1254,7 +1256,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 ### `uniform`
 
 _TODO_
@@ -1263,7 +1264,6 @@ _TODO_
 
 _TODO_
 
-<!-- ----------------------------------------------------------------------- -->
 <a name="attribute">
 ## `attribute`
 
@@ -1273,16 +1273,19 @@ _TODO_
 
 * `input`. Pages 5-47 to 5-49.
 
+-->
+
 <!-- ----------------------------------------------------------------------- -->
 <a name="acknowledgments">
 # Acknowledgments
 
 * Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
 * Tom Fili, Analytical Graphics, Inc.
+* Scott Hunter, Analytical Graphics, Inc.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
 # References
 
-* [WebGL 1.0 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
+* [WebGL 1.0.2 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
