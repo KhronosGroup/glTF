@@ -1,23 +1,19 @@
 <p align="center">
-<img src=“specification/figures/glTF_300.jpg” />
+<img src="specification/figures/glTF_300.jpg" />
 </p>
 
 glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.
 
-_glTF is a draft specification, it may change before ratification._
-
-Everyone is welcomed to contribute to the code and provide feedback about the specification. 
-
-#### Common setup 
-```
-git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
-```
+glTF is a draft specification, it may change before ratification.  Everyone is welcomed to contribute to the code and provide feedback about the specification.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback.
 
 ## Specification  
 
 [glTF Specification 0.6](https://github.com/KhronosGroup/glTF/blob/schema/specification/README.md)
 
-This is a work-in-progress from the COLLADA Working Group; it is not an official Khronos-ratified specification yet.  We've made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback.
+#### Cloning the repo
+```
+git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
+```
 
 ## Converter
 
