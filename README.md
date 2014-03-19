@@ -1,4 +1,8 @@
-## glTF - the runtime asset format for WebGL, OpenGL ES, and OpenGL
+<p align="center">
+<img src=“specification/figures/glTF_300.jpg” />
+</p>
+
+glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.
 
 _glTF is a draft specification, it may change before ratification._
 
