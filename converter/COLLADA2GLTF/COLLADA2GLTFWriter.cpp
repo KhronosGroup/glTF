@@ -745,9 +745,6 @@ namespace GLTF
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
                     shared_ptr <JSONArray> meshes(new JSONArray());
                     shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
-                    if (cvtMesh->getID() == "geom-house_319") {
-                        
-                    }
                     if (cvtMesh) {
                         //here we stock the mesh with unified indices but we may have to handle additional mesh attributes
                         if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(cvtMesh.get(), 65535, meshes, this->_asset->profile()) == false) {
