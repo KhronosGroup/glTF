@@ -244,7 +244,7 @@ namespace GLTF
                 this->_trackedOutputResourcesPath->setString(path, resourcePath);
                 this->_trackedResourcesPath->setString(resourcePath, path);
             }
-            return path;
+            return resourcePath;
         }
     }
     
