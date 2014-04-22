@@ -156,6 +156,8 @@ namespace GLTF
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
         this->_convertionResults = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedNodesReferringMeshes = shared_ptr<JSONObject> (new JSONObject());
+        this->_originalResourcesPath = shared_ptr<JSONObject> (new JSONObject());
+        
         this->_prefix = 0;
         this->setGeometryByteLength(0);
         this->setAnimationByteLength(0);
@@ -231,6 +233,7 @@ namespace GLTF
         } else {
             COLLADABU::URI resourceURI(resourcePath);
             std::string path = resourceURI.getPathFile();
+            this->_originalResourcesPath->setString(path, resourcePath);
             if (this->_trackedOutputResourcesPath->contains(path)) {
                 std::string existingResourcePath = this->_trackedOutputResourcesPath->getString(path);
                 if (existingResourcePath == resourcePath) {
@@ -244,7 +247,7 @@ namespace GLTF
                 this->_trackedOutputResourcesPath->setString(path, resourcePath);
                 this->_trackedResourcesPath->setString(resourcePath, path);
             }
-            return resourcePath;
+            return path;
         }
     }
     
@@ -326,8 +329,8 @@ namespace GLTF
         } else {
             COLLADABU::URI aURI(this->_inputFilePath.c_str());
             COLLADABU::URI inputURI(path.c_str());
-            aURI.setPath(aURI.getPathDir(), inputURI.getPathFileBase(), inputURI.getPathExtension());
-            return aURI.getURIString();
+            inputURI.setPathDir(aURI.getPathDir() + inputURI.getPathDir());
+            return inputURI.getURIString();
         }
     }
     
@@ -342,11 +345,12 @@ namespace GLTF
                     std::string path = image->getString("path");
                     //printf("\n****\nkey:%s\npath:%s\n", keys[i].c_str(), path.c_str());
                     
-                    COLLADABU::URI outputImagePathURI(this->_bundleOutputPath + "/" + this->_trackedResourcesPath->getString(path).c_str());
+                    std::string originalPath = this->_originalResourcesPath->getString(path);
+                    COLLADABU::URI outputImagePathURI(this->_bundleOutputPath + "/" + this->_trackedResourcesPath->getString(originalPath).c_str());
                     //printf("copy %s\n to %s\n", path.c_str(), outputImagePathURI.toNativePath().c_str());
                     
                     //copy the file
-                    std::string inputImagePath = this->pathRelativeToInputPath(path).c_str();
+                    std::string inputImagePath = this->pathRelativeToInputPath(originalPath).c_str();
                     //printf("inputImagePath %s\n\n", inputImagePath.c_str());
                     
                     std::ifstream f1(inputImagePath.c_str(), std::fstream::binary);

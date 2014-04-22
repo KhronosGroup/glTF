@@ -116,6 +116,7 @@ namespace GLTF
 
         shared_ptr <GLTFConfig>         _converterConfig;
         shared_ptr <JSONObject>         _convertionResults;
+        shared_ptr<JSONObject>          _originalResourcesPath;
         shared_ptr<JSONObject>          _trackedResourcesPath;
         shared_ptr<JSONObject>          _trackedOutputResourcesPath;
         shared_ptr<JSONObject>          _trackedNodesReferringMeshes;
