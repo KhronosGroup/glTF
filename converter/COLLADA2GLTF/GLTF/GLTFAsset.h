@@ -89,25 +89,27 @@ namespace GLTF
         std::string getSharedBufferId();
 
         std::vector <shared_ptr<GLTFAssetModifier> > &assetModifiers() { return this->_assetModifiers; };
-    
+        
+        shared_ptr<JSONObject> trackedNodesReferringMeshes();
+        
     //TODO: all those still need cleanup and should be moved to private
     protected:
         void launchModifiers();
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;
-        UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
         OriginalIDToTrackedObject       _originalIDToTrackedObject;
-        UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         SamplerHashtoSamplerIndex       _samplerHashtoSamplerIndex;
+        FlattenerMapsForAnimationID     _flattenerMapsForAnimationID;
+
+        UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
+        UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
-        
         UniqueIDToOriginalUID           _uniqueIDToOriginalID;
         UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
-        FlattenerMapsForAnimationID     _flattenerMapsForAnimationID;
         UniqueIDToAccessor              _uniqueIDToAccessorObject;
         UniqueIDToAnimationFlattener    _targetUIDWithPathToAnimationFlattener;
-
+        
     private:
         shared_ptr <GLTFProfile>        _profile;
         shared_ptr <JSONObject>         _root;
@@ -116,19 +118,20 @@ namespace GLTF
         shared_ptr <JSONObject>         _convertionResults;
         shared_ptr<JSONObject>          _trackedResourcesPath;
         shared_ptr<JSONObject>          _trackedOutputResourcesPath;
+        shared_ptr<JSONObject>          _trackedNodesReferringMeshes;
         unsigned int                    _prefix;
         std::string                     _inputFilePath;
         std::string                     _outputFilePath;
+        std::string                     _bundleOutputPath;
+        std::string                     _sharedBufferId;
         size_t                          _geometryByteLength;
         size_t                          _animationByteLength;
-        std::string                     _bundleOutputPath;
         bool                            _isBundle;
 
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
         
         NameToOutputStream              _nameToOutputStream;
         GLTF::GLTFWriter                _writer;
-        std::string                     _sharedBufferId;
         
         std::vector <shared_ptr<GLTFAssetModifier> > _assetModifiers;
     };

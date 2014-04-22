@@ -165,6 +165,7 @@ namespace GLTF
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
 	private:
+        void _trackMeshesReferredByNode(shared_ptr<JSONObject> &node, shared_ptr <JSONArray> &meshesUIDs);
         void registerObjectWithOriginalUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,

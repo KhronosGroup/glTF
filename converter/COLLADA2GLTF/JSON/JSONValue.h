@@ -41,8 +41,6 @@ namespace GLTF
         virtual ~JSONValue();
         
         virtual void write(GLTFWriter* , void* context = 0);
-                
-        JSONType getType();
         
         shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
         
@@ -51,6 +49,9 @@ namespace GLTF
         virtual JSONType getJSONType() = 0;
         
         virtual void apply(JSONValueApplierFunc, void* context);
+        
+        //consider overloading == later, but for now we are transitioning, so relying on isEqualTo implicitly provides more control over what/when comparaison are done
+        virtual bool isEqualTo(JSONValue* value);
         
     private:
     };

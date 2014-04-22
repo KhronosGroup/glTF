@@ -4,6 +4,7 @@
 #include "../GitSHA1.h"
 #include "GLTF-Open3DGC.h"
 #include "GLTFFlipUVModifier.h"
+#include "geometryHelpers.h"
 
 using namespace std::tr1;
 using namespace std;
@@ -144,15 +145,18 @@ namespace GLTF
         id += type + "_" + GLTF::GLTFUtils::toString(uniqueId.getObjectId());
         return id;
     }
+
+    shared_ptr<JSONObject> GLTFAsset::trackedNodesReferringMeshes() {
+        return this->_trackedNodesReferringMeshes;
+    }
     
     GLTFAsset::GLTFAsset():_isBundle(false) {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
         this->_convertionResults = shared_ptr<JSONObject> (new JSONObject());
+        this->_trackedNodesReferringMeshes = shared_ptr<JSONObject> (new JSONObject());
         this->_prefix = 0;
-        this->_geometryByteLength = 0;
-        this->_animationByteLength = 0;
         this->setGeometryByteLength(0);
         this->setAnimationByteLength(0);
     }
@@ -430,16 +434,77 @@ namespace GLTF
         
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
-        //WORK-AROUND: we don't want meshes without material, which can happen if a mesh is not associated with a node.
-        //In this case, the material binding - isn't resolved.
+        //here we will split meshes as needed or just pass through
+        for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
+            const std::string &meshUID = meshesUIDs[i];
+            shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshUID));
+            if (mesh) {
+                shared_ptr<JSONArray> allMeshes(new JSONArray());
+                if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(mesh.get(), 65535, allMeshes, this->profile()) == false) {
+                    allMeshes->appendValue(mesh);
+                } else {
+                    //register new meshes
+                    JSONValueVectorRef meshesVector = allMeshes->values();
+                    size_t meshesCount = meshesVector.size();
+                    if (meshesCount > 0) {
+                        meshes->removeValue(meshUID); //we remove the mesh that was splitted (to just keep the splitted parts).
+                        for (size_t j = 0 ; j < meshesCount ; j++) {
+                            mesh = static_pointer_cast<GLTFMesh>(meshesVector[j]);
+                            meshes->setValue(mesh->getID(), mesh);
+                        }
+                        
+                        //now, for each node referring the mesh that has been split, we remove references to its UID and replace by multiple references from the meshes resulting from his split.
+                        shared_ptr<JSONArray> nodesReferringMeshes = static_pointer_cast<JSONArray>(this->trackedNodesReferringMeshes()->getValue(meshUID));
+                        JSONValueVectorRef nodesVector = nodesReferringMeshes->values();
+                        shared_ptr<JSONValue> meshUIDAsValue = static_pointer_cast<JSONValue>(shared_ptr<JSONString>(new JSONString(meshUID)));
+                        for (size_t j = 0 ; j < nodesVector.size() ; j++) {
+                            shared_ptr<JSONObject> aNode = static_pointer_cast<JSONObject>(nodesVector[j]);
+                            
+                            if (aNode->contains(kMeshes)) {
+                                shared_ptr<JSONArray> meshesWithinNode = static_pointer_cast<JSONArray>(aNode->getValue(kMeshes));
+                                size_t indexOfMeshUID = meshesWithinNode->indexOfValue(meshUIDAsValue.get());
+                                if (indexOfMeshUID != string::npos) {
+                                    meshesWithinNode->values().erase(meshesWithinNode->values().begin() + indexOfMeshUID);
+                                    for (size_t k = 0 ; k < meshesCount ; k++) {
+                                        shared_ptr<GLTFMesh> subMesh = static_pointer_cast<GLTFMesh>(meshesVector[k]);
+                                        meshesWithinNode->appendValue(shared_ptr<JSONString>(new JSONString(subMesh->getID())));
+                                    }
+                                }
+                            }
+                            if (aNode->contains(kInstanceSkin)) {
+                                if (aNode->contains(kInstanceSkin)) {
+                                    shared_ptr<JSONObject> instanceSkin = aNode->getObject(kInstanceSkin);
+                                    shared_ptr<JSONArray> skinnedMeshesWithinNode = static_pointer_cast<JSONArray>(instanceSkin->getValue(kSources));
+                                    size_t indexOfMeshUID = skinnedMeshesWithinNode->indexOfValue(meshUIDAsValue.get());
+                                    if (indexOfMeshUID != string::npos) {
+                                        skinnedMeshesWithinNode->values().erase(skinnedMeshesWithinNode->values().begin() + indexOfMeshUID);
+                                        for (size_t k = 0 ; k < meshesCount ; k++) {
+                                            shared_ptr<GLTFMesh> subMesh = static_pointer_cast<GLTFMesh>(meshesVector[k]);
+                                            skinnedMeshesWithinNode->appendValue(shared_ptr<JSONString>(new JSONString(subMesh->getID())));
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                this->setValueForUniqueId(meshUID, allMeshes);
+            }
+        }
+       
+        meshesUIDs = meshes->getAllKeys();
+        
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
             mesh->resolveAttributes();
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             unsigned int primitivesCount =  (unsigned int)primitives.size();
+            //WORK-AROUND: we don't want meshes without material, which can happen if a mesh is not associated with a node.
+            //In this case, the material binding - isn't resolved.
             for (unsigned int k = 0 ; k < primitivesCount ; k++) {
                 shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[k]);
-                if (primitive->contains("material") ==  false) {
+                if (primitive->contains(kMaterial) ==  false) {
                     meshes->removeValue(mesh->getID());
                     break;
                 }
@@ -563,9 +628,7 @@ namespace GLTF
                     compressionData->setString(kBufferView, compressionBufferView->getID());
                 }
             }
-            
         }
-
 
         // ----
         shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");

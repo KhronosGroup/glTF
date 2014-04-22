@@ -72,4 +72,13 @@ namespace GLTF
         (*func)(this, context);
     }
     
+    bool JSONValue::isEqualTo(JSONValue *value) {
+        if (value->getJSONType() != this->getJSONType())
+            return false;
+        if (value == this)
+            return true;
+        
+        return false;
+    }
+    
 }

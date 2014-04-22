@@ -45,6 +45,7 @@ namespace GLTF
         const std::string& getString();
         
         virtual JSONType getJSONType();
+        virtual bool isEqualTo(JSONValue* value);
         
     private:
         std::string _str;

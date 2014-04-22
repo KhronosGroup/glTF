@@ -43,7 +43,7 @@ namespace GLTF
     //--- Skin
     
     GLTFSkin::GLTFSkin() : GLTFController() {
-        this->_id = GLTFUtils::generateIDForType("skin");
+        this->_id = GLTFUtils::generateIDForType(kSkin.c_str());
     }
 
     GLTFSkin::GLTFSkin(std::string id) : GLTFController() {

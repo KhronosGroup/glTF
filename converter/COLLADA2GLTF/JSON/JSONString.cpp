@@ -53,6 +53,17 @@ namespace GLTF
         return kJSONString;
     }
     
+    bool JSONString::isEqualTo(JSONValue* value) {
+        assert(value != nullptr);
+
+        if (JSONValue::isEqualTo(value) == true)
+            return true;
+        
+        JSONString *stringValue = (JSONString*)(value);
+        
+        return this->_str == stringValue->getString();
+    }
+    
 }
 #endif
 

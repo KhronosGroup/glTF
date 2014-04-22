@@ -43,8 +43,6 @@ using namespace rapidjson;
 
 namespace GLTF
 {
-    
-	
     /*
      */
     COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
@@ -355,7 +353,24 @@ namespace GLTF
         return true;
     }
     
+    /*
+        meshArray contains UIDs (strings)
+        This method keeps track for a given mesh of all nodes referring it.
+        It will be helpful, when later on we need to modify meshes.
+     */
+    void COLLADA2GLTFWriter::_trackMeshesReferredByNode(shared_ptr<JSONObject> &node, shared_ptr <JSONArray> &meshesArray) {
 
+        JSONValueVectorRef meshes = meshesArray->values();
+        shared_ptr<JSONObject> trackedNodes = this->_asset->trackedNodesReferringMeshes();
+        
+        for (size_t i = 0 ; i < meshes.size() ; i++) {
+            shared_ptr<JSONString> meshUID = static_pointer_cast<JSONString>(meshes[i]);
+            shared_ptr <JSONArray> nodes = trackedNodes->createArrayIfNeeded(meshUID->getString());
+            
+            nodes->appendValue(node);
+        }
+    }
+    
     bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node,
                                        shared_ptr <GLTF::JSONObject> nodesObject,
                                        COLLADABU::Math::Matrix4 parentMatrix,
@@ -365,7 +380,7 @@ namespace GLTF
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeOriginalID = node->getOriginalId();
         if (nodeOriginalID.length() == 0) {
-            nodeOriginalID = uniqueIdWithType("node", node->getUniqueId());
+            nodeOriginalID = uniqueIdWithType(kNode, node->getUniqueId());
         }
         
         std::string uniqueUID = node->getUniqueId().toAscii();
@@ -529,11 +544,12 @@ namespace GLTF
                     }
                     
                     instanceSkin->setValue("skeletons", skeletons);
-                    instanceSkin->setString("skin", skin->getId());
+                    instanceSkin->setString(kSkin, skin->getId());
                     
                     //FIXME: this should account for morph as sources to
-                    instanceSkin->setValue("sources", skinMeshesArray);
-                    nodeObject->setValue("instanceSkin", instanceSkin);
+                    instanceSkin->setValue(kSources, skinMeshesArray);
+                    this->_trackMeshesReferredByNode(nodeObject, skinMeshesArray);
+                    nodeObject->setValue(kInstanceSkin, instanceSkin);
                 }
             }
         }
@@ -551,17 +567,19 @@ namespace GLTF
             }
         }
         
-        if (meshesArray->values().size() > 0)
+        if (meshesArray->values().size() > 0) {
             nodeObject->setValue(kMeshes, meshesArray);
+            this->_trackMeshesReferredByNode(nodeObject, meshesArray);
+        }
 
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
-        nodeObject->setValue("children", childrenArray);
+        nodeObject->setValue(kChildren, childrenArray);
         
         count = (unsigned int)nodes.getCount();
         for (unsigned int i = 0 ; i < count ; i++)  {
             std::string childOriginalID = nodes[i]->getOriginalId();
             if (childOriginalID.length() == 0) {
-                childOriginalID = uniqueIdWithType("node", nodes[i]->getUniqueId());
+                childOriginalID = uniqueIdWithType(kNode, nodes[i]->getUniqueId());
             }
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
         }
@@ -666,24 +684,24 @@ namespace GLTF
         //FIXME: only one visual scene assumed/handled
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded("nodes");
+        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
         
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
         
-        this->_asset->root()->setValue("scenes", scenesObject);
+        this->_asset->root()->setValue(kScenes, scenesObject);
         this->_asset->root()->setString(kScene, "defaultScene");
         
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
-        sceneObject->setValue("nodes", childrenArray);
+        sceneObject->setValue(kNodes, childrenArray);
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
             std::string nodeUID = nodePointerArray[i]->getOriginalId();
             if (nodeUID.length() == 0) {
-                nodeUID = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());
+                nodeUID = uniqueIdWithType(kNode, nodePointerArray[i]->getUniqueId());
             }
                         
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
@@ -707,7 +725,7 @@ namespace GLTF
 	bool COLLADA2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes ) {
         const NodePointerArray& nodes = libraryNodes->getNodes();
         
-        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded("nodes");
+        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
                 
         size_t count = nodes.getCount();
         for (size_t i = 0 ; i < count ; i++) {
@@ -722,7 +740,7 @@ namespace GLTF
 
                     shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(value->getString()));
                     if (parentNode) {
-                        shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded("children");
+                        shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded(kChildren);
                         children->appendValue(shared_ptr <JSONString>(new JSONString(node->getOriginalId())));
                     }
                 }
@@ -745,25 +763,10 @@ namespace GLTF
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
                     shared_ptr <JSONArray> meshes(new JSONArray());
                     shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
-                    if (cvtMesh->getID() == "geom-house_319") {
-                        
-                    }
-                    if (cvtMesh) {
-                        //here we stock the mesh with unified indices but we may have to handle additional mesh attributes
-                        if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(cvtMesh.get(), 65535, meshes, this->_asset->profile()) == false) {
-                            meshes->appendValue(cvtMesh);
-                        }
-                        JSONValueVectorRef meshesVector = meshes->values();
-                        size_t meshesCount = meshesVector.size();
-                        if (meshesCount > 0) {
-                            shared_ptr<JSONObject> serializedMeshes = this->_asset->root()->createObjectIfNeeded(kMeshes);
-                            for (size_t i = 0 ; i < meshesCount ; i++) {
-                                cvtMesh = static_pointer_cast<GLTFMesh>(meshesVector[i]);
-                                serializedMeshes->setValue(cvtMesh->getID(), cvtMesh);
-                            }
-                            this->_asset->setValueForUniqueId(meshUID, meshes);
-                        }
-                    }
+                    meshes->appendValue(cvtMesh);
+                    
+                    this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
+                    this->_asset->setValueForUniqueId(meshUID, meshes);
                 }
             }
                 break;
@@ -1383,7 +1386,7 @@ namespace GLTF
         size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
 
-        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(        profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
         targetAttribute->setByteStride(meshAttribute->getByteStride());
         targetAttribute->setCount(vertexCount);
 

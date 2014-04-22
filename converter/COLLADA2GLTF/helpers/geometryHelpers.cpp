@@ -356,7 +356,7 @@ namespace GLTF
         
         if (primitiveCount == 0) {
             // FIXME: report error
-            //return 0;
+            return nullptr;
         }
         
         //in originalMeshAttributes we'll get the flattened list of all the meshAttributes as a vector.
@@ -410,7 +410,7 @@ namespace GLTF
                 allPrimitiveRemapInfos.push_back(primitiveRemapInfos);
             } else {
                 // FIXME: report error
-                //return NULL;
+                return nullptr;
             }
         }
         
@@ -476,7 +476,7 @@ namespace GLTF
             
             if (!status) {
                 // FIXME: report error
-                //return NULL;
+                return nullptr;
             }
         }
         
@@ -540,7 +540,7 @@ namespace GLTF
     }
     
     //FIXME: add suport for interleaved arrays
-    void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
+    static void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
     {
         //remap the subMesh using the original mesh
         //we walk through all meshAttributes
@@ -552,7 +552,6 @@ namespace GLTF
             size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
             for (size_t j = 0 ; j < attributesCount ; j ++) {
                 shared_ptr <GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
-                unsigned int indexSet = j;
                 
                 shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 
@@ -578,7 +577,7 @@ namespace GLTF
         }
     }
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile)
+    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maximumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile)
     {
         bool splitNeeded = false;
         
@@ -588,7 +587,7 @@ namespace GLTF
         
         for (size_t i = 0 ; i < primitives.size() ; i++) {
             shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            if (primitive->getIndices()->getCount() >= maxiumIndicesCount) {
+            if (primitive->getIndices()->getCount() >= maximumIndicesCount) {
                 splitNeeded = true;
                 break;
             }
@@ -597,7 +596,7 @@ namespace GLTF
         if (!splitNeeded)
             return false;
         
-        SubMeshContext *subMesh = NULL;
+        SubMeshContext *subMesh = 0;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
         bool primitiveCompleted = false;
@@ -669,7 +668,7 @@ namespace GLTF
                     //will we still have room to store coming indices from this mesh ?
                     //note: this is tied to the policy described above in (*)
                     size_t currentSize = subMesh->indexToRemappedIndex.size();
-                    if ((currentSize + indicesPerElementCount) < maxiumIndicesCount) {
+                    if ((currentSize + indicesPerElementCount) < maximumIndicesCount) {
                         __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
 
                         //build the indices for the primitive to be added to the subMesh
@@ -691,10 +690,6 @@ namespace GLTF
             allNextPrimitiveIndices[i] = nextPrimitiveIndex;
 
             if (targetIndicesCount > 0) {
-                //FIXME: here targetIndices takes too much memory
-                //To avoid this we would need to make a smaller copy.
-                //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
-                
                 shared_ptr <GLTFBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
                 
                 shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));

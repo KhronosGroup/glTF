@@ -75,7 +75,12 @@ const std::string kTarget = "target";
 const std::string kGeometry = "geometry";
 const std::string kAnimation = "animation";
 const std::string kScene = "scene";
-
+const std::string kScenes = "scenes";
+const std::string kNode = "node";
+const std::string kChildren = "children";
+const std::string kSources = "sources";
+const std::string kSkin = "skin";
+const std::string kInstanceSkin = "instanceSkin";
 
 namespace GLTF
 {

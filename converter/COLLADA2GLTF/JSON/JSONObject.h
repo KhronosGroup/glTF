@@ -86,6 +86,8 @@ namespace GLTF
         
         void apply(JSONValueApplierFunc func, void* context);
         
+        virtual bool isEqualTo(JSONValue* value);
+        
     protected:
         void _parseRapidJSONObject(void *value);
     private:
