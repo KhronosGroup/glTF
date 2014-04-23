@@ -281,12 +281,18 @@ namespace GLTF
                                     minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
                             }
                             
+                            size_t maxCoordsAttributesCount = mesh->getMeshAttributesCountForSemantic(GLTF::TEXCOORD) - 1;
                             for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
                                 
                                 std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
                                 SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
                                 
-                                std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
+                                //work-around for https://github.com/KhronosGroup/glTF/issues/253
+                                size_t setIndex = textureCoordBindings[coordIdx].getSetIndex() - minimumIndex;
+                                if (setIndex > maxCoordsAttributesCount)
+                                    setIndex = maxCoordsAttributesCount;
+                                
+                                std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(setIndex);
                                 
                                 if (semanticArrayPtr) {
                                     for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
