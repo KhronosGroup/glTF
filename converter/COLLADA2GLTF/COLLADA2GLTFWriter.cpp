@@ -391,8 +391,7 @@ namespace GLTF
         nodeObject->setString("name",node->getName());
         
         this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
-        this->_asset->_uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
-
+        this->_asset->setOriginalId(uniqueUID, nodeOriginalID);
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
@@ -620,7 +619,7 @@ namespace GLTF
                 
                 shared_ptr<JSONObject> light = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(id));
                 if (light) {
-                    std::string lightUID = this->_asset->_uniqueIDToOriginalID[id];
+                    std::string lightUID = this->_asset->getOriginalId(id);
                     
                     shared_ptr<JSONArray> listOfNodesPerLight;
                     if (this->_asset->_uniqueIDOfLightToNodes.count(id) == 0) {
@@ -914,7 +913,7 @@ namespace GLTF
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             Sampler* sampler = (Sampler*)samplers[texture.getSamplerId()];
-            std::string imageUID = uniqueIdWithType("image",sampler->getSourceImage());
+            std::string originalImageUID = this->_asset->getOriginalId(sampler->getSourceImage().toAscii());
             
             std::string texcoord = texture.getTexcoord();
             
@@ -930,12 +929,11 @@ namespace GLTF
                                                                       __GetFilterMode(sampler->getMinFilter(), profile),
                                                                       __GetFilterMode(sampler->getMagFilter(), profile));
             
-            std::string textureUID = "texture_" + imageUID;
-            
+            std::string textureUID = "texture_" + originalImageUID;
             shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
             if (textures->contains(textureUID) == false) {
                 shared_ptr <JSONObject> textureObject(new JSONObject());
-                textureObject->setString("source", imageUID);
+                textureObject->setString(kSource, originalImageUID);
                 textureObject->setString("sampler", samplerUID);
                 textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
                 
@@ -1124,19 +1122,14 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage ) {
-        shared_ptr <GLTF::JSONObject> images = this->_asset->root()->createObjectIfNeeded("images");
+        shared_ptr <GLTF::JSONObject> images = this->_asset->root()->createObjectIfNeeded(kImages);
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
         
-        std::string imageUID = uniqueIdWithType("image",openCOLLADAImage->getUniqueId());
+        std::string imageUID = openCOLLADAImage->getUniqueId().toAscii();
+        this->_asset->setValueForUniqueId(imageUID, image);
+        this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
+        images->setValue(openCOLLADAImage->getOriginalId(), image);
         
-        images->setValue(imageUID, image);
-        /*
-         bool relativePath = true;
-         if (pathDir.size() > 0) {
-         if ((pathDir[0] != '.') || (pathDir[0] == '/')) {
-         relativePath = false;
-         }
-         }*/
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
         std::string relPathFile = imageURI.getPathFile();
         
@@ -1146,7 +1139,7 @@ namespace GLTF
             relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
         }
         image->setString("path", this->_asset->resourceOuputPathForPath(relPathFile));
-
+        
         return true;
 	}
     
@@ -1203,7 +1196,7 @@ namespace GLTF
         
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
-        this->_asset->_uniqueIDToOriginalID[lightId] = light->getOriginalId();
+        this->_asset->setOriginalId(lightId, light->getOriginalId());
         
         shared_ptr<JSONArray> lightsIds = this->_asset->root()->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));

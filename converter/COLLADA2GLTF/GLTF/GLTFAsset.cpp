@@ -175,6 +175,19 @@ namespace GLTF
         return this->_uniqueIDToJSONValue.count(uniqueId) > 0;
     }
 
+    void GLTFAsset::setOriginalId(const std::string& uniqueId, const std::string& originalId) {
+        this->_uniqueIDToOriginalID[uniqueId] = originalId;
+        this->_originalIDToUniqueID[originalId] = uniqueId;
+    }
+    
+    std::string GLTFAsset::getOriginalId(const std::string& uniqueId) {
+        return this->_uniqueIDToOriginalID[uniqueId];
+    }
+    
+    std::string GLTFAsset::getUniqueId(const std::string& original) {
+        return this->_originalIDToUniqueID[original];
+    }
+
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
         if (this->_nameToOutputStream.count(streamName) == 0) {
@@ -336,7 +349,7 @@ namespace GLTF
     
     void GLTFAsset::copyImagesInsideBundleIfNeeded() {
         if (this->_isBundle == true) {
-            shared_ptr<JSONObject> images = this->_root->createObjectIfNeeded("images");
+            shared_ptr<JSONObject> images = this->_root->createObjectIfNeeded(kImages);
             size_t imagesCount = images->getKeysCount();
             if (imagesCount > 0) {
                 std::vector <std::string> keys = images->getAllKeys();

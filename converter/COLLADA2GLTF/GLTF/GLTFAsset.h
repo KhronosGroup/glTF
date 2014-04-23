@@ -33,7 +33,7 @@ namespace GLTF
     typedef std::map<std::string , shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
     
     typedef std::map<std::string , shared_ptr<JSONObject> > OriginalIDToTrackedObject;
-    typedef std::map<std::string , std::string > UniqueIDToOriginalUID;
+    typedef std::map<std::string , std::string > GLTFMapStringToString;
     typedef std::map<std::string , shared_ptr<JSONValue> > UniqueIDToJSONValue;
 
     typedef std::map<GLTFAccessorCache , std::string> UniqueIDToAccessor;
@@ -87,6 +87,10 @@ namespace GLTF
         void prepareForProfile(shared_ptr<GLTFProfile> profile);
 
         std::string getSharedBufferId();
+        
+        void setOriginalId(const std::string& uniqueId, const std::string& originalId);
+        std::string getOriginalId(const std::string& uniqueId);
+        std::string getUniqueId(const std::string& originalId);
 
         std::vector <shared_ptr<GLTFAssetModifier> > &assetModifiers() { return this->_assetModifiers; };
         
@@ -105,7 +109,6 @@ namespace GLTF
         UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
-        UniqueIDToOriginalUID           _uniqueIDToOriginalID;
         UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
         UniqueIDToAccessor              _uniqueIDToAccessorObject;
         UniqueIDToAnimationFlattener    _targetUIDWithPathToAnimationFlattener;
@@ -113,6 +116,9 @@ namespace GLTF
     private:
         shared_ptr <GLTFProfile>        _profile;
         shared_ptr <JSONObject>         _root;
+
+        GLTFMapStringToString           _uniqueIDToOriginalID;
+        GLTFMapStringToString           _originalIDToUniqueID;
 
         shared_ptr <GLTFConfig>         _converterConfig;
         shared_ptr <JSONObject>         _convertionResults;

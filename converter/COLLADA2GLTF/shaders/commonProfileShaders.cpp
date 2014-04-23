@@ -159,8 +159,8 @@ namespace GLTF
                     return false;
                 }
                 shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
-                std::string sourceUID = texture->getString("source");
-                shared_ptr<JSONObject> images = asset->root()->createObjectIfNeeded("images");
+                std::string sourceUID = texture->getString(kSource);
+                shared_ptr<JSONObject> images = asset->root()->createObjectIfNeeded(kImages);
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
@@ -227,11 +227,12 @@ namespace GLTF
         std::string hash = slot + ":";
 
         if (slotIsContributingToLighting(slot, parameters, asset)) {
-            shared_ptr<JSONObject> parameter = parameters->getObject(slot);
-            
-            if (parameter->contains("type")) {
-                hash += GLTFUtils::toString(parameter->getUnsignedInt32("type"));
-                return hash;
+            if (parameters->contains(slot)) {
+                shared_ptr<JSONObject> parameter = parameters->getObject(slot);
+                if (parameter->contains("type")) {
+                    hash += GLTFUtils::toString(parameter->getUnsignedInt32("type"));
+                    return hash;
+                }
             }
         } else if (parameters->contains(slot) && slot != "diffuse") {
             parameters->removeValue(slot);
@@ -262,9 +263,6 @@ namespace GLTF
     */
     static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset) {
         std::string techniqueHash = "";
-        
-        //FIXME:now assume we always have diffuse specified
-        shared_ptr<JSONObject> parameter = parameters->getObject("diffuse");
         
         techniqueHash += buildSlotHash(parameters, "diffuse", asset);
         techniqueHash += buildSlotHash(parameters, "ambient", asset);
@@ -884,7 +882,7 @@ namespace GLTF
                             vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
 
                             program->addVarying(varyingLightDirection, vec3Type);
-                            lightTransformParameter->setValue("source", nodesIds[j]);
+                            lightTransformParameter->setValue(kSource, nodesIds[j]);
 
                             if (hasNormals) {
                                 if (!useSimpleLambert) {
