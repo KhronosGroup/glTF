@@ -246,18 +246,18 @@ namespace GLTF
         int qcolor   = 10;
         int qWeights = 8;
         
-        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION", qcoord);
-        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL", qnormal);
-        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", qtexCoord);
-        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR", qcolor);
-        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT", qWeights);
+        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION");
+        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL");
+        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD");
+        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR");
+        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT");
         
-        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL", "NORMAL"));
-        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR", "DIFFERENTIAL"));
-        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT", "DIFFERENTIAL"));
+        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION"));
+        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD"));
+        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL"));
+        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR"));
+        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT"));
+        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT"));
         
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         size_t bufferOffset = outputStream->length();
@@ -454,13 +454,13 @@ namespace GLTF
         
         int quantization = 17;
         if (path == "TIME") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TIME", 10);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TIME");
         } else if (path == "translation") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.translation", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.translation");
         } else if (path == "rotation") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.rotation", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.rotation");
         } else if (path == "scale") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.scale", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.scale");
         }
         
         params.SetQuantBits(quantization);

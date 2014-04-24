@@ -179,7 +179,6 @@ namespace GLTF
         COLLADASaxFWL::Loader _loader;
         shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
-        GLTF::GLTFWriter _resultsWriter;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
 

@@ -157,7 +157,8 @@ namespace GLTF
         this->_convertionResults = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedNodesReferringMeshes = shared_ptr<JSONObject> (new JSONObject());
         this->_originalResourcesPath = shared_ptr<JSONObject> (new JSONObject());
-        
+        this->_convertionMetaData = shared_ptr<JSONObject> (new JSONObject());
+
         this->_prefix = 0;
         this->setGeometryByteLength(0);
         this->setAnimationByteLength(0);
@@ -227,7 +228,11 @@ namespace GLTF
     shared_ptr <JSONObject> GLTFAsset::convertionResults() {
         return this->_convertionResults;
     }
-    
+
+    shared_ptr <JSONObject> GLTFAsset::convertionMetaData() {
+        return this->_convertionMetaData;
+    }
+
     shared_ptr <GLTFProfile> GLTFAsset::profile() {
         return this->_profile;
     }
@@ -292,8 +297,8 @@ namespace GLTF
     };
     
     void GLTFAsset::log(const char * format, ... ) {
-        if ((this->_converterConfig->boolForKeyPath("outputProgress", false) == false) &&
-            (this->_converterConfig->boolForKeyPath("outputConvertionResults", false)) == false) {
+        if ((this->_converterConfig->boolForKeyPath("outputProgress") == false) &&
+            (this->_converterConfig->boolForKeyPath("outputConvertionResults")) == false) {
             char buffer[1000];
             va_list args;
             va_start (args, format);
@@ -330,6 +335,8 @@ namespace GLTF
     
     void GLTFAsset::setInputFilePath(const std::string& inputFilePath) {
         this->_inputFilePath = inputFilePath;
+        
+        this->_convertionMetaData->setString("source", inputFilePath);
     }
     
     std::string GLTFAsset::getInputFilePath() {
@@ -760,7 +767,27 @@ namespace GLTF
         this->log("[animations] %d bytes\n", (int)this->getAnimationByteLength());
         this->log("[scene] total bytes:%d\n", (int) (verticesLength + indicesLength + animationLength + compressionLength) );
         
-        this->copyImagesInsideBundleIfNeeded();        
+        this->copyImagesInsideBundleIfNeeded();
+        
+        if (asset->converterConfig()->boolForKeyPath("outputConvertionResults")) {
+            GLTF::GLTFWriter resultsWriter;
+            COLLADABU::URI convertResultsURI = this->resourceOuputPathForPath("results.json");
+            std::string aPath = convertResultsURI.getPathDir();
+            resultsWriter.initWithPath(aPath);
+            asset->convertionResults()->write(&resultsWriter);
+        }
+        
+        if (this->_isBundle || asset->converterConfig()->boolForKeyPath("outputConvertionMetaData")) {
+            GLTF::GLTFWriter resultsWriter;
+            COLLADABU::URI convertMetaDataURI = this->resourceOuputPathForPath("scene.meta");
+            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+            
+            std::string folder = outputURI.getPathDir();
+            
+            std::string aPath = folder + convertMetaDataURI.getPathFile();
+            resultsWriter.initWithPath(aPath);
+            asset->convertionMetaData()->write(&resultsWriter);
+        }
     }
     
 }

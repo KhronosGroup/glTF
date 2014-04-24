@@ -49,6 +49,7 @@ namespace GLTF
         
         shared_ptr <GLTFConfig> converterConfig();
         shared_ptr <JSONObject> convertionResults();
+        shared_ptr <JSONObject> convertionMetaData();
 
         shared_ptr <GLTFProfile> profile();
         shared_ptr <JSONObject> root();
@@ -122,6 +123,7 @@ namespace GLTF
 
         shared_ptr <GLTFConfig>         _converterConfig;
         shared_ptr <JSONObject>         _convertionResults;
+        shared_ptr <JSONObject>         _convertionMetaData;
         shared_ptr<JSONObject>          _originalResourcesPath;
         shared_ptr<JSONObject>          _trackedResourcesPath;
         shared_ptr<JSONObject>          _trackedOutputResourcesPath;

@@ -54,7 +54,42 @@ namespace GLTF
         optionsRoot->setString("compressionType", "none");
         optionsRoot->setString("compressionMode", "ascii");
         
-        optionsRoot->setBool("shareAnimationAccessors", true);        
+        optionsRoot->setBool("shareAnimationAccessors", true);
+        
+        optionsRoot->setBool("outputConvertionResults", false);
+        optionsRoot->setBool("outputConvertionMetaData", false);
+        
+        //create the path "extensions.Open3DGC.quantization" and set default for Open3DGC
+        shared_ptr<JSONObject> extensions(new JSONObject());
+        shared_ptr<JSONObject> Open3DGC(new JSONObject());
+        shared_ptr<JSONObject> quantization(new JSONObject());
+        
+        optionsRoot->setValue("extensions", extensions);
+        extensions->setValue("Open3DGC", Open3DGC);
+        Open3DGC->setValue("quantization", quantization);
+        
+        quantization->setUnsignedInt32("POSITION", 12);
+        quantization->setUnsignedInt32("NORMAL", 10);
+        quantization->setUnsignedInt32("TEXCOORD", 10);
+        quantization->setUnsignedInt32("COLOR", 10);
+        quantization->setUnsignedInt32("WEIGHT", 8);
+        quantization->setUnsignedInt32("TIME", 10);
+        
+        shared_ptr<JSONObject> prediction(new JSONObject());
+        Open3DGC->setValue("prediction", prediction);
+        
+        prediction->setString("POSITION", "PARALLELOGRAM");
+        prediction->setString("TEXCOORD", "PARALLELOGRAM");
+        prediction->setString("NORMAL", "NORMAL");
+        prediction->setString("WEIGHT", "PARALLELOGRAM");
+        prediction->setString("JOINT", "DIFFERENTIAL");
+
+        shared_ptr<JSONObject> transform(new JSONObject());
+        quantization->setValue("trasnform", transform);
+
+        transform->setUnsignedInt32("translation", 17);
+        transform->setUnsignedInt32("rotation", 17);
+        transform->setUnsignedInt32("scale", 17);
     }
     
     bool GLTFConfig::initWithPath(const std::string& path) {
@@ -73,8 +108,8 @@ namespace GLTF
     }
 
     
-    unsigned int GLTFConfig::unsignedInt32ForKeyPath(const std::string &keyPath, unsigned int defaultValue) {
-        unsigned int resultValue = defaultValue;
+    unsigned int GLTFConfig::unsignedInt32ForKeyPath(const std::string &keyPath) {
+        unsigned int resultValue = 0;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
             if (value->getJSONType() == kJSONNumber) {
@@ -86,8 +121,8 @@ namespace GLTF
         return resultValue;
     }
     
-    int GLTFConfig::int32ForKeyPath(const std::string &keyPath, int defaultValue) {
-        int resultValue = defaultValue;
+    int GLTFConfig::int32ForKeyPath(const std::string &keyPath) {
+        int resultValue = 0;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
             if (value->getJSONType() == kJSONNumber) {
@@ -100,8 +135,8 @@ namespace GLTF
 
     }
     
-    double GLTFConfig::doubleForKeyPath(const std::string &keyPath, double defaultValue) {
-        double resultValue = defaultValue;
+    double GLTFConfig::doubleForKeyPath(const std::string &keyPath) {
+        double resultValue = 0;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
             if (value->getJSONType() == kJSONNumber) {
@@ -114,8 +149,8 @@ namespace GLTF
 
     }
     
-    bool GLTFConfig::boolForKeyPath(const std::string &keyPath, bool defaultValue) {
-        bool resultValue = defaultValue;
+    bool GLTFConfig::boolForKeyPath(const std::string &keyPath) {
+        bool resultValue = false;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
             if (value->getJSONType() == kJSONNumber) {
@@ -127,8 +162,8 @@ namespace GLTF
         return resultValue;
     }
     
-    std::string GLTFConfig::stringForKeyPath(const std::string &keyPath, std::string defaultValue) {
-        std::string resultValue = defaultValue;
+    std::string GLTFConfig::stringForKeyPath(const std::string &keyPath) {
+        std::string resultValue;
         shared_ptr<JSONValue> value = this->_configObject->valueForKeyPath(keyPath);
         if (value) {
             if (value->getJSONType() == kJSONString) {

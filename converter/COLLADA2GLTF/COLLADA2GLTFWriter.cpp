@@ -76,15 +76,7 @@ namespace GLTF
 			return false;
         
         asset->write();
-        
-        if (asset->converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
-            COLLADABU::URI convertResultsURI(asset->getOutputFilePath());
-            std::string aPath = convertResultsURI.getPathDir();
-            aPath += "results.json";
-            this->_resultsWriter.initWithPath(aPath);
-            asset->convertionResults()->write(&this->_resultsWriter);
-        }
-        
+                
 		return true;
 	}
     
