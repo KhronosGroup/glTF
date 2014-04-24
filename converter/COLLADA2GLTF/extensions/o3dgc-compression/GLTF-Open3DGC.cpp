@@ -403,7 +403,7 @@ namespace GLTF
         compressedData->setInt32("verticesCount", vertexCount);
         compressedData->setInt32("indicesCount", allIndicesCount);
         //Open3DGC binary is disabled
-        params.SetStreamType(CONFIG_STRING("compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
+        params.SetStreamType(CONFIG_STRING(asset, "compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
 #if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
         COLLADABU::URI outputURI(asset->outputFilePath.c_str());
@@ -413,7 +413,7 @@ namespace GLTF
 #endif
         encoder.Encode(params, ifs, bstream);
         
-        compressedData->setString("mode", CONFIG_STRING("compressionMode") );
+        compressedData->setString("mode", CONFIG_STRING(asset, "compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
         compressedData->setUnsignedInt32("type", asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
@@ -438,7 +438,7 @@ namespace GLTF
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         Real max[32];
         Real min[32];
-        O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
+        O3DGCStreamType streamType = CONFIG_STRING(asset, "compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
         shared_ptr<GLTFConfig> config = asset->converterConfig();
         
@@ -542,7 +542,7 @@ namespace GLTF
         
         //write
         size_t byteOffset = 0;
-        bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
+        bool shouldEncodeOpen3DGC = CONFIG_STRING(asset, "compressionType")  == "Open3DGC";
         GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset->createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();;
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
@@ -561,7 +561,7 @@ namespace GLTF
                 
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", byteLength);
-                compressionDataObject->setString("mode", CONFIG_STRING("compressionMode"));
+                compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
                 compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
             }
         } else {
@@ -587,7 +587,7 @@ namespace GLTF
         
         shared_ptr <JSONObject> parameter;
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
-        if (CONFIG_BOOL("shareAnimationAccessors")) {
+        if (CONFIG_BOOL(asset, "shareAnimationAccessors")) {
             GLTFAccessorCache accessorCache(buffer, byteLength);
             UniqueIDToAccessor::iterator it = asset->_uniqueIDToAccessorObject.find(accessorCache);
             if (it != asset->_uniqueIDToAccessorObject.end()) {

@@ -100,7 +100,7 @@ namespace GLTF
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
         assetObject->setString("generator",version);
         shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
-        assetExtras->setBool(kPremultipliedAlpha, CONFIG_BOOL(kPremultipliedAlpha));
+        assetExtras->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         assetObject->setValue("extras", assetExtras);
         
         return true;
@@ -116,7 +116,7 @@ namespace GLTF
         }
         float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
         
-        return CONFIG_BOOL("invertTransparency") ? 1 - transparency : transparency;
+        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
     
     float COLLADA2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon) {
@@ -374,7 +374,7 @@ namespace GLTF
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo) {
         GLTFAsset *asset = this->_asset.get();
-        bool shouldExportTRS = CONFIG_BOOL("alwaysExportTRS");
+        bool shouldExportTRS = CONFIG_BOOL(asset, "alwaysExportTRS");
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeOriginalID = node->getOriginalId();
         if (nodeOriginalID.length() == 0) {
@@ -482,7 +482,7 @@ namespace GLTF
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
             
-            bool exportDefaultValues = CONFIG_BOOL("exportDefaultValues");
+            bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
                                        ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
             if (exportTranslation)
@@ -497,7 +497,7 @@ namespace GLTF
             
         } else {
             //FIXME: OpenCOLLADA typo
-            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL("exportDefaultValues") == false) ));
+            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
             if (exportMatrix)
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
         }
@@ -935,7 +935,7 @@ namespace GLTF
                 textureObject->setString("sampler", samplerUID);
                 textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
                 
-                if (CONFIG_BOOL("exportDefaultValues")) {
+                if (CONFIG_BOOL(asset, "exportDefaultValues")) {
                     textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
                     //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
                     textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
@@ -997,14 +997,14 @@ namespace GLTF
             handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
             
-            if (CONFIG_BOOL("alwaysExportFilterColor")) {
+            if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
                 slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
             
-            if (!isOpaque(effectCommon) || CONFIG_BOOL("alwaysExportTransparency")) {
+            if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
                 transparency->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));

@@ -414,10 +414,19 @@ namespace GLTF
         }
     }
     
+    void GLTFAsset::_writeJSONObjectAtPath(shared_ptr<JSONObject> &anObject, const std::string& path) {
+        GLTF::GLTFWriter resultsWriter;
+        COLLADABU::URI convertMetaDataURI = this->resourceOuputPathForPath("scene.meta");
+        COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+        std::string folder = outputURI.getPathDir();
+        std::string aPath = folder + convertMetaDataURI.getPathFile();
+        resultsWriter.initWithPath(aPath);
+        this->convertionMetaData()->write(&resultsWriter);
+    }
+    
     void GLTFAsset::write() {
         ifstream inputCompression;
         
-        GLTFAsset *asset = this;
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
 
@@ -561,7 +570,7 @@ namespace GLTF
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (compressMesh)
                 writeCompressedMesh(mesh, this);
         }
@@ -571,7 +580,7 @@ namespace GLTF
         //save all indices
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
                 writeMeshIndices(mesh, previousLength, this);
         }
@@ -592,7 +601,7 @@ namespace GLTF
         //save all mesh attributes
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING("compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
             if (!compressMesh)
                 writeMeshAttributes(mesh, previousLength, this);
         }
@@ -769,24 +778,22 @@ namespace GLTF
         
         this->copyImagesInsideBundleIfNeeded();
         
-        if (asset->converterConfig()->boolForKeyPath("outputConvertionResults")) {
+        if (this->converterConfig()->boolForKeyPath("outputConvertionResults")) {
             GLTF::GLTFWriter resultsWriter;
             COLLADABU::URI convertResultsURI = this->resourceOuputPathForPath("results.json");
             std::string aPath = convertResultsURI.getPathDir();
             resultsWriter.initWithPath(aPath);
-            asset->convertionResults()->write(&resultsWriter);
+            this->convertionResults()->write(&resultsWriter);
         }
         
-        if (this->_isBundle || asset->converterConfig()->boolForKeyPath("outputConvertionMetaData")) {
+        if (this->_isBundle || this->converterConfig()->boolForKeyPath("outputConvertionMetaData")) {
             GLTF::GLTFWriter resultsWriter;
             COLLADABU::URI convertMetaDataURI = this->resourceOuputPathForPath("scene.meta");
             COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            
             std::string folder = outputURI.getPathDir();
-            
             std::string aPath = folder + convertMetaDataURI.getPathFile();
             resultsWriter.initWithPath(aPath);
-            asset->convertionMetaData()->write(&resultsWriter);
+            this->convertionMetaData()->write(&resultsWriter);
         }
     }
     

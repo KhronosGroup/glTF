@@ -7,11 +7,11 @@
 
 namespace GLTF
 {
-#define CONFIG_BOOL(X) (asset->converterConfig()->config()->getBool(X))
-#define CONFIG_STRING(X) (asset->converterConfig()->config()->getString(X))
-#define CONFIG_DOUBLE(X) (asset->converterConfig()->config()->getDouble(X))
-#define CONFIG_INT32(X) (asset->converterConfig()->config()->getInt32(X))
-#define CONFIG_UINT32(X) (asset->converterConfig()->config()->getUInt32(X))
+#define CONFIG_BOOL(asset,X) (asset->converterConfig()->config()->getBool(X))
+#define CONFIG_STRING(asset, X) (asset->converterConfig()->config()->getString(X))
+#define CONFIG_DOUBLE(asset, X) (asset->converterConfig()->config()->getDouble(X))
+#define CONFIG_INT32(asset, X) (asset->converterConfig()->config()->getInt32(X))
+#define CONFIG_UINT32(asset, X) (asset->converterConfig()->config()->getUInt32(X))
 
     const std::string kRawOutputStream = "rawOutputStream";
     const std::string kCompressionOutputStream = "compression";
@@ -100,6 +100,8 @@ namespace GLTF
     //TODO: all those still need cleanup and should be moved to private
     protected:
         void launchModifiers();
+    private:
+        void _writeJSONObjectAtPath(shared_ptr<JSONObject> &anObject, const std::string& path);
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;

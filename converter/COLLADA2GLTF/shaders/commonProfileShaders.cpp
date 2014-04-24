@@ -97,7 +97,7 @@ namespace GLTF
     //Not yet implemented for everything
     static bool slotIsContributingToLighting(const std::string &slot, shared_ptr <JSONObject> inputParameters,  GLTFAsset* asset) {
         if (inputParameters->contains(slot)) {
-            if (CONFIG_BOOL("optimizeParameters") == false)
+            if (CONFIG_BOOL(asset, "optimizeParameters") == false)
                 return true;
             
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
@@ -140,7 +140,7 @@ namespace GLTF
         
         double transparency = tr->getDouble("value");
         
-        return CONFIG_BOOL("invertTransparency") ? 1 - transparency : transparency;
+        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
@@ -296,7 +296,7 @@ namespace GLTF
                 COLLADABU::URI outputURI(asset->getOutputFilePath());
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
-                if (!CONFIG_BOOL("outputProgress")) {
+                if (!CONFIG_BOOL(asset, "outputProgress")) {
                     asset->log("[shader]: %s\n", shaderPath.c_str());
                 }
             }
@@ -326,7 +326,7 @@ namespace GLTF
             shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
             
             
-            if (CONFIG_BOOL("premultipliedAlpha")) {
+            if (CONFIG_BOOL(asset, "premultipliedAlpha")) {
                 blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("ONE"));
             } else {
                 blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
@@ -753,8 +753,8 @@ namespace GLTF
                 shared_ptr<JSONArray> lightsIds = asset->root()->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
                 if (ids.size() > 0) {
-                    if (ids.size() == 1) {
-                        shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[0]);
+                    for (size_t i = 0 ; i < ids.size() ; i++) {
+                        shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                         shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                         
                         shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
@@ -762,15 +762,12 @@ namespace GLTF
                         std::string lightType = light->getString("type");
                         
                         //we ignore lighting if the only light we have is ambient
-                        modelContainsLights = lightType != "ambient";
-                    } else {
-                        modelContainsLights = true;
+                        modelContainsLights |= lightType != "ambient";
                     }
                 }
             }
             
-            
-            bool lightingIsEnabled = hasNormals && (modelContainsLights || CONFIG_BOOL("useDefaultLight"));
+            bool lightingIsEnabled = hasNormals && (modelContainsLights || CONFIG_BOOL(asset, "useDefaultLight"));
             
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
@@ -920,7 +917,7 @@ namespace GLTF
             
             //Currently the declaration of the shininess is dependent of the presence of light.
             //if we want details, we want also all parameters.
-            if (CONFIG_BOOL("exportPassDetails")) {
+            if (CONFIG_BOOL(asset, "exportPassDetails")) {
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
                     addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess", asset);
@@ -949,7 +946,7 @@ namespace GLTF
 
                 if ((!lightingIsEnabled) && ((slot == "ambient") || (slot == "specular"))) {
                     //as explained in https://github.com/KhronosGroup/glTF/issues/121 export all parameters when details is specified
-                    if (CONFIG_BOOL("exportPassDetails"))
+                    if (CONFIG_BOOL(asset, "exportPassDetails"))
                         addParameter(slot, slotType);
                     continue;
                 }
@@ -1028,7 +1025,7 @@ namespace GLTF
             }
             if (modelContainsLights) {
                 fragmentShader->appendCode("diffuse.xyz *= diffuseLight;\n");
-            } else if (CONFIG_BOOL("useDefaultLight") && hasNormals) {
+            } else if (CONFIG_BOOL(asset, "useDefaultLight") && hasNormals) {
                 fragmentShader->appendCode("diffuse.xyz *= max(dot(normal,vec3(0.,0.,1.)), 0.);\n");
             }
             fragmentShader->appendCode("color.xyz += diffuse.xyz;\n");
@@ -1049,7 +1046,7 @@ namespace GLTF
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a);\n");
             }
             
-            if (CONFIG_BOOL("alwaysExportFilterColor")) {
+            if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 if (inputParameters->contains("filterColor")) {
                     shared_ptr<JSONObject> filterColor = inputParameters->getObject("filterColor");
                     shared_ptr <JSONObject> filterColorParameter = addValue("fs", "uniform", vec4Type, 1, "filterColor", asset);
@@ -1150,7 +1147,7 @@ namespace GLTF
         passes->setValue(passName, pass);
         techniquesObject->setValue(techniqueID, referenceTechnique);
         
-        if (CONFIG_BOOL("exportPassDetails")) {
+        if (CONFIG_BOOL(asset, "exportPassDetails")) {
             shared_ptr <JSONObject> details = glTFPass->getDetails(lightingModel, values, techniqueExtras, texcoordBindings, asset);
             pass->setValue("details", details);
         }
