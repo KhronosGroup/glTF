@@ -99,9 +99,8 @@ namespace GLTF
         shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded("asset");
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
         assetObject->setString("generator",version);
-        shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
-        assetExtras->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
-        assetObject->setValue("extras", assetExtras);
+        //shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
+        assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         
         return true;
 	}
