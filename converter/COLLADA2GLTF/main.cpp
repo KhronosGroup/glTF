@@ -127,8 +127,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     bool hasInputPath = false;
     bool shouldShowHelp = false;
     
-    //asset->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
-    //asset->configObject
     buildOptions();
     
     if (argc == 1) {
@@ -229,7 +227,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     if (!hasOutputPath & hasInputPath) {
         asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
-        
     }
     
     return true;
@@ -242,11 +239,17 @@ int main (int argc, char * const argv[]) {
         if (asset->getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = asset->getInputFilePath().c_str();
-        
-        if (!fileExists(asset->getInputFilePath().c_str())) {
+        char* inputFilePathCStr = strdup(asset->getInputFilePath().c_str());
+
+        if (!fileExists(inputFilePathCStr)) {
+            free(inputFilePathCStr);
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
+        }
+
+        struct stat attr;
+        if (stat(inputFilePathCStr, &attr) != -1) {
+            asset->convertionMetaData()->setString("date", ctime(&attr.st_ctime));
         }
         
         clock_t start = clock();
@@ -270,8 +273,11 @@ int main (int argc, char * const argv[]) {
         double clocks = CLOCKS_PER_SEC;
 #endif
         std::stringstream s;
-        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
+        double elapsedTime = clock() - start;
+        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << elapsedTime / clocks ;
         asset->log("Runtime: %s seconds\n", s.str().c_str());
+        
+        free(inputFilePathCStr);
     }
     return 0;
 }
