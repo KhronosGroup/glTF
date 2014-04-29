@@ -363,18 +363,19 @@ namespace GLTF
                 for (size_t i = 0 ; i < imagesCount ; i++) {
                     shared_ptr<JSONObject> image = images->getObject(keys[i]);
                     std::string path = image->getString("path");
-                    //printf("\n****\nkey:%s\npath:%s\n", keys[i].c_str(), path.c_str());
                     
                     std::string originalPath = this->_originalResourcesPath->getString(path);
-                    COLLADABU::URI outputImagePathURI(this->_bundleOutputPath + "/" + this->_trackedResourcesPath->getString(originalPath).c_str());
-                    //printf("copy %s\n to %s\n", path.c_str(), outputImagePathURI.toNativePath().c_str());
                     
-                    //copy the file
                     std::string inputImagePath = this->pathRelativeToInputPath(originalPath).c_str();
-                    //printf("inputImagePath %s\n\n", inputImagePath.c_str());
+
+                    COLLADABU::URI outputImagePathURI(inputImagePath.c_str());
+                    
+                    COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+                    std::string folder = outputURI.getPathDir();
+                    std::string outputPath = folder + outputImagePathURI.getPathFile();
                     
                     std::ifstream f1(inputImagePath.c_str(), std::fstream::binary);
-                    std::ofstream f2(outputImagePathURI.toNativePath().c_str(), std::fstream::binary);
+                    std::ofstream f2(outputPath.c_str(), std::fstream::binary);
                     
                     f2 << f1.rdbuf(); // read original file into target
                 }
@@ -412,16 +413,6 @@ namespace GLTF
             assetModifier->modify(this->_root);
             assetModifier->cleanup();
         }
-    }
-    
-    void GLTFAsset::_writeJSONObjectAtPath(shared_ptr<JSONObject> &anObject, const std::string& path) {
-        GLTF::GLTFWriter resultsWriter;
-        COLLADABU::URI convertMetaDataURI = this->resourceOuputPathForPath("scene.meta");
-        COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-        std::string folder = outputURI.getPathDir();
-        std::string aPath = folder + convertMetaDataURI.getPathFile();
-        resultsWriter.initWithPath(aPath);
-        this->convertionMetaData()->write(&resultsWriter);
     }
     
     void GLTFAsset::write() {
