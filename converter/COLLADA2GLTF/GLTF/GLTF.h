@@ -39,6 +39,7 @@
 #include <fstream>
 #include <vector>
 #include "assert.h"
+#include <cstddef>
 
 #if (defined(WIN32) || defined(_LIBCPP_VERSION))
 #include <memory>
