@@ -333,6 +333,12 @@ namespace GLTF
         return this->_outputFilePath;
     }
     
+    std::string GLTFAsset::getOutputFolderPath() {
+        COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+        std::string folder = outputURI.getPathDir();
+        return folder;
+    }
+    
     void GLTFAsset::setInputFilePath(const std::string& inputFilePath) {
         this->_inputFilePath = inputFilePath;
         
@@ -377,6 +383,10 @@ namespace GLTF
                     std::ifstream f1(inputImagePath.c_str(), std::fstream::binary);
                     std::ofstream f2(outputPath.c_str(), std::fstream::binary);
                     
+                    if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
+                        this->log("[image]: Copy inside bundle from %s to %s\n", inputImagePath.c_str(), outputPath.c_str());
+                    }
+                    
                     f2 << f1.rdbuf(); // read original file into target
                 }
             }
@@ -415,8 +425,26 @@ namespace GLTF
         }
     }
     
+    void GLTFAsset::_writeJSONResource(const std::string &path, shared_ptr<JSONObject> obj) {
+        GLTF::GLTFWriter resultsWriter;
+        COLLADABU::URI outputURI(this->resourceOuputPathForPath(path));
+        std::string aPath = this->getOutputFolderPath() + outputURI.getPathFile();
+        resultsWriter.initWithPath(aPath);
+        obj->write(&resultsWriter);
+        
+        if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
+            this->log("[Resource]: write JSON resource at path:%s\n", aPath.c_str());
+        }
+    }
+
     void GLTFAsset::write() {
         ifstream inputCompression;
+        
+        if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
+            char cwd[1024];
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+                this->log("[Info]: current working directory:%s\n", cwd);
+        }
         
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
@@ -770,21 +798,11 @@ namespace GLTF
         this->copyImagesInsideBundleIfNeeded();
         
         if (this->converterConfig()->boolForKeyPath("outputConvertionResults")) {
-            GLTF::GLTFWriter resultsWriter;
-            COLLADABU::URI convertResultsURI = this->resourceOuputPathForPath("results.json");
-            std::string aPath = convertResultsURI.getPathDir();
-            resultsWriter.initWithPath(aPath);
-            this->convertionResults()->write(&resultsWriter);
+            this->_writeJSONResource("results.json", this->convertionResults());
         }
         
         if (this->_isBundle || this->converterConfig()->boolForKeyPath("outputConvertionMetaData")) {
-            GLTF::GLTFWriter resultsWriter;
-            COLLADABU::URI convertMetaDataURI = this->resourceOuputPathForPath("scene.meta");
-            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            std::string folder = outputURI.getPathDir();
-            std::string aPath = folder + convertMetaDataURI.getPathFile();
-            resultsWriter.initWithPath(aPath);
-            this->convertionMetaData()->write(&resultsWriter);
+            this->_writeJSONResource("scene.bld", this->convertionMetaData());
         }
     }
     

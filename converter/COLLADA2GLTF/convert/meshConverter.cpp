@@ -417,8 +417,10 @@ namespace GLTF
                 
                 static bool printedOnce = false;
                 if (!printedOnce) {
-                    asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
-                    printedOnce = true;
+                    if (asset->converterConfig()->boolForKeyPath("verboseLogging")) {
+                        asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                        printedOnce = true;
+                    }
                 }
                 
                 continue;

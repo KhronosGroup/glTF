@@ -74,6 +74,7 @@ namespace GLTF
         
         void setOutputFilePath(const std::string& outputFilePath);
         std::string getOutputFilePath();
+        std::string getOutputFolderPath();
         
         void setInputFilePath(const std::string& inputFilePath);
         std::string getInputFilePath();
@@ -101,7 +102,7 @@ namespace GLTF
     protected:
         void launchModifiers();
     private:
-        void _writeJSONObjectAtPath(shared_ptr<JSONObject> &anObject, const std::string& path);
+        void _writeJSONResource(const std::string &resourcePath, shared_ptr<JSONObject> obj);
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
         MaterialUIDToName               _materialUIDToName;

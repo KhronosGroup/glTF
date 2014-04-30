@@ -46,9 +46,9 @@
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 13
+#define OPTIONS_COUNT 14
 #else
-#define OPTIONS_COUNT 11
+#define OPTIONS_COUNT 12
 #endif
 
 
@@ -77,7 +77,8 @@ static const OptionDescriptor options[] = {
 #endif
     { "v",              no_argument,        "-v -> print version" },
     { "s",              no_argument,        "-s -> experimental mode"},
-	{ "h",              no_argument,        "-h -> help" }
+	{ "h",              no_argument,        "-h -> help" },
+	{ "r",              no_argument,        "-r -> verbose logging" }
 };
 
 static void buildOptions() {
@@ -143,7 +144,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsr", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -212,6 +213,9 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 converterConfig->config()->setBool("alwaysExportTransparency", true);
                 converterConfig->config()->setBool("useDefaultLight", false);
                 converterConfig->config()->setBool("optimizeParameters", true);
+                break;
+            case 'r':
+                converterConfig->config()->setBool("verboseLogging", true);
                 break;
                 
 			default:

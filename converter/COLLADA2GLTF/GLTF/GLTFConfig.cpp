@@ -58,6 +58,7 @@ namespace GLTF
         
         optionsRoot->setBool("outputConvertionResults", false);
         optionsRoot->setBool("outputConvertionMetaData", false);
+        optionsRoot->setBool("verboseLogging", false);
         
         //create the path "extensions.Open3DGC.quantization" and set default for Open3DGC
         shared_ptr<JSONObject> extensions(new JSONObject());
@@ -85,7 +86,7 @@ namespace GLTF
         prediction->setString("JOINT", "DIFFERENTIAL");
 
         shared_ptr<JSONObject> transform(new JSONObject());
-        quantization->setValue("trasnform", transform);
+        quantization->setValue("transform", transform);
 
         transform->setUnsignedInt32("translation", 17);
         transform->setUnsignedInt32("rotation", 17);

@@ -296,7 +296,7 @@ namespace GLTF
                 COLLADABU::URI outputURI(asset->getOutputFilePath());
                 std::string shaderPath =  outputURI.getPathDir() + path;
                 GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
-                if (!CONFIG_BOOL(asset, "outputProgress")) {
+                if (!CONFIG_BOOL(asset, "outputProgress") && asset->converterConfig()->boolForKeyPath("verboseLogging")) {
                     asset->log("[shader]: %s\n", shaderPath.c_str());
                 }
             }
