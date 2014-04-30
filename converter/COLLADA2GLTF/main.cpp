@@ -46,9 +46,9 @@
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 14
+#define OPTIONS_COUNT 15
 #else
-#define OPTIONS_COUNT 12
+#define OPTIONS_COUNT 13
 #endif
 
 
