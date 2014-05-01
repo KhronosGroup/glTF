@@ -29,14 +29,6 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-#ifdef _LIBCPP_VERSION
-namespace std {
-    namespace tr1 = std;
-}
-#endif
-
-using namespace std::tr1;
-
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
 const std::string kByteStride = "byteStride";
@@ -97,18 +89,18 @@ namespace GLTF
     class JSONVertexAttribute;
     class GLTFAnimationFlattener;
     //-- Args & Options
-    typedef std::vector <shared_ptr <GLTF::JSONValue> > JSONValueVector;
+    typedef std::vector <std::shared_ptr <GLTF::JSONValue> > JSONValueVector;
     typedef JSONValueVector& JSONValueVectorRef;
-    typedef std::vector <shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
-    typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
+    typedef std::vector <std::shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
+    typedef std::vector <std::shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     
-    typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
-    typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
+    typedef std::shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFMesh> > MeshVector;
 
-    typedef std::map<std::string , shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
-    typedef shared_ptr<AnimationFlattenerForTargetUID> AnimationFlattenerForTargetUIDSharedPtr;
+    typedef std::map<std::string , std::shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
+    typedef std::shared_ptr<AnimationFlattenerForTargetUID> AnimationFlattenerForTargetUIDSharedPtr;
     typedef std::map<std::string , AnimationFlattenerForTargetUIDSharedPtr > FlattenerMapsForAnimationID;
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);

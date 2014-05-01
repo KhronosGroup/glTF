@@ -59,7 +59,7 @@ namespace GLTF
     };
     
     
-    typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
+    typedef std::vector < std::shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
         
     typedef struct 
     {
@@ -72,17 +72,17 @@ namespace GLTF
 	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter(shared_ptr<GLTF::GLTFAsset> asset);
+		COLLADA2GLTFWriter(std::shared_ptr<GLTF::GLTFAsset> asset);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
-        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
+        bool writeNode(const COLLADAFW::Node* node, std::shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
         bool writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                   COLLADAFW::MaterialBindingArray &materialBindings,
-                                                  shared_ptr <GLTF::JSONArray> &meshesArray);
+                                                  std::shared_ptr <GLTF::JSONArray> &meshesArray);
         
 	public:        
         
@@ -165,19 +165,19 @@ namespace GLTF
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
 	private:
-        void _trackMeshesReferredByNode(shared_ptr<JSONObject> &node, shared_ptr <JSONArray> &meshesUIDs);
-        void registerObjectWithOriginalUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
+        void _trackMeshesReferredByNode(std::shared_ptr<JSONObject> &node, std::shared_ptr <JSONArray> &meshesUIDs);
+        void registerObjectWithOriginalUID(std::string nodeUID, std::shared_ptr <JSONObject> nodeObject, std::shared_ptr <JSONObject> nodesObject);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,
-                              shared_ptr <GLTFEffect> cvtEffect,
-                              shared_ptr<JSONObject> extras);
+                              std::shared_ptr <GLTFEffect> cvtEffect,
+                              std::shared_ptr<JSONObject> extras);
         
         std::string getSamplerUIDForParameters(unsigned int wrapS, unsigned int wrapT, unsigned int minFilter, unsigned int maxFilter);
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        shared_ptr<GLTF::GLTFAsset> _asset;
+        std::shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;

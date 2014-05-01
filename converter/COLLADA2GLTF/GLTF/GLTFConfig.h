@@ -32,7 +32,7 @@ namespace GLTF
         bool initWithPath(const std::string& path);
         
         virtual ~GLTFConfig();
-        shared_ptr <JSONObject> config();
+        std::shared_ptr <JSONObject> config();
 
         unsigned int unsignedInt32ForKeyPath(const std::string &keyPath);
         int int32ForKeyPath(const std::string &keyPath);
@@ -41,9 +41,9 @@ namespace GLTF
         std::string stringForKeyPath(const std::string &keyPath);
         
     private:
-        void _setupDefaultConfigOptions(shared_ptr<JSONObject> optionsRoot);
+        void _setupDefaultConfigOptions(std::shared_ptr<JSONObject> optionsRoot);
     private:
-        shared_ptr<JSONObject> _configObject;
+        std::shared_ptr<JSONObject> _configObject;
     };
 }
 

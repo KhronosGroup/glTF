@@ -33,8 +33,8 @@ namespace GLTF
         GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind);
         
         size_t length();
-        void write(shared_ptr<GLTFBuffer> buffer);
-        void write(shared_ptr<GLTFBufferView> bufferView);
+        void write(std::shared_ptr<GLTFBuffer> buffer);
+        void write(std::shared_ptr<GLTFBufferView> bufferView);
         void write(const char* buffer, size_t length);
 
         const std::string& filename();

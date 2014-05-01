@@ -29,7 +29,7 @@
 
 namespace GLTF
 {
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTF::GLTFAsset* asset);
+    std::string getReferenceTechniqueID(std::shared_ptr<JSONObject> techniqueGenerator, GLTF::GLTFAsset* asset);
 };
 
 #endif

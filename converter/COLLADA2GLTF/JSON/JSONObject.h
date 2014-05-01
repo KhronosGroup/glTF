@@ -29,11 +29,11 @@
 
 namespace GLTF 
 {
-    shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string fileName);
+    std::shared_ptr <JSONObject> JSONObjectWithContentsOfFile(std::string fileName);
 
     class JSONArray;
     
-    typedef std::map<std::string , shared_ptr <JSONValue> > KeyToJSONValue;
+    typedef std::map<std::string , std::shared_ptr <JSONValue> > KeyToJSONValue;
     
     class JSONObject : public JSONValue {
         friend class JSONArray;
@@ -47,15 +47,15 @@ namespace GLTF
         bool initWithCString(const char *jsonString, char **error);
         bool initWithContentsOfFile(const char *filepath, char **error);
 
-        shared_ptr <JSONObject> createObjectIfNeeded(const std::string& key);
-        shared_ptr <JSONArray> createArrayIfNeeded(const std::string& key);
-        void setValue(const std::string &key, shared_ptr <JSONValue> value);
-        shared_ptr <JSONValue> getValue(std::string);
+        std::shared_ptr <JSONObject> createObjectIfNeeded(const std::string& key);
+        std::shared_ptr <JSONArray> createArrayIfNeeded(const std::string& key);
+        void setValue(const std::string &key, std::shared_ptr <JSONValue> value);
+        std::shared_ptr <JSONValue> getValue(std::string);
 
         void removeValue(const std::string &key);
         
-        shared_ptr <JSONObject> getObject(const std::string&);
-        shared_ptr <JSONArray> getArray(const std::string&);
+        std::shared_ptr <JSONObject> getObject(const std::string&);
+        std::shared_ptr <JSONArray> getArray(const std::string&);
 
         bool contains(const std::string &key);
         
@@ -76,7 +76,7 @@ namespace GLTF
         
         std::vector <std::string> getAllKeys();
         
-        shared_ptr<JSONArray> keys();
+        std::shared_ptr<JSONArray> keys();
         
         size_t getKeysCount();
         

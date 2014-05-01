@@ -30,7 +30,7 @@
 namespace GLTF 
 {
     typedef std::vector <std::string > SemanticArray;
-    typedef shared_ptr<SemanticArray> SemanticArrayPtr;
+    typedef std::shared_ptr<SemanticArray> SemanticArrayPtr;
     typedef std::map<std::string /* texcoord */, SemanticArrayPtr > TexCoordToSemanticsArrayPtr;
     
     class GLTFEffect : public JSONObject {
@@ -41,8 +41,8 @@ namespace GLTF
         
         const std::string& getID();        
 
-        void setTechniqueGenerator(shared_ptr <JSONObject> techniqueGenerator);
-        shared_ptr <JSONObject> getTechniqueGenerator();
+        void setTechniqueGenerator(std::shared_ptr <JSONObject> techniqueGenerator);
+        std::shared_ptr <JSONObject> getTechniqueGenerator();
 
         void setName(const std::string& name);
         std::string getName();
@@ -50,8 +50,8 @@ namespace GLTF
         void setLightingModel(const std::string& lightingModel);
         const std::string& getLightingModel();
 
-        void setValues(shared_ptr <JSONObject>);
-        shared_ptr <JSONObject> getValues();
+        void setValues(std::shared_ptr <JSONObject>);
+        std::shared_ptr <JSONObject> getValues();
         
         void addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic);
         SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
@@ -61,8 +61,8 @@ namespace GLTF
     private:
         std::string _ID;
         std::string _lightingModel;
-        shared_ptr <JSONObject> _techniqueGenerator;
-        shared_ptr <JSONObject> _values;
+        std::shared_ptr <JSONObject> _techniqueGenerator;
+        std::shared_ptr <JSONObject> _values;
         TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
     };
 }

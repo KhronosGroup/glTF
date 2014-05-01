@@ -31,9 +31,9 @@ namespace GLTF
 {
     class GLTFMesh;
     
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector, shared_ptr<GLTFProfile> profile);
+    std::shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< std::shared_ptr<IndicesVector> > &vectorOfIndicesVector, std::shared_ptr<GLTFProfile> profile);
     
-    typedef std::map<unsigned int /* IndexSet */, shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
+    typedef std::map<unsigned int /* IndexSet */, std::shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
     typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;
     
     class GLTFMesh : public JSONObject {
@@ -43,14 +43,14 @@ namespace GLTF
         
         virtual ~GLTFMesh();
         
-        shared_ptr <MeshAttributeVector> meshAttributes();
+        std::shared_ptr <MeshAttributeVector> meshAttributes();
         
-        bool appendPrimitive(shared_ptr <GLTF::GLTFPrimitive> primitive);
+        bool appendPrimitive(std::shared_ptr <GLTF::GLTFPrimitive> primitive);
         
         bool hasSemantic(Semantic semantic);
         
-        void setMeshAttribute(Semantic semantic, size_t indexOfSet, shared_ptr<GLTFAccessor> meshAttribute);
-        shared_ptr<GLTFAccessor> getMeshAttribute(Semantic semantic, size_t indexOfSet);
+        void setMeshAttribute(Semantic semantic, size_t indexOfSet, std::shared_ptr<GLTFAccessor> meshAttribute);
+        std::shared_ptr<GLTFAccessor> getMeshAttribute(Semantic semantic, size_t indexOfSet);
         
         size_t getMeshAttributesCountForSemantic(Semantic semantic);
         
@@ -62,13 +62,13 @@ namespace GLTF
         std::string getName();
         void setName(std::string name);
         
-        shared_ptr<JSONObject> getExtensions();
+        std::shared_ptr<JSONObject> getExtensions();
 
         void setRemapTableForPositions(unsigned int* remapTableForPositions);
         unsigned int* getRemapTableForPositions();
 
-        shared_ptr<JSONArray> getPrimitives();
-        void setPrimitives(shared_ptr<JSONArray>);
+        std::shared_ptr<JSONArray> getPrimitives();
+        void setPrimitives(std::shared_ptr<JSONArray>);
         size_t getPrimitivesCount();
 
         bool writeAllBuffers(std::ofstream& verticesOutputStream, std::ofstream& indicesOutputStream, std::ofstream& genericStream);

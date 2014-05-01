@@ -40,6 +40,12 @@
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
 
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -142,7 +148,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
         }
     }
     
-    shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
+    std:shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
     while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsr", opt_options, 0)) != -1) {
         switch (ch) {

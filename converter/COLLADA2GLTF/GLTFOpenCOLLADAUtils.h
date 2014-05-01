@@ -24,7 +24,7 @@
 #ifndef __GLTF_OPENCOLLADA_UTILS_H__
 #define __GLTF_OPENCOLLADA_UTILS_H__
 
-shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix);
+std::shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix);
 void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m);
 
 #endif

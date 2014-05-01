@@ -42,7 +42,7 @@ namespace GLTF
         
         virtual void write(GLTFWriter* , void* context = 0);
         
-        shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
+        std::shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
         
         virtual void evaluate(void*);
         

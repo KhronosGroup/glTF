@@ -70,14 +70,14 @@ namespace GLTF
         size_t getVertexAttributesCount();
         
         VertexAttributeVector getVertexAttributes();
-        void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);
+        void appendVertexAttribute(std::shared_ptr <JSONVertexAttribute> VertexAttribute);
         
-        shared_ptr <GLTF::GLTFAccessor>  getIndices();
-        void setIndices(shared_ptr <GLTF::GLTFAccessor> indices);
+        std::shared_ptr <GLTF::GLTFAccessor>  getIndices();
+        void setIndices(std::shared_ptr <GLTF::GLTFAccessor> indices);
         
     private:                
         unsigned int _materialObjectID;
-        shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
+        std::shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
         VertexAttributeVector _allVertexAttributes;
     };
 

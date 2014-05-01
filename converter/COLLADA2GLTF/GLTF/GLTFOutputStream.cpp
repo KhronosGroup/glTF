@@ -23,7 +23,9 @@
 
 #include "GLTF.h"
 
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF 

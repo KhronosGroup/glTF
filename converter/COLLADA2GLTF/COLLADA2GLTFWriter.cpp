@@ -34,7 +34,10 @@
 #include "GitSHA1.h"
 #include <algorithm>
 
+
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 using namespace COLLADAFW;
 using namespace COLLADABU;

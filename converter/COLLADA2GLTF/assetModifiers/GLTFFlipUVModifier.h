@@ -32,7 +32,7 @@ namespace GLTF
         virtual ~GLTFFlipUVModifier();
         
         virtual bool init();
-        virtual void modify(shared_ptr<JSONObject> glTFAsset);
+        virtual void modify(std::shared_ptr<JSONObject> glTFAsset);
         virtual void cleanup();
     };
 }
