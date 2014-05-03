@@ -76,6 +76,9 @@ const std::string kSkin = "skin";
 const std::string kInstanceSkin = "instanceSkin";
 const std::string kImages = "images";
 const std::string kImage = "image";
+const std::string kCamera = "camera";
+const std::string kLights = "lights";
+const std::string kLight = "light";
 
 namespace GLTF
 {

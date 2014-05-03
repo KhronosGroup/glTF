@@ -60,7 +60,7 @@ namespace GLTF
     
     
     typedef std::vector < std::shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
-        
+    
     typedef struct 
     {
         BBOX sceneBBOX;
@@ -165,7 +165,10 @@ namespace GLTF
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
 	private:
-        void _trackMeshesReferredByNode(std::shared_ptr<JSONObject> &node, std::shared_ptr <JSONArray> &meshesUIDs);
+        void _storeMaterialBindingArray(const std::string& prefix,
+                                        const std::string& nodeUID,
+                                        const std::string& meshUID,
+                                        COLLADAFW::MaterialBindingArray &materialBindings);
         void registerObjectWithOriginalUID(std::string nodeUID, std::shared_ptr <JSONObject> nodeObject, std::shared_ptr <JSONObject> nodesObject);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
@@ -181,7 +184,6 @@ namespace GLTF
         const COLLADAFW::VisualScene *_visualScene;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-
         std::ofstream _compressedDataOutputStream;
 	};
 } 

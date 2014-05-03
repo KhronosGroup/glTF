@@ -75,9 +75,19 @@ namespace GLTF
         
         void resolveAttributes();
         
+        std::shared_ptr<JSONArray> subMeshes() {
+            if (this->_subMeshes == nullptr) {
+                this->_subMeshes = std::shared_ptr <JSONArray> (new JSONArray());
+            }
+            return this->_subMeshes;
+        }
+        
+        std::shared_ptr<GLTFMesh> clone();
+
     private:
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;
         std::string _ID;
+        std::shared_ptr<JSONArray> _subMeshes;
         
         //This is unfortunate that we need to keep this information,
         //but since we get skinning weights and bone indices after the mesh and the openCOLLADA mesh is not available anymore, we need to keep

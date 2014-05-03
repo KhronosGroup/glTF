@@ -75,7 +75,9 @@ namespace GLTF
         std::shared_ptr <GLTF::GLTFAccessor>  getIndices();
         void setIndices(std::shared_ptr <GLTF::GLTFAccessor> indices);
         
-    private:                
+        std::shared_ptr<GLTFPrimitive> clone();
+
+    private:
         unsigned int _materialObjectID;
         std::shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
         VertexAttributeVector _allVertexAttributes;

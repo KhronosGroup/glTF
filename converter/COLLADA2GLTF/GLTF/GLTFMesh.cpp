@@ -36,8 +36,9 @@ using namespace std;
 
 namespace GLTF
 {
-    GLTFMesh::GLTFMesh() : JSONObject() {
-        this->_remapTableForPositions = 0;
+    GLTFMesh::GLTFMesh() : JSONObject() , _subMeshes(nullptr) {
+        this->_subMeshes = nullptr;
+        this->_remapTableForPositions = nullptr;
         this->_ID = GLTFUtils::generateIDForType("mesh");
     }
     
@@ -46,16 +47,33 @@ namespace GLTF
             free(this->_remapTableForPositions);
     }
 
-    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) : JSONObject() {
-        this->_remapTableForPositions = 0;
-        //FIXME: ... didn't feel like propageted const everywhere yet
-        GLTFMesh *meshPtr = (GLTFMesh*)&mesh;
-        this->setPrimitives(meshPtr->getPrimitives());  //Is a single assignment here ok ? Need to check if a deep copy would be needed
+    //copy that retains elements
+    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) : JSONObject(), _subMeshes(nullptr) {
+        this->_remapTableForPositions = nullptr;
+        GLTFMesh *meshPtr = const_cast <GLTFMesh*>(&mesh);
+        this->setPrimitives(meshPtr->getPrimitives());
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->setName(meshPtr->getName());
     }
-    
+
+    shared_ptr<GLTFMesh> GLTFMesh::clone() {
+        
+        shared_ptr<GLTFMesh> clonedMesh(new GLTFMesh());
+        
+        clonedMesh->setID(this->getID());
+        clonedMesh->setName(this->getName());
+        clonedMesh->_semanticToMeshAttributes = this->_semanticToMeshAttributes;
+        
+        JSONValueVectorRef primitives =  this->getPrimitives()->values();
+        for (size_t i = 0 ; i < primitives.size() ; i++) {
+            shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            clonedMesh->appendPrimitive(primitive->clone());
+        }
+        
+        return clonedMesh;
+    }
+
     shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes() {
         shared_ptr <MeshAttributeVector> meshAttributes(new MeshAttributeVector());
         vector <GLTF::Semantic> allSemantics = this->allSemantics();

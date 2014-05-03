@@ -47,7 +47,8 @@ namespace GLTF
 			, const COLLADAFW::UniqueId& uniqueId, COLLADAFW::Object* object );
         
         std::shared_ptr <JSONObject> getExtras(COLLADAFW::UniqueId uniqueId);
-
+        std::shared_ptr <JSONObject> allExtras() { return this->_allExtras; }
+        
 	private:
         std::shared_ptr <JSONObject> _allExtras;
 	};

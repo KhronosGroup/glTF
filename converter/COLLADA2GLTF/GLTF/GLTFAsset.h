@@ -41,7 +41,12 @@ namespace GLTF
     typedef std::map<std::string , std::shared_ptr <COLLADAFW::Object> > UniqueIDToOpenCOLLADAObject;
     
     typedef std::map<std::string , std::shared_ptr<GLTFOutputStream> > NameToOutputStream;
-        
+    
+    //types for late binding of material
+    typedef std::vector <std::shared_ptr<COLLADAFW::MaterialBinding> > MaterialBindingsVector;
+    typedef std::map<std::string , std::shared_ptr <MaterialBindingsVector> > MaterialBindingsForMeshUID;
+    typedef std::map<std::string , std::shared_ptr <MaterialBindingsForMeshUID> > MaterialBindingsForNodeUID;
+    
 	class GLTFAsset
     {
     public:
@@ -95,13 +100,20 @@ namespace GLTF
         std::string getUniqueId(const std::string& originalId);
 
         std::vector <std::shared_ptr<GLTFAssetModifier> > &assetModifiers() { return this->_assetModifiers; };
+                
+        MaterialBindingsForNodeUID& materialBindingsForNodeUID() { return this->_materialBindingsForNodeUID; }
         
-        std::shared_ptr<JSONObject> trackedNodesReferringMeshes();
+        std::shared_ptr<JSONObject> getExtras();
+        void setExtras(std::shared_ptr<JSONObject>);
         
-    //TODO: all those still need cleanup and should be moved to private
     protected:
         void launchModifiers();
     private:
+        bool _applyMaterialBindingsForNode(const std::string& nodeUID);
+        void _applyMaterialBindings(std::shared_ptr<GLTFMesh> mesh,
+                                    std::shared_ptr <MaterialBindingsVector> materialBindingVector,
+                                    std::shared_ptr <JSONArray> meshesArray,
+                                    std::shared_ptr<JSONObject> meshExtras);
         void _writeJSONResource(const std::string &resourcePath, std::shared_ptr<JSONObject> obj);
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
@@ -124,13 +136,15 @@ namespace GLTF
         GLTFMapStringToString           _uniqueIDToOriginalID;
         GLTFMapStringToString           _originalIDToUniqueID;
 
-        std::shared_ptr <GLTFConfig>         _converterConfig;
-        std::shared_ptr <JSONObject>         _convertionResults;
-        std::shared_ptr <JSONObject>         _convertionMetaData;
-        std::shared_ptr<JSONObject>          _originalResourcesPath;
-        std::shared_ptr<JSONObject>          _trackedResourcesPath;
-        std::shared_ptr<JSONObject>          _trackedOutputResourcesPath;
-        std::shared_ptr<JSONObject>          _trackedNodesReferringMeshes;
+        std::shared_ptr <GLTFConfig>    _converterConfig;
+        std::shared_ptr <JSONObject>    _convertionResults;
+        std::shared_ptr <JSONObject>    _convertionMetaData;
+        std::shared_ptr<JSONObject>     _originalResourcesPath;
+        std::shared_ptr<JSONObject>     _trackedResourcesPath;
+        std::shared_ptr<JSONObject>     _trackedOutputResourcesPath;
+        std::shared_ptr<JSONObject>     _extras;
+        std::shared_ptr<JSONObject>     _meshesForMaterialBindingKey;
+
         unsigned int                    _prefix;
         std::string                     _inputFilePath;
         std::string                     _outputFilePath;
@@ -146,6 +160,8 @@ namespace GLTF
         GLTF::GLTFWriter                _writer;
         
         std::vector <std::shared_ptr<GLTFAssetModifier> > _assetModifiers;
+        
+        MaterialBindingsForNodeUID _materialBindingsForNodeUID;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

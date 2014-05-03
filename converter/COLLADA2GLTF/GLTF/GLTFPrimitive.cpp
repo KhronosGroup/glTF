@@ -47,14 +47,23 @@ namespace GLTF
     GLTFPrimitive::GLTFPrimitive(const GLTFPrimitive &primitive) : JSONObject()
     {
         this->_allVertexAttributes = primitive._allVertexAttributes;
-        //FIXME: ... didn't feel like propageted const everywhere yet
-        GLTFPrimitive *pr = (GLTFPrimitive*)&primitive;
-        
+        GLTFPrimitive *pr = const_cast<GLTFPrimitive*>(&primitive);
         this->setPrimitive(pr->getPrimitive());
         this->setMaterialID(pr->getMaterialID());
         this->_materialObjectID = primitive._materialObjectID;
         this->_uniqueIndices = primitive._uniqueIndices;
+        
     }
+    
+    shared_ptr<GLTFPrimitive> GLTFPrimitive::clone()
+    {
+        shared_ptr<GLTFPrimitive> primitive(new GLTFPrimitive(*this));
+        //FIXME: this should be done in GLTFPrimitive, but it's not possible at the moment, due to const signature that needs to be widely updated..
+        primitive->setIndices(this->getIndices());
+        
+        return primitive;
+    }
+
 
     GLTF::Semantic GLTFPrimitive::getSemanticAtIndex(unsigned int index)
     {

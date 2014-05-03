@@ -147,19 +147,16 @@ namespace GLTF
         id += type + "_" + GLTF::GLTFUtils::toString(uniqueId.getObjectId());
         return id;
     }
-
-    shared_ptr<JSONObject> GLTFAsset::trackedNodesReferringMeshes() {
-        return this->_trackedNodesReferringMeshes;
-    }
     
     GLTFAsset::GLTFAsset():_isBundle(false) {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
         this->_convertionResults = shared_ptr<JSONObject> (new JSONObject());
-        this->_trackedNodesReferringMeshes = shared_ptr<JSONObject> (new JSONObject());
         this->_originalResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_convertionMetaData = shared_ptr<JSONObject> (new JSONObject());
+        this->_extras = shared_ptr<JSONObject> (new JSONObject());
+        this->_meshesForMaterialBindingKey = shared_ptr<JSONObject> (new JSONObject());
 
         this->_prefix = 0;
         this->setGeometryByteLength(0);
@@ -438,6 +435,278 @@ namespace GLTF
             this->log("[Resource]: write JSON resource at path:%s\n", aPath.c_str());
         }
     }
+    
+    
+    shared_ptr<JSONObject> GLTFAsset::getExtras() {
+        return this->_extras;
+    }
+    
+    void GLTFAsset::setExtras(shared_ptr<JSONObject> extras) {
+        this->_extras = extras;
+    }
+
+    static shared_ptr <GLTF::JSONObject> serializeAttributeSemanticsForPrimitiveAtIndex(GLTFMesh* mesh, unsigned int idx) {
+        shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(mesh->getPrimitives()->values()[idx]);
+        
+        shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
+        shared_ptr<JSONArray> sets(new JSONArray());
+        
+        size_t count = primitive->getVertexAttributesCount();
+        for (size_t j = 0 ; j < count ; j++) {
+            Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
+            std::string semanticString = GLTFUtils::getStringForSemantic(semantic);
+            
+            shared_ptr<JSONObject> semanticInfo;
+            if (semantics->contains(semanticString) == false) {
+                semanticInfo = shared_ptr<JSONObject> (new JSONObject());
+                semantics->setValue(semanticString, semanticInfo);
+            }
+            
+            unsigned int indexOfSet = 0;
+            if (semantic == GLTF::TEXCOORD) {
+				indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
+            }
+            
+            sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
+        }
+        
+        return semantics;
+    }
+
+    static shared_ptr<GLTFEffect> createDefaultEffect(GLTFAsset* asset, shared_ptr <JSONObject> attributeSemantics, bool hasNormal) {
+        //we have no material, create default
+        shared_ptr<GLTFEffect> effect;
+        std::string uniqueId = "__glTF__defaultMaterial";
+        uniqueId += hasNormal ? "0" : "1";
+        
+        effect = shared_ptr<GLTFEffect> (new GLTFEffect(uniqueId));
+        shared_ptr <JSONObject> values(new JSONObject());
+        
+        effect->setValues(values);
+        effect->setLightingModel("Phong");
+        
+        //retrieve the type, parameterName -> symbol -> type
+        double red = 1, green = 1, blue = 1, alpha = 1;
+        shared_ptr <JSONObject> slotObject(new JSONObject());
+        slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
+        slotObject->setUnsignedInt32("type", asset->profile()->getGLenumForString("FLOAT_VEC4"));
+        values->setValue("diffuse", slotObject);
+        
+        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
+        
+        techniqueGenerator->setString("lightingModel", effect->getLightingModel());
+        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+        techniqueGenerator->setValue("values", effect->getValues());
+        techniqueGenerator->setValue("techniqueExtras", shared_ptr<JSONObject>(new JSONObject()));
+        techniqueGenerator->setValue("texcoordBindings", shared_ptr<JSONObject>(new JSONObject()));
+        
+        effect->setTechniqueGenerator(techniqueGenerator);
+        effect->setName(uniqueId);
+        return effect;
+    }
+    
+    static std::string buildKeyForMaterialBindingVector(shared_ptr <MaterialBindingsVector> materialBindingVector) {
+        std::string materialBindingKey = "";
+        
+        
+        for (size_t i = 0 ; i < materialBindingVector->size() ; i++) {
+            materialBindingKey += (*materialBindingVector)[i]->getReferencedMaterial().toAscii();
+        }
+        
+        return materialBindingKey;
+    }
+
+    void GLTFAsset::_applyMaterialBindings(shared_ptr<GLTFMesh> mesh,
+                                           shared_ptr <MaterialBindingsVector> materialBindingVector,
+                                           shared_ptr <JSONArray> meshesArray,
+                                           shared_ptr<JSONObject> meshExtras) {
+
+        std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingVector);
+        if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
+            shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
+            meshesForBindingKey->setValue(materialBindingKey, mesh);
+        } else {
+            shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(mesh->getID());
+            if (meshesForBindingKey->contains(materialBindingKey)) {
+                meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
+                return;
+            } else {
+                std::string originalID  = mesh->getID();
+                mesh = mesh->clone();
+                mesh->setID(originalID + "-variant-" + GLTFUtils::toString(meshesForBindingKey->getKeysCount()));
+                meshesForBindingKey->setValue(materialBindingKey, mesh);
+                this->root()->createObjectIfNeeded(kMeshes)->setValue(mesh->getID(), mesh);
+            }
+        }
+        
+        
+        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
+        assert(primitives.size() == materialBindingVector->size());
+        for (size_t j = 0 ; j < primitives.size() ; j++) {
+            shared_ptr <GLTFEffect> effect;
+            shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
+            shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
+            
+            COLLADAFW::MaterialBinding *materialBinding = (*materialBindingVector)[j].get();
+            
+            if (materialBinding != nullptr) {
+                shared_ptr<JSONObject> texcoordBindings(new JSONObject());
+                std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
+                
+                /* will be needed to get semantic & set association to create the shader */
+                const COLLADAFW::TextureCoordinateBindingArray &textureCoordBindings = materialBinding->getTextureCoordinateBindingArray();
+                COLLADAFW::UniqueId effectUID = this->_materialUIDToEffectUID[referencedMaterialID];
+                std::string effectID = effectUID.toAscii();
+                shared_ptr<JSONObject> effectExtras = this->_extras->contains(effectID) ? this->_extras->getObject(effectID) : nullptr;
+                
+                std::string materialName = this->_materialUIDToName[referencedMaterialID];
+                
+                if (this->containsValueForUniqueId(effectID)) {
+                    effect = static_pointer_cast<GLTFEffect>(this->getValueForUniqueId(effectID));
+                }
+                
+                // retrieve the semantic to be associated
+                size_t coordBindingsCount = textureCoordBindings.getCount();
+                if (coordBindingsCount > 0) {
+                    //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
+                    size_t minimumIndex = textureCoordBindings[0].getSetIndex();
+                    for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                        if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
+                            minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
+                    }
+                    
+                    size_t maxCoordsAttributesCount = mesh->getMeshAttributesCountForSemantic(GLTF::TEXCOORD) - 1;
+                    for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
+                        std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
+                        SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
+                        
+                        //work-around for https://github.com/KhronosGroup/glTF/issues/253
+                        size_t setIndex = textureCoordBindings[coordIdx].getSetIndex() - minimumIndex;
+                        if (setIndex > maxCoordsAttributesCount)
+                            setIndex = maxCoordsAttributesCount;
+                        
+                        std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(setIndex);
+                        
+                        if (semanticArrayPtr) {
+                            for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
+                                std::string slot = (*semanticArrayPtr)[semanticIndex];
+                                texcoordBindings->setString(slot, shaderSemantic);
+                                if (effectExtras != nullptr) {
+                                    if ((slot == "diffuse") && effectExtras->getBool("ambient_diffuse_lock")) {
+                                        texcoordBindings->setString("ambient", shaderSemantic);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                shared_ptr<JSONObject> techniqueExtras(new JSONObject());
+                if ((meshExtras != nullptr) && meshExtras->contains("double_sided")) {
+                    techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                }
+                if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
+                    techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
+                }
+                
+                //generate shaders if needed
+                shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
+                
+                shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
+                
+                techniqueGenerator->setString("lightingModel", effect->getLightingModel());
+                techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+                techniqueGenerator->setValue(kValues, effect->getValues());
+                techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
+                techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
+                
+                effect->setTechniqueGenerator(techniqueGenerator);
+                effect->setName(materialName);
+                primitive->setMaterialID(effect->getID());
+            } else {
+                //https://github.com/KhronosGroup/glTF/issues/194
+                //We'll deal with two cases cases of default materials
+                //With or without NORMALS
+                shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
+                
+                static shared_ptr<GLTFEffect> defaultEffectNoNormal = createDefaultEffect(this, attributeSemantics, false);
+                static shared_ptr<GLTFEffect> defaultEffectWithNormal = createDefaultEffect(this, attributeSemantics, true);
+                
+                bool hasNormal = attributeSemantics->contains(GLTFUtils::getStringForSemantic(GLTF::NORMAL));
+                
+                effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
+                
+                primitive->setMaterialID(effect->getID());
+                
+                if (materials->contains(effect->getID()) == false) {
+                    materials->setValue(effect->getID(), effect);
+                }
+            }
+        }
+        meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
+    }
+    
+    bool GLTFAsset::_applyMaterialBindingsForNode(const std::string &nodeUID) {
+        
+        if (this->containsValueForUniqueId(nodeUID) == false)
+            return false;
+        
+        shared_ptr <JSONObject> node = static_pointer_cast<JSONObject>(this->getValueForUniqueId(nodeUID));
+        
+        shared_ptr <MaterialBindingsForMeshUID> materialBindings = this->_materialBindingsForNodeUID.count(nodeUID) > 0 ? this->_materialBindingsForNodeUID[nodeUID] : nullptr;
+        
+        if (materialBindings == nullptr)
+            return false;
+        
+        //IMPORTANT -> check presence of meshesArray , we should bail as DAG could call this multiple time ?
+        shared_ptr <JSONArray> meshesArray = nullptr;
+
+        MaterialBindingsForMeshUID::const_iterator materialBindingsIterator;
+        for (materialBindingsIterator = materialBindings->begin() ; materialBindingsIterator != materialBindings->end() ; materialBindingsIterator++) {
+            
+            //------------- Transform & Parse MeshUID ------------------
+            //IMPORTANT !! at this point meshUID is formatted as this:
+            //"meshes-" + meshUID or "skin-meshes-" + meshUID
+            //by parsing the prefix ("meshes-" or "skin-meshes-")
+            //we will know if the meshes being processed belong
+            //to the meshes array in node or the sources in instanceSkin
+            //-----------------------------------------------------------
+            std::string meshUID = (*materialBindingsIterator).first;
+            
+            std::string meshesInNodePrefix = "meshes-";
+            std::string meshesInSkinningPrefix = "skin-meshes-";
+            bool meshesInNode = false, meshesInSkinning = false;
+            
+            if (meshUID.find(meshesInNodePrefix) == 0) {
+                meshesInNode = true;
+                meshUID = meshUID.substr(meshesInNodePrefix.length());
+                meshesArray = node->createArrayIfNeeded(kMeshes);
+            } else if (meshUID.find(meshesInSkinningPrefix) == 0) {
+                assert(node->contains(kInstanceSkin));
+                meshesInSkinning = true;
+                shared_ptr<JSONObject> instanceSkin = node->getObject(kInstanceSkin);
+                meshUID = meshUID.substr(meshesInSkinningPrefix.length());
+                meshesArray = instanceSkin->createArrayIfNeeded(kSources);
+            }
+            
+            assert(meshesInSkinning || meshesInNode);
+            
+            shared_ptr <MaterialBindingsVector> materialBindingVector = (*materialBindingsIterator).second;
+            assert(materialBindingVector != nullptr);
+            
+            shared_ptr<JSONObject> meshExtras = this->_extras->contains(meshUID) ? this->_extras->getObject(meshUID) : nullptr;
+            
+            shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
+            
+            this->_applyMaterialBindings(mesh, materialBindingVector, meshesArray, meshExtras);
+            JSONValueVectorRef subMeshes = mesh->subMeshes()->values();
+            for (size_t subMeshIndex = 0 ; subMeshIndex < subMeshes.size() ; subMeshIndex++) {
+                this->_applyMaterialBindings(static_pointer_cast<GLTFMesh>(subMeshes[subMeshIndex]), materialBindingVector, meshesArray, meshExtras);
+            }
+        }
+        
+        return true;
+    }
 
     void GLTFAsset::write() {
         ifstream inputCompression;
@@ -493,60 +762,33 @@ namespace GLTF
             const std::string &meshUID = meshesUIDs[i];
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshUID));
             if (mesh) {
-                shared_ptr<JSONArray> allMeshes(new JSONArray());
-                if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(mesh.get(), 65535, allMeshes, this->profile()) == false) {
-                    allMeshes->appendValue(mesh);
-                } else {
-                    //register new meshes
-                    JSONValueVectorRef meshesVector = allMeshes->values();
+                shared_ptr<GLTFMesh> targetMesh = createMeshWithMaximumIndicesCountFromMeshIfNeeded(mesh.get(), 65535, this->profile());
+                if (targetMesh != nullptr) {
+                    meshes->setValue(targetMesh->getID(), targetMesh);
+                    this->setValueForUniqueId(this->getUniqueId(targetMesh->getID()), targetMesh);
+                    JSONValueVectorRef meshesVector = targetMesh->subMeshes()->values();
                     size_t meshesCount = meshesVector.size();
                     if (meshesCount > 0) {
-                        meshes->removeValue(meshUID); //we remove the mesh that was splitted (to just keep the splitted parts).
                         for (size_t j = 0 ; j < meshesCount ; j++) {
                             mesh = static_pointer_cast<GLTFMesh>(meshesVector[j]);
                             meshes->setValue(mesh->getID(), mesh);
                         }
-                        
-                        //now, for each node referring the mesh that has been split, we remove references to its UID and replace by multiple references from the meshes resulting from his split.
-                        shared_ptr<JSONArray> nodesReferringMeshes = static_pointer_cast<JSONArray>(this->trackedNodesReferringMeshes()->getValue(meshUID));
-                        JSONValueVectorRef nodesVector = nodesReferringMeshes->values();
-                        shared_ptr<JSONValue> meshUIDAsValue = static_pointer_cast<JSONValue>(shared_ptr<JSONString>(new JSONString(meshUID)));
-                        for (size_t j = 0 ; j < nodesVector.size() ; j++) {
-                            shared_ptr<JSONObject> aNode = static_pointer_cast<JSONObject>(nodesVector[j]);
-                            
-                            if (aNode->contains(kMeshes)) {
-                                shared_ptr<JSONArray> meshesWithinNode = static_pointer_cast<JSONArray>(aNode->getValue(kMeshes));
-                                size_t indexOfMeshUID = meshesWithinNode->indexOfValue(meshUIDAsValue.get());
-                                if (indexOfMeshUID != string::npos) {
-                                    meshesWithinNode->values().erase(meshesWithinNode->values().begin() + indexOfMeshUID);
-                                    for (size_t k = 0 ; k < meshesCount ; k++) {
-                                        shared_ptr<GLTFMesh> subMesh = static_pointer_cast<GLTFMesh>(meshesVector[k]);
-                                        meshesWithinNode->appendValue(shared_ptr<JSONString>(new JSONString(subMesh->getID())));
-                                    }
-                                }
-                            }
-                            if (aNode->contains(kInstanceSkin)) {
-                                if (aNode->contains(kInstanceSkin)) {
-                                    shared_ptr<JSONObject> instanceSkin = aNode->getObject(kInstanceSkin);
-                                    shared_ptr<JSONArray> skinnedMeshesWithinNode = static_pointer_cast<JSONArray>(instanceSkin->getValue(kSources));
-                                    size_t indexOfMeshUID = skinnedMeshesWithinNode->indexOfValue(meshUIDAsValue.get());
-                                    if (indexOfMeshUID != string::npos) {
-                                        skinnedMeshesWithinNode->values().erase(skinnedMeshesWithinNode->values().begin() + indexOfMeshUID);
-                                        for (size_t k = 0 ; k < meshesCount ; k++) {
-                                            shared_ptr<GLTFMesh> subMesh = static_pointer_cast<GLTFMesh>(meshesVector[k]);
-                                            skinnedMeshesWithinNode->appendValue(shared_ptr<JSONString>(new JSONString(subMesh->getID())));
-                                        }
-                                    }
-                                    
-                                }
-                            }
-                        }
                     }
                 }
-                this->setValueForUniqueId(meshUID, allMeshes);
             }
         }
-       
+        
+        //Handle late binding of material in node
+        //So we go through all nodes and if a mesh got different bindings than the ones needed we clone the "reference" mesh and assign the binding
+        //we delay this operation to now, so that we get the reference mesh splitted.
+        shared_ptr <GLTF::JSONObject> nodes = this->root()->createObjectIfNeeded(kNodes);
+        
+        std::vector <std::string> nodesOriginalIds = nodes->getAllKeys();
+        for (size_t i = 0 ; i < nodesOriginalIds.size() ; i++) {
+            std::string nodeUID = this->getUniqueId(nodesOriginalIds[i]);
+            this->_applyMaterialBindingsForNode(nodeUID);
+        }
+        
         meshesUIDs = meshes->getAllKeys();
         
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {

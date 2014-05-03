@@ -502,10 +502,11 @@ namespace GLTF
         IndicesMap indexToRemappedIndex;
     } ;
 
-    SubMeshContext* __CreateSubMeshContext()
+    SubMeshContext* __CreateSubMeshContext(const std::string& id)
     {
         SubMeshContext *subMesh = new SubMeshContext();
         shared_ptr <GLTFMesh> targetMesh = shared_ptr <GLTFMesh> (new GLTFMesh());
+        targetMesh->setID(id);
         subMesh->targetMesh = targetMesh;
         
         return subMesh;
@@ -579,49 +580,48 @@ namespace GLTF
         }
     }
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maximumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile)
+    shared_ptr <GLTFMesh> createMeshWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, size_t maximumIndicesCount, shared_ptr<GLTFProfile> profile)
     {
-        bool splitNeeded = false;
-        
-        //First, check every primitive indices count to figure out if we really need to split anything at all.
-        //TODO: what about making a sanity check, to ensure we don't have points not referenced by any primitive. (I wonder if that's would be considered compliant with the SPEC. need to check.
+        shared_ptr <GLTFMesh> destinationMesh = nullptr;
+        bool splitNeeded = sourceMesh->getMeshAttribute(GLTF::POSITION, 0)->getCount()  >= maximumIndicesCount;
         GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
         
         for (size_t i = 0 ; i < primitives.size() ; i++) {
             shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            if (primitive->getIndices()->getCount() >= maximumIndicesCount) {
-                splitNeeded = true;
-                break;
-            }
         }
         
         if (!splitNeeded)
-            return false;
+            return nullptr;
         
-        SubMeshContext *subMesh = 0;
+        SubMeshContext *subMesh = nullptr;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
         bool primitiveCompleted = false;
         
         int *allNextPrimitiveIndices = (int*)calloc(primitives.size(), sizeof(int));
-        unsigned int meshIndex = 0;
+        size_t meshIndex = 0;
+        shared_ptr <GLTFMesh> targetMesh = nullptr;
+        
         for (size_t i = 0 ; i < primitives.size() ; i++) {
             if (allNextPrimitiveIndices[i] == -1)
                 continue;
             
-            if (subMesh == 0) {
-                subMesh = __CreateSubMeshContext();
-                meshes->appendValue(subMesh->targetMesh);
-                std::string meshID = "";
-                std::string meshName = "";
+            if (subMesh == nullptr) {
                 
-                meshID += sourceMesh->getID();
-                meshName += sourceMesh->getName();
-                if (meshIndex) {
-                    meshID += "-"+ GLTFUtils::toString(meshIndex);
-                    meshName += "-"+ GLTFUtils::toString(meshIndex);
+                if (targetMesh == nullptr) {
+                    subMesh = __CreateSubMeshContext(sourceMesh->getID());
+                    targetMesh = subMesh->targetMesh;
                 }
-                subMesh->targetMesh->setID(meshID);
+                
+                else {
+                    std::string id = sourceMesh->getID() + "split_" + GLTFUtils::toString(targetMesh->subMeshes()->values().size());
+                    subMesh = __CreateSubMeshContext(id);
+                    targetMesh->subMeshes()->appendValue(subMesh->targetMesh);
+                }
+                std::string meshName = sourceMesh->getName();
+                if (meshIndex) {
+                    meshName += GLTFUtils::toString(meshIndex);
+                }
                 subMesh->targetMesh->setName(meshName);
                 
                 stillHavePrimitivesElementsToBeProcessed = false;
@@ -647,8 +647,6 @@ namespace GLTF
             /* 
                 we could continue walking through a primitive even if the of maximum indices has been reached, because, for instance the next say, triangles could be within the already remapped indices. That said, not doing so should produce meshes that have more chances to have adjacent triangles. Need more experimentation about this. Having 2 modes would ideal.
              */
-            
-            
             //Different iterators type will be needed for these types
             /*
              type = "TRIANGLES";
@@ -724,7 +722,7 @@ namespace GLTF
         
         free(allNextPrimitiveIndices);
         
-        return true;
+        return targetMesh;
     }
 
     //Not required anymore since Open3DGC supports now sharing same vertex buffer and WebGL is disabled
