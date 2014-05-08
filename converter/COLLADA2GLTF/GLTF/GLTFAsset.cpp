@@ -505,12 +505,16 @@ namespace GLTF
         return effect;
     }
     
-    static std::string buildKeyForMaterialBindingVector(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap) {
+    static std::string buildKeyForMaterialBindingMap(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap) {
         std::string materialBindingKey = "";
+        size_t size = materialBindingPrimitiveMap->size();
         
-        MaterialBindingsPrimitiveMap::const_iterator iterator;
-        for (iterator = materialBindingPrimitiveMap->begin() ; iterator != materialBindingPrimitiveMap->end() ; iterator++) {
-            materialBindingKey += iterator->second->getReferencedMaterial().toAscii();
+        if (size > 0) {
+            MaterialBindingsPrimitiveMap::const_iterator iterator;
+            for (iterator = materialBindingPrimitiveMap->begin() ; iterator != materialBindingPrimitiveMap->end() ; iterator++) {
+                std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
+                materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
+            }
         }
         
         return materialBindingKey;
@@ -522,7 +526,7 @@ namespace GLTF
                                            shared_ptr<JSONObject> meshExtras) {
 
         if (materialBindingsPrimitiveMap) {
-            std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingsPrimitiveMap);
+            std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap);
             if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
                 shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
@@ -547,10 +551,8 @@ namespace GLTF
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             
-            COLLADAFW::MaterialBinding *materialBinding = (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()].get();
-            
-            if (materialBinding != nullptr) {
-
+            if (materialBindingsPrimitiveMap->count(primitive->getMaterialObjectID() > 0)) {
+                COLLADAFW::MaterialBinding *materialBinding =  (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()].get();
                 shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                 std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
                 
