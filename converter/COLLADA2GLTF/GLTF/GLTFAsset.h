@@ -43,8 +43,8 @@ namespace GLTF
     typedef std::map<std::string , std::shared_ptr<GLTFOutputStream> > NameToOutputStream;
     
     //types for late binding of material
-    typedef std::vector <std::shared_ptr<COLLADAFW::MaterialBinding> > MaterialBindingsVector;
-    typedef std::map<std::string , std::shared_ptr <MaterialBindingsVector> > MaterialBindingsForMeshUID;
+    typedef std::map<unsigned int , std::shared_ptr <COLLADAFW::MaterialBinding> > MaterialBindingsPrimitiveMap;
+    typedef std::map<std::string , std::shared_ptr <MaterialBindingsPrimitiveMap> > MaterialBindingsForMeshUID;
     typedef std::map<std::string , std::shared_ptr <MaterialBindingsForMeshUID> > MaterialBindingsForNodeUID;
     
 	class GLTFAsset
@@ -111,7 +111,7 @@ namespace GLTF
     private:
         bool _applyMaterialBindingsForNode(const std::string& nodeUID);
         void _applyMaterialBindings(std::shared_ptr<GLTFMesh> mesh,
-                                    std::shared_ptr <MaterialBindingsVector> materialBindingVector,
+                                    std::shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap,
                                     std::shared_ptr <JSONArray> meshesArray,
                                     std::shared_ptr<JSONObject> meshExtras);
         void _writeJSONResource(const std::string &resourcePath, std::shared_ptr<JSONObject> obj);

@@ -161,12 +161,12 @@ namespace GLTF
         
         //apply prefix on MeshUID
         std::string prefixedMeshUID = prefix + meshUID;
-        shared_ptr <MaterialBindingsVector> materialBindingsVector;
+        shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap;
         if (materialBindingsMap->count(prefixedMeshUID) == 0) {
-            materialBindingsVector = shared_ptr<MaterialBindingsVector> (new MaterialBindingsVector());
-            (*materialBindingsMap)[prefixedMeshUID] = materialBindingsVector;
+            materialBindingsPrimitiveMap = shared_ptr<MaterialBindingsPrimitiveMap> (new MaterialBindingsPrimitiveMap());
+            (*materialBindingsMap)[prefixedMeshUID] = materialBindingsPrimitiveMap;
         } else {
-            materialBindingsVector = (*materialBindingsMap)[prefixedMeshUID];
+            materialBindingsPrimitiveMap = (*materialBindingsMap)[prefixedMeshUID];
         }
         
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
@@ -181,10 +181,8 @@ namespace GLTF
             }
             if (materialBindingIndex != -1) {
                 shared_ptr <COLLADAFW::MaterialBinding> materialBinding(new COLLADAFW::MaterialBinding(materialBindings[materialBindingIndex]));
-                materialBindingsVector->push_back(materialBinding);
-            } else {
-                materialBindingsVector->push_back(nullptr);
-            }
+                (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()] = materialBinding;
+            }            
         }
         return;
     }

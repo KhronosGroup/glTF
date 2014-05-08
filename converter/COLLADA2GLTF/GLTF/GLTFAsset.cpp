@@ -505,28 +505,24 @@ namespace GLTF
         return effect;
     }
     
-    static std::string buildKeyForMaterialBindingVector(shared_ptr <MaterialBindingsVector> materialBindingVector) {
+    static std::string buildKeyForMaterialBindingVector(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap) {
         std::string materialBindingKey = "";
-        size_t size = materialBindingVector->size();
         
-        for (size_t i = 0 ; i < size ; i++) {
-            if ((*materialBindingVector)[i] != nullptr)
-                materialBindingKey += (*materialBindingVector)[i]->getReferencedMaterial().toAscii();
-            else {
-                materialBindingKey += "-null-";
-            }
+        MaterialBindingsPrimitiveMap::const_iterator iterator;
+        for (iterator = materialBindingPrimitiveMap->begin() ; iterator != materialBindingPrimitiveMap->end() ; iterator++) {
+            materialBindingKey += iterator->second->getReferencedMaterial().toAscii();
         }
         
         return materialBindingKey;
     }
 
     void GLTFAsset::_applyMaterialBindings(shared_ptr<GLTFMesh> mesh,
-                                           shared_ptr <MaterialBindingsVector> materialBindingVector,
+                                           shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap,
                                            shared_ptr <JSONArray> meshesArray,
                                            shared_ptr<JSONObject> meshExtras) {
 
-        if (materialBindingVector) {
-            std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingVector);
+        if (materialBindingsPrimitiveMap) {
+            std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingsPrimitiveMap);
             if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
                 shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
@@ -551,10 +547,9 @@ namespace GLTF
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             
-            COLLADAFW::MaterialBinding *materialBinding = (*materialBindingVector)[j].get();
+            COLLADAFW::MaterialBinding *materialBinding = (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()].get();
             
             if (materialBinding != nullptr) {
-                assert(primitives.size() == materialBindingVector->size());
 
                 shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                 std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
@@ -664,7 +659,6 @@ namespace GLTF
         if (materialBindings == nullptr)
             return false;
         
-        //IMPORTANT -> check presence of meshesArray , we should bail as DAG could call this multiple time ?
         shared_ptr <JSONArray> meshesArray = nullptr;
 
         MaterialBindingsForMeshUID::const_iterator materialBindingsIterator;
@@ -697,16 +691,16 @@ namespace GLTF
             
             assert(meshesInSkinning || meshesInNode);
             
-            shared_ptr <MaterialBindingsVector> materialBindingVector = (*materialBindingsIterator).second;
+            shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap = (*materialBindingsIterator).second;
             
             shared_ptr<JSONObject> meshExtras = this->_extras->contains(meshUID) ? this->_extras->getObject(meshUID) : nullptr;
             
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
             
-            this->_applyMaterialBindings(mesh, materialBindingVector, meshesArray, meshExtras);
+            this->_applyMaterialBindings(mesh, materialBindingsPrimitiveMap, meshesArray, meshExtras);
             JSONValueVectorRef subMeshes = mesh->subMeshes()->values();
             for (size_t subMeshIndex = 0 ; subMeshIndex < subMeshes.size() ; subMeshIndex++) {
-                this->_applyMaterialBindings(static_pointer_cast<GLTFMesh>(subMeshes[subMeshIndex]), materialBindingVector, meshesArray, meshExtras);
+                this->_applyMaterialBindings(static_pointer_cast<GLTFMesh>(subMeshes[subMeshIndex]), materialBindingsPrimitiveMap, meshesArray, meshExtras);
             }
         }
         
