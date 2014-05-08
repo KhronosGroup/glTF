@@ -476,6 +476,6 @@ namespace GLTF
             return createUnifiedIndexesMeshFromMesh(cvtMesh.get(), allPrimitiveIndicesVectors, asset->profile());
         }
 
-        return shared_ptr <GLTF::GLTFMesh> ((GLTFMesh*)0);
+        return nullptr;
     }
 }
