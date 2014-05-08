@@ -543,7 +543,7 @@ namespace GLTF
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
         assert(primitives.size() == materialBindingVector->size());
         for (size_t j = 0 ; j < primitives.size() ; j++) {
-            shared_ptr <GLTFEffect> effect;
+            shared_ptr <GLTFEffect> effect = nullptr;
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             
