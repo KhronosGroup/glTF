@@ -507,10 +507,14 @@ namespace GLTF
     
     static std::string buildKeyForMaterialBindingVector(shared_ptr <MaterialBindingsVector> materialBindingVector) {
         std::string materialBindingKey = "";
+        size_t size = materialBindingVector->size();
         
-        
-        for (size_t i = 0 ; i < materialBindingVector->size() ; i++) {
-            materialBindingKey += (*materialBindingVector)[i]->getReferencedMaterial().toAscii();
+        for (size_t i = 0 ; i < size ; i++) {
+            if ((*materialBindingVector)[i] != nullptr)
+                materialBindingKey += (*materialBindingVector)[i]->getReferencedMaterial().toAscii();
+            else {
+                materialBindingKey += "-null-";
+            }
         }
         
         return materialBindingKey;
@@ -521,27 +525,27 @@ namespace GLTF
                                            shared_ptr <JSONArray> meshesArray,
                                            shared_ptr<JSONObject> meshExtras) {
 
-        std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingVector);
-        if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
-            shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
-            meshesForBindingKey->setValue(materialBindingKey, mesh);
-        } else {
-            shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(mesh->getID());
-            if (meshesForBindingKey->contains(materialBindingKey)) {
-                meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
-                return;
-            } else {
-                std::string originalID  = mesh->getID();
-                mesh = mesh->clone();
-                mesh->setID(originalID + "-variant-" + GLTFUtils::toString(meshesForBindingKey->getKeysCount()));
+        if (materialBindingVector) {
+            std::string materialBindingKey = buildKeyForMaterialBindingVector(materialBindingVector);
+            if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
+                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
-                this->root()->createObjectIfNeeded(kMeshes)->setValue(mesh->getID(), mesh);
+            } else {
+                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(mesh->getID());
+                if (meshesForBindingKey->contains(materialBindingKey)) {
+                    meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
+                    return;
+                } else {
+                    std::string originalID  = mesh->getID();
+                    mesh = mesh->clone();
+                    mesh->setID(originalID + "-variant-" + GLTFUtils::toString(meshesForBindingKey->getKeysCount()));
+                    meshesForBindingKey->setValue(materialBindingKey, mesh);
+                    this->root()->createObjectIfNeeded(kMeshes)->setValue(mesh->getID(), mesh);
+                }
             }
         }
         
-        
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-        assert(primitives.size() == materialBindingVector->size());
         for (size_t j = 0 ; j < primitives.size() ; j++) {
             shared_ptr <GLTFEffect> effect = nullptr;
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
@@ -550,6 +554,8 @@ namespace GLTF
             COLLADAFW::MaterialBinding *materialBinding = (*materialBindingVector)[j].get();
             
             if (materialBinding != nullptr) {
+                assert(primitives.size() == materialBindingVector->size());
+
                 shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                 std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
                 
@@ -692,7 +698,6 @@ namespace GLTF
             assert(meshesInSkinning || meshesInNode);
             
             shared_ptr <MaterialBindingsVector> materialBindingVector = (*materialBindingsIterator).second;
-            assert(materialBindingVector != nullptr);
             
             shared_ptr<JSONObject> meshExtras = this->_extras->contains(meshUID) ? this->_extras->getObject(meshUID) : nullptr;
             
