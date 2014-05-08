@@ -573,8 +573,10 @@ namespace GLTF
                 std::string meshUID = geometry->getUniqueId().toAscii();
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
                     shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
-                    this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
-                    this->_asset->setValueForUniqueId(meshUID, cvtMesh);
+                    if (cvtMesh != nullptr) {
+                        this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
+                        this->_asset->setValueForUniqueId(meshUID, cvtMesh);
+                    }
                 }
             }
                 break;
