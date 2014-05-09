@@ -551,7 +551,7 @@ namespace GLTF
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             
-            if (materialBindingsPrimitiveMap->count(primitive->getMaterialObjectID() > 0)) {
+            if (materialBindingsPrimitiveMap->count(primitive->getMaterialObjectID()) > 0) {
                 COLLADAFW::MaterialBinding *materialBinding =  (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()].get();
                 shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                 std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
