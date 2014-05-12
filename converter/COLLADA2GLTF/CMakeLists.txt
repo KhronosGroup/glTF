@@ -12,7 +12,7 @@ get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GitSHA1.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp" @ONLY)
 
-set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
+set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static zlib zlibstat)
 
 if (NOT WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
@@ -20,6 +20,7 @@ endif()
 
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/kmz)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
@@ -51,6 +52,8 @@ if (NOT WIN32)
 endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
+link_directories(${COLLADA2GLTF_SOURCE_DIR}/kmz)
+
 
 if (WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -71,6 +74,15 @@ set(GLTF_SOURCES main.cpp
     GLTFOpenCOLLADA.h
     GLTFOpenCOLLADAUtils.h
     GLTFOpenCOLLADAUtils.cpp
+    
+    KMZ2Collada.h
+    KMZ2Collada.cpp
+    kmz/zlib.h
+    kmz/unzip.h
+    kmz/unzip.c
+    kmz/ioapi.h
+    kmz/ioapi.c
+
 
     GLTF/GLTFAccessorCache.cpp
     GLTF/GLTFAccessorCache.h
@@ -159,7 +171,7 @@ LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
 if (USE_OPEN3DGC)
-LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib)
+LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib zlib)
 endif()
 
 IF("${CMAKE_SYSTEM}" MATCHES "Linux")

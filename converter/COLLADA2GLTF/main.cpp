@@ -39,6 +39,7 @@
 
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
+#include "KMZ2Collada.h"
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -123,6 +124,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 	int ch;
     std::string file;
     std::string output;
+    std::string strFileName;
     bool hasOutputPath = false;
     bool hasInputPath = false;
     bool shouldShowHelp = false;
@@ -155,6 +157,12 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 return false;
             case 'f':
                 asset->setInputFilePath(optarg);
+                strFileName = optarg;
+                strFileName = strFileName.substr(strFileName.length()-3, 3);
+                transform(strFileName.begin(), strFileName.end(), 
+                    strFileName.begin(), tolower);
+                if (strcmp(strFileName.c_str(), "kmz") == 0)
+                    converterConfig->config()->setBool("isKmz", true);
                 hasInputPath = true;
 				break;
             case 'b':
@@ -256,6 +264,17 @@ int main (int argc, char * const argv[]) {
         } else {
             asset->log("converting:%s ... as %s \n",asset->getInputFilePath().c_str(), asset->getOutputFilePath().c_str());
         }
+
+        if (asset->converterConfig()->config()->getBool("isKmz")) {
+            std::string strJsonFilePath;
+            strJsonFilePath = GLTF::Kmz2Collada()(asset->getInputFilePath());
+            if (strJsonFilePath == "")
+                return -1;
+            asset->setInputFilePath(strJsonFilePath);
+            asset->setOutputFilePath(
+                replacePathExtensionWith(strJsonFilePath, "json"));
+        }
+        
         GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(asset);
         writer->write();
         if (asset->converterConfig()->config()->getBool("outputProgress")) {
