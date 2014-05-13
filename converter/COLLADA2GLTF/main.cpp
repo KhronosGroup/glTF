@@ -148,7 +148,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
         }
     }
     
-    std:shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
+    shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
     while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsr", opt_options, 0)) != -1) {
         switch (ch) {
