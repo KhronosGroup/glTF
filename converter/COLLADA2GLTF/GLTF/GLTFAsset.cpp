@@ -524,23 +524,23 @@ namespace GLTF
                                            shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap,
                                            shared_ptr <JSONArray> meshesArray,
                                            shared_ptr<JSONObject> meshExtras) {
-
+        
+        std::string meshOriginalID = mesh->getID();
         if (materialBindingsPrimitiveMap) {
             std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap);
-            if (this->_meshesForMaterialBindingKey->contains(mesh->getID()) == false) {
-                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(mesh->getID());
+            if (this->_meshesForMaterialBindingKey->contains(meshOriginalID) == false) {
+                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(meshOriginalID);
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
             } else {
-                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(mesh->getID());
+                shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(meshOriginalID);
                 if (meshesForBindingKey->contains(materialBindingKey)) {
-                    meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
+                    meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(meshOriginalID)));
                     return;
                 } else {
-                    std::string originalID  = mesh->getID();
                     mesh = mesh->clone();
-                    mesh->setID(originalID + "-variant-" + GLTFUtils::toString(meshesForBindingKey->getKeysCount()));
+                    mesh->setID(meshOriginalID + "-variant-" + GLTFUtils::toString(meshesForBindingKey->getKeysCount()));
                     meshesForBindingKey->setValue(materialBindingKey, mesh);
-                    this->root()->createObjectIfNeeded(kMeshes)->setValue(mesh->getID(), mesh);
+                    this->root()->createObjectIfNeeded(kMeshes)->setValue(meshOriginalID, mesh);
                 }
             }
         }
@@ -625,7 +625,7 @@ namespace GLTF
                 
                 effect->setTechniqueGenerator(techniqueGenerator);
                 effect->setName(materialName);
-                primitive->setMaterialID(effect->getID());
+                primitive->setMaterialID(meshOriginalID);
             } else {
                 //https://github.com/KhronosGroup/glTF/issues/194
                 //We'll deal with two cases cases of default materials
@@ -639,14 +639,14 @@ namespace GLTF
                 
                 effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
                 
-                primitive->setMaterialID(effect->getID());
+                primitive->setMaterialID(meshOriginalID);
                 
-                if (materials->contains(effect->getID()) == false) {
-                    materials->setValue(effect->getID(), effect);
+                if (materials->contains(meshOriginalID) == false) {
+                    materials->setValue(meshOriginalID, effect);
                 }
             }
         }
-        meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(mesh->getID())));
+        meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(meshOriginalID)));
     }
     
     bool GLTFAsset::_applyMaterialBindingsForNode(const std::string &nodeUID) {
