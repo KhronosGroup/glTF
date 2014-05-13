@@ -151,16 +151,6 @@
             },
             "default" : {}
         },
-        "profile" : {
-            "type" : "string",
-            "description" : "Specifies the target rendering API and version, e.g., WebGL 1.0.2.",
-            "default" : "WebGL 1.0.2"
-        },        
-        "version" : {
-            "type" : "string",
-            "description" : "The glTF version.",
-            "default" : "0.6"
-        },
         "textures" : {
             "properties" : {
             },
