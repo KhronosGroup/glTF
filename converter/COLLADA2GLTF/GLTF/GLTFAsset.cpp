@@ -395,7 +395,6 @@ namespace GLTF
     void GLTFAsset::prepareForProfile(shared_ptr<GLTFProfile> profile) {
         this->_profile = profile;
         this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
-        this->_root->setString(kProfile, profile->id());
         this->_root->createObjectIfNeeded(kNodes);
         
         this->_writer.initWithPath(this->getOutputFilePath().c_str());

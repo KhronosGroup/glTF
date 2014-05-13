@@ -29,6 +29,8 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
+const float glTFVersion = 0.6;
+
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
 const std::string kByteStride = "byteStride";
@@ -60,6 +62,8 @@ const std::string kValues = "values";
 const std::string kValue = "value";
 const std::string kPremultipliedAlpha = "premultipliedAlpha";
 const std::string kProfile = "profile";
+const std::string kVersion = "version";
+const std::string kAsset = "asset";
 const std::string kNodes = "nodes";
 const std::string kMeshes = "meshes";
 const std::string kAccessors = "accessors";

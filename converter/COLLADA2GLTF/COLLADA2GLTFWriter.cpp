@@ -99,12 +99,14 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
         GLTFAsset* asset = this->_asset.get();
-        shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded("asset");
+        shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded(kAsset);
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
-        assetObject->setString("generator",version);
-        //shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
-        assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         
+        assetObject->setString("generator",version);
+        assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
+        assetObject->setString(kProfile, asset->profile()->id());
+        assetObject->setDouble(kVersion, glTFVersion);
+
         return true;
 	}
     
