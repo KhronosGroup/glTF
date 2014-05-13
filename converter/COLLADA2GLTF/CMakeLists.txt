@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(COLLADA2GLTF)
 
+if (NOT WIN32)
 #http://www.guyrutenberg.com/2014/01/05/enabling-c11-c0x-in-cmake/
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -13,6 +14,7 @@ elseif(COMPILER_SUPPORTS_CXX0X)
     message("-- C++0x Enabled")
 else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 endif()
 
 set(USE_OPEN3DGC "ON")

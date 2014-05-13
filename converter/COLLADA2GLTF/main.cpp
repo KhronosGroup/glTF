@@ -256,12 +256,12 @@ int main (int argc, char * const argv[]) {
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
-
+#ifndef WIN32 || WIN64
         struct stat attr;
         if (stat(inputFilePathCStr, &attr) != -1) {
             asset->convertionMetaData()->setString("date", ctime(&attr.st_ctime));
         }
-        
+#endif
         clock_t start = clock();
         if (asset->converterConfig()->config()->getBool("outputProgress")) {
             asset->log("convertion 0%%");

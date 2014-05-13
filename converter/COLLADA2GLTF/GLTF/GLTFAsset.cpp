@@ -713,8 +713,13 @@ namespace GLTF
         
         if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
             char cwd[1024];
+#if (WIN32 || WIN64)
+            if (_getcwd(cwd, sizeof(cwd)) != NULL)
+#else
             if (getcwd(cwd, sizeof(cwd)) != NULL)
+#endif
                 this->log("[Info]: current working directory:%s\n", cwd);
+
         }
         
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
