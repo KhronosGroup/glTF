@@ -1,0 +1,44 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "texture",
+    "type" : "object",
+    "description" : "A texture and its sampler.  WebGL: see createTexture(), deleteTexture(), bindTexture(), texImage2D(), and texParameterf().",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "format": {
+            "type" : "integer",
+            "description" : "6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  WebGL: see texImage2D() format parameter.",
+            "enum" : [6406, 6407, 6408, 6409, 6410],
+            "default" : 6408
+        },
+        "internalFormat": {
+            "type" : "integer",
+            "description" : "6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  Defaults to same value as format.  WebGL: see internalFormat() format parameter.",
+            "enum" : [6406, 6407, 6408, 6409, 6410],
+            "default" : 6408
+        },
+        "sampler" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the sampler used by this texture.",
+            "required" : true
+        },
+        "source" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the image used by this texture.",
+            "required" : true
+        },
+        "target": {
+            "type" : "integer",
+            "description" : "3553 (TEXTURE_2D). WebGL: see bindTexture().",
+            "enum" : [3553],
+            "default" : 3553
+        },
+        "type": {
+            "type" : "integer",
+            "description" : "5121 (UNSIGNED_BYTE), 33635 (UNSIGNED_SHORT_5_6_5), 32819 (UNSIGNED_SHORT_4_4_4_4), and 32820 (UNSIGNED_SHORT_5_5_5_1). WebGL: see texImage2D() type property.",
+            "enum" : [5121, 33635, 32819, 32820],
+            "default" : 5121
+        }
+    },
+    "additionalProperties" : false
+}

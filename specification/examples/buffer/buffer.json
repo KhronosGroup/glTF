@@ -1,7 +1,0 @@
-{
-    "path" : "vertices.bin",
-    "byteLength": 1024,
-    "extra" : {
-       "Application specific" : "The extra object can contain any properties."
-    }    
-}

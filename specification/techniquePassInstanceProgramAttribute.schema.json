@@ -1,0 +1,6 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique/pass/instanceProgram/attribute",
+    "extends" : { "$ref" : "glTFid.schema.json" },
+    "description" : "Maps GLSL attribute names to technique parameter ids."
+}

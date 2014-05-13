@@ -1,8 +1,0 @@
-{
-    "name" : "application-visible globally-unique name",    
-    "path" : "example.png",
-    "generateMipmap" : false,
-    "extra" : {
-       "Application specific" : "The extra object can contain any properties."
-    }    
-}

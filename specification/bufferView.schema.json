@@ -2,34 +2,30 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "bufferView",
     "type" : "object",
-    "description" : "Represents a view of a buffer for indexing and manipulation",
+    "description" : "A view into a buffer.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "buffer" : {
-            "type" : "string",
-            "description" : "The id (JSON property name) of the buffer referenced by this view.",
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the buffer.",
             "required" : true
         },
         "byteOffset" : {
-            "type" : "number",
-            "description" : "The offset into the buffer, in bytes.",
+            "type" : "integer",
+            "description" : "The offset into the buffer in bytes.",
             "minimum" : 0,
-            "default" : 0
+            "required" : true
         },
         "byteLength" : {
-            "type" : "number",
-            "description" : "The length of the buffer view, in bytes.",
+            "type" : "integer",
+            "description" : "The length of the buffer-view in bytes.",
             "minimum" : 0,
             "required" : true
         },
         "target" : {
-            "type" : "string",
-            "description" : "Required target type for bindBuffer(), must be ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER",
-            "enum" : ["ARRAY_BUFFER", "ELEMENT_ARRAY_BUFFER"],
-            "required" : true
-        },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+            "type" : "integer",
+            "description" : "Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.  WebGL: see bindBuffer().",
+            "enum" : [34962, 34963]
         }
     },
     "additionalProperties" : false

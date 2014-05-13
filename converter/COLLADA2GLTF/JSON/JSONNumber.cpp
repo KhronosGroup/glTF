@@ -145,13 +145,13 @@ namespace GLTF
         
         switch (this->_type) {
             case UNSIGNED_INT32:
-                value  = (bool)this->getUnsignedInt32();
+				value = (this->getUnsignedInt32() != 0);
                 break;
             case INT32:
-                value  = (bool)this->getInt32();
+				value = (this->getInt32() != 0);
                 break;
             case DOUBLE:
-                value  = (bool)this->getBool();
+                value  = this->getBool();
                 break;
             default:
                 break;

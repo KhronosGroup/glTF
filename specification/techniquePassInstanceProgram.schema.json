@@ -1,0 +1,30 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique/pass/instanceProgram",
+    "type" : "object",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "attributes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePassInstanceProgramAttribute.schema.json"
+            },
+            "default" : {}
+        },
+        "program" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "Specifies the program id (property name).",
+            "required" : true
+        },
+        "uniforms" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniquePassInstanceProgramUniform.schema.json"
+            },
+            "default" : {}
+        }
+    },
+    "additionalProperties" : false
+}

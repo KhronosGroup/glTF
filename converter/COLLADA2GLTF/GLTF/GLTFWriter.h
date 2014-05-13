@@ -32,7 +32,7 @@ namespace GLTF
     shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
     shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
 
-    class GLTFWriter {
+	class GLTFWriter {
     private:
         
     public:        

@@ -2,37 +2,28 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "program",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "A shader program.  WebGL: see attachShader(), bindAttribLocation(), createProgram(), deleteProgram(), getProgramParameter(), getProgramInfoLog(), linkProgram(), useProgram(), and validateProgram().",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "attributes" : {
             "type" : "array",
-            "description" : "TODO",
+            "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
             "items" : {
-                "$ref" : "attribute.schema.json"
+                "type" : "string",
+                "minLength" : "1",
+                "maxLength" : "256"
             },
-            "minItems" : 1,
-            "required" : true
+            "default" : []
         },
         "fragmentShader" : {
-            "type" : "string",
-            "description" : "The id (JSON property name) of the fragment shader referenced by this program.",
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the fragment shader.",
             "required" : true
-        },
-        "uniforms" : {
-            "type" : "array",
-            "description" : "TODO",
-            "items" : {
-                "$ref" : "uniform.schema.json"
-            }
         },
         "vertexShader" : {
-            "type" : "string",
-            "description" : "The id (JSON property name) of the vertex shader referenced by this program.",
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the vertex shader.",
             "required" : true
-        },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
         }
     },
     "additionalProperties" : false

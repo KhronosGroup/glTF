@@ -2,30 +2,16 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "mesh",
     "type" : "object",
-    "description" : "TODO",
+    "description" : "An array of primitives defining geometry and material.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "attributes" : {
-            "description" : "TODO",
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "meshAttribute.schema.json"
-            }        
-        },
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },
         "primitives" : {
             "type" : "array",
-            "description" : "Primitives that form the geometry in this mesh.",
+            "description" : "Primitives that define geometry and material.",
             "items" : {
-                "$ref" : "primitive.schema.json"
-            }
-        },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+                "$ref" : "meshPrimitive.schema.json"
+            },
+            "default" : []
         }
     },
     "additionalProperties" : false

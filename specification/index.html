@@ -69,36 +69,11 @@ label {	display: block; font-weight: bold; }
 	
 	<form id="jsv" class="row">
 		<div class="row">
-            <!-- Add new glTF schemas below -->
 			<div class="sixcol">
 				<fieldset id="schemaUri_properties">
 					<label for="schemaUri">Schemas</label>
 					<select id="schemaUri" name="schemaUri">
-						<option value="---">---</option>
 						<option value="glTF.schema.json">glTF.schema.json</option>
-						<option value="asset.schema.json">asset.schema.json</option>
-						<option value="attribute.schema.json">attribute.schema.json</option>
-						<option value="buffer.schema.json">buffer.schema.json</option>
-						<option value="bufferView.schema.json">bufferView.schema.json</option>
-						<option value="camera.schema.json">camera.schema.json</option>
-						<option value="geographicLocation.schema.json">geographicLocation.schema.json</option>
-						<option value="image.schema.json">image.schema.json</option>
-						<option value="indices.schema.json">indices.schema.json</option>
-						<option value="material.schema.json">material.schema.json</option>
-						<option value="mesh.schema.json">mesh.schema.json</option>
-						<option value="meshAttribute.schema.json">meshAttribute.schema.json</option>
-						<option value="node.schema.json">node.schema.json</option>
-						<option value="orthographic.schema.json">orthographic.schema.json</option>
-						<option value="parameters.schema.json">parameters.schema.json</option>
-						<option value="pass.schema.json">pass.schema.json</option>
-						<option value="perspective.schema.json">perspective.schema.json</option>
-						<option value="primitive.schema.json">primitive.schema.json</option>
-						<option value="program.schema.json">program.schema.json</option>
-						<option value="semantics.schema.json">semantics.schema.json</option>
-						<option value="shader.schema.json">shader.schema.json</option>
-						<option value="states.schema.json">states.schema.json</option>
-						<option value="technique.schema.json">technique.schema.json</option>
-						<option value="uniform.schema.json">uniform.schema.json</option>
 					</select>
 				</fieldset>
 			</div>
@@ -109,44 +84,25 @@ label {	display: block; font-weight: bold; }
 					<label for="jsonUri">glTF JSON Examples</label>
 					<select id="jsonUri" name="jsonUri">
 						<option value="---">---</option>
-						<option value="examples/glTF/asset.json">glTF/asset.json</option>
-						<option value="examples/glTF/buffers.json">glTF/buffers.json</option>
-						<option value="examples/glTF/bufferViews.json">glTF/bufferViews.json</option>
-						<option value="examples/glTF/cameras.json">glTF/cameras.json</option>
-						<option value="examples/glTF/images.json">glTF/images.json</option>
-						<option value="examples/glTF/materials.json">glTF/materials.json</option>
-						<option value="examples/glTF/meshes.json">glTF/meshes.json</option>
-						<option value="examples/glTF/nodes.json">glTF/nodes.json</option>
-						<option value="examples/glTF/shaders.json">glTF/shaders.json</option>
-						<option value="examples/glTF/techniques.json">glTF/techniques.json</option>
-						<option value="examples/asset/asset.json">asset/asset.json</option>
-						<option value="examples/attribute/attribute.json">attribute/attribute.json</option>
-						<option value="examples/buffer/buffer.json">buffer/buffer.json</option>
-						<option value="examples/bufferView/bufferView.json">bufferView/bufferView.json</option>
-						<option value="examples/camera/camera.json">camera/camera.json</option>
-						<option value="examples/geographicLocation/geographicLocation.json">geographicLocation/geographicLocation.json</option>
-						<option value="examples/image/image.json">image/image.json</option>
-						<option value="examples/indices/indices.json">indices/indices.json</option>
-						<option value="examples/material/material.json">material/material.json</option>
-						<option value="examples/mesh/mesh.json">mesh/mesh.json</option>
-						<option value="examples/meshAttribute/meshAttribute.json">meshAttribute/meshAttribute.json</option>
-						<option value="examples/node/meshes.json">node/meshes.json</option>
-						<option value="examples/node/meshesLeaf.json">node/meshesLeaf.json</option>
-						<option value="examples/orthographic/orthographic.json">orthographic/orthographic.json</option>
-						<option value="examples/parameters/parameters.json">parameters/parameters.json</option>
-						<option value="examples/pass/pass.json">pass/pass.json</option>
-						<option value="examples/perspective/perspective.json">perspective/perspective.json</option>
-						<option value="examples/primitive/primitive.json">primitive/primitive.json</option>
-						<option value="examples/program/program.json">program/program.json</option>
-						<option value="examples/semantics/semantics.json">semantics/semantics.json</option>
-						<option value="examples/shader/shader.json">shader/shader.json</option>
-						<option value="examples/shader/dataUri.json">shader/dataUri.json</option>
-						<option value="examples/states/states.json">states/states.json</option>
-						<option value="examples/states/closedOpaqueObject.json">states/closedOpaqueObject.json</option>
-						<option value="examples/states/depthTest.json">states/depthTest.json</option>
-						<option value="examples/states/translucency.json">states/translucency.json</option>
-						<option value="examples/technique/technique.json">technique/technique.json</option>
-						<option value="examples/uniform/uniform.json">uniform/uniform.json</option>
+						<option value="examples/accessors.json">accessors.json</option>
+						<option value="examples/animations.json">animations.json</option>
+						<option value="examples/asset.json">asset.json</option>
+						<option value="examples/buffers.json">buffers.json</option>
+						<option value="examples/bufferViews.json">bufferViews.json</option>
+						<option value="examples/cameras.json">cameras.json</option>
+						<option value="examples/extensions.json">extensions.json</option>
+						<option value="examples/images.json">images.json</option>
+						<option value="examples/lights.json">lights.json</option>
+						<option value="examples/materials.json">materials.json</option>
+						<option value="examples/meshes.json">meshes.json</option>
+						<option value="examples/nodes.json">nodes.json</option>
+						<option value="examples/programs.json">programs.json</option>
+						<option value="examples/samplers.json">samplers.json</option>
+						<option value="examples/scenes.json">scenes.json</option>
+						<option value="examples/shaders.json">shaders.json</option>
+						<option value="examples/skins.json">skins.json</option>
+						<option value="examples/techniques.json">techniques.json</option>
+						<option value="examples/textures.json">textures.json</option>
 					</select>
 				</fieldset>
 			</div>

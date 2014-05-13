@@ -89,27 +89,20 @@
 
     var qp = getQueryParameters();
 
-    // Show schema and json to validate if provided as query parameters
-    if (typeof qp.schema !== 'undefined') {
-        schemaTextElement.innerHTML = getText(qp.schema);
-    }
+    // Show json to validate if provided as query parameters
     if (typeof qp.json !== 'undefined') {
         jsonTextElement.innerHTML = getText(qp.json);
     }
 
     // Schema and JSON uri shown in the validation output.
-    var schemaUri = defaultValue(qp.schema, document.getElementById('schemaUri').value);
+    var schemaUri = document.getElementById('schemaUri').value;
     var jsonUri = defaultValue(qp.json, document.getElementById('jsonUri').value);
+
+    schemaTextElement.innerHTML = getText(schemaUri);
 
     schemaUriElement.addEventListener('change', function(event) {
         schemaUri = schemaUriElement.value;
-
-        if (schemaUriElement.value !== '---') {
-            schemaTextElement.value = getText(schemaUriElement.value);
-        } else {
-            schemaTextElement.value = '';
-        }
-        
+        schemaTextElement.value = getText(schemaUriElement.value);
         clearReport();
     });
     schemaUriElement.addEventListener('focus', function(event) {
