@@ -1,7 +1,14 @@
 {
     "accessors": {
-        "attribute_23": {
+        "accessor_21": {
             "bufferView": "bufferView_29",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "count": 12636,
+            "type": 5123
+        },
+        "accessor_23": {
+            "bufferView": "bufferView_30",
             "byteOffset": 0,
             "byteStride": 12,
             "count": 2399,
@@ -17,8 +24,8 @@
             ],
             "type": 35665
         },
-        "attribute_25": {
-            "bufferView": "bufferView_29",
+        "accessor_25": {
+            "bufferView": "bufferView_30",
             "byteOffset": 28788,
             "byteStride": 12,
             "count": 2399,
@@ -34,8 +41,8 @@
             ],
             "type": 35665
         },
-        "attribute_27": {
-            "bufferView": "bufferView_29",
+        "accessor_27": {
+            "bufferView": "bufferView_30",
             "byteOffset": 57576,
             "byteStride": 8,
             "count": 2399,
@@ -48,33 +55,27 @@
                 0.019963
             ],
             "type": 35664
-        },
-        "indices_21": {
-            "bufferView": "bufferView_30",
-            "byteOffset": 0,
-            "count": 12636,
-            "type": 5123
         }
     },
     "animations": {},
     "asset": {
-        "extras": {
-            "premultipliedAlpha": true
-        },
-        "generator": "collada2gltf@8037062997389f5714154c03f692356ce78a30c0"
+        "generator": "collada2gltf@53bdd01c320c249c36ae9fbc439ae2cdee39acc8",
+        "premultipliedAlpha": true,
+        "profile": "WebGL 1.0.2",
+        "version": 0.6
     },
     "bufferViews": {
         "bufferView_29": {
             "buffer": "duck",
-            "byteLength": 76768,
+            "byteLength": 25272,
             "byteOffset": 0,
-            "target": 34962
+            "target": 34963
         },
         "bufferView_30": {
             "buffer": "duck",
-            "byteLength": 25272,
-            "byteOffset": 76768,
-            "target": 34963
+            "byteLength": 76768,
+            "byteOffset": 25272,
+            "target": 34962
         }
     },
     "buffers": {
@@ -96,7 +97,7 @@
         }
     },
     "images": {
-        "image_0": {
+        "file2": {
             "path": "duckCM.png"
         }
     },
@@ -123,7 +124,7 @@
                         0,
                         1
                     ],
-                    "diffuse": "texture_image_0",
+                    "diffuse": "texture_file2",
                     "emission": [
                         0,
                         0,
@@ -148,11 +149,11 @@
             "primitives": [
                 {
                     "attributes": {
-                        "NORMAL": "attribute_25",
-                        "POSITION": "attribute_23",
-                        "TEXCOORD_0": "attribute_27"
+                        "NORMAL": "accessor_25",
+                        "POSITION": "accessor_23",
+                        "TEXCOORD_0": "accessor_27"
                     },
-                    "indices": "indices_21",
+                    "indices": "accessor_21",
                     "material": "blinn3-fx",
                     "primitive": 4
                 }
@@ -232,7 +233,6 @@
             "name": "directionalLight1"
         }
     },
-    "profile": "WebGL 1.0.2",
     "programs": {
         "program_0": {
             "attributes": [
@@ -386,11 +386,11 @@
         }
     },
     "textures": {
-        "texture_image_0": {
+        "texture_file2": {
             "format": 6408,
             "internalFormat": 6408,
             "sampler": "sampler_0",
-            "source": "image_0",
+            "source": "file2",
             "target": 3553,
             "type": 5121
         }
