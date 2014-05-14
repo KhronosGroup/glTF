@@ -624,7 +624,7 @@ namespace GLTF
                 
                 effect->setTechniqueGenerator(techniqueGenerator);
                 effect->setName(materialName);
-                primitive->setMaterialID(meshOriginalID);
+                primitive->setMaterialID(effect->getID());
             } else {
                 //https://github.com/KhronosGroup/glTF/issues/194
                 //We'll deal with two cases cases of default materials
@@ -638,10 +638,10 @@ namespace GLTF
                 
                 effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
                 
-                primitive->setMaterialID(meshOriginalID);
+                primitive->setMaterialID(effect->getID());
                 
-                if (materials->contains(meshOriginalID) == false) {
-                    materials->setValue(meshOriginalID, effect);
+                if (materials->contains(effect->getID()) == false) {
+                    materials->setValue(effect->getID(), effect);
                 }
             }
         }
