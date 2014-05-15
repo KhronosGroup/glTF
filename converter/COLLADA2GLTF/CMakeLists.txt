@@ -25,6 +25,7 @@ include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/assetModifiers)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependercies)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/json/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
@@ -52,7 +53,6 @@ if (NOT WIN32)
 endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
-link_directories(${COLLADA2GLTF_SOURCE_DIR}/kmz)
 
 
 if (WIN32)
@@ -62,6 +62,7 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
+add_subdirectory(dependencies/kmz)
 
 if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
@@ -75,8 +76,8 @@ set(GLTF_SOURCES main.cpp
     GLTFOpenCOLLADAUtils.h
     GLTFOpenCOLLADAUtils.cpp
     
-    KMZ2Collada.h
-    KMZ2Collada.cpp
+    kmz/KMZ2Collada.h
+    kmz/KMZ2Collada.cpp
     kmz/zlib.h
     kmz/unzip.h
     kmz/unzip.c
@@ -171,7 +172,7 @@ LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
 if (USE_OPEN3DGC)
-LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib zlib)
+LIST(APPEND TARGET_LIBS o3dgc_common_lib o3dgc_enc_lib o3dgc_dec_lib)
 endif()
 
 IF("${CMAKE_SYSTEM}" MATCHES "Linux")

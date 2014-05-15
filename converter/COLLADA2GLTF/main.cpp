@@ -39,7 +39,7 @@
 
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
-#include "KMZ2Collada.h"
+#include "kmz/KMZ2Collada.h"
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
