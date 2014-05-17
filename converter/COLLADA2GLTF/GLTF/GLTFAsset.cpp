@@ -604,16 +604,22 @@ namespace GLTF
                 }
                 
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
-                if ((meshExtras != nullptr) && meshExtras->contains("double_sided")) {
-                    techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                if (meshExtras != nullptr) {
+                    if (meshExtras->contains("double_sided")) {
+                        techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                    }
+                    if (meshExtras->contains("jointsCount")) {
+                        unsigned int jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+                        techniqueExtras->setUnsignedInt32("jointsCount", jointsCount);
+                    }
                 }
+                
                 if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
                     techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
                 }
                 
                 //generate shaders if needed
                 shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                
                 shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
                 
                 techniqueGenerator->setString("lightingModel", effect->getLightingModel());
@@ -621,6 +627,7 @@ namespace GLTF
                 techniqueGenerator->setValue(kValues, effect->getValues());
                 techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
                 techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
+                
                 
                 effect->setTechniqueGenerator(techniqueGenerator);
                 effect->setName(materialName);
@@ -660,6 +667,18 @@ namespace GLTF
         if (materialBindings == nullptr)
             return false;
         
+        size_t jointsCount = 0;
+        if (node->contains(kInstanceSkin)) {
+            shared_ptr <JSONObject> instanceSkin = node->getObject(kInstanceSkin);
+            if (instanceSkin->contains(kSkin)) {
+                std::string skinOriginalID = instanceSkin->getString(kSkin);
+                shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
+                std::vector <std::string> skinUIDs = skins->getAllKeys();
+                shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
+                jointsCount = skin->getJointsCount();
+            }
+        }
+        
         shared_ptr <JSONArray> meshesArray = nullptr;
 
         MaterialBindingsForMeshUID::const_iterator materialBindingsIterator;
@@ -691,10 +710,15 @@ namespace GLTF
             }
             
             assert(meshesInSkinning || meshesInNode);
-            
+
             shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap = (*materialBindingsIterator).second;
-            
             shared_ptr<JSONObject> meshExtras = this->_extras->contains(meshUID) ? this->_extras->getObject(meshUID) : nullptr;
+            
+            if (jointsCount > 0) {
+                if (meshExtras == nullptr)
+                    meshExtras = shared_ptr <JSONObject> (new JSONObject());
+                meshExtras->setUnsignedInt32("jointsCount", jointsCount);
+            }
             
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
             
@@ -782,6 +806,17 @@ namespace GLTF
                 }
             }
         }
+        
+        // ----
+        shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
+        std::vector <std::string> skinsUIDs = skins->getAllKeys();
+        for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
+            shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
+            skins->setValue(skin->getId(), skin);
+            skins->removeValue(skinsUIDs[skinIndex]);
+        }
+        //we change the keys...
+        skinsUIDs = skins->getAllKeys();
         
         //Handle late binding of material in node
         //So we go through all nodes and if a mesh got different bindings than the ones needed we clone the "reference" mesh and assign the binding
@@ -932,11 +967,7 @@ namespace GLTF
         }
 
         // ----
-        shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");
-        std::vector <std::string> skinsUIDs = skins->getAllKeys();
-        
         for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
-            
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
             shared_ptr<JSONArray> joints = skin->getJointsIds();
             shared_ptr<JSONArray> jointsWithOriginalSids(new JSONArray());
@@ -954,8 +985,6 @@ namespace GLTF
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
             skin->setValue(kInverseBindMatrices, inverseBindMatrices);
-            skins->setValue(skin->getId(), skin);
-            skins->removeValue(skinsUIDs[skinIndex]);
         }
         
         // ----

@@ -263,6 +263,8 @@ namespace GLTF
     */
     static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset) {
         std::string techniqueHash = "";
+        bool doubleSided = false;
+        unsigned int jointsCount = 0;
         
         techniqueHash += buildSlotHash(parameters, "diffuse", asset);
         techniqueHash += buildSlotHash(parameters, "ambient", asset);
@@ -271,8 +273,13 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "reflective", asset);
         //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
-        if (techniqueExtras)
-            techniqueHash += "double_sided:" + GLTFUtils::toString(techniqueExtras->getBool("double_sided"));
+        if (techniqueExtras) {
+            jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
+            doubleSided = techniqueExtras->getBool("double_sided");
+        }
+        
+        techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
+        techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
                 
@@ -671,7 +678,14 @@ namespace GLTF
             bool useSimpleLambert = !(inputParameters->contains("specular") &&
                                      inputParameters->contains("shininess"));
             
-            bool hasSkinning = attributeSemantics->contains("WEIGHT") && attributeSemantics->contains("JOINT");
+            unsigned int jointsCount = 0;
+            bool hasSkinning = false;
+            if (techniqueExtras != nullptr) {
+                jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
+                hasSkinning =   attributeSemantics->contains("WEIGHT") &&
+                                attributeSemantics->contains("JOINT") &&
+                                (jointsCount > 0);
+            }
             
             std::vector <std::string> allAttributes;
             std::vector <std::string> allUniforms;
@@ -695,13 +709,14 @@ namespace GLTF
 
             if (hasSkinning) {
                 addSemantic("vs", "attribute",
-                            "JOINT", "joint", 1, true);
+                            "JOINT", "joint", 1, false);
                 addSemantic("vs", "attribute",
-                            "WEIGHT", "weight", 1, true);
-                //addValue("vs", "uniform",   "FLOAT_MAT4", 60, "jointMat");
+                            "WEIGHT", "weight", 1, false);
+                
+                assert(techniqueExtras != nullptr);
+                
                 addSemantic("vs", "uniform",
-                            "JOINT_MATRIX", "jointMat", 60, false);
-
+                            "JOINT_MATRIX", "jointMat", jointsCount, false);
             }
             
             if (hasNormals) {
@@ -709,6 +724,7 @@ namespace GLTF
                 addSemantic("vs", "uniform",
                         MODELVIEWINVERSETRANSPOSE, "normalMatrix" , 1, false);
             }
+            
             //modeliew matrix
             addSemantic("vs", "uniform",
                         MODELVIEW, "modelViewMatrix" , 1, false);
@@ -717,8 +733,7 @@ namespace GLTF
             addSemantic("vs", "uniform",
                         PROJECTION, "projectionMatrix" , 1, false);
             
-           
-            /* 
+            /*
                 Handle hardware skinning, for now with a fixed limit of 4 influences
              */
             

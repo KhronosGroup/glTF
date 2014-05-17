@@ -331,7 +331,7 @@ namespace GLTF
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
 		unsigned int count = (unsigned int)instanceControllers.getCount();
         if (count > 0) {
-            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
             for (unsigned int i = 0 ; i < count; i++) {
                 InstanceController* instanceController = instanceControllers[i];
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
@@ -1112,7 +1112,9 @@ namespace GLTF
             
 			if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT ) {
 				const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
-				for (size_t j = 0; j < pairCount; ++j, ++index) {
+				
+                
+                for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
                         bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
                         weightsPtr[(i * bucketSize) + j] = (*floatWeights)[weightIndices[index]];
@@ -1130,7 +1132,7 @@ namespace GLTF
 				}
 			}
         }
-        
+
         //inverse bind matrice
         const Matrix4Array& matrices = skinControllerData->getInverseBindMatrices();
         size_t matricesSize = sizeof(float) * 16 * skinControllerData->getJointsCount();
@@ -1170,8 +1172,9 @@ namespace GLTF
         jointsAttribute->setCount(vertexCount);
 
         glTFSkin->setJoints(jointsAttribute);
-
-        shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+        glTFSkin->setJointsCount(skinControllerData->getJointsCount());
+        
+        shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
          
         //Also we work around here what looks to be a bug in OpenCOLLADA with a fileId == 0
         COLLADAFW::UniqueId uniqueId = skinControllerData->getUniqueId();
@@ -1218,7 +1221,7 @@ namespace GLTF
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
             
             //Now we get the skin and the mesh, and
-            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
             
             COLLADAFW::UniqueId uniqueId = skinController->getSkinControllerData().toAscii();
             if (uniqueId.getFileId() == 0) {
