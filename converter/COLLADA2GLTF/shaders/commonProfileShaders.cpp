@@ -382,11 +382,11 @@ namespace GLTF
             return this->_profile->getGLSLTypeForGLType(glType);
         }
         
-        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count) {
+        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
             std::string declaration = qualifier + " ";
             declaration += GLSLTypeForGLType(type);
             declaration += " " + symbol;
-            if (count > 1) {
+            if ((count > 1) || forcesAsAnArray) {
                 declaration += "["+GLTFUtils::toString(count)+"]";
             }
             declaration += ";\n";
@@ -397,8 +397,8 @@ namespace GLTF
             _addDeclaration("attribute", symbol, type, 1);
         }
         
-        void addUniform(std::string symbol, unsigned int type, size_t count) {
-            _addDeclaration("uniform", symbol, type, count);
+        void addUniform(std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
+            _addDeclaration("uniform", symbol, type, count, forcesAsAnArray);
         }
         
         void addVarying(std::string symbol, unsigned int type) {
@@ -580,7 +580,8 @@ namespace GLTF
                          std::string semantic,
                          std::string parameterID,
                          size_t count,
-                         bool includesVarying) {
+                         bool includesVarying,
+                         bool forcesAsAnArray = false) {
             
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
 
@@ -611,7 +612,7 @@ namespace GLTF
                     program->addVarying("v_" + parameterID, type);
                 }
             } else {
-                shader->addUniform(symbol, type, count);
+                shader->addUniform(symbol, type, count, forcesAsAnArray);
             }
             
             return true;
@@ -714,9 +715,8 @@ namespace GLTF
                             "WEIGHT", "weight", 1, false);
                 
                 assert(techniqueExtras != nullptr);
-                
                 addSemantic("vs", "uniform",
-                            "JOINT_MATRIX", "jointMat", jointsCount, false);
+                            "JOINT_MATRIX", "jointMat", jointsCount, false, true /* force as an array */);
             }
             
             if (hasNormals) {
@@ -1097,17 +1097,24 @@ namespace GLTF
         techniqueHashToTechniqueID.clear();
     }
     
-    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset) {
-        
-        std::string lightingModel = techniqueGenerator->getString("lightingModel");
-        shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
+    std::string getTechniqueKey(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset)  {
         shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
-        shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
         
-        shared_ptr <JSONObject> inputParameters = values;
+        return buildTechniqueHash(values, techniqueExtras, asset);
+    }
+
+    
+    std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset) {
+        
+        std::string techniqueHash = getTechniqueKey(techniqueGenerator, asset);
+        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
+        std::string lightingModel = techniqueGenerator->getString("lightingModel");
+        shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
+        shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
+
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
-        std::string techniqueHash = buildTechniqueHash(values, techniqueExtras, asset);
 
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
             techniqueHashToTechniqueID[techniqueHash] = "technique" + GLTFUtils::toString(techniqueHashToTechniqueID.size());

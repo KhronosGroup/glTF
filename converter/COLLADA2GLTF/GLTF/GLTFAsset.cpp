@@ -5,6 +5,7 @@
 #include "GLTF-Open3DGC.h"
 #include "GLTFFlipUVModifier.h"
 #include "geometryHelpers.h"
+#include "../shaders/commonProfileShaders.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -504,7 +505,8 @@ namespace GLTF
         return effect;
     }
     
-    static std::string buildKeyForMaterialBindingMap(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap) {
+    static std::string buildKeyForMaterialBindingMap(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap,
+                                                     shared_ptr<JSONObject> meshExtras) {
         std::string materialBindingKey = "";
         size_t size = materialBindingPrimitiveMap->size();
         
@@ -513,6 +515,15 @@ namespace GLTF
             for (iterator = materialBindingPrimitiveMap->begin() ; iterator != materialBindingPrimitiveMap->end() ; iterator++) {
                 std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
                 materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
+                if (meshExtras != nullptr) {
+                    if (meshExtras->contains("double_sided")) {
+                        materialBindingKey += "doubleSided:1";
+                    }
+                    if (meshExtras->contains("jointsCount")) {
+                        unsigned int jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+                        materialBindingKey += "jointsCount:" + GLTFUtils::toString(jointsCount);
+                    }
+                }
             }
         }
         
@@ -526,7 +537,7 @@ namespace GLTF
         
         std::string meshOriginalID = mesh->getID();
         if (materialBindingsPrimitiveMap) {
-            std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap);
+            std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap, meshExtras);
             if (this->_meshesForMaterialBindingKey->contains(meshOriginalID) == false) {
                 shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(meshOriginalID);
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
@@ -602,14 +613,14 @@ namespace GLTF
                         }
                     }
                 }
-                
+                unsigned int jointsCount = 0;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
                 if (meshExtras != nullptr) {
                     if (meshExtras->contains("double_sided")) {
                         techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
                     }
                     if (meshExtras->contains("jointsCount")) {
-                        unsigned int jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+                        jointsCount = meshExtras->getUnsignedInt32("jointsCount");
                         techniqueExtras->setUnsignedInt32("jointsCount", jointsCount);
                     }
                 }
@@ -628,7 +639,20 @@ namespace GLTF
                 techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
                 techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
                 
-                
+                if (effect->getTechniqueGenerator() != nullptr) {
+                    //here we have the same material that shared by different meshes.
+                    //some of these meshes have different number of bones
+                    //so, we'll have to clone the effect
+                    std::string techniqueKey = getTechniqueKey(techniqueGenerator, this);
+                    if (getTechniqueKey(effect->getTechniqueGenerator(), this) != techniqueKey) {
+                        shared_ptr<GLTFEffect> effectCopy = shared_ptr <GLTFEffect> (new GLTFEffect(*effect));
+                        effectCopy->setID(effect->getID() + "-variant-" + GLTFUtils::toString(materials->getKeysCount()));
+                        effect = effectCopy;
+                        if (materials->contains(effect->getID()) == false) {
+                            materials->setValue(effect->getID(), effect);
+                        }
+                    }
+                }
                 effect->setTechniqueGenerator(techniqueGenerator);
                 effect->setName(materialName);
                 primitive->setMaterialID(effect->getID());
@@ -678,7 +702,6 @@ namespace GLTF
                 jointsCount = skin->getJointsCount();
             }
         }
-        
         shared_ptr <JSONArray> meshesArray = nullptr;
 
         MaterialBindingsForMeshUID::const_iterator materialBindingsIterator;
