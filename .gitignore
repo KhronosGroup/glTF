@@ -14,3 +14,4 @@ converter/COLLADA2GLTF/lib/
 converter/COLLADA2GLTF/GitSHA1.cpp
 specification/.project
 .DS_Store
+converter/COLLADA2GLTF/x64/

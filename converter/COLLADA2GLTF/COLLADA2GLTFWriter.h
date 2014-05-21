@@ -28,6 +28,7 @@
 #define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
+#include "COLLADA2GLTFExport.h"
 #include "GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 
@@ -35,6 +36,10 @@
 #include "helpers/mathHelpers.h"
 #include "convert/animationConverter.h"
 #include "convert/meshConverter.h"
+
+#ifdef WIN32
+#pragma warning(disable: 4275)
+#endif
 
 namespace GLTF
 {
@@ -69,7 +74,7 @@ namespace GLTF
     
     //-- OpenCOLLADA -> JSON writer implementation
     
-	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
+	class COLLADA2GLTF_EXPORT COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
 		COLLADA2GLTFWriter(std::shared_ptr<GLTF::GLTFAsset> asset);

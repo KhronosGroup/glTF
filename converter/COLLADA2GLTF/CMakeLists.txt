@@ -34,6 +34,9 @@ if (NOT WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
 endif()
 
+# Lets libxml2 work in a shared library
+add_definitions(-DLIBXML_STATIC_FOR_DLL)
+
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
@@ -80,8 +83,7 @@ if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
 endif()
 
-set(GLTF_SOURCES main.cpp
-
+set(GLTF_SOURCES
     COLLADA2GLTFWriter.h
     COLLADA2GLTFWriter.cpp
     GLTFOpenCOLLADA.h
@@ -164,11 +166,7 @@ LIST(APPEND GLTF_SOURCES
     extensions/o3dgc-compression/GLTF-Open3DGC.h)
 endif()
 
-if (WIN32)
-LIST(APPEND GLTF_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
-endif()
-
-add_executable(collada2gltf ${GLTF_SOURCES})
+add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
 
 if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
@@ -182,5 +180,15 @@ IF("${CMAKE_SYSTEM}" MATCHES "Linux")
     LIST(APPEND TARGET_LIBS rt)
 endif("${CMAKE_SYSTEM}" MATCHES "Linux")
 
-target_link_libraries (collada2gltf ${TARGET_LIBS})
+target_link_libraries (collada2gltfConvert ${TARGET_LIBS})
 
+set(GLTF_EXE_SOURCES  main.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
+    GitSHA1.h)
+
+if (WIN32)
+LIST(APPEND GLTF_EXE_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
+endif()
+
+add_executable(collada2gltf ${GLTF_EXE_SOURCES})
+target_link_libraries (collada2gltf collada2gltfConvert)
