@@ -55,7 +55,7 @@
 #include "filestream.h"
 
 // GLTF headers
-#include "../COLLADA2GLTFExport.h"
+#include "COLLADA2GLTFExport.h"
 #include "GLTFTypesAndConstants.h"
 #include "GLTFProfile.h"
 #include "JSONValue.h"

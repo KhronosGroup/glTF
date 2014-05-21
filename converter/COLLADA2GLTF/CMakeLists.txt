@@ -37,6 +37,7 @@ endif()
 # Lets libxml2 work in a shared library
 add_definitions(-DLIBXML_STATIC_FOR_DLL)
 
+include_directories(${COLLADA2GLTF_SOURCE_DIR})
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
