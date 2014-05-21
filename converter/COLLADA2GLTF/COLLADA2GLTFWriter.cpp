@@ -67,6 +67,8 @@ namespace GLTF
     /*
      */
     bool COLLADA2GLTFWriter::write() {
+        GLTFUtils::resetIDCount();
+        
         this->_extraDataHandler = new ExtraDataHandler();
         //To comply with macro to access config
         GLTFAsset *asset = this->_asset.get();
