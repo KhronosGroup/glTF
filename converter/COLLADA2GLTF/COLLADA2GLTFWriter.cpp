@@ -33,6 +33,7 @@
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
 #include <algorithm>
+#include "commonProfileShaders.h"
 
 
 #if __cplusplus <= 199711L
@@ -67,8 +68,6 @@ namespace GLTF
     /*
      */
     bool COLLADA2GLTFWriter::write() {
-        GLTFUtils::resetIDCount();
-        
         this->_extraDataHandler = new ExtraDataHandler();
         //To comply with macro to access config
         GLTFAsset *asset = this->_asset.get();
@@ -81,6 +80,10 @@ namespace GLTF
 			return false;
         
         asset->write();
+
+        // Cleanup IDs and Technique cache in case we have another conversion
+        GLTFUtils::resetIDCount();
+        clearCommonProfileTechniqueCache();
                 
 		return true;
 	}
