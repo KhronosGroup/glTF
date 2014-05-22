@@ -463,9 +463,7 @@ namespace GLTF
             }
             
             unsigned int indexOfSet = 0;
-            if (semantic == GLTF::TEXCOORD) {
-				indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
-            }
+            indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
             
             sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
         }

@@ -394,10 +394,48 @@ namespace GLTF
             }
         }
         
+        //TODO:refactor
+        if (openCOLLADAMeshPrimitive->hasBinormalIndices()) {
+            unsigned int triangulatedIndicesCount = 0;
+            indices = openCOLLADAMeshPrimitive->getBinormalIndices().getData();
+            if (shouldTriangulate) {
+                indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+                count = triangulatedIndicesCount;
+            }
+            shared_ptr <GLTF::GLTFBufferView> binormalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
+            shared_ptr <GLTF::GLTFAccessor> binormalIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            
+            binormalIndices->setBufferView(binormalBuffer);
+            binormalIndices->setCount(count);
+            
+            __AppendIndices(cvtPrimitive, primitiveIndicesVector, binormalIndices, TEXBINORMAL, 0);
+        }
+        
         if (verticesCountArray) {
             free(verticesCountArray);
         }
         
+        //TODO:refactor
+        if (openCOLLADAMeshPrimitive->hasTangentIndices()) {
+            unsigned int triangulatedIndicesCount = 0;
+            indices = openCOLLADAMeshPrimitive->getTangentIndices().getData();
+            if (shouldTriangulate) {
+                indices = createTrianglesFromPolylist(verticesCountArray, indices, vcount, &triangulatedIndicesCount);
+                count = triangulatedIndicesCount;
+            }
+            shared_ptr <GLTF::GLTFBufferView> tangentBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
+            shared_ptr <GLTF::GLTFAccessor> tangentIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            
+            tangentIndices->setBufferView(tangentBuffer);
+            tangentIndices->setCount(count);
+            
+            __AppendIndices(cvtPrimitive, primitiveIndicesVector, tangentIndices, TEXTANGENT, 0);
+        }
+        
+        if (verticesCountArray) {
+            free(verticesCountArray);
+        }
+
         return cvtPrimitive;
     }
     
@@ -464,7 +502,14 @@ namespace GLTF
                     case GLTF::COLOR:
                         __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getColors(), cvtMesh.get(), GLTF::COLOR, 4, asset->profile());
                         break;
-                        
+
+                    case GLTF::TEXBINORMAL:
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getBinormals(), cvtMesh.get(), GLTF::TEXBINORMAL, 3, asset->profile());
+                        break;
+                    case GLTF::TEXTANGENT:
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getTangents(), cvtMesh.get(), GLTF::TEXTANGENT, 3, asset->profile());
+                        break;
+
                     default:
                         break;
                 }

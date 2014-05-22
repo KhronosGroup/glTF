@@ -49,6 +49,8 @@ namespace GLTF
         std::shared_ptr <JSONObject> getExtras(COLLADAFW::UniqueId uniqueId);
         std::shared_ptr <JSONObject> allExtras() { return this->_allExtras; }
         
+        void determineBumpTextureSamplerAndTexCoord( const GeneratedSaxParser::xmlChar** attributes );
+
 	private:
         std::shared_ptr <JSONObject> _allExtras;
 	};

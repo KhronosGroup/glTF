@@ -119,7 +119,9 @@ namespace GLTF
         TEXCOORD = 3,
         COLOR = 4,
         WEIGHT = 5,
-        JOINT = 6
+        JOINT = 6,
+        TEXTANGENT = 7,
+        TEXBINORMAL = 8
     } Semantic;    
 
     typedef std::string JSONType;

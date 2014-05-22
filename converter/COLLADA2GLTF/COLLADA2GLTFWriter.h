@@ -170,6 +170,12 @@ namespace GLTF
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
 	private:
+        void _installTextureSlot(COLLADAFW::Sampler* sampler,
+                                 const std::string& slotName,
+                                 const std::string& texcoord,
+                                 std::shared_ptr <GLTF::GLTFAsset> asset,
+                                 std::shared_ptr<GLTF::GLTFEffect> cvtEffect);
+        
         void _storeMaterialBindingArray(const std::string& prefix,
                                         const std::string& nodeUID,
                                         const std::string& meshUID,

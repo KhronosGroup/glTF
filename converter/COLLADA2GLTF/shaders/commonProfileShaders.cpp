@@ -271,6 +271,8 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "emission", asset);
         techniqueHash += buildSlotHash(parameters, "specular", asset);
         techniqueHash += buildSlotHash(parameters, "reflective", asset);
+        techniqueHash += buildSlotHash(parameters, "bump", asset);
+        
         //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
         if (techniqueExtras) {
@@ -558,7 +560,8 @@ namespace GLTF
                 typeForSemanticAttribute["REFLECTIVE"] = _GL(FLOAT_VEC2);
                 typeForSemanticAttribute["WEIGHT"] = _GL(FLOAT_VEC4);
                 typeForSemanticAttribute["JOINT"] = _GL(FLOAT_VEC4);
-                
+                typeForSemanticAttribute["TEXTANGENT"] = _GL(FLOAT_VEC3);
+                typeForSemanticAttribute["TEXBINORMAL"] = _GL(FLOAT_VEC3);
             }
             
             return typeForSemanticAttribute[semantic];
@@ -681,12 +684,16 @@ namespace GLTF
             
             unsigned int jointsCount = 0;
             bool hasSkinning = false;
+            bool hasNormalMap = false;
+            
             if (techniqueExtras != nullptr) {
                 jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
                 hasSkinning =   attributeSemantics->contains("WEIGHT") &&
                                 attributeSemantics->contains("JOINT") &&
                                 (jointsCount > 0);
             }
+            
+            hasNormalMap = false;
             
             std::vector <std::string> allAttributes;
             std::vector <std::string> allUniforms;
@@ -757,7 +764,7 @@ namespace GLTF
                                          "u_modelViewMatrix",
                                          "a_position");
                 if (hasNormals) {
-                    vertexShader->appendCode("%s = normalize(%s * %s);\n",
+                    vertexShader->appendCode("%s = %s * %s;\n",
                                              "v_normal", "u_normalMatrix", "a_normal");
                 }
                 
@@ -774,10 +781,13 @@ namespace GLTF
                         
                         shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
-                        std::string lightType = light->getString("type");
                         
-                        //we ignore lighting if the only light we have is ambient
-                        modelContainsLights |= lightType != "ambient";
+                        if (light != nullptr) {
+                            std::string lightType = light->getString("type");
+                            
+                            //we ignore lighting if the only light we have is ambient
+                            modelContainsLights |= lightType != "ambient";
+                        }
                     }
                 }
             }
@@ -820,124 +830,6 @@ namespace GLTF
             if (lightingIsEnabled && slotIsContributingToLighting("specular", inputParameters, asset)) {
                 fragmentShader->appendCode("vec4 specular;\n");
             }
-                                    
-            /* 
-             Handle lighting
-             */
-            
-            shared_ptr <JSONObject> shininessObject;
-            
-            size_t lightIndex = 0;
-            if (lightingIsEnabled && asset->root()->contains("lightsIds")) {
-                shared_ptr<JSONArray> lightsIds = asset->root()->createArrayIfNeeded("lightsIds");
-                std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
-                
-                for (size_t i = 0 ; i < ids.size() ; i++) {
-                    shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
-                    shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
-                    
-                    shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
-                    shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());                    
-                    std::string lightType = light->getString("type");
-                    
-                    //we ignore lighting if the only light we have is ambient
-                    if ((lightType == "ambient") && ids.size() == 1)
-                        continue;
-                    
-                    
-                    shared_ptr<JSONObject> description = light->getObject(lightType);
-                    std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
-                    for (size_t j = 0 ; j < nodesIds.size() ; j++, lightIndex++) {
-                        
-                        //each light needs to be re-processed for each node
-                        char lightIndexCStr[100];
-                        char lightColor[100];
-                        char lightTransform[100];
-                        sprintf(lightIndexCStr, "light%d", (int)lightIndex);
-                        sprintf(lightColor, "%sColor", lightIndexCStr);
-                        sprintf(lightTransform, "%sTransform", lightIndexCStr);
-                        
-                        if (lightType == "ambient") {
-                            if (hasAmbientLight == false) {
-                                fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
-                                hasAmbientLight = true;
-                            }
-                            
-                            fragmentShader->appendCode("{\n");
-                            
-                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
-                            lightColorParameter->setValue("value", description->getValue("color"));
-                                                        
-                            //FIXME: what happens if multiple ambient light ?
-                            fragmentShader->appendCode("ambientLight += u_%s;\n", lightColor);
-                            fragmentShader->appendCode("}\n");
-
-                        } else if (1 /*lightType == "directional"*/) {
-                            if (!useSimpleLambert && (hasSpecularLight == false)) {
-                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
-                                hasSpecularLight = true;
-                            }
-                            
-                            fragmentShader->appendCode("{\n");
-                            
-                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
-                            lightColorParameter->setValue("value", description->getValue("color"));
-                            
-                            fragmentShader->appendCode("float diffuseIntensity;\n");
-                            fragmentShader->appendCode("float specularIntensity;\n");
-                            
-                            char varyingLightDirection[100];
-                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
-                            
-                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
-                            
-                            vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
-
-                            program->addVarying(varyingLightDirection, vec3Type);
-                            lightTransformParameter->setValue(kSource, nodesIds[j]);
-
-                            if (hasNormals) {
-                                if (!useSimpleLambert) {
-                                    if (inputParameters->contains("shininess") && (!shininessObject)) {
-                                        shininessObject = inputParameters->getObject("shininess");
-                                        addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
-                                    }
-                                    
-                                    fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
-                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
-                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
-                                    fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
-                                    fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
-                                    
-                                } else {
-                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
-                                }
-                            }
-                            
-                            fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
-                            fragmentShader->appendCode("}\n");
-
-
-                        } else if (lightType == "spot") {
-                            
-                        } else if (lightType == "point") {
-                            
-                        } else {
-                            //FIXME: report error
-                            
-                        }
-                    }
-                }
-            }
-            
-            //Currently the declaration of the shininess is dependent of the presence of light.
-            //if we want details, we want also all parameters.
-            if (CONFIG_BOOL(asset, "exportPassDetails")) {
-                if (inputParameters->contains("shininess") && (!shininessObject)) {
-                    shininessObject = inputParameters->getObject("shininess");
-                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess", asset);
-                }
-            }
             
             //texcoords
             std::string texcoordAttributeSymbol = "a_texcoord";
@@ -945,8 +837,8 @@ namespace GLTF
             std::map<std::string , std::string> declaredTexcoordAttributes;
             std::map<std::string , std::string> declaredTexcoordVaryings;
             
-            const int slotsCount = 5;
-            std::string slots[slotsCount] = { "ambient", "diffuse", "emission", "reflective", "specular" };
+            const int slotsCount = 6;
+            std::string slots[slotsCount] = { "ambient", "diffuse", "emission", "reflective", "specular", "bump" };
             for (size_t slotIndex = 0 ; slotIndex < slotsCount ; slotIndex++) {
                 std::string slot = slots[slotIndex];
                 
@@ -964,6 +856,20 @@ namespace GLTF
                     if (CONFIG_BOOL(asset, "exportPassDetails"))
                         addParameter(slot, slotType);
                     continue;
+                }
+                
+                if (lightingIsEnabled && (slot == "bump")) {
+                    hasNormalMap = slotType == sampler2DType && attributeSemantics->contains("TEXTANGENT") && attributeSemantics->contains("TEXBINORMAL") ;
+                    if (hasNormalMap == true) {
+                        addSemantic("vs", "attribute",
+                                    "TEXTANGENT", "textangent", 1, true);
+                        addSemantic("vs", "attribute",
+                                    "TEXBINORMAL", "texbinormal", 1, true);
+                        
+                        vertexShader->appendCode("v_texbinormal = u_normalMatrix * a_texbinormal;\n");
+                        vertexShader->appendCode("v_textangent = u_normalMatrix * a_textangent;\n");
+                        fragmentShader->appendCode("vec4 bump;\n");
+                    }
                 }
                 
                 if (slotType == vec4Type) {
@@ -1022,8 +928,187 @@ namespace GLTF
                     shared_ptr <JSONObject> textureParameter = inputParameters->getObject(slot);
                     //FIXME:this should eventually not come from the inputParameter
                     addValue("fs", "uniform", textureParameter->getUnsignedInt32("type"), 1, slot, asset);
-
+                    
+                    if ((hasNormalMap == false) && (slot == "bump"))
+                        continue;
                     fragmentShader->appendCode("%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
+                }
+            }
+            
+            if (hasNormalMap) {
+                fragmentShader->appendCode("vec3 binormal = normalize( cross(normal,v_textangent));\n");
+                fragmentShader->appendCode("mat3 bumpMatrix = mat3(v_textangent, binormal, normal);\n");
+                fragmentShader->appendCode("normal = normalize(-1.0 + bump.xyz * 2.0);\n");
+            }
+            
+            /*
+             Handle lighting
+             */
+            
+            shared_ptr <JSONObject> shininessObject;
+            
+            size_t lightIndex = 0;
+            if (lightingIsEnabled && asset->root()->contains("lightsIds")) {
+                shared_ptr<JSONArray> lightsIds = asset->root()->createArrayIfNeeded("lightsIds");
+                std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
+                
+                for (size_t i = 0 ; i < ids.size() ; i++) {
+                    shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
+                    shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
+                    
+                    shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                    shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
+                    if (light == nullptr)
+                        continue;
+                    std::string lightType = light->getString("type");
+                    
+                    //we ignore lighting if the only light we have is ambient
+                    if ((lightType == "ambient") && ids.size() == 1)
+                        continue;
+                    
+                    shared_ptr<JSONObject> description = light->getObject(lightType);
+                    std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
+                    for (size_t j = 0 ; j < nodesIds.size() ; j++, lightIndex++) {
+                        
+                        //each light needs to be re-processed for each node
+                        char lightIndexCStr[100];
+                        char lightColor[100];
+                        char lightTransform[100];
+                        sprintf(lightIndexCStr, "light%d", (int)lightIndex);
+                        sprintf(lightColor, "%sColor", lightIndexCStr);
+                        sprintf(lightTransform, "%sTransform", lightIndexCStr);
+                        
+                        if (lightType == "ambient") {
+                            if (hasAmbientLight == false) {
+                                fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
+                                hasAmbientLight = true;
+                            }
+                            
+                            fragmentShader->appendCode("{\n");
+                            
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                            
+                            //FIXME: what happens if multiple ambient light ?
+                            fragmentShader->appendCode("ambientLight += u_%s;\n", lightColor);
+                            fragmentShader->appendCode("}\n");
+                            
+                        } else if (lightType == "directional") {
+                            if (!useSimpleLambert && (hasSpecularLight == false)) {
+                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
+                                hasSpecularLight = true;
+                            }
+                            
+                            fragmentShader->appendCode("{\n");
+                            
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                            
+                            fragmentShader->appendCode("float diffuseIntensity;\n");
+                            fragmentShader->appendCode("float specularIntensity;\n");
+                            
+                            char varyingLightDirection[100];
+                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
+                            
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
+                            
+                            vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
+                            
+                            program->addVarying(varyingLightDirection, vec3Type);
+                            lightTransformParameter->setValue(kSource, nodesIds[j]);
+                            
+                            if (hasNormals) {
+                                if (!useSimpleLambert) {
+                                    if (inputParameters->contains("shininess") && (!shininessObject)) {
+                                        shininessObject = inputParameters->getObject("shininess");
+                                        addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
+                                    }
+                                    
+                                    fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
+                                    fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
+                                    fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                                    
+                                } else {
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
+                                }
+                            }
+                            
+                            fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
+                            fragmentShader->appendCode("}\n");
+                            
+                            
+                        } else
+                        /*
+                        else if (lightType == "spot") {
+                            //
+                        } else if (lightType == "point")
+                         */{
+                            if (!useSimpleLambert && (hasSpecularLight == false)) {
+                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
+                                hasSpecularLight = true;
+                            }
+                            
+                            fragmentShader->appendCode("{\n");
+                            
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                            
+                            fragmentShader->appendCode("float diffuseIntensity;\n");
+                            fragmentShader->appendCode("float specularIntensity;\n");
+                            
+                            char varyingLightDirection[100];
+                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
+                            
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
+                            
+                            vertexShader->appendCode("%s = vec3(u_%s[3][0], u_%s[3][1],u_%s[3][2]) - pos.xyz;\n", varyingLightDirection, lightTransform, lightTransform, lightTransform) ;
+                            
+                            program->addVarying(varyingLightDirection, vec3Type);
+                            
+                            lightTransformParameter->setValue(kSource, nodesIds[j]);
+                            
+                            if (hasNormals) {
+                                if (!useSimpleLambert) {
+                                    if (inputParameters->contains("shininess") && (!shininessObject)) {
+                                        shininessObject = inputParameters->getObject("shininess");
+                                        addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
+                                    }
+                                    
+                                    fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    if (hasNormalMap) {
+                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                        fragmentShader->appendCode("h *= bumpMatrix;\n");
+                                    }
+                                    
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
+                                    fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
+                                    fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                                    
+                                } else {
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
+                                }
+                            }
+                            
+                            fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
+                            fragmentShader->appendCode("}\n");
+                        }
+                        /*else {
+                            //FIXME: report error
+                            
+                        }*/
+                    }
+                }
+            }
+            
+            //Currently the declaration of the shininess is dependent of the presence of light.
+            //if we want details, we want also all parameters.
+            if (CONFIG_BOOL(asset, "exportPassDetails")) {
+                if (inputParameters->contains("shininess") && (!shininessObject)) {
+                    shininessObject = inputParameters->getObject("shininess");
+                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess", asset);
                 }
             }
             

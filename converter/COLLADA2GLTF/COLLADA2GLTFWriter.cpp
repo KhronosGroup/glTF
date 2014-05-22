@@ -679,6 +679,53 @@ namespace GLTF
         return samplerUID;
     }
     
+    
+    void COLLADA2GLTFWriter::_installTextureSlot(Sampler* sampler,
+                                                const std::string& slotName,
+                                                const std::string& texcoord,
+                                                shared_ptr <GLTFAsset> asset,
+                                                shared_ptr<GLTFEffect> cvtEffect)
+    {
+        assert(sampler);
+        assert(asset);
+        assert(cvtEffect);
+        shared_ptr <JSONObject> values = cvtEffect->getValues();
+        std::string originalImageUID = asset->getOriginalId(sampler->getSourceImage().toAscii());
+        GLTFProfile* profile = asset->profile().get();
+
+        cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
+        shared_ptr <JSONObject> slotObject(new JSONObject());
+        
+        //do we need to export a new texture ? if yes compose a new unique ID
+        slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
+        
+        //do we need a new sampler ?
+        std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
+                                                                  __GetGLWrapMode(sampler->getWrapT(), profile),
+                                                                  __GetFilterMode(sampler->getMinFilter(), profile),
+                                                                  __GetFilterMode(sampler->getMagFilter(), profile));
+        
+        std::string textureUID = "texture_" + originalImageUID;
+        shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
+        if (textures->contains(textureUID) == false) {
+            shared_ptr <JSONObject> textureObject(new JSONObject());
+            textureObject->setString(kSource, originalImageUID);
+            textureObject->setString("sampler", samplerUID);
+            textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
+            
+            if (CONFIG_BOOL(asset, "exportDefaultValues")) {
+                textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
+                //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
+                textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+            }
+            textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
+            textures->setValue(textureUID, textureObject);
+        }
+        
+        slotObject->setString("value", textureUID);
+        values->setValue(slotName, slotObject);
+    }
+    
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                                               std::string slotName,
                                               shared_ptr <GLTFEffect> cvtEffect,
@@ -708,7 +755,26 @@ namespace GLTF
             slot = commonProfile->getSpecular();
         else if (slotName == "reflective")
             slot = commonProfile->getReflective();
-        else
+        else if (slotName == "bump") {
+            //here we handle an extras slot
+            //for other extras, this will need refactoring
+            if (extras->contains("textures")) {
+                shared_ptr <JSONObject> textures = extras->getObject("textures");
+                if (textures->contains("bump")) {
+                    shared_ptr <JSONObject> bump = textures->getObject("bump");
+                    
+                    std::string texture = bump->getString("texture");
+                    std::string texcoord = bump->getString("texcoord");
+                    const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
+                    for (size_t i = 0 ; i < samplers.getCount() ; i++) {
+                        if (samplers[i]->getSid() == texture) {
+                            Sampler* sampler = (Sampler*)samplers[i];
+                            _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
+                        }
+                    }
+                }
+            }
+        } else
             return;
         
         //retrieve the type, parameterName -> symbol -> type
@@ -730,41 +796,8 @@ namespace GLTF
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             Sampler* sampler = (Sampler*)samplers[texture.getSamplerId()];
-            std::string originalImageUID = this->_asset->getOriginalId(sampler->getSourceImage().toAscii());
-            
             std::string texcoord = texture.getTexcoord();
-            
-            cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
-            shared_ptr <JSONObject> slotObject(new JSONObject());
-            
-            //do we need to export a new texture ? if yes compose a new unique ID
-            slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
-            
-            //do we need a new sampler ?
-            std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
-                                                                      __GetGLWrapMode(sampler->getWrapT(), profile),
-                                                                      __GetFilterMode(sampler->getMinFilter(), profile),
-                                                                      __GetFilterMode(sampler->getMagFilter(), profile));
-            
-            std::string textureUID = "texture_" + originalImageUID;
-            shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
-            if (textures->contains(textureUID) == false) {
-                shared_ptr <JSONObject> textureObject(new JSONObject());
-                textureObject->setString(kSource, originalImageUID);
-                textureObject->setString("sampler", samplerUID);
-                textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
-                
-                if (CONFIG_BOOL(asset, "exportDefaultValues")) {
-                    textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
-                    //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
-                    textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
-                }
-                textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
-                textures->setValue(textureUID, textureObject);
-            }
-
-            slotObject->setString("value", textureUID);
-            values->setValue(slotName, slotObject);
+            _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
         } else {
             // nothing to do, no texture or color
         }
@@ -815,6 +848,7 @@ namespace GLTF
             handleEffectSlot(effectCommon,"emission" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"bump" , cvtEffect, extras);
             
             if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
