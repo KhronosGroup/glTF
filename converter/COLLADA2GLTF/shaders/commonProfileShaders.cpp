@@ -1107,7 +1107,7 @@ namespace GLTF
                                  } else {
                                      fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
 
-                                     fragmentShader->appendCode("float range = length(l);\n");
+                                     fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
 
                                      fragmentShader->appendCode("float attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
                                                                 lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
