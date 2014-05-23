@@ -1003,9 +1003,9 @@ namespace GLTF
         COLLADAFW::Light::LightType lightType = light->getLightType();
 		Color color = light->getColor();
 
-        float constantAttenuation =  (float)light->getConstantAttenuation().getValue();
-        float linearAttenuation =  (float)light->getLinearAttenuation().getValue();
-        float quadraticAttenuation =  (float)light->getQuadraticAttenuation().getValue();
+        float constantAttenuation = (float)light->getConstantAttenuation().getValue();
+        float linearAttenuation = (float)light->getLinearAttenuation().getValue();
+        float quadraticAttenuation = (float)light->getQuadraticAttenuation().getValue();
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
         
