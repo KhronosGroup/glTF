@@ -937,8 +937,8 @@ namespace GLTF
             }
             
             if (hasNormalMap) {
-                fragmentShader->appendCode("vec3 binormal = normalize( cross(normal,v_textangent));\n");
-                fragmentShader->appendCode("mat3 bumpMatrix = mat3(v_textangent, binormal, normal);\n");
+                //fragmentShader->appendCode("vec3 binormal = normalize( cross(normal,v_textangent));\n");
+                fragmentShader->appendCode("mat3 bumpMatrix = mat3(normalize(v_textangent), normalize(v_texbinormal), normal);\n");
                 fragmentShader->appendCode("normal = normalize(-1.0 + bump.xyz * 2.0);\n");
             }
             
@@ -1105,12 +1105,14 @@ namespace GLTF
                                      fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess) * attenuation;\n");
                                      fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
                                  } else {
-                                     fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
+                                     fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+
+                                     fragmentShader->appendCode("float range = length(l);\n");
 
                                      fragmentShader->appendCode("float attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
                                                                 lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
                                      
-                                     fragmentShader->appendCode("diffuseIntensity = attenuation * max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
+                                     fragmentShader->appendCode("diffuseIntensity = attenuation * max(dot(normal,l), 0.);\n");
                                  }
                              }
                             
