@@ -755,7 +755,7 @@ namespace GLTF
                                          "u_modelViewMatrix",
                                          "a_position");
                 if (hasNormals) {
-                    vertexShader->appendCode("%s = normalize(%s * mat3(skinMat)* %s);\n",
+                    vertexShader->appendCode("%s = %s * mat3(skinMat)* %s;\n",
                                              "v_normal", "u_normalMatrix", "a_normal");
                 }
                 
