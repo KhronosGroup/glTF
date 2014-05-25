@@ -92,8 +92,6 @@ namespace GLTF
         ComponentType           _componentType;
         size_t                  _elementByteLength;
         std::string             _ID;
-        std::shared_ptr<JSONArray>   _min;
-        std::shared_ptr<JSONArray>   _max;
         bool                    _minMaxDirty;
     };
 }
