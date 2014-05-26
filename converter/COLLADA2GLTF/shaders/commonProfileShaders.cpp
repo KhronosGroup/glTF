@@ -1076,7 +1076,7 @@ namespace GLTF
                              
                              shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
                              
-                             vertexShader->appendCode("%s = vec3(u_%s[3][0], u_%s[3][1],u_%s[3][2]) - pos.xyz;\n", varyingLightDirection, lightTransform, lightTransform, lightTransform) ;
+                             vertexShader->appendCode("%s = u_%s[3].xyz - pos.xyz;\n", varyingLightDirection, lightTransform, lightTransform, lightTransform) ;
                              
                              program->addVarying(varyingLightDirection, vec3Type);
                              
