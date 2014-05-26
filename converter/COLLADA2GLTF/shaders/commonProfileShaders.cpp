@@ -1030,14 +1030,22 @@ namespace GLTF
                                         addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
                                     }
                                     
-                                    fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                                    fragmentShader->appendCode("vec3 l = %s;\n", varyingLightDirection);
                                     fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    if (hasNormalMap) {
+                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                        fragmentShader->appendCode("h *= bumpMatrix;\n");
+                                    }
                                     fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
                                     fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
                                     fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
                                     
                                 } else {
-                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,normalize(%s)), 0.);\n",varyingLightDirection);
+                                    fragmentShader->appendCode("vec3 l = %s;\n", varyingLightDirection);
+                                    if (hasNormalMap) {
+                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                    }
+                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal, l), 0.);\n");
                                 }
                             }
                             
