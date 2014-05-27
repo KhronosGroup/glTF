@@ -680,8 +680,7 @@ namespace GLTF
             
             shared_ptr <JSONObject> inputParameters = values;
             
-            bool useSimpleLambert = !(inputParameters->contains("specular") &&
-                                     inputParameters->contains("shininess"));
+            bool hasSpecular = (inputParameters->contains("specular") && inputParameters->contains("shininess"));
             
             unsigned int jointsCount = 0;
             bool hasSkinning = false;
@@ -794,7 +793,6 @@ namespace GLTF
             }
             
             bool lightingIsEnabled = hasNormals && (modelContainsLights || CONFIG_BOOL(asset, "useDefaultLight"));
-            
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
                 if (techniqueExtras) {
@@ -952,7 +950,12 @@ namespace GLTF
             if (lightingIsEnabled && asset->root()->contains("lightsIds")) {
                 shared_ptr<JSONArray> lightsIds = asset->root()->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
-                
+
+                if (inputParameters->contains("shininess") && (!shininessObject)) {
+                    shininessObject = inputParameters->getObject("shininess");
+                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
+                }
+
                 for (size_t i = 0 ; i < ids.size() ; i++) {
                     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
@@ -984,6 +987,11 @@ namespace GLTF
                         sprintf(lightLinearAttenuation, "%sLinearAttenuation", lightIndexCStr);
                         sprintf(lightQuadraticAttenuation, "%sQuadraticAttenuation", lightIndexCStr);
 
+                        if (hasSpecular && (hasSpecularLight == false)) {
+                            fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
+                            hasSpecularLight = true;
+                        }
+
                         if (lightType == "ambient") {
                             if (hasAmbientLight == false) {
                                 fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
@@ -1000,87 +1008,58 @@ namespace GLTF
                             fragmentShader->appendCode("}\n");
                             
                         } else if (lightType == "directional") {
-                            if (!useSimpleLambert && (hasSpecularLight == false)) {
-                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
-                                hasSpecularLight = true;
-                            }
+                            char varyingLightDirection[100];
+                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                             
                             fragmentShader->appendCode("{\n");
                             
                             shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
                             lightColorParameter->setValue("value", description->getValue("color"));
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
+                            vertexShader->appendCode("%s = mat3(u_%s) * vec3(0.,0.,1.);\n", varyingLightDirection, lightTransform);
                             
                             fragmentShader->appendCode("float diffuseIntensity;\n");
                             fragmentShader->appendCode("float specularIntensity;\n");
-                            
-                            char varyingLightDirection[100];
-                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
-                            
-                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
-                            
-                            vertexShader->appendCode("%s = normalize(mat3(u_%s) * vec3(0.,0.,1.));\n", varyingLightDirection, lightTransform);
-                            
+
                             program->addVarying(varyingLightDirection, vec3Type);
                             lightTransformParameter->setValue(kSource, nodesIds[j]);
                             
-                            if (hasNormals) {
-                                if (!useSimpleLambert) {
-                                    if (inputParameters->contains("shininess") && (!shininessObject)) {
-                                        shininessObject = inputParameters->getObject("shininess");
-                                        addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
-                                    }
-                                    
-                                    fragmentShader->appendCode("vec3 l = %s;\n", varyingLightDirection);
-                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
-                                    if (hasNormalMap) {
-                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
-                                        fragmentShader->appendCode("h *= bumpMatrix;\n");
-                                    }
-                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
-                                    fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
-                                    fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
-                                    
-                                } else {
-                                    fragmentShader->appendCode("vec3 l = %s;\n", varyingLightDirection);
-                                    if (hasNormalMap) {
-                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
-                                    }
-                                    fragmentShader->appendCode("diffuseIntensity = max(dot(normal, l), 0.);\n");
-                                }
+                            fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+
+                            if (hasSpecular) fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                            if (hasNormalMap) {
+                                fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                if (hasSpecular) fragmentShader->appendCode("h *= bumpMatrix;\n");
                             }
-                            
+                            fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.);\n");
+                            if (hasSpecular) {
+                                fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess);\n");
+                                fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                            }
                             fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
-                            fragmentShader->appendCode("}\n");                            
+                            fragmentShader->appendCode("}\n");
+                            
                         } else
                         /*
                         else if (lightType == "spot") {
                             //
                         } else if (lightType == "point")
                          */{
-                            if (!useSimpleLambert && (hasSpecularLight == false)) {
-                                fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
-                                hasSpecularLight = true;
-                            }
-                             
+                             char varyingLightDirection[100];
+                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                              fragmentShader->appendCode("{\n");
                             
                              shared_ptr <JSONObject> lightConstantAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightConstantAttenuation, asset);
                              lightConstantAttenuationParameter->setValue("value", description->getValue("constantAttenuation"));
-
                              shared_ptr <JSONObject> lightLinearAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightLinearAttenuation, asset);
                              lightLinearAttenuationParameter->setValue("value", description->getValue("linearAttenuation"));
-
                              shared_ptr <JSONObject> lightQuadraticAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightQuadraticAttenuation, asset);
                              lightQuadraticAttenuationParameter->setValue("value", description->getValue("quadraticAttenuation"));
-
                              shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
                              lightColorParameter->setValue("value", description->getValue("color"));
                              
                              fragmentShader->appendCode("float diffuseIntensity;\n");
                              fragmentShader->appendCode("float specularIntensity;\n");
-                             
-                             char varyingLightDirection[100];
-                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                              
                              shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
                              
@@ -1090,47 +1069,24 @@ namespace GLTF
                              
                              lightTransformParameter->setValue(kSource, nodesIds[j]);
                              
-                             if (hasNormals) {
-                                 if (!useSimpleLambert) {
-                                     if (inputParameters->contains("shininess") && (!shininessObject)) {
-                                         shininessObject = inputParameters->getObject("shininess");
-                                         addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
-                                     }
-                                     
-                                     fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
-                                     fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
-                                     fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
-                                     if (hasNormalMap) {
-                                         fragmentShader->appendCode("l *= bumpMatrix;\n");
-                                         fragmentShader->appendCode("h *= bumpMatrix;\n");
-                                     }
-                                     
-                                     
-                                     fragmentShader->appendCode("float attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
-                                                                lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
-
-                                     fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.) * attenuation;\n");
-                                     fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess) * attenuation;\n");
-                                     fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
-                                 } else {
-                                     fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
-
-                                     fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
-
-                                     fragmentShader->appendCode("float attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
-                                                                lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
-                                     
-                                     fragmentShader->appendCode("diffuseIntensity = attenuation * max(dot(normal,l), 0.);\n");
-                                 }
+                             fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
+                             fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                             
+                             if (hasSpecular) fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                             if (hasNormalMap) {
+                                 fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                 if (hasSpecular) fragmentShader->appendCode("h *= bumpMatrix;\n");
                              }
-                            
-                            fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
-                            fragmentShader->appendCode("}\n");
+                             fragmentShader->appendCode("float attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
+                                                        lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
+                             fragmentShader->appendCode("diffuseIntensity = max(dot(normal,l), 0.) * attenuation;\n");
+                             if (hasSpecular) {
+                                 fragmentShader->appendCode("specularIntensity = pow(max(0.0,dot(normal,h)),u_shininess) * attenuation;\n");
+                                 fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                             }
+                             fragmentShader->appendCode("diffuseLight += u_%s * diffuseIntensity;\n", lightColor);
+                             fragmentShader->appendCode("}\n");
                         }
-                        /*else {
-                            //FIXME: report error
-                            
-                        }*/
                     }
                 }
             }
