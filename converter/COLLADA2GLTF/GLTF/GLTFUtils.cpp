@@ -28,5 +28,5 @@
 
 namespace GLTF 
 {
-
+    unsigned int GLTFUtils::s_generatedIDCount = 1;
 }

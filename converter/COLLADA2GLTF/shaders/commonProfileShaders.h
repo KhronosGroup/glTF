@@ -30,6 +30,7 @@
 namespace GLTF
 {
     std::string getReferenceTechniqueID(std::shared_ptr<JSONObject> techniqueGenerator, GLTF::GLTFAsset* asset);
+    void clearCommonProfileTechniqueCache();
 };
 
 #endif

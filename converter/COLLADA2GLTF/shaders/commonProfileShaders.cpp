@@ -1075,6 +1075,12 @@ namespace GLTF
         shared_ptr <GLTFProfile> _profile;
         
     };
+
+    static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
+    void clearCommonProfileTechniqueCache()
+    {
+        techniqueHashToTechniqueID.clear();
+    }
     
     std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset) {
         
@@ -1088,7 +1094,6 @@ namespace GLTF
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
         std::string techniqueHash = buildTechniqueHash(values, techniqueExtras, asset);
 
-        static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
             techniqueHashToTechniqueID[techniqueHash] = "technique" + GLTFUtils::toString(techniqueHashToTechniqueID.size());
         }

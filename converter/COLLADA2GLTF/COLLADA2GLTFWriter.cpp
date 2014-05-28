@@ -33,6 +33,7 @@
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
 #include <algorithm>
+#include "commonProfileShaders.h"
 
 
 #if __cplusplus <= 199711L
@@ -79,6 +80,10 @@ namespace GLTF
 			return false;
         
         asset->write();
+
+        // Cleanup IDs and Technique cache in case we have another conversion
+        GLTFUtils::resetIDCount();
+        clearCommonProfileTechniqueCache();
                 
 		return true;
 	}
