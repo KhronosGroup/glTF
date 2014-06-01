@@ -37,6 +37,10 @@ endif()
 # Lets libxml2 work in a shared library
 add_definitions(-DLIBXML_STATIC_FOR_DLL)
 
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64") 
+ ADD_DEFINITIONS(-fPIC) 
+ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+
 include_directories(${COLLADA2GLTF_SOURCE_DIR})
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
