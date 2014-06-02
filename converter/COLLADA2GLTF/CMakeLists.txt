@@ -63,11 +63,14 @@ if (USE_OPEN3DGC)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_decode_lib/inc)
 endif()
 
-if (NOT WIN32)
-    find_package(PNG REQUIRED)
+set(CMAKE_PREFIX_PATH "C:/Program Files/libpng-1.6.10" "C:/Program Files/zlib-1.2.5")
+message(STATUS "CMake prefix_path: ' ${CMAKE_PREFIX_PATH}'")
+find_package(PNG)
+find_package(ZLIB)
+if (PNG_FOUND AND ZLIB_FOUND)
     include_directories(${PNG_INCLUDE_DIR})
-    find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIR})
+    add_definitions(-DUSE_LIBPNG)
 endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
@@ -169,8 +172,8 @@ endif()
 
 add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
 
-if (NOT WIN32)
-LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
+if (PNG_FOUND AND ZLIB_FOUND)
+    LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
 if (USE_OPEN3DGC)

@@ -26,7 +26,7 @@
 
 #include "GLTFAsset.h"
 #include "commonProfileShaders.h"
-#ifndef WIN32
+#ifdef USE_LIBPNG
 #include "png.h"
 #endif
 
@@ -40,7 +40,7 @@ using namespace std;
 namespace GLTF
 {
 #define PNGSIGSIZE 8
-    #ifndef WIN32
+#ifdef USE_LIBPNG
     void userReadData(png_structp pngPtr, png_bytep data, png_size_t length) {
         ((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
     }
@@ -48,7 +48,7 @@ namespace GLTF
     //thanks to piko3d.com libpng tutorial here
     static bool imageHasAlpha(const char *path)
     {
-#ifndef WIN32
+#ifdef USE_LIBPNG
         bool hasAlpha = false;
         std::ifstream source;
 
