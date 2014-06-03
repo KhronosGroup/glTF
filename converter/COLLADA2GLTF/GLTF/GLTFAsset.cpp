@@ -280,13 +280,13 @@ namespace GLTF
             outputBundlePathURI.setPath(inputPathURI.getPathDir(), outputBundlePathURI.getPathFileBase(), outputBundlePathURI.getPathExtension());
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
             
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
             //                this->log("outputBundlePath:%s\n",outputBundlePathURI.toNativePath().c_str());
             //                this->log("outputPath:%s\n",outputPathURI.toNativePath().c_str());
         } else {
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
         }
         COLLADABU::Utils::createDirectoryIfNeeded(this->_bundleOutputPath.c_str());

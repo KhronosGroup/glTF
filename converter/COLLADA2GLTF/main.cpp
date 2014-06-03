@@ -143,7 +143,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     if (argc == 2) {
         if (fileExists(argv[1])) {
             asset->setInputFilePath(argv[1]);
-            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
+            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
             return true;
         }
     }
@@ -167,7 +167,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 hasOutputPath = true;
 				break;
             case 'o':
-                asset->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
+                asset->setOutputFilePath(replacePathExtensionWith(optarg, "gltf"));
                 hasOutputPath = true;
 				break;
             case 'i':
@@ -236,7 +236,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     }
     
     if (!hasOutputPath & hasInputPath) {
-        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
+        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
     }
     
     return true;
