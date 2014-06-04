@@ -34,7 +34,7 @@
 #include "GitSHA1.h"
 #include <algorithm>
 #include "commonProfileShaders.h"
-
+#include "helpers\encodingHelpers.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -948,13 +948,47 @@ namespace GLTF
         
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
         std::string relPathFile = imageURI.getPathFile();
+		if (imageURI.getPathDir().substr(0, 2) != "./") {
+			relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
+		}
+		else {
+			relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
+		}
         
-        if (imageURI.getPathDir().substr(0,2) != "./") {
-            relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
-        } else {
-            relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
-        }
-        image->setString("path", this->_asset->resourceOuputPathForPath(relPathFile));
+		if (_asset->getEmbedResources())
+		{
+			COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
+			std::string imageFullPath = inputURI.getPathDir() + relPathFile;
+
+			std::ifstream fin(imageFullPath, ios::in | ios::binary);
+			if (fin.is_open())
+			{
+				std::ostringstream ss;
+				ss << fin.rdbuf();
+				COLLADABU::URI u(imageFullPath);
+				std::string ext = u.getPathExtension();
+				std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+				std::string contentType = "application/octet-stream";
+				if (ext == "png")
+				{
+					contentType = "image/png";
+				}
+				else if (ext == "gif")
+				{
+					contentType = "image/gif";
+				}
+				else if (ext == "jpg" || ext == "jpeg")
+				{
+					contentType = "image/jpeg";
+				}
+
+				image->setString("path", create_dataUri(ss.str(), contentType));
+
+				return true;
+			}
+		}
+		
+		image->setString("path", this->_asset->resourceOuputPathForPath(relPathFile));
         
         return true;
 	}
