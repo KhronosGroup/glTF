@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Fabrice Robinet.
+// Copyright (c) Fabrice Robinet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,40 +21,16 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_OUTPUT_STREAM__
-#define __GLTF_OUTPUT_STREAM__
+#ifndef __ENCODING_HELPERS__
+#define __ENCODING_HELPERS__
+
+#include <string>
 
 namespace GLTF
 {
-    class GLTFOutputStream {
-	public:
-        GLTFOutputStream();
-        GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind);
-        
-        size_t length();
-        void write(std::shared_ptr<GLTFBuffer> buffer);
-        void write(std::shared_ptr<GLTFBufferView> bufferView);
-        void write(const char* buffer, size_t length);
-
-        const std::string& filename();
-        const std::string& id();
-		const std::string& outputPath();
-        
-        void close();
-		void remove();
-        
-        virtual ~GLTFOutputStream();
-        
-    private:
-        std::shared_ptr<std::ostream> _stream;
-        std::string _outputPath;
-        std::string _filename;
-        std::string _id;
-        bool _opened;
-
-		bool _embedded;
-    };
+	std::string base64_encode(const std::string& _data);
+	std::string base64_decode(const std::string& _str);
+	std::string create_dataUri(const std::string& content, const std::string& contentType = "application/octet-stream", bool base64Encode = true);
 }
-
 
 #endif

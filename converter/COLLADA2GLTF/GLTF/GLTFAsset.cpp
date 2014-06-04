@@ -149,7 +149,7 @@ namespace GLTF
         return id;
     }
     
-    GLTFAsset::GLTFAsset():_isBundle(false) {
+	GLTFAsset::GLTFAsset() :_isBundle(false), _embedResources(false){
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -191,14 +191,23 @@ namespace GLTF
 
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
-        if (this->_nameToOutputStream.count(streamName) == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            
-            std::string folder = outputURI.getPathDir();
-            std::string fileName = inputURI.getPathFileBase();
-            
-            shared_ptr<GLTFOutputStream> outputStream = shared_ptr <GLTFOutputStream> (new GLTFOutputStream(folder, streamName, ""));
+        if (this->_nameToOutputStream.count(streamName) == 0)
+		{
+			shared_ptr<GLTFOutputStream> outputStream;
+			if (_embedResources)
+			{
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
+			}
+			else
+			{
+				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
+				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+
+				std::string folder = outputURI.getPathDir();
+				std::string fileName = inputURI.getPathFileBase();
+
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
+			}
             this->_nameToOutputStream[streamName] = outputStream;
         }
         
@@ -211,8 +220,8 @@ namespace GLTF
             shared_ptr<GLTFOutputStream> outputStream = this->_nameToOutputStream[streamName];
             
             outputStream->close();
-            if (removeFile) {
-                remove(outputStream->outputPathCStr());
+			if (removeFile) {
+                outputStream->remove();
             }
             
             //FIXME: We keep it around as it's informations are still accessed once close
@@ -348,6 +357,16 @@ namespace GLTF
     std::string GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
     }
+
+	void GLTFAsset::setEmbedResources(bool embedResources)
+	{
+		this->_embedResources = embedResources;
+	}
+
+	bool GLTFAsset::getEmbedResources()
+	{
+		return this->_embedResources;
+	}
     
     std::string GLTFAsset::pathRelativeToInputPath(const std::string& path) {
         if (GLTFUtils::isAbsolutePath(path) == true) {
@@ -1040,7 +1059,7 @@ namespace GLTF
         this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            sharedBuffer->setString(kPath, this->getSharedBufferId() + ".bin");
+			sharedBuffer->setString(kPath, rawOutputStream->outputPath());
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -1048,7 +1067,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kPath, compressedBufferID + ".bin");
+            compressionBuffer->setString(kPath, compressionOutputStream->outputPath());
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
@@ -1083,8 +1102,8 @@ namespace GLTF
             this->closeOutputStream(kCompressionOutputStream, true);
         }
         
-        if (sharedBuffer->getByteLength() == 0)
-            remove(rawOutputStream->outputPathCStr());
+		if (!_embedResources && sharedBuffer->getByteLength() == 0)
+            rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
 		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());
