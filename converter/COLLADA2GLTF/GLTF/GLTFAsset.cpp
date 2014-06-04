@@ -1150,7 +1150,7 @@ namespace GLTF
             this->closeOutputStream(kCompressionOutputStream, true);
         }
         
-		if (sharedBuffer->getByteLength() == 0)
+		if (!_embedResources && sharedBuffer->getByteLength() == 0)
             rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
