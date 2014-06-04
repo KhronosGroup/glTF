@@ -102,7 +102,11 @@ namespace GLTF
 
 	void GLTFOutputStream::remove()
 	{
-		if (!_embedded)
+		if (_embedded)
+		{
+			dynamic_pointer_cast<std::ostringstream>(this->_stream)->clear();
+		}
+		else
 		{
 			::remove(this->_outputPath.c_str());
 		}
