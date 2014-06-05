@@ -585,7 +585,7 @@ namespace GLTF
         std::shared_ptr<std::vector<std::string> > _transformsOrder;
     };
     
-    std::shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset);
+    std::shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset, double distanceScale);
     bool writeAnimation(std::shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
