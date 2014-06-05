@@ -48,7 +48,7 @@ using namespace std;
 namespace GLTF
 {
 #define PNGSIGSIZE 8
-    #ifndef WIN32
+#ifndef WIN32
     void userReadData(png_structp pngPtr, png_bytep data, png_size_t length) {
         ((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
     }
@@ -59,9 +59,9 @@ namespace GLTF
 #ifndef WIN32
         bool hasAlpha = false;
         std::ifstream source;
-
+        
         source.open(path, ios::in | ios::binary);
-//        printf("path:%s\n",path);
+        //        printf("path:%s\n",path);
         png_byte pngsig[PNGSIGSIZE];
         int isPNG = 0;
         source.read((char*)pngsig, PNGSIGSIZE);
@@ -111,7 +111,7 @@ namespace GLTF
             //FIXME: we need an explicit option to allow this, and make sure we get then consistent instanceTechnique and technique parameters
             shared_ptr <JSONObject> param = inputParameters->getObject(slot);
             
-            if (param->getUnsignedInt32("type") == asset->profile()->getGLenumForString("SAMPLER_2D"))
+            if (param->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("SAMPLER_2D"))
                 return true; //it is a texture, so presumably yes, this slot is not neutral
             
             if (param->contains("value")) {
@@ -152,16 +152,16 @@ namespace GLTF
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
-                         GLTFAsset* asset) {
+                                GLTFAsset* asset) {
         return getTransparency(parameters, asset)  < 1;
     }
     
     static bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
-
+        
         if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
-            if (diffuse->getUnsignedInt32("type") == asset->profile()->getGLenumForString("SAMPLER_2D")) {
+            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("SAMPLER_2D")) {
                 shared_ptr<JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
@@ -189,30 +189,31 @@ namespace GLTF
         }
         return !hasTransparency(parameters, asset);
     }
-/*
-    From https://github.com/KhronosGroup/glTF/issues/83#issuecomment-24095883
- 
-    MODEL - mat4 or mat3 - Transforms from model to world coordinates using the transform's node and all of its parents.
-    VIEW - mat4 or mat3 - Transforms from world to view coordinates using the active camera node.
-    PROJECTION - mat4 or mat3 - Transforms from view to clip coordinates using the active camera node.
-    MODELVIEW - mat4 or mat3 - Combined MODEL and VIEW.
-    MODELVIEWPROJECTION - mat4 or mat3 - Combined MODEL, VIEW, and PROJECTION.
-    Inverses
-    
-    MODELINVERSE - mat4 or mat3 - Inverse of MODEL.
-    VIEWINVERSE - mat4 or mat3 - Inverse of VIEW.
-    PROJECTIONINVERSE - mat4 or mat3 - Inverse of PROJECTION.
-    MODELVIEWINVERSE - mat4 or mat3 - Inverse of MODELVIEW.
-    MODELVIEWPROJECTIONINVERSE - mat4 or mat3 - Inverse of MODELVIEWPROJECTION.
-    Inverse transposes
-    
-    MODELINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODEL without the translation. This translates normals in model coordinates to world coordinates.
-    MODELVIEWINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODELVIEW without the translation. This translates normals in model coordinates to eye coordinates.
-*/
+    /*
+     From https://github.com/KhronosGroup/glTF/issues/83#issuecomment-24095883
+     
+     MODEL - mat4 or mat3 - Transforms from model to world coordinates using the transform's node and all of its parents.
+     VIEW - mat4 or mat3 - Transforms from world to view coordinates using the active camera node.
+     PROJECTION - mat4 or mat3 - Transforms from view to clip coordinates using the active camera node.
+     MODELVIEW - mat4 or mat3 - Combined MODEL and VIEW.
+     MODELVIEWPROJECTION - mat4 or mat3 - Combined MODEL, VIEW, and PROJECTION.
+     Inverses
+     
+     MODELINVERSE - mat4 or mat3 - Inverse of MODEL.
+     VIEWINVERSE - mat4 or mat3 - Inverse of VIEW.
+     PROJECTIONINVERSE - mat4 or mat3 - Inverse of PROJECTION.
+     MODELVIEWINVERSE - mat4 or mat3 - Inverse of MODELVIEW.
+     MODELVIEWPROJECTIONINVERSE - mat4 or mat3 - Inverse of MODELVIEWPROJECTION.
+     Inverse transposes
+     
+     MODELINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODEL without the translation. This translates normals in model coordinates to world coordinates.
+     MODELVIEWINVERSETRANSPOSE - mat3 or mat2 - The inverse-transpose of MODELVIEW without the translation. This translates normals in model coordinates to eye coordinates.
+     */
     
     
     static std::string MODELVIEW = "MODELVIEW";
     static std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
+    static std::string MODELVIEWINVERSE = "MODELVIEWINVERSE";
     static std::string PROJECTION = "PROJECTION";
     
     /* uniform types, derived from
@@ -233,12 +234,12 @@ namespace GLTF
     
     static std::string buildSlotHash(shared_ptr<JSONObject> &parameters, std::string slot, GLTFAsset* asset) {
         std::string hash = slot + ":";
-
+        
         if (slotIsContributingToLighting(slot, parameters, asset)) {
             if (parameters->contains(slot)) {
                 shared_ptr<JSONObject> parameter = parameters->getObject(slot);
-                if (parameter->contains("type")) {
-                    hash += GLTFUtils::toString(parameter->getUnsignedInt32("type"));
+                if (parameter->contains(kType)) {
+                    hash += GLTFUtils::toString(parameter->getUnsignedInt32(kType));
                     return hash;
                 }
             }
@@ -249,26 +250,26 @@ namespace GLTF
     }
     
     /*
-    static std::string buildLightsHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset& context) {
-        std::string lightsHash = "";
-        
-        if (context.root->contains("lightsIds")) {
-            shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
-            std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
-            
-            for (size_t i = 0 ; i < ids.size() ; i++) {
-                shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
-                
-                shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
-                
-                std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
-                for (size_t i = 0 ; i < ids.size() ; i++) {
-                }
-           }
-        }
-        return lightsHash;
-    }
-    */
+     static std::string buildLightsHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset& context) {
+     std::string lightsHash = "";
+     
+     if (context.root->contains("lightsIds")) {
+     shared_ptr<JSONArray> lightsIds = context.root->createArrayIfNeeded("lightsIds");
+     std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
+     
+     for (size_t i = 0 ; i < ids.size() ; i++) {
+     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
+     
+     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(context._uniqueIDOfLightToNodes[lightUID->getString()]);
+     
+     std::vector <shared_ptr <JSONValue> > nodesIds = lightsNodesIds->values();
+     for (size_t i = 0 ; i < ids.size() ; i++) {
+     }
+     }
+     }
+     return lightsHash;
+     }
+     */
     static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset) {
         std::string techniqueHash = "";
         bool doubleSided = false;
@@ -292,7 +293,7 @@ namespace GLTF
         techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
-                
+        
         return techniqueHash;
     }
     
@@ -307,7 +308,7 @@ namespace GLTF
             std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
             shaderObject->setString("path", asset->resourceOuputPathForPath(path));
-            shaderObject->setUnsignedInt32("type", type);
+            shaderObject->setUnsignedInt32(kType, type);
             //also write the file on disk
             if (shaderString.size() > 0) {
                 COLLADABU::URI outputURI(asset->getOutputFilePath());
@@ -335,7 +336,7 @@ namespace GLTF
             states->setUnsignedInt32("depthTestEnable", GLOne);
             states->setUnsignedInt32("depthMask", GLOne);
             states->setUnsignedInt32("blendEnable", GLZero);
-        } else {            
+        } else {
             states->setUnsignedInt32("blendEnable", GLOne);
             states->setUnsignedInt32("depthTestEnable", GLOne);
             states->setUnsignedInt32("depthMask", GLOne); //should be true for images, and false for plain color
@@ -348,7 +349,7 @@ namespace GLTF
             } else {
                 blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
             }
-
+            
             blendFunc->setUnsignedInt32("dfactor", profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"));
             states->setValue("blendFunc", blendFunc) ;
         }
@@ -359,17 +360,17 @@ namespace GLTF
     typedef std::map<std::string , std::string > TechniqueHashToTechniqueID;
     
     /*
-    static size_t __GetSetIndex(const std::string &semantic) {
-        size_t index = semantic.find("_");
-        if (index !=  string::npos) {
-            std::string setStr = semantic.substr(index + 1);
-            index = atoi(setStr.c_str());
-            return index;
-        }
-        
-        return 0;
-    }
-    */
+     static size_t __GetSetIndex(const std::string &semantic) {
+     size_t index = semantic.find("_");
+     if (index !=  string::npos) {
+     std::string setStr = semantic.substr(index + 1);
+     index = atoi(setStr.c_str());
+     return index;
+     }
+     
+     return 0;
+     }
+     */
     
     class GLSLShader {
     public:
@@ -460,7 +461,7 @@ namespace GLTF
             delete this->_vertexShader;
             delete this->_fragmentShader;
         }
-
+        
         void _nameDidChange() {
             this->_vertexShader->setName(_name + "VS");
             this->_fragmentShader->setName(_name + "FS");
@@ -528,7 +529,7 @@ namespace GLTF
             shared_ptr <JSONObject> commonProfile = details->createObjectIfNeeded("commonProfile");
             shared_ptr <JSONObject> extras = commonProfile->createObjectIfNeeded("extras");
             
-            details->setString("type", "COLLADA-1.4.1/commonProfile");
+            details->setString(kType, "COLLADA-1.4.1/commonProfile");
             
             shared_ptr<JSONArray> parameters(new JSONArray());
             
@@ -589,6 +590,7 @@ namespace GLTF
             static std::map<std::string , unsigned int> typeForSemanticUniform;
             if (typeForSemanticUniform.empty()) {
                 typeForSemanticUniform[MODELVIEWINVERSETRANSPOSE] = _GL(FLOAT_MAT3);; //typically the normal matrix
+                typeForSemanticUniform[MODELVIEWINVERSE] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[MODELVIEW] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[PROJECTION] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform["JOINT_MATRIX"] = _GL(FLOAT_MAT4);
@@ -605,16 +607,16 @@ namespace GLTF
                          bool forcesAsAnArray = false) {
             
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
-
+            
             unsigned int type = (uniformOrAttribute == "uniform") ?
-                                    typeForSemanticUniform(semantic) :
-                                    typeForSemanticAttribute(semantic);
+            typeForSemanticUniform(semantic) :
+            typeForSemanticAttribute(semantic);
             
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
-            parameter->setString("semantic", semantic);
-            parameter->setUnsignedInt32("type",  type);
+            parameter->setString(kSemantic, semantic);
+            parameter->setUnsignedInt32(kType,  type);
             _parameters->setValue(parameterID, parameter);
-
+            
             //FIXME: should not assume default pass / default program
             GLSLProgram* program = _pass->instanceProgram();
             GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
@@ -642,7 +644,7 @@ namespace GLTF
         //FIXME: refactor with addSemantic
         shared_ptr <JSONObject> addParameter(std::string parameterID, unsigned int type) {
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
-            parameter->setUnsignedInt32("type",  type);
+            parameter->setUnsignedInt32(kType,  type);
             _parameters->setValue(parameterID, parameter);
             
             return parameter;
@@ -654,9 +656,9 @@ namespace GLTF
                                          size_t count,
                                          std::string parameterID,
                                          GLTFAsset* asset) {
-                        
+            
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
-                        
+            
             //FIXME: should not assume default pass / default program
             GLSLProgram* program = _pass->instanceProgram();
             GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
@@ -701,7 +703,7 @@ namespace GLTF
             
             this->_profile = asset->profile();
             
-            unsigned int vec3Type =  _GL(FLOAT_VEC3);
+            unsigned int vec3Type = _GL(FLOAT_VEC3);
             unsigned int vec4Type = _GL(FLOAT_VEC4);
             unsigned int mat4Type = _GL(FLOAT_MAT4);
             unsigned int sampler2DType = _GL(SAMPLER_2D);
@@ -713,8 +715,8 @@ namespace GLTF
             shared_ptr <JSONObject> inputParameters = values;
             
             bool hasSpecular =  inputParameters->contains("specular") &&
-                                inputParameters->contains("shininess") &&
-                                ((lightingModel == phong) || (lightingModel == blinn));
+            inputParameters->contains("shininess") &&
+            ((lightingModel == phong) || (lightingModel == blinn));
             
             unsigned int jointsCount = 0;
             bool hasSkinning = false;
@@ -723,8 +725,8 @@ namespace GLTF
             if (techniqueExtras != nullptr) {
                 jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
                 hasSkinning =   attributeSemantics->contains("WEIGHT") &&
-                                attributeSemantics->contains("JOINT") &&
-                                (jointsCount > 0);
+                attributeSemantics->contains("JOINT") &&
+                (jointsCount > 0);
             }
             
             hasNormalMap = false;
@@ -737,7 +739,7 @@ namespace GLTF
             GLSLShader* vertexShader = program->vertexShader();
             GLSLShader* fragmentShader = program->fragmentShader();
             program->setName(shaderName);
-
+            
             //position attribute
             addSemantic("vs", "attribute",
                         "POSITION", "position" , 1, false);
@@ -748,7 +750,7 @@ namespace GLTF
                 addSemantic("vs", "attribute",
                             "NORMAL", "normal", 1, true);
             }
-
+            
             if (hasSkinning) {
                 addSemantic("vs", "attribute",
                             "JOINT", "joint", 1, false);
@@ -763,7 +765,7 @@ namespace GLTF
             if (hasNormals) {
                 //normal matrix
                 addSemantic("vs", "uniform",
-                        MODELVIEWINVERSETRANSPOSE, "normalMatrix" , 1, false);
+                            MODELVIEWINVERSETRANSPOSE, "normalMatrix" , 1, false);
             }
             
             //modeliew matrix
@@ -775,7 +777,7 @@ namespace GLTF
                         PROJECTION, "projectionMatrix" , 1, false);
             
             /*
-                Handle hardware skinning, for now with a fixed limit of 4 influences
+             Handle hardware skinning, for now with a fixed limit of 4 influences
              */
             
             if (hasSkinning) {
@@ -817,7 +819,7 @@ namespace GLTF
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                         
                         if (light != nullptr) {
-                            std::string lightType = light->getString("type");
+                            std::string lightType = light->getString(kType);
                             
                             //we ignore lighting if the only light we have is ambient
                             modelContainsLights |= lightType != "ambient";
@@ -837,7 +839,7 @@ namespace GLTF
             } else {
                 //https://github.com/KhronosGroup/glTF/issues/121
                 //we want to keep consistent the parameter in the instanceTechnique and the ones actually in use in the technique.
-                //Given the context, some parameters from instanceTechnique will be removed because they aren't used in the resulting shader. As an example, we may have no light declared and the default lighting disabled == no lighting at all, but still a specular color and a shininess. in this case specular and shininess won't be used 
+                //Given the context, some parameters from instanceTechnique will be removed because they aren't used in the resulting shader. As an example, we may have no light declared and the default lighting disabled == no lighting at all, but still a specular color and a shininess. in this case specular and shininess won't be used
                 
             }
             
@@ -882,8 +884,8 @@ namespace GLTF
                     continue;
                 
                 shared_ptr <JSONObject> param = inputParameters->getObject(slot);
-                unsigned int slotType = param->getUnsignedInt32("type");
-
+                unsigned int slotType = param->getUnsignedInt32(kType);
+                
                 if ((!lightingIsEnabled) && ((slot == "ambient") || (slot == "specular"))) {
                     //as explained in https://github.com/KhronosGroup/glTF/issues/121 export all parameters when details is specified
                     if (CONFIG_BOOL(asset, "exportPassDetails"))
@@ -927,11 +929,11 @@ namespace GLTF
                         //Update Vertex shader for reflection
                         std::string normalType = vertexShader->GLSLTypeForGLType(vec3Type);
                         vertexShader->appendCode("%s normalizedVert = normalize(%s(pos));\n",
-                                normalType.c_str(),
-                                normalType.c_str());
+                                                 normalType.c_str(),
+                                                 normalType.c_str());
                         vertexShader->appendCode("%s r = reflect(normalizedVert, %s);\n",
-                                normalType.c_str(),
-                                "v_normal");
+                                                 normalType.c_str(),
+                                                 "v_normal");
                         vertexShader->appendCode("r.z += 1.0;\n");
                         vertexShader->appendCode("float m = 2.0 * sqrt(dot(r,r));\n");
                         vertexShader->appendCode("%s = (r.xy / m) + 0.5;\n", texVSymbol.c_str());
@@ -941,7 +943,7 @@ namespace GLTF
                         if  (declaredTexcoordAttributes.count(semantic) == 0) {
                             texSymbol = texcoordAttributeSymbol + GLTFUtils::toString(declaredTexcoordAttributes.size());
                             texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
-
+                            
                             addSemantic("vs", "attribute",
                                         semantic, "texcoord" + GLTFUtils::toString(declaredTexcoordAttributes.size()), 1, false);
                             program->addVarying(texVSymbol, typeForSemanticAttribute(semantic));
@@ -960,7 +962,7 @@ namespace GLTF
                     //get the texture
                     shared_ptr <JSONObject> textureParameter = inputParameters->getObject(slot);
                     //FIXME:this should eventually not come from the inputParameter
-                    addValue("fs", "uniform", textureParameter->getUnsignedInt32("type"), 1, slot, asset);
+                    addValue("fs", "uniform", textureParameter->getUnsignedInt32(kType), 1, slot, asset);
                     
                     if ((hasNormalMap == false) && (slot == "bump"))
                         continue;
@@ -984,12 +986,12 @@ namespace GLTF
             if (lightingIsEnabled && asset->root()->contains("lightsIds")) {
                 shared_ptr<JSONArray> lightsIds = asset->root()->createArrayIfNeeded("lightsIds");
                 std::vector <shared_ptr <JSONValue> > ids = lightsIds->values();
-
+                
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
-                    addValue("fs", "uniform", shininessObject->getUnsignedInt32("type") , 1, "shininess", asset);
+                    addValue("fs", "uniform", shininessObject->getUnsignedInt32(kType) , 1, "shininess", asset);
                 }
-
+                
                 for (size_t i = 0 ; i < ids.size() ; i++) {
                     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
@@ -998,7 +1000,7 @@ namespace GLTF
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                     if (light == nullptr)
                         continue;
-                    std::string lightType = light->getString("type");
+                    std::string lightType = light->getString(kType);
                     
                     //we ignore lighting if the only light we have is ambient
                     if ((lightType == "ambient") && ids.size() == 1)
@@ -1014,18 +1016,22 @@ namespace GLTF
                         char lightConstantAttenuation[100];
                         char lightLinearAttenuation[100];
                         char lightQuadraticAttenuation[100];
+                        char lightFallOffAngle[100];
+                        char lightFallOffExponent[100];
                         sprintf(lightIndexCStr, "light%d", (int)lightIndex);
                         sprintf(lightColor, "%sColor", lightIndexCStr);
                         sprintf(lightTransform, "%sTransform", lightIndexCStr);
                         sprintf(lightConstantAttenuation, "%sConstantAttenuation", lightIndexCStr);
                         sprintf(lightLinearAttenuation, "%sLinearAttenuation", lightIndexCStr);
                         sprintf(lightQuadraticAttenuation, "%sQuadraticAttenuation", lightIndexCStr);
-
+                        sprintf(lightFallOffAngle, "%sFallOffAngle", lightIndexCStr);
+                        sprintf(lightFallOffExponent, "%sFallOffExponent", lightIndexCStr);
+                        
                         if (hasSpecular && (hasSpecularLight == false)) {
                             fragmentShader->appendCode("vec3 specularLight = vec3(0., 0., 0.);\n");
                             hasSpecularLight = true;
                         }
-
+                        
                         if (lightType == "ambient") {
                             if (hasAmbientLight == false) {
                                 fragmentShader->appendCode("vec3 ambientLight = vec3(0., 0., 0.);\n");
@@ -1042,71 +1048,96 @@ namespace GLTF
                             fragmentShader->appendCode("}\n");
                             
                         } else {
-                             char varyingLightDirection[100];
-                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
-                             program->addVarying(varyingLightDirection, vec3Type);
-                             if ((vertexShader->hasSymbol("v_position") == false) && (lightingModel == phong)) {
-                                 program->addVarying("v_position", vec3Type);
-                                 vertexShader->appendCode("v_position = pos.xyz;\n");
-                             }
-                             fragmentShader->appendCode("{\n");
+                            char varyingLightDirection[100];
+                            sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
+                            program->addVarying(varyingLightDirection, vec3Type);
+                            if ((vertexShader->hasSymbol("v_position") == false) && ((lightingModel == phong) || (lightType == "spot"))) {
+                                program->addVarying("v_position", vec3Type);
+                                vertexShader->appendCode("v_position = pos.xyz;\n");
+                            }
+                            fragmentShader->appendCode("{\n");
                             
-                             fragmentShader->appendCode("float specularIntensity = 0.;\n");
-                             
-                             if (lightType != "directional") {
-                                 shared_ptr <JSONObject> lightConstantAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightConstantAttenuation, asset);
-                                 lightConstantAttenuationParameter->setValue("value", description->getValue("constantAttenuation"));
-                                 shared_ptr <JSONObject> lightLinearAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightLinearAttenuation, asset);
-                                 lightLinearAttenuationParameter->setValue("value", description->getValue("linearAttenuation"));
-                                 shared_ptr <JSONObject> lightQuadraticAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightQuadraticAttenuation, asset);
-                                 lightQuadraticAttenuationParameter->setValue("value", description->getValue("quadraticAttenuation"));
-                             }
-                             shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
-                             lightColorParameter->setValue("value", description->getValue("color"));
-                             shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
-                             lightTransformParameter->setValue(kSource, nodesIds[j]);
-                             
-                             if (lightType == "directional") {
-                                 vertexShader->appendCode("%s = mat3(u_%s) * vec3(0.,0.,1.);\n", varyingLightDirection, lightTransform);
-                             } else {
-                                 vertexShader->appendCode("%s = u_%s[3].xyz - pos.xyz;\n", varyingLightDirection, lightTransform) ;
-                             }
-                             
-                             fragmentShader->appendCode("float attenuation = 1.0;\n");
-
-                             if (lightType != "directional") {
-                                 //compute light attenuation from non-normalized light direction
-                                 fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
-                                 fragmentShader->appendCode("attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
-                                                            lightConstantAttenuation,lightLinearAttenuation, lightQuadraticAttenuation);
-                             }
-                             //compute lighting from normalized light direction
-                             fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
-                             
-                             //we handle phong, blinn, constant and lambert
-                             if (hasSpecular) {
-                                 if (lightingModel == phong) {
-                                     fragmentShader->appendCode("vec3 position = v_position;\n");
-                                     if (hasNormalMap) {
-                                         fragmentShader->appendCode("l *= bumpMatrix;\n");
-                                         fragmentShader->appendCode("position *= bumpMatrix;\n");
-                                     }
-                                     fragmentShader->appendCode("float phongTerm = max(0.0, dot(reflect(-l,normal), normalize(-position)));\n");
-                                     fragmentShader->appendCode("specularIntensity = max(0., pow(phongTerm , u_shininess)) * attenuation;\n");
-                                 } else if (lightingModel == blinn) {
-                                     fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
-                                     if (hasNormalMap) {
-                                         fragmentShader->appendCode("h *= bumpMatrix;\n");
-                                         fragmentShader->appendCode("l *= bumpMatrix;\n");
-                                     }
-                                     fragmentShader->appendCode("specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;\n");
-                                 }
-                                 fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
-                             }
+                            fragmentShader->appendCode("float specularIntensity = 0.;\n");
                             
-                             //write diffuse
-                             fragmentShader->appendCode("diffuseLight += u_%s * max(dot(normal,l), 0.) * attenuation;\n", lightColor);
-                             fragmentShader->appendCode("}\n");
+                            if (lightType != "directional") {
+                                shared_ptr <JSONObject> lightConstantAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightConstantAttenuation, asset);
+                                lightConstantAttenuationParameter->setValue("value", description->getValue("constantAttenuation"));
+                                shared_ptr <JSONObject> lightLinearAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightLinearAttenuation, asset);
+                                lightLinearAttenuationParameter->setValue("value", description->getValue("linearAttenuation"));
+                                shared_ptr <JSONObject> lightQuadraticAttenuationParameter = addValue("fs", "uniform", floatType, 1, lightQuadraticAttenuation, asset);
+                                lightQuadraticAttenuationParameter->setValue("value", description->getValue("quadraticAttenuation"));
+                            }
+                            shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
+                            lightColorParameter->setValue("value", description->getValue("color"));
+                            shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
+                            lightTransformParameter->setValue(kSource, nodesIds[j]);
+                            //lightTransformParameter->setString(kSemantic, MODELVIEW);
+                            
+                            if (lightType == "directional") {
+                                vertexShader->appendCode("%s = mat3(u_%s) * vec3(0.,0.,1.);\n", varyingLightDirection, lightTransform);
+                            } else {
+                                vertexShader->appendCode("%s = u_%s[3].xyz - pos.xyz;\n", varyingLightDirection, lightTransform) ;
+                            }
+                            
+                            fragmentShader->appendCode("float attenuation = 1.0;\n");
+                            
+                            if (lightType != "directional") {
+                                //compute light attenuation from non-normalized light direction
+                                fragmentShader->appendCode("float range = length(%s);\n", varyingLightDirection);
+                                fragmentShader->appendCode("attenuation = 1.0 / ( u_%s + (u_%s * range) + (u_%s * range * range) ) ;\n",
+                                                           lightConstantAttenuation, lightLinearAttenuation, lightQuadraticAttenuation);
+                            }
+                            //compute lighting from normalized light direction
+                            fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
+                            
+                            if (lightType == "spot") {
+                                fragmentShader->addUniform("u_light1Transform", mat4Type, 1);
+                                
+                                shared_ptr <JSONObject> lightFallOffExponentParameter = addValue("fs", "uniform", floatType, 1, lightFallOffExponent, asset);
+                                lightFallOffExponentParameter->setValue("value", description->getValue("fallOffExponent"));
+                                shared_ptr <JSONObject> lightFallOffAngleParameter = addValue("fs", "uniform", floatType, 1, lightFallOffAngle, asset);
+                                lightFallOffAngleParameter->setValue("value", description->getValue("fallOffAngle"));
+                                
+                                //As in OpenGL ES 2.0 programming guide
+                                //Raise spec issue about the angle
+                                //we can test this in the shader generation
+                                fragmentShader->appendCode("if (u_%s < 180.0);\n", lightFallOffAngle);
+                                fragmentShader->appendCode("{\n");
+                                fragmentShader->appendCode("float spotFactor = 0.;\n");
+                                //doing this cos each pixel is just wrong (for performance)
+                                //need to find a way to specify that we pass the cos of a value
+                                fragmentShader->appendCode("vec3 spotPosition = mat3(u_%s) * v_position;\n", lightTransform);
+                                fragmentShader->appendCode("spotFactor = dot(vec3(0.0,0.0,1.0), normalize(spotPosition.xyz));\n");
+                                fragmentShader->appendCode("if(spotFactor >= cos(radians(u_%s)))\n", lightFallOffAngle);
+                                fragmentShader->appendCode("spotFactor = pow(spotFactor, u_%s);\n", lightFallOffExponent);
+                                fragmentShader->appendCode("attenuation *= spotFactor;\n");
+                                fragmentShader->appendCode("}\n");
+                            }
+                            
+                            //we handle phong, blinn, constant and lambert
+                            if (hasSpecular) {
+                                if (lightingModel == phong) {
+                                    fragmentShader->appendCode("vec3 position = v_position;\n");
+                                    if (hasNormalMap) {
+                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                        fragmentShader->appendCode("position *= bumpMatrix;\n");
+                                    }
+                                    fragmentShader->appendCode("float phongTerm = max(0.0, dot(reflect(-l,normal), normalize(-position)));\n");
+                                    fragmentShader->appendCode("specularIntensity = max(0., pow(phongTerm , u_shininess)) * attenuation;\n");
+                                } else if (lightingModel == blinn) {
+                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    if (hasNormalMap) {
+                                        fragmentShader->appendCode("h *= bumpMatrix;\n");
+                                        fragmentShader->appendCode("l *= bumpMatrix;\n");
+                                    }
+                                    fragmentShader->appendCode("specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;\n");
+                                }
+                                fragmentShader->appendCode("specularLight += u_%s * specularIntensity;\n", lightColor);
+                            }
+                            
+                            //write diffuse
+                            fragmentShader->appendCode("diffuseLight += u_%s * max(dot(normal,l), 0.) * attenuation;\n", lightColor);
+                            fragmentShader->appendCode("}\n");
                         }
                     }
                 }
@@ -1117,7 +1148,7 @@ namespace GLTF
             if (CONFIG_BOOL(asset, "exportPassDetails")) {
                 if (inputParameters->contains("shininess") && (!shininessObject)) {
                     shininessObject = inputParameters->getObject("shininess");
-                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32("type"), 1, "shininess", asset);
+                    addValue("fs", "uniform",   shininessObject->getUnsignedInt32(kType), 1, "shininess", asset);
                 }
             }
             
@@ -1142,13 +1173,13 @@ namespace GLTF
             if (slotIsContributingToLighting("emission", inputParameters, asset)) {
                 fragmentShader->appendCode("color.xyz += emission.xyz;\n");
             }
-                        
+            
             bool hasTransparency = inputParameters->contains("transparency");
             if (hasTransparency) {
                 std::string slot = "transparency";
                 shared_ptr <JSONObject> transparencyParam = inputParameters->getObject(slot);
                 
-                addValue("fs", "uniform",   transparencyParam->getUnsignedInt32("type"), 1, slot, asset);
+                addValue("fs", "uniform",   transparencyParam->getUnsignedInt32(kType), 1, slot, asset);
                 
                 fragmentShader->appendCode("color = vec4(color.rgb * diffuse.a, diffuse.a * %s);\n", "u_transparency");
             } else {
@@ -1163,15 +1194,14 @@ namespace GLTF
                     fragmentShader->appendCode("color *= u_filterColor;\n");
                 }
             }
-
+            
             fragmentShader->appendCode("gl_FragColor = color;\n");
-
+            
             vertexShader->appendCode("gl_Position = %s * pos;\n",
                                      "u_projectionMatrix");
             
             vertexShader->appendCode("}\n");
             fragmentShader->appendCode("}\n");
-            
         }
         
         shared_ptr <GLTF::JSONObject> parameters() {
@@ -1207,9 +1237,10 @@ namespace GLTF
         std::string lightingModel = techniqueGenerator->getString("lightingModel");
         shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
         shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
-
+        
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
-
+        
+        static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
             techniqueHashToTechniqueID[techniqueHash] = "technique" + GLTFUtils::toString(techniqueHashToTechniqueID.size());
         }
