@@ -1013,6 +1013,7 @@ namespace GLTF
                         char lightIndexCStr[100];
                         char lightColor[100];
                         char lightTransform[100];
+                        char lightInverseTransform[100];
                         char lightConstantAttenuation[100];
                         char lightLinearAttenuation[100];
                         char lightQuadraticAttenuation[100];
@@ -1021,6 +1022,7 @@ namespace GLTF
                         sprintf(lightIndexCStr, "light%d", (int)lightIndex);
                         sprintf(lightColor, "%sColor", lightIndexCStr);
                         sprintf(lightTransform, "%sTransform", lightIndexCStr);
+                        sprintf(lightInverseTransform, "%sInverseTransform", lightIndexCStr);
                         sprintf(lightConstantAttenuation, "%sConstantAttenuation", lightIndexCStr);
                         sprintf(lightLinearAttenuation, "%sLinearAttenuation", lightIndexCStr);
                         sprintf(lightQuadraticAttenuation, "%sQuadraticAttenuation", lightIndexCStr);
@@ -1071,7 +1073,7 @@ namespace GLTF
                             lightColorParameter->setValue("value", description->getValue("color"));
                             shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
                             lightTransformParameter->setValue(kSource, nodesIds[j]);
-                            //lightTransformParameter->setString(kSemantic, MODELVIEW);
+                            lightTransformParameter->setString(kSemantic, MODELVIEW);
                             
                             if (lightType == "directional") {
                                 vertexShader->appendCode("%s = mat3(u_%s) * vec3(0.,0.,1.);\n", varyingLightDirection, lightTransform);
@@ -1091,7 +1093,9 @@ namespace GLTF
                             fragmentShader->appendCode("vec3 l = normalize(%s);\n", varyingLightDirection);
                             
                             if (lightType == "spot") {
-                                fragmentShader->addUniform("u_light1Transform", mat4Type, 1);
+                                shared_ptr <JSONObject> lightInverseTransformParameter = addValue("fs", "uniform", mat4Type, 1, lightInverseTransform, asset);
+                                lightInverseTransformParameter->setValue(kSource, nodesIds[j]);
+                                lightInverseTransformParameter->setString(kSemantic, MODELVIEWINVERSE);
                                 
                                 shared_ptr <JSONObject> lightFallOffExponentParameter = addValue("fs", "uniform", floatType, 1, lightFallOffExponent, asset);
                                 lightFallOffExponentParameter->setValue("value", description->getValue("fallOffExponent"));
@@ -1101,17 +1105,13 @@ namespace GLTF
                                 //As in OpenGL ES 2.0 programming guide
                                 //Raise spec issue about the angle
                                 //we can test this in the shader generation
-                                fragmentShader->appendCode("if (u_%s < 180.0);\n", lightFallOffAngle);
-                                fragmentShader->appendCode("{\n");
-                                fragmentShader->appendCode("float spotFactor = 0.;\n");
+                                fragmentShader->appendCode("vec4 spotPosition = u_%s * vec4(v_position, 1.);\n", lightInverseTransform);
+                                fragmentShader->appendCode("float cosAngle = dot(vec3(0.0,0.0,-1.0), normalize(spotPosition.xyz));\n");
                                 //doing this cos each pixel is just wrong (for performance)
                                 //need to find a way to specify that we pass the cos of a value
-                                fragmentShader->appendCode("vec3 spotPosition = mat3(u_%s) * v_position;\n", lightTransform);
-                                fragmentShader->appendCode("spotFactor = dot(vec3(0.0,0.0,1.0), normalize(spotPosition.xyz));\n");
-                                fragmentShader->appendCode("if(spotFactor >= cos(radians(u_%s)))\n", lightFallOffAngle);
-                                fragmentShader->appendCode("spotFactor = pow(spotFactor, u_%s);\n", lightFallOffExponent);
-                                fragmentShader->appendCode("attenuation *= spotFactor;\n");
-                                fragmentShader->appendCode("}\n");
+                                fragmentShader->appendCode("if (cosAngle > cos(radians(u_%s * 0.5)))\n", lightFallOffAngle);
+                                fragmentShader->appendCode("{\n");
+                                fragmentShader->appendCode("attenuation *= max(0.0, pow(cosAngle, u_%s));\n", lightFallOffExponent);
                             }
                             
                             //we handle phong, blinn, constant and lambert
@@ -1137,6 +1137,10 @@ namespace GLTF
                             
                             //write diffuse
                             fragmentShader->appendCode("diffuseLight += u_%s * max(dot(normal,l), 0.) * attenuation;\n", lightColor);
+                            if (lightType == "spot") {
+                                //close previous scope beginning with "if (cosAngle > " ...
+                                fragmentShader->appendCode("}\n");
+                            }
                             fragmentShader->appendCode("}\n");
                         }
                     }
