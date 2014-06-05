@@ -421,7 +421,7 @@ namespace GLTF
         
         compressedData->setString("mode", CONFIG_STRING(asset, "compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
-        compressedData->setUnsignedInt32("type", asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
+        compressedData->setUnsignedInt32(kType, asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
@@ -540,7 +540,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         shared_ptr<JSONObject> parameter(new JSONObject());
         parameter->setUnsignedInt32("count", cvtAnimation->getCount());
-        parameter->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
+        parameter->setUnsignedInt32(kType, profile->getGLenumForString(parameterType));
 
         accessors->setValue(accessorUID, parameter);
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
@@ -554,7 +554,7 @@ namespace GLTF
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         
         if (shouldEncodeOpen3DGC) {
-            unsigned int glType = parameter->getUnsignedInt32("type");
+            unsigned int glType = parameter->getUnsignedInt32(kType);
             size_t componentsCount = profile->getComponentsCountForGLType(glType);
             if (componentsCount) {
                 encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), asset);
@@ -568,7 +568,7 @@ namespace GLTF
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", byteLength);
                 compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
-                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                compressionDataObject->setUnsignedInt32(kType, profile->getGLenumForString("UNSIGNED_BYTE"));
             }
         } else {
             outputStream->write((const char*)buffer, byteLength);

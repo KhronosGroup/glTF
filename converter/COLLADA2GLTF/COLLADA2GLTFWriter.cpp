@@ -337,9 +337,7 @@ namespace GLTF
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 if (asset->containsValueForUniqueId(uniqueId.toAscii())) {
-                    
                     shared_ptr<JSONString> skinControllerDataUID = static_pointer_cast<JSONString>(asset->getValueForUniqueId(uniqueId.toAscii()));
-
                     shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinControllerDataUID->getString()));
                     
                     UniqueId meshUniqueId(skin->getSourceUID());
@@ -348,21 +346,11 @@ namespace GLTF
                                                meshUniqueId.toAscii(),
                                                materialBindings);
                     
-                    //write instanceController
-                    shared_ptr<JSONObject> serializedInstanceController(new JSONObject());
-                    
-                    UniqueId skinDataUniqueId(skin->extras()->getString("uniqueId"));
-                    
-                    //looks like the only way to get the <skeleton> information from OpenCOLLADA
-                    Loader::InstanceControllerDataList list = this->_loader.getInstanceControllerDataListMap()[skinDataUniqueId];
-                    Loader::InstanceControllerData instanceControllerData = *list.begin();
-                    
                     shared_ptr<JSONObject> instanceSkin(new JSONObject());
-                    
                     shared_ptr<JSONArray> skeletons(new JSONArray());
-                    URIList::iterator listIterator;
-                    for(listIterator = instanceControllerData.skeletonRoots.begin(); listIterator != instanceControllerData.skeletonRoots.end(); ++listIterator) {
-                        std::string skeleton = listIterator->getFragment();
+                    
+                    for (size_t k = 0 ; k < instanceController->skeletons().size() ; k++) {
+                        std::string skeleton = instanceController->skeletons()[k].getFragment();
                         skeletons->appendValue(shared_ptr<JSONString>(new JSONString(skeleton)));
                     }
                     
@@ -697,7 +685,7 @@ namespace GLTF
         shared_ptr <JSONObject> slotObject(new JSONObject());
         
         //do we need to export a new texture ? if yes compose a new unique ID
-        slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
+        slotObject->setUnsignedInt32(kType, profile->getGLenumForString("SAMPLER_2D"));
         
         //do we need a new sampler ?
         std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
@@ -716,7 +704,7 @@ namespace GLTF
             if (CONFIG_BOOL(asset, "exportDefaultValues")) {
                 textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
                 //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
-                textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                textureObject->setUnsignedInt32(kType, profile->getGLenumForString("UNSIGNED_BYTE"));
             }
             textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
             textures->setValue(textureUID, textureObject);
@@ -789,7 +777,7 @@ namespace GLTF
             }
             shared_ptr <JSONObject> slotObject(new JSONObject());
             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-            slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
+            slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
             values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
@@ -853,14 +841,14 @@ namespace GLTF
             if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
-                slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
+                slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
             
             if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
-                transparency->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
+                transparency->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 values->setValue("transparency", transparency);
             }
             
@@ -871,7 +859,7 @@ namespace GLTF
                     shininess *= 128.0;
                 }
                 shared_ptr <JSONObject> shininessObject(new JSONObject());
-                shininessObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
+                shininessObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 shininessObject->setDouble("value", shininess);
                 values->setValue("shininess", shininessObject);
             }
@@ -905,7 +893,7 @@ namespace GLTF
                 break;
             case Camera::ORTHOGRAPHIC:
             {
-                cameraObject->setString("type", "orthographic");
+                cameraObject->setString(kType, "orthographic");
                 cameraObject->setValue("orthographic", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
@@ -935,7 +923,7 @@ namespace GLTF
                 break;
             case Camera::PERSPECTIVE:
             {
-                cameraObject->setString("type", "perspective");
+                cameraObject->setString(kType, "perspective");
                 cameraObject->setValue("perspective", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
@@ -1011,13 +999,13 @@ namespace GLTF
         
         switch (lightType) {
             case COLLADAFW::Light::AMBIENT_LIGHT:
-                glTFLight->setString("type", "ambient");
+                glTFLight->setString(kType, "ambient");
                 break;
             case COLLADAFW::Light::DIRECTIONAL_LIGHT:
-                glTFLight->setString("type", "directional");
+                glTFLight->setString(kType, "directional");
                 break;
             case COLLADAFW::Light::POINT_LIGHT: {
-                glTFLight->setString("type", "point");
+                glTFLight->setString(kType, "point");
 
                 description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
                 description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
@@ -1025,7 +1013,7 @@ namespace GLTF
             }
                 break;
             case COLLADAFW::Light::SPOT_LIGHT: {
-                glTFLight->setString("type", "spot");
+                glTFLight->setString(kType, "spot");
 
                 float fallOffAngle =  (float)light->getFallOffAngle().getValue();
                 float fallOffExponent = (float)light->getFallOffExponent().getValue();
@@ -1043,7 +1031,7 @@ namespace GLTF
         }
         
         description->setValue("color", lightColor);
-        glTFLight->setValue(glTFLight->getString("type"), description);
+        glTFLight->setValue(glTFLight->getString(kType), description);
         
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
@@ -1112,7 +1100,6 @@ namespace GLTF
         shared_ptr <GLTFSkin> glTFSkin(new GLTFSkin(skinControllerData->getOriginalId()));
         shared_ptr <GLTFProfile> profile = this->_asset->profile();
         
-        glTFSkin->extras()->setString("uniqueId", skinControllerData->getUniqueId().toAscii());
         glTFSkin->setBindShapeMatrix(serializeOpenCOLLADAMatrix4(skinControllerData->getBindShapeMatrix()));
         
 		const COLLADAFW::UIntValuesArray& jointsPerVertex = skinControllerData->getJointsPerVertex();

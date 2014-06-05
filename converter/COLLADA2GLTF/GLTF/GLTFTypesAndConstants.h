@@ -84,6 +84,7 @@ const std::string kImage = "image";
 const std::string kCamera = "camera";
 const std::string kLights = "lights";
 const std::string kLight = "light";
+const std::string kSemantic = "semantic";
 
 namespace GLTF
 {

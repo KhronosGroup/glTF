@@ -487,7 +487,7 @@ namespace GLTF
         double red = 1, green = 1, blue = 1, alpha = 1;
         shared_ptr <JSONObject> slotObject(new JSONObject());
         slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-        slotObject->setUnsignedInt32("type", asset->profile()->getGLenumForString("FLOAT_VEC4"));
+        slotObject->setUnsignedInt32(kType, asset->profile()->getGLenumForString("FLOAT_VEC4"));
         values->setValue("diffuse", slotObject);
         
         shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
