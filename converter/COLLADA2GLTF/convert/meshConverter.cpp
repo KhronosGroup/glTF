@@ -93,7 +93,8 @@ namespace GLTF
                                                                           GLTFMesh* mesh,
                                                                           GLTF::Semantic semantic,
                                                                           size_t allowedComponentsPerAttribute,
-                                                                          shared_ptr<GLTFProfile> profile)
+                                                                          shared_ptr<GLTFProfile> profile,
+                                                                          double distanceScale = 1.0)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -141,7 +142,16 @@ namespace GLTF
                     sourceData = (unsigned char*)array->getData() + byteOffset;
                     sourceSize = length * sizeof(float);
 
-                     byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+                    if (distanceScale != 1.0)
+                    {
+                        float *floatSourceData = (float*)sourceData;
+                        for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
+                        {
+                            floatSourceData[indexFloat] *= (float)distanceScale;
+                        }
+                    }
+
+                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                     break;
                 case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
@@ -153,6 +163,15 @@ namespace GLTF
                      const size_t count = array.getCount();
                      sourceData = (void*)array.getData();
                      sourceSize = length * sizeof(double);
+
+                     if (distanceScale != 1.0)
+                     {
+                         double *doubleSourceData = (float*)sourceData;
+                         for (size_t indexDouble = 0; indexDouble < length; ++indexDouble)
+                         {
+                            doubleSourceData[indexDouble] *= distanceScale;
+                         }
+                     }
                      */
                     // Warning if can't make "safe" conversion
                 }
@@ -401,7 +420,7 @@ namespace GLTF
         return cvtPrimitive;
     }
     
-    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFAsset* asset) {
+    shared_ptr<GLTFMesh> convertOpenCOLLADAMesh(COLLADAFW::Mesh* openCOLLADAMesh, GLTFAsset* asset, double distanceScale) {
         shared_ptr <GLTF::GLTFMesh> cvtMesh(new GLTF::GLTFMesh());
         
         cvtMesh->setID(openCOLLADAMesh->getOriginalId());
@@ -450,7 +469,7 @@ namespace GLTF
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), cvtMesh.get(), GLTF::POSITION, 3, asset->profile());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), cvtMesh.get(), GLTF::POSITION, 3, asset->profile(), distanceScale);
                         break;
                         
                     case GLTF::NORMAL:

@@ -29,6 +29,7 @@
 #include "GLTFOpenCOLLADAUtils.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
+#include "COLLADAFWFileInfo.h"
 #include "GLTF-Open3DGC.h"
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
@@ -51,7 +52,8 @@ namespace GLTF
      */
     COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
     _asset(asset),
-    _visualScene(0) {
+    _visualScene(0),
+    _metersPerUnit(1.0) {
 	}
     
     /*
@@ -111,6 +113,8 @@ namespace GLTF
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         assetObject->setString(kProfile, asset->profile()->id());
         assetObject->setDouble(kVersion, glTFVersion);
+
+        _metersPerUnit = globalAsset->getUnit().getLinearUnitMeter();
 
         return true;
 	}
@@ -307,6 +311,11 @@ namespace GLTF
                 
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
+
+            // Scale distance units if we need to
+            translation[0] *= _metersPerUnit;
+            translation[1] *= _metersPerUnit;
+            translation[2] *= _metersPerUnit;
             
             bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
@@ -577,7 +586,7 @@ namespace GLTF
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
                 std::string meshUID = geometry->getUniqueId().toAscii();
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
-                    shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
+                    shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get(), _metersPerUnit);
                     if (cvtMesh != nullptr) {
                         this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
                         this->_asset->setValueForUniqueId(meshUID, cvtMesh);
@@ -1022,7 +1031,7 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation) {
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get());
+        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get(), _metersPerUnit);
         
         cvtAnimation->setOriginalID(animation->getOriginalId());
         
