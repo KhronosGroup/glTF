@@ -78,7 +78,7 @@ namespace GLTF
     std::string keyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet)
     {
         std::string semanticIndexSetKey = "";
-        semanticIndexSetKey += "semantic";
+        semanticIndexSetKey += kSemantic;
         semanticIndexSetKey += GLTFUtils::toString(semantic);
         semanticIndexSetKey += ":indexSet";
         semanticIndexSetKey += GLTFUtils::toString(indexSet);

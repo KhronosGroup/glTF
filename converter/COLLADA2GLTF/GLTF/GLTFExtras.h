@@ -1,4 +1,4 @@
-// Copyright (c) Fabrice Robinet
+// Copyright (c) 2014, Fabrice Robinet.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,17 +21,25 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __COLLADA2GLTF_SHADERS__
-#define __COLLADA2GLTF_SHADERS__
+#ifndef __GLTF_EXTRAS_H__
+#define __GLTF_EXTRAS_H__
 
-#define SHADER_STR(Src) #Src
-#define SHADER(Src) SHADER_STR(Src)
-
-namespace GLTF
+namespace GLTF 
 {
-    std::string getReferenceTechniqueID(std::shared_ptr<JSONObject> techniqueGenerator, GLTF::GLTFAsset* asset);
-    void clearCommonProfileTechniqueCache();
-    std::string getTechniqueKey(std::shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset);
-};
+        class GLTFExtras : public JSONObject {
+        
+    public:
+        GLTFExtras(const std::string &ID);
+        GLTFExtras();
+        
+        const std::string& getID();
+
+        //void setName(const std::string& name);
+        //std::string getName();
+        
+    private:
+        std::string _ID;
+    };
+}
 
 #endif

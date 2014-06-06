@@ -36,7 +36,17 @@ using namespace std;
 namespace GLTF
 {
     GLTFEffect::GLTFEffect(const std::string& ID): JSONObject(),
-    _ID(ID) {
+    _ID(ID), _techniqueGenerator(nullptr) {
+    }
+    
+    GLTFEffect::GLTFEffect(const GLTFEffect &effect) : JSONObject() {
+        GLTFEffect* source = const_cast<GLTFEffect*>(&effect);
+        this->_ID = source->getID();
+        this->_techniqueGenerator = source->getTechniqueGenerator();
+        this->setName(source->getName());
+        this->setValues(source->getValues());
+        this->setLightingModel(source->getLightingModel());
+        this->_texcoordToSemantics = effect._texcoordToSemantics;
     }
 
     GLTFEffect::~GLTFEffect() {
@@ -44,6 +54,10 @@ namespace GLTF
                         
     const std::string& GLTFEffect::getID() {
         return this->_ID;
+    }
+    
+    void GLTFEffect::setID(const std::string& id) {
+        this->_ID = id;
     }
     
     void GLTFEffect::setTechniqueGenerator(shared_ptr <JSONObject> techniqueGenerator) {

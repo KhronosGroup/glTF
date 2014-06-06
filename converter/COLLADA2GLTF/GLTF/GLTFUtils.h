@@ -111,6 +111,10 @@ namespace GLTF
                     return "JOINT";
                 case GLTF::WEIGHT:
                     return "WEIGHT";
+                case GLTF::TEXBINORMAL:
+                    return "TEXBINORMAL";
+                case GLTF::TEXTANGENT:
+                    return "TEXTANGENT";
                     
                 default:
                     return "UNKNOWN";
