@@ -61,6 +61,7 @@ namespace GLTF
         optionsRoot->setBool("outputConvertionResults", false);
         optionsRoot->setBool("outputConvertionMetaData", false);
         optionsRoot->setBool("verboseLogging", false);
+		optionsRoot->setBool("embedResources", false);
         
         //create the path "extensions.Open3DGC.quantization" and set default for Open3DGC
         shared_ptr<JSONObject> extensions(new JSONObject());

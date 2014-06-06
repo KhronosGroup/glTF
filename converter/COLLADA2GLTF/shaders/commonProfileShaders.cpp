@@ -26,6 +26,7 @@
 
 #include "GLTFAsset.h"
 #include "commonProfileShaders.h"
+#include "helpers/encodingHelpers.h"
 #ifndef WIN32
 #include "png.h"
 #endif
@@ -164,7 +165,7 @@ namespace GLTF
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
-                    std::string imagePath = image->getString("path");
+                    std::string imagePath = image->getString("uri");
                     COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
                     std::string imageFullPath = inputURI.getPathDir() + imagePath;
                     if (imageHasAlpha(imageFullPath.c_str()))
@@ -287,19 +288,26 @@ namespace GLTF
             shared_ptr <JSONObject> shaderObject  = shadersObject->getObject(shaderId);
             shaderObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             
-            std::string path = shaderId+".glsl";
             shadersObject->setValue(shaderId, shaderObject);
-            shaderObject->setString("path", asset->resourceOuputPathForPath(path));
-            shaderObject->setUnsignedInt32("type", type);
-            //also write the file on disk
-            if (shaderString.size() > 0) {
-                COLLADABU::URI outputURI(asset->getOutputFilePath());
-                std::string shaderPath =  outputURI.getPathDir() + path;
-                GLTF::GLTFUtils::writeData(shaderPath, "w",(unsigned char*)shaderString.c_str(), shaderString.size());
-                if (!CONFIG_BOOL(asset, "outputProgress") && asset->converterConfig()->boolForKeyPath("verboseLogging")) {
-                    asset->log("[shader]: %s\n", shaderPath.c_str());
-                }
-            }
+			shaderObject->setUnsignedInt32("type", type);
+			if (asset->getEmbedResources())
+			{
+				shaderObject->setString("uri", create_dataUri(shaderString, "text/plain"));
+			}
+			else
+			{
+				std::string path = shaderId + ".glsl";
+                shaderObject->setString("uri", COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(path)));
+				//also write the file on disk
+				if (shaderString.size() > 0) {
+					COLLADABU::URI outputURI(asset->getOutputFilePath());
+					std::string shaderPath = outputURI.getPathDir() + path;
+					GLTF::GLTFUtils::writeData(shaderPath, "w", (unsigned char*)shaderString.c_str(), shaderString.size());
+					if (!CONFIG_BOOL(asset, "outputProgress") && asset->converterConfig()->boolForKeyPath("verboseLogging")) {
+						asset->log("[shader]: %s\n", shaderPath.c_str());
+					}
+				}
+			}
         }
         
         return true;

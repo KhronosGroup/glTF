@@ -141,6 +141,8 @@ set(GLTF_SOURCES
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+    helpers/encodingHelpers.h
+    helpers/encodingHelpers.cpp
 
     convert/meshConverter.cpp
     convert/meshConverter.h
@@ -172,6 +174,12 @@ LIST(APPEND GLTF_SOURCES
 endif()
 
 add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
+
+#Make sure the dll is in the same directory as the executable
+if (WIN32)
+    set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
+endif()
+
 
 if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
