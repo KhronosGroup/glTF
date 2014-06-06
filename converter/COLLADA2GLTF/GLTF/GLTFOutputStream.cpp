@@ -40,6 +40,7 @@ namespace GLTF
 
     GLTFOutputStream::GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind) :
 		_id(file + kind),
+        _opened(false),
 		_embedded(false)
 	{
 		_filename = _id + ".bin";
