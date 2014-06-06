@@ -34,7 +34,7 @@
 #include "GitSHA1.h"
 #include <algorithm>
 #include "commonProfileShaders.h"
-#include "helpers\encodingHelpers.h"
+#include "helpers/encodingHelpers.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -990,7 +990,7 @@ namespace GLTF
 				ss << fin.rdbuf();
 				COLLADABU::URI u(imageFullPath);
 				std::string ext = u.getPathExtension();
-				std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 				std::string contentType = "application/octet-stream";
 				if (ext == "png")
 				{
@@ -1005,13 +1005,13 @@ namespace GLTF
 					contentType = "image/jpeg";
 				}
 
-				image->setString("path", create_dataUri(ss.str(), contentType));
+				image->setString("uri", create_dataUri(ss.str(), contentType));
 
 				return true;
 			}
 		}
 		
-		image->setString("path", this->_asset->resourceOuputPathForPath(relPathFile));
+        image->setString("uri", COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
         
         return true;
 	}
