@@ -33,6 +33,7 @@ namespace GLTF
 {        
 	GLTFOutputStream::GLTFOutputStream() :
 		_stream(new std::ostringstream()),
+        _opened(true),
 		_embedded(true)
 	{
     }
