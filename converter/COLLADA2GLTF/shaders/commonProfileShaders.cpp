@@ -639,6 +639,9 @@ namespace GLTF
                 }
             } else {
                 shader->addUniform(symbol, type, count, forcesAsAnArray);
+                if ((count > 1) || forcesAsAnArray) {
+                    parameter->setUnsignedInt32(kCount, count);
+                }
             }
             
             return true;
