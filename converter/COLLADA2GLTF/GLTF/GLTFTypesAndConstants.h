@@ -86,6 +86,12 @@ const std::string kLights = "lights";
 const std::string kLight = "light";
 const std::string kSemantic = "semantic";
 
+const std::string MODELVIEW = "MODELVIEW";
+const std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
+const std::string MODELVIEWINVERSE = "MODELVIEWINVERSE";
+const std::string PROJECTION = "PROJECTION";
+const std::string JOINTMATRIX = "JOINTMATRIX";
+
 namespace GLTF
 {
     class JSONObject;

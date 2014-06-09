@@ -212,11 +212,6 @@ namespace GLTF
      */
     
     
-    static std::string MODELVIEW = "MODELVIEW";
-    static std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
-    static std::string MODELVIEWINVERSE = "MODELVIEWINVERSE";
-    static std::string PROJECTION = "PROJECTION";
-    
     /* uniform types, derived from
      GL_INT
      GL_INT_VEC2
@@ -601,7 +596,7 @@ namespace GLTF
                 typeForSemanticUniform[MODELVIEWINVERSE] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[MODELVIEW] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[PROJECTION] = _GL(FLOAT_MAT4);
-                typeForSemanticUniform["JOINT_MATRIX"] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform[JOINTMATRIX] = _GL(FLOAT_MAT4);
             }
             return typeForSemanticUniform[semantic];
         }
@@ -767,7 +762,7 @@ namespace GLTF
                 
                 assert(techniqueExtras != nullptr);
                 addSemantic("vs", "uniform",
-                            "JOINT_MATRIX", "jointMat", jointsCount, false, true /* force as an array */);
+                            JOINTMATRIX, "jointMat", jointsCount, false, true /* force as an array */);
             }
             
             if (hasNormals) {
