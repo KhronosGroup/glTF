@@ -29,7 +29,7 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-const float glTFVersion = 0.6f;
+const float glTFVersion = 0.7f;
 
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
@@ -77,12 +77,14 @@ const std::string kChildren = "children";
 const std::string kSources = "sources";
 const std::string kSource = "source";
 const std::string kSkin = "skin";
+const std::string kSkins = "skins";
 const std::string kInstanceSkin = "instanceSkin";
 const std::string kImages = "images";
 const std::string kImage = "image";
 const std::string kCamera = "camera";
 const std::string kLights = "lights";
 const std::string kLight = "light";
+const std::string kSemantic = "semantic";
 
 namespace GLTF
 {
@@ -118,7 +120,9 @@ namespace GLTF
         TEXCOORD = 3,
         COLOR = 4,
         WEIGHT = 5,
-        JOINT = 6
+        JOINT = 6,
+        TEXTANGENT = 7,
+        TEXBINORMAL = 8
     } Semantic;    
 
     typedef std::string JSONType;

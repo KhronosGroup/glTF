@@ -102,6 +102,7 @@ set(GLTF_SOURCES
     GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
+    GLTF/GLTFExtras.cpp
     GLTF/GLTFMesh.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
@@ -114,6 +115,7 @@ set(GLTF_SOURCES
     GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
+    GLTF/GLTFExtras.h
     GLTF/GLTFMesh.h
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
