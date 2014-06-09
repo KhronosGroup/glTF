@@ -141,6 +141,8 @@ set(GLTF_SOURCES
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+    helpers/encodingHelpers.h
+    helpers/encodingHelpers.cpp
 
     convert/meshConverter.cpp
     convert/meshConverter.h

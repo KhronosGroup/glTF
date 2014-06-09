@@ -84,7 +84,8 @@ static const OptionDescriptor options[] = {
     { "v",              no_argument,        "-v -> print version" },
     { "s",              no_argument,        "-s -> experimental mode"},
 	{ "h",              no_argument,        "-h -> help" },
-	{ "r",              no_argument,        "-r -> verbose logging" }
+	{ "r",              no_argument,        "-r -> verbose logging" },
+	{ "e",				no_argument,		"-e -> embed all resources as Data URIs" }
 };
 
 static void buildOptions() {
@@ -143,14 +144,14 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     if (argc == 2) {
         if (fileExists(argv[1])) {
             asset->setInputFilePath(argv[1]);
-            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
+            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
             return true;
         }
     }
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsr", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsre", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -167,7 +168,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 hasOutputPath = true;
 				break;
             case 'o':
-                asset->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
+                asset->setOutputFilePath(replacePathExtensionWith(optarg, "gltf"));
                 hasOutputPath = true;
 				break;
             case 'i':
@@ -223,7 +224,11 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
             case 'r':
                 converterConfig->config()->setBool("verboseLogging", true);
                 break;
-                
+               
+			case 'e':
+				converterConfig->config()->setBool("embedResources", true);
+				asset->setEmbedResources(true);
+				break;
 			default:
                 shouldShowHelp = true;
 				break;
@@ -236,7 +241,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     }
     
     if (!hasOutputPath & hasInputPath) {
-        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
+        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
     }
     
     return true;

@@ -148,7 +148,7 @@ namespace GLTF
         return id;
     }
     
-    GLTFAsset::GLTFAsset():_isBundle(false) {
+	GLTFAsset::GLTFAsset() :_isBundle(false), _embedResources(false){
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -190,14 +190,23 @@ namespace GLTF
 
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
-        if (this->_nameToOutputStream.count(streamName) == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            
-            std::string folder = outputURI.getPathDir();
-            std::string fileName = inputURI.getPathFileBase();
-            
-            shared_ptr<GLTFOutputStream> outputStream = shared_ptr <GLTFOutputStream> (new GLTFOutputStream(folder, streamName, ""));
+        if (this->_nameToOutputStream.count(streamName) == 0)
+		{
+			shared_ptr<GLTFOutputStream> outputStream;
+			if (_embedResources)
+			{
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
+			}
+			else
+			{
+				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
+				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+
+				std::string folder = outputURI.getPathDir();
+				std::string fileName = inputURI.getPathFileBase();
+
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
+			}
             this->_nameToOutputStream[streamName] = outputStream;
         }
         
@@ -210,8 +219,8 @@ namespace GLTF
             shared_ptr<GLTFOutputStream> outputStream = this->_nameToOutputStream[streamName];
             
             outputStream->close();
-            if (removeFile) {
-                remove(outputStream->outputPathCStr());
+			if (removeFile) {
+                outputStream->remove();
             }
             
             //FIXME: We keep it around as it's informations are still accessed once close
@@ -279,13 +288,13 @@ namespace GLTF
             outputBundlePathURI.setPath(inputPathURI.getPathDir(), outputBundlePathURI.getPathFileBase(), outputBundlePathURI.getPathExtension());
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
             
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
             //                this->log("outputBundlePath:%s\n",outputBundlePathURI.toNativePath().c_str());
             //                this->log("outputPath:%s\n",outputPathURI.toNativePath().c_str());
         } else {
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
         }
         COLLADABU::Utils::createDirectoryIfNeeded(this->_bundleOutputPath.c_str());
@@ -347,6 +356,16 @@ namespace GLTF
     std::string GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
     }
+
+	void GLTFAsset::setEmbedResources(bool embedResources)
+	{
+		this->_embedResources = embedResources;
+	}
+
+	bool GLTFAsset::getEmbedResources()
+	{
+		return this->_embedResources;
+	}
     
     std::string GLTFAsset::pathRelativeToInputPath(const std::string& path) {
         if (GLTFUtils::isAbsolutePath(path) == true) {
@@ -367,7 +386,7 @@ namespace GLTF
                 std::vector <std::string> keys = images->getAllKeys();
                 for (size_t i = 0 ; i < imagesCount ; i++) {
                     shared_ptr<JSONObject> image = images->getObject(keys[i]);
-                    std::string path = image->getString("path");
+                    std::string path = image->getString("uri");
                     
                     std::string originalPath = this->_originalResourcesPath->getString(path);
                     
@@ -990,7 +1009,7 @@ namespace GLTF
         this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            sharedBuffer->setString(kPath, this->getSharedBufferId() + ".bin");
+            sharedBuffer->setString(kUri, COLLADABU::URI::uriEncode(rawOutputStream->outputPath()));
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -998,7 +1017,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kPath, compressedBufferID + ".bin");
+            compressionBuffer->setString(kUri, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
@@ -1033,8 +1052,8 @@ namespace GLTF
             this->closeOutputStream(kCompressionOutputStream, true);
         }
         
-        if (sharedBuffer->getByteLength() == 0)
-            remove(rawOutputStream->outputPathCStr());
+		if (sharedBuffer->getByteLength() == 0)
+            rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
 		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());
