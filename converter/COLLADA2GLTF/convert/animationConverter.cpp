@@ -132,8 +132,8 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 3;
                                     shared_ptr <COLLADAFW::Translate> translate(new COLLADAFW::Translate(translations[offset + 0],
-                                                                                                         translations[offset + 1],
-                                                                                                         translations[offset + 2]));
+                                                                                                            translations[offset + 1],
+                                                                                                            translations[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, translate, timeValues[k]);
                                 }
                             } else if (path == "scale") {
@@ -144,40 +144,39 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 3;
                                     shared_ptr <COLLADAFW::Scale> scale(new COLLADAFW::Scale(scales[offset + 0],
-                                                                                             scales[offset + 1],
-                                                                                             scales[offset + 2]));
+                                                                                                scales[offset + 1],
+                                                                                                scales[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, scale, timeValues[k]);
                                 }
                             }
                         }
                     }
-                }
-                
-return true;
+                }                
+                return true;
             case COLLADAFW::AnimationList::ANGLE: {
-                //the angles to radians necessary convertion is done within the animationFlattener
-                //but it might be better to make it before...
-                for (size_t animatedTargetIndex = 0; animatedTargetIndex < animatedTargets->size(); animatedTargetIndex++) {
-                    shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
-                    std::string targetID = animatedTarget->getString(kTarget);
-                    if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
-                        cvtAnimation->targets()->setValue(targetID, animatedTarget);
+                    //the angles to radians necessary convertion is done within the animationFlattener
+                    //but it might be better to make it before...
+                    for (size_t animatedTargetIndex = 0; animatedTargetIndex < animatedTargets->size(); animatedTargetIndex++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
+                        std::string targetID = animatedTarget->getString(kTarget);
+                        if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
+                            cvtAnimation->targets()->setValue(targetID, animatedTarget);
 
-                        std::string path = animatedTarget->getString("path");
-                        if (path == "rotation") {
-                            std::string transformID = animatedTarget->getString("transformId");
-                            ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
+                            std::string path = animatedTarget->getString("path");
+                            if (path == "rotation") {
+                                std::string transformID = animatedTarget->getString("transformId");
+                                ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
 
-                            float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
-                            float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
-                            for (size_t k = 0; k < cvtAnimation->getCount(); k++) {
-                                animationFlattener->insertValueAtTime(transformID, rotations[k], 3, timeValues[k]);
+                                float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
+                                float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
+                                for (size_t k = 0; k < cvtAnimation->getCount(); k++) {
+                                    animationFlattener->insertValueAtTime(transformID, rotations[k], 3, timeValues[k]);
+                                }
                             }
                         }
                     }
                 }
-            }
-return true;
+                return true;
             case COLLADAFW::AnimationList::POSITION_X:
             case COLLADAFW::AnimationList::POSITION_Y:
             case COLLADAFW::AnimationList::POSITION_Z:
