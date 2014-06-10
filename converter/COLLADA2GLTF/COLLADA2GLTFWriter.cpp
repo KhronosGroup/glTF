@@ -122,6 +122,7 @@ namespace GLTF
             COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
             if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP)
             {
+                // Rotate -90 deg around Z
                 matrix.setElement(0, 0,  0.0f);
                 matrix.setElement(0, 1,  1.0f);
                 matrix.setElement(1, 0, -1.0f);
@@ -129,6 +130,7 @@ namespace GLTF
             }
             else // Z_UP
             {
+                // Rotate 90 deg around X
                 matrix.setElement(1, 1,  0.0f);
                 matrix.setElement(1, 2, -1.0f);
                 matrix.setElement(2, 1,  1.0f);
