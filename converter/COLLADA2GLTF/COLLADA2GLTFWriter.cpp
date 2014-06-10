@@ -36,6 +36,7 @@
 #include <algorithm>
 #include "commonProfileShaders.h"
 #include "helpers/encodingHelpers.h"
+#include "COLLADAFWFileInfo.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -115,6 +116,32 @@ namespace GLTF
         assetObject->setDouble(kVersion, glTFVersion);
 
         _metersPerUnit = globalAsset->getUnit().getLinearUnitMeter();
+        if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP ||
+            globalAsset->getUpAxisType() == COLLADAFW::FileInfo::Z_UP)
+        {
+            COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
+            if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP)
+            {
+                matrix.setElement(0, 0,  0.0f);
+                matrix.setElement(0, 1,  1.0f);
+                matrix.setElement(1, 0, -1.0f);
+                matrix.setElement(1, 1,  0.0f);
+            }
+            else // Z_UP
+            {
+                matrix.setElement(1, 1,  0.0f);
+                matrix.setElement(1, 2, -1.0f);
+                matrix.setElement(2, 1,  1.0f);
+                matrix.setElement(2, 2,  0.0f);
+            }
+                                
+            _rootTransform = std::shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+            _rootTransform->setString(kName, "Y_UP_Transform");
+            _rootTransform->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
+
+            shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
+            _rootTransform->setValue(kChildren, childrenArray);
+        }
 
         return true;
 	}
@@ -510,7 +537,26 @@ namespace GLTF
         
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
-        sceneObject->setValue(kNodes, childrenArray);
+        if (_rootTransform)
+        {
+            // Add the root transform to the nodes
+            nodesObject->setValue("__Y_UP_TRANSFORM__", _rootTransform);
+
+            // Create a children array for the scene and add the root transform to it
+            shared_ptr <GLTF::JSONArray> sceneChildrenArray(new GLTF::JSONArray());
+            sceneObject->setValue(kNodes, sceneChildrenArray);
+            shared_ptr <GLTF::JSONString> rootIDValue(new GLTF::JSONString("__Y_UP_TRANSFORM__"));
+            sceneChildrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (rootIDValue));
+
+            // Set childrenArray to the root transform's children array so all root nodes will become its children
+            childrenArray = std::static_pointer_cast<GLTF::JSONArray>(_rootTransform->getValue(kChildren));
+        }
+        else
+        {
+            // No root transform so just add all root nodes to the scene's children array
+            childrenArray = std::shared_ptr<GLTF::JSONArray>(new GLTF::JSONArray());
+            sceneObject->setValue(kNodes, childrenArray);
+        }
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
             std::string nodeUID = nodePointerArray[i]->getOriginalId();
