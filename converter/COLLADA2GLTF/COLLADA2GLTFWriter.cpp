@@ -342,9 +342,9 @@ namespace GLTF
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
 
             // Scale distance units if we need to
-            translation[0] *= _metersPerUnit;
-            translation[1] *= _metersPerUnit;
-            translation[2] *= _metersPerUnit;
+            translation[0] *= (float)_metersPerUnit;
+            translation[1] *= (float)_metersPerUnit;
+            translation[2] *= (float)_metersPerUnit;
             
             bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
@@ -1012,8 +1012,8 @@ namespace GLTF
                 break;
         }
         
-        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue());
-        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue());
+        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue() * _metersPerUnit);
+        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue() * _metersPerUnit);
         
 		return true;
 	}
