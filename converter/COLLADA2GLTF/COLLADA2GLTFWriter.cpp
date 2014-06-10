@@ -360,8 +360,10 @@ namespace GLTF
         } else {
             //FIXME: OpenCOLLADA typo
             bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
-            if (exportMatrix)
+            if (exportMatrix) {
+                matrix.scaleTrans(_metersPerUnit);
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
+            }
         }
         
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
