@@ -44,7 +44,6 @@ namespace GLTF
         virtual bool isDefaultValueForState(const std::string& state, std::shared_ptr<JSONValue> value);
     private:
         std::shared_ptr <JSONObject> _defaultValues;
-        
     };
 }
 
