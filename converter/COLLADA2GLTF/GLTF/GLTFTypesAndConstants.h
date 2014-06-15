@@ -37,6 +37,7 @@ const std::string kByteStride = "byteStride";
 const std::string kByteLength = "byteLength";
 const std::string kUri = "uri";
 const std::string kType = "type";
+const std::string kComponentType = "componentType";
 const std::string kBufferView = "bufferView";
 const std::string kBufferViews = "bufferViews";
 const std::string kMin = "min";
@@ -137,19 +138,6 @@ namespace GLTF
     const std::string kJSONObject = "object";
     const std::string kJSONArray = "array";
     const std::string kJSONString = "string";    
-    
-    typedef enum {
-        NOT_AN_ELEMENT_TYPE = 0,
-        BYTE = 1,
-        UNSIGNED_BYTE = 2,
-        SHORT = 3,
-        UNSIGNED_SHORT = 4,
-        FIXED = 5,
-        FLOAT = 6,
-        INT = 7,
-        UNSIGNED_INT = 8
-    } ComponentType;
-    
 };
 
 #endif

@@ -131,10 +131,10 @@ namespace GLTF
             unsigned char *sourceData = 0;
             size_t sourceSize = 0;
             
-            GLTF::ComponentType componentType = GLTF::NOT_AN_ELEMENT_TYPE;
+            std::string componentType = "";
             switch (vertexData.getType()) {
                 case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
-                    componentType = GLTF::FLOAT;
+                    componentType = "FLOAT";
                     stride = sizeof(float) * componentsPerElement;
                     const COLLADAFW::FloatArray* array = vertexData.getFloatValues();
                     
@@ -195,7 +195,7 @@ namespace GLTF
             
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(id, sourceData, 0, sourceSize, meshAttributeOwnsBuffer);
-            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(componentType, componentsPerElement)));
+            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor(profile, componentType, GLTFUtils::getTypeForVectorSize(componentsPerElement)));
             
             cvtMeshAttribute->setBufferView(cvtBufferView);
             cvtMeshAttribute->setByteStride(stride);
@@ -252,7 +252,7 @@ namespace GLTF
         }
         
         shared_ptr <GLTF::GLTFBufferView> uvBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), ownData);
-        shared_ptr <GLTFAccessor> accessor(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+        shared_ptr <GLTFAccessor> accessor(new GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
         
         accessor->setBufferView(uvBuffer);
         accessor->setCount(count);
@@ -336,7 +336,7 @@ namespace GLTF
         
         shared_ptr <GLTFBufferView> positionBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
         
-        shared_ptr <GLTF::GLTFAccessor> positionIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+        shared_ptr <GLTF::GLTFAccessor> positionIndices(new GLTF::GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
         
         positionIndices->setBufferView(positionBuffer);
         positionIndices->setCount(count);
@@ -352,7 +352,7 @@ namespace GLTF
             }
             
             shared_ptr <GLTF::GLTFBufferView> normalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <GLTF::GLTFAccessor> normalIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            shared_ptr <GLTF::GLTFAccessor> normalIndices(new GLTF::GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
             
             normalIndices->setBufferView(normalBuffer);
             normalIndices->setCount(count);
@@ -403,7 +403,7 @@ namespace GLTF
                 count = triangulatedIndicesCount;
             }
             shared_ptr <GLTF::GLTFBufferView> binormalBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <GLTF::GLTFAccessor> binormalIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            shared_ptr <GLTF::GLTFAccessor> binormalIndices(new GLTF::GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
             
             binormalIndices->setBufferView(binormalBuffer);
             binormalIndices->setCount(count);
@@ -424,7 +424,7 @@ namespace GLTF
                 count = triangulatedIndicesCount;
             }
             shared_ptr <GLTF::GLTFBufferView> tangentBuffer = createBufferViewWithAllocatedBuffer(indices, 0, count * sizeof(unsigned int), shouldTriangulate ? true : false);
-            shared_ptr <GLTF::GLTFAccessor> tangentIndices(new GLTF::GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+            shared_ptr <GLTF::GLTFAccessor> tangentIndices(new GLTF::GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
             
             tangentIndices->setBufferView(tangentBuffer);
             tangentIndices->setCount(count);

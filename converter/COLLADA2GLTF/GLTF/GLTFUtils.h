@@ -75,27 +75,7 @@ namespace GLTF
         {
             s_generatedIDCount = 1;
         }
-                
-        static std::string getStringForGLType(int componentType)
-        {
-            switch (componentType) {
-                case GLTF::UNSIGNED_BYTE:
-                    return "UNSIGNED_BYTE";
-                case GLTF::SHORT:
-                    return "SHORT";
-                case GLTF::UNSIGNED_SHORT:
-                    return "UNSIGNED_SHORT";
-                case GLTF::UNSIGNED_INT:
-                    return "UNSIGNED_INT";
-                case GLTF::FIXED:
-                    return "UNSIGNED_INT";
-                case GLTF::FLOAT: 
-                    return "FLOAT";
-                default:
-                    return "UNKNOWN";
-            }
-        }
-        
+                        
         static std::string getStringForSemantic(GLTF::Semantic semantic) 
         {
             switch (semantic) {
@@ -119,6 +99,20 @@ namespace GLTF
                 default:
                     return "UNKNOWN";
             }
+        }
+        
+        static std::string getTypeForVectorSize(unsigned int size) {
+            switch (size) {
+                case 1:
+                    return "SCALAR";
+                case 2:
+                    return "VEC2";
+                case 3:
+                    return "VEC3";
+                case 4:
+                    return "VEC4";
+            }
+            return 0;
         }
         
         /** Converts @a value to a string.

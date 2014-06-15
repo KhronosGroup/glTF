@@ -302,7 +302,7 @@ namespace GLTF
             shaderObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             
             shadersObject->setValue(shaderId, shaderObject);
-			shaderObject->setUnsignedInt32("type", type);
+			shaderObject->setUnsignedInt32(kType, type);
 			if (asset->getEmbedResources())
 			{
 				shaderObject->setString("uri", create_dataUri(shaderString, "text/plain"));

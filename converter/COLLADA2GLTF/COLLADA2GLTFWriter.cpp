@@ -1199,7 +1199,8 @@ namespace GLTF
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_MAT4"));
+        inverseBindMatrices->setString(kType, "MAT4");
+        inverseBindMatrices->setUnsignedInt32(kComponentType, profile->getGLenumForString("FLOAT"));
 		inverseBindMatrices->setUnsignedInt32(kCount, (unsigned int)skinControllerData->getJointsCount());
         inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
@@ -1211,7 +1212,7 @@ namespace GLTF
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
@@ -1220,7 +1221,7 @@ namespace GLTF
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
@@ -1247,7 +1248,7 @@ namespace GLTF
         size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
 
-        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, meshAttribute->componentType(), meshAttribute->type()));
         targetAttribute->setByteStride(meshAttribute->getByteStride());
         targetAttribute->setCount(vertexCount);
 

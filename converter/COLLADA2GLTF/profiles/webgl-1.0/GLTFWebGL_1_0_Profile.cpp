@@ -414,33 +414,28 @@ namespace GLTF
     {
     }
     
-    unsigned int GLTFWebGL_1_0_Profile::getGLTypeForComponentType(ComponentType componentType, size_t componentsPerElement)
+    unsigned int GLTFWebGL_1_0_Profile::getGLTypeForComponentTypeAndType(const std::string &componentType, const std::string &type)
     {
-        switch (componentType) {
-            case GLTF::BYTE:
-                return GL::BYTE;
-            case GLTF::SHORT:
-                return GL::SHORT;
-            case GLTF::UNSIGNED_SHORT:
-                return GL::UNSIGNED_SHORT;
-            case GLTF::FLOAT:
-                switch (componentsPerElement) {
-                    case 1:
-                        return GL::FLOAT;
-                    case 2:
-                        return GL::FLOAT_VEC2;
-                    case 3:
-                        return GL::FLOAT_VEC3;
-                    case 4:
-                        return GL::FLOAT_VEC4;
-                }
-                
-            case GLTF::INT:
-                return GL::INT;
-            case GLTF::UNSIGNED_INT:
-                return GL::UNSIGNED_INT;
-            default:
-                break;
+        if (componentType == "BYTE") {
+            return GL::BYTE;
+        } else if (componentType == "UNSIGNED_BYTE") {
+            return GL::UNSIGNED_BYTE;
+        } else if (componentType == "SHORT") {
+            return GL::SHORT;
+        } else if (componentType == "UNSIGNED_SHORT") {
+            return GL::UNSIGNED_SHORT;
+        } else if (componentType == "FLOAT") {
+            size_t componentsPerElement = GLTFProfile::getComponentsCountForType(type);
+            switch (componentsPerElement) {
+                case 1:
+                    return GL::FLOAT;
+                case 2:
+                    return GL::FLOAT_VEC2;
+                case 3:
+                    return GL::FLOAT_VEC3;
+                case 4:
+                    return GL::FLOAT_VEC4;
+            }
         }
         return 0;
     }
@@ -451,6 +446,8 @@ namespace GLTF
                 return sizeof(float);
             case GL::INT:
                 return sizeof(int);
+            case GL::UNSIGNED_SHORT:
+                return sizeof(unsigned short);
             case GL::BOOL:
                 return sizeof(bool);                
             case GL::FLOAT_VEC2:
@@ -515,6 +512,8 @@ namespace GLTF
             case GL::FLOAT:
             case GL::INT:
             case GL::BOOL:
+            case GL::UNSIGNED_SHORT:
+            case GL::UNSIGNED_BYTE:
                 return 1;
 
             case GL::FLOAT_VEC2:
@@ -542,8 +541,45 @@ namespace GLTF
         }
     }
 
-    ComponentType GLTFWebGL_1_0_Profile::getComponentTypeForGLType(unsigned int glType)
-    {
+    std::string GLTFWebGL_1_0_Profile::getTypeForGLType(unsigned int glType) {
+        switch (glType) {
+            case GL::FLOAT:
+            case GL::INT:
+            case GL::BOOL:
+            case GL::UNSIGNED_SHORT:
+            case GL::UNSIGNED_INT:
+                return "SCALAR";
+        
+            case GL::FLOAT_VEC2:
+            case GL::INT_VEC2:
+            case GL::BOOL_VEC2:
+                return "VEC2";
+                
+            case GL::FLOAT_VEC3:
+            case GL::INT_VEC3:
+            case GL::BOOL_VEC3:
+                return "VEC3";
+
+            case GL::FLOAT_VEC4:
+            case GL::INT_VEC4:
+            case GL::BOOL_VEC4:
+                return "VEC4";
+
+            case GL::FLOAT_MAT2:
+                return "MAT2";
+                
+            case GL::FLOAT_MAT3:
+                return "MAT3";
+                
+            case GL::FLOAT_MAT4:
+                return "MAT4";
+                
+            default:
+                return "";
+        }
+    }
+
+    unsigned int GLTFWebGL_1_0_Profile::getGLComponentTypeForGLType(unsigned int glType) {
         switch (glType) {
             case GL::FLOAT:
             case GL::FLOAT_VEC2:
@@ -552,19 +588,23 @@ namespace GLTF
             case GL::FLOAT_MAT2:
             case GL::FLOAT_MAT3:
             case GL::FLOAT_MAT4:
-                return GLTF::FLOAT;
+                return GL::FLOAT;
             case GL::INT:
             case GL::INT_VEC2:
             case GL::INT_VEC3:
             case GL::INT_VEC4:
-                return GLTF::INT;
+                return GL::INT;
             case GL::BOOL:
             case GL::BOOL_VEC2:
             case GL::BOOL_VEC3:
             case GL::BOOL_VEC4:
-                return UNSIGNED_BYTE;
+                return GL::BOOL;
+            case GL::UNSIGNED_SHORT:
+                return GL::UNSIGNED_SHORT;
+            case GL::UNSIGNED_INT:
+                return GL::UNSIGNED_INT;
             default:
-                return GLTF::NOT_AN_ELEMENT_TYPE;
+                return 0;
         }
     }
 

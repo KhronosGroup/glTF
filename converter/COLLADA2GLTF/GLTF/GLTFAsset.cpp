@@ -1041,7 +1041,6 @@ namespace GLTF
                 GLTFBufferView *bufferView = isCompressed ? (GLTFBufferView*)compressionBufferView.get() : (GLTFBufferView*)indicesBufferView.get();
                 
                 uniqueIndices->setString(kBufferView, bufferView->getID());
-                uniqueIndices->setUnsignedInt32(kType, this->_profile->getGLenumForString("UNSIGNED_SHORT"));
                 accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
             

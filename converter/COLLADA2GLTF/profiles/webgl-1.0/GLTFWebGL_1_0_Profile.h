@@ -33,13 +33,12 @@ namespace GLTF
         virtual ~GLTFWebGL_1_0_Profile();
 
         std::string id();
-        unsigned int getGLTypeForComponentType(ComponentType componentType, size_t);
+        unsigned int getGLTypeForComponentTypeAndType(const std::string& componentType, const std::string& type);
         std::string getGLSLTypeForGLType(unsigned int glType);
         size_t getComponentsCountForGLType(unsigned int glType);
         size_t sizeOfGLType(unsigned int glType);
-        ComponentType getComponentTypeForGLType(unsigned int glType);
-
-    private:
+        unsigned int getGLComponentTypeForGLType(unsigned int glType);
+        std::string getTypeForGLType(unsigned int glType);
     };
 }
 

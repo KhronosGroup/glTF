@@ -37,11 +37,14 @@ namespace GLTF
 {
     /* this has not been updated to use GL Types */
     typedef void (*GLTFAccessorApplierFunc)(void* /* value */,
-        ComponentType /* type */,
+        const std::string& componentType /* componentType */,
+        const std::string& type,
+    
         size_t /* elementsPerValue */,
         size_t /* index */,
         size_t /* vertexAttributeByteSize*/,
-        void* /* context */);
+        void* /* context */
+    );
     
     class GLTFAccessor : public JSONObject {
     private:
@@ -49,7 +52,13 @@ namespace GLTF
 
     public:
         
-        GLTFAccessor(std::shared_ptr<GLTFProfile>, unsigned int glType);
+        /* distinction between type and component type
+         Note: in the API componentType is passed as BYTE until it is resolved as an int using the destination profile
+            componentType :  [BYTE, UNSIGNED_BYTE, SHORT, UNSIGNED_SHORT, FLOAT], // integer (enum)
+            type : ['SCALAR', 'VEC_2', 'VEC_3', 'VEC_4', 'MAT4x2', and son on....] // string
+        */
+        
+        GLTFAccessor(std::shared_ptr<GLTFProfile>, const std::string& type, const std::string& componentType);
         GLTFAccessor(GLTFAccessor *);
         
         virtual ~GLTFAccessor();
@@ -61,10 +70,13 @@ namespace GLTF
         size_t getByteStride();
         
         size_t componentsPerElement();
-        ComponentType componentType();
         
-        //return a string that represents the GL Type,by taking into account componentType and componentsPerElement
-        unsigned int type();
+        //as high level string
+        std::string componentType();
+        //as GL enum that comes from profile
+        unsigned int GLComponentType();
+
+        std::string type();
         
         void setByteOffset(size_t offset);
         size_t getByteOffset();
@@ -91,11 +103,11 @@ namespace GLTF
         
     private:
         std::shared_ptr <GLTFBufferView> _bufferView;
-        size_t                  _componentsPerElement;
-        ComponentType           _componentType;
-        size_t                  _elementByteLength;
-        std::string             _ID;
-        bool                    _minMaxDirty;
+        size_t      _componentsPerElement;
+        std::string _componentType;
+        size_t      _elementByteLength;
+        std::string _ID;
+        bool        _minMaxDirty;
     };
 }
 
