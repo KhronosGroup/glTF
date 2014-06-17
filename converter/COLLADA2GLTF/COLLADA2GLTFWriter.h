@@ -196,7 +196,6 @@ namespace GLTF
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
         std::ofstream _compressedDataOutputStream;
-        double _metersPerUnit;
 	};
 } 
 
