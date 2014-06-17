@@ -53,8 +53,7 @@ namespace GLTF
      */
     COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
     _asset(asset),
-    _visualScene(0),
-    _metersPerUnit(1.0) {
+    _visualScene(0){
 	}
     
     /*
@@ -144,6 +143,7 @@ namespace GLTF
             shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
             _rootTransform->setValue(kChildren, childrenArray);
         }
+        asset->setDistanceScale(globalAsset->getUnit().getLinearUnitMeter());
 
         return true;
 	}
@@ -342,9 +342,9 @@ namespace GLTF
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
 
             // Scale distance units if we need to
-            translation[0] *= (float)_metersPerUnit;
-            translation[1] *= (float)_metersPerUnit;
-            translation[2] *= (float)_metersPerUnit;
+            translation[0] *= (float)_asset->getDistanceScale();
+            translation[1] *= (float)_asset->getDistanceScale();
+            translation[2] *= (float)_asset->getDistanceScale();
             
             bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
@@ -363,7 +363,7 @@ namespace GLTF
             //FIXME: OpenCOLLADA typo
             bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
             if (exportMatrix) {
-                matrix.scaleTrans(_metersPerUnit);
+                matrix.scaleTrans(_asset->getDistanceScale());
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
             }
         }
@@ -625,7 +625,7 @@ namespace GLTF
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
                 std::string meshUID = geometry->getUniqueId().toAscii();
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
-                    shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get(), _metersPerUnit);
+                    shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
                     if (cvtMesh != nullptr) {
                         this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
                         this->_asset->setValueForUniqueId(meshUID, cvtMesh);
@@ -1012,8 +1012,8 @@ namespace GLTF
                 break;
         }
         
-        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue() * _metersPerUnit);
-        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue() * _metersPerUnit);
+        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue() * _asset->getDistanceScale());
+        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue() * _asset->getDistanceScale());
         
 		return true;
 	}
@@ -1138,7 +1138,7 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation) {
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get(), _metersPerUnit);
+        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get());
         
         cvtAnimation->setOriginalID(animation->getOriginalId());
         

@@ -99,6 +99,9 @@ namespace GLTF
 		void setEmbedResources(bool embedResources);
 		bool getEmbedResources();
 
+        void setDistanceScale(double distanceScale);
+        double getDistanceScale();
+
         std::string pathRelativeToInputPath(const std::string& path);
         void copyImagesInsideBundleIfNeeded();
 
@@ -180,6 +183,7 @@ namespace GLTF
         size_t                          _animationByteLength;
         bool                            _isBundle;
 		bool							_embedResources;
+        double                          _distanceScale;
 
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
 

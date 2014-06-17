@@ -149,7 +149,11 @@ namespace GLTF
         return id;
     }
     
-	GLTFAsset::GLTFAsset() :_isBundle(false), _embedResources(false) {
+	GLTFAsset::GLTFAsset() :
+        _isBundle(false),
+        _embedResources(false),
+        _distanceScale(1.0)
+    {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -367,6 +371,16 @@ namespace GLTF
 	{
 		return this->_embedResources;
 	}
+
+    void GLTFAsset::setDistanceScale(double distanceScale)
+    {
+        this->_distanceScale = distanceScale;
+    }
+    
+    double GLTFAsset::getDistanceScale()
+    {
+        return this->_distanceScale;
+    }
     
     std::string GLTFAsset::pathRelativeToInputPath(const std::string& path) {
         if (GLTFUtils::isAbsolutePath(path) == true) {

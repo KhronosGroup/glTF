@@ -222,7 +222,7 @@ namespace GLTF
         return false;
     }
 
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset, double distanceScale)
+    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset)
     {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
@@ -244,7 +244,7 @@ namespace GLTF
             const COLLADAFW::FloatOrDoubleArray &outputArray = animationCurve->getOutputValues();
 
             // Scales any distance values if needed
-            if (distanceScale != 1.0)
+            if (asset->getDistanceScale() != 1.0)
             {
                 bool bNeedsScale = false;
                 const COLLADAFW::PhysicalDimensionArray& dimensions = animationCurve->getOutPhysicalDimensions();
@@ -268,7 +268,7 @@ namespace GLTF
                         {
                             if (dimensions[index % numDimensions] == COLLADAFW::PHYSICAL_DIMENSION_LENGTH)
                             {
-                                fArray[index] *= (float)distanceScale;
+                                fArray[index] *= (float)asset->getDistanceScale();
                             }
                         }
                     }
@@ -280,7 +280,7 @@ namespace GLTF
                         {
                             if (dimensions[index % numDimensions] == COLLADAFW::PHYSICAL_DIMENSION_LENGTH)
                             {
-                                dArray[index] *= distanceScale;
+                                dArray[index] *= asset->getDistanceScale();
                             }
                         }
                     }
