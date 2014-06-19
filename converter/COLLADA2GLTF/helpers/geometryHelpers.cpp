@@ -584,15 +584,11 @@ namespace GLTF
     {
         shared_ptr <GLTFMesh> destinationMesh = nullptr;
         bool splitNeeded = sourceMesh->getMeshAttribute(GLTF::POSITION, 0)->getCount()  >= maximumIndicesCount;
-        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
-        
-        for (size_t i = 0 ; i < primitives.size() ; i++) {
-            shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-        }
-        
         if (!splitNeeded)
             return nullptr;
         
+        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
+
         SubMeshContext *subMesh = nullptr;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
@@ -607,7 +603,6 @@ namespace GLTF
                 continue;
             
             if (subMesh == nullptr) {
-                
                 if (targetMesh == nullptr) {
                     subMesh = __CreateSubMeshContext(sourceMesh->getID());
                     targetMesh = subMesh->targetMesh;
