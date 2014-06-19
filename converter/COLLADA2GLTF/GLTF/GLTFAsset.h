@@ -7,6 +7,8 @@
 
 namespace GLTF
 {
+    class JSONValueEvaluator;
+    
 #define CONFIG_BOOL(asset,X) (asset->converterConfig()->config()->getBool(X))
 #define CONFIG_STRING(asset, X) (asset->converterConfig()->config()->getString(X))
 #define CONFIG_DOUBLE(asset, X) (asset->converterConfig()->config()->getDouble(X))
@@ -109,6 +111,9 @@ namespace GLTF
         std::shared_ptr<JSONObject> getExtras();
         void setExtras(std::shared_ptr<JSONObject>);
 
+        void addValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator);
+        void removeValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator);
+
     protected:
         void launchModifiers();
     private:
@@ -166,6 +171,8 @@ namespace GLTF
         std::vector <std::shared_ptr<GLTFAssetModifier> > _assetModifiers;
 
         MaterialBindingsForNodeUID _materialBindingsForNodeUID;
+        
+        std::vector <std::shared_ptr<JSONValueEvaluator>> _evaluators;        
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

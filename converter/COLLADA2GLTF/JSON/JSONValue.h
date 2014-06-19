@@ -28,7 +28,7 @@
 #define __JSON_VALUE_H__
 
 namespace GLTF 
-{
+{    
     class JSONValue;
     typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
     
@@ -52,7 +52,6 @@ namespace GLTF
         
         //consider overloading == later, but for now we are transitioning, so relying on isEqualTo implicitly provides more control over what/when comparaison are done
         virtual bool isEqualTo(JSONValue* value);
-        
     private:
     };
 

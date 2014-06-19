@@ -14,6 +14,17 @@ using namespace std;
 
 namespace GLTF
 {
+    class JSONValueEvaluator {
+    public:
+        //will/did[Evaluate] are optional
+        virtual void willEvaluate(JSONValue* value) {};
+        virtual void didEvaluate(JSONValue* value) {};
+        //evaluate is mandatory
+        virtual void evaluate() = 0;
+        
+        virtual ~JSONValueEvaluator() {};
+    };
+    
     bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
         GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -770,6 +781,17 @@ namespace GLTF
         }
         
         return true;
+    }
+
+    void GLTFAsset::addValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator) {
+        this->_evaluators.push_back(evaluator);
+    }
+    
+    void GLTFAsset::removeValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator) {
+        std::vector <std::shared_ptr<JSONValueEvaluator>>::iterator iter = std::find(this->_evaluators.begin(), this->_evaluators.end(), evaluator);
+        if (iter != this->_evaluators.end()) {
+            this->_evaluators.erase(iter);
+        }
     }
 
     void GLTFAsset::write() {

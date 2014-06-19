@@ -39,8 +39,13 @@ namespace GLTF
 
     JSONValue::~JSONValue() {
     }
+    
+//    static void __eval(JSONValue* value, void *context) {
+  //      value->evaluate(context);
+    //}
 
     void JSONValue::write(GLTFWriter* writer, void* context) {
+        //value->apply(__eval, context);
         writer->write(this, context);
     }
     
@@ -86,5 +91,4 @@ namespace GLTF
         
         return false;
     }
-    
 }
