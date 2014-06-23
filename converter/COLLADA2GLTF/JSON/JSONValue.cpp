@@ -83,6 +83,10 @@ namespace GLTF
         (*func)(this, context);
     }
     
+    void JSONValue::apply(JSONValueApplier* applier, void* context) {
+        applier->apply(this, context);
+    }
+    
     bool JSONValue::isEqualTo(JSONValue *value) {
         if (value->getJSONType() != this->getJSONType())
             return false;

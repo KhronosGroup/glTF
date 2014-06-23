@@ -45,9 +45,11 @@ namespace GLTF
         size_t getCount();
 
         virtual JSONType getJSONType();
+        virtual std::string valueType();
 
         void apply(JSONValueApplierFunc func, void* context);
-        
+        void apply(JSONValueApplier* applier, void* context);
+
         virtual bool isEqualTo(JSONValue* value);
 
         bool contains(JSONValue* value);

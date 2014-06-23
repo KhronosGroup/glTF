@@ -70,6 +70,8 @@ namespace GLTF
         void setJointsCount(size_t count);
         size_t getJointsCount();
         
+        virtual std::string valueType();
+
     private:
         std::shared_ptr <GLTFBufferView> _inverseBindMatrices;
                 

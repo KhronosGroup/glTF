@@ -28,8 +28,15 @@
 #define __JSON_VALUE_H__
 
 namespace GLTF 
-{    
+{
     class JSONValue;
+
+    class JSONValueApplier {
+    public:
+        virtual void apply(JSONValue* value, void* context) = 0;
+        virtual ~JSONValueApplier() {};
+    };
+    
     typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
     
     class GLTFWriter;
@@ -47,12 +54,15 @@ namespace GLTF
         virtual void evaluate(void*);
         
         virtual JSONType getJSONType() = 0;
-        
+        virtual std::string valueType() = 0;
+
         virtual void apply(JSONValueApplierFunc, void* context);
+        virtual void apply(JSONValueApplier*, void* context);
         
         //consider overloading == later, but for now we are transitioning, so relying on isEqualTo implicitly provides more control over what/when comparaison are done
         virtual bool isEqualTo(JSONValue* value);
     private:
+        std::string _type;
     };
 
 }

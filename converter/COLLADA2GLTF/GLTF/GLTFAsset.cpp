@@ -13,18 +13,7 @@ using namespace std::tr1;
 using namespace std;
 
 namespace GLTF
-{
-    class JSONValueEvaluator {
-    public:
-        //will/did[Evaluate] are optional
-        virtual void willEvaluate(JSONValue* value) {};
-        virtual void didEvaluate(JSONValue* value) {};
-        //evaluate is mandatory
-        virtual void evaluate() = 0;
-        
-        virtual ~JSONValueEvaluator() {};
-    };
-    
+{    
     bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
         GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -160,7 +149,7 @@ namespace GLTF
         return id;
     }
     
-	GLTFAsset::GLTFAsset() :_isBundle(false), _embedResources(false){
+	GLTFAsset::GLTFAsset() :_isBundle(false), _embedResources(false) {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -431,10 +420,47 @@ namespace GLTF
         this->_writer.initWithPath(this->getOutputFilePath().c_str());
     }
     
-    static void __eval(JSONValue* value, void *context) {
+    //FIXME:legacy
+    static void __eval(JSONValue* value, void* context) {
         value->evaluate(context);
     }
     
+    void GLTFAsset::evaluationWillStart(GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluate(JSONValue* value, GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
+        
+    }
+    
+    void GLTFAsset::_performValuesEvaluation() {
+
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationWillStart(this);
+        }
+
+        //these apply MUST be before the removeValue lightsIds that follows
+        this->_root->apply(__eval, this);
+        this->_root->apply(this, this);
+        this->_root->removeValue("lightsIds");
+        
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationDidComplete(this);
+        }
+        
+        this->_root->write(&this->_writer, this);
+    }
+
+    void GLTFAsset::apply(JSONValue* value, void *context) {
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluate(value, (GLTFAsset*)context);
+        }
+    }
+
     std::string GLTFAsset::getSharedBufferId() {
         if (this->_sharedBufferId.length() == 0) {
             COLLADABU::URI inputURI(this->getInputFilePath().c_str());
@@ -783,12 +809,12 @@ namespace GLTF
         return true;
     }
 
-    void GLTFAsset::addValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator) {
+    void GLTFAsset::addValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
         this->_evaluators.push_back(evaluator);
     }
     
-    void GLTFAsset::removeValueEvaluator(std::shared_ptr<JSONValueEvaluator> evaluator) {
-        std::vector <std::shared_ptr<JSONValueEvaluator>>::iterator iter = std::find(this->_evaluators.begin(), this->_evaluators.end(), evaluator);
+    void GLTFAsset::removeValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
+        std::vector <std::shared_ptr<GLTFAssetValueEvaluator>>::iterator iter = std::find(this->_evaluators.begin(), this->_evaluators.end(), evaluator);
         if (iter != this->_evaluators.end()) {
             this->_evaluators.erase(iter);
         }
@@ -1113,11 +1139,10 @@ namespace GLTF
         verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
-        //this apply MUST be before the removeValue lightsIds that follows
-        this->_root->apply(__eval, this);
-        this->_root->removeValue("lightsIds");
+        //to run legacy evaluate, to be removed
+        this->addValueEvaluator(shared_ptr<GLTFAssetValueEvaluator> (this));
         
-        this->_root->write(&this->_writer, this);
+        this->_performValuesEvaluation();
         
         rawOutputStream->close();
         if (compressionLength == 0) {

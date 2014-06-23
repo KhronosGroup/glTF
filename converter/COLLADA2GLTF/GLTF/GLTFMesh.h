@@ -83,6 +83,7 @@ namespace GLTF
         }
         
         std::shared_ptr<GLTFMesh> clone();
+        virtual std::string valueType();
 
     private:
         SemanticToMeshAttributeHashmap _semanticToMeshAttributes;

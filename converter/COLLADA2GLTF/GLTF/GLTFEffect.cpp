@@ -130,5 +130,9 @@ namespace GLTF
         }
         instanceTechnique->setValue(kValues, outputs);
     }
+    
+    std::string GLTFEffect::valueType() {
+        return "effect";
+    }
 
 }

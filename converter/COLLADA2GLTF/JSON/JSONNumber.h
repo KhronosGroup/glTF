@@ -58,6 +58,7 @@ namespace GLTF
         JSONNumber::JSONNumberType getNumberType();
 
         virtual JSONType getJSONType();
+        virtual std::string valueType();
 
         virtual bool isEqualTo(JSONValue* value);
 

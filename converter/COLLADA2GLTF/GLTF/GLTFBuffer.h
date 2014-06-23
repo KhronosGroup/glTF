@@ -50,6 +50,8 @@ namespace GLTF
         
         virtual void evaluate(void*);
         
+        virtual std::string valueType();
+
     private:
         std::string  _ID;
         unsigned char* _data;
@@ -75,6 +77,9 @@ namespace GLTF
         std::string const getID();
     
         void* getBufferDataByApplyingOffset();
+        
+        virtual std::string valueType();
+
     private:
         void _setBuffer(std::shared_ptr <GLTFBuffer>);
     private:
