@@ -180,11 +180,21 @@ namespace GLTF
         if (JSONValue::isEqualTo(value) == true)
             return true;
         
-        //JSONNumber *numberValue = (JSONNumber*)(value);
-
-        //FIXME:TODO        
-        return true;
+        JSONNumber *numberValue = (JSONNumber*)(value);
+        switch(this->_type) {
+            case UNSIGNED_INT32:
+                return this->getUnsignedInt32() == numberValue->getUnsignedInt32();
+            case INT32:
+                return this->getInt32() == numberValue->getInt32();
+            case DOUBLE:
+                return this->getDouble() == numberValue->getDouble();
+            case BOOL:
+                return this->getBool() == numberValue->getBool();
+            default:
+                break;
+        }
+        
+        return false;
     }
-    
 
 }

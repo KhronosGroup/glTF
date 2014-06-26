@@ -30,14 +30,18 @@ namespace GL {
     #include "webgl-idl.h"
 }
 
+const std::string webgl_1_0_defaults = "{\"ACTIVE_TEXTURE\":33984,\"BLEND\":false,\"BLEND_COLOR\":[0,0,0,0],\"COLOR_CLEAR_VALUE\":[0,0,0,0],\"COLOR_WRITEMASK\":[true,true,true,true],\"CULL_FACE\":false,\"CULL_FACE_MODE\":1029,\"DEPTH_CLEAR_VALUE\":1,\"DEPTH_FUNC\":513,\"DEPTH_RANGE\":[0,1],\"DEPTH_TEST\":false,\"DEPTH_WRITEMASK\":true,\"FRONT_FACE\":2305,\"LINE_WIDTH\":1,\"SAMPLE_BUFFERS\":1,\"STENCIL_CLEAR_VALUE\":0,\"STENCIL_FUNC\":519,\"STENCIL_PASS_DEPTH_FAIL\":7680,\"STENCIL_PASS_DEPTH_PASS\":7680,\"STENCIL_REF\":0,\"STENCIL_TEST\":false,\"POLYGON_OFFSET_FILL\":false,\"SCISSOR_TEST\":false, \"BLEND_EQUATION\":32774}";
+
 namespace GLTF
-{
-    
+{    
 #define Enum_STR(Src) #Src
 #define registerGLEnum(X) (setGLenumForString(Enum_STR(X), GL::X))
     
     GLTFWebGL_1_0_Profile::GLTFWebGL_1_0_Profile()
     {
+        this->_defaultValues = std::shared_ptr<JSONObject>(new JSONObject());
+        this->_defaultValues->initWithCString(webgl_1_0_defaults.c_str(), nullptr);
+        
         registerGLEnum(DEPTH_BUFFER_BIT);
         registerGLEnum(STENCIL_BUFFER_BIT);
         registerGLEnum(COLOR_BUFFER_BIT);
@@ -410,8 +414,18 @@ namespace GLTF
         registerGLEnum(BROWSER_DEFAULT_WEBGL);
     }
     
-    GLTFWebGL_1_0_Profile::~GLTFWebGL_1_0_Profile()
-    {
+    std::shared_ptr<JSONValue> GLTFWebGL_1_0_Profile::defaultValueForState(const std::string& state) {
+        return this->_defaultValues->getValue(state);
+    }
+    
+    bool GLTFWebGL_1_0_Profile::isDefaultValueForState(const std::string& state, std::shared_ptr<JSONValue> value) {
+        assert(value);
+        std::shared_ptr<JSONValue> defaultValue = defaultValueForState(state);
+        assert(defaultValue);
+        return value->isEqualTo(defaultValue.get());
+    }
+    
+    GLTFWebGL_1_0_Profile::~GLTFWebGL_1_0_Profile() {
     }
     
     unsigned int GLTFWebGL_1_0_Profile::getGLTypeForComponentTypeAndType(const std::string &componentType, const std::string &type)
