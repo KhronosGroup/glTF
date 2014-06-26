@@ -219,7 +219,7 @@ namespace GLTF
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
-            nodeObject->setString("jointId",sid);
+            nodeObject->setString(kJoint,sid);
         }
         
         bool nodeContainsLookAtTr = false;

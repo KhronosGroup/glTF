@@ -1064,8 +1064,8 @@ namespace GLTF
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
                 shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_uniqueIDToJSONValue[jointId->getString()]);
-                if (node->contains("jointId")) {
-                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
+                if (node->contains(kJoint)) {
+                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJoint)));
                 }
             }
             skin->setJointsIds(jointsWithOriginalSids);
