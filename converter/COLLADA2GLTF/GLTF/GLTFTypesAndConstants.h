@@ -87,6 +87,7 @@ const std::string kLights = "lights";
 const std::string kLight = "light";
 const std::string kSemantic = "semantic";
 const std::string kJoint = "joint";
+const std::string kDoubleSided = "doubleSided";
 
 const std::string MODELVIEW = "MODELVIEW";
 const std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";

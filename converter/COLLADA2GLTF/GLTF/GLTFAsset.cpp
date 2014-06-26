@@ -570,7 +570,7 @@ namespace GLTF
                 std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
                 materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
+                    if (meshExtras->contains(kDoubleSided)) {
                         materialBindingKey += "doubleSided:1";
                     }
                     if (meshExtras->contains("jointsCount")) {
@@ -670,8 +670,8 @@ namespace GLTF
                 unsigned int jointsCount = 0;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
-                        techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                    if (meshExtras->contains(kDoubleSided)) {
+                        techniqueExtras->setBool(kDoubleSided, meshExtras->getBool(kDoubleSided));
                     }
                     if (meshExtras->contains("jointsCount")) {
                         jointsCount = meshExtras->getUnsignedInt32("jointsCount");
@@ -679,8 +679,8 @@ namespace GLTF
                     }
                 }
                 
-                if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
-                    techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
+                if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
+                    techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
                 }
                 
                 //generate shaders if needed

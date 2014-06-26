@@ -282,7 +282,7 @@ namespace GLTF
         
         if (techniqueExtras) {
             jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
-            doubleSided = techniqueExtras->getBool("double_sided");
+            doubleSided = techniqueExtras->getBool(kDoubleSided);
         }
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
@@ -337,7 +337,7 @@ namespace GLTF
         shared_ptr <JSONNumber> GLOne(new JSONNumber(1));
         shared_ptr <JSONNumber> GLZero(new JSONNumber(0));
         
-        if (techniqueExtras->getBool("double_sided")) {
+        if (techniqueExtras->getBool(kDoubleSided)) {
             if (profile->isDefaultValueForState("CULL_FACE", GLZero) == false) {
                 disableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
             }
@@ -577,7 +577,7 @@ namespace GLTF
             
             commonProfile->setString("lightingModel", lightingModel);
             
-            extras->setBool("doubleSided", techniqueExtras->getBool("double_sided"));
+            extras->setBool("doubleSided", techniqueExtras->getBool(kDoubleSided));
             
             if (texcoordBindings->getKeysCount() > 0) {
                 commonProfile->setValue("texcoordBindings", texcoordBindings);
@@ -869,7 +869,7 @@ namespace GLTF
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
                 if (techniqueExtras) {
-                    if (techniqueExtras->getBool("double_sided")) {
+                    if (techniqueExtras->getBool(kDoubleSided)) {
                         fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
                     }
                 }
