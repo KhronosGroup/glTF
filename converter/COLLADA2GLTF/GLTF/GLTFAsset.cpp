@@ -783,7 +783,7 @@ namespace GLTF
                 meshesInSkinning = true;
                 shared_ptr<JSONObject> instanceSkin = node->getObject(kInstanceSkin);
                 meshUID = meshUID.substr(meshesInSkinningPrefix.length());
-                meshesArray = instanceSkin->createArrayIfNeeded(kSources);
+                meshesArray = instanceSkin->createArrayIfNeeded(kMeshes);
             }
             
             assert(meshesInSkinning || meshesInNode);
