@@ -1068,10 +1068,12 @@ namespace GLTF
                     jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJoint)));
                 }
             }
+            std::string inverseBindMatricesUID = "IBM_"+skin->getId();
             skin->setJointsIds(jointsWithOriginalSids);
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
-            skin->setValue(kInverseBindMatrices, inverseBindMatrices);
+            skin->setString(kInverseBindMatrices, inverseBindMatricesUID);
+            accessors->setValue(inverseBindMatricesUID, inverseBindMatrices);
         }
         
         // ----
