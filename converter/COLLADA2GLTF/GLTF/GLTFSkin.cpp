@@ -122,4 +122,8 @@ namespace GLTF
         return this->_jointsCount;
     }
     
+    std::string GLTFSkin::valueType() {
+        return getType();
+    }
+    
 };

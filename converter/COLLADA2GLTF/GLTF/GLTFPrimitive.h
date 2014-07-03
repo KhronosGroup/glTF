@@ -76,6 +76,7 @@ namespace GLTF
         void setIndices(std::shared_ptr <GLTF::GLTFAccessor> indices);
         
         std::shared_ptr<GLTFPrimitive> clone();
+        virtual std::string valueType();
 
     private:
         unsigned int _materialObjectID;

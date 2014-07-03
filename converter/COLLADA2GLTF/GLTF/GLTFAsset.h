@@ -7,6 +7,18 @@
 
 namespace GLTF
 {
+    class GLTFAsset;
+    
+    class GLTFAssetValueEvaluator {
+    public:
+        //evaluate is mandatory
+        virtual void evaluationWillStart(GLTFAsset*) {};
+        virtual void evaluate(JSONValue* value, GLTFAsset* asset) = 0;
+        virtual void evaluationDidComplete(GLTFAsset*) {};
+        
+        virtual ~GLTFAssetValueEvaluator() {};
+    };
+    
 #define CONFIG_BOOL(asset,X) (asset->converterConfig()->config()->getBool(X))
 #define CONFIG_STRING(asset, X) (asset->converterConfig()->config()->getString(X))
 #define CONFIG_DOUBLE(asset, X) (asset->converterConfig()->config()->getDouble(X))
@@ -47,7 +59,7 @@ namespace GLTF
     typedef std::map<std::string, std::shared_ptr <MaterialBindingsPrimitiveMap> > MaterialBindingsForMeshUID;
     typedef std::map<std::string, std::shared_ptr <MaterialBindingsForMeshUID> > MaterialBindingsForNodeUID;
 
-    class COLLADA2GLTF_EXPORT GLTFAsset
+    class COLLADA2GLTF_EXPORT GLTFAsset : public GLTFAssetValueEvaluator, public JSONValueApplier
     {
     public:
         GLTFAsset();
@@ -109,9 +121,20 @@ namespace GLTF
         std::shared_ptr<JSONObject> getExtras();
         void setExtras(std::shared_ptr<JSONObject>);
 
+        void addValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator);
+        void removeValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator);
+        
+        //as an GLTFAssetValueEvaluator
+        virtual void evaluationWillStart(GLTFAsset*);
+        virtual void evaluate(JSONValue* value, GLTFAsset* asset);
+        virtual void evaluationDidComplete(GLTFAsset*);
+        
+        void apply(JSONValue* value, void *context);
+
     protected:
         void launchModifiers();
     private:
+        void _performValuesEvaluation();
         bool _applyMaterialBindingsForNode(const std::string& nodeUID);
         void _applyMaterialBindings(std::shared_ptr<GLTFMesh> mesh,
             std::shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap,
@@ -166,6 +189,8 @@ namespace GLTF
         std::vector <std::shared_ptr<GLTFAssetModifier> > _assetModifiers;
 
         MaterialBindingsForNodeUID _materialBindingsForNodeUID;
+        
+        std::vector <std::shared_ptr<GLTFAssetValueEvaluator>> _evaluators;
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);

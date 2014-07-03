@@ -205,4 +205,9 @@ namespace GLTF
             primitivesArray->appendValue(primitive);
         }
     }
+    
+    std::string GLTFMesh::valueType() {
+        return "mesh";
+    }
+
 }

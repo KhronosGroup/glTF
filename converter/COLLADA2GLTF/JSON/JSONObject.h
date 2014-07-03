@@ -85,11 +85,13 @@ namespace GLTF
         size_t getKeysCount();
         
         virtual JSONType getJSONType();
-        
+        virtual std::string valueType();
+
         bool isEmpty();
         
         void apply(JSONValueApplierFunc func, void* context);
-        
+        void apply(JSONValueApplier* applier, void* context);
+
         virtual bool isEqualTo(JSONValue* value);
         
     protected:
