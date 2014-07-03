@@ -540,16 +540,17 @@ namespace GLTF
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         
         //first pass to output children name of our root node
-        shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
+        shared_ptr <GLTF::JSONArray> childrenArray;
         if (_rootTransform)
         {
             // Add the root transform to the nodes
-            nodesObject->setValue("__Y_UP_TRANSFORM__", _rootTransform);
+            std::string yUpNodeID = uniqueIdWithType(kNode, this->_loader.getUniqueId(COLLADAFW::COLLADA_TYPE::NODE));
+            nodesObject->setValue(yUpNodeID, _rootTransform);
 
             // Create a children array for the scene and add the root transform to it
             shared_ptr <GLTF::JSONArray> sceneChildrenArray(new GLTF::JSONArray());
             sceneObject->setValue(kNodes, sceneChildrenArray);
-            shared_ptr <GLTF::JSONString> rootIDValue(new GLTF::JSONString("__Y_UP_TRANSFORM__"));
+            shared_ptr <GLTF::JSONString> rootIDValue(new GLTF::JSONString(yUpNodeID));
             sceneChildrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (rootIDValue));
 
             // Set childrenArray to the root transform's children array so all root nodes will become its children
