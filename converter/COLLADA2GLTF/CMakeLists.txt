@@ -28,7 +28,7 @@ get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GitSHA1.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp" @ONLY)
 
-set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static)
+set(TARGET_LIBS GeneratedSaxParser_static OpenCOLLADABaseUtils_static UTF_static ftoa_static MathMLSolver_static OpenCOLLADASaxFrameworkLoader_static OpenCOLLADAFramework_static buffer_static zlib zlibstat)
 
 if (NOT WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
@@ -44,10 +44,12 @@ ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
 include_directories(${COLLADA2GLTF_SOURCE_DIR})
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/kmz)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/shaders)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/helpers)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/convert)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/assetModifiers)
+include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependercies)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/json/include/rapidjson)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADAFramework/include)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/OpenCOLLADA/COLLADABaseUtils/include)
@@ -83,6 +85,7 @@ if (WIN32)
 endif()
 
 add_subdirectory(dependencies/OpenCOLLADA)
+add_subdirectory(dependencies/kmz)
 
 if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
@@ -159,6 +162,14 @@ set(GLTF_SOURCES
     JSON/JSONObject.h
     JSON/JSONString.h
     JSON/JSONValue.h
+
+	kmz/KMZ2Collada.cpp
+	kmz/KMZ2Collada.h
+    kmz/zlib.h
+    kmz/unzip.h
+    kmz/unzip.c
+    kmz/ioapi.h
+    kmz/ioapi.c
     
     assetModifiers/GLTFAssetModifier.h
     assetModifiers/GLTFFlipUVModifier.h
