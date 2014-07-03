@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2014, Fabrice Robinet.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,39 +21,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_VALUE_H__
-#define __JSON_VALUE_H__
+#include "GLTF.h"
 
-namespace GLTF 
-{
-    class JSONValue;
-    typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
-    
-    class GLTFWriter;
-    class COLLADA2GLTF_EXPORT JSONValue {
-    private:
-
-    public:        
-        JSONValue();
-        virtual ~JSONValue();
-        
-        virtual void write(GLTFWriter* , void* context = 0);
-        
-        std::shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
-        
-        virtual void evaluate(void*);
-        
-        virtual JSONType getJSONType() = 0;
-        
-        virtual void apply(JSONValueApplierFunc, void* context);
-        
-        //consider overloading == later, but for now we are transitioning, so relying on isEqualTo implicitly provides more control over what/when comparaison are done
-        virtual bool isEqualTo(JSONValue* value);
-        
-    private:
-    };
-
-}
-
-
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
 #endif
+using namespace std;
+
+namespace GLTF
+{
+    GLTFExtras::GLTFExtras(const std::string& ID): JSONObject(),
+    _ID(ID) {
+    }
+
+    GLTFExtras::GLTFExtras() {
+    }
+                        
+    const std::string& GLTFExtras::getID() {
+        return this->_ID;
+    }
+    
+    /*
+    void GLTFEffect::setName(const std::string& name) {
+        this->setString(kName, name);
+    }
+    
+    std::string GLTFEffect::getName() {
+        return this->getString(kName);
+    }
+    */
+}

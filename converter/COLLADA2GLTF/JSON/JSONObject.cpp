@@ -29,7 +29,9 @@
 #include "document.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 
@@ -289,5 +291,38 @@ namespace GLTF
         }
     }
 
+    
+    bool JSONObject::isEqualTo(JSONValue* value) {
+        assert(value != nullptr);
+        
+        if (JSONValue::isEqualTo(value) == true)
+            return true;
+        
+        JSONObject *objectValue = (JSONObject*)(value);
+        
+        //for this first pass/implementation, it will be a bit slow as many , we'll gather all the keys
+        //then, if the number of keys is equal on both objects, then check if all the keys are equlals, and finally if these objects are equal one by one.
+        shared_ptr<JSONArray> keysA = this->keys();
+        shared_ptr<JSONArray> keysB = objectValue->keys();
+        
+        if (keysA->getCount() != keysB->getCount())
+            return false;
+        
+        if (keysA->isEqualTo(keysB.get()) == false)
+            return false;
+        
+        JSONValueVectorRef allKeys = keysA->values();
+        for (size_t i = 0 ; i < allKeys.size() ; i++) {
+            shared_ptr<JSONString> key = static_pointer_cast<JSONString>(allKeys[i]);
+            
+            shared_ptr<JSONValue> objA = this->getValue(key->getString());
+            shared_ptr<JSONValue> objB = objectValue->getValue(key->getString());
+            if (objA->isEqualTo(objB.get()) == false) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
     
 }

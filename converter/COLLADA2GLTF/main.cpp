@@ -39,7 +39,13 @@
 
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
-#include "kmz/KMZ2Collada.h"
+#include "KMZ2Collada.h"
+
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -47,9 +53,9 @@
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 13
+#define OPTIONS_COUNT 15
 #else
-#define OPTIONS_COUNT 11
+#define OPTIONS_COUNT 13
 #endif
 
 
@@ -78,7 +84,8 @@ static const OptionDescriptor options[] = {
 #endif
     { "v",              no_argument,        "-v -> print version" },
     { "s",              no_argument,        "-s -> experimental mode"},
-	{ "h",              no_argument,        "-h -> help" }
+	{ "h",              no_argument,        "-h -> help" },
+	{ "r",              no_argument,        "-r -> verbose logging" }
 };
 
 static void buildOptions() {
@@ -129,8 +136,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     bool hasInputPath = false;
     bool shouldShowHelp = false;
     
-    //asset->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
-    //asset->configObject
     buildOptions();
     
     if (argc == 1) {
@@ -147,7 +152,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsr", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -223,6 +228,9 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 converterConfig->config()->setBool("useDefaultLight", false);
                 converterConfig->config()->setBool("optimizeParameters", true);
                 break;
+            case 'r':
+                converterConfig->config()->setBool("verboseLogging", true);
+                break;
                 
 			default:
                 shouldShowHelp = true;
@@ -237,7 +245,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     if (!hasOutputPath & hasInputPath) {
         asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
-        
     }
     
     return true;
@@ -250,13 +257,19 @@ int main (int argc, char * const argv[]) {
         if (asset->getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = asset->getInputFilePath().c_str();
-        
-        if (!fileExists(asset->getInputFilePath().c_str())) {
+        char* inputFilePathCStr = strdup(asset->getInputFilePath().c_str());
+
+        if (!fileExists(inputFilePathCStr)) {
+            free(inputFilePathCStr);
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
-        
+#ifndef WIN32 || WIN64
+        struct stat attr;
+        if (stat(inputFilePathCStr, &attr) != -1) {
+            asset->convertionMetaData()->setString("date", ctime(&attr.st_ctime));
+        }
+#endif
         clock_t start = clock();
         if (asset->converterConfig()->config()->getBool("outputProgress")) {
             asset->log("convertion 0%%");
@@ -264,17 +277,15 @@ int main (int argc, char * const argv[]) {
         } else {
             asset->log("converting:%s ... as %s \n",asset->getInputFilePath().c_str(), asset->getOutputFilePath().c_str());
         }
-
         if (asset->converterConfig()->config()->getBool("isKmz")) {
-            std::string strJsonFilePath;
-            strJsonFilePath = GLTF::Kmz2Collada()(asset->getInputFilePath());
+            std::string strJsonFilePath = asset->getInputFilePath();
+            strJsonFilePath = GLTF::Kmz2Collada(strJsonFilePath);
             if (strJsonFilePath == "")
                 return -1;
             asset->setInputFilePath(strJsonFilePath);
             asset->setOutputFilePath(
                 replacePathExtensionWith(strJsonFilePath, "json"));
         }
-        
         GLTF::COLLADA2GLTFWriter* writer = new GLTF::COLLADA2GLTFWriter(asset);
         writer->write();
         if (asset->converterConfig()->config()->getBool("outputProgress")) {
@@ -289,8 +300,11 @@ int main (int argc, char * const argv[]) {
         double clocks = CLOCKS_PER_SEC;
 #endif
         std::stringstream s;
-        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
+        double elapsedTime = clock() - start;
+        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << elapsedTime / clocks ;
         asset->log("Runtime: %s seconds\n", s.str().c_str());
+        
+        free(inputFilePathCStr);
     }
     return 0;
 }

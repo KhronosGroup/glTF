@@ -24,39 +24,17 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __JSON_VALUE_H__
-#define __JSON_VALUE_H__
+#ifndef __COLLADA2GLTFEXPORT_H__
+#define __COLLADA2GLTFEXPORT_H__
 
-namespace GLTF 
-{
-    class JSONValue;
-    typedef void (*JSONValueApplierFunc)(JSONValue*  , void* /*context*/);
-    
-    class GLTFWriter;
-    class COLLADA2GLTF_EXPORT JSONValue {
-    private:
-
-    public:        
-        JSONValue();
-        virtual ~JSONValue();
-        
-        virtual void write(GLTFWriter* , void* context = 0);
-        
-        std::shared_ptr<JSONValue> valueForKeyPath(std::string keyPath);
-        
-        virtual void evaluate(void*);
-        
-        virtual JSONType getJSONType() = 0;
-        
-        virtual void apply(JSONValueApplierFunc, void* context);
-        
-        //consider overloading == later, but for now we are transitioning, so relying on isEqualTo implicitly provides more control over what/when comparaison are done
-        virtual bool isEqualTo(JSONValue* value);
-        
-    private:
-    };
-
-}
-
+#	ifdef WIN32
+#		ifdef collada2gltfConvert_EXPORTS
+#			define COLLADA2GLTF_EXPORT __declspec(dllexport)  
+#		else
+#			define COLLADA2GLTF_EXPORT __declspec(dllimport) 
+#		endif
+#	else
+#		define COLLADA2GLTF_EXPORT
+#	endif // WIN32
 
 #endif

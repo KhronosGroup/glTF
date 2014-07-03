@@ -27,7 +27,9 @@
 #include "GLTF.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF 
@@ -121,12 +123,12 @@ namespace GLTF
     
     shared_ptr<JSONArray> GLTFAccessor::min() {
         this->_computeMinMaxIfNeeded();        
-        return this->_min;
+        return this->createArrayIfNeeded("min");
     }
 
     shared_ptr<JSONArray> GLTFAccessor::max() {
         this->_computeMinMaxIfNeeded();
-        return this->_max;
+        return this->createArrayIfNeeded("max");
     }
     
     typedef struct {

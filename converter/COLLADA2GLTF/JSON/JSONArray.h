@@ -38,14 +38,21 @@ namespace GLTF
         JSONArray();
         virtual ~JSONArray();
 
-        virtual void appendValue(shared_ptr <JSONValue>);
+        virtual void appendValue(std::shared_ptr <JSONValue>);
         
         JSONValueVectorRef values();
+        
+        size_t getCount();
 
         virtual JSONType getJSONType();
 
         void apply(JSONValueApplierFunc func, void* context);
+        
+        virtual bool isEqualTo(JSONValue* value);
 
+        bool contains(JSONValue* value);
+        size_t indexOfValue(JSONValue* value);
+                                       
     protected:
         void _parseRapidJSONArray(void *value);
     private:

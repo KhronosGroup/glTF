@@ -58,18 +58,22 @@ namespace GLTF
         
         static std::string generateIDForType(const char* typeCStr, const char* suffix = 0)
         {   
-            static unsigned int generatedIDCount = 1;
             char separator = '_';
             
             std::string type(typeCStr);
             type +=  separator; // FIXME: should probably not generate a "-" for a JSON output
-            type += GLTFUtils::toString(generatedIDCount++);
+            type += GLTFUtils::toString(s_generatedIDCount++);
             if (suffix) {
                 type +=  separator;
                 type += suffix;
             }
             
             return type;
+        }
+
+        static void resetIDCount()
+        {
+            s_generatedIDCount = 1;
         }
                 
         static std::string getStringForGLType(int componentType)
@@ -107,6 +111,10 @@ namespace GLTF
                     return "JOINT";
                 case GLTF::WEIGHT:
                     return "WEIGHT";
+                case GLTF::TEXBINORMAL:
+                    return "TEXBINORMAL";
+                case GLTF::TEXTANGENT:
+                    return "TEXTANGENT";
                     
                 default:
                     return "UNKNOWN";
@@ -144,6 +152,10 @@ namespace GLTF
             return isPathSeparator(name[0]);
 #endif
         }
+
+
+        private:
+            static unsigned int s_generatedIDCount;
     };
     
 }

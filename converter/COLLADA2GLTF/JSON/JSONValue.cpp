@@ -26,6 +26,12 @@
 
 #include "GLTF.h"
 
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 namespace GLTF 
 {
     JSONValue::JSONValue() {
@@ -70,6 +76,15 @@ namespace GLTF
 
     void JSONValue::apply(JSONValueApplierFunc func, void* context) {
         (*func)(this, context);
+    }
+    
+    bool JSONValue::isEqualTo(JSONValue *value) {
+        if (value->getJSONType() != this->getJSONType())
+            return false;
+        if (value == this)
+            return true;
+        
+        return false;
     }
     
 }

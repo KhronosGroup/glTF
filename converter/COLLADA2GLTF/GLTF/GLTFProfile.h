@@ -24,7 +24,7 @@
 #ifndef __GLTF_PROFILE__
 #define __GLTF_PROFILE__
 
-typedef unordered_map<std::string ,unsigned int> GLEnumForString;
+typedef std::unordered_map<std::string ,unsigned int> GLEnumForString;
 
 namespace GLTF
 {

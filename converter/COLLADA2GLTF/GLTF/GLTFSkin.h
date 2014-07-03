@@ -32,9 +32,9 @@ namespace GLTF
         virtual ~GLTFController();
         virtual std::string getType() = 0;
 
-        shared_ptr<JSONObject> extras();
+        std::shared_ptr<JSONObject> extras();
     private:
-        shared_ptr<JSONObject> _extras;
+        std::shared_ptr<JSONObject> _extras;
     };
 
     class GLTFSkin : public GLTFController
@@ -44,37 +44,42 @@ namespace GLTF
         GLTFSkin(std::string id);
         virtual ~GLTFSkin();
         
-        shared_ptr<JSONArray> getBindShapeMatrix();
-        void setBindShapeMatrix(shared_ptr<JSONArray>  bindShapeMatrix);
+        std::shared_ptr<JSONArray> getBindShapeMatrix();
+        void setBindShapeMatrix(std::shared_ptr<JSONArray>  bindShapeMatrix);
         
-        shared_ptr<JSONArray> getJointsIds();
-        void setJointsIds(shared_ptr<JSONArray> jointIds);
+        std::shared_ptr<JSONArray> getJointsIds();
+        void setJointsIds(std::shared_ptr<JSONArray> jointIds);
         
         const std::string& getId();
         
-        void setJoints(shared_ptr <GLTFAccessor> joints);
-        shared_ptr <GLTFAccessor> getJoints();
+        void setJoints(std::shared_ptr <GLTFAccessor> joints);
+        std::shared_ptr <GLTFAccessor> getJoints();
 
-        void setWeights(shared_ptr <GLTFAccessor> weights);
-        shared_ptr <GLTFAccessor> getWeights();
+        void setWeights(std::shared_ptr <GLTFAccessor> weights);
+        std::shared_ptr <GLTFAccessor> getWeights();
 
         void setSourceUID(std::string uniqueId);
         std::string getSourceUID();
         
-        void setInverseBindMatrices(shared_ptr <GLTFBufferView> inverseBindMatrices);
-        shared_ptr <GLTFBufferView> getInverseBindMatrices();
+        void setInverseBindMatrices(std::shared_ptr <GLTFBufferView> inverseBindMatrices);
+        std::shared_ptr <GLTFBufferView> getInverseBindMatrices();
                 
         //controller
         std::string getType();
         
+        void setJointsCount(size_t count);
+        size_t getJointsCount();
+        
     private:
-        shared_ptr <GLTFBufferView> _inverseBindMatrices;
+        std::shared_ptr <GLTFBufferView> _inverseBindMatrices;
                 
-        shared_ptr<GLTFAccessor> _joints;
-        shared_ptr<GLTFAccessor> _weights;
+        std::shared_ptr<GLTFAccessor> _joints;
+        std::shared_ptr<GLTFAccessor> _weights;
         
         std::string _id;
         std::string _sourceUID;
+        
+        size_t _jointsCount;
     };
 }
 

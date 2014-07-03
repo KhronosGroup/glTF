@@ -59,6 +59,8 @@ namespace GLTF
 
         virtual JSONType getJSONType();
 
+        virtual bool isEqualTo(JSONValue* value);
+
     private:
         void* _value;
         JSONNumberType _type;

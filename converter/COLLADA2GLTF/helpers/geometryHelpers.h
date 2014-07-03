@@ -28,9 +28,9 @@ namespace GLTF
 {
     std::string keyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet);
 
-    shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< shared_ptr<IndicesVector> > &vectorOfIndicesVector, shared_ptr<GLTFProfile> profile);
+    std::shared_ptr <GLTFMesh> createUnifiedIndexesMeshFromMesh(GLTFMesh *sourceMesh, std::vector< std::shared_ptr<IndicesVector> > &vectorOfIndicesVector, std::shared_ptr<GLTFProfile> profile);
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile);
+    std::shared_ptr <GLTFMesh> createMeshWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, size_t maxiumIndicesCount, std::shared_ptr<GLTFProfile> profile);
     
     unsigned int* createTrianglesFromPolylist(unsigned int *verticesCount /* array containing the count for each array of indices per face */,
                                               unsigned int *polylist /* array containing the indices of a face */,

@@ -29,8 +29,8 @@
 
 namespace GLTF
 {
-    shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
-    shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
+    std::shared_ptr <JSONValue> serializeVec3(double x,double y, double z);
+    std::shared_ptr <JSONValue> serializeVec4(double x,double y, double z, double w);
 
 	class GLTFWriter {
     private:

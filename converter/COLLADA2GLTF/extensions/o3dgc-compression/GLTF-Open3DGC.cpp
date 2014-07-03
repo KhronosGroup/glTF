@@ -39,6 +39,12 @@
 #define DUMP_O3DGC_OUTPUT 0
 
 using namespace o3dgc;
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 namespace GLTF
 {
     
@@ -246,18 +252,18 @@ namespace GLTF
         int qcolor   = 10;
         int qWeights = 8;
         
-        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION", qcoord);
-        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL", qnormal);
-        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", qtexCoord);
-        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR", qcolor);
-        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT", qWeights);
+        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION");
+        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL");
+        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD");
+        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR");
+        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT");
         
-        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL", "NORMAL"));
-        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR", "DIFFERENTIAL"));
-        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT", "PARALLELOGRAM"));
-        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT", "DIFFERENTIAL"));
+        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION"));
+        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD"));
+        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL"));
+        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR"));
+        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT"));
+        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT"));
         
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         size_t bufferOffset = outputStream->length();
@@ -403,7 +409,7 @@ namespace GLTF
         compressedData->setInt32("verticesCount", vertexCount);
         compressedData->setInt32("indicesCount", allIndicesCount);
         //Open3DGC binary is disabled
-        params.SetStreamType(CONFIG_STRING("compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
+        params.SetStreamType(CONFIG_STRING(asset, "compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
 #if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
         COLLADABU::URI outputURI(asset->outputFilePath.c_str());
@@ -413,9 +419,9 @@ namespace GLTF
 #endif
         encoder.Encode(params, ifs, bstream);
         
-        compressedData->setString("mode", CONFIG_STRING("compressionMode") );
+        compressedData->setString("mode", CONFIG_STRING(asset, "compressionMode") );
         compressedData->setUnsignedInt32("count", bstream.GetSize());
-        compressedData->setUnsignedInt32("type", asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
+        compressedData->setUnsignedInt32(kType, asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
         compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
@@ -438,7 +444,7 @@ namespace GLTF
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         Real max[32];
         Real min[32];
-        O3DGCStreamType streamType = CONFIG_STRING("compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
+        O3DGCStreamType streamType = CONFIG_STRING(asset, "compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
         
         shared_ptr<GLTFConfig> config = asset->converterConfig();
         
@@ -454,13 +460,13 @@ namespace GLTF
         
         int quantization = 17;
         if (path == "TIME") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TIME", 10);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TIME");
         } else if (path == "translation") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.translation", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.translation");
         } else if (path == "rotation") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.rotation", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.rotation");
         } else if (path == "scale") {
-            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.scale", 17);
+            quantization = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.transform.scale");
         }
         
         params.SetQuantBits(quantization);
@@ -534,7 +540,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
         shared_ptr<JSONObject> parameter(new JSONObject());
         parameter->setUnsignedInt32("count", cvtAnimation->getCount());
-        parameter->setUnsignedInt32("type", profile->getGLenumForString(parameterType));
+        parameter->setUnsignedInt32(kType, profile->getGLenumForString(parameterType));
 
         accessors->setValue(accessorUID, parameter);
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
@@ -542,13 +548,13 @@ namespace GLTF
         
         //write
         size_t byteOffset = 0;
-        bool shouldEncodeOpen3DGC = CONFIG_STRING("compressionType")  == "Open3DGC";
+        bool shouldEncodeOpen3DGC = CONFIG_STRING(asset, "compressionType")  == "Open3DGC";
         GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset->createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();;
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         
         if (shouldEncodeOpen3DGC) {
-            unsigned int glType = parameter->getUnsignedInt32("type");
+            unsigned int glType = parameter->getUnsignedInt32(kType);
             size_t componentsCount = profile->getComponentsCountForGLType(glType);
             if (componentsCount) {
                 encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), asset);
@@ -561,8 +567,8 @@ namespace GLTF
                 
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", byteLength);
-                compressionDataObject->setString("mode", CONFIG_STRING("compressionMode"));
-                compressionDataObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
+                compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
+                compressionDataObject->setUnsignedInt32(kType, profile->getGLenumForString("UNSIGNED_BYTE"));
             }
         } else {
             outputStream->write((const char*)buffer, byteLength);
@@ -587,7 +593,7 @@ namespace GLTF
         
         shared_ptr <JSONObject> parameter;
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
-        if (CONFIG_BOOL("shareAnimationAccessors")) {
+        if (CONFIG_BOOL(asset, "shareAnimationAccessors")) {
             GLTFAccessorCache accessorCache(buffer, byteLength);
             UniqueIDToAccessor::iterator it = asset->_uniqueIDToAccessorObject.find(accessorCache);
             if (it != asset->_uniqueIDToAccessorObject.end()) {

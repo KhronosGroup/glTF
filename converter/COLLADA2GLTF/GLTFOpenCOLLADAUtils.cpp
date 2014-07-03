@@ -25,6 +25,11 @@
 #include "GLTFOpenCOLLADA.h"
 #include "GLTFOpenCOLLADAUtils.h"
 
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m) {
     shared_ptr <GLTF::JSONArray> array(new GLTF::JSONArray());
     

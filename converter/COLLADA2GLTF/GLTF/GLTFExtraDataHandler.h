@@ -6,22 +6,13 @@
 
 #include "COLLADASaxFWLIExtraDataCallbackHandler.h"
 
-#if (defined(WIN32) || defined(_LIBCPP_VERSION))
+#if (defined(WIN32) || defined(_LIBCPP_VERSION) || __cplusplus > 199711L)
 #include <memory>
 #include <unordered_map>
 #else
 #include <tr1/memory>
 #include <tr1/unordered_map>
 #endif
-
-#ifdef _LIBCPP_VERSION
-namespace std{
-    namespace tr1 = std;
-}
-#endif
-
-using namespace std::tr1;
-using namespace std;
 
 namespace GLTF
 {
@@ -55,10 +46,13 @@ namespace GLTF
 		bool parseElement( const COLLADASaxFWL::ParserChar* profileName, const COLLADASaxFWL::StringHash& elementHash
 			, const COLLADAFW::UniqueId& uniqueId, COLLADAFW::Object* object );
         
-        shared_ptr <JSONObject> getExtras(COLLADAFW::UniqueId uniqueId);
+        std::shared_ptr <JSONObject> getExtras(COLLADAFW::UniqueId uniqueId);
+        std::shared_ptr <JSONObject> allExtras() { return this->_allExtras; }
+        
+        void determineBumpTextureSamplerAndTexCoord( const GeneratedSaxParser::xmlChar** attributes );
 
 	private:
-        shared_ptr <JSONObject> _allExtras;
+        std::shared_ptr <JSONObject> _allExtras;
 	};
 }
 

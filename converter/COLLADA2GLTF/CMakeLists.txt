@@ -1,6 +1,22 @@
 cmake_minimum_required(VERSION 2.8)
 project(COLLADA2GLTF)
 
+if (NOT WIN32)
+#http://www.guyrutenberg.com/2014/01/05/enabling-c11-c0x-in-cmake/
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    message("-- C++11 Enabled")
+elseif(COMPILER_SUPPORTS_CXX0X)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    message("-- C++0x Enabled")
+else()
+        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
+endif()
+
 set(USE_OPEN3DGC "ON")
 set(WITH_IN_SOURCE_BUILD "ON")
 set(COLLADA2GLTF_BINARY_DIR, COLLADA2GLTF_SOURCE_DIR)
@@ -18,6 +34,14 @@ if (NOT WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES .so .a .dylib)
 endif()
 
+# Lets libxml2 work in a shared library
+add_definitions(-DLIBXML_STATIC_FOR_DLL)
+
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64") 
+ ADD_DEFINITIONS(-fPIC) 
+ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+
+include_directories(${COLLADA2GLTF_SOURCE_DIR})
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/kmz)
@@ -54,7 +78,6 @@ endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
 
-
 if (WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DWIN32)
@@ -68,22 +91,12 @@ if (USE_OPEN3DGC)
     add_subdirectory(dependencies/o3dgc/src)
 endif()
 
-set(GLTF_SOURCES main.cpp
-
+set(GLTF_SOURCES
     COLLADA2GLTFWriter.h
     COLLADA2GLTFWriter.cpp
     GLTFOpenCOLLADA.h
     GLTFOpenCOLLADAUtils.h
     GLTFOpenCOLLADAUtils.cpp
-    
-    kmz/KMZ2Collada.h
-    kmz/KMZ2Collada.cpp
-    kmz/zlib.h
-    kmz/unzip.h
-    kmz/unzip.c
-    kmz/ioapi.h
-    kmz/ioapi.c
-
 
     GLTF/GLTFAccessorCache.cpp
     GLTF/GLTFAccessorCache.h
@@ -92,6 +105,7 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
+    GLTF/GLTFExtras.cpp
     GLTF/GLTFMesh.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
@@ -104,6 +118,7 @@ set(GLTF_SOURCES main.cpp
     GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
+    GLTF/GLTFExtras.h
     GLTF/GLTFMesh.h
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
@@ -147,6 +162,14 @@ set(GLTF_SOURCES main.cpp
     JSON/JSONObject.h
     JSON/JSONString.h
     JSON/JSONValue.h
+
+	kmz/KMZ2Collada.cpp
+	kmz/KMZ2Collada.h
+    kmz/zlib.h
+    kmz/unzip.h
+    kmz/unzip.c
+    kmz/ioapi.h
+    kmz/ioapi.c
     
     assetModifiers/GLTFAssetModifier.h
     assetModifiers/GLTFFlipUVModifier.h
@@ -161,11 +184,13 @@ LIST(APPEND GLTF_SOURCES
     extensions/o3dgc-compression/GLTF-Open3DGC.h)
 endif()
 
+add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
+
+#Make sure the dll is in the same directory as the executable
 if (WIN32)
-LIST(APPEND GLTF_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
+    set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
 endif()
 
-add_executable(collada2gltf ${GLTF_SOURCES})
 
 if (NOT WIN32)
 LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
@@ -179,5 +204,15 @@ IF("${CMAKE_SYSTEM}" MATCHES "Linux")
     LIST(APPEND TARGET_LIBS rt)
 endif("${CMAKE_SYSTEM}" MATCHES "Linux")
 
-target_link_libraries (collada2gltf ${TARGET_LIBS})
+target_link_libraries (collada2gltfConvert ${TARGET_LIBS})
 
+set(GLTF_EXE_SOURCES  main.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/GitSHA1.cpp
+    GitSHA1.h)
+
+if (WIN32)
+LIST(APPEND GLTF_EXE_SOURCES ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt_long.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.c ${COLLADA2GLTF_SOURCE_DIR}/dependencies/misc/getopt.h)
+endif()
+
+add_executable(collada2gltf ${GLTF_EXE_SOURCES})
+target_link_libraries (collada2gltf collada2gltfConvert)

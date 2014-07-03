@@ -33,8 +33,12 @@
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
 #include <algorithm>
+#include "commonProfileShaders.h"
 
+
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 using namespace COLLADAFW;
 using namespace COLLADABU;
@@ -43,8 +47,6 @@ using namespace rapidjson;
 
 namespace GLTF
 {
-    
-	
     /*
      */
     COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
@@ -69,7 +71,7 @@ namespace GLTF
         this->_extraDataHandler = new ExtraDataHandler();
         //To comply with macro to access config
         GLTFAsset *asset = this->_asset.get();
-
+        asset->setExtras(this->_extraDataHandler->allExtras());
         asset->prepareForProfile(shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile()));
                 
 		COLLADAFW::Root root(&this->_loader, this);
@@ -78,15 +80,11 @@ namespace GLTF
 			return false;
         
         asset->write();
-        
-        if (asset->converterConfig()->boolForKeyPath("outputConvertionResults", false)) {
-            COLLADABU::URI convertResultsURI(asset->getOutputFilePath());
-            std::string aPath = convertResultsURI.getPathDir();
-            aPath += "results.json";
-            this->_resultsWriter.initWithPath(aPath);
-            asset->convertionResults()->write(&this->_resultsWriter);
-        }
-        
+
+        // Cleanup IDs and Technique cache in case we have another conversion
+        GLTFUtils::resetIDCount();
+        clearCommonProfileTechniqueCache();
+                
 		return true;
 	}
     
@@ -106,13 +104,14 @@ namespace GLTF
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
         GLTFAsset* asset = this->_asset.get();
-        shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded("asset");
+        shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded(kAsset);
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
-        assetObject->setString("generator",version);
-        shared_ptr<JSONObject> assetExtras = assetObject->createObjectIfNeeded("extras");
-        assetExtras->setBool(kPremultipliedAlpha, CONFIG_BOOL(kPremultipliedAlpha));
-        assetObject->setValue("extras", assetExtras);
         
+        assetObject->setString("generator",version);
+        assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
+        assetObject->setString(kProfile, asset->profile()->id());
+        assetObject->setDouble(kVersion, glTFVersion);
+
         return true;
 	}
     
@@ -126,7 +125,7 @@ namespace GLTF
         }
         float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
         
-        return CONFIG_BOOL("invertTransparency") ? 1 - transparency : transparency;
+        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
     
     float COLLADA2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon) {
@@ -145,227 +144,67 @@ namespace GLTF
             this->_asset->log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", originalId.c_str());
         }
     }
-    
-    shared_ptr <GLTF::JSONObject> serializeAttributeSemanticsForPrimitiveAtIndex(GLTFMesh* mesh, unsigned int idx) {
-        shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(mesh->getPrimitives()->values()[idx]);
-                                
-        shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
-        shared_ptr<JSONArray> sets(new JSONArray());
-        
-        size_t count = primitive->getVertexAttributesCount();
-        for (size_t j = 0 ; j < count ; j++) {
-            Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
-            std::string semanticString = GLTFUtils::getStringForSemantic(semantic);
-
-            shared_ptr<JSONObject> semanticInfo;
-            if (semantics->contains(semanticString) == false) {
-                semanticInfo = shared_ptr<JSONObject> (new JSONObject());
-                semantics->setValue(semanticString, semanticInfo);
-            }
             
-            unsigned int indexOfSet = 0;
-            if (semantic == GLTF::TEXCOORD) {
-				indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
-            }
-            
-            sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
-        }
-        
-        return semantics;
-    }
-    
-    static shared_ptr<GLTFEffect> createDefaultEffect(GLTFAsset* asset, shared_ptr <JSONObject> attributeSemantics, bool hasNormal) {
-        //we have no material, create default
-        shared_ptr<GLTFEffect> effect;
-        std::string uniqueId = "__glTF__defaultMaterial";
-        uniqueId += hasNormal ? "0" : "1";
-        
-        effect = shared_ptr<GLTFEffect> (new GLTFEffect(uniqueId));
-        shared_ptr <JSONObject> values(new JSONObject());
-        
-        effect->setValues(values);
-        effect->setLightingModel("Phong");
-        
-        //retrieve the type, parameterName -> symbol -> type
-        double red = 1, green = 1, blue = 1, alpha = 1;
-        shared_ptr <JSONObject> slotObject(new JSONObject());
-        slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-        slotObject->setUnsignedInt32("type", asset->profile()->getGLenumForString("FLOAT_VEC4"));
-        values->setValue("diffuse", slotObject);
-        
-        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
-        
-        techniqueGenerator->setString("lightingModel", effect->getLightingModel());
-        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
-        techniqueGenerator->setValue("values", effect->getValues());
-        techniqueGenerator->setValue("techniqueExtras", shared_ptr<JSONObject>(new JSONObject()));
-        techniqueGenerator->setValue("texcoordBindings", shared_ptr<JSONObject>(new JSONObject()));
-        
-        effect->setTechniqueGenerator(techniqueGenerator);
-        effect->setName(uniqueId);
-        return effect;
-    }
-    
-    bool COLLADA2GLTFWriter::writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
-                                                                  MaterialBindingArray &materialBindings,
-                                                                  shared_ptr <GLTF::JSONArray> &meshesArray) {
-        
-        std::string meshUID = uniqueId.toAscii();
-        shared_ptr<JSONObject> meshExtras = this->_extraDataHandler->getExtras(uniqueId);
+    void COLLADA2GLTFWriter::_storeMaterialBindingArray(const std::string& prefix,
+                                                        const std::string& nodeUID,
+                                                        const std::string& meshUID,
+                                                        MaterialBindingArray &materialBindings) {
         
         if (this->_asset->containsValueForUniqueId(meshUID) == false) {
-            return false;
+            return;
         }
         
-        shared_ptr <JSONArray> meshes = static_pointer_cast<JSONArray>(this->_asset->getValueForUniqueId(meshUID));
-        size_t meshesCount = meshes->values().size();
-        if (meshesCount > 0) {
-            for (size_t meshIndex = 0 ; meshIndex < meshesCount ; meshIndex++) {
-                shared_ptr <GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->values()[meshIndex]);
-                if (!mesh) {
-                    continue;
-                }
-                
-                /*
-                if (sceneFlatteningInfo) {
-                    GLTF::IndexSetToMeshAttributeHashmap& semanticMap = mesh->getMeshAttributesForSemantic(GLTF::POSITION);
-                    shared_ptr <GLTF::GLTFAccessor> vertexMeshAttribute = semanticMap[0];
-                    
-                    BBOX vertexBBOX(COLLADABU::Math::Vector3(vertexMeshAttribute->getMin()),
-                                    COLLADABU::Math::Vector3(vertexMeshAttribute->getMax()));
-                    vertexBBOX.transform(worldMatrix);
-                    
-                    sceneFlatteningInfo->sceneBBOX.merge(&vertexBBOX);
-                }
-                */
-                GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-                for (size_t j = 0 ; j < primitives.size() ; j++) {
-                    shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
-                    
-                    //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
-                    int materialBindingIndex = -1;
-                    for (size_t k = 0; k < materialBindings.getCount() ; k++) {
-                        //printf("materialID in binding:%d primitveObjectID:%d\n", materialBindings[k].getMaterialId(),
-                        //   primitive->getMaterialObjectID());
-                        
-                        if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
-                            materialBindingIndex = (unsigned int)k;
-                        }
-                    }
-                    
-                    shared_ptr<JSONObject> texcoordBindings(new JSONObject());
-                    shared_ptr <GLTFEffect> effect;
-                    shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
-                    
-                    if (materialBindingIndex != -1) {
-                        std::string referencedMaterialID = materialBindings[materialBindingIndex].getReferencedMaterial().toAscii();
-                        
-                        /* will be needed to get semantic & set association to create the shader */
-                        const TextureCoordinateBindingArray &textureCoordBindings = materialBindings[materialBindingIndex].getTextureCoordinateBindingArray();
-                        
-                        COLLADAFW::UniqueId effectUID = this->_asset->_materialUIDToEffectUID[referencedMaterialID];
-                        std::string effectID = effectUID.toAscii();
-                        shared_ptr<JSONObject> effectExtras = this->_extraDataHandler->getExtras(effectUID);
-                        
-                        std::string materialName = this->_asset->_materialUIDToName[referencedMaterialID];
-                        
-                        if (this->_asset->containsValueForUniqueId(effectID)) {
-                            effect = static_pointer_cast<GLTFEffect>(this->_asset->getValueForUniqueId(effectID));
-                        }
-                                                
-                        // retrieve the semantic to be associated
-                        size_t coordBindingsCount = textureCoordBindings.getCount();
-                        if (coordBindingsCount > 0) {
-                            //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
-                            size_t minimumIndex = textureCoordBindings[0].getSetIndex();
-                            for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                                if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
-                                    minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
-                            }
-                            
-                            for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                                
-                                std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
-                                SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
-                                
-                                std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(textureCoordBindings[coordIdx].getSetIndex() - minimumIndex);
-                                
-                                if (semanticArrayPtr) {
-                                    for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                        std::string slot = (*semanticArrayPtr)[semanticIndex];
-                                        texcoordBindings->setString(slot, shaderSemantic);
-                                        if ((slot == "diffuse") && effectExtras->getBool("ambient_diffuse_lock")) {
-                                            texcoordBindings->setString("ambient", shaderSemantic);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        shared_ptr<JSONObject> techniqueExtras(new JSONObject());
-                        if (meshExtras->contains("double_sided")) {
-                            techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
-                        }
-                        if (effectExtras->contains("double_sided")) {
-                            techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
-                        }
-                        
-                        //generate shaders if needed
-						shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                    
-                        shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
-                        
-                        techniqueGenerator->setString("lightingModel", effect->getLightingModel());
-                        techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
-                        techniqueGenerator->setValue(kValues, effect->getValues());
-                        techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
-                        techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
-                        
-                        effect->setTechniqueGenerator(techniqueGenerator);
-                        effect->setName(materialName);
-                        primitive->setMaterialID(effect->getID());
-                    } else {
-                        //https://github.com/KhronosGroup/glTF/issues/194
-                        //We'll deal with two cases cases of default materials
-                        //With or without NORMALS
-						shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                        
-                        static shared_ptr<GLTFEffect> defaultEffectNoNormal = createDefaultEffect(this->_asset.get(), attributeSemantics, false);
-                        static shared_ptr<GLTFEffect> defaultEffectWithNormal = createDefaultEffect(this->_asset.get(), attributeSemantics, true);
- 
-                        bool hasNormal = attributeSemantics->contains(GLTFUtils::getStringForSemantic(GLTF::NORMAL));
-                                                                      
-                        effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
-                        
-                        primitive->setMaterialID(effect->getID());
-                        
-                        if (materials->contains(effect->getID()) == false) {
-                            materials->setValue(effect->getID(), effect);
-                        }
-                    }
-                }
-                
-                meshesArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(mesh->getID())));
-                /*if (sceneFlatteningInfo) {
-                    shared_ptr <MeshFlatteningInfo> meshFlatteningInfo(new MeshFlatteningInfo(meshUID, parentMatrix));
-                    sceneFlatteningInfo->allMeshes.push_back(meshFlatteningInfo);
-                }*/
-            }
+        shared_ptr <GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(meshUID));
+        this->_asset->setOriginalId(meshUID, mesh->getID());
+        
+        MaterialBindingsForNodeUID& mb = this->_asset->materialBindingsForNodeUID();
+        shared_ptr <MaterialBindingsForMeshUID> materialBindingsMap;
+        if (mb.count(nodeUID) == 0) {
+            materialBindingsMap = shared_ptr<MaterialBindingsForMeshUID>(new MaterialBindingsForMeshUID());
+            mb[nodeUID] = materialBindingsMap;
+        } else {
+            materialBindingsMap = mb[nodeUID];
         }
-        return true;
+        
+        //apply prefix on MeshUID
+        std::string prefixedMeshUID = prefix + meshUID;
+        shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap;
+        if (materialBindingsMap->count(prefixedMeshUID) == 0) {
+            materialBindingsPrimitiveMap = shared_ptr<MaterialBindingsPrimitiveMap> (new MaterialBindingsPrimitiveMap());
+            (*materialBindingsMap)[prefixedMeshUID] = materialBindingsPrimitiveMap;
+        } else {
+            materialBindingsPrimitiveMap = (*materialBindingsMap)[prefixedMeshUID];
+        }
+        
+        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
+        for (size_t j = 0 ; j < primitives.size() ; j++) {
+            shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
+            //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
+            int materialBindingIndex = -1;
+            for (size_t k = 0; k < materialBindings.getCount() ; k++) {
+                if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
+                    materialBindingIndex = (int)k;
+                }
+            }
+            if (materialBindingIndex != -1) {
+                shared_ptr <COLLADAFW::MaterialBinding> materialBinding(new COLLADAFW::MaterialBinding(materialBindings[materialBindingIndex]));
+                (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()] = materialBinding;
+            }            
+        }
+        return;
     }
-    
 
+    
     bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node,
                                        shared_ptr <GLTF::JSONObject> nodesObject,
                                        COLLADABU::Math::Matrix4 parentMatrix,
                                        SceneFlatteningInfo* sceneFlatteningInfo) {
         GLTFAsset *asset = this->_asset.get();
-        bool shouldExportTRS = CONFIG_BOOL("alwaysExportTRS");
+        bool shouldExportTRS = CONFIG_BOOL(asset, "alwaysExportTRS");
         const NodePointerArray& nodes = node->getChildNodes();
         std::string nodeOriginalID = node->getOriginalId();
         if (nodeOriginalID.length() == 0) {
-            nodeOriginalID = uniqueIdWithType("node", node->getUniqueId());
+            nodeOriginalID = uniqueIdWithType(kNode, node->getUniqueId());
         }
         
         std::string uniqueUID = node->getUniqueId().toAscii();
@@ -373,11 +212,10 @@ namespace GLTF
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         
         shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
-        nodeObject->setString("name",node->getName());
+        nodeObject->setString(kName,node->getName());
         
         this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
-        this->_asset->_uniqueIDToOriginalID[uniqueUID] = nodeOriginalID;
-
+        this->_asset->setOriginalId(uniqueUID, nodeOriginalID);
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
@@ -391,8 +229,8 @@ namespace GLTF
             InstanceCamera* instanceCamera = instanceCameras[0];
             shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
             
-            std::string cameraId = uniqueIdWithType("camera", instanceCamera->getInstanciatedObjectId());
-            nodeObject->setString("camera", cameraId);
+            std::string cameraId = uniqueIdWithType(kCamera, instanceCamera->getInstanciatedObjectId());
+            nodeObject->setString(kCamera, cameraId);
             
             //FIXME: just handle the first camera within a node now
             //for (size_t i = 0 ; i < camerasCount ; i++) {
@@ -470,7 +308,7 @@ namespace GLTF
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
             
-            bool exportDefaultValues = CONFIG_BOOL("exportDefaultValues");
+            bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
                                        ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
             if (exportTranslation)
@@ -485,55 +323,40 @@ namespace GLTF
             
         } else {
             //FIXME: OpenCOLLADA typo
-            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL("exportDefaultValues") == false) ));
+            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
             if (exportMatrix)
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
         }
         
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
-        shared_ptr <GLTF::JSONArray> meshesArray(new GLTF::JSONArray());
 		unsigned int count = (unsigned int)instanceControllers.getCount();
         if (count > 0) {
-            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
             for (unsigned int i = 0 ; i < count; i++) {
                 InstanceController* instanceController = instanceControllers[i];
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
-                
-                //FIXME: need to check in more details what's going on here  (we always had this issue, but it was hidden by the fact we were using just the objectId and not the full uniqueId
-                uniqueId = UniqueId(COLLADAFW::COLLADA_TYPE::SKIN_DATA, uniqueId.getObjectId(), uniqueId.getFileId());
-                if (skins->contains(uniqueId.toAscii())) {
-                    shared_ptr <GLTF::JSONArray> skinMeshesArray(new GLTF::JSONArray());
-
-                    shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(uniqueId.toAscii()));
+                if (asset->containsValueForUniqueId(uniqueId.toAscii())) {
+                    shared_ptr<JSONString> skinControllerDataUID = static_pointer_cast<JSONString>(asset->getValueForUniqueId(uniqueId.toAscii()));
+                    shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinControllerDataUID->getString()));
+                    
                     UniqueId meshUniqueId(skin->getSourceUID());
-                    writeMeshFromUIDWithMaterialBindings(meshUniqueId, materialBindings, skinMeshesArray);
-                    
-                    //write instanceController
-                    shared_ptr<JSONObject> serializedInstanceController(new JSONObject());
-                    //const COLLADAFW::SkeletonUrlList&  skeletonList = instanceController->getSkeletonUrlList();
-                    
-                    UniqueId skinDataUniqueId(skin->extras()->getString("uniqueId"));
-                    
-                    //looks like the only way to get the <skeleton> information from OpenCOLLADA
-                    Loader::InstanceControllerDataList list = this->_loader.getInstanceControllerDataListMap()[skinDataUniqueId];
-                    Loader::InstanceControllerData instanceControllerData = *list.begin();
+                    _storeMaterialBindingArray("skin-meshes-",
+                                               node->getUniqueId().toAscii(),
+                                               meshUniqueId.toAscii(),
+                                               materialBindings);
                     
                     shared_ptr<JSONObject> instanceSkin(new JSONObject());
-                    
                     shared_ptr<JSONArray> skeletons(new JSONArray());
-                    URIList::iterator listIterator;
-                    for(listIterator = instanceControllerData.skeletonRoots.begin(); listIterator != instanceControllerData.skeletonRoots.end(); ++listIterator) {
-                        std::string skeleton = listIterator->getFragment();
+                    
+                    for (size_t k = 0 ; k < instanceController->skeletons().size() ; k++) {
+                        std::string skeleton = instanceController->skeletons()[k].getFragment();
                         skeletons->appendValue(shared_ptr<JSONString>(new JSONString(skeleton)));
                     }
                     
                     instanceSkin->setValue("skeletons", skeletons);
-                    instanceSkin->setString("skin", skin->getId());
-                    
-                    //FIXME: this should account for morph as sources to
-                    instanceSkin->setValue("sources", skinMeshesArray);
-                    nodeObject->setValue("instanceSkin", instanceSkin);
+                    instanceSkin->setString(kSkin, skin->getId());
+                    nodeObject->setValue(kInstanceSkin, instanceSkin);
                 }
             }
         }
@@ -547,21 +370,21 @@ namespace GLTF
                 InstanceGeometry* instanceGeometry = instanceGeometries[i];
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceGeometry->getInstanciatedObjectId();
-                writeMeshFromUIDWithMaterialBindings(uniqueId, materialBindings, meshesArray);
+                _storeMaterialBindingArray("meshes-",
+                                           node->getUniqueId().toAscii(),
+                                           uniqueId.toAscii(),
+                                           materialBindings);
             }
         }
         
-        if (meshesArray->values().size() > 0)
-            nodeObject->setValue(kMeshes, meshesArray);
-
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
-        nodeObject->setValue("children", childrenArray);
+        nodeObject->setValue(kChildren, childrenArray);
         
         count = (unsigned int)nodes.getCount();
         for (unsigned int i = 0 ; i < count ; i++)  {
             std::string childOriginalID = nodes[i]->getOriginalId();
             if (childOriginalID.length() == 0) {
-                childOriginalID = uniqueIdWithType("node", nodes[i]->getUniqueId());
+                childOriginalID = uniqueIdWithType(kNode, nodes[i]->getUniqueId());
             }
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
         }
@@ -595,14 +418,14 @@ namespace GLTF
         
         //For a given light, keep track of all the nodes holding it
         if (count) {
-            shared_ptr<JSONObject> lights = this->_asset->root()->createObjectIfNeeded("lights");
+            shared_ptr<JSONObject> lights = this->_asset->root()->createObjectIfNeeded(kLights);
             for (unsigned int i = 0 ; i < count ; i++) {
                 InstanceLight* instanceLight  = instanceLights[i];
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
                 
                 shared_ptr<JSONObject> light = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(id));
                 if (light) {
-                    std::string lightUID = this->_asset->_uniqueIDToOriginalID[id];
+                    std::string lightUID = this->_asset->getOriginalId(id);
                     
                     shared_ptr<JSONArray> listOfNodesPerLight;
                     if (this->_asset->_uniqueIDOfLightToNodes.count(id) == 0) {
@@ -621,7 +444,7 @@ namespace GLTF
             //https://github.com/KhronosGroup/glTF/issues/13
             //nodeObject->setValue("lights", lightsInNode);
             if (lightsInNode->values().size() > 0) {
-                nodeObject->setValue("light", lightsInNode->values()[0]);
+                nodeObject->setValue(kLight, lightsInNode->values()[0]);
                 if (count > 1) {
                     //FR: AFAIK no authoring tool export multiple light per node, but we'll warn if that's the case
                     //To fix this, dummy sub nodes should be created.
@@ -666,24 +489,24 @@ namespace GLTF
         //FIXME: only one visual scene assumed/handled
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded("nodes");
+        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
         
 		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
         
-        this->_asset->root()->setValue("scenes", scenesObject);
+        this->_asset->root()->setValue(kScenes, scenesObject);
         this->_asset->root()->setString(kScene, "defaultScene");
         
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
         
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
-        sceneObject->setValue("nodes", childrenArray);
+        sceneObject->setValue(kNodes, childrenArray);
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
             std::string nodeUID = nodePointerArray[i]->getOriginalId();
             if (nodeUID.length() == 0) {
-                nodeUID = uniqueIdWithType("node", nodePointerArray[i]->getUniqueId());
+                nodeUID = uniqueIdWithType(kNode, nodePointerArray[i]->getUniqueId());
             }
                         
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
@@ -707,7 +530,7 @@ namespace GLTF
 	bool COLLADA2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes ) {
         const NodePointerArray& nodes = libraryNodes->getNodes();
         
-        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded("nodes");
+        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
                 
         size_t count = nodes.getCount();
         for (size_t i = 0 ; i < count ; i++) {
@@ -722,7 +545,7 @@ namespace GLTF
 
                     shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(value->getString()));
                     if (parentNode) {
-                        shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded("children");
+                        shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded(kChildren);
                         children->appendValue(shared_ptr <JSONString>(new JSONString(node->getOriginalId())));
                     }
                 }
@@ -743,23 +566,10 @@ namespace GLTF
                 const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
                 std::string meshUID = geometry->getUniqueId().toAscii();
                 if (this->_asset->containsValueForUniqueId(meshUID) == false) {
-                    shared_ptr <JSONArray> meshes(new JSONArray());
                     shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
-                    if (cvtMesh) {
-                        //here we stock the mesh with unified indices but we may have to handle additional mesh attributes
-                        if  (createMeshesWithMaximumIndicesCountFromMeshIfNeeded(cvtMesh.get(), 65535, meshes, this->_asset->profile()) == false) {
-                            meshes->appendValue(cvtMesh);
-                        }
-                        JSONValueVectorRef meshesVector = meshes->values();
-                        size_t meshesCount = meshesVector.size();
-                        if (meshesCount > 0) {
-                            shared_ptr<JSONObject> serializedMeshes = this->_asset->root()->createObjectIfNeeded(kMeshes);
-                            for (size_t i = 0 ; i < meshesCount ; i++) {
-                                cvtMesh = static_pointer_cast<GLTFMesh>(meshesVector[i]);
-                                serializedMeshes->setValue(cvtMesh->getID(), cvtMesh);
-                            }
-                            this->_asset->setValueForUniqueId(meshUID, meshes);
-                        }
+                    if (cvtMesh != nullptr) {
+                        this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
+                        this->_asset->setValueForUniqueId(meshUID, cvtMesh);
                     }
                 }
             }
@@ -857,6 +667,53 @@ namespace GLTF
         return samplerUID;
     }
     
+    
+    void COLLADA2GLTFWriter::_installTextureSlot(Sampler* sampler,
+                                                const std::string& slotName,
+                                                const std::string& texcoord,
+                                                shared_ptr <GLTFAsset> asset,
+                                                shared_ptr<GLTFEffect> cvtEffect)
+    {
+        assert(sampler);
+        assert(asset);
+        assert(cvtEffect);
+        shared_ptr <JSONObject> values = cvtEffect->getValues();
+        std::string originalImageUID = asset->getOriginalId(sampler->getSourceImage().toAscii());
+        GLTFProfile* profile = asset->profile().get();
+
+        cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
+        shared_ptr <JSONObject> slotObject(new JSONObject());
+        
+        //do we need to export a new texture ? if yes compose a new unique ID
+        slotObject->setUnsignedInt32(kType, profile->getGLenumForString("SAMPLER_2D"));
+        
+        //do we need a new sampler ?
+        std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
+                                                                  __GetGLWrapMode(sampler->getWrapT(), profile),
+                                                                  __GetFilterMode(sampler->getMinFilter(), profile),
+                                                                  __GetFilterMode(sampler->getMagFilter(), profile));
+        
+        std::string textureUID = "texture_" + originalImageUID;
+        shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
+        if (textures->contains(textureUID) == false) {
+            shared_ptr <JSONObject> textureObject(new JSONObject());
+            textureObject->setString(kSource, originalImageUID);
+            textureObject->setString("sampler", samplerUID);
+            textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
+            
+            if (CONFIG_BOOL(asset, "exportDefaultValues")) {
+                textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
+                //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
+                textureObject->setUnsignedInt32(kType, profile->getGLenumForString("UNSIGNED_BYTE"));
+            }
+            textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
+            textures->setValue(textureUID, textureObject);
+        }
+        
+        slotObject->setString("value", textureUID);
+        values->setValue(slotName, slotObject);
+    }
+    
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                                               std::string slotName,
                                               shared_ptr <GLTFEffect> cvtEffect,
@@ -886,7 +743,26 @@ namespace GLTF
             slot = commonProfile->getSpecular();
         else if (slotName == "reflective")
             slot = commonProfile->getReflective();
-        else
+        else if (slotName == "bump") {
+            //here we handle an extras slot
+            //for other extras, this will need refactoring
+            if (extras->contains("textures")) {
+                shared_ptr <JSONObject> textures = extras->getObject("textures");
+                if (textures->contains("bump")) {
+                    shared_ptr <JSONObject> bump = textures->getObject("bump");
+                    
+                    std::string texture = bump->getString("texture");
+                    std::string texcoord = bump->getString("texcoord");
+                    const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
+                    for (size_t i = 0 ; i < samplers.getCount() ; i++) {
+                        if (samplers[i]->getSid() == texture) {
+                            Sampler* sampler = (Sampler*)samplers[i];
+                            _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
+                        }
+                    }
+                }
+            }
+        } else
             return;
         
         //retrieve the type, parameterName -> symbol -> type
@@ -901,49 +777,15 @@ namespace GLTF
             }
             shared_ptr <JSONObject> slotObject(new JSONObject());
             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-            slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
+            slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
             values->setValue(slotName, slotObject);
             
         } else if (slot.isTexture()) {
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             Sampler* sampler = (Sampler*)samplers[texture.getSamplerId()];
-            std::string imageUID = uniqueIdWithType("image",sampler->getSourceImage());
-            
             std::string texcoord = texture.getTexcoord();
-            
-            cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
-            shared_ptr <JSONObject> slotObject(new JSONObject());
-            
-            //do we need to export a new texture ? if yes compose a new unique ID
-            slotObject->setUnsignedInt32("type", profile->getGLenumForString("SAMPLER_2D"));
-            
-            //do we need a new sampler ?
-            std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
-                                                                      __GetGLWrapMode(sampler->getWrapT(), profile),
-                                                                      __GetFilterMode(sampler->getMinFilter(), profile),
-                                                                      __GetFilterMode(sampler->getMagFilter(), profile));
-            
-            std::string textureUID = "texture_" + imageUID;
-            
-            shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
-            if (textures->contains(textureUID) == false) {
-                shared_ptr <JSONObject> textureObject(new JSONObject());
-                textureObject->setString("source", imageUID);
-                textureObject->setString("sampler", samplerUID);
-                textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
-                
-                if (CONFIG_BOOL("exportDefaultValues")) {
-                    textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
-                    //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
-                    textureObject->setUnsignedInt32("type", profile->getGLenumForString("UNSIGNED_BYTE"));
-                }
-                textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
-                textures->setValue(textureUID, textureObject);
-            }
-
-            slotObject->setString("value", textureUID);
-            values->setValue(slotName, slotObject);
+            _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
         } else {
             // nothing to do, no texture or color
         }
@@ -994,18 +836,19 @@ namespace GLTF
             handleEffectSlot(effectCommon,"emission" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
             handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
+            handleEffectSlot(effectCommon,"bump" , cvtEffect, extras);
             
-            if (CONFIG_BOOL("alwaysExportFilterColor")) {
+            if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
-                slotObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT_VEC4"));
+                slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
             
-            if (!isOpaque(effectCommon) || CONFIG_BOOL("alwaysExportTransparency")) {
+            if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
-                transparency->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
+                transparency->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 values->setValue("transparency", transparency);
             }
             
@@ -1016,7 +859,7 @@ namespace GLTF
                     shininess *= 128.0;
                 }
                 shared_ptr <JSONObject> shininessObject(new JSONObject());
-                shininessObject->setUnsignedInt32("type", profile->getGLenumForString("FLOAT"));
+                shininessObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 shininessObject->setDouble("value", shininess);
                 values->setValue("shininess", shininessObject);
             }
@@ -1040,7 +883,7 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> projectionObject(new GLTF::JSONObject());
 
-        std::string id = uniqueIdWithType("camera", camera->getUniqueId());
+        std::string id = uniqueIdWithType(kCamera, camera->getUniqueId());
         
         camerasObject->setValue(id, cameraObject);
         
@@ -1050,7 +893,7 @@ namespace GLTF
                 break;
             case Camera::ORTHOGRAPHIC:
             {
-                cameraObject->setString("type", "orthographic");
+                cameraObject->setString(kType, "orthographic");
                 cameraObject->setValue("orthographic", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
@@ -1080,7 +923,7 @@ namespace GLTF
                 break;
             case Camera::PERSPECTIVE:
             {
-                cameraObject->setString("type", "perspective");
+                cameraObject->setString(kType, "perspective");
                 cameraObject->setValue("perspective", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
@@ -1118,19 +961,14 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage ) {
-        shared_ptr <GLTF::JSONObject> images = this->_asset->root()->createObjectIfNeeded("images");
+        shared_ptr <GLTF::JSONObject> images = this->_asset->root()->createObjectIfNeeded(kImages);
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
         
-        std::string imageUID = uniqueIdWithType("image",openCOLLADAImage->getUniqueId());
+        std::string imageUID = openCOLLADAImage->getUniqueId().toAscii();
+        this->_asset->setValueForUniqueId(imageUID, image);
+        this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
+        images->setValue(openCOLLADAImage->getOriginalId(), image);
         
-        images->setValue(imageUID, image);
-        /*
-         bool relativePath = true;
-         if (pathDir.size() > 0) {
-         if ((pathDir[0] != '.') || (pathDir[0] == '/')) {
-         relativePath = false;
-         }
-         }*/
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
         std::string relPathFile = imageURI.getPathFile();
         
@@ -1140,7 +978,7 @@ namespace GLTF
             relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
         }
         image->setString("path", this->_asset->resourceOuputPathForPath(relPathFile));
-
+        
         return true;
 	}
     
@@ -1153,21 +991,21 @@ namespace GLTF
         COLLADAFW::Light::LightType lightType = light->getLightType();
 		Color color = light->getColor();
 
-        float constantAttenuation =  (float)light->getConstantAttenuation().getValue();
-        float linearAttenuation =  (float)light->getLinearAttenuation().getValue();
-        float quadraticAttenuation =  (float)light->getQuadraticAttenuation().getValue();
+        float constantAttenuation = (float)light->getConstantAttenuation().getValue();
+        float linearAttenuation = (float)light->getLinearAttenuation().getValue();
+        float quadraticAttenuation = (float)light->getQuadraticAttenuation().getValue();
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
         
         switch (lightType) {
             case COLLADAFW::Light::AMBIENT_LIGHT:
-                glTFLight->setString("type", "ambient");
+                glTFLight->setString(kType, "ambient");
                 break;
             case COLLADAFW::Light::DIRECTIONAL_LIGHT:
-                glTFLight->setString("type", "directional");
+                glTFLight->setString(kType, "directional");
                 break;
             case COLLADAFW::Light::POINT_LIGHT: {
-                glTFLight->setString("type", "point");
+                glTFLight->setString(kType, "point");
 
                 description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
                 description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
@@ -1175,7 +1013,7 @@ namespace GLTF
             }
                 break;
             case COLLADAFW::Light::SPOT_LIGHT: {
-                glTFLight->setString("type", "spot");
+                glTFLight->setString(kType, "spot");
 
                 float fallOffAngle =  (float)light->getFallOffAngle().getValue();
                 float fallOffExponent = (float)light->getFallOffExponent().getValue();
@@ -1193,11 +1031,11 @@ namespace GLTF
         }
         
         description->setValue("color", lightColor);
-        glTFLight->setValue(glTFLight->getString("type"), description);
+        glTFLight->setValue(glTFLight->getString(kType), description);
         
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
-        this->_asset->_uniqueIDToOriginalID[lightId] = light->getOriginalId();
+        this->_asset->setOriginalId(lightId, light->getOriginalId());
         
         shared_ptr<JSONArray> lightsIds = this->_asset->root()->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
@@ -1262,8 +1100,6 @@ namespace GLTF
         shared_ptr <GLTFSkin> glTFSkin(new GLTFSkin(skinControllerData->getOriginalId()));
         shared_ptr <GLTFProfile> profile = this->_asset->profile();
         
-        glTFSkin->extras()->setString("uniqueId", skinControllerData->getUniqueId().toAscii());
-        
         glTFSkin->setBindShapeMatrix(serializeOpenCOLLADAMatrix4(skinControllerData->getBindShapeMatrix()));
         
 		const COLLADAFW::UIntValuesArray& jointsPerVertex = skinControllerData->getJointsPerVertex();
@@ -1297,7 +1133,9 @@ namespace GLTF
             
 			if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT ) {
 				const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
-				for (size_t j = 0; j < pairCount; ++j, ++index) {
+				
+                
+                for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
                         bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
                         weightsPtr[(i * bucketSize) + j] = (*floatWeights)[weightIndices[index]];
@@ -1315,7 +1153,7 @@ namespace GLTF
 				}
 			}
         }
-        
+
         //inverse bind matrice
         const Matrix4Array& matrices = skinControllerData->getInverseBindMatrices();
         size_t matricesSize = sizeof(float) * 16 * skinControllerData->getJointsCount();
@@ -1355,17 +1193,12 @@ namespace GLTF
         jointsAttribute->setCount(vertexCount);
 
         glTFSkin->setJoints(jointsAttribute);
-
-        shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+        glTFSkin->setJointsCount(skinControllerData->getJointsCount());
+        
+        shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
          
         //Also we work around here what looks to be a bug in OpenCOLLADA with a fileId == 0
         COLLADAFW::UniqueId uniqueId = skinControllerData->getUniqueId();
-        if (uniqueId.getFileId() == 0) {
-            uniqueId = UniqueId(uniqueId.getClassId(), uniqueId.getObjectId(), 1);
-        }
-        if (uniqueId.getClassId() != COLLADAFW::COLLADA_TYPE::SKIN_DATA) {
-            uniqueId = UniqueId(COLLADAFW::COLLADA_TYPE::SKIN_DATA, uniqueId.getObjectId(), uniqueId.getFileId());
-        }        
         
         std::string skinUID = uniqueId.toAscii();
         skins->setValue(skinUID , glTFSkin);
@@ -1380,7 +1213,7 @@ namespace GLTF
         size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
 
-        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(        profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
         targetAttribute->setByteStride(meshAttribute->getByteStride());
         targetAttribute->setCount(vertexCount);
 
@@ -1403,52 +1236,43 @@ namespace GLTF
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
             
             //Now we get the skin and the mesh, and
-            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded("skins");
+            shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
             
             COLLADAFW::UniqueId uniqueId = skinController->getSkinControllerData().toAscii();
-            if (uniqueId.getFileId() == 0) {
-                uniqueId = UniqueId(uniqueId.getClassId(), uniqueId.getObjectId(), 1);
-            }
 
             shared_ptr <GLTFSkin> glTFSkin = static_pointer_cast<GLTFSkin>(skins->getValue(uniqueId.toAscii()));
-            shared_ptr<JSONArray> meshes = static_pointer_cast<JSONArray>(this->_asset->getValueForUniqueId(skinController->getSource().toAscii()));
+            shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(skinController->getSource().toAscii()));
+            this->_asset->setValueForUniqueId(controller->getUniqueId().toAscii(),
+                                              shared_ptr<JSONString> (new JSONString(uniqueId.toAscii())));
+            glTFSkin->setSourceUID(skinController->getSource().toAscii());
             
-            JSONValueVectorRef meshesVector = meshes->values();
-            size_t meshesCount = meshesVector.size();
+            unsigned int *remapTableForPositions = mesh->getRemapTableForPositions();
+            size_t vertexCount = mesh->getMeshAttribute(GLTF::POSITION, 0)->getCount();
+            //Now we remap the bone indices and weight attribute in respect of deindexing we have
             
-            for (size_t i = 0 ; i < meshesCount ; i++) {
-                shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshesVector[i]);
-                glTFSkin->setSourceUID(skinController->getSource().toAscii());
-                
-                unsigned int *remapTableForPositions = mesh->getRemapTableForPositions();
-                size_t vertexCount = mesh->getMeshAttribute(GLTF::POSITION, 0)->getCount();
-                //Now we remap the bone indices and weight attribute in respect of deindexing we have
-                
-                shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions, this->_asset->profile());
-                
-                mesh->setMeshAttribute(GLTF::WEIGHT, 0, weightsAttribute);
-                
-                shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions, this->_asset->profile());
-                
-                mesh->setMeshAttribute(GLTF::JOINT, 0, jointsAttribute);
-
-                
-                GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-                for (size_t i = 0 ; i < primitives.size() ; i++) {
-                    shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-                    primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::JOINT,0)));
-                    primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::WEIGHT,0)));
-                }
-                
-                //save the list of joints, first as uniqueIds, and then we will replace with sid's
-                shared_ptr <JSONArray> joints(new JSONArray());
-                UniqueIdArray& jointsUID = skinController->getJoints();
-                for (size_t i = 0 ; i < jointsUID.getCount() ; i++) {
-                    shared_ptr<JSONString> jointId(new JSONString(jointsUID[i].toAscii()));
-                    joints->appendValue(jointId);
-                }
-                glTFSkin->setJointsIds(joints);
+            shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions, this->_asset->profile());
+            
+            mesh->setMeshAttribute(GLTF::WEIGHT, 0, weightsAttribute);
+            
+            shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions, this->_asset->profile());
+            
+            mesh->setMeshAttribute(GLTF::JOINT, 0, jointsAttribute);
+            
+            GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
+            for (size_t i = 0 ; i < primitives.size() ; i++) {
+                shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::JOINT,0)));
+                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::WEIGHT,0)));
             }
+            
+            //save the list of joints, first as uniqueIds, and then we will replace with sid's
+            shared_ptr <JSONArray> joints(new JSONArray());
+            UniqueIdArray& jointsUID = skinController->getJoints();
+            for (size_t i = 0 ; i < jointsUID.getCount() ; i++) {
+                shared_ptr<JSONString> jointId(new JSONString(jointsUID[i].toAscii()));
+                joints->appendValue(jointId);
+            }
+            glTFSkin->setJointsIds(joints);
         }
 		return true;
 	}
