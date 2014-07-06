@@ -76,8 +76,10 @@ namespace GLTF
                 
         COLLADAFW::Root root(&this->_loader, this);
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-        if (!root.loadDocument(asset->getInputFilePath()))
+        if (!root.loadDocument(asset->getInputFilePath())) {
+            delete _extraDataHandler;
             return false;
+        }
         
         asset->write();
 
@@ -85,6 +87,7 @@ namespace GLTF
         GLTFUtils::resetIDCount();
         clearCommonProfileTechniqueCache();
                 
+        delete _extraDataHandler;
         return true;
 	}
     
