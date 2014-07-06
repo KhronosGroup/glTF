@@ -22,7 +22,7 @@ namespace GLTF
     }
 
     GLTFAccessorCache::~GLTFAccessorCache() {
-        delete this->m_pData;
+        delete[] this->m_pData;
     }
     
     bool GLTFAccessorCache::operator<(const GLTFAccessorCache& rhs) const {
