@@ -514,6 +514,10 @@ namespace GLTF
             this->_profile = profile;
             this->_instanceProgram = new GLSLProgram(profile);
         }
+
+        ~Pass() {
+            delete _instanceProgram;
+        }
         
         GLSLProgram* instanceProgram() {
             return this->_instanceProgram;
@@ -1206,6 +1210,10 @@ namespace GLTF
             
             vertexShader->appendCode("}\n");
             fragmentShader->appendCode("}\n");
+        }
+
+        ~Technique() {
+            delete _pass;
         }
         
         shared_ptr <GLTF::JSONObject> parameters() {

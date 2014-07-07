@@ -74,10 +74,12 @@ namespace GLTF
         asset->setExtras(this->_extraDataHandler->allExtras());
         asset->prepareForProfile(shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile()));
                 
-		COLLADAFW::Root root(&this->_loader, this);
+        COLLADAFW::Root root(&this->_loader, this);
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-		if (!root.loadDocument(asset->getInputFilePath()))
-			return false;
+        if (!root.loadDocument(asset->getInputFilePath())) {
+            delete _extraDataHandler;
+            return false;
+        }
         
         asset->write();
 
@@ -85,7 +87,8 @@ namespace GLTF
         GLTFUtils::resetIDCount();
         clearCommonProfileTechniqueCache();
                 
-		return true;
+        delete _extraDataHandler;
+        return true;
 	}
     
 	//--------------------------------------------------------------------
