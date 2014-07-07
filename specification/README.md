@@ -2,7 +2,7 @@
 <img src="figures/glTF_300.jpg" />
 </p>
 
-Version 0.6
+Version 0.8
 
 glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.
 
