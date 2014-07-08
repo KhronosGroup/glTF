@@ -29,6 +29,7 @@
 #include "GLTFOpenCOLLADAUtils.h"
 #include "GLTFExtraDataHandler.h"
 #include "COLLADASaxFWLLoader.h"
+#include "COLLADAFWFileInfo.h"
 #include "GLTF-Open3DGC.h"
 #include "profiles/webgl-1.0/GLTFWebGL_1_0_Profile.h"
 #include "GitSHA1.h"
@@ -51,7 +52,7 @@ namespace GLTF
      */
     COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
     _asset(asset),
-    _visualScene(0) {
+    _visualScene(0){
 	}
     
     /*
@@ -111,6 +112,8 @@ namespace GLTF
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         assetObject->setString(kProfile, asset->profile()->id());
         assetObject->setDouble(kVersion, glTFVersion);
+
+        asset->setDistanceScale(globalAsset->getUnit().getLinearUnitMeter());
 
         return true;
 	}
@@ -307,6 +310,11 @@ namespace GLTF
                 
         if (shouldExportTRS) {
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
+
+            // Scale distance units if we need to
+            translation[0] *= (float)_asset->getDistanceScale();
+            translation[1] *= (float)_asset->getDistanceScale();
+            translation[2] *= (float)_asset->getDistanceScale();
             
             bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
             bool exportTranslation = !(!exportDefaultValues &&
@@ -323,9 +331,11 @@ namespace GLTF
             
         } else {
             //FIXME: OpenCOLLADA typo
+            matrix.scaleTrans(_asset->getDistanceScale());
             bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
-            if (exportMatrix)
+            if (exportMatrix) {   
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
+            }
         }
         
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
@@ -953,8 +963,8 @@ namespace GLTF
                 break;
         }
         
-        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue());
-        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue());
+        projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue() * _asset->getDistanceScale());
+        projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue() * _asset->getDistanceScale());
         
 		return true;
 	}
