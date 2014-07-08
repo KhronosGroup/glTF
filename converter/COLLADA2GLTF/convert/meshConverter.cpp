@@ -88,13 +88,79 @@ namespace GLTF
         return bufferView;
     }
     
+
+    static void __ScaleOpenCOLLADAMeshVertexData(const COLLADAFW::MeshVertexData &vertexData, double distanceScale)
+    {
+        if (distanceScale == 1.0)
+            return;
+
+        size_t length;
+        size_t byteOffset = 0;
+        size_t inputLength = 0;
+
+        size_t setCount = vertexData.getNumInputInfos();
+        bool unpatchedOpenCOLLADA = (setCount == 0); // reliable heuristic to know if the input have not been set
+
+        if (unpatchedOpenCOLLADA)
+            setCount = 1;
+
+        for (size_t indexOfSet = 0; indexOfSet < setCount; indexOfSet++) {
+            if (!unpatchedOpenCOLLADA) {
+                inputLength = vertexData.getLength(indexOfSet);
+            }
+            else {
+                // for unpatched version of OpenCOLLADA we need this work-around.
+                inputLength = vertexData.getLength(0);
+            }
+
+            length = inputLength ? inputLength : vertexData.getValuesCount();
+            unsigned char *sourceData = 0;
+            size_t sourceSize = 0;
+
+            switch (vertexData.getType()) {
+            case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
+                const COLLADAFW::FloatArray* array = vertexData.getFloatValues();
+
+                sourceData = (unsigned char*)array->getData() + byteOffset;
+                sourceSize = length * sizeof(float);
+
+                float *floatSourceData = (float*)sourceData;
+                for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
+                {
+                    floatSourceData[indexFloat] *= (float)distanceScale;
+                }
+
+                byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+            }
+                break;
+            case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
+                const COLLADAFW::DoubleArray* array = vertexData.getDoubleValues();
+
+                sourceData = (unsigned char*)array->getData() + byteOffset;
+                sourceSize = length * sizeof(double);
+
+                double *doubleSourceData = (double*)sourceData;
+                for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
+                {
+                    doubleSourceData[indexFloat] *= distanceScale;
+                }
+
+                byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+            }
+                break;
+            default:
+            case COLLADAFW::MeshVertexData::DATA_TYPE_UNKNOWN:
+                //FIXME report error
+                break;
+            }
+        }
+    }
     
     static unsigned int __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData,
                                                                           GLTFMesh* mesh,
                                                                           GLTF::Semantic semantic,
                                                                           size_t allowedComponentsPerAttribute,
-                                                                          shared_ptr<GLTFProfile> profile,
-                                                                          double distanceScale = 1.0)
+                                                                          shared_ptr<GLTFProfile> profile)
     {
         // The following are OpenCOLLADA fmk issues preventing doing a totally generic processing of sources
         //1. "set"(s) other than texCoord don't have valid input infos
@@ -142,38 +208,20 @@ namespace GLTF
                     sourceData = (unsigned char*)array->getData() + byteOffset;
                     sourceSize = length * sizeof(float);
 
-                    if (distanceScale != 1.0)
-                    {
-                        float *floatSourceData = (float*)sourceData;
-                        for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
-                        {
-                            floatSourceData[indexFloat] *= (float)distanceScale;
-                        }
-                    }
-
                     byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                     break;
                 case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
-                    //FIXME: handle this
-                    /*
-                     sourceType = DOUBLE;
-                     
-                     const DoubleArray& array = vertexData.getDoubleValues()[indexOfSet];
-                     const size_t count = array.getCount();
-                     sourceData = (void*)array.getData();
-                     sourceSize = length * sizeof(double);
+                /*
+                    componentType = GLTF::DOUBLE;
+                    stride = sizeof(double) * componentsPerElement;
+                    const COLLADAFW::DoubleArray* array = vertexData.getDoubleValues();
 
-                     if (distanceScale != 1.0)
-                     {
-                         double *doubleSourceData = (double*)sourceData;
-                         for (size_t indexDouble = 0; indexDouble < length; ++indexDouble)
-                         {
-                            doubleSourceData[indexDouble] *= distanceScale;
-                         }
-                     }
-                     */
-                    // Warning if can't make "safe" conversion
+                    sourceData = (unsigned char*)array->getData() + byteOffset;
+                    sourceSize = length * sizeof(double);
+
+                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+                */
                 }
                     
                     break;
@@ -469,6 +517,8 @@ namespace GLTF
         
         std::vector< shared_ptr<IndicesVector> > allPrimitiveIndicesVectors;
                 
+        __ScaleOpenCOLLADAMeshVertexData(openCOLLADAMesh->getPositions(), asset->getDistanceScale());
+
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
             
@@ -507,7 +557,7 @@ namespace GLTF
                 
                 switch (semantic) {
                     case GLTF::POSITION:
-                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), cvtMesh.get(), GLTF::POSITION, 3, asset->profile(), asset->getDistanceScale());
+                        __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(openCOLLADAMesh->getPositions(), cvtMesh.get(), GLTF::POSITION, 3, asset->profile());
                         break;
                         
                     case GLTF::NORMAL:
