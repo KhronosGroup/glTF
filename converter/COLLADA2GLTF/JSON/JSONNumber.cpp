@@ -170,13 +170,17 @@ namespace GLTF
         return kJSONNumber;
     }
     
+    std::string JSONNumber::valueType() {
+        return "number";
+    }
+    
     bool JSONNumber::isEqualTo(JSONValue* value) {
         assert(value != nullptr);
         
         if (JSONValue::isEqualTo(value) == true)
             return true;
         
-        JSONNumber *numberValue = (JSONNumber*)(value);
+        //JSONNumber *numberValue = (JSONNumber*)(value);
 
         //FIXME:TODO        
         return true;

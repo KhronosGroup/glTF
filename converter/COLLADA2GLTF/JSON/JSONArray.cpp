@@ -99,6 +99,10 @@ namespace GLTF
         return kJSONArray;
     }
     
+    std::string JSONArray::valueType() {
+        return "array";
+    }
+    
     void JSONArray::apply(JSONValueApplierFunc func, void* context) {
         vector <shared_ptr <JSONValue> > values = this->values();
         size_t count = values.size();
@@ -106,7 +110,15 @@ namespace GLTF
             values[i]->apply(func, context);
         }
     }
-    
+
+    void JSONArray::apply(JSONValueApplier* applier, void* context) {
+        vector <shared_ptr <JSONValue> > values = this->values();
+        size_t count = values.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            values[i]->apply(applier, context);
+        }
+    }
+
     size_t JSONArray::getCount() {
         return this->_values.size();
     }

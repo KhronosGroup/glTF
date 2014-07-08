@@ -64,6 +64,8 @@ namespace GLTF
         
         void writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset);
         
+        virtual std::string valueType();
+
     private:
         std::string _id;
         std::string _originalID;

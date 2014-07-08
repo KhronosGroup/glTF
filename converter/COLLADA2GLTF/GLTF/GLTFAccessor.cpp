@@ -221,4 +221,8 @@ namespace GLTF
         return this->getUnsignedInt32(kType);
     }
 
+    std::string GLTFAccessor::valueType() {
+        return "accessor";
+    }
+
 }

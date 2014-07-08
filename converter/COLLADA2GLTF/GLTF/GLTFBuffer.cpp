@@ -84,9 +84,11 @@ namespace GLTF
         return this->_data;
     }
     
-    //--- GLTFBufferView    
-    
-    
+    std::string GLTFBuffer::valueType() {
+        return "buffer";
+    }
+
+    //--- GLTFBufferView
     
     GLTFBufferView::~GLTFBufferView() {
     }
@@ -159,4 +161,8 @@ namespace GLTF
         return bufferView;
     }
     
+    std::string GLTFBufferView::valueType() {
+        return "bufferView";
+    }
+
 }
