@@ -331,9 +331,9 @@ namespace GLTF
             
         } else {
             //FIXME: OpenCOLLADA typo
+            matrix.scaleTrans(_asset->getDistanceScale());
             bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
-            if (exportMatrix) {
-                matrix.scaleTrans(_asset->getDistanceScale());
+            if (exportMatrix) {   
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
             }
         }

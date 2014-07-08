@@ -166,7 +166,7 @@ namespace GLTF
 
                      if (distanceScale != 1.0)
                      {
-                         double *doubleSourceData = (float*)sourceData;
+                         double *doubleSourceData = (double*)sourceData;
                          for (size_t indexDouble = 0; indexDouble < length; ++indexDouble)
                          {
                             doubleSourceData[indexDouble] *= distanceScale;
