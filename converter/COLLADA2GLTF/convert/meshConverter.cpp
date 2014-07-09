@@ -478,10 +478,6 @@ namespace GLTF
             __AppendIndices(cvtPrimitive, primitiveIndicesVector, binormalIndices, TEXBINORMAL, 0);
         }
         
-        if (verticesCountArray) {
-            free(verticesCountArray);
-        }
-        
         //TODO:refactor
         if (openCOLLADAMeshPrimitive->hasTangentIndices()) {
             unsigned int triangulatedIndicesCount = 0;
