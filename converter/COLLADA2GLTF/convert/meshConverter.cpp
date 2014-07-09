@@ -526,9 +526,10 @@ namespace GLTF
             if ((primitiveType != COLLADAFW::MeshPrimitive::TRIANGLES) &&
                 //(primitiveType != COLLADAFW::MeshPrimitive::TRIANGLE_STRIPS) &&
                 (primitiveType != COLLADAFW::MeshPrimitive::POLYLIST) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS)) {
-                
-                
+                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS) &&
+                (primitiveType != COLLADAFW::MeshPrimitive::LINES) &&
+                (primitiveType != COLLADAFW::MeshPrimitive::LINE_STRIPS)) {
+
                 static bool printedOnce = false;
                 if (!printedOnce) {
                     if (asset->converterConfig()->boolForKeyPath("verboseLogging")) {
