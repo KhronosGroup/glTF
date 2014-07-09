@@ -5,6 +5,7 @@
 #include "GLTF-Open3DGC.h"
 #include "GLTFFlipUVModifier.h"
 #include "geometryHelpers.h"
+#include "../shaders/commonProfileShaders.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -12,7 +13,7 @@ using namespace std::tr1;
 using namespace std;
 
 namespace GLTF
-{
+{    
     bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
         GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -148,7 +149,11 @@ namespace GLTF
         return id;
     }
     
-    GLTFAsset::GLTFAsset():_isBundle(false) {
+	GLTFAsset::GLTFAsset() :
+        _isBundle(false),
+        _embedResources(false),
+        _distanceScale(1.0)
+    {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -190,14 +195,23 @@ namespace GLTF
 
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
-        if (this->_nameToOutputStream.count(streamName) == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            
-            std::string folder = outputURI.getPathDir();
-            std::string fileName = inputURI.getPathFileBase();
-            
-            shared_ptr<GLTFOutputStream> outputStream = shared_ptr <GLTFOutputStream> (new GLTFOutputStream(folder, streamName, ""));
+        if (this->_nameToOutputStream.count(streamName) == 0)
+		{
+			shared_ptr<GLTFOutputStream> outputStream;
+			if (_embedResources)
+			{
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
+			}
+			else
+			{
+				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
+				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+
+				std::string folder = outputURI.getPathDir();
+				std::string fileName = inputURI.getPathFileBase();
+
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
+			}
             this->_nameToOutputStream[streamName] = outputStream;
         }
         
@@ -210,8 +224,8 @@ namespace GLTF
             shared_ptr<GLTFOutputStream> outputStream = this->_nameToOutputStream[streamName];
             
             outputStream->close();
-            if (removeFile) {
-                remove(outputStream->outputPathCStr());
+			if (removeFile) {
+                outputStream->remove();
             }
             
             //FIXME: We keep it around as it's informations are still accessed once close
@@ -279,13 +293,13 @@ namespace GLTF
             outputBundlePathURI.setPath(inputPathURI.getPathDir(), outputBundlePathURI.getPathFileBase(), outputBundlePathURI.getPathExtension());
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
             
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
             //                this->log("outputBundlePath:%s\n",outputBundlePathURI.toNativePath().c_str());
             //                this->log("outputPath:%s\n",outputPathURI.toNativePath().c_str());
         } else {
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
         }
         COLLADABU::Utils::createDirectoryIfNeeded(this->_bundleOutputPath.c_str());
@@ -347,6 +361,26 @@ namespace GLTF
     std::string GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
     }
+
+	void GLTFAsset::setEmbedResources(bool embedResources)
+	{
+		this->_embedResources = embedResources;
+	}
+
+	bool GLTFAsset::getEmbedResources()
+	{
+		return this->_embedResources;
+	}
+
+    void GLTFAsset::setDistanceScale(double distanceScale)
+    {
+        this->_distanceScale = distanceScale;
+    }
+    
+    double GLTFAsset::getDistanceScale()
+    {
+        return this->_distanceScale;
+    }
     
     std::string GLTFAsset::pathRelativeToInputPath(const std::string& path) {
         if (GLTFUtils::isAbsolutePath(path) == true) {
@@ -367,7 +401,7 @@ namespace GLTF
                 std::vector <std::string> keys = images->getAllKeys();
                 for (size_t i = 0 ; i < imagesCount ; i++) {
                     shared_ptr<JSONObject> image = images->getObject(keys[i]);
-                    std::string path = image->getString("path");
+                    std::string path = image->getString("uri");
                     
                     std::string originalPath = this->_originalResourcesPath->getString(path);
                     
@@ -400,10 +434,47 @@ namespace GLTF
         this->_writer.initWithPath(this->getOutputFilePath().c_str());
     }
     
-    static void __eval(JSONValue* value, void *context) {
+    //FIXME:legacy
+    static void __eval(JSONValue* value, void* context) {
         value->evaluate(context);
     }
     
+    void GLTFAsset::evaluationWillStart(GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluate(JSONValue* value, GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
+        
+    }
+    
+    void GLTFAsset::_performValuesEvaluation() {
+
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationWillStart(this);
+        }
+
+        //these apply MUST be before the removeValue lightsIds that follows
+        this->_root->apply(__eval, this);
+        this->_root->apply(this, this);
+        this->_root->removeValue("lightsIds");
+        
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationDidComplete(this);
+        }
+        
+        this->_root->write(&this->_writer, this);
+    }
+
+    void GLTFAsset::apply(JSONValue* value, void *context) {
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluate(value, (GLTFAsset*)context);
+        }
+    }
+
     std::string GLTFAsset::getSharedBufferId() {
         if (this->_sharedBufferId.length() == 0) {
             COLLADABU::URI inputURI(this->getInputFilePath().c_str());
@@ -462,9 +533,7 @@ namespace GLTF
             }
             
             unsigned int indexOfSet = 0;
-            if (semantic == GLTF::TEXCOORD) {
-				indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
-            }
+            indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
             
             sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
         }
@@ -488,7 +557,7 @@ namespace GLTF
         double red = 1, green = 1, blue = 1, alpha = 1;
         shared_ptr <JSONObject> slotObject(new JSONObject());
         slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
-        slotObject->setUnsignedInt32("type", asset->profile()->getGLenumForString("FLOAT_VEC4"));
+        slotObject->setUnsignedInt32(kType, asset->profile()->getGLenumForString("FLOAT_VEC4"));
         values->setValue("diffuse", slotObject);
         
         shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
@@ -504,7 +573,8 @@ namespace GLTF
         return effect;
     }
     
-    static std::string buildKeyForMaterialBindingMap(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap) {
+    static std::string buildKeyForMaterialBindingMap(shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap,
+                                                     shared_ptr<JSONObject> meshExtras) {
         std::string materialBindingKey = "";
         size_t size = materialBindingPrimitiveMap->size();
         
@@ -513,6 +583,15 @@ namespace GLTF
             for (iterator = materialBindingPrimitiveMap->begin() ; iterator != materialBindingPrimitiveMap->end() ; iterator++) {
                 std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
                 materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
+                if (meshExtras != nullptr) {
+                    if (meshExtras->contains("double_sided")) {
+                        materialBindingKey += "doubleSided:1";
+                    }
+                    if (meshExtras->contains("jointsCount")) {
+                        unsigned int jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+                        materialBindingKey += "jointsCount:" + GLTFUtils::toString(jointsCount);
+                    }
+                }
             }
         }
         
@@ -526,7 +605,7 @@ namespace GLTF
         
         std::string meshOriginalID = mesh->getID();
         if (materialBindingsPrimitiveMap) {
-            std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap);
+            std::string materialBindingKey = buildKeyForMaterialBindingMap(materialBindingsPrimitiveMap, meshExtras);
             if (this->_meshesForMaterialBindingKey->contains(meshOriginalID) == false) {
                 shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->createObjectIfNeeded(meshOriginalID);
                 meshesForBindingKey->setValue(materialBindingKey, mesh);
@@ -602,18 +681,24 @@ namespace GLTF
                         }
                     }
                 }
-                
+                unsigned int jointsCount = 0;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
-                if ((meshExtras != nullptr) && meshExtras->contains("double_sided")) {
-                    techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                if (meshExtras != nullptr) {
+                    if (meshExtras->contains("double_sided")) {
+                        techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                    }
+                    if (meshExtras->contains("jointsCount")) {
+                        jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+                        techniqueExtras->setUnsignedInt32("jointsCount", jointsCount);
+                    }
                 }
+                
                 if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
                     techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
                 }
                 
                 //generate shaders if needed
                 shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                
                 shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
                 
                 techniqueGenerator->setString("lightingModel", effect->getLightingModel());
@@ -622,6 +707,20 @@ namespace GLTF
                 techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
                 techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
                 
+                if (effect->getTechniqueGenerator() != nullptr) {
+                    //here we have the same material that shared by different meshes.
+                    //some of these meshes have different number of bones
+                    //so, we'll have to clone the effect
+                    std::string techniqueKey = getTechniqueKey(techniqueGenerator, this);
+                    if (getTechniqueKey(effect->getTechniqueGenerator(), this) != techniqueKey) {
+                        shared_ptr<GLTFEffect> effectCopy = shared_ptr <GLTFEffect> (new GLTFEffect(*effect));
+                        effectCopy->setID(effect->getID() + "-variant-" + GLTFUtils::toString(materials->getKeysCount()));
+                        effect = effectCopy;
+                        if (materials->contains(effect->getID()) == false) {
+                            materials->setValue(effect->getID(), effect);
+                        }
+                    }
+                }
                 effect->setTechniqueGenerator(techniqueGenerator);
                 effect->setName(materialName);
                 primitive->setMaterialID(effect->getID());
@@ -660,6 +759,17 @@ namespace GLTF
         if (materialBindings == nullptr)
             return false;
         
+        size_t jointsCount = 0;
+        if (node->contains(kInstanceSkin)) {
+            shared_ptr <JSONObject> instanceSkin = node->getObject(kInstanceSkin);
+            if (instanceSkin->contains(kSkin)) {
+                std::string skinOriginalID = instanceSkin->getString(kSkin);
+                shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
+                std::vector <std::string> skinUIDs = skins->getAllKeys();
+                shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
+                jointsCount = skin->getJointsCount();
+            }
+        }
         shared_ptr <JSONArray> meshesArray = nullptr;
 
         MaterialBindingsForMeshUID::const_iterator materialBindingsIterator;
@@ -691,10 +801,15 @@ namespace GLTF
             }
             
             assert(meshesInSkinning || meshesInNode);
-            
+
             shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap = (*materialBindingsIterator).second;
-            
             shared_ptr<JSONObject> meshExtras = this->_extras->contains(meshUID) ? this->_extras->getObject(meshUID) : nullptr;
+            
+            if (jointsCount > 0) {
+                if (meshExtras == nullptr)
+                    meshExtras = shared_ptr <JSONObject> (new JSONObject());
+                meshExtras->setUnsignedInt32("jointsCount", jointsCount);
+            }
             
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
             
@@ -706,6 +821,17 @@ namespace GLTF
         }
         
         return true;
+    }
+
+    void GLTFAsset::addValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
+        this->_evaluators.push_back(evaluator);
+    }
+    
+    void GLTFAsset::removeValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
+        std::vector <std::shared_ptr<GLTFAssetValueEvaluator>>::iterator iter = std::find(this->_evaluators.begin(), this->_evaluators.end(), evaluator);
+        if (iter != this->_evaluators.end()) {
+            this->_evaluators.erase(iter);
+        }
     }
 
     void GLTFAsset::write() {
@@ -782,6 +908,17 @@ namespace GLTF
                 }
             }
         }
+        
+        // ----
+        shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
+        std::vector <std::string> skinsUIDs = skins->getAllKeys();
+        for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
+            shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
+            skins->setValue(skin->getId(), skin);
+            skins->removeValue(skinsUIDs[skinIndex]);
+        }
+        //we change the keys...
+        skinsUIDs = skins->getAllKeys();
         
         //Handle late binding of material in node
         //So we go through all nodes and if a mesh got different bindings than the ones needed we clone the "reference" mesh and assign the binding
@@ -932,11 +1069,7 @@ namespace GLTF
         }
 
         // ----
-        shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded("skins");
-        std::vector <std::string> skinsUIDs = skins->getAllKeys();
-        
         for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
-            
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
             shared_ptr<JSONArray> joints = skin->getJointsIds();
             shared_ptr<JSONArray> jointsWithOriginalSids(new JSONArray());
@@ -954,8 +1087,6 @@ namespace GLTF
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
             skin->setValue(kInverseBindMatrices, inverseBindMatrices);
-            skins->setValue(skin->getId(), skin);
-            skins->removeValue(skinsUIDs[skinIndex]);
         }
         
         // ----
@@ -990,7 +1121,7 @@ namespace GLTF
         this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            sharedBuffer->setString(kPath, this->getSharedBufferId() + ".bin");
+            sharedBuffer->setString(kUri, COLLADABU::URI::uriEncode(rawOutputStream->outputPath()));
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -998,7 +1129,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kPath, compressedBufferID + ".bin");
+            compressionBuffer->setString(kUri, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
@@ -1022,19 +1153,18 @@ namespace GLTF
         verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
-        //this apply MUST be before the removeValue lightsIds that follows
-        this->_root->apply(__eval, this);
-        this->_root->removeValue("lightsIds");
+        //to run legacy evaluate, to be removed
+        this->addValueEvaluator(shared_ptr<GLTFAssetValueEvaluator> (this));
         
-        this->_root->write(&this->_writer, this);
+        this->_performValuesEvaluation();
         
         rawOutputStream->close();
         if (compressionLength == 0) {
             this->closeOutputStream(kCompressionOutputStream, true);
         }
         
-        if (sharedBuffer->getByteLength() == 0)
-            remove(rawOutputStream->outputPathCStr());
+		if (sharedBuffer->getByteLength() == 0)
+            rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
 		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());

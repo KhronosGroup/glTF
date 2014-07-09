@@ -123,12 +123,12 @@ namespace GLTF
     
     shared_ptr<JSONArray> GLTFAccessor::min() {
         this->_computeMinMaxIfNeeded();        
-        return this->_min;
+        return this->createArrayIfNeeded("min");
     }
 
     shared_ptr<JSONArray> GLTFAccessor::max() {
         this->_computeMinMaxIfNeeded();
-        return this->_max;
+        return this->createArrayIfNeeded("max");
     }
     
     typedef struct {
@@ -219,6 +219,10 @@ namespace GLTF
     
     unsigned int GLTFAccessor::type() {
         return this->getUnsignedInt32(kType);
+    }
+
+    std::string GLTFAccessor::valueType() {
+        return "accessor";
     }
 
 }

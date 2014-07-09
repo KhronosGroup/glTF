@@ -83,6 +83,9 @@ namespace GLTF
         
         bool matchesLayout(GLTFAccessor* meshAttribute);
         void exposeMinMax();
+        
+        virtual std::string valueType();
+
     private:
         void _computeMinMaxIfNeeded();
         
@@ -92,8 +95,6 @@ namespace GLTF
         ComponentType           _componentType;
         size_t                  _elementByteLength;
         std::string             _ID;
-        std::shared_ptr<JSONArray>   _min;
-        std::shared_ptr<JSONArray>   _max;
         bool                    _minMaxDirty;
     };
 }

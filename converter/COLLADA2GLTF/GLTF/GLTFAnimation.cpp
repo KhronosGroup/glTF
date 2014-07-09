@@ -183,4 +183,9 @@ namespace GLTF
             free(rotations);
         }
     }
+    
+    std::string GLTFAnimation::valueType() {
+        return "animation";
+    }
+
 }

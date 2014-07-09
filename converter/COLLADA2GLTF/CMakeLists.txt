@@ -37,6 +37,10 @@ endif()
 # Lets libxml2 work in a shared library
 add_definitions(-DLIBXML_STATIC_FOR_DLL)
 
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64") 
+ ADD_DEFINITIONS(-fPIC) 
+ENDIF(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+
 include_directories(${COLLADA2GLTF_SOURCE_DIR})
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/GLTF)
 include_directories(${COLLADA2GLTF_SOURCE_DIR}/JSON)
@@ -101,6 +105,7 @@ set(GLTF_SOURCES
     GLTF/GLTFAccessor.cpp
     GLTF/GLTFBuffer.cpp
     GLTF/GLTFEffect.cpp
+    GLTF/GLTFExtras.cpp
     GLTF/GLTFMesh.cpp
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
@@ -113,6 +118,7 @@ set(GLTF_SOURCES
     GLTF/GLTFAccessor.h
     GLTF/GLTFBuffer.h
     GLTF/GLTFEffect.h
+    GLTF/GLTFExtras.h
     GLTF/GLTFMesh.h
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
@@ -140,6 +146,8 @@ set(GLTF_SOURCES
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+    helpers/encodingHelpers.h
+    helpers/encodingHelpers.cpp
 
     convert/meshConverter.cpp
     convert/meshConverter.h
@@ -171,6 +179,11 @@ LIST(APPEND GLTF_SOURCES
 endif()
 
 add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
+
+#Make sure the dll is in the same directory as the executable
+if (WIN32)
+    set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
+endif()
 
 if (PNG_FOUND AND ZLIB_FOUND)
     LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})

@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) Analytical Graphics, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,55 +21,16 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF__
-#define __GLTF__
+#ifndef __ENCODING_HELPERS__
+#define __ENCODING_HELPERS__
 
-#include "GLTF.h"
+#include <string>
 
-using namespace std;
-#if __cplusplus <= 199711L
-using namespace std::tr1;
-#endif
-
-namespace GLTF 
+namespace GLTF
 {
-    JSONString::JSONString() : JSONValue() {
-    }
-
-    JSONString::JSONString(const std::string& str) : JSONValue() {
-        this->_str = str;
-    }
-
-    JSONString::~JSONString() {
-    }        
-        
-    const char* JSONString::getCString() {
-        return this->_str.c_str();
-    }
-    
-    const std::string& JSONString::getString() {
-        return this->_str;
-    }
-    
-    JSONType JSONString::getJSONType() {
-        return kJSONString;
-    }
-    
-    std::string JSONString::valueType() {
-        return "string";
-    }
-    
-    bool JSONString::isEqualTo(JSONValue* value) {
-        assert(value != nullptr);
-
-        if (JSONValue::isEqualTo(value) == true)
-            return true;
-        
-        JSONString *stringValue = (JSONString*)(value);
-        
-        return this->_str == stringValue->getString();
-    }
-    
+	std::string base64_encode(const std::string& _data);
+	std::string base64_decode(const std::string& _str);
+	std::string create_dataUri(const std::string& content, const std::string& contentType = "application/octet-stream", bool base64Encode = true);
 }
-#endif
 
+#endif

@@ -46,11 +46,11 @@ namespace GLTF
 
     //--- Skin
     
-    GLTFSkin::GLTFSkin() : GLTFController() {
+    GLTFSkin::GLTFSkin() : GLTFController(), _jointsCount(0) {
         this->_id = GLTFUtils::generateIDForType(kSkin.c_str());
     }
 
-    GLTFSkin::GLTFSkin(std::string id) : GLTFController() {
+    GLTFSkin::GLTFSkin(std::string id) : GLTFController(), _jointsCount(0) {
         this->_id = id;
     }
 
@@ -112,6 +112,18 @@ namespace GLTF
     
     shared_ptr <GLTFBufferView> GLTFSkin::getInverseBindMatrices() {
         return this->_inverseBindMatrices;
+    }
+    
+    void GLTFSkin::setJointsCount(size_t count) {
+        this->_jointsCount = count;
+    }
+    
+    size_t GLTFSkin::getJointsCount() {
+        return this->_jointsCount;
+    }
+    
+    std::string GLTFSkin::valueType() {
+        return getType();
     }
     
 };

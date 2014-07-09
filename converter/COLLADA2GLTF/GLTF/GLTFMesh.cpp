@@ -195,9 +195,7 @@ namespace GLTF
 				GLTF::Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
                 std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
                 unsigned int indexOfSet = 0;
-                if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL) &&
-                    //FIXME: should not be required for JOINT and WEIGHT
-                    (semantic != GLTF::JOINT) && (semantic != GLTF::WEIGHT)) {
+                if ((semantic == GLTF::TEXCOORD) || (semantic == GLTF::COLOR)) {
 					indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
                     semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
                 }
@@ -207,4 +205,9 @@ namespace GLTF
             primitivesArray->appendValue(primitive);
         }
     }
+    
+    std::string GLTFMesh::valueType() {
+        return "mesh";
+    }
+
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Motorola Mobility, Inc.
+// Copyright (c) 2014, Fabrice Robinet.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -9,9 +9,6 @@
 //  * Redistributions in binary form must reproduce the above copyright
 //    notice, this list of conditions and the following disclaimer in the
 //    documentation and/or other materials provided with the distribution.
-//  * Neither the name of the Motorola Mobility, Inc. nor the names of its
-//    contributors may be used to endorse or promote products derived from this
-//    software without specific prior written permission.
 //
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -24,55 +21,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF__
-#define __GLTF__
-
 #include "GLTF.h"
 
-using namespace std;
+using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif
+using namespace std;
 
-namespace GLTF 
+namespace GLTF
 {
-    JSONString::JSONString() : JSONValue() {
+    GLTFExtras::GLTFExtras(const std::string& ID): JSONObject(),
+    _ID(ID) {
     }
 
-    JSONString::JSONString(const std::string& str) : JSONValue() {
-        this->_str = str;
+    GLTFExtras::GLTFExtras() {
     }
-
-    JSONString::~JSONString() {
-    }        
-        
-    const char* JSONString::getCString() {
-        return this->_str.c_str();
+                        
+    const std::string& GLTFExtras::getID() {
+        return this->_ID;
     }
     
-    const std::string& JSONString::getString() {
-        return this->_str;
+    /*
+    void GLTFEffect::setName(const std::string& name) {
+        this->setString(kName, name);
     }
     
-    JSONType JSONString::getJSONType() {
-        return kJSONString;
+    std::string GLTFEffect::getName() {
+        return this->getString(kName);
     }
-    
-    std::string JSONString::valueType() {
-        return "string";
-    }
-    
-    bool JSONString::isEqualTo(JSONValue* value) {
-        assert(value != nullptr);
-
-        if (JSONValue::isEqualTo(value) == true)
-            return true;
-        
-        JSONString *stringValue = (JSONString*)(value);
-        
-        return this->_str == stringValue->getString();
-    }
-    
+    */
 }
-#endif
-
