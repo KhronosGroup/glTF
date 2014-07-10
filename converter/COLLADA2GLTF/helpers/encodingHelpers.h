@@ -31,6 +31,8 @@ namespace GLTF
 	std::string base64_encode(const std::string& _data);
 	std::string base64_decode(const std::string& _str);
 	std::string create_dataUri(const std::string& content, const std::string& contentType = "application/octet-stream", bool base64Encode = true);
+    bool is_dataUri(const std::string& _str);
+    std::string decode_dataUri(const std::string& uri);
 }
 
 #endif

@@ -59,14 +59,25 @@ namespace GLTF
     {
 #ifdef USE_LIBPNG
         bool hasAlpha = false;
-        std::ifstream source;
+        std::shared_ptr<std::istream> source;
+        if (is_dataUri(path))
+        {
+            std::stringstream* sin = new std::stringstream();
+            sin->str(decode_dataUri(path));
+            source.reset(sin);
+        }
+        else
+        {
+            std::ifstream* fin = new std::ifstream();
+            fin->open(path, ios::in | ios::binary);
+            source.reset(fin);
+        }
         
-        source.open(path, ios::in | ios::binary);
         //        printf("path:%s\n",path);
         png_byte pngsig[PNGSIGSIZE];
         int isPNG = 0;
-        source.read((char*)pngsig, PNGSIGSIZE);
-        if (!source.good())
+        source->read((char*)pngsig, PNGSIGSIZE);
+        if (!source->good())
             return false;
         isPNG = png_sig_cmp(pngsig, 0, PNGSIGSIZE) == 0;
         if (isPNG) {
@@ -74,7 +85,7 @@ namespace GLTF
             if (pngPtr) {
                 png_infop infoPtr = png_create_info_struct(pngPtr);
                 if (infoPtr) {
-                    png_set_read_fn(pngPtr,(png_voidp)&source, userReadData);
+                    png_set_read_fn(pngPtr,(png_voidp)source.get(), userReadData);
                     png_set_sig_bytes(pngPtr, PNGSIGSIZE);
                     png_read_info(pngPtr, infoPtr);
                     png_uint_32 color_type = png_get_color_type(pngPtr, infoPtr);
@@ -93,8 +104,6 @@ namespace GLTF
                 }
             }
         }
-        
-        source.close();
         
         return hasAlpha;
 #else
