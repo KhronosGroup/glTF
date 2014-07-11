@@ -517,19 +517,18 @@ namespace GLTF
 
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
-            
             const COLLADAFW::MeshPrimitive::PrimitiveType primitiveType = primitives[i]->getPrimitiveType();
             if ((primitiveType != COLLADAFW::MeshPrimitive::TRIANGLES) &&
                 //(primitiveType != COLLADAFW::MeshPrimitive::TRIANGLE_STRIPS) &&
                 (primitiveType != COLLADAFW::MeshPrimitive::POLYLIST) &&
                 (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::LINES) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::LINE_STRIPS)) {
+                //(primitiveType != COLLADAFW::MeshPrimitive::LINE_STRIPS) &&
+                (primitiveType != COLLADAFW::MeshPrimitive::LINES)) {
 
                 static bool printedOnce = false;
                 if (!printedOnce) {
                     if (asset->converterConfig()->boolForKeyPath("verboseLogging")) {
-                        asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                        asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST, POLYGONS and LINES\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
                         printedOnce = true;
                     }
                 }
