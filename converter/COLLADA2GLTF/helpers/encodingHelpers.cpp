@@ -151,4 +151,31 @@ namespace GLTF
 
 		return result;
 	}
+
+    bool is_dataUri(const std::string& _str)
+    {
+        return _str.find("data:") == 0;
+    }
+
+    std::string decode_dataUri(const std::string& uri)
+    {
+        std::string result;
+        if (is_dataUri(uri))
+        {
+            std::string::size_type pos = uri.find(',');
+            if (pos != std::string::npos)
+            {
+                if (uri.find(";base64") < pos)
+                {
+                    result = base64_decode(uri.substr(pos + 1));
+                }
+                else
+                {
+                    result = uri.substr(pos + 1);
+                }
+            }
+        }
+
+        return result;
+    }
 }
