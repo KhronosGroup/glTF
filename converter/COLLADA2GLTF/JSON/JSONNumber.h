@@ -29,7 +29,7 @@
 
 namespace GLTF 
 {
-    class JSONNumber : public JSONValue {
+    class COLLADA2GLTF_EXPORT JSONNumber : public JSONValue {
     private:
         JSONNumber():JSONValue(), _type(NOT_A_NUMBER) {}
         

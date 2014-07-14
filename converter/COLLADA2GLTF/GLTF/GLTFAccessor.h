@@ -46,7 +46,7 @@ namespace GLTF
         void* /* context */
     );
     
-    class GLTFAccessor : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFAccessor : public JSONObject {
     private:
         void _generateID();
 
