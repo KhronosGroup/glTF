@@ -67,11 +67,13 @@ if (USE_OPEN3DGC)
     include_directories(${COLLADA2GLTF_SOURCE_DIR}/dependencies/o3dgc/src/o3dgc_decode_lib/inc)
 endif()
 
-if (NOT WIN32)
-    find_package(PNG REQUIRED)
+find_package(PNG)
+if (PNG_FOUND)
     include_directories(${PNG_INCLUDE_DIR})
-    find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIR})
+    add_definitions(-DUSE_LIBPNG)
+else()
+    message(WARNING "libpng or one of its dependencies couldn't be found. Transparency may not be correctly detected.")
 endif()
 
 link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
@@ -143,6 +145,8 @@ set(GLTF_SOURCES
     helpers/geometryHelpers.cpp
     helpers/mathHelpers.h
     helpers/mathHelpers.cpp
+    helpers/encodingHelpers.h
+    helpers/encodingHelpers.cpp
 
     convert/meshConverter.cpp
     convert/meshConverter.h
@@ -180,9 +184,8 @@ if (WIN32)
     set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
 endif()
 
-
-if (NOT WIN32)
-LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
+if (PNG_FOUND)
+    LIST(APPEND TARGET_LIBS ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
 if (USE_OPEN3DGC)

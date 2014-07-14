@@ -123,4 +123,8 @@ namespace GLTF
         this->_uniqueIndices = indices;
     }
     
+    std::string GLTFPrimitive::valueType() {
+        return "primitive";
+    }
+
 };

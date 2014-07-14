@@ -88,6 +88,73 @@ namespace GLTF
         return bufferView;
     }
     
+
+    static void __ScaleOpenCOLLADAMeshVertexData(const COLLADAFW::MeshVertexData &vertexData, double distanceScale)
+    {
+        if (distanceScale == 1.0)
+            return;
+
+        size_t length;
+        size_t byteOffset = 0;
+        size_t inputLength = 0;
+
+        size_t setCount = vertexData.getNumInputInfos();
+        bool unpatchedOpenCOLLADA = (setCount == 0); // reliable heuristic to know if the input have not been set
+
+        if (unpatchedOpenCOLLADA)
+            setCount = 1;
+
+        for (size_t indexOfSet = 0; indexOfSet < setCount; indexOfSet++) {
+            if (!unpatchedOpenCOLLADA) {
+                inputLength = vertexData.getLength(indexOfSet);
+            }
+            else {
+                // for unpatched version of OpenCOLLADA we need this work-around.
+                inputLength = vertexData.getLength(0);
+            }
+
+            length = inputLength ? inputLength : vertexData.getValuesCount();
+            unsigned char *sourceData = 0;
+            size_t sourceSize = 0;
+
+            switch (vertexData.getType()) {
+            case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
+                const COLLADAFW::FloatArray* array = vertexData.getFloatValues();
+
+                sourceData = (unsigned char*)array->getData() + byteOffset;
+                sourceSize = length * sizeof(float);
+
+                float *floatSourceData = (float*)sourceData;
+                for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
+                {
+                    floatSourceData[indexFloat] *= (float)distanceScale;
+                }
+
+                byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+            }
+                break;
+            case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
+                const COLLADAFW::DoubleArray* array = vertexData.getDoubleValues();
+
+                sourceData = (unsigned char*)array->getData() + byteOffset;
+                sourceSize = length * sizeof(double);
+
+                double *doubleSourceData = (double*)sourceData;
+                for (size_t indexFloat = 0; indexFloat < length; ++indexFloat)
+                {
+                    doubleSourceData[indexFloat] *= distanceScale;
+                }
+
+                byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+            }
+                break;
+            default:
+            case COLLADAFW::MeshVertexData::DATA_TYPE_UNKNOWN:
+                //FIXME report error
+                break;
+            }
+        }
+    }
     
     static unsigned int __ConvertOpenCOLLADAMeshVertexDataToGLTFAccessors(const COLLADAFW::MeshVertexData &vertexData,
                                                                           GLTFMesh* mesh,
@@ -141,20 +208,20 @@ namespace GLTF
                     sourceData = (unsigned char*)array->getData() + byteOffset;
                     sourceSize = length * sizeof(float);
 
-                     byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
                 }
                     break;
                 case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
-                    //FIXME: handle this
-                    /*
-                     sourceType = DOUBLE;
-                     
-                     const DoubleArray& array = vertexData.getDoubleValues()[indexOfSet];
-                     const size_t count = array.getCount();
-                     sourceData = (void*)array.getData();
-                     sourceSize = length * sizeof(double);
-                     */
-                    // Warning if can't make "safe" conversion
+                /*
+                    componentType = GLTF::DOUBLE;
+                    stride = sizeof(double) * componentsPerElement;
+                    const COLLADAFW::DoubleArray* array = vertexData.getDoubleValues();
+
+                    sourceData = (unsigned char*)array->getData() + byteOffset;
+                    sourceSize = length * sizeof(double);
+
+                    byteOffset += sourceSize; //Doh! - OpenCOLLADA store all sets contiguously in the same array
+                */
                 }
                     
                     break;
@@ -446,20 +513,22 @@ namespace GLTF
         
         std::vector< shared_ptr<IndicesVector> > allPrimitiveIndicesVectors;
                 
+        __ScaleOpenCOLLADAMeshVertexData(openCOLLADAMesh->getPositions(), asset->getDistanceScale());
+
         // get all primitives
         for (size_t i = 0 ; i < primitiveCount ; i++) {
-            
             const COLLADAFW::MeshPrimitive::PrimitiveType primitiveType = primitives[i]->getPrimitiveType();
             if ((primitiveType != COLLADAFW::MeshPrimitive::TRIANGLES) &&
                 //(primitiveType != COLLADAFW::MeshPrimitive::TRIANGLE_STRIPS) &&
                 (primitiveType != COLLADAFW::MeshPrimitive::POLYLIST) &&
-                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS)) {
-                
-                
+                (primitiveType != COLLADAFW::MeshPrimitive::POLYGONS) &&
+                //(primitiveType != COLLADAFW::MeshPrimitive::LINE_STRIPS) &&
+                (primitiveType != COLLADAFW::MeshPrimitive::LINES)) {
+
                 static bool printedOnce = false;
                 if (!printedOnce) {
                     if (asset->converterConfig()->boolForKeyPath("verboseLogging")) {
-                        asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST and POLYGONS\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
+                        asset->log("WARNING: some primitives failed to convert\nCurrently supported are TRIANGLES, POLYLIST, POLYGONS and LINES\nMore: https://github.com/KhronosGroup/glTF/issues/129\nand https://github.com/KhronosGroup/glTF/issues/135\n");
                         printedOnce = true;
                     }
                 }

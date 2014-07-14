@@ -45,6 +45,7 @@ namespace GLTF
 {
     class GLTFObject;
     class ExtraDataHandler;
+    class JSONObject;
         
     // -- SceneFlattening
     
@@ -196,6 +197,7 @@ namespace GLTF
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
         std::ofstream _compressedDataOutputStream;
+        std::shared_ptr<GLTF::JSONObject> _rootTransform;
 	};
 } 
 

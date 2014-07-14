@@ -584,15 +584,11 @@ namespace GLTF
     {
         shared_ptr <GLTFMesh> destinationMesh = nullptr;
         bool splitNeeded = sourceMesh->getMeshAttribute(GLTF::POSITION, 0)->getCount()  >= maximumIndicesCount;
-        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
-        
-        for (size_t i = 0 ; i < primitives.size() ; i++) {
-            shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-        }
-        
         if (!splitNeeded)
             return nullptr;
         
+        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
+
         SubMeshContext *subMesh = nullptr;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
@@ -607,7 +603,6 @@ namespace GLTF
                 continue;
             
             if (subMesh == nullptr) {
-                
                 if (targetMesh == nullptr) {
                     subMesh = __CreateSubMeshContext(sourceMesh->getID());
                     targetMesh = subMesh->targetMesh;
@@ -680,6 +675,32 @@ namespace GLTF
                     
                         nextPrimitiveIndex++;
                     } else {
+                        allNextPrimitiveIndices[i] = -1;
+                        primitiveCompleted = true;
+                        break;
+                    }
+                }
+            }
+            else if (primitive->getPrimitive() == profile->getGLenumForString("LINES")) {
+                unsigned int indicesPerElementCount = 2;
+                primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
+                for (j = nextPrimitiveIndex; j < primitiveCount; j++) {
+                    unsigned int *indicesPtrAtPrimitiveIndex = indicesPtr + (j * indicesPerElementCount);
+                    //will we still have room to store coming indices from this mesh ?
+                    //note: this is tied to the policy described above in (*)
+                    size_t currentSize = subMesh->indexToRemappedIndex.size();
+                    if ((currentSize + indicesPerElementCount) < maximumIndicesCount) {
+                        __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+
+                        //build the indices for the primitive to be added to the subMesh
+                        targetIndicesPtr[targetIndicesCount] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[0]];
+                        targetIndicesPtr[targetIndicesCount + 1] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[1]];
+
+                        targetIndicesCount += indicesPerElementCount;
+
+                        nextPrimitiveIndex++;
+                    }
+                    else {
                         allNextPrimitiveIndices[i] = -1;
                         primitiveCompleted = true;
                         break;

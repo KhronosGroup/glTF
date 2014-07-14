@@ -13,7 +13,7 @@ using namespace std::tr1;
 using namespace std;
 
 namespace GLTF
-{
+{    
     bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
         GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
@@ -149,7 +149,11 @@ namespace GLTF
         return id;
     }
     
-    GLTFAsset::GLTFAsset():_isBundle(false) {
+	GLTFAsset::GLTFAsset() :
+        _isBundle(false),
+        _embedResources(false),
+        _distanceScale(1.0)
+    {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -191,14 +195,23 @@ namespace GLTF
 
     shared_ptr<GLTFOutputStream> GLTFAsset::createOutputStreamIfNeeded(const std::string& streamName) {
 
-        if (this->_nameToOutputStream.count(streamName) == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-            
-            std::string folder = outputURI.getPathDir();
-            std::string fileName = inputURI.getPathFileBase();
-            
-            shared_ptr<GLTFOutputStream> outputStream = shared_ptr <GLTFOutputStream> (new GLTFOutputStream(folder, streamName, ""));
+        if (this->_nameToOutputStream.count(streamName) == 0)
+		{
+			shared_ptr<GLTFOutputStream> outputStream;
+			if (_embedResources)
+			{
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
+			}
+			else
+			{
+				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
+				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+
+				std::string folder = outputURI.getPathDir();
+				std::string fileName = inputURI.getPathFileBase();
+
+				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
+			}
             this->_nameToOutputStream[streamName] = outputStream;
         }
         
@@ -211,8 +224,8 @@ namespace GLTF
             shared_ptr<GLTFOutputStream> outputStream = this->_nameToOutputStream[streamName];
             
             outputStream->close();
-            if (removeFile) {
-                remove(outputStream->outputPathCStr());
+			if (removeFile) {
+                outputStream->remove();
             }
             
             //FIXME: We keep it around as it's informations are still accessed once close
@@ -280,13 +293,13 @@ namespace GLTF
             outputBundlePathURI.setPath(inputPathURI.getPathDir(), outputBundlePathURI.getPathFileBase(), outputBundlePathURI.getPathExtension());
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
             
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase() + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
             //                this->log("outputBundlePath:%s\n",outputBundlePathURI.toNativePath().c_str());
             //                this->log("outputPath:%s\n",outputPathURI.toNativePath().c_str());
         } else {
             this->_bundleOutputPath = outputBundlePathURI.toNativePath();
-            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "json");
+            COLLADABU::URI outputPathURI(outputBundlePathURI.getURIString() + "/" + outputBundlePathURI.getPathFileBase()  + "." + "gltf");
             this->_outputFilePath = outputPathURI.toNativePath();
         }
         COLLADABU::Utils::createDirectoryIfNeeded(this->_bundleOutputPath.c_str());
@@ -348,6 +361,26 @@ namespace GLTF
     std::string GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
     }
+
+	void GLTFAsset::setEmbedResources(bool embedResources)
+	{
+		this->_embedResources = embedResources;
+	}
+
+	bool GLTFAsset::getEmbedResources()
+	{
+		return this->_embedResources;
+	}
+
+    void GLTFAsset::setDistanceScale(double distanceScale)
+    {
+        this->_distanceScale = distanceScale;
+    }
+    
+    double GLTFAsset::getDistanceScale()
+    {
+        return this->_distanceScale;
+    }
     
     std::string GLTFAsset::pathRelativeToInputPath(const std::string& path) {
         if (GLTFUtils::isAbsolutePath(path) == true) {
@@ -368,7 +401,7 @@ namespace GLTF
                 std::vector <std::string> keys = images->getAllKeys();
                 for (size_t i = 0 ; i < imagesCount ; i++) {
                     shared_ptr<JSONObject> image = images->getObject(keys[i]);
-                    std::string path = image->getString("path");
+                    std::string path = image->getString(kURI);
                     
                     std::string originalPath = this->_originalResourcesPath->getString(path);
                     
@@ -401,10 +434,47 @@ namespace GLTF
         this->_writer.initWithPath(this->getOutputFilePath().c_str());
     }
     
-    static void __eval(JSONValue* value, void *context) {
+    //FIXME:legacy
+    static void __eval(JSONValue* value, void* context) {
         value->evaluate(context);
     }
     
+    void GLTFAsset::evaluationWillStart(GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluate(JSONValue* value, GLTFAsset* asset) {
+    }
+    
+    void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
+        
+    }
+    
+    void GLTFAsset::_performValuesEvaluation() {
+
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationWillStart(this);
+        }
+
+        //these apply MUST be before the removeValue lightsIds that follows
+        this->_root->apply(__eval, this);
+        this->_root->apply(this, this);
+        this->_root->removeValue("lightsIds");
+        
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluationDidComplete(this);
+        }
+        
+        this->_root->write(&this->_writer, this);
+    }
+
+    void GLTFAsset::apply(JSONValue* value, void *context) {
+        size_t count = this->_evaluators.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            this->_evaluators[i]->evaluate(value, (GLTFAsset*)context);
+        }
+    }
+
     std::string GLTFAsset::getSharedBufferId() {
         if (this->_sharedBufferId.length() == 0) {
             COLLADABU::URI inputURI(this->getInputFilePath().c_str());
@@ -753,6 +823,17 @@ namespace GLTF
         return true;
     }
 
+    void GLTFAsset::addValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
+        this->_evaluators.push_back(evaluator);
+    }
+    
+    void GLTFAsset::removeValueEvaluator(std::shared_ptr<GLTFAssetValueEvaluator> evaluator) {
+        std::vector <std::shared_ptr<GLTFAssetValueEvaluator>>::iterator iter = std::find(this->_evaluators.begin(), this->_evaluators.end(), evaluator);
+        if (iter != this->_evaluators.end()) {
+            this->_evaluators.erase(iter);
+        }
+    }
+
     void GLTFAsset::write() {
         ifstream inputCompression;
         
@@ -1040,7 +1121,9 @@ namespace GLTF
         this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            sharedBuffer->setString(kPath, this->getSharedBufferId() + ".bin");
+            
+            COLLADABU::URI uri(rawOutputStream->outputPath());
+            sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -1048,7 +1131,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kPath, compressedBufferID + ".bin");
+            compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
@@ -1072,19 +1155,18 @@ namespace GLTF
         verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
         
         //---
-        //this apply MUST be before the removeValue lightsIds that follows
-        this->_root->apply(__eval, this);
-        this->_root->removeValue("lightsIds");
+        //to run legacy evaluate, to be removed
+        this->addValueEvaluator(shared_ptr<GLTFAssetValueEvaluator> (this));
         
-        this->_root->write(&this->_writer, this);
+        this->_performValuesEvaluation();
         
         rawOutputStream->close();
         if (compressionLength == 0) {
             this->closeOutputStream(kCompressionOutputStream, true);
         }
         
-        if (sharedBuffer->getByteLength() == 0)
-            remove(rawOutputStream->outputPathCStr());
+		if (sharedBuffer->getByteLength() == 0)
+            rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
 		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());

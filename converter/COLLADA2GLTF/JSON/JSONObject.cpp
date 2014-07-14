@@ -279,6 +279,10 @@ namespace GLTF
         return kJSONObject;
     }
     
+    std::string JSONObject::valueType() {
+        return "object";
+    }
+
     void JSONObject::apply(JSONValueApplierFunc func, void* context) {
         JSONValue::apply(func, context);
         
@@ -290,8 +294,19 @@ namespace GLTF
                 value->apply(func, context);
         }
     }
-
     
+    void JSONObject::apply(JSONValueApplier* applier, void* context) {
+        JSONValue::apply(applier, context);
+        
+        vector <std::string> keys = this->getAllKeys();
+        size_t count = keys.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            shared_ptr <JSONValue> value = this->getValue(keys[i]);
+            if (value)
+                value->apply(applier, context);
+        }
+    }
+
     bool JSONObject::isEqualTo(JSONValue* value) {
         assert(value != nullptr);
         

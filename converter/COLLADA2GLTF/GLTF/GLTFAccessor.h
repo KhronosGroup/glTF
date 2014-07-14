@@ -83,6 +83,9 @@ namespace GLTF
         
         bool matchesLayout(GLTFAccessor* meshAttribute);
         void exposeMinMax();
+        
+        virtual std::string valueType();
+
     private:
         void _computeMinMaxIfNeeded();
         

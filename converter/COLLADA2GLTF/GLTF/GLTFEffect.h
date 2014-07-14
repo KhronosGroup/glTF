@@ -60,7 +60,8 @@ namespace GLTF
         SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
         
         void evaluate(void *context);
-        
+        virtual std::string valueType();
+
     private:
         std::string _ID;
         std::string _lightingModel;

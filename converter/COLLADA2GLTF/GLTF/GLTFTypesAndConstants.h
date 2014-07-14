@@ -29,13 +29,13 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-const float glTFVersion = 0.6f;
+const float glTFVersion = 0.7f;
 
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
 const std::string kByteStride = "byteStride";
 const std::string kByteLength = "byteLength";
-const std::string kPath = "path";
+const std::string kURI = "uri";
 const std::string kType = "type";
 const std::string kBufferView = "bufferView";
 const std::string kBufferViews = "bufferViews";
