@@ -29,7 +29,7 @@ namespace GLTF
     class GLTFAnimationFlattener;
     class GLTFAsset;
         
-    class GLTFAnimation : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFAnimation : public JSONObject {
     public:
         GLTFAnimation();
         virtual ~GLTFAnimation();

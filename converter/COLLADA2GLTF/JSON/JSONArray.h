@@ -29,7 +29,7 @@
 
 namespace GLTF 
 {
-    class JSONArray : public JSONValue {
+    class COLLADA2GLTF_EXPORT JSONArray : public JSONValue {
         friend class JSONObject;
         
     private:

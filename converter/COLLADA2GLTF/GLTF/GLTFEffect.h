@@ -33,7 +33,7 @@ namespace GLTF
     typedef std::shared_ptr<SemanticArray> SemanticArrayPtr;
     typedef std::map<std::string /* texcoord */, SemanticArrayPtr > TexCoordToSemanticsArrayPtr;
     
-    class GLTFEffect : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFEffect : public JSONObject {
         
     public:
         GLTFEffect(const std::string &ID);

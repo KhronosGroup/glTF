@@ -47,7 +47,7 @@ namespace GLTF
         size_t _indexOfSet;
     };
         
-    class GLTFPrimitive : public JSONObject
+    class COLLADA2GLTF_EXPORT GLTFPrimitive : public JSONObject
     {
     public:
         GLTFPrimitive();

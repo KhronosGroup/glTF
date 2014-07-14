@@ -882,7 +882,7 @@ namespace GLTF
             }
         }
         
-        this->assetModifiers().push_back(shared_ptr<GLTFFlipUVModifier> (new GLTFFlipUVModifier()));
+        this->assetModifiers().insert(this->assetModifiers().begin(), shared_ptr<GLTFFlipUVModifier>(new GLTFFlipUVModifier()));
         
         this->launchModifiers();
         

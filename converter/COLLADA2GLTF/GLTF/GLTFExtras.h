@@ -26,7 +26,7 @@
 
 namespace GLTF 
 {
-        class GLTFExtras : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFExtras : public JSONObject {
         
     public:
         GLTFExtras(const std::string &ID);

@@ -34,7 +34,7 @@
 
 namespace GLTF 
 {
-    class GLTFBuffer : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFBuffer : public JSONObject {
     private:
         GLTFBuffer();
     public:
@@ -56,7 +56,7 @@ namespace GLTF
         bool _ownData;
     };
     
-    class GLTFBufferView : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFBufferView : public JSONObject {
     public:
         GLTFBufferView();
         GLTFBufferView(std::shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
