@@ -36,7 +36,7 @@ namespace GLTF
     typedef std::map<unsigned int /* IndexSet */, std::shared_ptr<GLTF::GLTFAccessor> > IndexSetToMeshAttributeHashmap;
     typedef std::map<GLTF::Semantic , IndexSetToMeshAttributeHashmap > SemanticToMeshAttributeHashmap;
     
-    class GLTFMesh : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFMesh : public JSONObject {
     public:
         GLTFMesh();
         GLTFMesh(const GLTFMesh &mesh);

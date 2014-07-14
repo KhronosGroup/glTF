@@ -30,7 +30,7 @@ namespace GLTF
      *
      *
      */
-    class GLTFAssetModifier {
+    class COLLADA2GLTF_EXPORT GLTFAssetModifier {
     public:
         virtual bool init() { return true; };
         virtual void modify(std::shared_ptr<JSONObject> glTFAsset) = 0;

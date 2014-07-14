@@ -26,7 +26,7 @@
 
 namespace GLTF 
 {
-    class GLTFController : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFController : public JSONObject {
     public:
         GLTFController();
         virtual ~GLTFController();
@@ -37,7 +37,7 @@ namespace GLTF
         std::shared_ptr<JSONObject> _extras;
     };
 
-    class GLTFSkin : public GLTFController
+    class COLLADA2GLTF_EXPORT GLTFSkin : public GLTFController
     {
     public:
         GLTFSkin();
