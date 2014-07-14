@@ -1068,13 +1068,13 @@ namespace GLTF
 					contentType = "image/jpeg";
 				}
 
-				image->setString("uri", create_dataUri(ss.str(), contentType));
+				image->setString(kURI, create_dataUri(ss.str(), contentType));
 
 				return true;
 			}
 		}
 		
-        image->setString("uri", COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
+        image->setString(kURI, COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
         
         return true;
 	}

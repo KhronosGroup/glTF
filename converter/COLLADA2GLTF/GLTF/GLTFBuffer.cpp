@@ -69,7 +69,7 @@ namespace GLTF
         //FIXME:this would be better somewhere else..
         GLTFAsset* asset = (GLTFAsset*)context;
         
-        this->setString(kUri, COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(this->getString(kUri))));
+        this->setString(kURI, COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(this->getString(kURI))));
     }
     
     size_t GLTFBuffer::getByteLength() {
