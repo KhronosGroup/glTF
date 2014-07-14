@@ -681,6 +681,32 @@ namespace GLTF
                     }
                 }
             }
+            else if (primitive->getPrimitive() == profile->getGLenumForString("LINES")) {
+                unsigned int indicesPerElementCount = 2;
+                primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
+                for (j = nextPrimitiveIndex; j < primitiveCount; j++) {
+                    unsigned int *indicesPtrAtPrimitiveIndex = indicesPtr + (j * indicesPerElementCount);
+                    //will we still have room to store coming indices from this mesh ?
+                    //note: this is tied to the policy described above in (*)
+                    size_t currentSize = subMesh->indexToRemappedIndex.size();
+                    if ((currentSize + indicesPerElementCount) < maximumIndicesCount) {
+                        __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+
+                        //build the indices for the primitive to be added to the subMesh
+                        targetIndicesPtr[targetIndicesCount] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[0]];
+                        targetIndicesPtr[targetIndicesCount + 1] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[1]];
+
+                        targetIndicesCount += indicesPerElementCount;
+
+                        nextPrimitiveIndex++;
+                    }
+                    else {
+                        allNextPrimitiveIndices[i] = -1;
+                        primitiveCompleted = true;
+                        break;
+                    }
+                }
+            }
             
             allNextPrimitiveIndices[i] = nextPrimitiveIndex;
 
