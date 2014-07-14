@@ -401,7 +401,7 @@ namespace GLTF
                 std::vector <std::string> keys = images->getAllKeys();
                 for (size_t i = 0 ; i < imagesCount ; i++) {
                     shared_ptr<JSONObject> image = images->getObject(keys[i]);
-                    std::string path = image->getString("uri");
+                    std::string path = image->getString(kURI);
                     
                     std::string originalPath = this->_originalResourcesPath->getString(path);
                     
@@ -1121,7 +1121,9 @@ namespace GLTF
         this->_root->setValue("buffers", buffersObject);
         
         if (sharedBuffer->getByteLength() > 0) {
-            sharedBuffer->setString(kUri, COLLADABU::URI::uriEncode(rawOutputStream->outputPath()));
+            
+            COLLADABU::URI uri(rawOutputStream->outputPath());
+            sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -1129,7 +1131,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kUri, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
+            compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else

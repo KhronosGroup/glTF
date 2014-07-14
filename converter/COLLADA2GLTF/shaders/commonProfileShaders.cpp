@@ -182,7 +182,7 @@ namespace GLTF
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
-                    std::string imagePath = image->getString("uri");
+                    std::string imagePath = image->getString(kURI);
                     COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
                     std::string imageFullPath = inputURI.getPathDir() + imagePath;
                     if (imageHasAlpha(imageFullPath.c_str()))
@@ -319,12 +319,12 @@ namespace GLTF
 			shaderObject->setUnsignedInt32("type", type);
 			if (asset->getEmbedResources())
 			{
-				shaderObject->setString("uri", create_dataUri(shaderString, "text/plain"));
+				shaderObject->setString(kURI, create_dataUri(shaderString, "text/plain"));
 			}
 			else
 			{
 				std::string path = shaderId + ".glsl";
-                shaderObject->setString("uri", COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(path)));
+                shaderObject->setString(kURI, COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(path)));
 				//also write the file on disk
 				if (shaderString.size() > 0) {
 					COLLADABU::URI outputURI(asset->getOutputFilePath());
