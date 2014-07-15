@@ -40,15 +40,21 @@
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
 
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 13
+#define OPTIONS_COUNT 15
 #else
-#define OPTIONS_COUNT 11
+#define OPTIONS_COUNT 13
 #endif
 
 
@@ -77,7 +83,9 @@ static const OptionDescriptor options[] = {
 #endif
     { "v",              no_argument,        "-v -> print version" },
     { "s",              no_argument,        "-s -> experimental mode"},
-	{ "h",              no_argument,        "-h -> help" }
+	{ "h",              no_argument,        "-h -> help" },
+	{ "r",              no_argument,        "-r -> verbose logging" },
+	{ "e",				no_argument,		"-e -> embed all resources as Data URIs" }
 };
 
 static void buildOptions() {
@@ -127,8 +135,6 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     bool hasInputPath = false;
     bool shouldShowHelp = false;
     
-    //asset->configObject = shared_ptr<GLTF::JSONObject> (new GLTF::JSONObject());
-    //asset->configObject
     buildOptions();
     
     if (argc == 1) {
@@ -138,14 +144,14 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     if (argc == 2) {
         if (fileExists(argv[1])) {
             asset->setInputFilePath(argv[1]);
-            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
+            asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
             return true;
         }
     }
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhs", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsre", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -162,7 +168,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 hasOutputPath = true;
 				break;
             case 'o':
-                asset->setOutputFilePath(replacePathExtensionWith(optarg, "json"));
+                asset->setOutputFilePath(replacePathExtensionWith(optarg, "gltf"));
                 hasOutputPath = true;
 				break;
             case 'i':
@@ -215,7 +221,14 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                 converterConfig->config()->setBool("useDefaultLight", false);
                 converterConfig->config()->setBool("optimizeParameters", true);
                 break;
-                
+            case 'r':
+                converterConfig->config()->setBool("verboseLogging", true);
+                break;
+               
+			case 'e':
+				converterConfig->config()->setBool("embedResources", true);
+				asset->setEmbedResources(true);
+				break;
 			default:
                 shouldShowHelp = true;
 				break;
@@ -228,8 +241,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     }
     
     if (!hasOutputPath & hasInputPath) {
-        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "json"));
-        
+        asset->setOutputFilePath(replacePathExtensionWith(asset->getInputFilePath(), "gltf"));
     }
     
     return true;
@@ -242,13 +254,19 @@ int main (int argc, char * const argv[]) {
         if (asset->getInputFilePath().length() == 0) {
             return -1;
         }
-        const char* inputFilePathCStr = asset->getInputFilePath().c_str();
-        
-        if (!fileExists(asset->getInputFilePath().c_str())) {
+        char* inputFilePathCStr = strdup(asset->getInputFilePath().c_str());
+
+        if (!fileExists(inputFilePathCStr)) {
+            free(inputFilePathCStr);
             printf("path:%s does not exists or is not accessible, please check file path and permissions\n",inputFilePathCStr);
             return -1;
         }
-        
+#ifndef WIN32 || WIN64
+        struct stat attr;
+        if (stat(inputFilePathCStr, &attr) != -1) {
+            asset->convertionMetaData()->setString("date", ctime(&attr.st_ctime));
+        }
+#endif
         clock_t start = clock();
         if (asset->converterConfig()->config()->getBool("outputProgress")) {
             asset->log("convertion 0%%");
@@ -270,8 +288,11 @@ int main (int argc, char * const argv[]) {
         double clocks = CLOCKS_PER_SEC;
 #endif
         std::stringstream s;
-        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << float(clock() - start) / clocks ;
+        double elapsedTime = clock() - start;
+        s << std::setiosflags(std::ios::fixed) << std::setprecision(2) << elapsedTime / clocks ;
         asset->log("Runtime: %s seconds\n", s.str().c_str());
+        
+        free(inputFilePathCStr);
     }
     return 0;
 }

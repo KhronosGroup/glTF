@@ -8,6 +8,12 @@
 
 #include "GLTF-Open3DGC.h"
 
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 namespace GLTF
 {    
     
@@ -126,8 +132,8 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 3;
                                     shared_ptr <COLLADAFW::Translate> translate(new COLLADAFW::Translate(translations[offset + 0],
-                                                                                                         translations[offset + 1],
-                                                                                                         translations[offset + 2]));
+                                                                                                            translations[offset + 1],
+                                                                                                            translations[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, translate, timeValues[k]);
                                 }
                             } else if (path == "scale") {
@@ -138,36 +144,35 @@ namespace GLTF
                                 for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
                                     size_t offset = k * 3;
                                     shared_ptr <COLLADAFW::Scale> scale(new COLLADAFW::Scale(scales[offset + 0],
-                                                                                             scales[offset + 1],
-                                                                                             scales[offset + 2]));
+                                                                                                scales[offset + 1],
+                                                                                                scales[offset + 2]));
                                     animationFlattener->insertTransformAtTime(transformID, scale, timeValues[k]);
                                 }
                             }
                         }
                     }
-                }
-                
+                }                
                 return true;
             case COLLADAFW::AnimationList::ANGLE: {
                     //the angles to radians necessary convertion is done within the animationFlattener
                     //but it might be better to make it before...
-                    for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                    for (size_t animatedTargetIndex = 0; animatedTargetIndex < animatedTargets->size(); animatedTargetIndex++) {
                         shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                         std::string targetID = animatedTarget->getString(kTarget);
                         if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                             cvtAnimation->targets()->setValue(targetID, animatedTarget);
-                            
+
                             std::string path = animatedTarget->getString("path");
                             if (path == "rotation") {
                                 std::string transformID = animatedTarget->getString("transformId");
                                 ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
-                                
+
                                 float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                                 float* rotations = (float*)bufferView->getBufferDataByApplyingOffset();
-                                for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                                for (size_t k = 0; k < cvtAnimation->getCount(); k++) {
                                     animationFlattener->insertValueAtTime(transformID, rotations[k], 3, timeValues[k]);
                                 }
-                            }                             
+                            }
                         }
                     }
                 }
@@ -177,19 +182,19 @@ namespace GLTF
             case COLLADAFW::AnimationList::POSITION_Z:
             {
                 int index = animationClass - COLLADAFW::AnimationList::POSITION_X;
-                for (size_t animatedTargetIndex = 0 ; animatedTargetIndex < animatedTargets->size() ; animatedTargetIndex++) {
+                for (size_t animatedTargetIndex = 0; animatedTargetIndex < animatedTargets->size(); animatedTargetIndex++) {
                     shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[animatedTargetIndex];
                     std::string targetID = animatedTarget->getString(kTarget);
                     if (asset->_uniqueIDToOpenCOLLADAObject.count(targetID) != 0) {
                         cvtAnimation->targets()->setValue(targetID, animatedTarget);
                         std::string path = animatedTarget->getString("path");
                         std::string transformID = animatedTarget->getString("transformId");
-                        
+
                         ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID);
-                        
+
                         float* timeValues = (float*)timeBufferView->getBufferDataByApplyingOffset();
                         float* values = (float*)bufferView->getBufferDataByApplyingOffset();
-                        for (size_t k = 0 ; k < cvtAnimation->getCount() ; k++) {
+                        for (size_t k = 0; k < cvtAnimation->getCount(); k++) {
                             animationFlattener->insertValueAtTime(transformID, values[k], index, timeValues[k]);
                         }
                     }
@@ -213,30 +218,80 @@ namespace GLTF
                 }
                 break;
         }
-        
+
         return false;
     }
-    
+
     shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset)
     {
         shared_ptr <GLTFAnimation> cvtAnimation(new GLTFAnimation());
         if (animation->getAnimationType() == COLLADAFW::Animation::ANIMATION_CURVE) {
             shared_ptr <JSONObject> animationParameters = cvtAnimation->parameters();
-            
+
             const COLLADAFW::AnimationCurve *animationCurve = (const COLLADAFW::AnimationCurve*)animation;
-            
+
             //This needs to be fixed when re-working: https://github.com/KhronosGroup/glTF/issues/158
             //especially, this point: "by default the converter should replicate COLLADA animations layout (not yet done), but an option should allow to have one animation per target. (this is actually the case)."
 
             std::string animationID = uniqueIdWithType(kAnimation, animation->getUniqueId());
-            
+
             cvtAnimation->setID(animationID);
-            
+
             cvtAnimation->setCount(animationCurve->getKeyCount());
-            
+
             /** Returns the input values of the animation. */
             const COLLADAFW::FloatOrDoubleArray &inputArray = animationCurve->getInputValues();
             const COLLADAFW::FloatOrDoubleArray &outputArray = animationCurve->getOutputValues();
+
+            // Scales any distance values if needed
+            if (asset->getDistanceScale() != 1.0)
+            {
+                bool bNeedsScale = false;
+                const COLLADAFW::PhysicalDimensionArray& dimensions = animationCurve->getOutPhysicalDimensions();
+                size_t numDimensions = animationCurve->getOutDimension();
+                for (size_t dimIndex = 0; dimIndex < numDimensions; ++dimIndex)
+                {
+                    if (dimensions[dimIndex] == COLLADAFW::PHYSICAL_DIMENSION_LENGTH)
+                    {
+                        bNeedsScale = true;
+                        break;
+                    }
+                }
+
+                if (bNeedsScale)
+                {
+                    switch (outputArray.getType()) {
+                    case COLLADAFW::MeshVertexData::DATA_TYPE_FLOAT: {
+                        COLLADAFW::FloatArray* array = const_cast<COLLADAFW::FloatArray*>(outputArray.getFloatValues());
+                        float* fArray = array->getData();
+                        for (size_t index = 0; index < array->getCount(); ++index)
+                        {
+                            if (dimensions[index % numDimensions] == COLLADAFW::PHYSICAL_DIMENSION_LENGTH)
+                            {
+                                fArray[index] *= (float)asset->getDistanceScale();
+                            }
+                        }
+                    }
+                        break;
+                    case COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE: {
+                        COLLADAFW::DoubleArray* array = const_cast<COLLADAFW::DoubleArray*>(outputArray.getDoubleValues());
+                        double* dArray = array->getData();
+                        for (size_t index = 0; index < array->getCount(); ++index)
+                        {
+                            if (dimensions[index % numDimensions] == COLLADAFW::PHYSICAL_DIMENSION_LENGTH)
+                            {
+                                dArray[index] *= asset->getDistanceScale();
+                            }
+                        }
+                    }
+                        break;
+                    default:
+                    case COLLADAFW::MeshVertexData::DATA_TYPE_UNKNOWN:
+                        //FIXME report error
+                        break;
+                    };
+                }
+            }
             
             const std::string originalID = animationCurve->getOriginalId();
             

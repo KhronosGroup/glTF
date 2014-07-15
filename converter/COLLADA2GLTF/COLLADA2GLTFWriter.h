@@ -28,6 +28,7 @@
 #define __COLLADA2JSONWRITER_H__
 
 #include "GLTF.h"
+#include "COLLADA2GLTFExport.h"
 #include "GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
 
@@ -36,10 +37,15 @@
 #include "convert/animationConverter.h"
 #include "convert/meshConverter.h"
 
+#ifdef WIN32
+#pragma warning(disable: 4275)
+#endif
+
 namespace GLTF
 {
     class GLTFObject;
     class ExtraDataHandler;
+    class JSONObject;
         
     // -- SceneFlattening
     
@@ -59,8 +65,8 @@ namespace GLTF
     };
     
     
-    typedef std::vector < shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
-        
+    typedef std::vector < std::shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
+    
     typedef struct 
     {
         BBOX sceneBBOX;
@@ -69,20 +75,20 @@ namespace GLTF
     
     //-- OpenCOLLADA -> JSON writer implementation
     
-	class COLLADA2GLTFWriter : public COLLADAFW::IWriter
+	class COLLADA2GLTF_EXPORT COLLADA2GLTFWriter : public COLLADAFW::IWriter
 	{
 	public:        
-		COLLADA2GLTFWriter(shared_ptr<GLTF::GLTFAsset> asset);
+		COLLADA2GLTFWriter(std::shared_ptr<GLTF::GLTFAsset> asset);
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
-        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
+        bool writeNode(const COLLADAFW::Node* node, std::shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
         bool writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                   COLLADAFW::MaterialBindingArray &materialBindings,
-                                                  shared_ptr <GLTF::JSONArray> &meshesArray);
+                                                  std::shared_ptr <GLTF::JSONArray> &meshesArray);
         
 	public:        
         
@@ -165,24 +171,33 @@ namespace GLTF
 		virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene ){return true;};
         
 	private:
-        void registerObjectWithOriginalUID(std::string nodeUID, shared_ptr <JSONObject> nodeObject, shared_ptr <JSONObject> nodesObject);
+        void _installTextureSlot(COLLADAFW::Sampler* sampler,
+                                 const std::string& slotName,
+                                 const std::string& texcoord,
+                                 std::shared_ptr <GLTF::GLTFAsset> asset,
+                                 std::shared_ptr<GLTF::GLTFEffect> cvtEffect);
+        
+        void _storeMaterialBindingArray(const std::string& prefix,
+                                        const std::string& nodeUID,
+                                        const std::string& meshUID,
+                                        COLLADAFW::MaterialBindingArray &materialBindings);
+        void registerObjectWithOriginalUID(std::string nodeUID, std::shared_ptr <JSONObject> nodeObject, std::shared_ptr <JSONObject> nodesObject);
         bool writeData(std::string filename, unsigned char* data, size_t length);
         void handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
                               std::string slotName,
-                              shared_ptr <GLTFEffect> cvtEffect,
-                              shared_ptr<JSONObject> extras);
+                              std::shared_ptr <GLTFEffect> cvtEffect,
+                              std::shared_ptr<JSONObject> extras);
         
         std::string getSamplerUIDForParameters(unsigned int wrapS, unsigned int wrapT, unsigned int minFilter, unsigned int maxFilter);
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        shared_ptr<GLTF::GLTFAsset> _asset;
+        std::shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
-        GLTF::GLTFWriter _resultsWriter;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-
         std::ofstream _compressedDataOutputStream;
+        std::shared_ptr<GLTF::JSONObject> _rootTransform;
 	};
 } 
 

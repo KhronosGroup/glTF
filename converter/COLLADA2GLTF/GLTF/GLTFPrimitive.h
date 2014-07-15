@@ -47,7 +47,7 @@ namespace GLTF
         size_t _indexOfSet;
     };
         
-    class GLTFPrimitive : public JSONObject
+    class COLLADA2GLTF_EXPORT GLTFPrimitive : public JSONObject
     {
     public:
         GLTFPrimitive();
@@ -70,14 +70,17 @@ namespace GLTF
         size_t getVertexAttributesCount();
         
         VertexAttributeVector getVertexAttributes();
-        void appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute);
+        void appendVertexAttribute(std::shared_ptr <JSONVertexAttribute> VertexAttribute);
         
-        shared_ptr <GLTF::GLTFAccessor>  getIndices();
-        void setIndices(shared_ptr <GLTF::GLTFAccessor> indices);
+        std::shared_ptr <GLTF::GLTFAccessor>  getIndices();
+        void setIndices(std::shared_ptr <GLTF::GLTFAccessor> indices);
         
-    private:                
+        std::shared_ptr<GLTFPrimitive> clone();
+        virtual std::string valueType();
+
+    private:
         unsigned int _materialObjectID;
-        shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
+        std::shared_ptr <GLTF::GLTFAccessor> _uniqueIndices;
         VertexAttributeVector _allVertexAttributes;
     };
 

@@ -4,6 +4,7 @@
 #ifndef __GLTFANIMATIONCONVERTER_H__
 #define __GLTFANIMATIONCONVERTER_H__
 
+#include "GLTF.h"
 #include "../GLTFOpenCOLLADA.h"
 #include "mathHelpers.h"
 
@@ -11,12 +12,12 @@ namespace GLTF
 {    
     //a few helper classes to help flattening animations
     
-    typedef std::map<std::string , shared_ptr<COLLADAFW::Transformation> > IDToTransform;
+    typedef std::map<std::string , std::shared_ptr<COLLADAFW::Transformation> > IDToTransform;
     
     class GLTFTransformKey {
     public:
         
-        GLTFTransformKey(double time, shared_ptr<COLLADAFW::Transformation> transform, std::string transformID) {
+        GLTFTransformKey(double time, std::shared_ptr<COLLADAFW::Transformation> transform, std::string transformID) {
             this->_subTransforms[transformID] = transform;
             this->_time = time;
         }
@@ -46,7 +47,7 @@ namespace GLTF
     
     class GLTFAnimationFlattener {
     private:
-        void _updateTransformByReplacingValueAtIndex(shared_ptr<COLLADAFW::Transformation> transform, size_t index, float value)
+        void _updateTransformByReplacingValueAtIndex(std::shared_ptr<COLLADAFW::Transformation> transform, size_t index, float value)
         {
             switch (transform->getTransformationType()) {
                 case COLLADAFW::Transformation::ROTATE:
@@ -114,10 +115,10 @@ namespace GLTF
             }
         }
         
-        shared_ptr<COLLADAFW::Transformation> _cloneTransformByReplacingValueAtIndex(std::string transformID, size_t index, float value)
+        std::shared_ptr<COLLADAFW::Transformation> _cloneTransformByReplacingValueAtIndex(std::string transformID, size_t index, float value)
         {
-            shared_ptr<COLLADAFW::Transformation> transform = _idToTransform[transformID];
-            shared_ptr<COLLADAFW::Transformation> clonedTransform(transform->clone());
+            std::shared_ptr<COLLADAFW::Transformation> transform = _idToTransform[transformID];
+            std::shared_ptr<COLLADAFW::Transformation> clonedTransform(transform->clone());
             
             _updateTransformByReplacingValueAtIndex(clonedTransform, index, value);
             
@@ -127,7 +128,7 @@ namespace GLTF
     public:
         
         GLTFAnimationFlattener(COLLADAFW::Node *node) {
-            this->_transformsOrder = shared_ptr <std::vector<std::string> > (new std::vector<std::string>);
+            this->_transformsOrder = std::shared_ptr <std::vector<std::string> > (new std::vector<std::string>);
             const COLLADAFW::TransformationPointerArray& transformations = node->getTransformations();
             size_t transformationsCount = transformations.getCount();
             int index = 0;
@@ -139,7 +140,7 @@ namespace GLTF
             _idIndex = (int*)malloc(sizeof(int) * transformationsCount);
             for (size_t i = 0 ; i < transformationsCount ; i++) {
                 const COLLADAFW::Transformation* tr = transformations[i];
-                shared_ptr<COLLADAFW::Transformation> clonedTransform(tr->clone());
+                std::shared_ptr<COLLADAFW::Transformation> clonedTransform(tr->clone());
                 const COLLADAFW::UniqueId& animationListID = tr->getAnimationList();
                 if (animationListID.isValid()) {                    
                     _idIndex[i] = index++;
@@ -195,7 +196,7 @@ namespace GLTF
             float *previousAxisAngle = 0;
             float axisAngle[4];
             for (size_t i = 0 ; i < _transforms.size() ; i++) {
-                shared_ptr<GLTFTransformKey> key = this->_transforms[i];
+                std::shared_ptr<GLTFTransformKey> key = this->_transforms[i];
 
                 if ((i > 0) && (rotations != 0)) {
                     previousAxisAngle = rotations + ((i-1) * 4);
@@ -268,7 +269,7 @@ namespace GLTF
             }
         }
         
-        void transformWasInserted(shared_ptr<COLLADAFW::Transformation> tr) {
+        void transformWasInserted(std::shared_ptr<COLLADAFW::Transformation> tr) {
             switch (tr->getTransformationType()) {
                 case COLLADAFW::Transformation::MATRIX:
                     this->_hasAnimatedScale = this->_hasAnimatedTranslation = this->_hasAnimatedRotation = true;
@@ -289,14 +290,14 @@ namespace GLTF
         }
         
         //to be used for whole matrices and angle axis
-        void insertTransformAtTime(std::string transformID, shared_ptr<COLLADAFW::Transformation> transformation, double time) {
+        void insertTransformAtTime(std::string transformID, std::shared_ptr<COLLADAFW::Transformation> transformation, double time) {
             transformWasInserted(transformation);
             if (_transforms.size() == 0) {
-                shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
             } else {
                 for (size_t i = 0 ; i < _transforms.size() ; i++) {
-                    shared_ptr<GLTFTransformKey> key = _transforms[i];
+                    std::shared_ptr<GLTFTransformKey> key = _transforms[i];
                     if (time == key->getTime()) {
                         if ( (*key->subTransforms()).count(transformID) > 0) {
                             printf("INCONSISTENCY ERROR: overlap\n");
@@ -305,16 +306,16 @@ namespace GLTF
                         return;
                     } else if (time > key->getTime()) {
                         if (i + 1 == _transforms.size()) {
-                            shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                            std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.push_back(key);
                             return;
                         } else if (time < _transforms[i+1]->getTime()) {
-                            shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                            std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.insert(_transforms.begin() + i, key);
                             return;
                         }
                     } else {
-                        shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                        std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                         _transforms.insert(_transforms.begin() + i, key);
                         return;
                     }
@@ -323,17 +324,17 @@ namespace GLTF
         }
         
         void insertValueAtTime(std::string transformID, float value, size_t index, double time) {
-            shared_ptr <COLLADAFW::Transformation> transformation;
+            std::shared_ptr <COLLADAFW::Transformation> transformation;
             if (_transforms.size() == 0) {
                 transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                 
-                shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                 _transforms.push_back(key);
                 transformWasInserted(transformation);
                 return;
             } else {
                 for (size_t i = 0 ; i < _transforms.size() ; i++) {
-                    shared_ptr<GLTFTransformKey> key = _transforms[i];
+                    std::shared_ptr<GLTFTransformKey> key = _transforms[i];
                     if (time == key->getTime()) {
                         if ( (*key->subTransforms()).count(transformID) > 0) {
                             transformation = (*key->subTransforms())[transformID];
@@ -348,14 +349,14 @@ namespace GLTF
                         if (i + 1 == _transforms.size()) {
                             transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             
-                            shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                            std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.push_back(key);
                             transformWasInserted(transformation);
                             return;
                         } else if (time < _transforms[i+1]->getTime()) {
                             transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                             
-                            shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                            std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                             _transforms.insert(_transforms.begin() + i, key);
                             transformWasInserted(transformation);
                             return;
@@ -363,7 +364,7 @@ namespace GLTF
                     } else {
                         transformation = this->_cloneTransformByReplacingValueAtIndex(transformID,  index, value);
                         
-                        shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
+                        std::shared_ptr <GLTFTransformKey> key(new GLTFTransformKey(time, transformation, transformID));
                         _transforms.insert(_transforms.begin() + i, key);
                         transformWasInserted(transformation);
                         return;
@@ -373,11 +374,11 @@ namespace GLTF
             
         }
         
-        void setTransformsOrder(shared_ptr<std::vector<std::string> > transformsOrder) {
+        void setTransformsOrder(std::shared_ptr<std::vector<std::string> > transformsOrder) {
             this->_transformsOrder = transformsOrder;
         }
         
-        shared_ptr<std::vector<std::string> > getTransformsOrder() {
+        std::shared_ptr<std::vector<std::string> > getTransformsOrder() {
             return this->_transformsOrder;
         }
         
@@ -386,10 +387,10 @@ namespace GLTF
 #define _INTERPOLATE(I1, I2, STEP) (I1 + (STEP * (I2-I1)))
         
         //TODO: might be worth checking for equality for prev & transform to be interpolated here
-        shared_ptr <COLLADAFW::Transformation> _interpolateTransforms(shared_ptr<COLLADAFW::Transformation> previousTransform, shared_ptr<COLLADAFW::Transformation> nextTransform, double ratio) {
+        std::shared_ptr <COLLADAFW::Transformation> _interpolateTransforms(std::shared_ptr<COLLADAFW::Transformation> previousTransform, std::shared_ptr<COLLADAFW::Transformation> nextTransform, double ratio) {
             
             COLLADAFW::Transformation::TransformationType transformationType = previousTransform->getTransformationType();
-            shared_ptr<COLLADAFW::Transformation> transform(previousTransform->clone());
+            std::shared_ptr<COLLADAFW::Transformation> transform(previousTransform->clone());
             
             switch (transformationType) {
                 case COLLADAFW::Transformation::ROTATE:
@@ -463,16 +464,16 @@ namespace GLTF
                 int idIndex = _idIndex[i];
                 if (idIndex != -1) {
                     std::string transformID = this->_transformsOrder->at(idIndex);
-                    shared_ptr <GLTFTransformKey> key = this->_transforms[index];
+                    std::shared_ptr <GLTFTransformKey> key = this->_transforms[index];
                     
                     if ((*key->subTransforms()).count(transformID) == 0) {
                         //so here we need to get a transform matching transformID for this key but it does not contain it,
                         //we need to figure it out by interpolating the previous/next key containing this transform (this involves a search.
                         
-                        shared_ptr<COLLADAFW::Transformation> previousTransform;
-                        shared_ptr<COLLADAFW::Transformation> nextTransform;
-                        shared_ptr <GLTFTransformKey> previousKey;
-                        shared_ptr <GLTFTransformKey> nextKey;
+                        std::shared_ptr<COLLADAFW::Transformation> previousTransform;
+                        std::shared_ptr<COLLADAFW::Transformation> nextTransform;
+                        std::shared_ptr <GLTFTransformKey> previousKey;
+                        std::shared_ptr <GLTFTransformKey> nextKey;
                         double t1 = 0, t2 = 0;
                         
                         bool found = false;
@@ -509,7 +510,7 @@ namespace GLTF
                         }
                         
                         if (found == false) {
-                            shared_ptr <GLTFTransformKey> lastKey = this->_transforms[this->_transforms.size() - 1];
+                            std::shared_ptr <GLTFTransformKey> lastKey = this->_transforms[this->_transforms.size() - 1];
                             nextTransform = _idToTransform[transformID];
                             t2 = lastKey->getTime();
                         }
@@ -578,14 +579,14 @@ namespace GLTF
         bool _hasAnimatedScale, _hasAnimatedTranslation, _hasAnimatedRotation;
         std::string _targetUID;
         int *_idIndex;
-        std::vector<shared_ptr<COLLADAFW::Transformation> > _originalTransforms;
-        std::vector<shared_ptr<GLTFTransformKey> > _transforms;
-        std::map<std::string , shared_ptr<COLLADAFW::Transformation> > _idToTransform;
-        shared_ptr<std::vector<std::string> > _transformsOrder;
+        std::vector<std::shared_ptr<COLLADAFW::Transformation> > _originalTransforms;
+        std::vector<std::shared_ptr<GLTFTransformKey> > _transforms;
+        std::map<std::string , std::shared_ptr<COLLADAFW::Transformation> > _idToTransform;
+        std::shared_ptr<std::vector<std::string> > _transformsOrder;
     };
     
-    shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset);
-    bool writeAnimation(shared_ptr <GLTFAnimation> cvtAnimation,
+    std::shared_ptr <GLTFAnimation> convertOpenCOLLADAAnimationToGLTFAnimation(const COLLADAFW::Animation* animation, GLTF::GLTFAsset *asset);
+    bool writeAnimation(std::shared_ptr <GLTFAnimation> cvtAnimation,
                         const COLLADAFW::AnimationList::AnimationClass animationClass,
                         AnimatedTargetsSharedPtr animatedTargets,
                         GLTF::GLTFAsset *asset);

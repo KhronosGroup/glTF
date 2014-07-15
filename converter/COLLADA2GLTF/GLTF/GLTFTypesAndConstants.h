@@ -29,19 +29,13 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-#ifdef _LIBCPP_VERSION
-namespace std {
-    namespace tr1 = std;
-}
-#endif
-
-using namespace std::tr1;
+const float glTFVersion = 0.7f;
 
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
 const std::string kByteStride = "byteStride";
 const std::string kByteLength = "byteLength";
-const std::string kPath = "path";
+const std::string kURI = "uri";
 const std::string kType = "type";
 const std::string kBufferView = "bufferView";
 const std::string kBufferViews = "bufferViews";
@@ -68,6 +62,8 @@ const std::string kValues = "values";
 const std::string kValue = "value";
 const std::string kPremultipliedAlpha = "premultipliedAlpha";
 const std::string kProfile = "profile";
+const std::string kVersion = "version";
+const std::string kAsset = "asset";
 const std::string kNodes = "nodes";
 const std::string kMeshes = "meshes";
 const std::string kAccessors = "accessors";
@@ -75,7 +71,20 @@ const std::string kTarget = "target";
 const std::string kGeometry = "geometry";
 const std::string kAnimation = "animation";
 const std::string kScene = "scene";
-
+const std::string kScenes = "scenes";
+const std::string kNode = "node";
+const std::string kChildren = "children";
+const std::string kSources = "sources";
+const std::string kSource = "source";
+const std::string kSkin = "skin";
+const std::string kSkins = "skins";
+const std::string kInstanceSkin = "instanceSkin";
+const std::string kImages = "images";
+const std::string kImage = "image";
+const std::string kCamera = "camera";
+const std::string kLights = "lights";
+const std::string kLight = "light";
+const std::string kSemantic = "semantic";
 
 namespace GLTF
 {
@@ -89,18 +98,18 @@ namespace GLTF
     class JSONVertexAttribute;
     class GLTFAnimationFlattener;
     //-- Args & Options
-    typedef std::vector <shared_ptr <GLTF::JSONValue> > JSONValueVector;
+    typedef std::vector <std::shared_ptr <GLTF::JSONValue> > JSONValueVector;
     typedef JSONValueVector& JSONValueVectorRef;
-    typedef std::vector <shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
-    typedef std::vector <shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
-    typedef std::vector <shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
+    typedef std::vector <std::shared_ptr <GLTF::GLTFPrimitive> > PrimitiveVector;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFAccessor> > IndicesVector;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFAccessor> > MeshAttributeVector;
+    typedef std::vector <std::shared_ptr<GLTF::JSONVertexAttribute> > VertexAttributeVector;
     
-    typedef shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
-    typedef std::vector <shared_ptr<GLTF::GLTFMesh> > MeshVector;
+    typedef std::shared_ptr<GLTFMesh> GLTFMeshSharedPtr;
+    typedef std::vector <std::shared_ptr<GLTF::GLTFMesh> > MeshVector;
 
-    typedef std::map<std::string , shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
-    typedef shared_ptr<AnimationFlattenerForTargetUID> AnimationFlattenerForTargetUIDSharedPtr;
+    typedef std::map<std::string , std::shared_ptr <GLTFAnimationFlattener> > AnimationFlattenerForTargetUID;
+    typedef std::shared_ptr<AnimationFlattenerForTargetUID> AnimationFlattenerForTargetUIDSharedPtr;
     typedef std::map<std::string , AnimationFlattenerForTargetUIDSharedPtr > FlattenerMapsForAnimationID;
 
     std::string generateIDForType( const char* typeCStr, const char* suffix = 0);
@@ -111,7 +120,9 @@ namespace GLTF
         TEXCOORD = 3,
         COLOR = 4,
         WEIGHT = 5,
-        JOINT = 6
+        JOINT = 6,
+        TEXTANGENT = 7,
+        TEXBINORMAL = 8
     } Semantic;    
 
     typedef std::string JSONType;

@@ -27,7 +27,9 @@
 #include "GLTF.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF 
@@ -167,5 +169,22 @@ namespace GLTF
     JSONType JSONNumber::getJSONType() {
         return kJSONNumber;
     }
+    
+    std::string JSONNumber::valueType() {
+        return "number";
+    }
+    
+    bool JSONNumber::isEqualTo(JSONValue* value) {
+        assert(value != nullptr);
+        
+        if (JSONValue::isEqualTo(value) == true)
+            return true;
+        
+        //JSONNumber *numberValue = (JSONNumber*)(value);
+
+        //FIXME:TODO        
+        return true;
+    }
+    
 
 }

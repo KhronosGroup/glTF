@@ -29,13 +29,16 @@
 #include "../helpers/geometryHelpers.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF
 {
-    GLTFMesh::GLTFMesh() : JSONObject() {
-        this->_remapTableForPositions = 0;
+    GLTFMesh::GLTFMesh() : JSONObject() , _subMeshes(nullptr) {
+        this->_subMeshes = nullptr;
+        this->_remapTableForPositions = nullptr;
         this->_ID = GLTFUtils::generateIDForType("mesh");
     }
     
@@ -44,16 +47,33 @@ namespace GLTF
             free(this->_remapTableForPositions);
     }
 
-    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) : JSONObject() {
-        this->_remapTableForPositions = 0;
-        //FIXME: ... didn't feel like propageted const everywhere yet
-        GLTFMesh *meshPtr = (GLTFMesh*)&mesh;
-        this->setPrimitives(meshPtr->getPrimitives());  //Is a single assignment here ok ? Need to check if a deep copy would be needed
+    //copy that retains elements
+    GLTFMesh::GLTFMesh(const GLTFMesh &mesh) : JSONObject(), _subMeshes(nullptr) {
+        this->_remapTableForPositions = nullptr;
+        GLTFMesh *meshPtr = const_cast <GLTFMesh*>(&mesh);
+        this->setPrimitives(meshPtr->getPrimitives());
         this->_semanticToMeshAttributes = mesh._semanticToMeshAttributes;
         this->_ID = mesh._ID;
         this->setName(meshPtr->getName());
     }
-    
+
+    shared_ptr<GLTFMesh> GLTFMesh::clone() {
+        
+        shared_ptr<GLTFMesh> clonedMesh(new GLTFMesh());
+        
+        clonedMesh->setID(this->getID());
+        clonedMesh->setName(this->getName());
+        clonedMesh->_semanticToMeshAttributes = this->_semanticToMeshAttributes;
+        
+        JSONValueVectorRef primitives =  this->getPrimitives()->values();
+        for (size_t i = 0 ; i < primitives.size() ; i++) {
+            shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            clonedMesh->appendPrimitive(primitive->clone());
+        }
+        
+        return clonedMesh;
+    }
+
     shared_ptr <MeshAttributeVector> GLTFMesh::meshAttributes() {
         shared_ptr <MeshAttributeVector> meshAttributes(new MeshAttributeVector());
         vector <GLTF::Semantic> allSemantics = this->allSemantics();
@@ -175,9 +195,7 @@ namespace GLTF
 				GLTF::Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
                 std::string semanticAndSet = GLTFUtils::getStringForSemantic(semantic);
                 unsigned int indexOfSet = 0;
-                if ((semantic != GLTF::POSITION) && (semantic != GLTF::NORMAL) &&
-                    //FIXME: should not be required for JOINT and WEIGHT
-                    (semantic != GLTF::JOINT) && (semantic != GLTF::WEIGHT)) {
+                if ((semantic == GLTF::TEXCOORD) || (semantic == GLTF::COLOR)) {
 					indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
                     semanticAndSet += "_" + GLTFUtils::toString(indexOfSet);
                 }
@@ -187,4 +205,9 @@ namespace GLTF
             primitivesArray->appendValue(primitive);
         }
     }
+    
+    std::string GLTFMesh::valueType() {
+        return "mesh";
+    }
+
 }

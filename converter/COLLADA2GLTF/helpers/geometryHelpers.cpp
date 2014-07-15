@@ -27,7 +27,9 @@
 #include "geometryHelpers.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF
@@ -76,7 +78,7 @@ namespace GLTF
     std::string keyWithSemanticAndSet(GLTF::Semantic semantic, unsigned int indexSet)
     {
         std::string semanticIndexSetKey = "";
-        semanticIndexSetKey += "semantic";
+        semanticIndexSetKey += kSemantic;
         semanticIndexSetKey += GLTFUtils::toString(semantic);
         semanticIndexSetKey += ":indexSet";
         semanticIndexSetKey += GLTFUtils::toString(indexSet);
@@ -356,7 +358,7 @@ namespace GLTF
         
         if (primitiveCount == 0) {
             // FIXME: report error
-            //return 0;
+            return nullptr;
         }
         
         //in originalMeshAttributes we'll get the flattened list of all the meshAttributes as a vector.
@@ -410,7 +412,7 @@ namespace GLTF
                 allPrimitiveRemapInfos.push_back(primitiveRemapInfos);
             } else {
                 // FIXME: report error
-                //return NULL;
+                return nullptr;
             }
         }
         
@@ -476,7 +478,7 @@ namespace GLTF
             
             if (!status) {
                 // FIXME: report error
-                //return NULL;
+                return nullptr;
             }
         }
         
@@ -500,10 +502,11 @@ namespace GLTF
         IndicesMap indexToRemappedIndex;
     } ;
 
-    SubMeshContext* __CreateSubMeshContext()
+    SubMeshContext* __CreateSubMeshContext(const std::string& id)
     {
         SubMeshContext *subMesh = new SubMeshContext();
         shared_ptr <GLTFMesh> targetMesh = shared_ptr <GLTFMesh> (new GLTFMesh());
+        targetMesh->setID(id);
         subMesh->targetMesh = targetMesh;
         
         return subMesh;
@@ -540,7 +543,7 @@ namespace GLTF
     }
     
     //FIXME: add suport for interleaved arrays
-    void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
+    static void __RemapSubMesh(SubMeshContext *subMesh, GLTFMesh *sourceMesh)
     {
         //remap the subMesh using the original mesh
         //we walk through all meshAttributes
@@ -552,7 +555,6 @@ namespace GLTF
             size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
             for (size_t j = 0 ; j < attributesCount ; j ++) {
                 shared_ptr <GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
-                unsigned int indexSet = j;
                 
                 shared_ptr <GLTFBufferView> referenceBufferView = selectedMeshAttribute->getBufferView();
                 
@@ -578,49 +580,43 @@ namespace GLTF
         }
     }
     
-    bool createMeshesWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, unsigned int maxiumIndicesCount, shared_ptr<JSONArray> meshes, shared_ptr<GLTFProfile> profile)
+    shared_ptr <GLTFMesh> createMeshWithMaximumIndicesCountFromMeshIfNeeded(GLTFMesh *sourceMesh, size_t maximumIndicesCount, shared_ptr<GLTFProfile> profile)
     {
-        bool splitNeeded = false;
-        
-        //First, check every primitive indices count to figure out if we really need to split anything at all.
-        //TODO: what about making a sanity check, to ensure we don't have points not referenced by any primitive. (I wonder if that's would be considered compliant with the SPEC. need to check.
-        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
-        
-        for (size_t i = 0 ; i < primitives.size() ; i++) {
-            shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            if (primitive->getIndices()->getCount() >= maxiumIndicesCount) {
-                splitNeeded = true;
-                break;
-            }
-        }
-        
+        shared_ptr <GLTFMesh> destinationMesh = nullptr;
+        bool splitNeeded = sourceMesh->getMeshAttribute(GLTF::POSITION, 0)->getCount()  >= maximumIndicesCount;
         if (!splitNeeded)
-            return false;
+            return nullptr;
         
-        SubMeshContext *subMesh = NULL;
+        GLTF::JSONValueVector primitives = sourceMesh->getPrimitives()->values();
+
+        SubMeshContext *subMesh = nullptr;
 
         bool stillHavePrimitivesElementsToBeProcessed = false;
         bool primitiveCompleted = false;
         
         int *allNextPrimitiveIndices = (int*)calloc(primitives.size(), sizeof(int));
-        unsigned int meshIndex = 0;
+        size_t meshIndex = 0;
+        shared_ptr <GLTFMesh> targetMesh = nullptr;
+        
         for (size_t i = 0 ; i < primitives.size() ; i++) {
             if (allNextPrimitiveIndices[i] == -1)
                 continue;
             
-            if (subMesh == 0) {
-                subMesh = __CreateSubMeshContext();
-                meshes->appendValue(subMesh->targetMesh);
-                std::string meshID = "";
-                std::string meshName = "";
-                
-                meshID += sourceMesh->getID();
-                meshName += sourceMesh->getName();
-                if (meshIndex) {
-                    meshID += "-"+ GLTFUtils::toString(meshIndex);
-                    meshName += "-"+ GLTFUtils::toString(meshIndex);
+            if (subMesh == nullptr) {
+                if (targetMesh == nullptr) {
+                    subMesh = __CreateSubMeshContext(sourceMesh->getID());
+                    targetMesh = subMesh->targetMesh;
                 }
-                subMesh->targetMesh->setID(meshID);
+                
+                else {
+                    std::string id = sourceMesh->getID() + "split_" + GLTFUtils::toString(targetMesh->subMeshes()->values().size());
+                    subMesh = __CreateSubMeshContext(id);
+                    targetMesh->subMeshes()->appendValue(subMesh->targetMesh);
+                }
+                std::string meshName = sourceMesh->getName();
+                if (meshIndex) {
+                    meshName += GLTFUtils::toString(meshIndex);
+                }
                 subMesh->targetMesh->setName(meshName);
                 
                 stillHavePrimitivesElementsToBeProcessed = false;
@@ -646,8 +642,6 @@ namespace GLTF
             /* 
                 we could continue walking through a primitive even if the of maximum indices has been reached, because, for instance the next say, triangles could be within the already remapped indices. That said, not doing so should produce meshes that have more chances to have adjacent triangles. Need more experimentation about this. Having 2 modes would ideal.
              */
-            
-            
             //Different iterators type will be needed for these types
             /*
              type = "TRIANGLES";
@@ -669,7 +663,7 @@ namespace GLTF
                     //will we still have room to store coming indices from this mesh ?
                     //note: this is tied to the policy described above in (*)
                     size_t currentSize = subMesh->indexToRemappedIndex.size();
-                    if ((currentSize + indicesPerElementCount) < maxiumIndicesCount) {
+                    if ((currentSize + indicesPerElementCount) < maximumIndicesCount) {
                         __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
 
                         //build the indices for the primitive to be added to the subMesh
@@ -687,14 +681,36 @@ namespace GLTF
                     }
                 }
             }
+            else if (primitive->getPrimitive() == profile->getGLenumForString("LINES")) {
+                unsigned int indicesPerElementCount = 2;
+                primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
+                for (j = nextPrimitiveIndex; j < primitiveCount; j++) {
+                    unsigned int *indicesPtrAtPrimitiveIndex = indicesPtr + (j * indicesPerElementCount);
+                    //will we still have room to store coming indices from this mesh ?
+                    //note: this is tied to the policy described above in (*)
+                    size_t currentSize = subMesh->indexToRemappedIndex.size();
+                    if ((currentSize + indicesPerElementCount) < maximumIndicesCount) {
+                        __PushAndRemapIndicesInSubMesh(subMesh, indicesPtrAtPrimitiveIndex, indicesPerElementCount);
+
+                        //build the indices for the primitive to be added to the subMesh
+                        targetIndicesPtr[targetIndicesCount] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[0]];
+                        targetIndicesPtr[targetIndicesCount + 1] = subMesh->indexToRemappedIndex[indicesPtrAtPrimitiveIndex[1]];
+
+                        targetIndicesCount += indicesPerElementCount;
+
+                        nextPrimitiveIndex++;
+                    }
+                    else {
+                        allNextPrimitiveIndices[i] = -1;
+                        primitiveCompleted = true;
+                        break;
+                    }
+                }
+            }
             
             allNextPrimitiveIndices[i] = nextPrimitiveIndex;
 
             if (targetIndicesCount > 0) {
-                //FIXME: here targetIndices takes too much memory
-                //To avoid this we would need to make a smaller copy.
-                //In our case not sure if that's really a problem since this buffer won't be around for too long, as each buffer is deallocated once the callback from OpenCOLLADA to handle geomery has completed.
-                
                 shared_ptr <GLTFBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
                 
                 shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
@@ -727,7 +743,7 @@ namespace GLTF
         
         free(allNextPrimitiveIndices);
         
-        return true;
+        return targetMesh;
     }
 
     //Not required anymore since Open3DGC supports now sharing same vertex buffer and WebGL is disabled

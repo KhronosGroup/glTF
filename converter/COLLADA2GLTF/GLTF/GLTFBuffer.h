@@ -34,7 +34,7 @@
 
 namespace GLTF 
 {
-    class GLTFBuffer : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFBuffer : public JSONObject {
     private:
         GLTFBuffer();
     public:
@@ -50,17 +50,19 @@ namespace GLTF
         
         virtual void evaluate(void*);
         
+        virtual std::string valueType();
+
     private:
         std::string  _ID;
         unsigned char* _data;
         bool _ownData;
     };
     
-    class GLTFBufferView : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFBufferView : public JSONObject {
     public:
         GLTFBufferView();
-        GLTFBufferView(shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
-        GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
+        GLTFBufferView(std::shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
+        GLTFBufferView(std::string ID, std::shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength);
         
         virtual ~GLTFBufferView();
         
@@ -70,21 +72,24 @@ namespace GLTF
         void setByteOffset(size_t byteOffset);
         size_t getByteOffset();
         
-        shared_ptr <GLTFBuffer> getBuffer();
+        std::shared_ptr <GLTFBuffer> getBuffer();
 
         std::string const getID();
     
         void* getBufferDataByApplyingOffset();
+        
+        virtual std::string valueType();
+
     private:
-        void _setBuffer(shared_ptr <GLTFBuffer>);
+        void _setBuffer(std::shared_ptr <GLTFBuffer>);
     private:
         std::string  _ID;
-        shared_ptr<GLTFBuffer> _buffer;
+        std::shared_ptr<GLTFBuffer> _buffer;
     };
     
     //conveniences functions
-    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData);
-    shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData);
+    std::shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(std::string ID, void *data, size_t byteOffset, size_t byteLength, bool ownData);
+    std::shared_ptr <GLTFBufferView>  createBufferViewWithAllocatedBuffer(void *data, size_t byteOffset, size_t byteLength, bool ownData);
 
 }
 

@@ -27,31 +27,32 @@
 namespace GLTF
 {
     class GLTFOutputStream {
-    private:
+	public:
         GLTFOutputStream();
-    public:
         GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind);
         
         size_t length();
-        void write(shared_ptr<GLTFBuffer> buffer);
-        void write(shared_ptr<GLTFBufferView> bufferView);
+        void write(std::shared_ptr<GLTFBuffer> buffer);
+        void write(std::shared_ptr<GLTFBufferView> bufferView);
         void write(const char* buffer, size_t length);
 
         const std::string& filename();
         const std::string& id();
-
-        const char* outputPathCStr();
+		const std::string& outputPath();
         
         void close();
+		void remove();
         
         virtual ~GLTFOutputStream();
         
     private:
-        std::ofstream _stream;
+        std::shared_ptr<std::ostream> _stream;
         std::string _outputPath;
         std::string _filename;
         std::string _id;
         bool _opened;
+
+		bool _embedded;
     };
 }
 

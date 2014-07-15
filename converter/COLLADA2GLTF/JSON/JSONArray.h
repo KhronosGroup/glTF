@@ -29,7 +29,7 @@
 
 namespace GLTF 
 {
-    class JSONArray : public JSONValue {
+    class COLLADA2GLTF_EXPORT JSONArray : public JSONValue {
         friend class JSONObject;
         
     private:
@@ -38,14 +38,23 @@ namespace GLTF
         JSONArray();
         virtual ~JSONArray();
 
-        virtual void appendValue(shared_ptr <JSONValue>);
+        virtual void appendValue(std::shared_ptr <JSONValue>);
         
         JSONValueVectorRef values();
+        
+        size_t getCount();
 
         virtual JSONType getJSONType();
+        virtual std::string valueType();
 
         void apply(JSONValueApplierFunc func, void* context);
+        void apply(JSONValueApplier* applier, void* context);
 
+        virtual bool isEqualTo(JSONValue* value);
+
+        bool contains(JSONValue* value);
+        size_t indexOfValue(JSONValue* value);
+                                       
     protected:
         void _parseRapidJSONArray(void *value);
     private:

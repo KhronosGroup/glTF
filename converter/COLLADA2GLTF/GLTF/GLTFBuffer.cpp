@@ -28,6 +28,11 @@
 #include "GLTFAsset.h"
 
 using namespace rapidjson;
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
 
 namespace GLTF 
 {    
@@ -64,7 +69,7 @@ namespace GLTF
         //FIXME:this would be better somewhere else..
         GLTFAsset* asset = (GLTFAsset*)context;
         
-        this->setString(kPath, asset->resourceOuputPathForPath(this->getString(kPath)));
+        this->setString(kURI, COLLADABU::URI::uriEncode(asset->resourceOuputPathForPath(this->getString(kURI))));
     }
     
     size_t GLTFBuffer::getByteLength() {
@@ -79,9 +84,11 @@ namespace GLTF
         return this->_data;
     }
     
-    //--- GLTFBufferView    
-    
-    
+    std::string GLTFBuffer::valueType() {
+        return "buffer";
+    }
+
+    //--- GLTFBufferView
     
     GLTFBufferView::~GLTFBufferView() {
     }
@@ -154,4 +161,8 @@ namespace GLTF
         return bufferView;
     }
     
+    std::string GLTFBufferView::valueType() {
+        return "bufferView";
+    }
+
 }

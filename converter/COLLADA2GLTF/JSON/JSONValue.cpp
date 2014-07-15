@@ -26,6 +26,12 @@
 
 #include "GLTF.h"
 
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
+
 namespace GLTF 
 {
     JSONValue::JSONValue() {
@@ -33,8 +39,13 @@ namespace GLTF
 
     JSONValue::~JSONValue() {
     }
+    
+//    static void __eval(JSONValue* value, void *context) {
+  //      value->evaluate(context);
+    //}
 
     void JSONValue::write(GLTFWriter* writer, void* context) {
+        //value->apply(__eval, context);
         writer->write(this, context);
     }
     
@@ -72,4 +83,16 @@ namespace GLTF
         (*func)(this, context);
     }
     
+    void JSONValue::apply(JSONValueApplier* applier, void* context) {
+        applier->apply(this, context);
+    }
+    
+    bool JSONValue::isEqualTo(JSONValue *value) {
+        if (value->getJSONType() != this->getJSONType())
+            return false;
+        if (value == this)
+            return true;
+        
+        return false;
+    }
 }

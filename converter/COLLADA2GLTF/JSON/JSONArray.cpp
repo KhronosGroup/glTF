@@ -32,7 +32,9 @@
 #include "document.h"
 
 using namespace rapidjson;
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF 
@@ -97,6 +99,10 @@ namespace GLTF
         return kJSONArray;
     }
     
+    std::string JSONArray::valueType() {
+        return "array";
+    }
+    
     void JSONArray::apply(JSONValueApplierFunc func, void* context) {
         vector <shared_ptr <JSONValue> > values = this->values();
         size_t count = values.size();
@@ -105,6 +111,55 @@ namespace GLTF
         }
     }
 
+    void JSONArray::apply(JSONValueApplier* applier, void* context) {
+        vector <shared_ptr <JSONValue> > values = this->values();
+        size_t count = values.size();
+        for (size_t i = 0 ; i < count ; i++) {
+            values[i]->apply(applier, context);
+        }
+    }
+
+    size_t JSONArray::getCount() {
+        return this->_values.size();
+    }
+
+    bool JSONArray::isEqualTo(JSONValue* value) {
+        assert(value != nullptr);
+        
+        if (JSONValue::isEqualTo(value) == true)
+            return true;
+        
+        size_t count = this->getCount();
+        JSONArray *arrayValue = (JSONArray*)(value);
+        if (count != arrayValue->getCount())
+            return false;
+        
+        
+        JSONValueVectorRef allValues = arrayValue->values();
+        for (size_t i = 0 ; i < count ; i++) {
+            if (allValues[i]->isEqualTo(this->_values[i].get()) == false) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    size_t JSONArray::indexOfValue(JSONValue* value) {
+        assert(value != nullptr);
+        size_t count = this->getCount();
+        for (size_t i = 0 ; i < count ; i++) {
+            if (this->_values[i]->isEqualTo(value)) {
+                return i;
+            }
+        }
+        return string::npos;
+    }
+    
+    bool JSONArray::contains(JSONValue* value) {
+        return this->indexOfValue(value) != string::npos;
+    }
+    
 }
 
 #endif

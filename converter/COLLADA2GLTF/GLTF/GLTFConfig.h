@@ -24,26 +24,30 @@
 #ifndef __GLTF_CONFIG__
 #define __GLTF_CONFIG__
 
+#ifdef WIN32
+#pragma warning(disable: 4251)
+#endif
+
 namespace GLTF
 {
-    class GLTFConfig {
+    class COLLADA2GLTF_EXPORT GLTFConfig {
     public:        
         GLTFConfig();
         bool initWithPath(const std::string& path);
         
         virtual ~GLTFConfig();
-        shared_ptr <JSONObject> config();
+        std::shared_ptr <JSONObject> config();
 
-        unsigned int unsignedInt32ForKeyPath(const std::string &keyPath, unsigned int defaultValue);
-        int int32ForKeyPath(const std::string &keyPath, int defaultValue);
-        double doubleForKeyPath(const std::string &keyPath, double defaultValue);
-        bool boolForKeyPath(const std::string &keyPath, bool defaultValue = false);
-        std::string stringForKeyPath(const std::string &keyPath, std::string defaultValue);
+        unsigned int unsignedInt32ForKeyPath(const std::string &keyPath);
+        int int32ForKeyPath(const std::string &keyPath);
+        double doubleForKeyPath(const std::string &keyPath);
+        bool boolForKeyPath(const std::string &keyPath);
+        std::string stringForKeyPath(const std::string &keyPath);
         
     private:
-        void _setupDefaultConfigOptions(shared_ptr<JSONObject> optionsRoot);
+        void _setupDefaultConfigOptions(std::shared_ptr<JSONObject> optionsRoot);
     private:
-        shared_ptr<JSONObject> _configObject;
+        std::shared_ptr<JSONObject> _configObject;
     };
 }
 

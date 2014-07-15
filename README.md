@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
 <img src=“specification/figures/glTF_300.jpg” />
 </p>
 

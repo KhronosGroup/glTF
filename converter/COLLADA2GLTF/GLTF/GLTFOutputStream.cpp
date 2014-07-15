@@ -22,29 +22,40 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "helpers/encodingHelpers.h"
 
+#if __cplusplus <= 199711L
 using namespace std::tr1;
+#endif
 using namespace std;
 
 namespace GLTF 
 {        
-    GLTFOutputStream::GLTFOutputStream() {
-        
+	GLTFOutputStream::GLTFOutputStream() :
+		_stream(new std::ostringstream()),
+        _opened(true),
+		_embedded(true)
+	{
     }
-    
-    GLTFOutputStream::GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind) {
-        this->_id = file + kind;
-        this->_filename = this->_id + ".bin";
-        this->_outputPath = folder + this->_filename;        
-        this->_stream.open(this->_outputPath.c_str(), ios::out | ios::ate | ios::binary);
+
+    GLTFOutputStream::GLTFOutputStream(const std::string &folder, const std::string &file, const std::string &kind) :
+		_id(file + kind),
+        _opened(false),
+		_embedded(false)
+	{
+		_filename = _id + ".bin";
+		_outputPath = folder + _filename;
+		std::ofstream *fout = new ofstream();
+		fout->open(this->_outputPath.c_str(), ios::out | ios::ate | ios::binary);
+		this->_stream.reset(static_cast<std::ostream*>(fout));
         
-        if (this->_stream.is_open()) {
+		if (fout->is_open()) {
             this->_opened = true;
         } else {
             printf("cannot create file :%s\n", this->_outputPath.c_str());
         }
     }
-    
+   
     const std::string& GLTFOutputStream::filename() {
         return this->_filename;
     }
@@ -53,17 +64,22 @@ namespace GLTF
         return this->_id;
     }
     
-    const char* GLTFOutputStream::outputPathCStr() {
-        return this->_outputPath.c_str();
-    }
+	const std::string& GLTFOutputStream::outputPath() {
+		if (_embedded)
+		{
+			this->_outputPath = create_dataUri(dynamic_pointer_cast<std::ostringstream>(this->_stream)->str());
+		}
+
+		return this->_outputPath;
+	}
 
     size_t GLTFOutputStream::length() {        
-        return this->_opened ? static_cast<size_t> (this->_stream.tellp()) : 0;
+        return this->_opened ? static_cast<size_t> (this->_stream->tellp()) : 0;
     }
     
     void GLTFOutputStream::write(const char* buffer, size_t length) {
         if (this->_opened) {
-            this->_stream.write(buffer, length);
+            this->_stream->write(buffer, length);
         }
     }
     
@@ -77,11 +93,26 @@ namespace GLTF
     
     void GLTFOutputStream::close() {
         if (this->_opened) {
-            this->_stream.flush();
-            this->_stream.close();
+            this->_stream->flush();
+			if (!_embedded)
+			{
+				dynamic_pointer_cast<std::ofstream>(this->_stream)->close();
+			}
             this->_opened = false;
         }
     }
+
+	void GLTFOutputStream::remove()
+	{
+		if (_embedded)
+		{
+			dynamic_pointer_cast<std::ostringstream>(this->_stream)->clear();
+		}
+		else
+		{
+			::remove(this->_outputPath.c_str());
+		}
+	}
     
     GLTFOutputStream::~GLTFOutputStream() {
         this->close();

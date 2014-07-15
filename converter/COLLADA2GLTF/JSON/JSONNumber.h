@@ -29,7 +29,7 @@
 
 namespace GLTF 
 {
-    class JSONNumber : public JSONValue {
+    class COLLADA2GLTF_EXPORT JSONNumber : public JSONValue {
     private:
         JSONNumber():JSONValue(), _type(NOT_A_NUMBER) {}
         
@@ -58,6 +58,9 @@ namespace GLTF
         JSONNumber::JSONNumberType getNumberType();
 
         virtual JSONType getJSONType();
+        virtual std::string valueType();
+
+        virtual bool isEqualTo(JSONValue* value);
 
     private:
         void* _value;

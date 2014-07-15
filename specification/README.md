@@ -157,7 +157,7 @@ Binary, image, and GLSL files can also be embedded directly into the JSON using 
 
 ![](figures/assetLayout.png)
 
-For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/webgl/apps/viewer/model/duck).
+For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/model/duck).
 
 Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
 

@@ -29,6 +29,11 @@
 
 #include "GLTF.h"
 
+using namespace std;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+
 namespace GLTF 
 {
     JSONString::JSONString() : JSONValue() {
@@ -51,6 +56,21 @@ namespace GLTF
     
     JSONType JSONString::getJSONType() {
         return kJSONString;
+    }
+    
+    std::string JSONString::valueType() {
+        return "string";
+    }
+    
+    bool JSONString::isEqualTo(JSONValue* value) {
+        assert(value != nullptr);
+
+        if (JSONValue::isEqualTo(value) == true)
+            return true;
+        
+        JSONString *stringValue = (JSONString*)(value);
+        
+        return this->_str == stringValue->getString();
     }
     
 }

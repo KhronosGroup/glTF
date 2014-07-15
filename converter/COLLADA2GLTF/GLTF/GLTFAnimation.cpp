@@ -27,6 +27,11 @@
 #include "GLTF-Open3DGC.h" //FIXME: setupAndWriteAnimationParameter has to move out from this header
 
 using namespace rapidjson;
+using namespace rapidjson;
+#if __cplusplus <= 199711L
+using namespace std::tr1;
+#endif
+using namespace std;
 
 namespace GLTF 
 {
@@ -178,4 +183,9 @@ namespace GLTF
             free(rotations);
         }
     }
+    
+    std::string GLTFAnimation::valueType() {
+        return "animation";
+    }
+
 }

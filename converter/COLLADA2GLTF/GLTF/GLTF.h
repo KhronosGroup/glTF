@@ -39,8 +39,10 @@
 #include <fstream>
 #include <vector>
 #include "assert.h"
+#include <cstddef>
+#include <cstdint>
 
-#if (defined(WIN32) || defined(_LIBCPP_VERSION))
+#if (defined(WIN32) || defined(_LIBCPP_VERSION) || __cplusplus > 199711L)
 #include <memory>
 #include <unordered_map>
 #else 
@@ -53,6 +55,7 @@
 #include "filestream.h"
 
 // GLTF headers
+#include "COLLADA2GLTFExport.h"
 #include "GLTFTypesAndConstants.h"
 #include "GLTFProfile.h"
 #include "JSONValue.h"
@@ -73,5 +76,6 @@
 #include "GLTFOutputStream.h"
 #include "GLTFConfig.h"
 #include "GLTFAssetModifier.h"
+#include "GLTFExtras.h"
 
 #endif 

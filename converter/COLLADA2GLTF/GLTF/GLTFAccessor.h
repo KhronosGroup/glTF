@@ -43,19 +43,19 @@ namespace GLTF
         size_t /* vertexAttributeByteSize*/,
         void* /* context */);
     
-    class GLTFAccessor : public JSONObject {
+    class COLLADA2GLTF_EXPORT GLTFAccessor : public JSONObject {
     private:
         void _generateID();
 
     public:
         
-        GLTFAccessor(shared_ptr<GLTFProfile>, unsigned int glType);
+        GLTFAccessor(std::shared_ptr<GLTFProfile>, unsigned int glType);
         GLTFAccessor(GLTFAccessor *);
         
         virtual ~GLTFAccessor();
         
-        void setBufferView(shared_ptr <GLTFBufferView> buffer);
-        shared_ptr <GLTFBufferView> getBufferView();
+        void setBufferView(std::shared_ptr <GLTFBufferView> buffer);
+        std::shared_ptr <GLTFBufferView> getBufferView();
                 
         void setByteStride(size_t stride);
         size_t getByteStride();
@@ -78,22 +78,23 @@ namespace GLTF
         
         size_t elementByteLength();
         
-        shared_ptr<JSONArray> min();
-        shared_ptr<JSONArray> max();
+        std::shared_ptr<JSONArray> min();
+        std::shared_ptr<JSONArray> max();
         
         bool matchesLayout(GLTFAccessor* meshAttribute);
         void exposeMinMax();
+        
+        virtual std::string valueType();
+
     private:
         void _computeMinMaxIfNeeded();
         
     private:
-        shared_ptr <GLTFBufferView> _bufferView;
+        std::shared_ptr <GLTFBufferView> _bufferView;
         size_t                  _componentsPerElement;
         ComponentType           _componentType;
         size_t                  _elementByteLength;
         std::string             _ID;
-        shared_ptr<JSONArray>   _min;
-        shared_ptr<JSONArray>   _max;
         bool                    _minMaxDirty;
     };
 }
