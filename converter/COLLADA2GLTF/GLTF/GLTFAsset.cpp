@@ -1154,11 +1154,7 @@ namespace GLTF
         
         indicesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
         verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
-        
-        //---
-        //to run legacy evaluate, to be removed
-        this->addValueEvaluator(shared_ptr<GLTFAssetValueEvaluator> (this));
-        
+       
         this->_performValuesEvaluation();
         
         rawOutputStream->close();

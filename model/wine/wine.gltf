@@ -873,7 +873,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf8b25dffa85bb223c3cfac9f7b71c272c037840",
+        "generator": "collada2gltf@9a6981e11fb02c0666c06ff5235ec075a3cfc438",
         "premultipliedAlpha": true,
         "profile": "WebGL 1.0.2",
         "version": 0.8

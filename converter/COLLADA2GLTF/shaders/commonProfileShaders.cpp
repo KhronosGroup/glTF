@@ -1279,7 +1279,6 @@ namespace GLTF
         
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
         
-        static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
             techniqueHashToTechniqueID[techniqueHash] = "technique" + GLTFUtils::toString(techniqueHashToTechniqueID.size());
         }
