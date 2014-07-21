@@ -320,7 +320,7 @@ namespace GLTF
         shared_ptr <GLTF::GLTFPrimitiveRemapInfos> primitiveRemapInfos(new GLTF::GLTFPrimitiveRemapInfos(generatedIndices, generatedIndicesCount, originalCountAndIndexes));
         shared_ptr <GLTF::GLTFBufferView> indicesBufferView = createBufferViewWithAllocatedBuffer(uniqueIndexes, 0, vertexIndicesCount * sizeof(unsigned int), true);
         
-        shared_ptr <GLTF::GLTFAccessor> indices = shared_ptr <GLTF::GLTFAccessor> (new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+        shared_ptr <GLTF::GLTFAccessor> indices = shared_ptr <GLTF::GLTFAccessor> (new GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
         
         indices->setBufferView(indicesBufferView);
         indices->setCount(vertexIndicesCount);
@@ -527,11 +527,12 @@ namespace GLTF
     }
     
     static void __RemapMeshAttribute(void *value,
-                          GLTF::ComponentType type,
-                          size_t componentsPerElement,
-                          size_t index,
-                          size_t vertexAttributeByteSize,
-                          void *context) {
+                                     const std::string &componentType,
+                                     const std::string &type,
+                                     size_t componentsPerElement,
+                                     size_t index,
+                                     size_t vertexAttributeByteSize,
+                                     void *context) {
         
         void **remapContext = (void**)context;
         unsigned char *targetBufferPtr = (unsigned char*)remapContext[0];
@@ -713,7 +714,7 @@ namespace GLTF
             if (targetIndicesCount > 0) {
                 shared_ptr <GLTFBufferView> targetBufferView = createBufferViewWithAllocatedBuffer(targetIndicesPtr, 0,targetIndicesCount * sizeof(unsigned int), true);
                 
-                shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, profile->getGLenumForString("UNSIGNED_SHORT")));
+                shared_ptr <GLTFAccessor> indices(new GLTFAccessor(profile, "UNSIGNED_SHORT", "SCALAR"));
 
                 indices->setBufferView(targetBufferView);
                 indices->setCount(targetIndicesCount);

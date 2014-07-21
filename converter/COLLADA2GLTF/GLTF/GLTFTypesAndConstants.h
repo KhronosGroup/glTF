@@ -29,7 +29,7 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-const float glTFVersion = 0.7f;
+const float glTFVersion = 0.8f;
 
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";
@@ -37,6 +37,7 @@ const std::string kByteStride = "byteStride";
 const std::string kByteLength = "byteLength";
 const std::string kURI = "uri";
 const std::string kType = "type";
+const std::string kComponentType = "componentType";
 const std::string kBufferView = "bufferView";
 const std::string kBufferViews = "bufferViews";
 const std::string kMin = "min";
@@ -85,6 +86,14 @@ const std::string kCamera = "camera";
 const std::string kLights = "lights";
 const std::string kLight = "light";
 const std::string kSemantic = "semantic";
+const std::string kJoint = "joint";
+const std::string kDoubleSided = "doubleSided";
+
+const std::string MODELVIEW = "MODELVIEW";
+const std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
+const std::string MODELVIEWINVERSE = "MODELVIEWINVERSE";
+const std::string PROJECTION = "PROJECTION";
+const std::string JOINTMATRIX = "JOINTMATRIX";
 
 namespace GLTF
 {
@@ -131,19 +140,6 @@ namespace GLTF
     const std::string kJSONObject = "object";
     const std::string kJSONArray = "array";
     const std::string kJSONString = "string";    
-    
-    typedef enum {
-        NOT_AN_ELEMENT_TYPE = 0,
-        BYTE = 1,
-        UNSIGNED_BYTE = 2,
-        SHORT = 3,
-        UNSIGNED_SHORT = 4,
-        FIXED = 5,
-        FLOAT = 6,
-        INT = 7,
-        UNSIGNED_INT = 8
-    } ComponentType;
-    
 };
 
 #endif

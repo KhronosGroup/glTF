@@ -170,7 +170,7 @@ namespace GLTF
             shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
             bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
             if ( !failed ) {
-                extras->setBool("double_sided", val);
+                extras->setBool(kDoubleSided, val);
             }
         }
         

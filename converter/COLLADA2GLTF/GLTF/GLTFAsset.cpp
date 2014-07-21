@@ -584,7 +584,7 @@ namespace GLTF
                 std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
                 materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
+                    if (meshExtras->contains(kDoubleSided)) {
                         materialBindingKey += "doubleSided:1";
                     }
                     if (meshExtras->contains("jointsCount")) {
@@ -684,8 +684,8 @@ namespace GLTF
                 unsigned int jointsCount = 0;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
-                        techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                    if (meshExtras->contains(kDoubleSided)) {
+                        techniqueExtras->setBool(kDoubleSided, meshExtras->getBool(kDoubleSided));
                     }
                     if (meshExtras->contains("jointsCount")) {
                         jointsCount = meshExtras->getUnsignedInt32("jointsCount");
@@ -693,8 +693,8 @@ namespace GLTF
                     }
                 }
                 
-                if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
-                    techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
+                if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
+                    techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
                 }
                 
                 //generate shaders if needed
@@ -797,7 +797,7 @@ namespace GLTF
                 meshesInSkinning = true;
                 shared_ptr<JSONObject> instanceSkin = node->getObject(kInstanceSkin);
                 meshUID = meshUID.substr(meshesInSkinningPrefix.length());
-                meshesArray = instanceSkin->createArrayIfNeeded(kSources);
+                meshesArray = instanceSkin->createArrayIfNeeded(kMeshes);
             }
             
             assert(meshesInSkinning || meshesInNode);
@@ -1055,7 +1055,6 @@ namespace GLTF
                 GLTFBufferView *bufferView = isCompressed ? (GLTFBufferView*)compressionBufferView.get() : (GLTFBufferView*)indicesBufferView.get();
                 
                 uniqueIndices->setString(kBufferView, bufferView->getID());
-                uniqueIndices->setUnsignedInt32(kType, this->_profile->getGLenumForString("UNSIGNED_SHORT"));
                 accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
             
@@ -1079,14 +1078,16 @@ namespace GLTF
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
                 shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_uniqueIDToJSONValue[jointId->getString()]);
-                if (node->contains("jointId")) {
-                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
+                if (node->contains(kJoint)) {
+                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJoint)));
                 }
             }
+            std::string inverseBindMatricesUID = "IBM_"+skin->getId();
             skin->setJointsIds(jointsWithOriginalSids);
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
-            skin->setValue(kInverseBindMatrices, inverseBindMatrices);
+            skin->setString(kInverseBindMatrices, inverseBindMatricesUID);
+            accessors->setValue(inverseBindMatricesUID, inverseBindMatrices);
         }
         
         // ----
