@@ -63,7 +63,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@0a061d461b7ff3482187e68ae9e262445a873baf",
+        "generator": "collada2gltf@cf8b25dffa85bb223c3cfac9f7b71c272c037840",
         "premultipliedAlpha": true,
         "profile": "WebGL 1.0.2",
         "version": 0.8
@@ -381,6 +381,7 @@
                         }
                     },
                     "states": {
+                        "depthMask": true,
                         "enable": [
                             2884,
                             2929

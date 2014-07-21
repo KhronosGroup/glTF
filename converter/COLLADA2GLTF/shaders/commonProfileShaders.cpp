@@ -340,59 +340,40 @@ namespace GLTF
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
 
         shared_ptr <JSONArray> enableArray(new GLTF::JSONArray());
-        shared_ptr <JSONArray> disableArray(new GLTF::JSONArray());
         
         shared_ptr <GLTFProfile> profile = asset->profile();
-        shared_ptr <JSONNumber> GLOne(new JSONNumber(1));
-        shared_ptr <JSONNumber> GLZero(new JSONNumber(0));
         
-        if (techniqueExtras->getBool(kDoubleSided)) {
-            if (profile->isDefaultValueForState("CULL_FACE", GLZero) == false) {
-                disableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
-            }
-        } else {
-            if (profile->isDefaultValueForState("CULL_FACE", GLOne) == false) {
-                enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
-            }
+        if (techniqueExtras->getBool(kDoubleSided) == false) {
+            enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
         }
         
-        if (isOpaque(parameters, asset)) {
-            if (profile->isDefaultValueForState("DEPTH_TEST", GLOne) == false) {
-                enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
-            }
-            if (profile->isDefaultValueForState("DEPTH_WRITEMASK", GLOne) == false) {
-                states->setValue("depthMask", GLOne);
-            }
-            if (profile->isDefaultValueForState("BLEND", GLZero) == false) {
-                disableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("BLEND"))));
-            }
-        } else {
-            if (profile->isDefaultValueForState("BLEND", GLOne) == false) {
-                enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("BLEND"))));
-            }
-            if (profile->isDefaultValueForState("DEPTH_TEST", GLOne) == false) {
-                enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
-            }
-            if (profile->isDefaultValueForState("DEPTH_WRITEMASK", GLOne) == false) {
-                states->setValue("depthMask", GLOne);
-            }
-            if (profile->isDefaultValueForState("BLEND_EQUATION", shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("FUNC_ADD"))))) {
-                states->setUnsignedInt32("blendEquation", profile->getGLenumForString("FUNC_ADD"));
-            }
+        states->setBool("depthMask", true);
+        enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
+
+        if (isOpaque(parameters, asset) == false) {
+            enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("BLEND"))));
             
-            shared_ptr <JSONArray> blendFunc(new GLTF::JSONArray());
+            unsigned func_add = profile->getGLenumForString("FUNC_ADD");
+            shared_ptr <JSONArray> blendEquationSeparate(new GLTF::JSONArray());
+            blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
+            blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
+            states->setValue("blendEquationSeparate", blendEquationSeparate);
+            
+            shared_ptr <JSONArray> blendFuncSeparate(new GLTF::JSONArray());
             if (CONFIG_BOOL(asset, "premultipliedAlpha")) {
-                blendFunc->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             } else {
-                blendFunc->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             }
-            blendFunc->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
-            states->setValue("blendFunc", blendFunc) ;
+            states->setValue("blendFuncSeparate", blendFuncSeparate) ;
         }
         
-        if (disableArray->getCount() > 0) {
-            states->setValue("disable", disableArray);
-        }
         if (enableArray->getCount() > 0) {
             states->setValue("enable", enableArray);
         }
