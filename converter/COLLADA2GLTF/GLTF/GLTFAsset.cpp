@@ -1123,8 +1123,12 @@ namespace GLTF
         
         if (sharedBuffer->getByteLength() > 0) {
             
-            COLLADABU::URI uri(rawOutputStream->outputPath());
-            sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            if (this->_embedResources == false) {
+                COLLADABU::URI uri(rawOutputStream->outputPath());
+                sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            } else {
+                sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(rawOutputStream->outputPath()));
+            }
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -1132,7 +1136,12 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
+            if (this->_embedResources == false) {
+                COLLADABU::URI uri(compressionOutputStream->outputPath());
+                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            } else {
+                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
+            }
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
