@@ -346,7 +346,6 @@ namespace GLTF
             enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
         }
         
-        functions->setBool("depthMask", true);
         enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
 
         if (isOpaque(parameters, asset) == false) {
