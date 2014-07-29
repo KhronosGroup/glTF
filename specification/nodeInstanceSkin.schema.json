@@ -6,7 +6,7 @@
     "properties": {
         "skeletons" : {
             "type" : "array",
-            "description" : "Joint id (joint property) of skeleton nodes.",
+            "description" : "Joint name (jointName property) of skeleton nodes.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
