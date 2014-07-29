@@ -22,9 +22,9 @@
             "extends" : { "$ref" : "nodeInstanceSkin.schema.json" },
             "description" : "An instance of a skin."
         },
-        "joint" : {
+        "jointName" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "id used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined."
+            "description" : "Name used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined."
         },
         "light" : {
             "extends" : { "$ref" : "glTFid.schema.json" },

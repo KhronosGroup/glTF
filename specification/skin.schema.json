@@ -20,9 +20,9 @@
             "description" : "Accessor id (JSON property name) containing the 4x4 inverse-bind matrices.",
             "required" : true        
         },
-        "joints" : {
+        "jointNames" : {
             "type" : "array",
-            "description" : "Joint ids of the joints (nodes with a joint property) in this skin.",
+            "description" : "Joint names of the joints (nodes with a joint property) in this skin.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
