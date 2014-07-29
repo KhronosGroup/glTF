@@ -255,7 +255,7 @@ namespace GLTF
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
-            nodeObject->setString(kJoint,sid);
+            nodeObject->setString(kJointName,sid);
         }
         
         bool nodeContainsLookAtTr = false;
@@ -1370,7 +1370,7 @@ namespace GLTF
                 shared_ptr<JSONString> jointId(new JSONString(jointsUID[i].toAscii()));
                 joints->appendValue(jointId);
             }
-            glTFSkin->setJointsIds(joints);
+            glTFSkin->setJointNames(joints);
         }
 		return true;
 	}

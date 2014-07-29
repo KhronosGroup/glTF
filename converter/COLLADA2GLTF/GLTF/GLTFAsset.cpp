@@ -1070,7 +1070,7 @@ namespace GLTF
         // ----
         for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
-            shared_ptr<JSONArray> joints = skin->getJointsIds();
+            shared_ptr<JSONArray> joints = skin->getJointNames();
             shared_ptr<JSONArray> jointsWithOriginalSids(new JSONArray());
             
             //resolve the sid and use the original ones
@@ -1078,12 +1078,12 @@ namespace GLTF
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
                 shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_uniqueIDToJSONValue[jointId->getString()]);
-                if (node->contains(kJoint)) {
-                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJoint)));
+                if (node->contains(kJointName)) {
+                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJointName)));
                 }
             }
             std::string inverseBindMatricesUID = "IBM_"+skin->getId();
-            skin->setJointsIds(jointsWithOriginalSids);
+            skin->setJointNames(jointsWithOriginalSids);
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
             skin->setString(kInverseBindMatrices, inverseBindMatricesUID);

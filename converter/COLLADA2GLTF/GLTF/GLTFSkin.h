@@ -47,8 +47,8 @@ namespace GLTF
         std::shared_ptr<JSONArray> getBindShapeMatrix();
         void setBindShapeMatrix(std::shared_ptr<JSONArray>  bindShapeMatrix);
         
-        std::shared_ptr<JSONArray> getJointsIds();
-        void setJointsIds(std::shared_ptr<JSONArray> jointIds);
+        std::shared_ptr<JSONArray> getJointNames();
+        void setJointNames(std::shared_ptr<JSONArray> jointNames);
         
         const std::string& getId();
         

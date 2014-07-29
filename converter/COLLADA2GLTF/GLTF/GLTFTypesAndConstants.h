@@ -50,7 +50,6 @@ const std::string kName = "name";
 const std::string kExtensions = "extensions";
 const std::string kPrimitives = "primitives";
 const std::string kAttributes = "attributes";
-const std::string kJoints = "joints";
 const std::string kBindShapeMatrix = "bindShapeMatrix";
 const std::string kInverseBindMatrices = "inverseBindMatrices";
 const std::string kSamplers = "samplers";
@@ -86,7 +85,8 @@ const std::string kCamera = "camera";
 const std::string kLights = "lights";
 const std::string kLight = "light";
 const std::string kSemantic = "semantic";
-const std::string kJoint = "joint";
+const std::string kJointName = "jointName";
+const std::string kJointNames = "jointNames";
 const std::string kDoubleSided = "doubleSided";
 
 const std::string MODELVIEW = "MODELVIEW";
