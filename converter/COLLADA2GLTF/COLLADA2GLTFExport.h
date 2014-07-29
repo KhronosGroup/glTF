@@ -27,6 +27,12 @@
 #ifndef __COLLADA2GLTFEXPORT_H__
 #define __COLLADA2GLTFEXPORT_H__
 
+#ifdef STATIC_COLLADA2GLTF
+
+#   define COLLADA2GLTF_EXPORT
+
+#else
+
 #	ifdef WIN32
 #		ifdef collada2gltfConvert_EXPORTS
 #			define COLLADA2GLTF_EXPORT __declspec(dllexport)  
@@ -36,5 +42,7 @@
 #	else
 #		define COLLADA2GLTF_EXPORT
 #	endif // WIN32
+
+#endif // STATIC_COLLADA2GLTF
 
 #endif
