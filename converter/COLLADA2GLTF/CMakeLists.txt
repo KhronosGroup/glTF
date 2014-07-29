@@ -177,11 +177,16 @@ LIST(APPEND GLTF_SOURCES
     extensions/o3dgc-compression/GLTF-Open3DGC.h)
 endif()
 
-add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
-
-#Make sure the dll is in the same directory as the executable
-if (WIN32)
-    set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
+option(CONVERT_SHARED "CONVERT_SHARED" OFF)
+if (CONVERT_SHARED)
+    add_library(collada2gltfConvert SHARED ${GLTF_SOURCES})
+    #Make sure the dll is in the same directory as the executable
+    if (WIN32)
+        set_target_properties(collada2gltfConvert PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
+    endif()
+else()
+    add_library(collada2gltfConvert STATIC ${GLTF_SOURCES})
+    add_definitions(-DSTATIC_COLLADA2GLTF)
 endif()
 
 if (PNG_FOUND)
