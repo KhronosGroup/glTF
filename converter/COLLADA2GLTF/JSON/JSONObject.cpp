@@ -223,7 +223,7 @@ namespace GLTF
         return 0;
     }
     
-    void JSONObject::setString(const std::string &key, const std::string &value) {
+    void JSONObject::setString(const std::string &key, const std::string &value) {        
         this->setValue(key, shared_ptr <JSONString> (new JSONString(value)));
     }
 

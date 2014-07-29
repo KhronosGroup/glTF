@@ -221,11 +221,6 @@ namespace GLTF
      */
     
     
-    static std::string MODELVIEW = "MODELVIEW";
-    static std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
-    static std::string MODELVIEWINVERSE = "MODELVIEWINVERSE";
-    static std::string PROJECTION = "PROJECTION";
-    
     /* uniform types, derived from
      GL_INT
      GL_INT_VEC2
@@ -296,7 +291,7 @@ namespace GLTF
         
         if (techniqueExtras) {
             jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
-            doubleSided = techniqueExtras->getBool("double_sided");
+            doubleSided = techniqueExtras->getBool(kDoubleSided);
         }
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
@@ -316,7 +311,7 @@ namespace GLTF
             shaderObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
             
             shadersObject->setValue(shaderId, shaderObject);
-			shaderObject->setUnsignedInt32("type", type);
+			shaderObject->setUnsignedInt32(kType, type);
 			if (asset->getEmbedResources())
 			{
 				shaderObject->setString(kURI, create_dataUri(shaderString, "text/plain"));
@@ -343,32 +338,44 @@ namespace GLTF
     static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset)
     {
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
+
+        shared_ptr <JSONArray> enableArray(new GLTF::JSONArray());
+        
         shared_ptr <GLTFProfile> profile = asset->profile();
-        unsigned int GLZero = 0;
-        unsigned int GLOne = 1;
         
-        states->setUnsignedInt32("cullFaceEnable", techniqueExtras->getBool("double_sided") ? GLZero : GLOne );
+        if (techniqueExtras->getBool(kDoubleSided) == false) {
+            enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
+        }
         
-        if (isOpaque(parameters, asset)) {
-            states->setUnsignedInt32("depthTestEnable", GLOne);
-            states->setUnsignedInt32("depthMask", GLOne);
-            states->setUnsignedInt32("blendEnable", GLZero);
-        } else {
-            states->setUnsignedInt32("blendEnable", GLOne);
-            states->setUnsignedInt32("depthTestEnable", GLOne);
-            states->setUnsignedInt32("depthMask", GLOne); //should be true for images, and false for plain color
-            states->setUnsignedInt32("blendEquation", profile->getGLenumForString("FUNC_ADD"));
-            shared_ptr <JSONObject> blendFunc(new GLTF::JSONObject());
+        states->setBool("depthMask", true);
+        enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
+
+        if (isOpaque(parameters, asset) == false) {
+            enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("BLEND"))));
             
+            unsigned func_add = profile->getGLenumForString("FUNC_ADD");
+            shared_ptr <JSONArray> blendEquationSeparate(new GLTF::JSONArray());
+            blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
+            blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
+            states->setValue("blendEquationSeparate", blendEquationSeparate);
             
+            shared_ptr <JSONArray> blendFuncSeparate(new GLTF::JSONArray());
             if (CONFIG_BOOL(asset, "premultipliedAlpha")) {
-                blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("ONE"));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             } else {
-                blendFunc->setUnsignedInt32("sfactor", profile->getGLenumForString("SRC_ALPHA"));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
+                blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             }
-            
-            blendFunc->setUnsignedInt32("dfactor", profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"));
-            states->setValue("blendFunc", blendFunc) ;
+            states->setValue("blendFuncSeparate", blendFuncSeparate) ;
+        }
+        
+        if (enableArray->getCount() > 0) {
+            states->setValue("enable", enableArray);
         }
         
         return states;
@@ -564,7 +571,7 @@ namespace GLTF
             
             commonProfile->setString("lightingModel", lightingModel);
             
-            extras->setBool("doubleSided", techniqueExtras->getBool("double_sided"));
+            extras->setBool("doubleSided", techniqueExtras->getBool(kDoubleSided));
             
             if (texcoordBindings->getKeysCount() > 0) {
                 commonProfile->setValue("texcoordBindings", texcoordBindings);
@@ -614,7 +621,7 @@ namespace GLTF
                 typeForSemanticUniform[MODELVIEWINVERSE] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[MODELVIEW] = _GL(FLOAT_MAT4);
                 typeForSemanticUniform[PROJECTION] = _GL(FLOAT_MAT4);
-                typeForSemanticUniform["JOINT_MATRIX"] = _GL(FLOAT_MAT4);
+                typeForSemanticUniform[JOINTMATRIX] = _GL(FLOAT_MAT4);
             }
             return typeForSemanticUniform[semantic];
         }
@@ -657,6 +664,9 @@ namespace GLTF
                 }
             } else {
                 shader->addUniform(symbol, type, count, forcesAsAnArray);
+                if ((count > 1) || forcesAsAnArray) {
+                    parameter->setUnsignedInt32(kCount, count);
+                }
             }
             
             return true;
@@ -780,7 +790,7 @@ namespace GLTF
                 
                 assert(techniqueExtras != nullptr);
                 addSemantic("vs", "uniform",
-                            "JOINT_MATRIX", "jointMat", jointsCount, false, true /* force as an array */);
+                            JOINTMATRIX, "jointMat", jointsCount, false, true /* force as an array */);
             }
             
             if (hasNormals) {
@@ -853,7 +863,7 @@ namespace GLTF
             if (lightingIsEnabled) {
                 fragmentShader->appendCode("vec3 normal = normalize(%s);\n", "v_normal");
                 if (techniqueExtras) {
-                    if (techniqueExtras->getBool("double_sided")) {
+                    if (techniqueExtras->getBool(kDoubleSided)) {
                         fragmentShader->appendCode("if (gl_FrontFacing == false) normal = -normal;\n");
                     }
                 }
@@ -1269,7 +1279,6 @@ namespace GLTF
         
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
         
-        static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
         if (techniqueHashToTechniqueID.count(techniqueHash) == 0) {
             techniqueHashToTechniqueID[techniqueHash] = "technique" + GLTFUtils::toString(techniqueHashToTechniqueID.size());
         }

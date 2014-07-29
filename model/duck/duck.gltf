@@ -4,13 +4,15 @@
             "bufferView": "bufferView_29",
             "byteOffset": 0,
             "byteStride": 0,
+            "componentType": 5123,
             "count": 12636,
-            "type": 5123
+            "type": "SCALAR"
         },
         "accessor_23": {
             "bufferView": "bufferView_30",
             "byteOffset": 0,
             "byteStride": 12,
+            "componentType": 5126,
             "count": 2399,
             "max": [
                 0.961799,
@@ -22,12 +24,13 @@
                 0.0992937,
                 -0.613282
             ],
-            "type": 35665
+            "type": "VEC3"
         },
         "accessor_25": {
             "bufferView": "bufferView_30",
             "byteOffset": 28788,
             "byteStride": 12,
+            "componentType": 5126,
             "count": 2399,
             "max": [
                 0.999599,
@@ -39,12 +42,13 @@
                 -1,
                 -0.999832
             ],
-            "type": 35665
+            "type": "VEC3"
         },
         "accessor_27": {
             "bufferView": "bufferView_30",
             "byteOffset": 57576,
             "byteStride": 8,
+            "componentType": 5126,
             "count": 2399,
             "max": [
                 0.983346,
@@ -54,15 +58,15 @@
                 0.026409,
                 0.019963
             ],
-            "type": 35664
+            "type": "VEC2"
         }
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@506d909430e3f033e2a84c31b1d41270f7c6eb67",
+        "generator": "collada2gltf@9a6981e11fb02c0666c06ff5235ec075a3cfc438",
         "premultipliedAlpha": true,
         "profile": "WebGL 1.0.2",
-        "version": 0.7
+        "version": 0.8
     },
     "bufferViews": {
         "bufferView_29": {
@@ -377,10 +381,11 @@
                         }
                     },
                     "states": {
-                        "blendEnable": 0,
-                        "cullFaceEnable": 1,
-                        "depthMask": 1,
-                        "depthTestEnable": 1
+                        "depthMask": true,
+                        "enable": [
+                            2884,
+                            2929
+                        ]
                     }
                 }
             }

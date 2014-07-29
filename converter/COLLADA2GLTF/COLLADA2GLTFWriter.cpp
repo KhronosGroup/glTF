@@ -117,6 +117,7 @@ namespace GLTF
         assetObject->setString(kProfile, asset->profile()->id());
         assetObject->setDouble(kVersion, glTFVersion);
 
+        _metersPerUnit = globalAsset->getUnit().getLinearUnitMeter();
         if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP ||
             globalAsset->getUpAxisType() == COLLADAFW::FileInfo::Z_UP)
         {
@@ -145,7 +146,6 @@ namespace GLTF
             shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
             _rootTransform->setValue(kChildren, childrenArray);
         }
-
         asset->setDistanceScale(globalAsset->getUnit().getLinearUnitMeter());
 
         return true;
@@ -255,7 +255,7 @@ namespace GLTF
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
-            nodeObject->setString("jointId",sid);
+            nodeObject->setString(kJointName,sid);
         }
         
         bool nodeContainsLookAtTr = false;
@@ -1262,7 +1262,8 @@ namespace GLTF
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
         shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_MAT4"));
+        inverseBindMatrices->setString(kType, "MAT4");
+        inverseBindMatrices->setUnsignedInt32(kComponentType, profile->getGLenumForString("FLOAT"));
 		inverseBindMatrices->setUnsignedInt32(kCount, (unsigned int)skinControllerData->getJointsCount());
         inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
@@ -1274,7 +1275,7 @@ namespace GLTF
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
@@ -1283,7 +1284,7 @@ namespace GLTF
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(GLTF::FLOAT, bucketSize)));
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
@@ -1310,7 +1311,7 @@ namespace GLTF
         size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
         unsigned char* destinationPtr = (unsigned char*)malloc(bufferSize);
 
-        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, profile->getGLTypeForComponentType(meshAttribute->componentType(), meshAttribute->componentsPerElement())));
+        shared_ptr <GLTFAccessor> targetAttribute(new GLTFAccessor(profile, meshAttribute->componentType(), meshAttribute->type()));
         targetAttribute->setByteStride(meshAttribute->getByteStride());
         targetAttribute->setCount(vertexCount);
 
@@ -1369,7 +1370,7 @@ namespace GLTF
                 shared_ptr<JSONString> jointId(new JSONString(jointsUID[i].toAscii()));
                 joints->appendValue(jointId);
             }
-            glTFSkin->setJointsIds(joints);
+            glTFSkin->setJointNames(joints);
         }
 		return true;
 	}

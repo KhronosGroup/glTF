@@ -197,6 +197,7 @@ namespace GLTF
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
         std::ofstream _compressedDataOutputStream;
+        double _metersPerUnit;
         std::shared_ptr<GLTF::JSONObject> _rootTransform;
 	};
 } 

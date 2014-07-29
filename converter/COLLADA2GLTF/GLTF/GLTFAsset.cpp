@@ -477,8 +477,8 @@ namespace GLTF
 
     std::string GLTFAsset::getSharedBufferId() {
         if (this->_sharedBufferId.length() == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            std::string fileName = inputURI.getPathFileBase();
+            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+            std::string fileName = outputURI.getPathFileBase();
             this->_sharedBufferId = fileName;
         }
         return this->_sharedBufferId;
@@ -584,7 +584,7 @@ namespace GLTF
                 std::shared_ptr <COLLADAFW::MaterialBinding> materialBinding = iterator->second;
                 materialBindingKey += materialBinding->getReferencedMaterial().toAscii();
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
+                    if (meshExtras->contains(kDoubleSided)) {
                         materialBindingKey += "doubleSided:1";
                     }
                     if (meshExtras->contains("jointsCount")) {
@@ -684,8 +684,8 @@ namespace GLTF
                 unsigned int jointsCount = 0;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
                 if (meshExtras != nullptr) {
-                    if (meshExtras->contains("double_sided")) {
-                        techniqueExtras->setBool("double_sided", meshExtras->getBool("double_sided"));
+                    if (meshExtras->contains(kDoubleSided)) {
+                        techniqueExtras->setBool(kDoubleSided, meshExtras->getBool(kDoubleSided));
                     }
                     if (meshExtras->contains("jointsCount")) {
                         jointsCount = meshExtras->getUnsignedInt32("jointsCount");
@@ -693,8 +693,8 @@ namespace GLTF
                     }
                 }
                 
-                if ((effectExtras != nullptr) && effectExtras->contains("double_sided")) {
-                    techniqueExtras->setBool("double_sided", effectExtras->getBool("double_sided"));
+                if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
+                    techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
                 }
                 
                 //generate shaders if needed
@@ -797,7 +797,7 @@ namespace GLTF
                 meshesInSkinning = true;
                 shared_ptr<JSONObject> instanceSkin = node->getObject(kInstanceSkin);
                 meshUID = meshUID.substr(meshesInSkinningPrefix.length());
-                meshesArray = instanceSkin->createArrayIfNeeded(kSources);
+                meshesArray = instanceSkin->createArrayIfNeeded(kMeshes);
             }
             
             assert(meshesInSkinning || meshesInNode);
@@ -1055,7 +1055,6 @@ namespace GLTF
                 GLTFBufferView *bufferView = isCompressed ? (GLTFBufferView*)compressionBufferView.get() : (GLTFBufferView*)indicesBufferView.get();
                 
                 uniqueIndices->setString(kBufferView, bufferView->getID());
-                uniqueIndices->setUnsignedInt32(kType, this->_profile->getGLenumForString("UNSIGNED_SHORT"));
                 accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
             
@@ -1071,7 +1070,7 @@ namespace GLTF
         // ----
         for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
-            shared_ptr<JSONArray> joints = skin->getJointsIds();
+            shared_ptr<JSONArray> joints = skin->getJointNames();
             shared_ptr<JSONArray> jointsWithOriginalSids(new JSONArray());
             
             //resolve the sid and use the original ones
@@ -1079,14 +1078,16 @@ namespace GLTF
             for (size_t i = 0 ; i < values.size() ; i++) {
                 shared_ptr<JSONString> jointId = static_pointer_cast<JSONString>(values[i]);
                 shared_ptr<JSONObject> node = static_pointer_cast<JSONObject>(this->_uniqueIDToJSONValue[jointId->getString()]);
-                if (node->contains("jointId")) {
-                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue("jointId")));
+                if (node->contains(kJointName)) {
+                    jointsWithOriginalSids->appendValue(static_pointer_cast <JSONValue> (node->getValue(kJointName)));
                 }
             }
-            skin->setJointsIds(jointsWithOriginalSids);
+            std::string inverseBindMatricesUID = "IBM_"+skin->getId();
+            skin->setJointNames(jointsWithOriginalSids);
             shared_ptr <JSONObject> inverseBindMatrices = static_pointer_cast<JSONObject>(skin->extras()->getValue(kInverseBindMatrices));
             inverseBindMatrices->setString(kBufferView, genericBufferView->getID());
-            skin->setValue(kInverseBindMatrices, inverseBindMatrices);
+            skin->setString(kInverseBindMatrices, inverseBindMatricesUID);
+            accessors->setValue(inverseBindMatricesUID, inverseBindMatrices);
         }
         
         // ----
@@ -1122,8 +1123,12 @@ namespace GLTF
         
         if (sharedBuffer->getByteLength() > 0) {
             
-            COLLADABU::URI uri(rawOutputStream->outputPath());
-            sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            if (this->_embedResources == false) {
+                COLLADABU::URI uri(rawOutputStream->outputPath());
+                sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            } else {
+                sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(rawOutputStream->outputPath()));
+            }
             sharedBuffer->setString(kType, "arraybuffer");
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
@@ -1131,7 +1136,12 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
+            if (this->_embedResources == false) {
+                COLLADABU::URI uri(compressionOutputStream->outputPath());
+                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
+            } else {
+                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
+            }
             if (converterConfig()->config()->getString("compressionMode") == "ascii")
                 compressionBuffer->setString(kType, "text");
             else
@@ -1153,11 +1163,7 @@ namespace GLTF
         
         indicesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
         verticesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ARRAY_BUFFER"));
-        
-        //---
-        //to run legacy evaluate, to be removed
-        this->addValueEvaluator(shared_ptr<GLTFAssetValueEvaluator> (this));
-        
+       
         this->_performValuesEvaluation();
         
         rawOutputStream->close();

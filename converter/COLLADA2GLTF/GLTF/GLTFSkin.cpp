@@ -70,12 +70,12 @@ namespace GLTF
         this->setValue(kBindShapeMatrix, bindShapeMatrix);
     }
     
-    shared_ptr<JSONArray> GLTFSkin::getJointsIds() {
-        return this->getArray(kJoints);
+    shared_ptr<JSONArray> GLTFSkin::getJointNames() {
+        return this->getArray(kJointNames);
     }
     
-    void GLTFSkin::setJointsIds(shared_ptr<JSONArray> jointIds) {
-        this->setValue(kJoints, jointIds);
+    void GLTFSkin::setJointNames(shared_ptr<JSONArray> jointNames) {
+        this->setValue(kJointNames, jointNames);
     }
     
     const std::string& GLTFSkin::getId() {

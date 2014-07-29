@@ -32,15 +32,17 @@ namespace GLTF
     {
     public:
         virtual ~GLTFProfile();
-        virtual unsigned int getGLTypeForComponentType(ComponentType componentType, size_t) = 0;
+        virtual unsigned int getGLTypeForComponentTypeAndType(const std::string& componentType, const std::string& type) = 0;
         virtual std::string getGLSLTypeForGLType(unsigned int glType) = 0;
         virtual size_t getComponentsCountForGLType(unsigned int glType) = 0;
         virtual std::string id() = 0;
         virtual size_t sizeOfGLType(unsigned int glType) = 0;
-        virtual ComponentType getComponentTypeForGLType(unsigned int glType) = 0;
-        static size_t getComponentsCountForType(const std::string &type);
-    public:
+        virtual unsigned int getGLComponentTypeForGLType(unsigned int glType) = 0;
+        virtual std::string getTypeForGLType(unsigned int glType) = 0;
+        static size_t getComponentsCountForType(const std::string& type);
         unsigned int getGLenumForString(const std::string&);
+        virtual std::shared_ptr<JSONValue> defaultValueForState(const std::string& state) = 0;
+        virtual bool isDefaultValueForState(const std::string& state, std::shared_ptr<JSONValue> value) = 0;
     protected:
         void setGLenumForString(const std::string& , unsigned int);
     private:

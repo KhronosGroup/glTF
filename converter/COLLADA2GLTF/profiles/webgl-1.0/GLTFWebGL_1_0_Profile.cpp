@@ -30,14 +30,18 @@ namespace GL {
     #include "webgl-idl.h"
 }
 
+const std::string webgl_1_0_defaults = "{\"ACTIVE_TEXTURE\":33984,\"BLEND\":false,\"BLEND_COLOR\":[0,0,0,0],\"COLOR_CLEAR_VALUE\":[0,0,0,0],\"COLOR_WRITEMASK\":[true,true,true,true],\"CULL_FACE\":false,\"CULL_FACE_MODE\":1029,\"DEPTH_CLEAR_VALUE\":1,\"DEPTH_FUNC\":513,\"DEPTH_RANGE\":[0,1],\"DEPTH_TEST\":false,\"DEPTH_WRITEMASK\":true,\"FRONT_FACE\":2305,\"LINE_WIDTH\":1,\"SAMPLE_BUFFERS\":1,\"STENCIL_CLEAR_VALUE\":0,\"STENCIL_FUNC\":519,\"STENCIL_PASS_DEPTH_FAIL\":7680,\"STENCIL_PASS_DEPTH_PASS\":7680,\"STENCIL_REF\":0,\"STENCIL_TEST\":false,\"POLYGON_OFFSET_FILL\":false,\"SCISSOR_TEST\":false, \"BLEND_EQUATION\":32774}";
+
 namespace GLTF
-{
-    
+{    
 #define Enum_STR(Src) #Src
 #define registerGLEnum(X) (setGLenumForString(Enum_STR(X), GL::X))
     
     GLTFWebGL_1_0_Profile::GLTFWebGL_1_0_Profile()
     {
+        this->_defaultValues = std::shared_ptr<JSONObject>(new JSONObject());
+        this->_defaultValues->initWithCString(webgl_1_0_defaults.c_str(), nullptr);
+        
         registerGLEnum(DEPTH_BUFFER_BIT);
         registerGLEnum(STENCIL_BUFFER_BIT);
         registerGLEnum(COLOR_BUFFER_BIT);
@@ -410,37 +414,42 @@ namespace GLTF
         registerGLEnum(BROWSER_DEFAULT_WEBGL);
     }
     
-    GLTFWebGL_1_0_Profile::~GLTFWebGL_1_0_Profile()
-    {
+    std::shared_ptr<JSONValue> GLTFWebGL_1_0_Profile::defaultValueForState(const std::string& state) {
+        return this->_defaultValues->getValue(state);
     }
     
-    unsigned int GLTFWebGL_1_0_Profile::getGLTypeForComponentType(ComponentType componentType, size_t componentsPerElement)
+    bool GLTFWebGL_1_0_Profile::isDefaultValueForState(const std::string& state, std::shared_ptr<JSONValue> value) {
+        assert(value);
+        std::shared_ptr<JSONValue> defaultValue = defaultValueForState(state);
+        assert(defaultValue);
+        return value->isEqualTo(defaultValue.get());
+    }
+    
+    GLTFWebGL_1_0_Profile::~GLTFWebGL_1_0_Profile() {
+    }
+    
+    unsigned int GLTFWebGL_1_0_Profile::getGLTypeForComponentTypeAndType(const std::string &componentType, const std::string &type)
     {
-        switch (componentType) {
-            case GLTF::BYTE:
-                return GL::BYTE;
-            case GLTF::SHORT:
-                return GL::SHORT;
-            case GLTF::UNSIGNED_SHORT:
-                return GL::UNSIGNED_SHORT;
-            case GLTF::FLOAT:
-                switch (componentsPerElement) {
-                    case 1:
-                        return GL::FLOAT;
-                    case 2:
-                        return GL::FLOAT_VEC2;
-                    case 3:
-                        return GL::FLOAT_VEC3;
-                    case 4:
-                        return GL::FLOAT_VEC4;
-                }
-                
-            case GLTF::INT:
-                return GL::INT;
-            case GLTF::UNSIGNED_INT:
-                return GL::UNSIGNED_INT;
-            default:
-                break;
+        if (componentType == "BYTE") {
+            return GL::BYTE;
+        } else if (componentType == "UNSIGNED_BYTE") {
+            return GL::UNSIGNED_BYTE;
+        } else if (componentType == "SHORT") {
+            return GL::SHORT;
+        } else if (componentType == "UNSIGNED_SHORT") {
+            return GL::UNSIGNED_SHORT;
+        } else if (componentType == "FLOAT") {
+            size_t componentsPerElement = GLTFProfile::getComponentsCountForType(type);
+            switch (componentsPerElement) {
+                case 1:
+                    return GL::FLOAT;
+                case 2:
+                    return GL::FLOAT_VEC2;
+                case 3:
+                    return GL::FLOAT_VEC3;
+                case 4:
+                    return GL::FLOAT_VEC4;
+            }
         }
         return 0;
     }
@@ -451,6 +460,8 @@ namespace GLTF
                 return sizeof(float);
             case GL::INT:
                 return sizeof(int);
+            case GL::UNSIGNED_SHORT:
+                return sizeof(unsigned short);
             case GL::BOOL:
                 return sizeof(bool);                
             case GL::FLOAT_VEC2:
@@ -515,6 +526,8 @@ namespace GLTF
             case GL::FLOAT:
             case GL::INT:
             case GL::BOOL:
+            case GL::UNSIGNED_SHORT:
+            case GL::UNSIGNED_BYTE:
                 return 1;
 
             case GL::FLOAT_VEC2:
@@ -542,8 +555,45 @@ namespace GLTF
         }
     }
 
-    ComponentType GLTFWebGL_1_0_Profile::getComponentTypeForGLType(unsigned int glType)
-    {
+    std::string GLTFWebGL_1_0_Profile::getTypeForGLType(unsigned int glType) {
+        switch (glType) {
+            case GL::FLOAT:
+            case GL::INT:
+            case GL::BOOL:
+            case GL::UNSIGNED_SHORT:
+            case GL::UNSIGNED_INT:
+                return "SCALAR";
+        
+            case GL::FLOAT_VEC2:
+            case GL::INT_VEC2:
+            case GL::BOOL_VEC2:
+                return "VEC2";
+                
+            case GL::FLOAT_VEC3:
+            case GL::INT_VEC3:
+            case GL::BOOL_VEC3:
+                return "VEC3";
+
+            case GL::FLOAT_VEC4:
+            case GL::INT_VEC4:
+            case GL::BOOL_VEC4:
+                return "VEC4";
+
+            case GL::FLOAT_MAT2:
+                return "MAT2";
+                
+            case GL::FLOAT_MAT3:
+                return "MAT3";
+                
+            case GL::FLOAT_MAT4:
+                return "MAT4";
+                
+            default:
+                return "";
+        }
+    }
+
+    unsigned int GLTFWebGL_1_0_Profile::getGLComponentTypeForGLType(unsigned int glType) {
         switch (glType) {
             case GL::FLOAT:
             case GL::FLOAT_VEC2:
@@ -552,19 +602,23 @@ namespace GLTF
             case GL::FLOAT_MAT2:
             case GL::FLOAT_MAT3:
             case GL::FLOAT_MAT4:
-                return GLTF::FLOAT;
+                return GL::FLOAT;
             case GL::INT:
             case GL::INT_VEC2:
             case GL::INT_VEC3:
             case GL::INT_VEC4:
-                return GLTF::INT;
+                return GL::INT;
             case GL::BOOL:
             case GL::BOOL_VEC2:
             case GL::BOOL_VEC3:
             case GL::BOOL_VEC4:
-                return UNSIGNED_BYTE;
+                return GL::BOOL;
+            case GL::UNSIGNED_SHORT:
+                return GL::UNSIGNED_SHORT;
+            case GL::UNSIGNED_INT:
+                return GL::UNSIGNED_INT;
             default:
-                return GLTF::NOT_AN_ELEMENT_TYPE;
+                return 0;
         }
     }
 
