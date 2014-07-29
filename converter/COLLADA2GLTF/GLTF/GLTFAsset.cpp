@@ -477,8 +477,8 @@ namespace GLTF
 
     std::string GLTFAsset::getSharedBufferId() {
         if (this->_sharedBufferId.length() == 0) {
-            COLLADABU::URI inputURI(this->getInputFilePath().c_str());
-            std::string fileName = inputURI.getPathFileBase();
+            COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
+            std::string fileName = outputURI.getPathFileBase();
             this->_sharedBufferId = fileName;
         }
         return this->_sharedBufferId;
