@@ -337,17 +337,15 @@ namespace GLTF
     
     static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset)
     {
+        shared_ptr <JSONObject> functions(new GLTF::JSONObject());
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
-
         shared_ptr <JSONArray> enableArray(new GLTF::JSONArray());
-        
         shared_ptr <GLTFProfile> profile = asset->profile();
         
         if (techniqueExtras->getBool(kDoubleSided) == false) {
             enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
         }
         
-        states->setBool("depthMask", true);
         enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
 
         if (isOpaque(parameters, asset) == false) {
@@ -357,7 +355,7 @@ namespace GLTF
             shared_ptr <JSONArray> blendEquationSeparate(new GLTF::JSONArray());
             blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
             blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
-            states->setValue("blendEquationSeparate", blendEquationSeparate);
+            functions->setValue("blendEquationSeparate", blendEquationSeparate);
             
             shared_ptr <JSONArray> blendFuncSeparate(new GLTF::JSONArray());
             if (CONFIG_BOOL(asset, "premultipliedAlpha")) {
@@ -371,11 +369,14 @@ namespace GLTF
                 blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
                 blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             }
-            states->setValue("blendFuncSeparate", blendFuncSeparate) ;
+            functions->setValue("blendFuncSeparate", blendFuncSeparate) ;
         }
         
         if (enableArray->getCount() > 0) {
             states->setValue("enable", enableArray);
+        }
+        if (functions->getKeysCount() > 0) {
+            states->setValue("functions", functions);
         }
         
         return states;

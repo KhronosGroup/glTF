@@ -873,7 +873,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@9a6981e11fb02c0666c06ff5235ec075a3cfc438",
+        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
         "premultipliedAlpha": true,
         "profile": "WebGL 1.0.2",
         "version": 0.8
@@ -11969,7 +11969,6 @@
                         }
                     },
                     "states": {
-                        "depthMask": true,
                         "enable": [
                             2884,
                             2929
@@ -12046,22 +12045,23 @@
                         }
                     },
                     "states": {
-                        "blendEquationSeparate": [
-                            32774,
-                            32774
-                        ],
-                        "blendFuncSeparate": [
-                            1,
-                            771,
-                            1,
-                            771
-                        ],
-                        "depthMask": true,
                         "enable": [
                             2884,
                             2929,
                             3042
-                        ]
+                        ],
+                        "functions": {
+                            "blendEquationSeparate": [
+                                32774,
+                                32774
+                            ],
+                            "blendFuncSeparate": [
+                                1,
+                                771,
+                                1,
+                                771
+                            ]
+                        }
                     }
                 }
             }
@@ -12108,7 +12108,6 @@
                         }
                     },
                     "states": {
-                        "depthMask": true,
                         "enable": [
                             2884,
                             2929
@@ -12180,7 +12179,6 @@
                         }
                     },
                     "states": {
-                        "depthMask": true,
                         "enable": [
                             2884,
                             2929
