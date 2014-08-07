@@ -117,7 +117,7 @@ namespace GLTF
                             for (int x = 0; (x < width) && !hasAlpha; x++) {
                                 png_bytep px = &(row[x * 4]);
                                 if (px[3] != 255) {
-                            hasAlpha =  true;
+                                    hasAlpha =  true;
                                 }
                             }
                         }
