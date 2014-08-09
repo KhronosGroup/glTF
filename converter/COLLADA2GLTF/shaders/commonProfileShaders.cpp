@@ -89,15 +89,44 @@ namespace GLTF
                     png_set_sig_bytes(pngPtr, PNGSIGSIZE);
                     png_read_info(pngPtr, infoPtr);
                     png_uint_32 color_type = png_get_color_type(pngPtr, infoPtr);
-                    switch (color_type) {
-                        case PNG_COLOR_TYPE_RGB_ALPHA:
-                            hasAlpha =  true;
-                            break;
-                        case PNG_COLOR_TYPE_GRAY_ALPHA:
-                            hasAlpha = true;
-                            break;
-                        default:
-                            break;
+                    if (color_type == PNG_COLOR_TYPE_RGB_ALPHA || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
+                        int width = png_get_image_width(pngPtr, infoPtr);
+                        int height = png_get_image_height(pngPtr, infoPtr);
+                        png_byte bit_depth = png_get_bit_depth(pngPtr, infoPtr);
+
+                        if (bit_depth == 16)
+                            png_set_strip_16(pngPtr);
+
+                        if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
+                            png_set_tRNS_to_alpha(pngPtr);
+
+                        if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+                            png_set_gray_to_rgb(pngPtr);
+
+                        // Allocate row pointers
+                        png_bytep *row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+                        for (int y = 0; y < height; y++) {
+                            row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(pngPtr, infoPtr));
+                        }
+
+                        png_read_image(pngPtr, row_pointers);
+
+                        // Check for alpha less than 255
+                        for (int y = 0; (y < height) && !hasAlpha; y++) {
+                            png_bytep row = row_pointers[y];
+                            for (int x = 0; (x < width) && !hasAlpha; x++) {
+                                png_bytep px = &(row[x * 4]);
+                                if (px[3] != 255) {
+                                    hasAlpha =  true;
+                                }
+                            }
+                        }
+
+                        // Free row pointers
+                        for (int y = 0; y < height; y++) {
+                            free(row_pointers[y]);
+                        }
+                        free(row_pointers);
                     }
                     
                     png_destroy_read_struct(&pngPtr, (png_infopp)0, (png_infopp)0);
@@ -337,17 +366,15 @@ namespace GLTF
     
     static shared_ptr <JSONObject> createStatesForTechnique(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset)
     {
+        shared_ptr <JSONObject> functions(new GLTF::JSONObject());
         shared_ptr <JSONObject> states(new GLTF::JSONObject());
-
         shared_ptr <JSONArray> enableArray(new GLTF::JSONArray());
-        
         shared_ptr <GLTFProfile> profile = asset->profile();
         
         if (techniqueExtras->getBool(kDoubleSided) == false) {
             enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
         }
         
-        states->setBool("depthMask", true);
         enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
 
         if (isOpaque(parameters, asset) == false) {
@@ -357,7 +384,7 @@ namespace GLTF
             shared_ptr <JSONArray> blendEquationSeparate(new GLTF::JSONArray());
             blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
             blendEquationSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(func_add)));
-            states->setValue("blendEquationSeparate", blendEquationSeparate);
+            functions->setValue("blendEquationSeparate", blendEquationSeparate);
             
             shared_ptr <JSONArray> blendFuncSeparate(new GLTF::JSONArray());
             if (CONFIG_BOOL(asset, "premultipliedAlpha")) {
@@ -371,11 +398,14 @@ namespace GLTF
                 blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("SRC_ALPHA"))));
                 blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             }
-            states->setValue("blendFuncSeparate", blendFuncSeparate) ;
+            functions->setValue("blendFuncSeparate", blendFuncSeparate) ;
         }
         
         if (enableArray->getCount() > 0) {
             states->setValue("enable", enableArray);
+        }
+        if (functions->getKeysCount() > 0) {
+            states->setValue("functions", functions);
         }
         
         return states;
