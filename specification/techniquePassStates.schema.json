@@ -4,370 +4,151 @@
     "type" : "object",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
-        "blendEnable" : {
-            "type" : "boolean",
-            "description" : "enable(BLEND) or disable(BLEND)",
-            "default" : false
+        "enable" : {
+            "type" : "array",
+            "description" : "WebGL states to enable.  Valid values are (3042) BLEND, (2884) CULL_FACE, (2929) DEPTH_TEST, (32823) POLYGON_OFFSET_FILL, (32926) SAMPLE_ALPHA_TO_COVERAGE, and (3089) SCISSOR_TEST.",
+            "items" : {
+                "type": "integer"
+            },
+            "uniqueItems" : true,
+            "default" : []
         },
-        "blendEquation" : {
-            "type" : "string",
-            "description" : "blendEquation()",
-            "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
-            "default" : "FUNC_ADD"
-        },
-        "blendEquationSeparate" : {
+        "functions" : {
+            "$schema" : "http://json-schema.org/draft-03/schema",
+            "title" : "states functions",
             "type" : "object",
-            "description" : "blendEquationSeparate()",
+            "description" : "Arguments for state functions.",
+            "extends" : { "$ref" : "glTFProperty.schema.json" },
             "properties" : {
-                "rgb" : {
-                    "type" : "string",
-                    "description" : "blendEquationSeparate()",
-                    "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
-                    "default" : "FUNC_ADD"
+                "blendColor" : {
+                    "type" : "array",
+                    "description" : "Floating-point values passed to blendColor(). [red, green, blue, alpha]",
+                    "items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 4,
+                    "maxItems" : 4,
+                    "default" : [0.0, 0.0, 0.0, 0.0]
                 },
-                "alpha" : {
-                    "type" : "string",
-                    "description" : "blendEquationSeparate()",
-                    "enum" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"],
-                    "default" : "FUNC_ADD"
+                "blendEquationSeparate" : {
+                    "type" : "array",
+                    "description" : "Integer values passed to blendEquationSeparate(). [rgb, alpha]. Valid values are (32774) FUNC_ADD, (32778) FUNC_SUBTRACT, and (32779) FUNC_REVERSE_SUBTRACT.",
+                    "items" : {
+                        "type" : "number",
+                        "enum" : [32774, 32778, 32779]
+                    },
+                    "minItems" : 2,
+                    "maxItems" : 2,
+                    "default" : [32774, 32774]
+                },
+                "blendFuncSeparate" : {
+                    "type" : "array",
+                    "description" : "Integer values passed to blendFuncSeparate(). [srcRGB, srcAlpha, dstRGB, dstAlpha]. Valid values are (0) ZERO, (1) ONE, (768) SRC_COLOR, (769) ONE_MINUS_SRC_COLOR, (774) DST_COLOR, (775) ONE_MINUS_DST_COLOR, (770) SRC_ALPHA, (771) ONE_MINUS_SRC_ALPHA, (772) DST_ALPHA, (773) ONE_MINUS_DST_ALPHA, (32769) CONSTANT_COLOR, (32770) ONE_MINUS_CONSTANT_COLOR, (32771) CONSTANT_ALPHA, (32772) ONE_MINUS_CONSTANT_ALPHA, and (776) SRC_ALPHA_SATURATE.",
+                    "items" : {
+                        "type" : "number",
+                        "enum" : [0, 1, 768, 769, 774, 775, 770, 771, 772, 773, 32769, 32770, 32771, 32772, 776]
+                    },
+                    "minItems" : 4,
+                    "maxItems" : 4,
+                    "default" : [1, 1, 0, 0]
+                },
+                "colorMask" : {
+                    "type" : "array",
+                    "description" : "Boolean values passed to colorMask(). [red, green, blue, alpha].",
+                    "items" : {
+                        "type" : "boolean"
+                    },
+                    "minItems" : 4,
+                    "maxItems" : 4,
+                    "default" : [true, true, true, true]
+                },
+                "cullFace" : {
+                    "type" : "array",
+                    "description" : "Integer value passed to cullFace(). Valid values are (1028) FRONT, (1029) BACK, and (1032) FRONT_AND_BACK.",
+                    "items" : {
+                        "type" : "integer",
+                        "enum" : [1028, 1029, 1032]
+                    },
+                    "minItems" : 1,
+                    "maxItems" : 1,
+                    "default" : [1029]
+                },
+                "depthFunc" : {
+                    "type" : "array",
+                    "description" : "Integer values passed to depthFunc(). Valid values are (512) NEVER, (513) LESS, (515) LEQUAL, (514) EQUAL, (516) GREATER, (517) NOTEQUAL, (518) GEQUAL, and (519) ALWAYS.",
+                    "items" : {
+                        "type" : "integer",
+                        "enum" : [512, 513, 515, 514, 516, 517, 518, 519]
+                    },
+                    "minItems" : 1,
+                    "maxItems" : 1,
+                    "default" : [513]
+                },
+                "depthMask" : {
+                    "type" : "array",
+                    "description" : "Boolean value passed to depthMask().",
+                    "items" : {
+                        "type" : "boolean"
+                    },
+                    "minItems" : 1,
+                    "maxItems" : 1,
+                    "default" : [true]
+                },
+                "depthRange" : {
+                    "type" : "array",
+                    "description" : "Floating-point values passed to depthRange(). [zNear, zFar]",
+                    "items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 2,
+                    "maxItems" : 2,
+                    "default" : [0.0, 1.0]
+                },
+                "frontFace" : {
+                    "type" : "array",
+                    "description" : "Integer value passed to frontFace().  Valid values are (2304) CW and (2305) CCW.",
+                    "items" : {
+                        "type" : "integer",
+                        "enum" : [2304, 2305]
+                    },
+                    "minItems" : 1,
+                    "maxItems" : 1,
+                    "default" : [2305]
+                },
+                "lineWidth" : {
+                    "type" : "array",
+                    "description" : "Floating-point value passed to lineWidth().",
+                    "items" : {
+                        "type" : "number",
+                        "minimum" : 0.0,
+                        "exclusiveMinimum" : true
+                    },
+                    "minItems" : 1,
+                    "maxItems" : 1,
+                    "default" : [1.0]
+                },
+                "polygonOffset" : {
+                    "type" : "array",
+                    "description" : "Floating-point value passed to polygonOffset().  [factor, units]",
+                    "items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 2,
+                    "maxItems" : 2,
+                    "default" : [0.0, 0.0]
+                },
+                "scissor" : {
+                    "type" : "array",
+                    "description" : "Floating-point value passed to scissor().  [x, y, width, height].  The defaults is the dimensions of the canvas when the WebGL context is created.  TODO: width and height must be > 0.0, items should be an array below.",
+                    "items" : {
+                        "type" : "number"
+                    },
+                    "minItems" : 4,
+                    "maxItems" : 4,
+                    "default" : [0.0, 0.0, 0.0, 0.0]
                 }
-            }
-        },
-        "blendFunc" : {
-            "type" : "object",
-            "description" : "blendFunc()",
-            "properties" : {
-                "sfactor" : {
-                    "type" : "string",
-                    "description" : "blendFunc()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ONE"
-                },
-                "dfactor" : {
-                    "type" : "string",
-                    "description" : "blendFunc()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ZERO"
-                }
-            }
-        },		
-        "blendFuncSeparate" : {
-            "type" : "object",
-            "description" : "blendFuncSeparate()",
-            "properties" : {
-                "srcRGB" : {
-                    "type" : "string",
-                    "description" : "blendFuncSeparate()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ONE"
-                },
-                "srcAlpha" : {
-                    "type" : "string",
-                    "description" : "blendFuncSeparate()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ONE"
-                },
-                "dstRGB" : {
-                    "type" : "string",
-                    "description" : "blendFuncSeparate()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ZERO"
-                },
-                "dstAlpha" : {
-                    "type" : "string",
-                    "description" : "blendFuncSeparate()",
-                    "enum" : ["ZERO","ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"],
-                    "default" : "ZERO"
-                }
-            }
-        },
-        "colorMask" : {
-            "type" : "object",
-            "description" : "colorMask()",
-            "properties" : {
-                "red" : {
-                    "type" : "boolean",
-                    "description" : "colorMask()",
-                    "default" : true
-                },
-                "green" : {
-                    "type" : "boolean",
-                    "description" : "colorMask()",
-                    "default" : true
-                },
-                "blue" : {
-                    "type" : "boolean",
-                    "description" : "colorMask()",
-                    "default" : true
-                },
-                "alpha" : {
-                    "type" : "boolean",
-                    "description" : "colorMask()",
-                    "default" : true
-                }
-            }
-        },    
-        "cullFace" : {
-            "type" : "string",
-            "description" : "cullFace()",
-            "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
-            "default" : "BACK"
-        },
-        "cullFaceEnable" : {
-            "type" : "boolean",
-            "description" : "enable(CULL_FACE) or disable(CULL_FACE)",
-            "default" : false
-        },
-        "depthFunc" : {
-            "type" : "string",
-            "description" : "depthFunc()",
-            "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
-            "default" : "LESS"
-        },
-        "depthMask" : {
-            "type" : "boolean",
-            "description" : "depthMask()",
-            "default" : true
-        },
-        "depthRange" : {
-            "type" : "object",
-            "description" : "depthRange()",
-            "properties" : {
-                "zNear" : {
-                    "type" : "number",
-                    "description" : "depthRange()",
-                    "default" : 0.0,
-                    "minimum" : 0.0,
-                    "maximum" : 1.0
-                },			
-                "zFar" : {
-                    "type" : "number",
-                    "description" : "depthRange()",
-                    "default" : 1.0,
-                    "minimum" : 0.0,
-                    "maximum" : 1.0
-                }		
-            }		
-        },
-        "depthTestEnable" : {
-            "type" : "boolean",
-            "description" : "enable(DEPTH_TEST) or disable(DEPTH_TEST)",
-            "default" : false
-        },
-        "ditherEnable" : {
-            "type" : "boolean",
-            "description" : "enable(DITHER) or disable(DITHER)",
-            "default" : false
-        },
-        "frontFace" : {
-            "type" : "string",
-            "description" : "frontFace()",
-            "enum" : ["CW,", "CCW"],
-            "default" : "CCW"
-        },
-        "lineWidth" : {
-            "type" : "number",
-            "description" : "lineWidth()",
-            "default" : 1.0,
-            "minimum" : 0.0,
-            "exclusiveMinimum" : true
-        },
-        "pointSize" : {
-            "type" : "number",
-            "description" : "gl_PointSize"
-        },
-        "polygonOffset" : {
-            "type" : "object",
-            "description" : "polygonOffset()",
-            "properties" : {
-                "factor" : {
-                    "type" : "number",
-                    "description" : "polygonOffset()",
-                    "default" : 0.0
-                },
-                "units" : {
-                    "type" : "number",
-                    "description" : "polygonOffset()",
-                    "default" : 0.0
-                }
-            }
-        },
-        "polygonOffsetFillEnable" : {
-            "type" : "boolean",
-            "description" : "enable(POLYGON_OFFSET_FILL) or disable(POLYGON_OFFSET_FILL)",
-            "default" : false
-        },
-        "sampleAlphaToCoverageEnable" : {
-            "type" : "boolean",
-            "description" : "enable(SAMPLE_ALPHA_TO_COVERAGE) or disable(SAMPLE_ALPHA_TO_COVERAGE)",
-            "default" : false
-        },
-        "sampleCoverage" : {
-            "type" : "object",
-            "description" : "sampleCoverage()",
-            "properties" : {
-                "value" : {
-                    "type" : "number",
-                    "description" : "sampleCoverage()",
-                    "default" : 1.0,
-                    "minimum" : 0.0,
-                    "maximum" : 1.0
-                },
-                "invert" : {
-                    "type" : "boolean",
-                    "description" : "sampleCoverage()",
-                    "default" : false
-                }
-            }			
-        },
-        "sampleCoverageEnable" : {
-            "type" : "boolean",
-            "description" : "enable(SAMPLE_COVERAGE) or disable(SAMPLE_COVERAGE)",
-            "default" : false
-        },
-        "scissor" : {
-            "type" : "object",
-            "description" : "scissor()",
-            "properties" : {
-                "x" : {
-                    "type" : "integer",
-                    "description" : "scissor()",
-                    "default" : 0
-                },
-                "y" : {
-                    "type" : "integer",
-                    "description" : "scissor()",
-                    "default" : 0
-                },
-                "width" : {
-                    "type" : "integer",
-                    "description" : "scissor()",
-                    "default" : 0
-                },
-                "height" : {
-                    "type" : "integer",
-                    "description" : "scissor()",
-                    "default" : 0
-                }
-            }			
-        },
-        "scissorTestEnable" : {
-            "type" : "boolean",
-            "description" : "enable(SCISSOR_TEST) or disable(SCISSOR_TEST)",
-            "default" : false
-        },
-        "stencilFunc" : {
-            "type" : "object",
-            "description" : "stencilFunc()",
-            "properties" : {
-                "func" : {
-                    "type" : "string",
-                    "description" : "stencilFunc()",
-                    "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
-                    "default" : "ALWAYS"
-                },
-                "ref" : {
-                    "type" : "integer",
-                    "description" : "stencilFunc()",
-                    "default" : 0,
-                    "minimum" : 0
-                },
-                "mask" : {
-                    "type" : "integer",
-                    "description" : "stencilFunc().  The default is all ones."
-                }
-            }			
-        },
-        "stencilFuncSeparate" : {
-            "type" : "object",
-            "description" : "stencilFuncSeparate()",
-            "properties" : {
-                "front" : {
-                    "type" : "string",
-                    "description" : "stencilFuncSeparate()",
-                    "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
-                    "default" : "ALWAYS"
-                },
-                "back" : {
-                    "type" : "string",
-                    "description" : "stencilFuncSeparate()",
-                    "enum" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"],
-                    "default" : "ALWAYS"
-                },
-                "ref" : {
-                    "type" : "integer",
-                    "description" : "stencilFuncSeparate()",
-                    "default" : 0,
-                    "minimum" : 0
-                },
-                "mask" : {
-                    "type" : "integer",
-                    "description" : "stencilFuncSeparate().  The default is all ones."
-                }
-            }			
-        },
-        "stencilMask" : {
-            "type" : "integer",
-            "description" : "stencilMask().  The default is all ones."
-        },
-        "stencilOp" : {
-            "type" : "object",
-            "description" : "stencilOp()",
-            "properties" : {
-                "fail" : {
-                    "type" : "string",
-                    "description" : "stencilOp()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                },
-                "zfail" : {
-                    "type" : "string",
-                    "description" : "stencilOp()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                },
-                "zpass" : {
-                    "type" : "string",
-                    "description" : "stencilOp()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                }
-            }		
-        },
-        "stencilOpSeparate" : {
-            "type" : "object",
-            "description" : "stencilOpSeparate()",
-            "properties" : {
-                "face" : {
-                    "type" : "string",
-                    "description" : "stencilOpSeparate()",
-                    "enum" : ["FRONT", "BACK", "FRONT_AND_BACK"],
-                    "default" : "FRONT_AND_BACK"
-                },
-                "fail" : {
-                    "type" : "string",
-                    "description" : "stencilOpSeparate()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                },
-                "zfail" : {
-                    "type" : "string",
-                    "description" : "stencilOpSeparate()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                },
-                "zpass" : {
-                    "type" : "string",
-                    "description" : "stencilOpSeparate()",
-                    "enum" : ["KEEP", "ZERO", "REPLACE", "INCR", "DECR", "INVERT", "INCR_WRAP", "DECR_WRAP"],
-                    "default" : "KEEP"
-                }
-            }		
-        },
-        "stencilTestEnable" : {
-            "type" : "boolean",
-            "description" : "enable(STENCIL_TEST) or disable(STENCIL_TEST)",
-            "default" : false
+            },
+            "additionalProperties" : false
         }
     },
     "additionalProperties" : false
