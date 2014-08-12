@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "accessor",
     "type" : "object",
-    "description" : "A typed accessor into a buffer-view.  WebGL: see vertexAttribPointer().",
+    "description" : "A typed accessor into a buffer-view.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bufferView" : {
@@ -25,19 +25,19 @@
         },
         "componentType" : {
             "type" : "integer",
-            "description" : "Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array. WebGL: see vertexAttribPointer() type parameter.",
+            "description" : "Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array.",
             "enum" : [5120, 5121, 5122, 5123, 5126],
             "required" : true
         },
         "count" : {
             "type" : "integer",
             "description" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.",
-            "minimum" : 0,
+            "minimum" : 1,
             "required" : true
         },
         "type" : {
             "type" : "string",
-            "description" : "Specifies if the attribute is a scale, vector, or matrix.  WebGL: see vertexAttribPointer() size parameter.",
+            "description" : "Specifies if the attribute is a scale, vector, or matrix.",
             "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
             "required" : true
         },        
