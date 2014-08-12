@@ -20,7 +20,7 @@
             "type" : "integer",
             "description" : "The length of the buffer-view in bytes.",
             "minimum" : 0,
-            "required" : true
+            "default" : 0
         },
         "target" : {
             "type" : "integer",
