@@ -1,9 +1,0 @@
-{
-    "xmag" : 0.5,
-    "ymag" : 0.5,
-    "zfar" : 1000,
-    "znear" : 1,
-    "extra" : {
-       "Application specific" : "The extra object can contain any properties."
-    }    
-}

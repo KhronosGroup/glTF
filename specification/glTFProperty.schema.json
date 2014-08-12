@@ -1,0 +1,17 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "glTF property",
+    "type" : "object",
+    "properties" : {
+        "extensions" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "extension.schema.json"
+            }
+        },
+        "extras" : {
+            "$ref" : "extras.schema.json"
+        }
+    }
+}

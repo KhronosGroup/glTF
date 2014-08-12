@@ -2,32 +2,13 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "material",
     "type" : "object",
-    "description" : "TODO",
-    "properties": {    
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },
-        "parameters" : {
-	        "$ref" : "parameters.schema.json"
-        },
-        "technique" : {
-            "type" : "string",
-            "description" : "The id (JSON property name) of the default technique referenced by this material.",
+    "description" : "An instance of a technique with parameter value overrides.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties": {
+        "instanceTechnique" : {
+            "extends" : { "$ref" : "materialInstanceTechnique.schema.json" },
+            "description" : "An instance of a technique with parameter value overrides.",
             "required" : true
-        },
-        "techniques" : {
-            "description" : "The techniques available to this material.",
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "technique.schema.json"
-            },
-            "required" : true
-        },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
         }
     },
     "additionalProperties" : false

@@ -1,9 +1,0 @@
-{
-    "children" : ["child_id", "anotherChild_id"],
-    "matrix" : [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    "meshes" : ["mesh_id"],
-    "name" : "application-visible globally-unique name",
-    "extra" : {
-       "Application specific" : "The extra object can contain any properties."
-    }    
-}

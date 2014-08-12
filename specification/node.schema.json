@@ -2,40 +2,81 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node",
     "type" : "object",
-    "description" : "A node in the model's node hierarchy.  Node can reference meshes, cameras, or lights.",
+    "description" : "A node in the node hierarchy.  Nodes can reference meshes, cameras, lights, or skins.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "camera" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the camera referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
+        },
         "children" : {
             "type" : "array",
-            "description" : "The node's children.  Each string in the array must match an existing id (JSON property name) in this model's nodes.  Children are affected by the node's matrix.",
+            "description" : "The ids (JSON property name) of this node's children.",
             "items" : {
-                "type" : "string"
+                "$ref" : "glTFid.schema.json"
             },
-            "uniqueItems" : true
+            "uniqueItems" : true,
+            "default" : []
+        },
+        "instanceSkin" : {
+            "extends" : { "$ref" : "nodeInstanceSkin.schema.json" },
+            "description" : "An instance of a skin."
+        },
+        "jointName" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "Name used when this node is a joint in a skin.  When this node is a skin, instanceSkin will also be defined."
+        },
+        "light" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the light referenced by this node.  A node will have either the camera, light, meshes, or instanceSkin property defined."
         },
         "matrix" : {
             "type" : "array",
-            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  It is directly usable by uniformMatrix4fv with transpose equal to false.",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.  WebGL: see uniformMatrix4fv with the transpose parameter equal to false.",
             "items" : {
                 "type": "number"
             },
             "minItems" : 16,
-            "maxItems" : 16
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The meshes that are part of this node.  Each string in the array must match an existing id (JSON property name) in this model's meshes.  Multiple meshes are allowed so each can share the same transform matrix.",
+            "description" : "The ids (JSON property name) of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix.  A node will have either the camera, light, meshes, or instanceSkin property defined.",
             "items" : {
-                "type" : "string"
+                "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true
         },
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
+        "rotation" : {
+            "type" : "array",
+            "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [ 1.0, 0.0, 0.0, 0.0 ]
         },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+        "scale" : {
+            "type" : "array",
+            "description" : "The node's non-uniform scale.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 1.0, 1.0, 1.0 ]
+        },
+        "translation" : {
+            "type" : "array",
+            "description" : "The node's translation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 0.0, 0.0, 0.0 ]
         }
     },
     "additionalProperties" : false

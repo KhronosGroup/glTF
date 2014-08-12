@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
 <img src="specification/figures/glTF_300.jpg" />
 </p>
 
@@ -8,18 +8,21 @@ glTF is a draft specification, it may change before ratification.  Everyone is e
 
 ## Specification  
 
-[glTF Specification 0.6](https://github.com/KhronosGroup/glTF/blob/schema/specification/README.md)
-
-## Cloning the repo
-```
-git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
-```
+[glTF Specification 0.8](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md)
 
 ## Converter
 
-An open-source [converter](https://github.com/KhronosGroup/glTF/wiki/converter) produces glTF assets from COLLADA using [OpenCOLLADA](https://github.com/khronosGroup/OpenCOLLADA/).
+An open-source command-line [converter](https://github.com/KhronosGroup/glTF/wiki/converter) produces glTF assets from COLLADA using [OpenCOLLADA](https://github.com/khronosGroup/OpenCOLLADA/).
 
-You can also find binary [builds](https://github.com/KhronosGroup/glTF/wiki/Converter-builds).
+Download the [binary](https://github.com/KhronosGroup/glTF/wiki/Converter-builds) for Mac or Windows.
+
+## Cloning the repo
+
+Since this repo has git submodules, clone with:
+
+```
+git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
+```
 
 ## Viewers
 

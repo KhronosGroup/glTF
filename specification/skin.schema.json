@@ -1,0 +1,34 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "skin",
+    "type" : "object",
+    "description" : "Joints and matrices defining a skin.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "bindShapeMatrix" : {
+            "type" : "array",
+            "description" : "Floating-point 4x4 transformation matrix stored in column-major order.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "inverseBindMatrices" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "Accessor id (JSON property name) containing the 4x4 inverse-bind matrices.",
+            "required" : true        
+        },
+        "jointNames" : {
+            "type" : "array",
+            "description" : "Joint names of the joints (nodes with a joint property) in this skin.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "required" : true        
+        }
+    },
+    "additionalProperties" : false
+}

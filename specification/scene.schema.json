@@ -1,16 +1,17 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "mesh",
+    "title" : "scene",
     "type" : "object",
-    "description" : "An array of primitives defining geometry and material.",
+    "description" : "The root nodes of the scene.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "primitives" : {
+        "nodes" : {
             "type" : "array",
-            "description" : "Primitives that define geometry and material.",
+            "description" : "The ids (JSON property names) for each root node.",
             "items" : {
-                "$ref" : "meshPrimitive.schema.json"
+                "$ref" : "glTFid.schema.json"
             },
+            "uniqueItems" : true,
             "default" : []
         }
     },

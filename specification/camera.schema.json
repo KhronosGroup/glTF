@@ -2,21 +2,22 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "camera",
     "type" : "object",
-    "description" : "A view into the scene.  The camera describes the projection, but not the camera's position and direction.",
+    "description" : "A camera's projection.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
-        "name" : {
-            "type" : "string",
-            "description" : "The application-visible globally-unique name of this node."
-        },    
         "orthographic" : {
-            "$ref" : "orthographic.schema.json"
+            "extends" : { "$ref" : "cameraOrthographic.schema.json" },
+            "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
         },
         "perspective" : {
-            "$ref" : "perspective.schema.json"
+            "extends" : { "$ref" : "cameraPerspective.schema.json" },
+            "description" : "A perspective camera containing properties to create a perspective projection matrix."
         },
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+        "type" : {
+            "type" : "string",
+            "description" : "Specifies if the camera uses a perspective or orthographic projection.",
+            "enum" : ["perspective", "orthographic"],
+            "required" : true
         }
     },
     "additionalProperties" : false

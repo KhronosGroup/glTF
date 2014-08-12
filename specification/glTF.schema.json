@@ -2,97 +2,167 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "glTF",
     "type" : "object",
-    "description" : "The glTF model.",
+    "description" : "Root glTF property.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "allExtensions" : {
+            "type" : "array",
+            "description" : "Names of extensions used throughout model.  WebGL: see getSupportedExtensions() and getExtension().",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "default" : []
+        },
+        "accessors" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "accessor.schema.json"
+            },
+            "default" : {}
+        },
+        "animations" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.schema.json"
+            },
+            "default" : {}
+        },
         "asset" : {
-            "$ref" : "asset.schema.json"
+            "extends" : { "$ref" : "asset.schema.json" },
+            "description" : "Asset-management information.",
+            "default" : {}
         },
         "buffers" : {
-            "description" : "The buffers used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "buffer.schema.json"
-            }
+            },
+            "default" : {}
         },
         "bufferViews" : {
-            "description" : "The buffer views used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "bufferView.schema.json"
-            }
+            },
+            "default" : {}
         },
         "cameras" : {
-            "description" : "The cameras available to this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "camera.schema.json"
-            }
+            },
+            "default" : {}
         },
         "images" : {
-            "description" : "The images used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "image.schema.json"
-            }
+            },
+            "default" : {}
+        },
+        "lights" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "light.schema.json"
+            },
+            "default" : {}
         },
         "materials" : {
-            "description" : "The materials used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "material.schema.json"
-            }
+            },
+            "default" : {}
         },
         "meshes" : {
-            "description" : "The meshes that make up this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "mesh.schema.json"
-            }
+            },
+            "default" : {}
         },
         "nodes" : {
-            "description" : "The nodes that make up this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "node.schema.json"
-            }
+            },
+            "default" : {}
+        },
+        "programs" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "program.schema.json"
+            },
+            "default" : {}
+        },
+        "samplers" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "sampler.schema.json"
+            },
+            "default" : {}
+        },
+        "scene" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the default scene."
+        },
+        "scenes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "scene.schema.json"
+            },
+            "default" : {}
         },
         "shaders" : {
-            "description" : "The shaders used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "shader.schema.json"
-            }
+            },
+            "default" : {}
+        },
+        "skins" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "skin.schema.json"
+            },
+            "default" : {}
         },
         "techniques" : {
-            "description" : "The techniques used in this model.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.schema.json"
-            }
+            },
+            "default" : {}
         },
-        "version" : {
-            "type" : "string",
-            "description" : "The glTF version.",
-            "required" : true
-        },
-        "profile" : {
-            "type" : "string",
-            "description" : "The glTF profile used for this asset.",
-            "required" : true
-        },        
-        "extra" : {
-            "type" : "any",
-            "description" : "Optional application-specific data."
+        "textures" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "texture.schema.json"
+            },
+            "default" : {}
         }
+    },
+    "dependencies" : {
+        "scene" : "scenes",
+        "scenes" : "scene"
     },
     "additionalProperties" : false
 }
