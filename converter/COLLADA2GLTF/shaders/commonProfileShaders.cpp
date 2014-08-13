@@ -103,10 +103,13 @@ namespace GLTF
                         if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
                             png_set_gray_to_rgb(pngPtr);
 
+                        png_read_update_info(pngPtr, infoPtr);
+
                         // Allocate row pointers
                         png_bytep *row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+                        png_size_t rowBytes = png_get_rowbytes(pngPtr, infoPtr);
                         for (int y = 0; y < height; y++) {
-                            row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(pngPtr, infoPtr));
+                            row_pointers[y] = (png_byte*)malloc(rowBytes);
                         }
 
                         png_read_image(pngPtr, row_pointers);
@@ -117,7 +120,7 @@ namespace GLTF
                             for (int x = 0; (x < width) && !hasAlpha; x++) {
                                 png_bytep px = &(row[x * 4]);
                                 if (px[3] != 255) {
-                                    hasAlpha =  true;
+                                    hasAlpha = true;
                                 }
                             }
                         }
