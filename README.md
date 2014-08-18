@@ -12,9 +12,13 @@ glTF is a draft specification, it may change before ratification.  Everyone is e
 
 ## Converter
 
-An open-source command-line [converter](https://github.com/KhronosGroup/glTF/wiki/converter) produces glTF assets from COLLADA using [OpenCOLLADA](https://github.com/khronosGroup/OpenCOLLADA/).
+COLLADA2GLTF is an open-source command-line pipeline tool that converts COLLADA to glTF.
 
-Download the [binary](https://github.com/KhronosGroup/glTF/wiki/Converter-builds) for Mac or Windows.
+* Download the [binary](https://github.com/KhronosGroup/glTF/wiki/Converter-builds) for Mac or Windows
+* Get the [source from github](https://github.com/KhronosGroup/glTF/wiki/converter)
+
+There is also an online drag-and-drop [COLLADA-to-glTF converter](http://cesiumjs.org/convertmodel.html) hosted by the [Cesium](http://cesiumjs.org/) virtual globe engine
+
 
 ## Cloning the repo
 
@@ -28,5 +32,5 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 
 * [glTF viewer](https://github.com/fabrobinet/glTF-webgl-viewer) based on [montagejs](https://github.com/montagejs/montage)
 * [glTF loader](https://github.com/mrdoob/three.js/tree/master/examples/js/loaders/gltf) in [Three.js](http://threejs.org/)
-* [glTF loader](http://cesiumjs.org/2014/03/03/Cesium-3D-Models-Tutorial/) in the [Cesium](http://cesiumjs.org/) virtual globe engine
+* [glTF loader](http://cesiumjs.org/2014/03/03/Cesium-3D-Models-Tutorial/) in [Cesium](http://cesiumjs.org/)
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API
