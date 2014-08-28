@@ -13,7 +13,7 @@ Editors
 * Fabrice Robinet, COLLADA Working Group Chair
 * Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
 * Remi Arnaud, AMD
-* Tony Parisi, SkyBox Networks
+* Tony Parisi, Vizi
 
 # Contents
 
