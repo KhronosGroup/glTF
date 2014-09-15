@@ -857,29 +857,34 @@ namespace GLTF
         for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
             std::string inputParameterName = "TIME";
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
-            shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
-            
-            if (animation->parameters()->contains(inputParameterName) == false) {
-                setupAndWriteAnimationParameter(animation.get(),
-                                                inputParameterName,
-                                                "FLOAT",
-                                                (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
-                                                timeBufferView->getByteLength(), true,
-                                                this);
-            }
-            
-            std::vector<std::string> allTargets = animation->targets()->getAllKeys();
-            std::vector<GLTFAnimationFlattener*> flatteners;
-            for (size_t i = 0 ; i < allTargets.size() ; i++) {
-                std::string targetID = allTargets[i];
-                shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID);
-                if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get()) != flatteners.end()) {
-                    continue;
+
+            // Can be null if there are no keyframes
+            if (animation)
+            {
+                shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
+
+                if (animation->parameters()->contains(inputParameterName) == false) {
+                    setupAndWriteAnimationParameter(animation.get(),
+                        inputParameterName,
+                        "FLOAT",
+                        (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
+                        timeBufferView->getByteLength(), true,
+                        this);
                 }
-                flatteners.push_back(animationFlattener.get());
-                animation->writeAnimationForTargetID(targetID, this);
+
+                std::vector<std::string> allTargets = animation->targets()->getAllKeys();
+                std::vector<GLTFAnimationFlattener*> flatteners;
+                for (size_t i = 0; i < allTargets.size(); i++) {
+                    std::string targetID = allTargets[i];
+                    shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID);
+                    if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get()) != flatteners.end()) {
+                        continue;
+                    }
+                    flatteners.push_back(animationFlattener.get());
+                    animation->writeAnimationForTargetID(targetID, this);
+                }
+                animations->setValue(animation->getID(), animation);
             }
-            animations->setValue(animation->getID(), animation);
             animations->removeValue(animationsUIDs[animationIndex]);
         }
         
