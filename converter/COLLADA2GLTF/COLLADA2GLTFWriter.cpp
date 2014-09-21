@@ -452,6 +452,11 @@ namespace GLTF
             }
             
             parents->appendValue(shared_ptr<JSONString> (new JSONString(node->getUniqueId().toAscii())));
+
+            if (this->_asset->containsValueForUniqueId(id)) {
+                std::string instanceNodeOriginalId = this->_asset->getOriginalId(id);
+                childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(instanceNodeOriginalId)));
+            }
         }
         
         shared_ptr <GLTF::JSONArray> lightsInNode(new GLTF::JSONArray());
