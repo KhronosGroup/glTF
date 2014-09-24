@@ -126,16 +126,16 @@ namespace GLTF
             {
                 // Rotate -90 deg around Z
                 matrix.setElement(0, 0,  0.0f);
-                matrix.setElement(0, 1,  1.0f);
-                matrix.setElement(1, 0, -1.0f);
+                matrix.setElement(0, 1, -1.0f);
+                matrix.setElement(1, 0,  1.0f);
                 matrix.setElement(1, 1,  0.0f);
             }
             else // Z_UP
             {
                 // Rotate 90 deg around X
                 matrix.setElement(1, 1,  0.0f);
-                matrix.setElement(1, 2, -1.0f);
-                matrix.setElement(2, 1,  1.0f);
+                matrix.setElement(1, 2,  1.0f);
+                matrix.setElement(2, 1, -1.0f);
                 matrix.setElement(2, 2,  0.0f);
             }
                                 
