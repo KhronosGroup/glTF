@@ -18,15 +18,13 @@
             "default" : false
         },
         "profile" : {
-            "type" : "string",
-            "description" : "Specifies the target rendering API and version, e.g., WebGL 1.0.2.",
-            "default" : "WebGL 1.0.2"
+            "extends" : { "$ref" : "assetProfile.schema.json" },
+            "default" : {}
         },
         "version" : {
-            "type" : "number",
+            "type" : "string",
             "description" : "The glTF version.",
-            "minimum" : 0.0,
-            "default" : 0.6
+            "default" : "0.8"
         }
     },
     "additionalProperties" : false
