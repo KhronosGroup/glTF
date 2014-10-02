@@ -151,7 +151,6 @@ namespace GLTF
     
 	GLTFAsset::GLTFAsset() :
         _isBundle(false),
-        _embedResources(false),
         _distanceScale(1.0)
     {
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
@@ -198,7 +197,7 @@ namespace GLTF
         if (this->_nameToOutputStream.count(streamName) == 0)
 		{
 			shared_ptr<GLTFOutputStream> outputStream;
-			if (_embedResources)
+            if (CONFIG_BOOL(this, "embedResources"))
 			{
 				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
 			}
@@ -361,16 +360,6 @@ namespace GLTF
     std::string GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
     }
-
-	void GLTFAsset::setEmbedResources(bool embedResources)
-	{
-		this->_embedResources = embedResources;
-	}
-
-	bool GLTFAsset::getEmbedResources()
-	{
-		return this->_embedResources;
-	}
 
     void GLTFAsset::setDistanceScale(double distanceScale)
     {
@@ -1128,7 +1117,7 @@ namespace GLTF
         
         if (sharedBuffer->getByteLength() > 0) {
             
-            if (this->_embedResources == false) {
+            if (CONFIG_BOOL(this, "embedResources") == false) {
                 COLLADABU::URI uri(rawOutputStream->outputPath());
                 sharedBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
             } else {
@@ -1141,7 +1130,7 @@ namespace GLTF
         if (compressionBuffer->getByteLength() > 0) {
             std::string compressedBufferID = compressionOutputStream->id();
             buffersObject->setValue(compressedBufferID, compressionBuffer);
-            if (this->_embedResources == false) {
+            if (CONFIG_BOOL(this, "embedResources") == false) {
                 COLLADABU::URI uri(compressionOutputStream->outputPath());
                 compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
             } else {

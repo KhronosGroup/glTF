@@ -96,9 +96,6 @@ namespace GLTF
         void setInputFilePath(const std::string& inputFilePath);
         std::string getInputFilePath();
 
-		void setEmbedResources(bool embedResources);
-		bool getEmbedResources();
-
         void setDistanceScale(double distanceScale);
         double getDistanceScale();
 
@@ -182,7 +179,6 @@ namespace GLTF
         size_t                          _geometryByteLength;
         size_t                          _animationByteLength;
         bool                            _isBundle;
-		bool							_embedResources;
         double                          _distanceScale;
 
         UniqueIDToJSONValue             _uniqueIDToJSONValue;

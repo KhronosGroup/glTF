@@ -167,8 +167,9 @@ namespace GLTF
         tr.setElement(2,3, 0);
         tr.setElement(3,3, 1);
         double tran[20];
+        memset(tran, 0, sizeof(tran));
         
-        if (!unmatrix(tr, tran)) {
+        if (!unmatrix(tr, tran) && (translation || rotation)) {
             printf("WARNING: matrix can't be decomposed \n");
         }
         
