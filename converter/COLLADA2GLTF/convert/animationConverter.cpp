@@ -16,9 +16,11 @@ using namespace std;
 
 namespace GLTF
 {    
-    
 #define ANIMATIONFLATTENER_FOR_PATH_AND_TARGETID(path, targetID) std::string targetUIDWithPath = path+targetID;\
-    if (asset->_targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
+    if (CONFIG_BOOL(asset, "noCombineAnimations")) {\
+        animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);\
+    }\
+    else if (asset->_targetUIDWithPathToAnimationFlattener.count(targetUIDWithPath) > 0) {\
         animationFlattener = asset->_targetUIDWithPathToAnimationFlattener[targetUIDWithPath];\
     } else {\
         animationFlattener = cvtAnimation->animationFlattenerForTargetUID(targetID);\

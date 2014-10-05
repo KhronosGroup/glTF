@@ -1046,7 +1046,7 @@ namespace GLTF
 			relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
 		}
         
-		if (_asset->getEmbedResources())
+        if (CONFIG_BOOL(_asset, "embedResources"))
 		{
 			COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
 			std::string imageFullPath = inputURI.getPathDir() + relPathFile;

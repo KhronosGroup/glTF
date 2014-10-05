@@ -344,7 +344,7 @@ namespace GLTF
             
             shadersObject->setValue(shaderId, shaderObject);
 			shaderObject->setUnsignedInt32(kType, type);
-			if (asset->getEmbedResources())
+            if (CONFIG_BOOL(asset, "embedResources"))
 			{
 				shaderObject->setString(kURI, create_dataUri(shaderString, "text/plain"));
 			}

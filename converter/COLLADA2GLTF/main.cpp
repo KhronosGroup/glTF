@@ -85,7 +85,8 @@ static const OptionDescriptor options[] = {
     { "s",              no_argument,        "-s -> experimental mode"},
 	{ "h",              no_argument,        "-h -> help" },
 	{ "r",              no_argument,        "-r -> verbose logging" },
-	{ "e",				no_argument,		"-e -> embed all resources as Data URIs" }
+	{ "e",				no_argument,		"-e -> embed all resources as Data URIs" },
+    { "n",              no_argument,        "-n -> don't combine animations with the same target" }
 };
 
 static void buildOptions() {
@@ -227,8 +228,10 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                
 			case 'e':
 				converterConfig->config()->setBool("embedResources", true);
-				asset->setEmbedResources(true);
 				break;
+            case 'n':
+                converterConfig->config()->setBool("noCombineAnimations", true);
+                break;
 			default:
                 shouldShowHelp = true;
 				break;
