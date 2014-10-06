@@ -169,6 +169,10 @@ namespace GLTF
         double tran[20];
         memset(tran, 0, sizeof(tran));
         
+        // unmatrix can fail if the uniform scale is 0
+        // This just makes sure we don't print the warning if
+        //  we are trying to extract only scale because it's
+        //  probably this valid case we are running into.
         if (!unmatrix(tr, tran) && (translation || rotation)) {
             printf("WARNING: matrix can't be decomposed \n");
         }
