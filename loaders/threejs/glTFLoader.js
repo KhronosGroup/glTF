@@ -525,7 +525,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     var ShaderContext = function(id, path) {
     	this.id = id;
-    	this.path = path;
+    	this.uri = path;
     };
     
     // Resource management
@@ -632,10 +632,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         		this.resources.setEntry(entryID, null, description);
         		var shaderRequest = {
         				id : entryID,
-        				path : description.path,
+        				uri : description.uri,
         		};
 
-                var shaderContext = new ShaderContext(entryID, description.path);
+                var shaderContext = new ShaderContext(entryID, description.uri);
 
                 theLoader.shadersRequested++;
         		THREE.GLTFLoaderUtils.getFile(shaderRequest, shaderDelegate, shaderContext);
@@ -760,7 +760,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			texturePath = imageEntry.description.path;
+                        			texturePath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -802,7 +802,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			envMapPath = imageEntry.description.path;
+                        			envMapPath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -926,6 +926,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         		byteOffset : indices.description.byteOffset,
                         		count : indices.description.count,
                         		id : indices.entryID,
+                        		componentType : indices.description.componentType,
                         		type : indices.description.type
                         };
                         
@@ -965,6 +966,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                             		count : attribute.count,
                             		max : attribute.max,
                             		min : attribute.min,
+                            		componentType : attribute.componentType,
                             		type : attribute.type,
                             		id : attributeID             
                             };
@@ -1408,7 +1410,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 	            				var node = this.resources.getEntry(target.id);
 	            				if (node) {
 
-	            					var path = target.path;
+	            					var path = target.uri;
 		            				
 		            				if (path == "rotation")
 		            				{

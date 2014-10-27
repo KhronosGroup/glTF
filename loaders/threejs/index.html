@@ -371,6 +371,12 @@
 
 			var sceneList = 
 				[
+	                 { name : "Duck", url : "../../model/duck/duck.gltf", 
+		                 cameraPos: new THREE.Vector3(0, 30, -50),
+		                 objectScale: new THREE.Vector3(0.1, 0.1, 0.1),
+		                 addLights:true,
+		                 addGround:true,
+		                 shadows:true },
 	                 { name : "Virtual City", url : "/glTFTests/virtual-city/vc.json", 
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
 		                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0), 
@@ -403,12 +409,6 @@
 		                 addLights:true,
 		                 groundPos: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
 		                 addGround:true },
-	                 { name : "Duck", url : "../../model/duck/duck.json", 
-		                 cameraPos: new THREE.Vector3(0, 30, -50),
-		                 objectScale: new THREE.Vector3(0.1, 0.1, 0.1),
-		                 addLights:true,
-		                 addGround:true,
-		                 shadows:true },
 	                 { name : "Wine Rack", url : "../../model/wine/wine.json",
 		             	 cameraPos: new THREE.Vector3(60, 30, 100), 
 		             	 objectPosition: new THREE.Vector3(-60, 0, -20),

@@ -110,7 +110,7 @@ var global = window;
                         var descriptionKeys = Object.keys(descriptions);
                         descriptionKeys.forEach( function(descriptionKey) {
                             var description = descriptions[descriptionKey];
-                            description.path = this.resolvePathIfNeeded(description.path);
+                            description.uri = this.resolvePathIfNeeded(description.uri);
                         }, this);
                     }
                 }, this);
