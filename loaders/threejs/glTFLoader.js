@@ -421,10 +421,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     	var glResource = null;
     	switch (parameter.type) {
-	        case WebGLRenderingContext.FLOAT :
-	        case WebGLRenderingContext.FLOAT_VEC2 :
-	        case WebGLRenderingContext.FLOAT_VEC3 :
-	        case WebGLRenderingContext.FLOAT_VEC4 :
+	        case "SCALAR" :
+	        case "VEC2" :
+	        case "VEC3" :
+	        case "VEC4" :
 	        	glResource = new Float32Array(resource, 0, parameter.count * componentsPerElementForGLType(parameter.type));
 	        	break;
 	        default:
@@ -1423,7 +1423,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 	            				var node = this.resources.getEntry(target.id);
 	            				if (node) {
 
-	            					var path = target.uri;
+	            					var path = target.path;
 		            				
 		            				if (path == "rotation")
 		            				{
@@ -1488,6 +1488,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     		bufferView : bufferView,
                     		byteOffset : accessor.byteOffset,
                     		count : accessor.count,
+                    		componentType : accessor.componentType,
                     		type : accessor.type,
                     		id : accessor.bufferView,
                     		name : param             
