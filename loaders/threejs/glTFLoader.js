@@ -57,23 +57,35 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     	}
     }
 
-    function componentsPerElementForGLType(glType) {
-        switch (glType) {
-            case WebGLRenderingContext.FLOAT :
-            case WebGLRenderingContext.UNSIGNED_BYTE :
-            case WebGLRenderingContext.UNSIGNED_SHORT :
-                return 1;
-            case WebGLRenderingContext.FLOAT_VEC2 :
-                return 2;
-            case WebGLRenderingContext.FLOAT_VEC3 :
-                return 3;
-            case WebGLRenderingContext.FLOAT_VEC4 :
-                return 4;
-            case WebGLRenderingContext.FLOAT_MAT4 :
-                return 16;
-            default:
-                return null;
-        }
+    function componentsPerElementForGLType(type) {
+		switch(type) {    		
+	        case "SCALAR" :
+	            nElements = 1;
+	            break;
+	        case "VEC2" :
+	            nElements = 2;
+	            break;
+	        case "VEC3" :
+	            nElements = 3;
+	            break;
+	        case "VEC4" :
+	            nElements = 4;
+	            break;
+	        case "MAT2" :
+	            nElements = 4;
+	            break;
+	        case "MAT3" :
+	            nElements = 9;
+	            break;
+	        case "MAT4" :
+	            nElements = 16;
+	            break;
+	        default :
+	        	debugger;
+	        	break;
+		}
+		
+		return nElements;
     }
 
 
@@ -278,7 +290,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             		array : floatArray
             };
         } else if(semantic == "NORMAL") {
-            floatArray = new Float32Array(glResource, 0, attribute.count * componentsPerElementForGLType(attribute.type));
+        	nComponents = componentsPerElementForGLType(attribute.type);
+            floatArray = new Float32Array(glResource, 0, attribute.count * nComponents);
             geom.geometry.attributes.normal = {
             		itemSize: 3,
             		array : floatArray

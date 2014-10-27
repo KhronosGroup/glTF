@@ -154,18 +154,28 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
     		switch(type) {    		
 	            case "SCALAR" :
 	                nElements = 1;
+	                break;
 	            case "VEC2" :
 	                nElements = 2;
+	                break;
 	            case "VEC3" :
 	                nElements = 3;
+	                break;
 	            case "VEC4" :
 	                nElements = 4;
+	                break;
 	            case "MAT2" :
 	                nElements = 4;
+	                break;
 	            case "MAT3" :
 	                nElements = 9;
+	                break;
 	            case "MAT4" :
 	                nElements = 16;
+	                break;
+	            default :
+	            	debugger;
+	            	break;
     		}
     		
             switch (componentType) {
