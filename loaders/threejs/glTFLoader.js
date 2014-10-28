@@ -1094,10 +1094,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             value: function(entryID, description, userInfo) {
 
         		var threeNode = null;
-	            if (description.jointId) {
+	            if (description.jointName) {
 	                threeNode = new THREE.Bone();
-	                threeNode.jointId = description.jointId;
-	                this.joints[description.jointId] = entryID;
+	                threeNode.jointName = description.jointName;
+	                this.joints[description.jointName] = entryID;
 	            }
 	            else {
 	                threeNode = new THREE.Object3D();
@@ -1175,9 +1175,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 		description.instanceSkin.skin = skin;
                         threeNode.instanceSkin = description.instanceSkin;
 
-                		var sources = description.instanceSkin.sources;
+                		var meshes = description.instanceSkin.meshes;
                 		skin.meshes = [];
-                        sources.forEach( function(meshID) {
+                        meshes.forEach( function(meshID) {
                             meshEntry = this.resources.getEntry(meshID);
                             theLoader.meshesRequested++;
                             meshEntry.object.onComplete(function(mesh) {
@@ -1279,12 +1279,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     	material.skinning = true;
         	                            
                                     	threeMesh.boneInverses = [];
-        	                            var jointsIds = skin.jointsIds;
+        	                            var jointNames = skin.jointNames;
         	                            var joints = [];
-        	                            var i, len = jointsIds.length;
+        	                            var i, len = jointNames.length;
         	                            for (i = 0; i < len; i++) {
-        	                            	var jointId = jointsIds[i];
-        	                                var nodeForJoint = this.joints[jointId];
+        	                            	var jointName = jointNames[i];
+        	                                var nodeForJoint = this.joints[jointName];
         	                                var joint = this.resources.getEntry(nodeForJoint).object;
         	                                if (joint) {
         	                                	
@@ -1303,7 +1303,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         	                                    threeMesh.pose();
         	                                    
         	                                } else {
-        	                                    console.log("WARNING: jointId:"+jointId+" cannot be found in skeleton:"+skeleton);
+        	                                    console.log("WARNING: jointName:"+jointName+" cannot be found in skeleton:"+skeleton);
         	                                }
         	                            }
                                     }
@@ -1529,8 +1529,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         m[3],  m[7],  m[11], m[15]
                     );
 	            
-	            skin.jointsIds = description.joints;
-	            var inverseBindMatricesDescription = description.inverseBindMatrices;
+	            skin.jointNames = description.jointNames;
+	            var inverseBindMatricesDescription = this.resources.getEntry(description.inverseBindMatrices);
+	            inverseBindMatricesDescription = inverseBindMatricesDescription.description;
 	            skin.inverseBindMatricesDescription = inverseBindMatricesDescription;
 	            skin.inverseBindMatricesDescription.id = entryID + "_inverseBindMatrices";
 
@@ -1540,6 +1541,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 		bufferView : bufferEntry,
                 		byteOffset : inverseBindMatricesDescription.byteOffset,
                 		count : inverseBindMatricesDescription.count,
+                		componentType : inverseBindMatricesDescription.componentType,
                 		type : inverseBindMatricesDescription.type,
                 		id : inverseBindMatricesDescription.bufferView,
                 		name : skin.inverseBindMatricesDescription.id             
