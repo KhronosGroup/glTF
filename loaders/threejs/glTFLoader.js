@@ -493,7 +493,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     	var glResource = null;
     	switch (parameter.type) {
-	        case WebGLRenderingContext.FLOAT_MAT4 :
+	        case "MAT4" :
 	        	glResource = new Float32Array(resource, 0, parameter.count * componentsPerElementForGLType(parameter.type));
 	        	break;
 	        default:
@@ -1533,7 +1533,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 	            var inverseBindMatricesDescription = this.resources.getEntry(description.inverseBindMatrices);
 	            inverseBindMatricesDescription = inverseBindMatricesDescription.description;
 	            skin.inverseBindMatricesDescription = inverseBindMatricesDescription;
-	            skin.inverseBindMatricesDescription.id = entryID + "_inverseBindMatrices";
+	            skin.inverseBindMatricesDescription.id = description.inverseBindMatrices;
 
                 var bufferEntry = this.resources.getEntry(inverseBindMatricesDescription.bufferView);
 
