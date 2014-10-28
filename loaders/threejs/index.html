@@ -171,7 +171,7 @@
                 var spot1 = null;
                 if (sceneInfo.addLights) {
                     
-                    var ambient = new THREE.AmbientLight( 0x888888 );
+                    var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
@@ -414,8 +414,8 @@
 		             	 addLights:true },
 	                 { name : "Rambler", url : "../../model/rambler/Rambler.gltf", 
 			      		cameraPos: new THREE.Vector3(0, 10, 50), 
-			      		objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0),
-			      		objectPosition: new THREE.Vector3(0, 1, 0),
+			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+			      		objectPosition: new THREE.Vector3(0, .2, 0),
 			      		addLights:true,
 			      		addGround:true,
 			      		shadows:true },
