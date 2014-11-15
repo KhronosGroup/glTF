@@ -430,13 +430,23 @@ namespace GLTF
      */
     
     class GLSLShader {
-    public:
-        
-        GLSLShader(shared_ptr <GLTFProfile> profile) {
-            this->_declarations = "precision highp float;\n";;
+    private:
+        void _commonInit(shared_ptr <GLTFProfile> profile) {
+            this->_declarations += "precision highp float;\n";;
             this->_body = "void main(void) {\n";
             this->_profile = profile;
         }
+    public:
+
+        GLSLShader(GLTFAsset *asset) {
+            this->_declarations = "";
+            if (asset->converterConfig()->config()->contains("glslVersion")) {
+                this->_declarations += "#version " + GLTFUtils::toString(asset->converterConfig()->config()->getInt32("glslVersion")) + "\n";
+            }
+            
+            _commonInit(asset->profile());
+        }
+
         
         void setName(std::string name) {
             _name = name;
@@ -506,12 +516,12 @@ namespace GLTF
     
     class GLSLProgram {
     public:
-        GLSLProgram(shared_ptr<GLTFProfile> profile) {
-            this->_profile = profile;
+        GLSLProgram(GLTFAsset *asset) {
+            this->_profile = asset->profile();
             this->_uniforms = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
             this->_attributes = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
-            this->_vertexShader = new GLSLShader(profile);
-            this->_fragmentShader = new GLSLShader(profile);
+            this->_vertexShader = new GLSLShader(asset);
+            this->_fragmentShader = new GLSLShader(asset);
         }
         
         virtual ~GLSLProgram() {
@@ -567,9 +577,9 @@ namespace GLTF
     
     class Pass {
     public:
-        Pass(shared_ptr <GLTFProfile> profile) {
-            this->_profile = profile;
-            this->_instanceProgram = new GLSLProgram(profile);
+        Pass(GLTFAsset * asset) {
+            this->_profile = asset->profile();
+            this->_instanceProgram = new GLSLProgram(asset);
         }
 
         ~Pass() {
@@ -773,7 +783,7 @@ namespace GLTF
             unsigned int sampler2DType = _GL(SAMPLER_2D);
             unsigned int floatType = _GL(FLOAT);
             
-            this->_pass = new Pass(this->_profile);
+            this->_pass = new Pass(asset);
             this->_parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
             
             shared_ptr <JSONObject> inputParameters = values;
@@ -1333,6 +1343,9 @@ namespace GLTF
         GLSLProgram* glTFProgram = glTFPass->instanceProgram();
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
+        
+        if (asset->converterConfig()->config()->contains("glslVersion")) {
+        }
         
         //create shader name made of the input file name to avoid file name conflicts
         COLLADABU::URI outputFileURI(asset->getOutputFilePath().c_str());
