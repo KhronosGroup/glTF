@@ -1343,10 +1343,7 @@ namespace GLTF
         GLSLProgram* glTFProgram = glTFPass->instanceProgram();
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
-        
-        if (asset->converterConfig()->config()->contains("glslVersion")) {
-        }
-        
+                
         //create shader name made of the input file name to avoid file name conflicts
         COLLADABU::URI outputFileURI(asset->getOutputFilePath().c_str());
         shared_ptr <JSONObject> shaders = asset->root()->createObjectIfNeeded("shaders");
