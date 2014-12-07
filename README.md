@@ -15,7 +15,7 @@ glTF is a draft specification, it may change before ratification.  Everyone is e
 COLLADA2GLTF is an open-source command-line pipeline tool that converts COLLADA to glTF.
 
 * Download the [binary](https://github.com/KhronosGroup/glTF/wiki/Converter-builds) for Mac or Windows
-* Get the [source from github](https://github.com/KhronosGroup/glTF/wiki/converter)
+* Get the [source & instructions](https://github.com/KhronosGroup/glTF/wiki/converter)
 
 There is also an online drag-and-drop [COLLADA-to-glTF converter](http://cesiumjs.org/convertmodel.html) hosted by the [Cesium](http://cesiumjs.org/) virtual globe engine
 
