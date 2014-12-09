@@ -505,7 +505,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			texturePath = imageEntry.description.path;
+                        			texturePath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -548,7 +548,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			envMapPath = imageEntry.description.path;
+                        			envMapPath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -941,7 +941,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 	            				var node = this.resources.getEntry(target.id);
 	            				if (node) {
 
-	            					var path = target.path;
+	            					var path = target.uri;
 		            				
 		            				if (path == "rotation")
 		            				{

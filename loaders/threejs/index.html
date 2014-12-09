@@ -171,7 +171,7 @@
                 var spot1 = null;
                 if (sceneInfo.addLights) {
                     
-                    var ambient = new THREE.AmbientLight( 0x888888 );
+                    var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
@@ -371,11 +371,16 @@
 
 			var sceneList = 
 				[
-	                 { name : "Virtual City", url : "/glTFTests/virtual-city/vc.json", 
+	                 { name : "Duck", url : "../../model/duck/duck.gltf", 
+		                 cameraPos: new THREE.Vector3(0, 3, -5),
+		                 addLights:true,
+		                 addGround:true,
+		                 shadows:true },
+	                 { name : "Virtual City", url : "/glTFTests/vc-new/vc/vc.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
 		                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0), 
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
-		             { name : "Monster", url : "/glTFTests/monster/monster.json", 
+		             { name : "Monster", url : "/glTFTests/monster/monster.gltf", 
 			                 cameraPos: new THREE.Vector3(30, 10, 70), 
 			                 objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
 			                 objectPosition: new THREE.Vector3(0, 1, 0),
@@ -384,7 +389,7 @@
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
-		             { name : "BrainSteam", url : "/glTFTests/brainsteam/brainsteam.json", 
+		             { name : "BrainSteam", url : "/glTFTests/brainsteam/brainsteam.gltf", 
 			                 cameraPos: new THREE.Vector3(0, 6, 13), 
 			                 center: new THREE.Vector3(0, 3, 0), 
 			                 addLights:true,
@@ -403,25 +408,18 @@
 		                 addLights:true,
 		                 groundPos: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
 		                 addGround:true },
-	                 { name : "Duck", url : "../../model/duck/duck.json", 
-		                 cameraPos: new THREE.Vector3(0, 30, -50),
-		                 objectScale: new THREE.Vector3(0.1, 0.1, 0.1),
-		                 addLights:true,
-		                 addGround:true,
-		                 shadows:true },
-	                 { name : "Wine Rack", url : "../../model/wine/wine.json",
+	                 { name : "Wine Rack", url : "../../model/wine/wine.gltf",
 		             	 cameraPos: new THREE.Vector3(60, 30, 100), 
 		             	 objectPosition: new THREE.Vector3(-60, 0, -20),
 		             	 addLights:true },
-	                 { name : "Rambler", url : "../../model/rambler/Rambler.json", 
+	                 { name : "Rambler", url : "../../model/rambler/Rambler.gltf", 
 			      		cameraPos: new THREE.Vector3(0, 10, 50), 
-			      		objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0),
-			      		objectPosition: new THREE.Vector3(0, 1, 0),
-			      		objectScale: new THREE.Vector3(0.1, 0.1, 0.1),
+			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+			      		objectPosition: new THREE.Vector3(0, .2, 0),
 			      		addLights:true,
 			      		addGround:true,
 			      		shadows:true },
-	                 { name : "Super Murdoch", url : "../../model/SuperMurdoch/SuperMurdoch.json", 
+	                 { name : "Super Murdoch", url : "../../model/SuperMurdoch/SuperMurdoch.gltf", 
              			cameraPos: new THREE.Vector3(0, 10, 50), 
 	             		objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
              			addLights:true,

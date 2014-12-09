@@ -57,23 +57,35 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     	}
     }
 
-    function componentsPerElementForGLType(glType) {
-        switch (glType) {
-            case WebGLRenderingContext.FLOAT :
-            case WebGLRenderingContext.UNSIGNED_BYTE :
-            case WebGLRenderingContext.UNSIGNED_SHORT :
-                return 1;
-            case WebGLRenderingContext.FLOAT_VEC2 :
-                return 2;
-            case WebGLRenderingContext.FLOAT_VEC3 :
-                return 3;
-            case WebGLRenderingContext.FLOAT_VEC4 :
-                return 4;
-            case WebGLRenderingContext.FLOAT_MAT4 :
-                return 16;
-            default:
-                return null;
-        }
+    function componentsPerElementForGLType(type) {
+		switch(type) {    		
+	        case "SCALAR" :
+	            nElements = 1;
+	            break;
+	        case "VEC2" :
+	            nElements = 2;
+	            break;
+	        case "VEC3" :
+	            nElements = 3;
+	            break;
+	        case "VEC4" :
+	            nElements = 4;
+	            break;
+	        case "MAT2" :
+	            nElements = 4;
+	            break;
+	        case "MAT3" :
+	            nElements = 9;
+	            break;
+	        case "MAT4" :
+	            nElements = 16;
+	            break;
+	        default :
+	        	debugger;
+	        	break;
+		}
+		
+		return nElements;
     }
 
 
@@ -278,7 +290,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             		array : floatArray
             };
         } else if(semantic == "NORMAL") {
-            floatArray = new Float32Array(glResource, 0, attribute.count * componentsPerElementForGLType(attribute.type));
+        	nComponents = componentsPerElementForGLType(attribute.type);
+            floatArray = new Float32Array(glResource, 0, attribute.count * nComponents);
             geom.geometry.attributes.normal = {
             		itemSize: 3,
             		array : floatArray
@@ -408,10 +421,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     	var glResource = null;
     	switch (parameter.type) {
-	        case WebGLRenderingContext.FLOAT :
-	        case WebGLRenderingContext.FLOAT_VEC2 :
-	        case WebGLRenderingContext.FLOAT_VEC3 :
-	        case WebGLRenderingContext.FLOAT_VEC4 :
+	        case "SCALAR" :
+	        case "VEC2" :
+	        case "VEC3" :
+	        case "VEC4" :
 	        	glResource = new Float32Array(resource, 0, parameter.count * componentsPerElementForGLType(parameter.type));
 	        	break;
 	        default:
@@ -480,7 +493,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     	var glResource = null;
     	switch (parameter.type) {
-	        case WebGLRenderingContext.FLOAT_MAT4 :
+	        case "MAT4" :
 	        	glResource = new Float32Array(resource, 0, parameter.count * componentsPerElementForGLType(parameter.type));
 	        	break;
 	        default:
@@ -525,7 +538,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     var ShaderContext = function(id, path) {
     	this.id = id;
-    	this.path = path;
+    	this.uri = path;
     };
     
     // Resource management
@@ -632,10 +645,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         		this.resources.setEntry(entryID, null, description);
         		var shaderRequest = {
         				id : entryID,
-        				path : description.path,
+        				uri : description.uri,
         		};
 
-                var shaderContext = new ShaderContext(entryID, description.path);
+                var shaderContext = new ShaderContext(entryID, description.uri);
 
                 theLoader.shadersRequested++;
         		THREE.GLTFLoaderUtils.getFile(shaderRequest, shaderDelegate, shaderContext);
@@ -760,7 +773,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			texturePath = imageEntry.description.path;
+                        			texturePath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -802,7 +815,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         	{
                         		var imageEntry = this.resources.getEntry(textureEntry.description.source);
                         		if (imageEntry) {
-                        			envMapPath = imageEntry.description.path;
+                        			envMapPath = imageEntry.description.uri;
                         		}
                         		
                         		var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
@@ -926,6 +939,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         		byteOffset : indices.description.byteOffset,
                         		count : indices.description.count,
                         		id : indices.entryID,
+                        		componentType : indices.description.componentType,
                         		type : indices.description.type
                         };
                         
@@ -965,6 +979,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                             		count : attribute.count,
                             		max : attribute.max,
                             		min : attribute.min,
+                            		componentType : attribute.componentType,
                             		type : attribute.type,
                             		id : attributeID             
                             };
@@ -1079,10 +1094,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             value: function(entryID, description, userInfo) {
 
         		var threeNode = null;
-	            if (description.jointId) {
+	            if (description.jointName) {
 	                threeNode = new THREE.Bone();
-	                threeNode.jointId = description.jointId;
-	                this.joints[description.jointId] = entryID;
+	                threeNode.jointName = description.jointName;
+	                this.joints[description.jointName] = entryID;
 	            }
 	            else {
 	                threeNode = new THREE.Object3D();
@@ -1160,9 +1175,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 		description.instanceSkin.skin = skin;
                         threeNode.instanceSkin = description.instanceSkin;
 
-                		var sources = description.instanceSkin.sources;
+                		var meshes = description.instanceSkin.meshes;
                 		skin.meshes = [];
-                        sources.forEach( function(meshID) {
+                        meshes.forEach( function(meshID) {
                             meshEntry = this.resources.getEntry(meshID);
                             theLoader.meshesRequested++;
                             meshEntry.object.onComplete(function(mesh) {
@@ -1264,12 +1279,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     	material.skinning = true;
         	                            
                                     	threeMesh.boneInverses = [];
-        	                            var jointsIds = skin.jointsIds;
+        	                            var jointNames = skin.jointNames;
         	                            var joints = [];
-        	                            var i, len = jointsIds.length;
+        	                            var i, len = jointNames.length;
         	                            for (i = 0; i < len; i++) {
-        	                            	var jointId = jointsIds[i];
-        	                                var nodeForJoint = this.joints[jointId];
+        	                            	var jointName = jointNames[i];
+        	                                var nodeForJoint = this.joints[jointName];
         	                                var joint = this.resources.getEntry(nodeForJoint).object;
         	                                if (joint) {
         	                                	
@@ -1288,7 +1303,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         	                                    threeMesh.pose();
         	                                    
         	                                } else {
-        	                                    console.log("WARNING: jointId:"+jointId+" cannot be found in skeleton:"+skeleton);
+        	                                    console.log("WARNING: jointName:"+jointName+" cannot be found in skeleton:"+skeleton);
         	                                }
         	                            }
                                     }
@@ -1473,6 +1488,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     		bufferView : bufferView,
                     		byteOffset : accessor.byteOffset,
                     		count : accessor.count,
+                    		componentType : accessor.componentType,
                     		type : accessor.type,
                     		id : accessor.bufferView,
                     		name : param             
@@ -1513,10 +1529,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         m[3],  m[7],  m[11], m[15]
                     );
 	            
-	            skin.jointsIds = description.joints;
-	            var inverseBindMatricesDescription = description.inverseBindMatrices;
+	            skin.jointNames = description.jointNames;
+	            var inverseBindMatricesDescription = this.resources.getEntry(description.inverseBindMatrices);
+	            inverseBindMatricesDescription = inverseBindMatricesDescription.description;
 	            skin.inverseBindMatricesDescription = inverseBindMatricesDescription;
-	            skin.inverseBindMatricesDescription.id = entryID + "_inverseBindMatrices";
+	            skin.inverseBindMatricesDescription.id = description.inverseBindMatrices;
 
                 var bufferEntry = this.resources.getEntry(inverseBindMatricesDescription.bufferView);
 
@@ -1524,6 +1541,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 		bufferView : bufferEntry,
                 		byteOffset : inverseBindMatricesDescription.byteOffset,
                 		count : inverseBindMatricesDescription.count,
+                		componentType : inverseBindMatricesDescription.componentType,
                 		type : inverseBindMatricesDescription.type,
                 		id : inverseBindMatricesDescription.bufferView,
                 		name : skin.inverseBindMatricesDescription.id             
