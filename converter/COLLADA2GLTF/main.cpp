@@ -52,9 +52,9 @@ using namespace std;
 
 #define STDOUT_OUTPUT 0
 #if USE_OPEN3DGC
-#define OPTIONS_COUNT 15
+#define OPTIONS_COUNT 16
 #else
-#define OPTIONS_COUNT 13
+#define OPTIONS_COUNT 14
 #endif
 
 
@@ -73,6 +73,7 @@ static const OptionDescriptor options[] = {
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
 	{ "b",				required_argument,  "-b -> path of output bundle argument [string]" },
 	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
+    { "g",              required_argument,  "-g -> [experimental] GLSL version to output in generated shaders" },
 	{ "i",              no_argument,        "-i -> invert-transparency" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "p",              no_argument,        "-p -> output progress" },
@@ -152,7 +153,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:idpl:c:m:vhsre", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:g:idpl:c:m:vhsre", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -229,6 +230,15 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 			case 'e':
 				converterConfig->config()->setBool("embedResources", true);
 				break;
+            case 'g': {
+                int glslVersion = atoi(optarg);
+                if (glslVersion != 0) {
+                    converterConfig->config()->setInt32("glslVersion", glslVersion);
+                } else {
+                    printf("[warning] invalid GLSL version:%s\n", optarg);
+                }
+                break;
+            }
             case 'n':
                 converterConfig->config()->setBool("noCombineAnimations", true);
                 break;
