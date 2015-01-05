@@ -23,7 +23,7 @@
             "description" : "The id (JSON property name) of the material to apply to this primitive when rendering.",
             "required" : true
         },
-        "primitive" : {
+        "mode" : {
             "type" : "integer",
             "description" : "The type of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).",
             "enum" : [0, 1, 2, 3, 4, 5, 6],
