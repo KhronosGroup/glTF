@@ -106,11 +106,45 @@ namespace GLTF
 	void COLLADA2GLTFWriter::finish() {
 	}
     
+    
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
+    bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
         GLTFAsset* asset = this->_asset.get();
         shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded(kAsset);
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
+        
+        const COLLADAFW::FileInfo::ValuePairPointerArray& valuePairs = globalAsset->getValuePairArray();
+        for ( size_t i = 0, count = valuePairs.getCount(); i < count; ++i)
+        {
+            const COLLADAFW::FileInfo::ValuePair* valuePair = valuePairs[i];
+            const String& key = valuePair->first;
+            const String& value = valuePair->second;
+            const char *sketchUp = "Google SketchUp";
+            
+            if ((key == "authoring_tool") && value.length() > 0) {
+                if (value.find(sketchUp) != string::npos) {
+                    //isolate x.y (version) that is the latest token from a string that is possibily x.y.z
+                    size_t end = value.find_last_of(" ", value.length() - 1);
+                    if ( end != string::npos) {
+                        std::string version = value.substr(end);
+                        size_t major = version.find(".", 0);
+                        if (major != string::npos) {
+                            size_t minor = version.find(".", major + 1);
+                            if (minor != string::npos) {
+                                version = version.substr(0, minor);
+                                float sketchUpVersion = atof(version.c_str());
+                                if (sketchUpVersion < 7.1) {
+                                    asset->converterConfig()->config()->setBool("invertTransparency", true);
+                                    this->_asset->log("WARNING: Fixing transparency - by inverting it - as we convert an asset generated from SketchUp version:%s \n", version.c_str());
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }
         
         assetObject->setString("generator",version);
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
