@@ -117,8 +117,8 @@ namespace GLTF
         for ( size_t i = 0, count = valuePairs.getCount(); i < count; ++i)
         {
             const COLLADAFW::FileInfo::ValuePair* valuePair = valuePairs[i];
-            const String& key = valuePair->first;
-            const String& value = valuePair->second;
+			const COLLADAFW::String& key = valuePair->first;
+			const COLLADAFW::String& value = valuePair->second;
             const char *sketchUp = "Google SketchUp";
             
             if ((key == "authoring_tool") && value.length() > 0) {
