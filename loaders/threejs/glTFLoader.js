@@ -1130,7 +1130,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 	var rotation = r ? new THREE.Quaternion(r[0], r[1], r[2], r[3]) :
                 		new THREE.Quaternion;
                 	var scale = s ? new THREE.Vector3(s[0], s[1], s[2]) :
-                		new THREE.Vector3;
+                		new THREE.Vector3(1, 1, 1);
                 	
                 	var matrix = new THREE.Matrix4;
                 	matrix.compose(position, rotation, scale);
