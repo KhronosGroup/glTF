@@ -215,9 +215,13 @@ namespace GLTF
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     std::string imagePath = image->getString(kURI);
-                    COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
-                    std::string imageFullPath = inputURI.getPathDir() + imagePath;
-                    if (imageHasAlpha(imageFullPath.c_str()))
+                    if (!is_dataUri(imagePath))
+                    {
+                        COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
+                        imagePath = inputURI.getPathDir() + imagePath;
+                    }
+
+                    if (imageHasAlpha(imagePath.c_str()))
                         return false;
                 } else {
                     static bool printedOnce = false;
