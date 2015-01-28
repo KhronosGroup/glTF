@@ -31,7 +31,9 @@ namespace GLTF
             EXTRA_TAG_TYPE_ATLAS_MIN_S,
             EXTRA_TAG_TYPE_ATLAS_MAX_S,
             EXTRA_TAG_TYPE_ATLAS_MIN_T,
-            EXTRA_TAG_TYPE_ATLAS_MAX_T
+            EXTRA_TAG_TYPE_ATLAS_MAX_T,
+            EXTRA_TAG_TYPE_ATLAS_WRAP_S,
+            EXTRA_TAG_TYPE_ATLAS_WRAP_T,
 		};
 
 	private:

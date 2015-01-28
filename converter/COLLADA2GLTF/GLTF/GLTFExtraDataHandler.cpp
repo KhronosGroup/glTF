@@ -120,7 +120,14 @@ namespace GLTF
         }
         else if (strcmp(elementName, "atlas_max_t") == 0) {
             mExtraTagType = EXTRA_TAG_TYPE_ATLAS_MAX_T;
+        } 
+        else if (strcmp(elementName, "atlas_wrap_s") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_WRAP_S;
         }
+        else if (strcmp(elementName, "atlas_wrap_t") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_WRAP_T;
+        }
+        
         /*
 		switch ( mExtraTagType )
 		{
@@ -275,6 +282,36 @@ namespace GLTF
 
                 atlasMax->values()[1] = make_shared<JSONNumber>(val);
             }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_WRAP_S) {
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            shared_ptr<JSONObject> atlasWrap;
+            if (!extras->contains("atlas_wrap"))
+            {
+                atlasWrap = make_shared<JSONObject>();
+                extras->setValue("atlas_wrap", atlasWrap);
+            }
+            else
+            {
+                atlasWrap = extras->getObject("atlas_wrap");
+            }
+
+            atlasWrap->setString("S", mTextBuffer);
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_WRAP_T) {
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            shared_ptr<JSONObject> atlasWrap;
+            if (!extras->contains("atlas_wrap"))
+            {
+                atlasWrap = make_shared<JSONObject>();
+                extras->setValue("atlas_wrap", atlasWrap);
+            }
+            else
+            {
+                atlasWrap = extras->getObject("atlas_wrap");
+            }
+
+            atlasWrap->setString("T", mTextBuffer);
         }
 
 		/*

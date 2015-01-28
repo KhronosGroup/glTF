@@ -329,7 +329,7 @@ namespace GLTF
         if (techniqueExtras) {
             jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
             doubleSided = techniqueExtras->getBool(kDoubleSided);
-            useAtlas = techniqueExtras->contains("atlas_min") && techniqueExtras->contains("atlas_max");
+            useAtlas = techniqueExtras->contains("atlas_min") && techniqueExtras->contains("atlas_max") && techniqueExtras->contains("atlas_wrap");
         }
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
@@ -337,6 +337,9 @@ namespace GLTF
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
         techniqueHash += "useAtlas:" + GLTFUtils::toString(useAtlas);
+        techniqueHash += "atlasWrapS:" + (useAtlas ? techniqueExtras->getObject("atlas_wrap")->getString("S") : "none");
+        techniqueHash += "atlasWrapT:" + (useAtlas ? techniqueExtras->getObject("atlas_wrap")->getString("T") : "none");
+        
         
         return techniqueHash;
     }
@@ -1049,12 +1052,32 @@ namespace GLTF
                     if ((hasNormalMap == false) && (slot == "bump"))
                         continue;
 
-                    if (techniqueExtras && techniqueExtras->contains("atlas_min") && techniqueExtras->contains("atlas_max")) {
+                    if (techniqueExtras && techniqueExtras->contains("atlas_min") &&
+                        techniqueExtras->contains("atlas_max") && techniqueExtras->contains("atlas_wrap"))
+                    {
                         if (!_parameters->contains("atlas_min"))
                         {
                             addValue("fs", "uniform", vec2Type, 1, "atlas_min", asset);
                             addValue("fs", "uniform", vec2Type, 1, "atlas_max", asset);
-                            fragmentShader->appendCode("vec2 wrappedTexCoord = fract(%s) * (u_atlas_max - u_atlas_min) + u_atlas_min;\n", texVSymbol.c_str());
+                            shared_ptr<JSONObject> wrap = techniqueExtras->getObject("atlas_wrap");
+                            const std::string& sWrap = wrap->getString("S");
+                            const std::string& tWrap = wrap->getString("T");
+                            fragmentShader->appendCode("vec2 wrappedTexCoord;\n");
+                            if (sWrap == "CLAMP")
+                                fragmentShader->appendCode("wrappedTexCoord.s = clamp(%s.s, 0.0, 1.0);\n", texVSymbol.c_str());
+                            else if (sWrap == "MIRROR")
+                                fragmentShader->appendCode("wrappedTexCoord.s = (mod(floor(%s.s), 2) > 0) ? (1.0 - fract(%s.s)) : fract(%s.s);\n", texVSymbol.c_str(), texVSymbol.c_str(), texVSymbol.c_str());
+                            else
+                                fragmentShader->appendCode("wrappedTexCoord.s = fract(%s.s);\n", texVSymbol.c_str());
+
+                            if (tWrap == "CLAMP")
+                                fragmentShader->appendCode("wrappedTexCoord.t = clamp(%s.t, 0.0, 1.0);\n", texVSymbol.c_str());
+                            else if (tWrap == "MIRROR")
+                                fragmentShader->appendCode("wrappedTexCoord.t = (mod(floor(%s.t), 2) > 0) ? (1.0 - fract(%s.t)) : fract(%s.t);\n", texVSymbol.c_str(), texVSymbol.c_str(), texVSymbol.c_str());
+                            else
+                                fragmentShader->appendCode("wrappedTexCoord.t = fract(%s.t);\n", texVSymbol.c_str());
+
+                            fragmentShader->appendCode("wrappedTexCoord = wrappedTexCoord * (u_atlas_max - u_atlas_min) + u_atlas_min;\n");
                         }
                         texVSymbol = "wrappedTexCoord";
                     }
