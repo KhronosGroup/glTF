@@ -1049,7 +1049,7 @@ namespace GLTF
                     if ((hasNormalMap == false) && (slot == "bump"))
                         continue;
 
-                    if (techniqueExtras && techniqueExtras->contains("atlas_min")) {
+                    if (techniqueExtras && techniqueExtras->contains("atlas_min") && techniqueExtras->contains("atlas_max")) {
                         if (!_parameters->contains("atlas_min"))
                         {
                             addValue("fs", "uniform", vec2Type, 1, "atlas_min", asset);
