@@ -315,6 +315,7 @@ namespace GLTF
         std::string techniqueHash = "";
         bool doubleSided = false;
         unsigned int jointsCount = 0;
+        bool useAtlas = false;
         
         techniqueHash += buildSlotHash(parameters, "diffuse", asset);
         techniqueHash += buildSlotHash(parameters, "ambient", asset);
@@ -328,12 +329,14 @@ namespace GLTF
         if (techniqueExtras) {
             jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
             doubleSided = techniqueExtras->getBool(kDoubleSided);
+            useAtlas = techniqueExtras->contains("atlas_min") && techniqueExtras->contains("atlas_max");
         }
         
         techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
         techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
         techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
         techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
+        techniqueHash += "useAtlas:" + GLTFUtils::toString(useAtlas);
         
         return techniqueHash;
     }
@@ -781,6 +784,7 @@ namespace GLTF
             
             this->_profile = asset->profile();
             
+            unsigned int vec2Type = _GL(FLOAT_VEC2);
             unsigned int vec3Type = _GL(FLOAT_VEC3);
             unsigned int vec4Type = _GL(FLOAT_VEC4);
             unsigned int mat4Type = _GL(FLOAT_MAT4);
@@ -1044,6 +1048,17 @@ namespace GLTF
                     
                     if ((hasNormalMap == false) && (slot == "bump"))
                         continue;
+
+                    if (techniqueExtras && techniqueExtras->contains("atlas_min")) {
+                        if (!_parameters->contains("atlas_min"))
+                        {
+                            addValue("fs", "uniform", vec2Type, 1, "atlas_min", asset);
+                            addValue("fs", "uniform", vec2Type, 1, "atlas_max", asset);
+                            fragmentShader->appendCode("vec2 wrappedTexCoord = fract(%s) * (u_atlas_max - u_atlas_min) + u_atlas_min;\n", texVSymbol.c_str());
+                        }
+                        texVSymbol = "wrappedTexCoord";
+                    }
+
                     fragmentShader->appendCode("%s = texture2D(%s, %s);\n", slot.c_str(), textureSymbol.c_str(), texVSymbol.c_str());
                 }
             }
