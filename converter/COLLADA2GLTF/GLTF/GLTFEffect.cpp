@@ -128,6 +128,17 @@ namespace GLTF
                 outputs->setValue(keys[i], parameterValue);
             }
         }
+
+        if (techniqueGenerator->contains("techniqueExtras"))
+        {
+            shared_ptr<JSONObject> extras = techniqueGenerator->getObject("techniqueExtras");
+            if (extras->contains("atlas_min") && extras->contains("atlas_max"))
+            {
+                outputs->setValue("atlas_min", extras->getValue("atlas_min"));
+                outputs->setValue("atlas_max", extras->getValue("atlas_max"));
+            }
+        }
+
         instanceTechnique->setValue(kValues, outputs);
     }
     

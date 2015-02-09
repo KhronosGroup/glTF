@@ -109,6 +109,24 @@ namespace GLTF
             mExtraTagType = EXTRA_TAG_TYPE_BUMP;
         }
 
+        if (strcmp(elementName, "atlas_min_s") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_MIN_S;
+        }
+        else if (strcmp(elementName, "atlas_max_s") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_MAX_S;
+        }
+        else if (strcmp(elementName, "atlas_min_t") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_MIN_T;
+        }
+        else if (strcmp(elementName, "atlas_max_t") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_MAX_T;
+        } 
+        else if (strcmp(elementName, "atlas_wrap_s") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_WRAP_S;
+        }
+        else if (strcmp(elementName, "atlas_wrap_t") == 0) {
+            mExtraTagType = EXTRA_TAG_TYPE_ATLAS_WRAP_T;
+        }
         
         /*
 		switch ( mExtraTagType )
@@ -173,14 +191,127 @@ namespace GLTF
                 extras->setBool(kDoubleSided, val);
             }
         }
-        
-        if (mExtraTagType == EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE) {
+        else if (mExtraTagType == EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE) {
             const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
             shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
             bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
             if ( !failed ) {
                 extras->setBool("ambient_diffuse_lock", val);
             }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_MIN_S) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            double val = GeneratedSaxParser::Utils::toDouble(&buffer, failed);
+            if (!failed) {
+                shared_ptr<JSONArray> atlasMin;
+                if (!extras->contains("atlas_min"))
+                {
+                    atlasMin = make_shared<JSONArray>();
+                    atlasMin->appendValue(make_shared<JSONNumber>(0.0));
+                    atlasMin->appendValue(make_shared<JSONNumber>(0.0));
+                    extras->setValue("atlas_min", atlasMin);
+                }
+                else
+                {
+                    atlasMin = extras->getArray("atlas_min");
+                }
+                
+                atlasMin->values()[0] = make_shared<JSONNumber>(val);
+            }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_MAX_S) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            double val = GeneratedSaxParser::Utils::toDouble(&buffer, failed);
+            if (!failed) {
+                shared_ptr<JSONArray> atlasMax;
+                if (!extras->contains("atlas_max"))
+                {
+                    atlasMax = make_shared<JSONArray>();
+                    atlasMax->appendValue(make_shared<JSONNumber>(1.0));
+                    atlasMax->appendValue(make_shared<JSONNumber>(1.0));
+                    extras->setValue("atlas_max", atlasMax);
+                }
+                else
+                {
+                    atlasMax = extras->getArray("atlas_max");
+                }
+
+                atlasMax->values()[0] = make_shared<JSONNumber>(val);
+            }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_MIN_T) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            double val = GeneratedSaxParser::Utils::toDouble(&buffer, failed);
+            if (!failed) {
+                shared_ptr<JSONArray> atlasMin;
+                if (!extras->contains("atlas_min"))
+                {
+                    atlasMin = make_shared<JSONArray>();
+                    atlasMin->appendValue(make_shared<JSONNumber>(0.0));
+                    atlasMin->appendValue(make_shared<JSONNumber>(0.0));
+                    extras->setValue("atlas_min", atlasMin);
+                }
+                else
+                {
+                    atlasMin = extras->getArray("atlas_min");
+                }
+
+                atlasMin->values()[1] = make_shared<JSONNumber>(val);
+            }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_MAX_T) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            double val = GeneratedSaxParser::Utils::toDouble(&buffer, failed);
+            if (!failed) {
+                shared_ptr<JSONArray> atlasMax;
+                if (!extras->contains("atlas_max"))
+                {
+                    atlasMax = make_shared<JSONArray>();
+                    atlasMax->appendValue(make_shared<JSONNumber>(1.0));
+                    atlasMax->appendValue(make_shared<JSONNumber>(1.0));
+                    extras->setValue("atlas_max", atlasMax);
+                }
+                else
+                {
+                    atlasMax = extras->getArray("atlas_max");
+                }
+
+                atlasMax->values()[1] = make_shared<JSONNumber>(val);
+            }
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_WRAP_S) {
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            shared_ptr<JSONObject> atlasWrap;
+            if (!extras->contains("atlas_wrap"))
+            {
+                atlasWrap = make_shared<JSONObject>();
+                extras->setValue("atlas_wrap", atlasWrap);
+            }
+            else
+            {
+                atlasWrap = extras->getObject("atlas_wrap");
+            }
+
+            atlasWrap->setString("S", mTextBuffer);
+        }
+        else if (mExtraTagType == EXTRA_TAG_TYPE_ATLAS_WRAP_T) {
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            shared_ptr<JSONObject> atlasWrap;
+            if (!extras->contains("atlas_wrap"))
+            {
+                atlasWrap = make_shared<JSONObject>();
+                extras->setValue("atlas_wrap", atlasWrap);
+            }
+            else
+            {
+                atlasWrap = extras->getObject("atlas_wrap");
+            }
+
+            atlasWrap->setString("T", mTextBuffer);
         }
 
 		/*

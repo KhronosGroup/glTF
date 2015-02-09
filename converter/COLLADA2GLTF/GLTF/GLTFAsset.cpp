@@ -682,8 +682,16 @@ namespace GLTF
                     }
                 }
                 
-                if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
-                    techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
+                if (effectExtras != nullptr) {
+                    if (effectExtras->contains(kDoubleSided))
+                        techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
+
+                    if (effectExtras->contains("atlas_min") && effectExtras->contains("atlas_max") && effectExtras->contains("atlas_wrap"))
+                    {
+                        techniqueExtras->setValue("atlas_min", effectExtras->getArray("atlas_min"));
+                        techniqueExtras->setValue("atlas_max", effectExtras->getArray("atlas_max"));
+                        techniqueExtras->setValue("atlas_wrap", effectExtras->getArray("atlas_wrap"));
+                    }
                 }
                 
                 //generate shaders if needed
