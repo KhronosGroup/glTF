@@ -1081,37 +1081,37 @@ namespace GLTF
 		}
         
         if (CONFIG_BOOL(_asset, "embedResources"))
-		{
-			COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
-			std::string imageFullPath = inputURI.getPathDir() + relPathFile;
+        {
+            COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
+            std::string imageFullPath = COLLADABU::URI::uriDecode(inputURI.getPathDir() + relPathFile);
 
-			std::ifstream fin(imageFullPath, ios::in | ios::binary);
-			if (fin.is_open())
-			{
-				std::ostringstream ss;
-				ss << fin.rdbuf();
-				COLLADABU::URI u(imageFullPath);
-				std::string ext = u.getPathExtension();
-				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-				std::string contentType = "application/octet-stream";
-				if (ext == "png")
-				{
-					contentType = "image/png";
-				}
-				else if (ext == "gif")
-				{
-					contentType = "image/gif";
-				}
-				else if (ext == "jpg" || ext == "jpeg")
-				{
-					contentType = "image/jpeg";
-				}
+            std::ifstream fin(imageFullPath, ios::in | ios::binary);
+            if (fin.is_open())
+            {
+                std::ostringstream ss;
+                ss << fin.rdbuf();
+                COLLADABU::URI u(imageFullPath);
+                std::string ext = u.getPathExtension();
+                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+                std::string contentType = "application/octet-stream";
+                if (ext == "png")
+                {
+	                contentType = "image/png";
+                }
+                else if (ext == "gif")
+                {
+	                contentType = "image/gif";
+                }
+                else if (ext == "jpg" || ext == "jpeg")
+                {
+	                contentType = "image/jpeg";
+                }
 
-				image->setString(kURI, create_dataUri(ss.str(), contentType));
+                image->setString(kURI, create_dataUri(ss.str(), contentType));
 
-				return true;
-			}
-		}
+                return true;
+            }
+        }
 		
         image->setString(kURI, COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
         
