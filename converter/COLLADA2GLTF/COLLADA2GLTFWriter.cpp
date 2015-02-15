@@ -188,12 +188,36 @@ namespace GLTF
 	//--------------------------------------------------------------------
             
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon) {
+        float transparency = 1.0;
         GLTFAsset* asset = this->_asset.get();
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
         }
-        float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+        
+        COLLADAFW::EffectCommon::OpaqueMode opaqueMode;
+        
+        opaqueMode = effectCommon->getOpaqueMode();
+
+        switch (opaqueMode) {
+                
+            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(1.0 - transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            }
+                break;
+            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            }
+                break;
+            case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
+            default:
+                transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+                break;
+        }
         
         return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
