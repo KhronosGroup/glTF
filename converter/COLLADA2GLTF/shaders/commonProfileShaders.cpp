@@ -187,10 +187,8 @@ namespace GLTF
         }
         
         shared_ptr<JSONObject> tr = parameters->getObject("transparency");
-        
         double transparency = tr->getDouble("value");
-        
-        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
+        return transparency;
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
