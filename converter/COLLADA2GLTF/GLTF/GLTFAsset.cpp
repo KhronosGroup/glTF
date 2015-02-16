@@ -553,7 +553,7 @@ namespace GLTF
         
         techniqueGenerator->setString("lightingModel", effect->getLightingModel());
         techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
-        techniqueGenerator->setValue("values", effect->getValues());
+        techniqueGenerator->setValue(kValues, effect->getValues());
         techniqueGenerator->setValue("techniqueExtras", shared_ptr<JSONObject>(new JSONObject()));
         techniqueGenerator->setValue("texcoordBindings", shared_ptr<JSONObject>(new JSONObject()));
         

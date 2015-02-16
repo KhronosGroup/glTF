@@ -58,3 +58,29 @@ shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::
     return array;
 }
 
+std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode) {
+
+    std::string opaqueStr;
+    
+    switch (opaqueMode) {
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
+            opaqueStr = "A_ONE";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO:
+            opaqueStr = "A_ZERO";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
+            opaqueStr = "RGB_ZERO";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE:
+            opaqueStr = "RGB_ONE";
+            break;
+        default:
+        case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
+            opaqueStr = "UNSPECIFIED_OPAQUE";
+            break;
+    }
+    return opaqueStr;
+}
+
+

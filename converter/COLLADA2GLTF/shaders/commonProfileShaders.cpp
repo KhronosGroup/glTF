@@ -187,10 +187,8 @@ namespace GLTF
         }
         
         shared_ptr<JSONObject> tr = parameters->getObject("transparency");
-        
         double transparency = tr->getDouble("value");
-        
-        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
+        return transparency;
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
@@ -322,8 +320,6 @@ namespace GLTF
         techniqueHash += buildSlotHash(parameters, "specular", asset);
         techniqueHash += buildSlotHash(parameters, "reflective", asset);
         techniqueHash += buildSlotHash(parameters, "bump", asset);
-        
-        //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
         
         if (techniqueExtras) {
             jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
@@ -1308,7 +1304,7 @@ namespace GLTF
     }
     
     std::string getTechniqueKey(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset)  {
-        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> values = techniqueGenerator->getObject(kValues);
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
         
         return buildTechniqueHash(values, techniqueExtras, asset);
@@ -1318,7 +1314,7 @@ namespace GLTF
     std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset) {
         
         std::string techniqueHash = getTechniqueKey(techniqueGenerator, asset);
-        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> values = techniqueGenerator->getObject(kValues);
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
         std::string lightingModel = techniqueGenerator->getString("lightingModel");
         shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
