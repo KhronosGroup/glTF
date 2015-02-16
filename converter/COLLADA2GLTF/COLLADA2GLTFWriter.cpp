@@ -188,7 +188,7 @@ namespace GLTF
 	//--------------------------------------------------------------------
             
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon) {
-        float transparency = 1.0;
+        static bool loggedOnce = false;
         GLTFAsset* asset = this->_asset.get();
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
@@ -196,20 +196,29 @@ namespace GLTF
         }
         
         COLLADAFW::EffectCommon::OpaqueMode opaqueMode;
+        float transparency = 1.0;
         
         opaqueMode = effectCommon->getOpaqueMode();
 
         switch (opaqueMode) {
-                
+            
             case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
             case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO: {
                 ColorOrTexture transparent = effectCommon->getTransparent();
                 transparency = static_cast<float>(1.0 - transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+                if (!loggedOnce) {
+                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
+                    loggedOnce = true;
+                }
             }
                 break;
             case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE: {
                 ColorOrTexture transparent = effectCommon->getTransparent();
                 transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+                if (!loggedOnce) {
+                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
+                    loggedOnce = true;
+                }
             }
                 break;
             case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
