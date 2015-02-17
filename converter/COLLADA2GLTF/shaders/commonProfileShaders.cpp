@@ -890,6 +890,8 @@ namespace GLTF
                         shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                         
                         shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                        if (!lights->contains(lightUID->getString()))
+                            continue;
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                         
                         if (light != nullptr) {
@@ -1071,6 +1073,8 @@ namespace GLTF
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                     
                     shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                    if (!lights->contains(lightUID->getString()))
+                        continue;
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                     if (light == nullptr)
                         continue;
