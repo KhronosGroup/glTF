@@ -28,9 +28,29 @@ Since this repo has git submodules, clone with:
 git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 ```
 
+# glTF Tools
+
 ## Viewers
 
-* [glTF viewer](https://github.com/fabrobinet/glTF-webgl-viewer) based on [montagejs](https://github.com/montagejs/montage)
 * [glTF loader](https://github.com/mrdoob/three.js/tree/master/examples/js/loaders/gltf) in [Three.js](http://threejs.org/)
 * [glTF loader](http://cesiumjs.org/2014/03/03/Cesium-3D-Models-Tutorial/) in [Cesium](http://cesiumjs.org/)
+* [glTF viewer](https://github.com/fabrobinet/glTF-webgl-viewer) based on [montagejs](https://github.com/montagejs/montage)
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API
+* [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF
+
+## Converters
+
+* `COLLADA2GLTF` - C++ command-line tool to converter COLLADA to glTF (mentioned above)
+* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) drag and drop converter and viewer from Cesium (mentioned above)
+* [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
+
+## Utilities
+
+* [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
+* [gltf-statistics](https://github.com/AnalyticalGraphicsInc/gltf-statistics) - JavaScript and Node.js library and command-line tool to display statistics for glTF models
+
+## Tutorials and Articles
+
+* [Writing an FBX importer / Exporter plug-in](http://around-the-corner.typepad.com/adn/2015/01/writing-an-fbx-importer-exporter-plug-in.html), January 2015
+* [glTF Tips for Artists](http://cesiumjs.org/2014/12/15/glTF-Tips-for-Artists/), December 2014
+* [Building a WebGL Santa with Cesium and glTF](http://cesiumjs.org/2013/12/23/Building-A-WebGL-Santa-with-Cesium-and-glTF/), December 2013
