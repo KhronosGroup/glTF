@@ -8,8 +8,8 @@
             "type" : "array",
             "description" : "WebGL states to enable.  Valid values are (3042) BLEND, (2884) CULL_FACE, (2929) DEPTH_TEST, (32823) POLYGON_OFFSET_FILL, (32926) SAMPLE_ALPHA_TO_COVERAGE, and (3089) SCISSOR_TEST.",
             "items" : {
-                        "type" : "integer",
-                        "enum" : [3042, 2884, 2929, 32823, 32926, 3089]
+                "type" : "integer",
+                "enum" : [3042, 2884, 2929, 32823, 32926, 3089]
             },
             "uniqueItems" : true,
             "default" : []
