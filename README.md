@@ -55,6 +55,7 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 
 ## Tutorials and Articles
 
+* [glTF and the WebGL Art Pipeline](http://www.slideshare.net/auradeluxe/gltf-and-the-webgl-art-pipeline-march-2015), March 2015
 * [Writing an FBX importer / Exporter plug-in](http://around-the-corner.typepad.com/adn/2015/01/writing-an-fbx-importer-exporter-plug-in.html), January 2015
 * [glTF Tips for Artists](http://cesiumjs.org/2014/12/15/glTF-Tips-for-Artists/), December 2014
 * [3D for the Modern Web: Declarative 3D and glTF](http://mason.gmu.edu/~bcoughl2/cs752/), Summer 2014
