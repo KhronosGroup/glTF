@@ -10,10 +10,11 @@ _This is a draft specification; it is incomplete and may change before ratificat
 
 Editors
 
-* Fabrice Robinet, COLLADA Working Group Chair
 * Patrick Cozzi, Analytical Graphics, Inc. and University of Pennsylvania
 * Remi Arnaud, AMD
 * Tony Parisi, Vizi
+
+Previous Editor and Incubator: Fabrice Robinet, Individual Contributor
 
 # Contents
 
