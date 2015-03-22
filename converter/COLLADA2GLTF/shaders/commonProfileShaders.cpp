@@ -309,30 +309,6 @@ namespace GLTF
      return lightsHash;
      }
      */
-    static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset) {
-        std::string techniqueHash = "";
-        bool doubleSided = false;
-        unsigned int jointsCount = 0;
-        
-        techniqueHash += buildSlotHash(parameters, "diffuse", asset);
-        techniqueHash += buildSlotHash(parameters, "ambient", asset);
-        techniqueHash += buildSlotHash(parameters, "emission", asset);
-        techniqueHash += buildSlotHash(parameters, "specular", asset);
-        techniqueHash += buildSlotHash(parameters, "reflective", asset);
-        techniqueHash += buildSlotHash(parameters, "bump", asset);
-        
-        if (techniqueExtras) {
-            jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
-            doubleSided = techniqueExtras->getBool(kDoubleSided);
-        }
-        
-        techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
-        techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
-        techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
-        techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
-        
-        return techniqueHash;
-    }
     
     bool writeShaderIfNeeded(const std::string& shaderId,  const std::string& shaderString, GLTFAsset *asset, unsigned int type)
     {
@@ -1308,10 +1284,48 @@ namespace GLTF
     }
     
     std::string getTechniqueKey(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset)  {
-        shared_ptr<JSONObject> values = techniqueGenerator->getObject(kValues);
+        shared_ptr<JSONObject> parameters = techniqueGenerator->getObject(kValues);
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
+        shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
+
+        //build a hash based on attributes to be integrated to the techniqueHash
+        std::string attributesHash = "";
+        vector <std::string> allAttributes = attributeSemantics->getAllKeys();
+        sort(allAttributes.begin(), allAttributes.end());
+        for (size_t i = 0 ; i < allAttributes.size() ; i++) {
+            std::string attribute = allAttributes[i];
+            shared_ptr<JSONArray> sets = attributeSemantics->getArray(attribute);
+            attributesHash += attribute;
+            unsigned int setHash = 0;
+            for (size_t k = 0 ; k < sets->getCount() ; k++) {
+                shared_ptr<JSONNumber> nb = static_pointer_cast<JSONNumber>(sets->values()[k]);
+                setHash += nb->getUnsignedInt32();
+            }
+            attributesHash += GLTFUtils::toString(setHash);
+        }
         
-        return buildTechniqueHash(values, techniqueExtras, asset);
+        std::string techniqueHash = attributesHash;
+        bool doubleSided = false;
+        unsigned int jointsCount = 0;
+        
+        techniqueHash += buildSlotHash(parameters, "diffuse", asset);
+        techniqueHash += buildSlotHash(parameters, "ambient", asset);
+        techniqueHash += buildSlotHash(parameters, "emission", asset);
+        techniqueHash += buildSlotHash(parameters, "specular", asset);
+        techniqueHash += buildSlotHash(parameters, "reflective", asset);
+        techniqueHash += buildSlotHash(parameters, "bump", asset);
+        
+        if (techniqueExtras) {
+            jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
+            doubleSided = techniqueExtras->getBool(kDoubleSided);
+        }
+        
+        techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
+        techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
+        techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
+        techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
+        
+        return techniqueHash;
     }
 
     
