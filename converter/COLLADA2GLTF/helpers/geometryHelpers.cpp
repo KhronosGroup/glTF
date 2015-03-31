@@ -251,12 +251,15 @@ namespace GLTF
                 }
                 
                 MeshAttributesBufferInfos *bufferInfos = &allBufferInfos[meshAttributeIndex];
-                void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalMeshAttributeByteStride);
-                //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
-                /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
-                void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedMeshAttributeByteStride);
+                if (bufferInfos && bufferInfos->originalBufferData)
+                {
+                    void *ptrSrc = (unsigned char*)bufferInfos->originalBufferData + (rindex * bufferInfos->originalMeshAttributeByteStride);
+                    //FIXME: optimize / secure this a bit, too many indirections without testing for invalid pointers
+                    /* copy the vertex attributes at the right offset and right indice (using the generated uniqueIndexes table */
+                    void *ptrDst = bufferInfos->remappedBufferData + (uniqueIndicesBuffer[idx] * bufferInfos->remappedMeshAttributeByteStride);
 
-                memcpy(ptrDst, ptrSrc , bufferInfos->elementByteLength);
+                    memcpy(ptrDst, ptrSrc, bufferInfos->elementByteLength);
+                }
             }
         }
         
