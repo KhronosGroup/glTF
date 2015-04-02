@@ -51,12 +51,6 @@ using namespace std;
 #endif
 
 #define STDOUT_OUTPUT 0
-#if USE_OPEN3DGC
-#define OPTIONS_COUNT 16
-#else
-#define OPTIONS_COUNT 14
-#endif
-
 
 typedef struct {
     const char* name;
@@ -72,7 +66,7 @@ static const OptionDescriptor options[] = {
 	{ "f",				required_argument,  "-f -> path of input file, argument [string]" },
 	{ "o",				required_argument,  "-o -> path of output file argument [string]" },
 	{ "b",				required_argument,  "-b -> path of output bundle argument [string]" },
-	{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },
+	//{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },  // Code for this option is currently commented out.
     { "g",              required_argument,  "-g -> [experimental] GLSL version to output in generated shaders" },
 	{ "i",              no_argument,        "-i -> invert-transparency" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
@@ -86,9 +80,11 @@ static const OptionDescriptor options[] = {
     { "s",              no_argument,        "-s -> experimental mode"},
 	{ "h",              no_argument,        "-h -> help" },
 	{ "r",              no_argument,        "-r -> verbose logging" },
-	{ "e",				no_argument,		"-e -> embed all resources as Data URIs" },
+	{ "e",				no_argument,		"-e -> embed resources (bin, shaders, available textures) in glTF file" },
     { "n",              no_argument,        "-n -> don't combine animations with the same target" }
 };
+
+static const int OPTIONS_COUNT = sizeof(options) / sizeof(OptionDescriptor);
 
 static void buildOptions() {
     helpMessage += "usage: collada2gltlf -f [file] [options]\n";
