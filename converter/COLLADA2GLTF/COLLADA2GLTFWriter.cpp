@@ -1235,32 +1235,35 @@ namespace GLTF
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
-        for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
-            const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+        if (animatedTargets)
+        {
+            for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
+                const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
 
-            shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
+                shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
 
-            // Can be null if there are no keyframes
-            if (cvtAnimation)
-            {
-                AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
-                for (size_t j = 0; j < animatedTargets->size(); j++) {
-                    shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
-                    shared_ptr<GLTFAnimationFlattener> animationFlattener;
-                    std::string targetUID = animatedTarget->getString(kTarget);
-                    if (animationFlattenerMap->count(targetUID) == 0) {
-                        //FIXME: assuming node here is wrong
-                        COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-                        animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
-                        (*animationFlattenerMap)[targetUID] = animationFlattener;
+                // Can be null if there are no keyframes
+                if (cvtAnimation)
+                {
+                    AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
+                    for (size_t j = 0; j < animatedTargets->size(); j++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
+                        shared_ptr<GLTFAnimationFlattener> animationFlattener;
+                        std::string targetUID = animatedTarget->getString(kTarget);
+                        if (animationFlattenerMap->count(targetUID) == 0) {
+                            //FIXME: assuming node here is wrong
+                            COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
+                            animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
+                            (*animationFlattenerMap)[targetUID] = animationFlattener;
+                        }
                     }
-                }
 
-                cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
+                    cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
 
-                if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
-                    //if an animation failed to convert, we don't want to keep track of it.
-                    animations->removeValue(animationBindings[i].animation.toAscii());
+                    if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
+                        //if an animation failed to convert, we don't want to keep track of it.
+                        animations->removeValue(animationBindings[i].animation.toAscii());
+                    }
                 }
             }
         }

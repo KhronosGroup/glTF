@@ -503,27 +503,25 @@ namespace GLTF
     void GLTFAsset::setExtras(shared_ptr<JSONObject> extras) {
         this->_extras = extras;
     }
-
+    
     static shared_ptr <GLTF::JSONObject> serializeAttributeSemanticsForPrimitiveAtIndex(GLTFMesh* mesh, unsigned int idx) {
         shared_ptr <GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(mesh->getPrimitives()->values()[idx]);
-        
         shared_ptr <GLTF::JSONObject> semantics(new GLTF::JSONObject());
-        shared_ptr<JSONArray> sets(new JSONArray());
         
         size_t count = primitive->getVertexAttributesCount();
         for (size_t j = 0 ; j < count ; j++) {
             Semantic semantic = primitive->getSemanticAtIndex((unsigned int)j);
             std::string semanticString = GLTFUtils::getStringForSemantic(semantic);
-            
-            shared_ptr<JSONObject> semanticInfo;
+            shared_ptr<JSONArray> sets;
+
             if (semantics->contains(semanticString) == false) {
-                semanticInfo = shared_ptr<JSONObject> (new JSONObject());
-                semantics->setValue(semanticString, semanticInfo);
+                sets = shared_ptr<JSONArray> (new JSONArray());
+                semantics->setValue(semanticString, sets);
+            } else {
+                sets = semantics->getArray(semanticString);
             }
             
-            unsigned int indexOfSet = 0;
-            indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
-            
+            unsigned int indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
             sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
         }
         
