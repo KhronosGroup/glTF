@@ -46,6 +46,7 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 * [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) drag and drop converter and viewer from Cesium (mentioned above)
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
+* [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service to convert 3D models from COLLADA to glTF
 
 ## Utilities
 
@@ -54,8 +55,10 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 
 ## Tutorials and Articles
 
+* [glTF and the WebGL Art Pipeline](http://www.slideshare.net/auradeluxe/gltf-and-the-webgl-art-pipeline-march-2015), March 2015
 * [Writing an FBX importer / Exporter plug-in](http://around-the-corner.typepad.com/adn/2015/01/writing-an-fbx-importer-exporter-plug-in.html), January 2015
 * [glTF Tips for Artists](http://cesiumjs.org/2014/12/15/glTF-Tips-for-Artists/), December 2014
 * [3D for the Modern Web: Declarative 3D and glTF](http://mason.gmu.edu/~bcoughl2/cs752/), Summer 2014
+* glTF: Designing an Open-Standard Runtime Asset Format in [GPU Pro 5](http://gpupro.blogspot.com/), May 2014
 * [Building a WebGL Santa with Cesium and glTF](http://cesiumjs.org/2013/12/23/Building-A-WebGL-Santa-with-Cesium-and-glTF/), December 2013
 * [glTF update](http://www.slideshare.net/auradeluxe/gltf-update-with-tony-parisi), August 2013
