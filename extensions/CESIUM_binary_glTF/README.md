@@ -64,16 +64,24 @@ var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
 var json = JSON.parse(jsonString)
 ```
 
+Binary glTF still supports external resources.  For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF.
+
+Binary glTF also supported embedded base64-encoded resources, but it would be inefficient to use them.  An advantage of Binary glTF over glTF is that resources can be embedded without paying the size and client-side decoding costs of base64-encoding.
+
 ## glTF Schema Updates
+
+TODO: Schema for this
+TODO: `self` or `CESIUM_binary_glTF` or implicit because it is in the top-level `extensions`?
+TODO: `shader` and `image` changes should move to the `extensions` part.
 
 This required some minor spec additions (which are up for discussion):
 * `"self"` is the buffer that references the binary glTF file.
 * `shader` can have a `uri` (as usual) or a `bufferView` so the text can be extracted from the typed array (binary glTF).
 * `image` can have a `uri` (as usual) or `bufferView`, `mimeType`, `width`, and `height`, which allows users to create a JavaScript image like [this](https://github.com/AnalyticalGraphicsInc/cesium/blob/2d4b2f8694d525e65a29b8b524b1c07b9abd609c/Source/Core/loadImageFromTypedArray.js).
 
-**File size and number of files**
+## Experimental Results
 
-Tested with our [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir) (we need to test with me).
+Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles, two texture atlases, and no animations/skins, sizes for the common glTF setups are:
 
             | dae               | glTF              | glTF (base64-encoded bin/png/glsl) | Binary glTF
 ------------|-------------------|-------------------|------------------------------------|------------
@@ -81,12 +89,6 @@ size        | 1.07 MB (3 files) | 802 KB (8 files)  | 1.03 MB                   
 size (gzip) | 728 KB            | 677 KB            | 706 KB                             |  707 KB
 
 (Not impressed by gzip size for this example)
-
-Binary glTF still supports external resources and embedded base64 ones.  For example, I think a common case will be to embed .bin and shaders into a binary glTF and then have external images.
-
-Questions
-* Do we want this to become core glTF?  Or a container format?
-* Any recommended tweaks to the schema?
 
 ## Known Implementations
 
