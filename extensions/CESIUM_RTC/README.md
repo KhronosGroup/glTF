@@ -2,8 +2,8 @@
 
 ## Contributors
 
-Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
-Tom Fili, [CesiumFili](https://twitter.com/CesiumFili)
+* Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
+* Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
 
 ## Status
 
@@ -15,14 +15,15 @@ Written against the glTF 0.8 spec.
 
 ## Overview
 
-Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [Ohlarik08].
+Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/)].
 
 In this technique, each position is defined relative to an origin (the _center_) such that 32-bit floating-point precision is adequate to describe the distance between each position and the center.  These relative positions are stored in the glTF vertex data.  The positions are transformed with a modified model-view matrix that makes the center relative to the eye.  This avoids 32-bit subtraction of large translation components on the GPU.
 
 This extension adds:
-* A new `CESIUM_RTC` property to the `extensions` property of the top-level glTF object.  `CESIUM_RTC` contains one property: `center`, an array of three numbers (`x`, `y`, `z`) that define the center in an application-specific coordinate system.  For example, in virtual globe applications, this may be WGS84 coordinates.  In a spatial data structure, this may be the origin of the node containing the model.
+* A new `CESIUM_RTC` property to the `extensions` property of the top-level glTF object.  `CESIUM_RTC` contains one property: `center`, an array of three numbers (`x`, `y`, `z`) that define the center in an application-specific coordinate system.  For example, in virtual globe applications, this may be WGS84 coordinates.  In a spatial data structure, this may be the origin of the node containing the model.  See [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json) and the example below.
 * The `CESIUM_RTC_MODELVIEW` parameter semantic, which modifies the `MODELVIEW` semantic to mean the RTC model-view matrix.  This matrix can be computed as shown in Listing 1.  The `MODELVIEWINVERSETRANSPOSE` semantic is still appropriate for transforming normals since RTC only introduces a translation which does not affect normals.
 
+**Listing 1**: Computing the RTC model-view matrix.
 ```javascript
 // Transform the RTC center point into eye coordinates using double-precision on the CPU
 var viewMatrix = new Matrix4(/* ... */);
@@ -37,11 +38,8 @@ modelViewRTC[12] = rtcCenterEye.x;  // Column-major 4x4 matrix layout
 modelViewRTC[13] = rtcCenterEye.y;
 modelViewRTC[14] = rtcCenterEye.z;
 ```
-**Listing 1**
 
 ## Examples
-
-Schema: [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json)
 
 ```json
 "extensions": {
@@ -59,7 +57,7 @@ Schema: [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json)
                 "semantic": "CESIUM_RTC_MODELVIEW",
                 "type": 35676
              },
-             // ...
+             ...
          }
      }
  }
