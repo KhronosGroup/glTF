@@ -62,7 +62,7 @@ namespace GLTF
     class COLLADA2GLTF_EXPORT GLTFAsset : public GLTFAssetValueEvaluator, public JSONValueApplier
     {
     public:
-        GLTFAsset();
+        GLTFAsset(std::shared_ptr<GLTFWriter> writer = 0);
 
         std::shared_ptr <GLTFConfig> converterConfig();
         std::shared_ptr <JSONObject> convertionResults();
@@ -184,7 +184,7 @@ namespace GLTF
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
 
         NameToOutputStream              _nameToOutputStream;
-        GLTF::GLTFWriter                _writer;
+        std::shared_ptr<GLTF::GLTFWriter>   _writer;
 
         std::vector <std::shared_ptr<GLTFAssetModifier> > _assetModifiers;
 

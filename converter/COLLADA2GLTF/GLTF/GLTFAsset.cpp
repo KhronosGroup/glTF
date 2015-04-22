@@ -149,10 +149,16 @@ namespace GLTF
         return id;
     }
     
-	GLTFAsset::GLTFAsset() :
+    GLTFAsset::GLTFAsset(std::shared_ptr<GLTFWriter> writer) :
         _isBundle(false),
-        _distanceScale(1.0)
+        _distanceScale(1.0),
+        _writer(writer)
     {
+        if (!_writer)
+        {
+            _writer = std::make_shared<GLTFDefaultWriter>();
+        }
+
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -420,7 +426,7 @@ namespace GLTF
         this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_root->createObjectIfNeeded(kNodes);
         
-        this->_writer.initWithPath(this->getOutputFilePath().c_str());
+        this->_writer->initWithPath(this->getOutputFilePath().c_str());
     }
     
     //FIXME:legacy
@@ -454,7 +460,7 @@ namespace GLTF
             this->_evaluators[i]->evaluationDidComplete(this);
         }
         
-        this->_root->write(&this->_writer, this);
+        this->_root->write(this->_writer.get(), this);
     }
 
     void GLTFAsset::apply(JSONValue* value, void *context) {
@@ -484,11 +490,11 @@ namespace GLTF
     }
     
     void GLTFAsset::_writeJSONResource(const std::string &path, shared_ptr<JSONObject> obj) {
-        GLTF::GLTFWriter resultsWriter;
+        std::shared_ptr<GLTF::GLTFWriter> resultsWriter = std::make_shared<GLTF::GLTFDefaultWriter>();
         COLLADABU::URI outputURI(this->resourceOuputPathForPath(path));
         std::string aPath = this->getOutputFolderPath() + outputURI.getPathFile();
-        resultsWriter.initWithPath(aPath);
-        obj->write(&resultsWriter);
+        resultsWriter->initWithPath(aPath);
+        obj->write(resultsWriter.get());
         
         if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
             this->log("[Resource]: write JSON resource at path:%s\n", aPath.c_str());
