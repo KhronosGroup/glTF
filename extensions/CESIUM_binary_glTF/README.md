@@ -23,9 +23,45 @@ Base64-encoding increases the file size and requires extra decoding.  glTF is co
 
 To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) are stored in a binary blob.  The `TextDecoder` JavaScript API can be used to extract the JSON from the binary blob, which can be parses with `JSON.parse` as usual, and then the binary blog is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
 
+The binary blob is little endian.  It has a 16-byte header followed by the glTF resources, including the JSON:
 ![](layout.jpg)
 
-TODO: https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js
+`magic` is the ANSI string `'glTF'`, and can be used to identify the binary blob as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.
+
+TODO: `jsonOffset` and `jsonLength`
+
+
+Given an `arrayBuffer` with Binary glTF, Example 1 shows how to parse the header and extra the JSON.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js).
+
+**Example 1**: parsing Binary glTF
+```javascript
+var sizeOfUnit32 = Uint32Array.BYTES_PER_ELEMENT;
+
+var magic = getStringFromTypedArray(arrayBuffer, 0, 4);
+if (magic !== 'glTF') {
+    // Not Binary glTF
+}
+
+var view = new DataView(arrayBuffer);
+var byteOffset = sizeOfUnit32;  // Skip magic number
+
+var version = view.getUint32(byteOffset, true);
+byteOffset += sizeOfUnit32;
+if (version !== 1) {
+    // This only handles version 1.
+}
+
+var jsonOffset = view.getUint32(byteOffset, true);
+byteOffset += sizeOfUnit32;
+
+var jsonLength = view.getUint32(byteOffset, true);
+byteOffset += sizeOfUnit32;
+
+var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
+var json = JSON.parse(jsonString)
+```
+
+
 TODO: below here.
 
 The Binary glTF format we prototyped is:
