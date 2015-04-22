@@ -88,8 +88,6 @@ Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesiu
 size        | 1.07 MB (3 files) | 802 KB (8 files)  | 1.03 MB                            |  806 KB
 size (gzip) | 728 KB            | 677 KB            | 706 KB                             |  707 KB
 
-(Not impressed by gzip size for this example)
-
 ## Known Implementations
 
 * Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Scene/Model.js))
