@@ -23,17 +23,20 @@ Base64-encoding increases the file size and requires extra decoding.  glTF is co
 
 To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) are stored in a binary blob.  The `TextDecoder` JavaScript API can be used to extract the JSON from the binary blob, which can be parses with `JSON.parse` as usual, and then the binary blog is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
 
+## Binary glTF Layout
+
 The binary blob is little endian.  It has a 16-byte header followed by the glTF resources, including the JSON:
+
+**Figure 1**: Binary glTF layout.
 ![](layout.jpg)
 
-`magic` is the ANSI string `'glTF'`, and can be used to identify the binary blob as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.
+`magic` is the ANSI string `'glTF'`, and can be used to identify the binary blob as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `jsonOffset` is the offset, in bytes, from the start of the binary blog to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
 
-TODO: `jsonOffset` and `jsonLength`
+`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the binary blog, other that it is past the 16-byte header and is continious, nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illistrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
 
+Given an `arrayBuffer` with Binary glTF, Example 1 shows how to parse the header and access the JSON.
 
-Given an `arrayBuffer` with Binary glTF, Example 1 shows how to parse the header and extra the JSON.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js).
-
-**Example 1**: parsing Binary glTF
+**Example 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js).  Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/loadImageFromTypedArray.js) helper function is also useful to extracting images from Binary glTF.
 ```javascript
 var sizeOfUnit32 = Uint32Array.BYTES_PER_ELEMENT;
 
@@ -61,19 +64,7 @@ var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
 var json = JSON.parse(jsonString)
 ```
 
-
-TODO: below here.
-
-The Binary glTF format we prototyped is:
-```
-magic number, uint32 // 'glTF'
-version, uint32
-jsonOffset, uint32
-jsonLength, uint32
-// embedded (or separate) data
-```
-
-Our loader is [here](https://github.com/AnalyticalGraphicsInc/cesium/compare/bgltf#diff-bcedb35459e5bed46206bad4990bc7f1R779).
+## glTF Schema Updates
 
 This required some minor spec additions (which are up for discussion):
 * `"self"` is the buffer that references the binary glTF file.
@@ -96,10 +87,6 @@ Binary glTF still supports external resources and embedded base64 ones.  For exa
 Questions
 * Do we want this to become core glTF?  Or a container format?
 * Any recommended tweaks to the schema?
-
-## Examples
-
-TODO
 
 ## Known Implementations
 
