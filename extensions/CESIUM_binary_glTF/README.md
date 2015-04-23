@@ -21,7 +21,7 @@ glTF provides two delivery options that can be also be used together:
 
 Base64-encoding increases the file size and requires extra decoding.  glTF is commonly criticized for requiring separate requests or extra space due to base64-encoding.
 
-To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) are stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the `ArrayBuffer`.  The JSON can be parses with `JSON.parse` as usual, and then the `ArrayBuffer` is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
+To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) are stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parses with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
 
 ## Binary glTF Layout
 
@@ -31,9 +31,9 @@ Binary glTF is little endian.  It has a 16-byte header followed by the glTF reso
 
 ![](layout.jpg)
 
-`magic` is the ANSI string `'glTF'`, and can be used to identify the `ArrayBuffer` as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `jsonOffset` is the offset, in bytes, from the start of the `ArrayBuffer` to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
+`magic` is the ANSI string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
 
-`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the `ArrayBuffer` nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illistrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
+`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the arraybuffer nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illistrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
 
 Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
 
@@ -73,7 +73,7 @@ Binary glTF also supported embedded base64-encoded resources, but it would be in
 
 ## glTF Schema Updates
 
-This extension introduces an explicitly named `buffer` called `CESIUM_binary_glTF`.  This buffer is an implicit reference to the binary blob that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF `arrayBuffer` as the buffer.  `bufferViews` that reference this `buffer` work as usual.
+This extension introduces an explicitly named `buffer` called `CESIUM_binary_glTF`.  This buffer is an implicit reference to the arraybuffer that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF arrayBuffer as the buffer.  `bufferViews` that reference this `buffer` work as usual.
 
 To support embedded shaders and images, `shader` and `image` glTF properties have new `CESIUM_binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
 
@@ -88,7 +88,7 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 }
 ```
 
-**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the `arrayBuffer`.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer.  See Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/loadImageFromTypedArray.js) helper function.
+**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer.  See Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/loadImageFromTypedArray.js) helper function.
 ```json
 "an_image" : {
     "extensions" : {
