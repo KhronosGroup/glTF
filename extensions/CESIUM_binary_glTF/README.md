@@ -96,8 +96,8 @@ To support embedded shaders and images, `shader` and `image` glTF have new `CESI
     "extensions" : {
         "CESIUM_binary_glTF" : {
             "bufferview" : ...,
-            "mimeType" : 'image/png'
-            "height" : 256
+            "mimeType" : 'image/png',
+            "height" : 256,
             "width" : 512
         }
     }
