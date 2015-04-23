@@ -39,8 +39,6 @@ modelViewRTC[13] = rtcCenterEye.y;
 modelViewRTC[14] = rtcCenterEye.z;
 ```
 
-## Examples
-
 **Listing 2**: Example glTF JSON.
 ```json
 "extensions": {
@@ -64,6 +62,10 @@ modelViewRTC[14] = rtcCenterEye.z;
      }
  }
 ```
+
+## Schema
+
+[CESIUM_RTC.schema.json](CESIUM_RTC.schema.json)
 
 ## Known Implementations
 
