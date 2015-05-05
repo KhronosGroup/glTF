@@ -90,11 +90,14 @@ namespace GLTF
         size_t getAnimationByteLength();
 
         void setOutputFilePath(const std::string& outputFilePath);
-        std::string getOutputFilePath();
+        const std::string& getOutputFilePath();
         std::string getOutputFolderPath();
 
         void setInputFilePath(const std::string& inputFilePath);
-        std::string getInputFilePath();
+        const std::string& getInputFilePath();
+
+        void setInputFileData(const std::string& inputFileData);
+        const std::string& getInputFileData();
 
         void setDistanceScale(double distanceScale);
         double getDistanceScale();
@@ -173,6 +176,7 @@ namespace GLTF
 
         unsigned int                    _prefix;
         std::string                     _inputFilePath;
+        std::string                     _inputFileData;
         std::string                     _outputFilePath;
         std::string                     _bundleOutputPath;
         std::string                     _sharedBufferId;

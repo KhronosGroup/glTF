@@ -4,6 +4,7 @@
 #include "../GitSHA1.h"
 #include "GLTF-Open3DGC.h"
 #include "GLTFFlipUVModifier.h"
+#include "GLTFCleanupEvaluator.h"
 #include "geometryHelpers.h"
 #include "../shaders/commonProfileShaders.h"
 
@@ -347,7 +348,7 @@ namespace GLTF
         this->_outputFilePath = outputFilePath;
     }
     
-    std::string GLTFAsset::getOutputFilePath() {
+    const std::string& GLTFAsset::getOutputFilePath() {
         return this->_outputFilePath;
     }
     
@@ -363,8 +364,18 @@ namespace GLTF
         this->_convertionMetaData->setString("source", inputFilePath);
     }
     
-    std::string GLTFAsset::getInputFilePath() {
+    const std::string& GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
+    }
+
+    void GLTFAsset::setInputFileData(const std::string& inputFileData)
+    {
+        this->_inputFileData = inputFileData;
+    }
+
+    const std::string& GLTFAsset::getInputFileData()
+    {
+        return this->_inputFileData;
     }
 
     void GLTFAsset::setDistanceScale(double distanceScale)
@@ -441,7 +452,6 @@ namespace GLTF
     }
     
     void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
-        
     }
     
     void GLTFAsset::_performValuesEvaluation() {
@@ -962,7 +972,8 @@ namespace GLTF
         }
         
         this->assetModifiers().insert(this->assetModifiers().begin(), shared_ptr<GLTFFlipUVModifier>(new GLTFFlipUVModifier()));
-        
+        this->addValueEvaluator(std::make_shared<GLTFCleanupEvaluator>());
+
         this->launchModifiers();
         
         size_t verticesLength = 0;
