@@ -212,6 +212,12 @@ namespace GLTF
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
+                    // If the user adds an <has_alpha> extra tag to the image then we override
+                    //  what the image actually contain as far as weather there is alpha or not.
+                    if (image->contains("has_alpha"))
+                    {
+                        return !image->getBool("has_alpha");
+                    }
                     std::string imagePath = image->getString(kURI);
                     if (!is_dataUri(imagePath))
                     {
