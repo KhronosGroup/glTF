@@ -35,6 +35,7 @@
 
 #define _GL_STR(X) #X
 #define _GL(X) (this->_profile->getGLenumForString(_GL_STR(X)));
+#include <GLTFOpenCOLLADAUtils.h>
 
 
 typedef enum {
@@ -222,7 +223,7 @@ namespace GLTF
                     if (!is_dataUri(imagePath))
                     {
                         COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
-                        imagePath = inputURI.getPathDir() + imagePath;
+                        imagePath = getPathDir(inputURI) + imagePath;
                     }
 
                     if (imageHasAlpha(imagePath.c_str()))
@@ -337,7 +338,7 @@ namespace GLTF
 				//also write the file on disk
 				if (shaderString.size() > 0) {
 					COLLADABU::URI outputURI(asset->getOutputFilePath());
-					std::string shaderPath = outputURI.getPathDir() + path;
+                    std::string shaderPath = getPathDir(outputURI) + path;
 					GLTF::GLTFUtils::writeData(shaderPath, "w", (unsigned char*)shaderString.c_str(), shaderString.size());
 					if (!CONFIG_BOOL(asset, "outputProgress") && asset->converterConfig()->boolForKeyPath("verboseLogging")) {
 						asset->log("[shader]: %s\n", shaderPath.c_str());
