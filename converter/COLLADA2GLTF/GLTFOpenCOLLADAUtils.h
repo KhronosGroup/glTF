@@ -27,5 +27,6 @@
 std::shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix);
 void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m);
 std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode);
+std::string COLLADA2GLTF_EXPORT getPathDir(const COLLADABU::URI& uri);
 
 #endif

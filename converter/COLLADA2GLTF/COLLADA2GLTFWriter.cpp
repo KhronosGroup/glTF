@@ -1132,17 +1132,18 @@ namespace GLTF
         }
 
         std::string relPathFile = imageURI.getPathFile();
-		if (imageURI.getPathDir().substr(0, 2) != "./") {
-			relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
+        std::string pathDir = getPathDir(imageURI);
+        if (pathDir.substr(0, 2) != "./") {
+            relPathFile = pathDir + imageURI.getPathFile();
 		}
 		else {
-			relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
+            relPathFile = pathDir.substr(2) + imageURI.getPathFile();
 		}
         
         if (CONFIG_BOOL(_asset, "embedResources"))
         {
             COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
-            std::string imageFullPath = COLLADABU::URI::uriDecode(inputURI.getPathDir() + relPathFile);
+            std::string imageFullPath = COLLADABU::URI::uriDecode(getPathDir(inputURI) + relPathFile);
 
             std::ifstream fin(imageFullPath, ios::in | ios::binary);
             if (fin.is_open())

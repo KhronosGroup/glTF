@@ -9,6 +9,7 @@
 #include "../shaders/commonProfileShaders.h"
 
 #if __cplusplus <= 199711L
+#include <GLTFOpenCOLLADAUtils.h>
 using namespace std::tr1;
 #endif
 using namespace std;
@@ -213,7 +214,7 @@ namespace GLTF
 				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
 				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
 
-				std::string folder = outputURI.getPathDir();
+                std::string folder = getPathDir(outputURI);
 				std::string fileName = inputURI.getPathFileBase();
 
 				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
@@ -354,7 +355,7 @@ namespace GLTF
     
     std::string GLTFAsset::getOutputFolderPath() {
         COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-        std::string folder = outputURI.getPathDir();
+        std::string folder = getPathDir(outputURI);
         return folder;
     }
     
@@ -394,7 +395,7 @@ namespace GLTF
         } else {
             COLLADABU::URI aURI(this->_inputFilePath.c_str());
             COLLADABU::URI inputURI(path.c_str());
-            inputURI.setPathDir(aURI.getPathDir() + inputURI.getPathDir());
+            inputURI.setPathDir(getPathDir(aURI) + getPathDir(inputURI));
             return inputURI.getURIString();
         }
     }
@@ -416,7 +417,7 @@ namespace GLTF
                     COLLADABU::URI outputImagePathURI(inputImagePath.c_str());
                     
                     COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-                    std::string folder = outputURI.getPathDir();
+                    std::string folder = getPathDir(outputURI);
                     std::string outputPath = folder + outputImagePathURI.getPathFile();
                     
                     std::ifstream f1(inputImagePath.c_str(), std::fstream::binary);
