@@ -7,9 +7,9 @@
 #include "GLTFCleanupEvaluator.h"
 #include "geometryHelpers.h"
 #include "../shaders/commonProfileShaders.h"
+#include <GLTFOpenCOLLADAUtils.h>
 
 #if __cplusplus <= 199711L
-#include <GLTFOpenCOLLADAUtils.h>
 using namespace std::tr1;
 #endif
 using namespace std;
