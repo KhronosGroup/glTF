@@ -29,11 +29,13 @@ Binary glTF is little endian.  It has a 16-byte header followed by the glTF reso
 
 **Figure 1**: Binary glTF layout.
 
-![](layout.jpg)
+![](layout.png)
 
-`magic` is the ANSI string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
+`magic` is the ANSI string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `length` is the total length of the Binary glTF, including the header, in bytes.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
 
-`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the arraybuffer nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illistrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
+`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the arraybuffer nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illustrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
+
+The start of the embedded data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
 
 Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
 
@@ -54,6 +56,8 @@ byteOffset += sizeOfUnit32;
 if (version !== 1) {
     // This only handles version 1.
 }
+
+byteOffset += sizeOfUnit32;  // Skip length
 
 var jsonOffset = view.getUint32(byteOffset, true);
 byteOffset += sizeOfUnit32;
