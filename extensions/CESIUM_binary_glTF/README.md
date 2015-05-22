@@ -110,6 +110,10 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 
 TODO
 
+## MIME Type
+
+Use `application/vnd.gltf+binary`.
+
 ## Experimental Results
 
 Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles, two texture atlases, and no animations/skins, sizes for the common glTF setups are:
