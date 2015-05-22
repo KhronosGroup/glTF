@@ -112,7 +112,7 @@ TODO
 
 ## MIME Type
 
-Use `application/vnd.gltf+binary`.
+Use `model/vnd.gltf+binary`.
 
 ## Experimental Results
 
