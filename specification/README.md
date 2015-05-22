@@ -149,14 +149,19 @@ Another perspective that motivates glTF is that 3D is the last media type withou
 > Non-normative: the COLLADA Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs. 
 
 Concretely, a glTF asset is represented by:
-* JSON file (`.json`) containing the node hierarchy, materials, and cameras
+* JSON-formatted file (`.gltf`) containing the node hierarchy, materials, and cameras
 * Binary files (`.bin`) containing geometry and animations
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL source code for individual stages
 
 Binary, image, and GLSL files can also be embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en/data_URIs).
 
-![](figures/assetLayout.png)
+**MIME types**
+
+* `*.gltf` files use `model/vnd.gltf+json`
+* `*.bin` files use `application/octet-stream`
+* `*.glsl` files use `text/plain`
+* Texture files use the official `image/*` type based on the specific image format.
 
 For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/model/duck).
 
