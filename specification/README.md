@@ -1290,6 +1290,7 @@ _TODO_
 * Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
 * Tom Fili, Analytical Graphics, Inc.
 * Scott Hunter, Analytical Graphics, Inc.
+* Ed Mackey, Analytical Graphics, Inc.
 
 <!-- ----------------------------------------------------------------------- -->
 <a name="references">
