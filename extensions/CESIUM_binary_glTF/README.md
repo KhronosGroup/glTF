@@ -4,6 +4,7 @@
 
 * Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
 * Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
+* Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
 
 ## Status
 
