@@ -1,0 +1,1230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.74.0 commit date:2015-03-31, commit time:13:39, hash:000dfc0</authoring_tool>
+    </contributor>
+    <created>2015-05-27T15:09:12</created>
+    <modified>2015-05-27T15:09:12</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images>
+    <image id="lightmap_png" name="lightmap_png">
+      <init_from>lightmap.png</init_from>
+    </image>
+    <image id="lightmap_001_png" name="lightmap_001_png">
+      <init_from>lightmap.001.png</init_from>
+    </image>
+    <image id="lightmap_002_png" name="lightmap_002_png">
+      <init_from>lightmap.002.png</init_from>
+    </image>
+    <image id="lightmap_003_png" name="lightmap_003_png">
+      <init_from>lightmap.003.png</init_from>
+    </image>
+    <image id="lightmap_004_png" name="lightmap_004_png">
+      <init_from>lightmap.004.png</init_from>
+    </image>
+    <image id="lightmap_005_png" name="lightmap_005_png">
+      <init_from>lightmap.005.png</init_from>
+    </image>
+    <image id="lightmap_006_png" name="lightmap_006_png">
+      <init_from>lightmap.006.png</init_from>
+    </image>
+    <image id="lightmap_007_png" name="lightmap_007_png">
+      <init_from>lightmap.007.png</init_from>
+    </image>
+    <image id="lightmap_008_png" name="lightmap_008_png">
+      <init_from>lightmap.008.png</init_from>
+    </image>
+    <image id="lightmap_009_png" name="lightmap_009_png">
+      <init_from>lightmap.009.png</init_from>
+    </image>
+  </library_images>
+  <library_effects>
+    <effect id="Material_000-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_png-sampler">
+          <sampler2D>
+            <source>lightmap_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_png-sampler" texcoord="Plane_001-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_002-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_001_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_001_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_001_png-sampler">
+          <sampler2D>
+            <source>lightmap_001_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_001_png-sampler" texcoord="Plane_002-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_003-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_002_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_002_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_002_png-sampler">
+          <sampler2D>
+            <source>lightmap_002_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_002_png-sampler" texcoord="Plane_003-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_004-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_003_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_003_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_003_png-sampler">
+          <sampler2D>
+            <source>lightmap_003_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_003_png-sampler" texcoord="Plane_004-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_005-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_004_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_004_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_004_png-sampler">
+          <sampler2D>
+            <source>lightmap_004_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_004_png-sampler" texcoord="Plane_005-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_006-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_005_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_005_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_005_png-sampler">
+          <sampler2D>
+            <source>lightmap_005_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_005_png-sampler" texcoord="Plane_006-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_007-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_006_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_006_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_006_png-sampler">
+          <sampler2D>
+            <source>lightmap_006_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_006_png-sampler" texcoord="Plane_007-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_008-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_007_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_007_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_007_png-sampler">
+          <sampler2D>
+            <source>lightmap_007_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_007_png-sampler" texcoord="Plane_008-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_009-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_008_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_008_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_008_png-sampler">
+          <sampler2D>
+            <source>lightmap_008_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_008_png-sampler" texcoord="Plane_009-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material_010-effect">
+      <profile_COMMON>
+        <newparam sid="lightmap_009_png-surface">
+          <surface type="2D">
+            <init_from>lightmap_009_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="lightmap_009_png-sampler">
+          <sampler2D>
+            <source>lightmap_009_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="lightmap_009_png-sampler" texcoord="Plane_010-mesh-map-0"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.25 0.25 0.25 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="Material_000-material" name="Material_000">
+      <instance_effect url="#Material_000-effect"/>
+    </material>
+    <material id="Material_002-material" name="Material_002">
+      <instance_effect url="#Material_002-effect"/>
+    </material>
+    <material id="Material_003-material" name="Material_003">
+      <instance_effect url="#Material_003-effect"/>
+    </material>
+    <material id="Material_004-material" name="Material_004">
+      <instance_effect url="#Material_004-effect"/>
+    </material>
+    <material id="Material_005-material" name="Material_005">
+      <instance_effect url="#Material_005-effect"/>
+    </material>
+    <material id="Material_006-material" name="Material_006">
+      <instance_effect url="#Material_006-effect"/>
+    </material>
+    <material id="Material_007-material" name="Material_007">
+      <instance_effect url="#Material_007-effect"/>
+    </material>
+    <material id="Material_008-material" name="Material_008">
+      <instance_effect url="#Material_008-effect"/>
+    </material>
+    <material id="Material_009-material" name="Material_009">
+      <instance_effect url="#Material_009-effect"/>
+    </material>
+    <material id="Material_010-material" name="Material_010">
+      <instance_effect url="#Material_010-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="Plane_001-mesh" name="Plane.001">
+      <mesh>
+        <source id="Plane_001-mesh-positions">
+          <float_array id="Plane_001-mesh-positions-array" count="12">-1 -1 0 1 -1 0 -1 1 0 1 1 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-normals">
+          <float_array id="Plane_001-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-map-0">
+          <float_array id="Plane_001-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-map-1">
+          <float_array id="Plane_001-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-map-2">
+          <float_array id="Plane_001-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-map-3">
+          <float_array id="Plane_001-mesh-map-3-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-map-3-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_001-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_001-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_000-material" count="2">
+          <input semantic="VERTEX" source="#Plane_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_001-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_001-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_001-mesh-map-2" offset="2" set="2"/>
+          <input semantic="TEXCOORD" source="#Plane_001-mesh-map-3" offset="2" set="3"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_002-mesh" name="Plane.002">
+      <mesh>
+        <source id="Plane_002-mesh-positions">
+          <float_array id="Plane_002-mesh-positions-array" count="12">-1 -1 0.1 1 -1 0.1 -1 1 0.1 1 1 0.1</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-normals">
+          <float_array id="Plane_002-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-map-0">
+          <float_array id="Plane_002-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-map-1">
+          <float_array id="Plane_002-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-map-2">
+          <float_array id="Plane_002-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_002-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_002-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_002-material" count="2">
+          <input semantic="VERTEX" source="#Plane_002-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_002-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_002-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_002-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_002-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_003-mesh" name="Plane.003">
+      <mesh>
+        <source id="Plane_003-mesh-positions">
+          <float_array id="Plane_003-mesh-positions-array" count="12">-1 -1 0.2 1 -1 0.2 -1 1 0.2 1 1 0.2</float_array>
+          <technique_common>
+            <accessor source="#Plane_003-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_003-mesh-normals">
+          <float_array id="Plane_003-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_003-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_003-mesh-map-0">
+          <float_array id="Plane_003-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_003-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_003-mesh-map-1">
+          <float_array id="Plane_003-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_003-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_003-mesh-map-2">
+          <float_array id="Plane_003-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_003-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_003-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_003-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_003-material" count="2">
+          <input semantic="VERTEX" source="#Plane_003-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_003-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_003-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_003-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_003-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_004-mesh" name="Plane.004">
+      <mesh>
+        <source id="Plane_004-mesh-positions">
+          <float_array id="Plane_004-mesh-positions-array" count="12">-1 -1 0.3 1 -1 0.3 -1 1 0.3 1 1 0.3</float_array>
+          <technique_common>
+            <accessor source="#Plane_004-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_004-mesh-normals">
+          <float_array id="Plane_004-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_004-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_004-mesh-map-0">
+          <float_array id="Plane_004-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_004-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_004-mesh-map-1">
+          <float_array id="Plane_004-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_004-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_004-mesh-map-2">
+          <float_array id="Plane_004-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_004-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_004-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_004-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_004-material" count="2">
+          <input semantic="VERTEX" source="#Plane_004-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_004-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_004-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_004-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_004-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_005-mesh" name="Plane.005">
+      <mesh>
+        <source id="Plane_005-mesh-positions">
+          <float_array id="Plane_005-mesh-positions-array" count="12">-1 -1 0.4 1 -1 0.4 -1 1 0.4 1 1 0.4</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-normals">
+          <float_array id="Plane_005-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-map-0">
+          <float_array id="Plane_005-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-map-1">
+          <float_array id="Plane_005-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-map-2">
+          <float_array id="Plane_005-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_005-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_005-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_005-material" count="2">
+          <input semantic="VERTEX" source="#Plane_005-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_005-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_005-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_005-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_005-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_006-mesh" name="Plane.006">
+      <mesh>
+        <source id="Plane_006-mesh-positions">
+          <float_array id="Plane_006-mesh-positions-array" count="12">-1 -1 0.5 1 -1 0.5 -1 1 0.5 1 1 0.5</float_array>
+          <technique_common>
+            <accessor source="#Plane_006-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_006-mesh-normals">
+          <float_array id="Plane_006-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_006-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_006-mesh-map-0">
+          <float_array id="Plane_006-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_006-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_006-mesh-map-1">
+          <float_array id="Plane_006-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_006-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_006-mesh-map-2">
+          <float_array id="Plane_006-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_006-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_006-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_006-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_006-material" count="2">
+          <input semantic="VERTEX" source="#Plane_006-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_006-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_006-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_006-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_006-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_007-mesh" name="Plane.007">
+      <mesh>
+        <source id="Plane_007-mesh-positions">
+          <float_array id="Plane_007-mesh-positions-array" count="12">-1 -1 0.6 1 -1 0.6 -1 1 0.6 1 1 0.6</float_array>
+          <technique_common>
+            <accessor source="#Plane_007-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_007-mesh-normals">
+          <float_array id="Plane_007-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_007-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_007-mesh-map-0">
+          <float_array id="Plane_007-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_007-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_007-mesh-map-1">
+          <float_array id="Plane_007-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_007-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_007-mesh-map-2">
+          <float_array id="Plane_007-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_007-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_007-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_007-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_007-material" count="2">
+          <input semantic="VERTEX" source="#Plane_007-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_007-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_007-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_007-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_007-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_008-mesh" name="Plane.008">
+      <mesh>
+        <source id="Plane_008-mesh-positions">
+          <float_array id="Plane_008-mesh-positions-array" count="12">-1 -1 0.7000001 1 -1 0.7000001 -1 1 0.7000001 1 1 0.7000001</float_array>
+          <technique_common>
+            <accessor source="#Plane_008-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_008-mesh-normals">
+          <float_array id="Plane_008-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_008-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_008-mesh-map-0">
+          <float_array id="Plane_008-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_008-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_008-mesh-map-1">
+          <float_array id="Plane_008-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_008-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_008-mesh-map-2">
+          <float_array id="Plane_008-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_008-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_008-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_008-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_008-material" count="2">
+          <input semantic="VERTEX" source="#Plane_008-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_008-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_008-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_008-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_008-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_009-mesh" name="Plane.009">
+      <mesh>
+        <source id="Plane_009-mesh-positions">
+          <float_array id="Plane_009-mesh-positions-array" count="12">-1 -1 0.8000001 1 -1 0.8000001 -1 1 0.8000001 1 1 0.8000001</float_array>
+          <technique_common>
+            <accessor source="#Plane_009-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_009-mesh-normals">
+          <float_array id="Plane_009-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_009-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_009-mesh-map-0">
+          <float_array id="Plane_009-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_009-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_009-mesh-map-1">
+          <float_array id="Plane_009-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_009-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_009-mesh-map-2">
+          <float_array id="Plane_009-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_009-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_009-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_009-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_009-material" count="2">
+          <input semantic="VERTEX" source="#Plane_009-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_009-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_009-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_009-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_009-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_010-mesh" name="Plane.010">
+      <mesh>
+        <source id="Plane_010-mesh-positions">
+          <float_array id="Plane_010-mesh-positions-array" count="12">-1 -1 0.9000001 1 -1 0.9000001 -1 1 0.9000001 1 1 0.9000001</float_array>
+          <technique_common>
+            <accessor source="#Plane_010-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_010-mesh-normals">
+          <float_array id="Plane_010-mesh-normals-array" count="6">0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_010-mesh-normals-array" count="2" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_010-mesh-map-0">
+          <float_array id="Plane_010-mesh-map-0-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_010-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_010-mesh-map-1">
+          <float_array id="Plane_010-mesh-map-1-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_010-mesh-map-1-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_010-mesh-map-2">
+          <float_array id="Plane_010-mesh-map-2-array" count="12">1 0 1 1 0 1 0 0 1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_010-mesh-map-2-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_010-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_010-mesh-positions"/>
+        </vertices>
+        <polylist material="Material_010-material" count="2">
+          <input semantic="VERTEX" source="#Plane_010-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_010-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_010-mesh-map-0" offset="2" set="0"/>
+          <input semantic="TEXCOORD" source="#Plane_010-mesh-map-1" offset="2" set="1"/>
+          <input semantic="TEXCOORD" source="#Plane_010-mesh-map-2" offset="2" set="2"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 0 1 3 1 1 4 2 1 5</p>
+        </polylist>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_controllers/>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Plane_001" name="Plane_001" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_001-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_000-material" target="#Material_000-material">
+                <bind_vertex_input semantic="Plane_001-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_001-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_001-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+                <bind_vertex_input semantic="Plane_001-mesh-map-3" input_semantic="TEXCOORD" input_set="3"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_002" name="Plane_002" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_002-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_002-material" target="#Material_002-material">
+                <bind_vertex_input semantic="Plane_002-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_002-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_002-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_003" name="Plane_003" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_003-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_003-material" target="#Material_003-material">
+                <bind_vertex_input semantic="Plane_003-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_003-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_003-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_004" name="Plane_004" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_004-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_004-material" target="#Material_004-material">
+                <bind_vertex_input semantic="Plane_004-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_004-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_004-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_005" name="Plane_005" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_005-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_005-material" target="#Material_005-material">
+                <bind_vertex_input semantic="Plane_005-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_005-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_005-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_006" name="Plane_006" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_006-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_006-material" target="#Material_006-material">
+                <bind_vertex_input semantic="Plane_006-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_006-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_006-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_007" name="Plane_007" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_007-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_007-material" target="#Material_007-material">
+                <bind_vertex_input semantic="Plane_007-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_007-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_007-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_008" name="Plane_008" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_008-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_008-material" target="#Material_008-material">
+                <bind_vertex_input semantic="Plane_008-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_008-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_008-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_009" name="Plane_009" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_009-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_009-material" target="#Material_009-material">
+                <bind_vertex_input semantic="Plane_009-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_009-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_009-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_010" name="Plane_010" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_010-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material_010-material" target="#Material_010-material">
+                <bind_vertex_input semantic="Plane_010-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="Plane_010-mesh-map-1" input_semantic="TEXCOORD" input_set="1"/>
+                <bind_vertex_input semantic="Plane_010-mesh-map-2" input_semantic="TEXCOORD" input_set="2"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
