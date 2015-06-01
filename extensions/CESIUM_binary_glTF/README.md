@@ -4,6 +4,7 @@
 
 * Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
 * Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
+* Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
 
 ## Status
 
@@ -25,7 +26,7 @@ To solve this, this extension introduces a container format, _Binary glTF_.  In 
 
 ## Binary glTF Layout
 
-Binary glTF is little endian.  It has a 16-byte header followed by the glTF resources, including the JSON:
+Binary glTF is little endian.  It has a 20-byte header followed by the glTF resources, including the JSON:
 
 **Figure 1**: Binary glTF layout.
 
@@ -41,7 +42,7 @@ Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header
 
 **Listing 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js).
 ```javascript
-var sizeOfUnit32 = Uint32Array.BYTES_PER_ELEMENT;
+var sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
 
 var magic = getStringFromTypedArray(arrayBuffer, 0, 4);
 if (magic !== 'glTF') {
@@ -49,21 +50,21 @@ if (magic !== 'glTF') {
 }
 
 var view = new DataView(arrayBuffer);
-var byteOffset = sizeOfUnit32;  // Skip magic number
+var byteOffset = sizeOfUint32;  // Skip magic number
 
 var version = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUnit32;
+byteOffset += sizeOfUint32;
 if (version !== 1) {
     // This only handles version 1.
 }
 
-byteOffset += sizeOfUnit32;  // Skip length
+byteOffset += sizeOfUint32;  // Skip length
 
 var jsonOffset = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUnit32;
+byteOffset += sizeOfUint32;
 
 var jsonLength = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUnit32;
+byteOffset += sizeOfUint32;
 
 var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
 var json = JSON.parse(jsonString)
@@ -81,7 +82,7 @@ This extension introduces an explicitly named `buffer` called `CESIUM_binary_glT
 
 To support embedded shaders and images, `shader` and `image` glTF properties have new `CESIUM_binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
 
-**Listing 2**: A `shader` referencing a`bufferview` to access an embedded shader source.
+**Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
 ```json
 "a_shader" : {
     "extensions" : {
@@ -116,7 +117,7 @@ Use `model/vnd.gltf.binary`.
 
 ## Experimental Results
 
-Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles, two texture atlases, and no animations/skins, sizes for the common glTF setups are:
+Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles, two texture atlases, a simple animation, and no skins, sizes for the common glTF setups are:
 
             | dae               | glTF              | glTF (base64-encoded bin/png/glsl) | Binary glTF
 ------------|-------------------|-------------------|------------------------------------|------------
