@@ -1,6 +1,6 @@
 # Benchmarking Procedure
 
-Each `BenchData` directory contains a COLLADA `.dae` file.  Each of these was converted to several different glTF formats: standard gLTF, data-uri embedded glTF, and Binary glTF.  All files except for stand-alone textures were gzipped, and the resulting files were served using `Content-Encoding: gzip`.
+Each `BenchData` directory contains a COLLADA `.dae` file.  Each of these was converted to several different glTF formats: standard glTF, data-uri embedded glTF, and Binary glTF.  All files except for stand-alone textures were gzipped, and the resulting files were served using `Content-Encoding: gzip`.
 
 Finally, these files were loaded and timed using the Cesium [Sandcastle demo](http://cesiumjs.org/Cesium/Apps/Sandcastle/), with the code in Listing A1.
 
