@@ -135,7 +135,7 @@ TODO: another model and decode speeds
 ### Tools
 
 * Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
-* colladaToBglTFConverter ([colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
+* colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
 
 ## Resources
 
