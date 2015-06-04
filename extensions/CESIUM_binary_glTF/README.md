@@ -128,7 +128,14 @@ TODO: another model and decode speeds
 
 ## Known Implementations
 
+### Runtime
+
 * Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Scene/Model.js))
+
+### Tools
+
+* Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
+* colladaToBglTFConverter ([colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
 
 ## Resources
 
