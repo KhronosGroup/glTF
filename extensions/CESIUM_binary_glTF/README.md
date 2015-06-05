@@ -40,6 +40,8 @@ The start of the embedded data is 4-byte aligned to ease its use with JavaScript
 
 Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
 
+_TODO: the code below is out-of-sync with Cesium_
+
 **Listing 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/getStringFromTypedArray.js).
 ```javascript
 var sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
