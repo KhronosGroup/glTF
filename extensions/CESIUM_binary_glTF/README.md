@@ -113,6 +113,10 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 
 TODO
 
+## File Extension
+
+`.bgltf`
+
 ## MIME Type
 
 Use `model/vnd.gltf.binary`.
