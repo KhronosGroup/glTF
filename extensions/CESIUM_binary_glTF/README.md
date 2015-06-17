@@ -147,3 +147,4 @@ TODO: another model and decode speeds
 
 * Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
 * base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
+* [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
