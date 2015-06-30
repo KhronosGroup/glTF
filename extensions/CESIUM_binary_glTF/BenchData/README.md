@@ -56,6 +56,6 @@ function timeModelLoad(url) {
 (function() {
     var model = 'Cesium_Air';
 
-    timeModelLoad('../../BenchData/%m/%m.gltf).replace(/%m/g, model);
+    timeModelLoad('../../BenchData/%m/%m.gltf'.replace(/%m/g, model));
 })();
 ```
