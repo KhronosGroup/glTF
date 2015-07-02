@@ -129,9 +129,8 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
                     var subArray = res_.slice(req_.range[0], req_.range[1]);
                     var convertedResource = req_.delegate.convert(subArray, req_.ctx);
                     self._storeResource(req_.id, convertedResource);
-                    req_.delegate.resourceAvailable(convertedResource, req_.ctx);
                     --self._resourcesStatus[req_.id];
-
+                    req_.delegate.resourceAvailable(convertedResource, req_.ctx);                    
                 }, this);
             	
                 delete self._streamsStatus[path];

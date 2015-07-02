@@ -206,6 +206,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         var geometry = ctx.geometry;
         geometry.indexArray = glResource;
         geometry.checkFinished();
+
+        theLoader.checkComplete();
         return true;
     };
 
@@ -338,6 +340,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         var geom = ctx.geometry;
         geom.loadedAttributes++;
         geom.checkFinished();
+
+        theLoader.checkComplete();
         return true;
     };
 
@@ -439,6 +443,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     	var parameter = ctx.parameter;
     	parameter.data = glResource;
     	animation.handleParameterLoaded(parameter);
+    	theLoader.checkComplete();
         return true;
     };
 
@@ -506,6 +511,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     InverseBindMatricesDelegate.prototype.resourceAvailable = function(glResource, ctx) {
     	var skin = ctx.skin;
     	skin.inverseBindMatrices = glResource;
+        theLoader.checkComplete();
         return true;
     };
 
@@ -1110,7 +1116,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 var m = description.matrix;
                 if(m) {
                     threeNode.matrixAutoUpdate = false;
-                    threeNode.applyMatrix(new THREE.Matrix4(
+                    threeNode.applyMatrix(new THREE.Matrix4().set(
                         m[0],  m[4],  m[8],  m[12],
                         m[1],  m[5],  m[9],  m[13],
                         m[2],  m[6],  m[10], m[14],
@@ -1278,7 +1284,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                                     	material.skinning = true;
         	                            
-                                    	threeMesh.boneInverses = [];
+                                    	threeMesh.skeleton.boneInverses = [];
         	                            var jointNames = skin.jointNames;
         	                            var joints = [];
         	                            var i, len = jointNames.length;
@@ -1290,17 +1296,17 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         	                                	
         	                                	joint.skin = threeMesh;
         	                                    joints.push(joint);
-        	                                    threeMesh.bones.push(joint);
+        	                                    threeMesh.skeleton.bones.push(joint);
         	                                    
         	                                    var m = skin.inverseBindMatrices;
-        	                    	            var mat = new THREE.Matrix4(
+        	                    	            var mat = new THREE.Matrix4().set(
         	                                            m[i * 16 + 0],  m[i * 16 + 4],  m[i * 16 + 8],  m[i * 16 + 12],
         	                                            m[i * 16 + 1],  m[i * 16 + 5],  m[i * 16 + 9],  m[i * 16 + 13],
         	                                            m[i * 16 + 2],  m[i * 16 + 6],  m[i * 16 + 10], m[i * 16 + 14],
         	                                            m[i * 16 + 3],  m[i * 16 + 7],  m[i * 16 + 11], m[i * 16 + 15]
         	                                        );
-        	                                    threeMesh.boneInverses.push(mat);
-        	                                    threeMesh.pose();
+        	                                    threeMesh.skeleton.boneInverses.push(mat);
+        	                                    threeMesh.skeleton.pose();
         	                                    
         	                                } else {
         	                                    console.log("WARNING: jointName:"+jointName+" cannot be found in skeleton:"+skeleton);
@@ -1522,7 +1528,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         		};
         		
                 var m = description.bindShapeMatrix;
-	            skin.bindShapeMatrix = new THREE.Matrix4(
+	            skin.bindShapeMatrix = new THREE.Matrix4().set(
                         m[0],  m[4],  m[8],  m[12],
                         m[1],  m[5],  m[9],  m[13],
                         m[2],  m[6],  m[10], m[14],
@@ -1554,6 +1560,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 	            var bufferView = this.resources.getEntry(skin.inverseBindMatricesDescription.bufferView);
 	            skin.inverseBindMatricesDescription.bufferView = 
 	            	bufferView.object;
+	            console.log(skin.inverseBindMatrices);
+	            console.log(THREE.GLTFLoaderUtils);
 	    		this.resources.setEntry(entryID, skin, description);
                 return true;
             }
@@ -1635,9 +1643,25 @@ THREE.glTFLoader.prototype.callLoadedCallback = function() {
 }
 
 THREE.glTFLoader.prototype.checkComplete = function() {
+	var loading = [];
+	for (var rs in THREE.GLTFLoaderUtils._resourcesStatus) {
+		if (THREE.GLTFLoaderUtils._resourcesStatus[rs] > 0) {
+			loading.push(rs);
+			// break;
+		}
+	}
+
+	if (loading.length > 0) {
+		console.log("STILL LOADING:");
+		for (var i in loading) {
+			console.log('\t' + loading[i]);			
+		}
+	}
+	
 	if (this.meshesLoaded == this.meshesRequested 
 			&& this.shadersLoaded == this.shadersRequested
-			&& this.animationsLoaded == this.animationsRequested)
+			&& this.animationsLoaded == this.animationsRequested
+			&& loading.length == 0)
 	{
 		
 		for (var i = 0; i < this.pendingMeshes.length; i++) {
@@ -1651,6 +1675,7 @@ THREE.glTFLoader.prototype.checkComplete = function() {
 		}
 
 		this.loader.createAnimations();
+		console.log("CREATING MESH ANIMATIONS");
 		this.loader.createMeshAnimations(this.rootObj);
         
 		this.callLoadedCallback();
