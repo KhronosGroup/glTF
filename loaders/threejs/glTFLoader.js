@@ -1641,25 +1641,24 @@ THREE.glTFLoader.prototype.callLoadedCallback = function() {
 }
 
 THREE.glTFLoader.prototype.checkComplete = function() {
-	var loading = [];
+	var resourcesLoading = [];
 	for (var rs in THREE.GLTFLoaderUtils._resourcesStatus) {
 		if (THREE.GLTFLoaderUtils._resourcesStatus[rs] > 0) {
-			loading.push(rs);
-			// break;
+			resourcesLoading.push(rs);
 		}
 	}
 
-	if (loading.length > 0) {
-		console.log("STILL LOADING:");
-		for (var i in loading) {
-			console.log('\t' + loading[i]);			
-		}
-	}
+	// if (resourcesLoading.length > 0) {
+	// 	console.log("STILL LOADING:");
+	// 	for (var i in resourcesLoading) {
+	// 		console.log('\t' + resourcesLoading[i]);			
+	// 	}
+	// }
 	
 	if (this.meshesLoaded == this.meshesRequested 
 			&& this.shadersLoaded == this.shadersRequested
 			&& this.animationsLoaded == this.animationsRequested
-			&& loading.length == 0)
+			&& resourcesLoading.length == 0)
 	{
 		
 		for (var i = 0; i < this.pendingMeshes.length; i++) {
@@ -1673,7 +1672,6 @@ THREE.glTFLoader.prototype.checkComplete = function() {
 		}
 
 		this.loader.createAnimations();
-		console.log("CREATING MESH ANIMATIONS");
 		this.loader.createMeshAnimations(this.rootObj);
         
 		this.callLoadedCallback();
