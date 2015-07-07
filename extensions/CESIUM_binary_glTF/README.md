@@ -17,12 +17,13 @@ Written against the glTF 0.8 spec.
 ## Overview
 
 glTF provides two delivery options that can be also be used together:
+
 * glTF JSON points to external binary data (geometry, key frames, skins), images, and shaders.
-* glTF JSON has base64-encoded binary data, images, and shaders using data uris.
+* glTF JSON embeds base64-encoded binary data, images, and shaders inline using data uris.
 
-Base64-encoding increases the file size and requires extra decoding.  glTF is commonly criticized for requiring separate requests or extra space due to base64-encoding.
+glTF is commonly criticized for requiring either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by 33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
-To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) are stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parses with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
+To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parses with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
 
 ## Binary glTF Layout
 
@@ -32,7 +33,7 @@ Binary glTF is little endian.  It has a 20-byte header followed by the glTF reso
 
 ![](layout.png)
 
-`magic` is the ANSI string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `length` is the total length of the Binary glTF, including the header, in bytes.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
+`magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is currently `1`.  `length` is the total length of the Binary glTF, including the header, in bytes.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
 
 `jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the arraybuffer nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illustrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations will find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
 
@@ -123,20 +124,50 @@ Use `model/vnd.gltf.binary`.
 
 ## Experimental Results
 
-Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles, two texture atlases, a simple animation, and no skins, sizes for the common glTF setups are:
+Based on extensive experimentation (below & [1]) using Cesium's implementation, different configurations are recommended for different scenarios. The flexibility of Binary glTF allows for optimization.
 
-            | dae               | glTF              | glTF (base64-encoded bin/png/glsl) | Binary glTF
-------------|-------------------|-------------------|------------------------------------|------------
-size        | 1.07 MB (3 files) | 802 KB (8 files)  | 1.03 MB                            |  806 KB
-size (gzip) | 728 KB            | 677 KB            | 706 KB                             |  707 KB
+* If bandwidth is limited, to minimize file size and number of files, binary glTF and gzip all files, excepting already-compressed textures (PNG, JPEG, etc.) to avoid significant decompression overhead.
+* If bandwidth is not limited, to minimize decompression overhead, use any uncompressed format.
+* If file requests are very slow or a single file is desired, use binary glTF with all files embedded (usually compressed).
+* For files with very little non-texture data, the difference in loading time is minimal, but binary glTF reduces the number of requests.
 
-TODO: another model and decode speeds
+The following observations are made from file size and benchmark data:
+
+* JSON, mesh data, and animation data are highly compressible.
+* Already-compressed textures (PNG, JPEG) are not very compressible.  Adding compression (e.g. by embedding them into a Binary glTF file which will be compressed) adds significant CPU overhead with little size benefit.
+
+Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which renders 5,984 triangles with two texture atlases and a simple animation without skinning, statistics and results for the common glTF setups are:
+
+| Cesium Air                            | # files |     size | size (gzip\*) |  load time |
+| :------------------------------------ | ------: | -------: | ------------: | ---------: |
+| COLLADA                               |     3   |  922 KiB |     591 KiB   |            |
+| glTF                                  |     8   |  621 KiB |     540 KiB   |   0.33 s   |
+| glTF, base64-encoded bin/jpg/png/glsl |   **1** |  822 KiB |     540 KiB   |   0.37 s   |
+| Binary glTF, embedded textures        |   **1** |  610 KiB |   **514 KiB** |   0.31 s   |
+| Binary glTF, separate textures        |     3   |  610 KiB |     539 KiB   | **0.29 s** |
+
+![](BenchData/thumb/Cesium_Air.jpg)
+
+Using the 1200 12th Ave model [2], which renders 30,235 triangles with 21 textures and no animations, statistics and results for the common glTF setups are:
+
+| 1200 12th Ave                         | # files |     size | size (gzip\*) |  load time | 
+| :------------------------------------ | ------: | -------: | ------------: | ---------: | 
+| COLLADA                               |    22   | 5.93 MiB |    1.36 MiB   |            | 
+| glTF                                  |    31   | 4.44 MiB |    1.29 MiB   |   0.85 s   | 
+| glTF, base64-encoded bin/jpg/png/glsl |   **1** | 5.09 MiB |    1.34 MiB   |   1.30 s   | 
+| Binary glTF, embedded textures        |   **1** | 3.09 MiB |  **1.25 MiB** |   1.07 s   | 
+| Binary glTF, separate textures        |    22   | 3.09 MiB |    1.27 MiB   | **0.75 s** | 
+
+![](BenchData/thumb/1200_12th.jpg)
+
+\* All files compressed except for stand-alone texture files.
+
 
 ## Known Implementations
 
 ### Runtime
 
-* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Scene/Model.js))
+* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
 
 ### Tools
 
@@ -148,3 +179,6 @@ TODO: another model and decode speeds
 * Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
 * base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
 * [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
+
+* [1] Raw data for benchmarks using compression available in `BenchData` supplemental.
+* [2] Model provided by Cube Cities.
