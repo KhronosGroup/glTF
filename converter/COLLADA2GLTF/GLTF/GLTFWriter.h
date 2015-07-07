@@ -37,7 +37,7 @@ namespace GLTF
     public:
         virtual ~GLTFWriter() {};
 
-        virtual bool initWithPath(const std::string &path) = 0;
+        virtual bool initWithPath(const std::string &path, bool minifyJSON) = 0;
         virtual void writeArray(JSONArray* array, void *context) = 0;
         virtual void writeObject(JSONObject* object, void *context) = 0;
         virtual void writeNumber(JSONNumber* number, void *context) = 0;
@@ -51,7 +51,7 @@ namespace GLTF
         GLTFDefaultWriter();
         virtual ~GLTFDefaultWriter();
 
-        bool initWithPath(const std::string &path);
+        bool initWithPath(const std::string &path, bool minifyJSON);
         void writeArray(JSONArray* array, void *context);
         void writeObject(JSONObject* object, void *context);
         void writeNumber(JSONNumber* number, void *context);
@@ -60,7 +60,7 @@ namespace GLTF
 
     private:
         FILE* _fd;
-        rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
+        rapidjson::Writer <rapidjson::FileStream> *_writer;
         rapidjson::FileStream *_fileStream;
     };
 

@@ -82,6 +82,7 @@ static const OptionDescriptor options[] = {
 	{ "h",              no_argument,        "-h -> help" },
 	{ "r",              no_argument,        "-r -> verbose logging" },
 	{ "e",				no_argument,		"-e -> embed resources (bin, shaders, available textures) in glTF file" },
+    { "M",              no_argument,        "-M -> output minified glTF JSON" },
     { "n",              no_argument,        "-n -> don't combine animations with the same target" }
 };
 
@@ -227,6 +228,9 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 			case 'e':
 				converterConfig->config()->setBool("embedResources", true);
 				break;
+            case 'M':
+                converterConfig->config()->setBool("minifyJSON", true);
+                break;
             case 'g': {
                 int glslVersion = atoi(optarg);
                 if (glslVersion != 0) {

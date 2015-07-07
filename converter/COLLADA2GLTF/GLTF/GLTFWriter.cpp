@@ -66,12 +66,14 @@ namespace GLTF
         _fd = 0;
     }
 
-    bool GLTFDefaultWriter::initWithPath(const std::string &path) {
+    bool GLTFDefaultWriter::initWithPath(const std::string &path, bool minifyJSON) {
         this->_fd = fopen(path.c_str(), "w");
         if (this->_fd) {
             this->_fileStream = new rapidjson::FileStream(this->_fd);
             if (this->_fileStream) {
-                this->_writer = new rapidjson::PrettyWriter <rapidjson::FileStream>(*this->_fileStream);
+                this->_writer = minifyJSON ?
+                    new rapidjson::Writer <rapidjson::FileStream>(*this->_fileStream) :
+                    static_cast <rapidjson::Writer <rapidjson::FileStream>*>(new rapidjson::PrettyWriter <rapidjson::FileStream>(*this->_fileStream));
                 return this->_writer != 0;
             }
         }

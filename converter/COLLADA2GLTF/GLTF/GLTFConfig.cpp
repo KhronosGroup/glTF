@@ -62,6 +62,7 @@ namespace GLTF
         optionsRoot->setBool("outputConvertionMetaData", false);
         optionsRoot->setBool("verboseLogging", false);
 		optionsRoot->setBool("embedResources", false);
+        optionsRoot->setBool("minifyJSON", false);
         optionsRoot->setBool("noCombineAnimations", false);
         
         //create the path "extensions.Open3DGC.quantization" and set default for Open3DGC

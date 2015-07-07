@@ -438,7 +438,7 @@ namespace GLTF
         this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_root->createObjectIfNeeded(kNodes);
         
-        this->_writer->initWithPath(this->getOutputFilePath().c_str());
+        this->_writer->initWithPath(this->getOutputFilePath().c_str(), CONFIG_BOOL(this, "minifyJSON"));
     }
     
     //FIXME:legacy
@@ -504,7 +504,7 @@ namespace GLTF
         std::shared_ptr<GLTF::GLTFWriter> resultsWriter = std::make_shared<GLTF::GLTFDefaultWriter>();
         COLLADABU::URI outputURI(this->resourceOuputPathForPath(path));
         std::string aPath = this->getOutputFolderPath() + outputURI.getPathFile();
-        resultsWriter->initWithPath(aPath);
+        resultsWriter->initWithPath(aPath, CONFIG_BOOL(this, "minifyJSON"));
         obj->write(resultsWriter.get());
         
         if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
