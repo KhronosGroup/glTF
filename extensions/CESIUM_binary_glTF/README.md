@@ -146,6 +146,8 @@ Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesiu
 | Binary glTF, embedded textures        |   **1** |  610 KiB |   **514 KiB** |   0.31 s   |
 | Binary glTF, separate textures        |     3   |  610 KiB |     539 KiB   | **0.29 s** |
 
+![](BenchData/thumb/Cesium_Air.jpg)
+
 Using the 1200 12th Ave model [2], which renders 30,235 triangles with 21 textures and no animations, statistics and results for the common glTF setups are:
 
 | 1200 12th Ave                         | # files |     size | size (gzip\*) |  load time | 
@@ -156,7 +158,9 @@ Using the 1200 12th Ave model [2], which renders 30,235 triangles with 21 textur
 | Binary glTF, embedded textures        |   **1** | 3.09 MiB |  **1.25 MiB** |   1.07 s   | 
 | Binary glTF, separate textures        |    22   | 3.09 MiB |    1.27 MiB   | **0.75 s** | 
 
-\* except for stand-alone texture files
+![](BenchData/thumb/1200_12th.jpg)
+
+\* All files compressed except for stand-alone texture files.
 
 
 ## Known Implementations
