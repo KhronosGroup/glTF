@@ -15,56 +15,56 @@ Each test was run 5 times, and the mean of the results for each test is reported
 
 ## Detailed results
 
-| Model                    | Format                      |  Load time | Size (gzip*) | # files |
-| :----------------------- | :-------------------------- | ---------: | -----------: | ------: |
-| **Cesium Air**           | ![](thumb/Cesium_Air.jpg)   |            |              |         |
-|                          | gltf, separate              |   0.33 s   |   0.53 MiB   |     8   |
-|                          | gltf, tex-separate          |   0.30 s   |   0.55 MiB   |     3   |
-|                          | gltf, embedded              |   0.37 s   |   0.53 MiB   |   **1** |
-|                          | bgltf, tex-separate         | **0.29 s** |   0.53 MiB   |     3   |
-|                          | bgltf, embedded             |   0.31 s   | **0.50 MiB** |   **1** |
-| **LargeTex**             | ![](thumb/LargeTex.jpg)     |            |              |         |
-|                          | gltf, separate              |   3.10 s   |   8.48 MiB   |     5   |
-|                          | gltf, tex-separate          | **3.07 s** |   8.48 MiB   |     2   |
-|                          | gltf, embedded              |   4.59 s   |   8.41 MiB   |   **1** |
-|                          | bgltf, tex-separate         | **3.04 s** |   8.48 MiB   |     2   |
-|                          | bgltf, embedded             | **3.06 s** | **8.31 MiB** |   **1** |
-| **TenTex**               | ![](thumb/TenTex.jpg)       |            |              |         |
-|                          | gltf, separate              |   1.54 s   |   4.91 MiB   |    16   |
-|                          | gltf, tex-separate          | **1.48 s** |   4.91 MiB   |    11   |
-|                          | gltf, embedded              |   2.42 s   |   4.95 MiB   |   **1** |
-|                          | bgltf, tex-separate         | **1.49 s** |   4.91 MiB   |    11   |
-|                          | bgltf, embedded             |   1.62 s   | **4.90 MiB** |   **1** |
-| **100kTris**             | ![](thumb/100kTris.jpg)     |            |              |         |
-|                          | gltf, separate              |   0.97 s   | **2.98 MiB** |     4   |
-|                          | gltf, tex-separate          |   1.41 s   |   3.25 MiB   |   **1** |
-|                          | gltf, embedded              |        ^   |          ^   |   **^** |
-|                          | bgltf, tex-separate         | **0.91 s** | **2.98 MiB** |   **1** |
-|                          | bgltf, embedded             |        ^   |        **^** |   **^** |
-| **BinaryTree**           | ![](thumb/BinaryTree.jpg)   |            |              |         |
-|                          | gltf, separate              |   0.76 s   |   0.25 MiB   |     4   |
-|                          | gltf, tex-separate          |   0.94 s   |   0.25 MiB   |   **1** |
-|                          | gltf, embedded              |        ^   |          ^   |   **^** |
-|                          | bgltf, tex-separate         | **0.68 s** | **0.18 MiB** |   **1** |
-|                          | bgltf, embedded             |        ^   |        **^** |   **^** |
-| **SpinningTree**         | ![](thumb/SpinningTree.jpg) |            |              |         |
-|                          | gltf, separate              |   0.63 s   | **1.24 MiB** |     4   |
-|                          | gltf, tex-separate          |   0.73 s   |   1.34 MiB   |   **1** |
-|                          | gltf, embedded              |        ^   |        **^** |   **^** |
-|                          | bgltf, tex-separate         | **0.58 s** | **1.24 MiB** |   **1** |
-|                          | bgltf, embedded             |        ^   |        **^** |   **^** |
-| **1200 12th Ave** [1]    | ![](thumb/1200_12th.jpg)    |            |              |         |
-|                          | gltf, separate              |   0.85 s   |   1.29 MiB   |    31   |
-|                          | gltf, tex-separate          |   0.85 s   |   1.35 MiB   |    22   |
-|                          | gltf, embedded              |   1.30 s   |   1.34 MiB   |   **1** |
-|                          | bgltf, tex-separate         | **0.75 s** |   1.27 MiB   |    22   |
-|                          | bgltf, embedded             |   1.07 s   | **1.25 MiB** |   **1** |
-| **Eau Claire Tower** [1] | ![](thumb/EauClaire.jpg)    |            |              |         |
-|                          | gltf, separate              |   0.59 s   |   0.60 MiB   |    23   |
-|                          | gltf, tex-separate          |   0.57 s   |   0.60 MiB   |    16   |
-|                          | gltf, embedded              |   0.73 s   | **0.53 MiB** |   **1** |
-|                          | bgltf, tex-separate         | **0.55 s** |   0.60 MiB   |    16   |
-|                          | bgltf, embedded             |   0.67 s   | **0.53 MiB** |   **1** |
+| Model        | Model            | Format                      |  Load time | Size (gzip\*) | # files | 
+| ------------ | ---------------- | --------------------------- | ---------- | ------------- | ------- | 
+| Cesium_Air   | Cesium Air       | ![](thumb/Cesium_Air.jpg)   |            |               |         | 
+|              |                  | gltf, separate              |   0.32 s   |   538 KiB     |   8     | 
+|              |                  | gltf, tex-separate          | **0.30 s** |   559 KiB     |   3     | 
+|              |                  | gltf, all-embedded          |   0.41 s   |   540 KiB     | **1**   | 
+|              |                  | bgltf, tex-separate         | **0.30 s** |   538 KiB     |   3     | 
+|              |                  | bgltf, all-embedded         | **0.29 s** | **513 KiB**   | **1**   | 
+| LargeTex     | Large Tex        | ![](thumb/LargeTex.jpg)     |            |               |         | 
+|              |                  | gltf, separate              |   3.07 s   |   8.48 MiB    |   5     | 
+|              |                  | gltf, tex-separate          |   3.08 s   |   8.48 MiB    |   2     | 
+|              |                  | gltf, all-embedded          |   4.62 s   |   8.41 MiB    | **1**   | 
+|              |                  | bgltf, tex-separate         | **3.04 s** |   8.48 MiB    |   2     | 
+|              |                  | bgltf, all-embedded         | **3.05 s** | **8.31 MiB**  | **1**   | 
+| TenTex       | Ten Tex          | ![](thumb/TenTex.jpg)       |            |               |         | 
+|              |                  | gltf, separate              |   1.58 s   |   4.91 MiB    |   16    | 
+|              |                  | gltf, tex-separate          | **1.48 s** |   4.91 MiB    |   11    | 
+|              |                  | gltf, all-embedded          |   2.48 s   |   4.95 MiB    | **1**   | 
+|              |                  | bgltf, tex-separate         | **1.51 s** |   4.91 MiB    |   11    | 
+|              |                  | bgltf, all-embedded         |   1.63 s   | **4.90 MiB**  | **1**   | 
+| 100kTris     | 100k Tris        | ![](thumb/100kTris.jpg)     |            |               |         | 
+|              |                  | gltf, separate              |   0.97 s   | **2.98 MiB**  |   4     | 
+|              |                  | gltf, tex-separate          |   1.39 s   |   3.25 MiB    | **1**   | 
+|              |                  | gltf, all-embedded          |   ^        |   ^           | **^**   | 
+|              |                  | bgltf, tex-separate         | **0.91 s** | **2.98 MiB**  | **1**   | 
+|              |                  | bgltf, all-embedded         | **^**      | **^**         | **^**   | 
+| BinaryTree   | Binary Tree      | ![](thumb/BinaryTree.jpg)   |            |               |         | 
+|              |                  | gltf, separate              | **0.70 s** | **184 KiB**   |   4     | 
+|              |                  | gltf, tex-separate          |   0.87 s   | **184 KiB**   | **1**   | 
+|              |                  | gltf, all-embedded          |   ^        | **^**         | **^**   | 
+|              |                  | bgltf, tex-separate         | **0.69 s** | **184 KiB**   | **1**   | 
+|              |                  | bgltf, all-embedded         | **^**      | **^**         | **^**   | 
+| SpinningTree | Spinning Tree    | ![](thumb/SpinningTree.jpg) |            |               |         | 
+|              |                  | gltf, separate              |   0.64 s   | **1.24 MiB**  |   4     | 
+|              |                  | gltf, tex-separate          |   0.73 s   |   1.34 MiB    | **1**   | 
+|              |                  | gltf, all-embedded          |   ^        |   ^           | **^**   | 
+|              |                  | bgltf, tex-separate         | **0.59 s** | **1.24 MiB**  | **1**   | 
+|              |                  | bgltf, all-embedded         | **^**      | **^**         | **^**   | 
+| 1200_12th    | 1200 12th Ave    | ![](thumb/1200_12th.jpg)    |            |               |         | 
+|              |                  | gltf, separate              | **0.85 s** |   1.25 MiB    |   31    | 
+|              |                  | gltf, tex-separate          |   0.87 s   |   1.31 MiB    |   22    | 
+|              |                  | gltf, all-embedded          |   1.25 s   |   1.30 MiB    | **1**   | 
+|              |                  | bgltf, tex-separate         | **0.84 s** |   1.25 MiB    |   22    | 
+|              |                  | bgltf, all-embedded         |   1.02 s   | **1.23 MiB**  | **1**   | 
+| EauClaire    | Eau Claire Tower | ![](thumb/EauClaire.jpg)    |            |               |         | 
+|              |                  | gltf, separate              |   0.55 s   |   609 KiB     |   23    | 
+|              |                  | gltf, tex-separate          | **0.52 s** |   610 KiB     |   16    | 
+|              |                  | gltf, all-embedded          |   0.66 s   |   539 KiB     | **1**   | 
+|              |                  | bgltf, tex-separate         | **0.53 s** |   608 KiB     |   16    | 
+|              |                  | bgltf, all-embedded         |   0.56 s   | **538 KiB**   | **1**   | 
 
 ^ Results are excluded for "embedded" for files with no textures, as this is exactly the same as "tex-separate".
 
@@ -74,13 +74,16 @@ Each test was run 5 times, and the mean of the results for each test is reported
 
 All files except for stand-alone textures are always pre-gzipped.
 
-| Format       | Description                                                          |
-| :----------- | :------------------------------------------------------------------- |
-| gltf         | Standard glTF                                                        |
-| bgltf        | Binary glTF                                                          |
-| separate     | all resources as separate files                                      |
-| tex-separate | only textures as separate files, others embedded                     |
-| embedded     | all resources embedded (for gltf, as data uri; for bgltf, as binary) |
+| Format       | Description                                      |
+| :----------- | :----------------------------------------------- |
+| gltf         | Standard glTF                                    |
+| bgltf        | Binary glTF                                      |
+| separate     | all resources as separate files                  |
+| tex-separate | only textures as separate files, others embedded |
+| all-embedded | all resources embedded                           |
+
+For standard glTF, files are embedded as base64-encoded data uris.
+For binary glTF, files are embedded as binary.
 
 ### Model statistics
 
@@ -101,6 +104,7 @@ These statistics are for the optimized models which are then converted to the va
 
 **Listing A1**: Code used for benchmarking.
 ```javascript
+// Add to HelloWorld.html.
 var viewer = new Cesium.Viewer('cesiumContainer', {globe: false, skyBox: false, skyAtmosphere: false});
 var scene = viewer.scene;
 
@@ -132,6 +136,15 @@ var timeModelLoad = function(url) {
 };
 
 timeModelLoad('/BenchData/Cesium_Air/fmt/CesiumAir.gltf');
+```
+
+```javascript
+// Add to server.js when using Node.js.
+    app.get('*.bin'  , function(req, res, next) { res.header('Content-Encoding', 'gzip'); next(); });
+    app.get('*.glsl' , function(req, res, next) { res.header('Content-Encoding', 'gzip'); next(); });
+    app.get('*.gltf' , function(req, res, next) { res.header('Content-Encoding', 'gzip'); next(); });
+    app.get('*.bin'  , function(req, res, next) { res.header('Content-Encoding', 'gzip'); next(); });
+    app.get('*.bgltf', function(req, res, next) { res.header('Content-Encoding', 'gzip'); next(); });
 ```
 
 ### References

@@ -126,10 +126,10 @@ Use `model/vnd.gltf.binary`.
 
 Based on extensive experimentation (below & [1]) using Cesium's implementation, different configurations are recommended for different scenarios. The flexibility of Binary glTF allows for optimization.
 
-* If bandwidth is limited, to minimize file size and number of files, binary glTF and gzip all files, excepting already-compressed textures (PNG, JPEG, etc.) to avoid significant decompression overhead.
+* If bandwidth is limited, to minimize file size and number of files, use binary glTF and gzip all files, excepting already-compressed textures (PNG, JPEG, etc.) to avoid significant decompression overhead.
 * If bandwidth is not limited, to minimize decompression overhead, use any uncompressed format.
 * If file requests are very slow or a single file is desired, use binary glTF with all files embedded (usually compressed).
-* For files with very little non-texture data, the difference in loading time is minimal, but binary glTF reduces the number of requests.
+* For files with very little non-texture data, the difference in loading time is minimal, but binary glTF can reduce the number of requests without overhead.
 
 The following observations are made from file size and benchmark data:
 
@@ -141,10 +141,10 @@ Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesiu
 | Cesium Air                            | # files |     size | size (gzip\*) |  load time |
 | :------------------------------------ | ------: | -------: | ------------: | ---------: |
 | COLLADA                               |     3   |  922 KiB |     591 KiB   |            |
-| glTF                                  |     8   |  621 KiB |     540 KiB   |   0.33 s   |
-| glTF, base64-encoded bin/jpg/png/glsl |   **1** |  822 KiB |     540 KiB   |   0.37 s   |
-| Binary glTF, embedded textures        |   **1** |  610 KiB |   **514 KiB** |   0.31 s   |
-| Binary glTF, separate textures        |     3   |  610 KiB |     539 KiB   | **0.29 s** |
+| glTF                                  |     8   |  608 KiB |     538 KiB   |   0.32 s   |
+| glTF, base64-encoded bin/jpg/png/glsl |   **1** |  808 KiB |     540 KiB   |   0.41 s   |
+| Binary glTF, embedded textures        |   **1** |  609 KiB |   **513 KiB** | **0.29 s** |
+| Binary glTF, separate textures        |     3   |  609 KiB |     538 KiB   | **0.30 s** |
 
 ![](BenchData/thumb/Cesium_Air.jpg)
 
@@ -152,11 +152,11 @@ Using the 1200 12th Ave model [2], which renders 30,235 triangles with 21 textur
 
 | 1200 12th Ave                         | # files |     size | size (gzip\*) |  load time | 
 | :------------------------------------ | ------: | -------: | ------------: | ---------: | 
-| COLLADA                               |    22   | 5.93 MiB |    1.36 MiB   |            | 
-| glTF                                  |    31   | 4.44 MiB |    1.29 MiB   |   0.85 s   | 
-| glTF, base64-encoded bin/jpg/png/glsl |   **1** | 5.09 MiB |    1.34 MiB   |   1.30 s   | 
-| Binary glTF, embedded textures        |   **1** | 3.09 MiB |  **1.25 MiB** |   1.07 s   | 
-| Binary glTF, separate textures        |    22   | 3.09 MiB |    1.27 MiB   | **0.75 s** | 
+| COLLADA                               |    22   | 5.93 MiB |    1.36 MiB   |            |
+| glTF                                  |    31   | 2.99 MiB |    1.25 MiB   | **0.85 s** |
+| glTF, base64-encoded bin/jpg/png/glsl |   **1** | 3.64 MiB |    1.30 MiB   |   1.25 s   |
+| Binary glTF, embedded textures        |   **1** | 2.99 MiB |  **1.23 MiB** |   1.03 s   |
+| Binary glTF, separate textures        |    22   | 2.99 MiB |    1.25 MiB   | **0.84 s** |
 
 ![](BenchData/thumb/1200_12th.jpg)
 
