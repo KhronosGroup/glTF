@@ -90,6 +90,11 @@ const std::string kSemantic = "semantic";
 const std::string kJointName = "jointName";
 const std::string kJointNames = "jointNames";
 const std::string kDoubleSided = "doubleSided";
+const std::string kExtensionOpen3DGC = "mesh_compression_open3dgc";
+const std::string kDecompressedView = "decompressedView";
+const std::string kDecompressedViews = "decompressedViews";
+const std::string kDecompressedByteLength = "decompressedByteLength";
+const std::string kCompressionMode = "mode";
 
 const std::string MODELVIEW = "MODELVIEW";
 const std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";

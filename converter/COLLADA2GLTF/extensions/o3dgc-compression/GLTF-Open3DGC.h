@@ -28,9 +28,7 @@ namespace GLTF
 {
     bool canEncodeOpen3DGCMesh(std::shared_ptr <GLTFMesh> mesh, std::shared_ptr <GLTFProfile> profile);
     
-    void encodeOpen3DGCMesh(std::shared_ptr <GLTFMesh> mesh,
-                            std::shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFAsset* asset);
+    void encodeOpen3DGCMesh(std::shared_ptr <GLTFMesh> mesh, GLTFAsset* asset);
     
     void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset);
     

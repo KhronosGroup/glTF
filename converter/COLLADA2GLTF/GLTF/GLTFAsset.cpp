@@ -89,59 +89,8 @@ namespace GLTF
     }
     
     bool writeCompressedMesh(shared_ptr <GLTFMesh> mesh, GLTFAsset* asset) {
-        GLTFOutputStream* compressionOutputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
-        
-        shared_ptr <JSONObject> floatAttributeIndexMapping(new JSONObject());
-		unsigned compressedBufferStart = (unsigned int)compressionOutputStream->length();
-        encodeOpen3DGCMesh(mesh, floatAttributeIndexMapping, asset);
-        typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
-        IDToBufferDef IDToBuffer;
-        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
-        int vertexCount;
-        unsigned int indicesCount, allIndicesCount = 0;
-        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
-            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
-            /*
-             Convert the indices to unsigned short and write the blob
-             */
-            indicesCount = (unsigned int)uniqueIndices->getCount();
-            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
-            if (indicesCount > 0) {
-                allIndicesCount += indicesCount;                
-                //FIXME: this is assuming triangles
-                unsigned int trianglesCount = asset->convertionResults()->getUnsignedInt32("trianglesCount");
-                trianglesCount += indicesCount / 3;
-                asset->convertionResults()->setUnsignedInt32("trianglesCount", trianglesCount);
-                size_t indicesLength = sizeof(unsigned short) * indicesCount;
-                uniqueIndices->setByteOffset(compressedBufferStart);
-				compressedBufferStart += (unsigned int)indicesLength; //we simulate how will be the uncompressed data here, so this is the length in short *on purpose*
-            }
-        }
-        
-        shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
-		vertexCount = (unsigned int)positionAttribute->getCount();
-        unsigned int totalVerticesCount = asset->convertionResults()->getUnsignedInt32("verticesCount");
-        totalVerticesCount += vertexCount;
-        asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
-
-        for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
-            shared_ptr <GLTFAccessor> meshAttribute = (*allMeshAttributes)[j];
-            shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
-            shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
-            
-            if (!bufferView.get()) { return false; }
-            
-            if (!IDToBuffer[bufferView->getBuffer()->getID()].get()) {
-                meshAttribute->exposeMinMax();
-                meshAttribute->setByteOffset(compressedBufferStart);
-				compressedBufferStart += (unsigned int)buffer->getByteLength();
-                IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-            }
-        }
-        
+        // Encode the mesh into the output stream
+        encodeOpen3DGCMesh(mesh, asset);
         return true;
     }
 
@@ -438,7 +387,10 @@ namespace GLTF
         this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_root->createObjectIfNeeded(kNodes);
         
-        this->_writer->initWithPath(this->getOutputFilePath().c_str());
+        if (!this->_writer->initWithPath(this->getOutputFilePath().c_str())) {
+            printf("fatal error: could not open file for writing\n");
+            exit(EXIT_FAILURE);
+        }
     }
     
     //FIXME:legacy
@@ -853,7 +805,6 @@ namespace GLTF
         }
         
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
-        shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
 
         shared_ptr <GLTF::JSONObject> animations = this->_root->createObjectIfNeeded("animations");
         std::vector <std::string> animationsUIDs = animations->getAllKeys();
@@ -894,6 +845,7 @@ namespace GLTF
         
         shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded(kMeshes);
         shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded(kAccessors);
+        shared_ptr <GLTF::JSONObject> bufferViews = this->_root->createObjectIfNeeded(kBufferViews);
         
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
         
@@ -976,37 +928,43 @@ namespace GLTF
         this->addValueEvaluator(std::make_shared<GLTFCleanupEvaluator>());
 
         this->launchModifiers();
-        
+
         size_t verticesLength = 0;
         size_t indicesLength = 0;
         size_t animationLength = rawOutputStream->length();
+        size_t compressionLength = 0;
         size_t previousLength = animationLength;
                 
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
-            if (compressMesh)
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
+            if (compressMesh) {
                 writeCompressedMesh(mesh, this);
+            }
         }
-        size_t compressionLength = compressionOutputStream->length();
-        shared_ptr <GLTFBuffer> compressionBuffer(new GLTFBuffer(compressionOutputStream->id(), compressionLength));
+
+        compressionLength = rawOutputStream->length() - previousLength;
+        previousLength = rawOutputStream->length();
+
         
         //save all indices
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
-            if (!compressMesh)
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
+            if (!compressMesh) {
                 writeMeshIndices(mesh, previousLength, this);
+            }
         }
         
         indicesLength = rawOutputStream->length() - previousLength;
         previousLength = rawOutputStream->length();
+
         //add padding for https://github.com/KhronosGroup/glTF/issues/167
         //it is known that the other buffers are all FLOAT, so as a minimal fix we just have to align indices (that are short) on FLOAT when writting them.
         size_t rem = indicesLength % 4;
         if (rem) {
-            char pad[3];
+            char pad[3] = {0};
             size_t paddingForAlignement = 4 - rem;
             rawOutputStream->write(pad, paddingForAlignement);
             indicesLength += paddingForAlignement;
@@ -1016,31 +974,28 @@ namespace GLTF
         //save all mesh attributes
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh,this->_profile);
-            if (!compressMesh)
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
+            if (!compressMesh) {
                 writeMeshAttributes(mesh, previousLength, this);
+            }
         }
+
         verticesLength = rawOutputStream->length() - previousLength;
         previousLength = rawOutputStream->length();
 
-        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(this->getSharedBufferId(), verticesLength + indicesLength + animationLength));
+        shared_ptr <GLTFBuffer> sharedBuffer(new GLTFBuffer(this->getSharedBufferId(), verticesLength + indicesLength + animationLength + compressionLength));
 
         //---
         shared_ptr <GLTFBufferView> genericBufferView(new GLTFBufferView(sharedBuffer, 0, animationLength));
         shared_ptr <GLTFBufferView> indicesBufferView(new GLTFBufferView(sharedBuffer, animationLength, indicesLength));
-        shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, indicesLength + animationLength, verticesLength));
-        shared_ptr <GLTFBufferView> compressionBufferView(new GLTFBufferView(compressionBuffer, 0, compressionLength));
+        shared_ptr <GLTFBufferView> verticesBufferView(new GLTFBufferView(sharedBuffer, animationLength + indicesLength, verticesLength));
         
         // ----
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            
+
+            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-            
-            bool isCompressed = false;
-            if (mesh->contains(kExtensions)) {
-                isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
-            }
             
             //serialize attributes
             vector <GLTF::Semantic> allSemantics = mesh->allSemantics();
@@ -1051,29 +1006,30 @@ namespace GLTF
                 for (size_t j = 0 ; j < attributesCount ; j++) {
                     shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
                     
-                    meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
+                    if (compressMesh) {
+                        auto bv = meshAttribute->getBufferView();
+                        bufferViews->setValue(bv->getID(), bv);
+                    } else {
+                        meshAttribute->setBufferView(verticesBufferView);
+                    }
                     accessors->setValue(meshAttribute->getID(), meshAttribute);
                 }
             }
-            
+
             //serialize indices
             unsigned int primitivesCount =  (unsigned int)primitives.size();
             for (size_t k = 0 ; k < primitivesCount ; k++) {
                 shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[k]);
                 shared_ptr <GLTF::GLTFAccessor> uniqueIndices =  primitive->getIndices();
-                
-                GLTFBufferView *bufferView = isCompressed ? (GLTFBufferView*)compressionBufferView.get() : (GLTFBufferView*)indicesBufferView.get();
-                
-                uniqueIndices->setString(kBufferView, bufferView->getID());
-                accessors->setValue(uniqueIndices->getID(), uniqueIndices);
-            }
-            
-            //set the compression buffer view
-            if (mesh->contains(kExtensions)) {
-                shared_ptr<JSONObject> compressionData = static_pointer_cast<JSONObject>(mesh->valueForKeyPath("extensions.Open3DGC-compression.compressedData"));
-                if (compressionData) {
-                    compressionData->setString(kBufferView, compressionBufferView->getID());
+
+                if (compressMesh) {
+                    auto bv = uniqueIndices->getBufferView();
+                    bufferViews->setValue(bv->getID(), bv);
+                } else {
+                    GLTFBufferView *bufferView = indicesBufferView.get();
+                    uniqueIndices->setString(kBufferView, bufferView->getID());
                 }
+                accessors->setValue(uniqueIndices->getID(), uniqueIndices);
             }
         }
 
@@ -1119,10 +1075,8 @@ namespace GLTF
             for (size_t i = 0 ; i <parameterKeys.size() ; i++) {
                 std::string parameterUID = parameters->getString(parameterKeys[i]);
                 shared_ptr <JSONObject> parameterObject = accessors->getObject(parameterUID);
+                // TODO: fix animation compression?
                 shared_ptr <JSONObject> compressedData = static_pointer_cast<JSONObject>(parameterObject->valueForKeyPath("extensions.Open3DGC-compression.compressedData"));
-                if (compressedData) {
-                    compressedData->setString(kBufferView, compressionBufferView->getID());
-                }
                 parameterObject->setString(kBufferView, genericBufferView->getID());
             }            
         }
@@ -1143,32 +1097,18 @@ namespace GLTF
             buffersObject->setValue(this->getSharedBufferId(), sharedBuffer);
         }
         
-        if (compressionBuffer->getByteLength() > 0) {
-            std::string compressedBufferID = compressionOutputStream->id();
-            buffersObject->setValue(compressedBufferID, compressionBuffer);
-            if (CONFIG_BOOL(this, "embedResources") == false) {
-                COLLADABU::URI uri(compressionOutputStream->outputPath());
-                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(uri.getPathFile()));
-            } else {
-                compressionBuffer->setString(kURI, COLLADABU::URI::uriEncode(compressionOutputStream->outputPath()));
-            }
-            if (converterConfig()->config()->getString("compressionMode") == "ascii")
-                compressionBuffer->setString(kType, "text");
-            else
-                compressionBuffer->setString(kType, "arraybuffer");
-        }
-        
         //FIXME: below is an acceptable short-cut since in this converter we will always create one buffer view for vertices and one for indices.
         //Fabrice: Other pipeline tools should be built on top of the format & manipulate the buffers and end up with a buffer / bufferViews layout that matches the need of a given application for performance. For instance we might want to concatenate a set of geometry together that come from different file and call that a "level" for a game.
-        shared_ptr <JSONObject> bufferViews = this->_root->createObjectIfNeeded(kBufferViews);
         
-        bufferViews->setValue(indicesBufferView->getID(), indicesBufferView);
-        bufferViews->setValue(verticesBufferView->getID(), verticesBufferView);
-        if ((animationLength > 0) || (compressionLength > 0)) {
-            bufferViews->setValue(genericBufferView->getID(), genericBufferView);
+        if (indicesLength > 0) {
+            bufferViews->setValue(indicesBufferView->getID(), indicesBufferView);
         }
-        if (compressionLength > 0) {
-            bufferViews->setValue(compressionBufferView->getID(), compressionBufferView);
+        if (verticesLength > 0) {
+            bufferViews->setValue(verticesBufferView->getID(), verticesBufferView);
+        }
+        // TODO: fix animation compression?
+        if (animationLength > 0) {
+            bufferViews->setValue(genericBufferView->getID(), genericBufferView);
         }
         
         indicesBufferView->setUnsignedInt32(kTarget, this->_profile->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
@@ -1177,16 +1117,13 @@ namespace GLTF
         this->_performValuesEvaluation();
         
         rawOutputStream->close();
-        if (compressionLength == 0) {
-            this->closeOutputStream(kCompressionOutputStream, true);
-        }
         
 		if (sharedBuffer->getByteLength() == 0)
             rawOutputStream->remove();
                 
 		this->convertionResults()->setUnsignedInt32(kGeometry, (unsigned int)this->getGeometryByteLength());
 		this->convertionResults()->setUnsignedInt32(kAnimation, (unsigned int)this->getAnimationByteLength());
-        this->convertionResults()->setUnsignedInt32(kScene, (int) (verticesLength + indicesLength + animationLength + compressionLength) );
+        this->convertionResults()->setUnsignedInt32(kScene, (unsigned int) (verticesLength + indicesLength + animationLength + compressionLength));
         
         this->log("[geometry] %d bytes\n", (int)this->getGeometryByteLength());
         this->log("[animations] %d bytes\n", (int)this->getAnimationByteLength());

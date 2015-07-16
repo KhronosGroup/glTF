@@ -78,6 +78,7 @@ namespace GLTF
         quantization->setUnsignedInt32("TEXCOORD", 10);
         quantization->setUnsignedInt32("COLOR", 10);
         quantization->setUnsignedInt32("WEIGHT", 8);
+        quantization->setUnsignedInt32("JOINT", 10);
         quantization->setUnsignedInt32("TIME", 10);
         
         shared_ptr<JSONObject> prediction(new JSONObject());

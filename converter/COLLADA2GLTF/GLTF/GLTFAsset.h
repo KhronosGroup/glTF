@@ -24,8 +24,6 @@ namespace GLTF
 #define CONFIG_DOUBLE(asset, X) ((asset)->converterConfig()->config()->getDouble(X))
 #define CONFIG_INT32(asset, X) ((asset)->converterConfig()->config()->getInt32(X))
 
-    const std::string kCompressionOutputStream = "compression";
-
     class GLTFAnimationFlattener;
 
     typedef std::vector <std::shared_ptr<JSONObject> > AnimatedTargets;

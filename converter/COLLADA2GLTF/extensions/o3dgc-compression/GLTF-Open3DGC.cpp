@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet.
+// Copyright (c) 2013, Fabrice Robinet; 2015, Analytical Graphics, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -219,6 +219,12 @@ namespace GLTF
             }
         }
         
+        for (auto semantic : mesh->allSemantics()) {
+            if (mesh->getMeshAttributesCountForSemantic(semantic) > 1) {
+                return false;
+            }
+        }
+
         return true;
     }
     
@@ -237,141 +243,156 @@ namespace GLTF
         return o3dPredictionMode;
     }
     
-    void encodeOpen3DGCMesh(shared_ptr <GLTFMesh> mesh,
-                            shared_ptr<JSONObject> floatAttributeIndexMapping,
-                            GLTFAsset* asset)
+    inline bool semanticIsCompressible(Semantic s) {
+        return true;
+    }
+    
+    void encodeOpen3DGCMesh(shared_ptr<GLTFMesh> mesh, GLTFAsset* asset)
     {
-        o3dgc::SC3DMCEncodeParams params;
-        o3dgc::IndexedFaceSet <unsigned short> ifs;
-        shared_ptr <GLTFConfig> config = asset->converterConfig();
+        shared_ptr<GLTFConfig> config = asset->converterConfig();
+        string decompressedViewName = kDecompressedView + "_" + mesh->getName();
         
-        //setup options
-        int qcoord    = 12;
-        int qtexCoord = 10;
-        int qnormal   = 10;
-        int qcolor   = 10;
-        int qWeights = 8;
+        // Retrieve quantization level parameters.
+        int quantPosition = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION");
+        int quantNormal   = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL");
+        int quantTexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD");
+        int quantColor    = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR");
+        int quantWeight   = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT");
+        int quantJoint    = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.JOINT");
         
-        qcoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.POSITION");
-        qnormal = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.NORMAL");
-        qtexCoord = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.TEXCOORD");
-        qcolor = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.COLOR");
-        qWeights = config->unsignedInt32ForKeyPath("extensions.Open3DGC.quantization.WEIGHT");
+        // Retrieve prediction mode parameters.
+        O3DGCSC3DMCPredictionMode predPosition = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.POSITION"));
+        O3DGCSC3DMCPredictionMode predNormal   = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.NORMAL"));
+        O3DGCSC3DMCPredictionMode predTexCoord = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.TEXCOORD"));
+        O3DGCSC3DMCPredictionMode predColor    = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.COLOR"));
+        O3DGCSC3DMCPredictionMode predWeight   = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.WEIGHT"));
+        O3DGCSC3DMCPredictionMode predJoint    = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.prediction.JOINT"));
         
-        O3DGCSC3DMCPredictionMode positionPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.POSITION"));
-        O3DGCSC3DMCPredictionMode texcoordPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.TEXCOORD"));
-        O3DGCSC3DMCPredictionMode normalPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.NORMAL"));
-        O3DGCSC3DMCPredictionMode colorPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.COLOR"));
-        O3DGCSC3DMCPredictionMode weightPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.WEIGHT"));
-        O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT"));
-        
-        GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
-        size_t bufferOffset = outputStream->length();
-        
-        O3DGCSC3DMCPredictionMode floatAttributePrediction = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
-        
-        unsigned int nFloatAttributes = 0;
-        
+        // Get a list of the glTF primitives
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-        unsigned int primitivesCount =  (unsigned int)primitives.size();
+        unsigned int primitivesCount = static_cast<unsigned int>(primitives.size());
+        
+        // The following loop runs through primitives to gather the total number of indices...
         unsigned int allIndicesCount = 0;
-        unsigned int allTrianglesCount = 0;
-        
+        // ... and compute the number of triangles in each primitive.
         std::vector <unsigned int> trianglesPerPrimitive;
-        
-        //First run through primitives to gather the number of indices and infer the number of triangles.
-        for (unsigned int i = 0 ; i < primitivesCount ; i++) {
+
+        for (unsigned int i = 0; i < primitivesCount; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
-            unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
-            //FIXME: assumes triangles, but we are guarded from issues by canEncodeOpen3DGCMesh
+            shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
+            unsigned int indicesCount = static_cast<unsigned int>(uniqueIndices->getCount());
+            // FIXME: assumes triangles. (For now, we are guarded from issues by
+            // canEncodeOpen3DGCMesh, which will prevent compression of anything
+            // that isn't triangles.)
             allIndicesCount += indicesCount;
             trianglesPerPrimitive.push_back(indicesCount / 3);
         }
         
-        //Then we setup the matIDs array and at the same time concatenate all triangle indices
-        unsigned long *primitiveIDs = (unsigned long*)malloc(sizeof(unsigned long) * (allIndicesCount / 3));
-        unsigned long *primitiveIDsPtr = primitiveIDs;
-        unsigned short* allConcatenatedIndices = (unsigned short*)malloc(allIndicesCount * sizeof(unsigned short));
-        unsigned short* allConcatenatedIndicesPtr = allConcatenatedIndices;
-        
-        for (unsigned int i = 0 ; i < trianglesPerPrimitive.size() ; i++) {
+        // The following loop fills the primitiveIDs array (a mapping from triangle index to primitive index), ...
+        unsigned long *primitiveIDs = new unsigned long[allIndicesCount / 3];
+        unsigned int primitiveIDsIdx = 0;
+        // ... fills the allConcatenatedIndices array (an array of all vertex indices), ...
+        unsigned short *allConcatenatedIndices = new unsigned short[allIndicesCount];
+        unsigned int allConcatenatedIndicesIdx = 0;
+        // ... and counts the number of triangles.
+        unsigned int allTrianglesCount = 0;
+
+        for (unsigned int i = 0; i < primitivesCount; i++) {
             unsigned int trianglesCount = trianglesPerPrimitive[i];
-            for (unsigned int j = 0 ; j < trianglesCount ; j++) {
-                primitiveIDsPtr[j] = i;
+            for (unsigned int j = 0; j < trianglesCount; j++) {
+                primitiveIDs[primitiveIDsIdx] = i;
+                primitiveIDsIdx++;
             }
-            primitiveIDsPtr += trianglesCount;
             allTrianglesCount += trianglesCount;
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            shared_ptr <GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
-            unsigned int indicesCount = (unsigned int)(uniqueIndices->getCount());
-            unsigned int* indicesPtr = (unsigned int*)uniqueIndices->getBufferView()->getBufferDataByApplyingOffset();
-            for (unsigned int j = 0 ; j < indicesCount ; j++) {
-                allConcatenatedIndicesPtr[j] = indicesPtr[j];
+            shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
+            unsigned int indicesCount = static_cast<unsigned int>(uniqueIndices->getCount());
+            auto indicesBufferView = uniqueIndices->getBufferView();
+            unsigned int *indicesPtr = static_cast<unsigned int *>(indicesBufferView->getBufferDataByApplyingOffset());
+            for (unsigned int j = 0; j < indicesCount; j++) {
+                allConcatenatedIndices[allConcatenatedIndicesIdx] = indicesPtr[j];
+                allConcatenatedIndicesIdx++;
             }
-            allConcatenatedIndicesPtr += indicesCount;
         }
         
-        //FIXME:Open3DGC SetNCoordIndex is not a good name here (file against o3dgc)
+        // Create the IFS object for compression.
+        o3dgc::IndexedFaceSet<unsigned short> ifs;
+        // Tell it how many triangles there are.
+        // FIXME: Open3DGC SetNCoordIndex is not a good name here (file against o3dgc)
         ifs.SetNCoordIndex(allTrianglesCount);
-        ifs.SetCoordIndex((unsigned short * const ) allConcatenatedIndices);
+        // Tell it where the indices for those triangles are.
+        ifs.SetCoordIndex(allConcatenatedIndices);
         ifs.SetIndexBufferID(primitiveIDs);
-        
+
+        // The following loop, for each semantic (type of attribute),
+        // extracts the encoding parameters and points the IFS at the attribute data.
+        std::vector<GLTF::Semantic> semantics = mesh->allSemantics();
+        o3dgc::SC3DMCEncodeParams params;
+        // The vertex count for all attributes will be the same - the number of vertices total.
         size_t vertexCount = 0;
-        
-        std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
-        for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
-            GLTF::Semantic semantic  = semantics[i];
-            
+        // This is used to define an index for each float attribute (any float attribute other than POSITION or NORMAL).
+        unsigned int nFloatAttributes = 0;
+        // This is used to define an index for each float attribute (any int attribute).
+        unsigned int nIntAttributes = 0;
+
+        for (Semantic semantic : semantics) {
             size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
+            if (attributesCount > 1) {
+                // This should never happen. It is detected in canEncodeOpen3DGCMesh.
+                printf("fatal error: cannot compress meshes which have multiple primitives with different attributes\n");
+                exit(EXIT_FAILURE);
+            }
             
-            for (size_t j = 0 ; j < attributesCount ; j++) {
-                shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
+            for (size_t j = 0; j < attributesCount; j++) {
+                shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
                 vertexCount = meshAttribute->getCount();
                 size_t componentsPerElement = meshAttribute->componentsPerElement();
-                char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+
+                if (!semanticIsCompressible(semantic)) {
+                    continue;
+                }
+
+                // Use the temporary bufferView to get data to send to the compressor
+                meshAttribute->exposeMinMax();
+                void *buffer = meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
                 switch (semantic) {
                     case POSITION:
-                        params.SetCoordQuantBits(qcoord);
-                        params.SetCoordPredMode(positionPrediction);
-                        params.SetCoordPredMode(floatAttributePrediction);
+                        params.SetCoordQuantBits(quantPosition);
+                        params.SetCoordPredMode(predPosition);
                         ifs.SetNCoord(vertexCount);
-                        ifs.SetCoord((Real * const)buffer);
+                        ifs.SetCoord(static_cast<Real *>(buffer));
                         break;
                     case NORMAL:
-                        params.SetNormalQuantBits(qnormal);
-                        params.SetNormalPredMode(normalPrediction);
+                        params.SetNormalQuantBits(quantNormal);
+                        params.SetNormalPredMode(predNormal);
                         ifs.SetNNormal(vertexCount);
-                        ifs.SetNormal((Real * const)buffer);
+                        ifs.SetNormal(static_cast<Real *>(buffer));
                         break;
                     case TEXCOORD:
-                        params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
-                        params.SetFloatAttributePredMode(nFloatAttributes, texcoordPrediction);
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, quantTexCoord);
+                        params.SetFloatAttributePredMode(nFloatAttributes, predTexCoord);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
-                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        ifs.SetFloatAttribute(nFloatAttributes, static_cast<Real *>(buffer));
                         nFloatAttributes++;
                         break;
                     case COLOR:
-                        params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
-                        params.SetFloatAttributePredMode(nFloatAttributes, colorPrediction);
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, quantColor);
+                        params.SetFloatAttributePredMode(nFloatAttributes, predColor);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
-                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        ifs.SetFloatAttribute(nFloatAttributes, static_cast<Real *>(buffer));
                         nFloatAttributes++;
                         break;
                     case WEIGHT:
-                        params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
-                        params.SetFloatAttributePredMode(nFloatAttributes, weightPrediction);
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, quantWeight);
+                        params.SetFloatAttributePredMode(nFloatAttributes, predWeight);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
-                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        ifs.SetFloatAttribute(nFloatAttributes, static_cast<Real *>(buffer));
                         nFloatAttributes++;
                         break;
                     case JOINT:
@@ -383,13 +404,12 @@ namespace GLTF
                          ifs.SetIntAttribute(nIntAttributes, (long * const ) & (jointIDs[0]));
                          nIntAttributes++;
                          */
-                        params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
-                        params.SetFloatAttributePredMode(nFloatAttributes, jointPrediction);
+                        params.SetFloatAttributeQuantBits(nFloatAttributes, quantJoint);
+                        params.SetFloatAttributePredMode(nFloatAttributes, predJoint);
                         ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
                         ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
-                        ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
-                        floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
+                        ifs.SetFloatAttribute(nFloatAttributes, static_cast<Real *>(buffer));
                         nFloatAttributes++;
                         break;
                     default:
@@ -398,18 +418,13 @@ namespace GLTF
             }
         }
         
-        params.SetNumFloatAttributes(nFloatAttributes);
+        // Inform the encoder and IFS of a few things.
         ifs.SetNumFloatAttributes(nFloatAttributes);
-        shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
-        
         ifs.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
-        BinaryStream bstream(vertexCount * 8);
-        SC3DMCEncoder <unsigned short> encoder;
-        shared_ptr<JSONObject> compressedData(new JSONObject());
-        compressedData->setInt32("verticesCount", vertexCount);
-        compressedData->setInt32("indicesCount", allIndicesCount);
-        //Open3DGC binary is disabled
+        params.SetNumFloatAttributes(nFloatAttributes);
+        //Open3DGC binary is disabled  // TODO: What does this mean? It looks like it works, at least. But o3dgc.js can't load it. -kainino0x
         params.SetStreamType(CONFIG_STRING(asset, "compressionMode") == "binary" ? O3DGC_STREAM_TYPE_BINARY : O3DGC_STREAM_TYPE_ASCII);
+
 #if DUMP_O3DGC_OUTPUT
         static int dumpedId = 0;
         COLLADABU::URI outputURI(asset->outputFilePath.c_str());
@@ -417,32 +432,154 @@ namespace GLTF
         dumpedId++;
         SaveIFS(outputFilePath, ifs);
 #endif
+        
+        // Get (or create) stream to output the compressed blob.
+        GLTFOutputStream *const outputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
+        unsigned int bufferOffset = static_cast<unsigned int>(outputStream->length());
+        
+        // Encode the parameters and IFS into a bytestream.
+        BinaryStream bstream(vertexCount * 8);  // allocate some arbitrary amount of space
+        SC3DMCEncoder <unsigned short> encoder;
         encoder.Encode(params, ifs, bstream);
-        
-        compressedData->setString("mode", CONFIG_STRING(asset, "compressionMode") );
-        compressedData->setUnsignedInt32("count", bstream.GetSize());
-        compressedData->setString(kType, "SCALAR");
-        compressedData->setUnsignedInt32(kComponentType, asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
-        compressedData->setUnsignedInt32("byteOffset", bufferOffset);
-        compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
-        
-        compressionObject->setValue("compressedData", compressedData);
-        
+
+        unsigned int decompressedByteLength = 0;
+
+        // Create final bufferView for indices
+        auto indexBufferView = make_shared<GLTFBufferView>();
+        indexBufferView->removeValue(kBuffer);
+        indexBufferView->setByteOffset(0);
+        indexBufferView->setByteLength(allIndicesCount * sizeof(unsigned short));
+        indexBufferView->setInt32(kTarget, asset->profile()->getGLenumForString("ELEMENT_ARRAY_BUFFER"));
+        {
+            auto extensions = indexBufferView->createObjectIfNeeded(kExtensions);
+            auto extension = extensions->createObjectIfNeeded(kExtensionOpen3DGC);
+            extension->setString(kDecompressedView, decompressedViewName);
+        }
+        decompressedByteLength += allIndicesCount * sizeof(unsigned short);
+
+        // Pad to the next 4-byte boundary so that floats are aligned
+        decompressedByteLength = ((decompressedByteLength + 3) / 4) * 4;
+
+        // Create final bufferview for vertex data
+        auto vertexBufferView = make_shared<GLTFBufferView>();
+        vertexBufferView->removeValue(kBuffer);
+        vertexBufferView->setByteOffset(decompressedByteLength);
+        vertexBufferView->setInt32(kTarget, asset->profile()->getGLenumForString("ARRAY_BUFFER"));
+        // byteLength set in loop below
+        {
+            auto extensions = vertexBufferView->createObjectIfNeeded(kExtensions);
+            auto extension = extensions->createObjectIfNeeded(kExtensionOpen3DGC);
+            extension->setString(kDecompressedView, decompressedViewName);
+        }
+
+        // Once the temporary bufferViews have been handled, replace them with the real ones.
+        // (But don't do this until after compression has accessed the buffer data.)
+        // For indices:
+        unsigned int indicesOffset = 0;
+        for (unsigned int i = 0; i < primitivesCount; i++) {
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
+            shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
+            uniqueIndices->setBufferView(indexBufferView);
+            uniqueIndices->setByteOffset(indicesOffset);
+            indicesOffset += uniqueIndices->getCount() * uniqueIndices->elementByteLength();
+        }
+
+        // Since accessors point into _decompressed_ data, we have to simulate the layout.
+        unsigned accessorOffset = 0;
+
+        // For vertex data:
+        for (Semantic semantic : semantics) {
+            size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
+            
+            if (semanticIsCompressible(semantic)) {
+                for (size_t j = 0; j < attributesCount; j++) {
+                    shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
+                    unsigned int vCount = meshAttribute->getCount();
+                    size_t componentsPerElement = meshAttribute->componentsPerElement();
+
+                    meshAttribute->setBufferView(vertexBufferView);
+                    meshAttribute->setByteOffset(accessorOffset);
+                    auto attributeSize = vCount * meshAttribute->elementByteLength();
+                    accessorOffset += attributeSize;
+                    vertexBufferView->setByteLength(vertexBufferView->getByteLength() + attributeSize);
+                }
+            }
+        }
+
+        decompressedByteLength += accessorOffset;
+
+        shared_ptr<JSONObject> decompressedView(new JSONObject());
+        decompressedView->setString(kBuffer, asset->getSharedBufferId());
+        decompressedView->setInt32(kByteOffset, bufferOffset);
+        decompressedView->setInt32(kByteLength, bstream.GetSize());
+        decompressedView->setInt32(kDecompressedByteLength, decompressedByteLength);
+        decompressedView->setString(kCompressionMode, CONFIG_STRING(asset, "compressionMode"));
+
+        {
+            // Get (or create) the extensions.mesh_compression_open3dgc object.
+            shared_ptr<JSONObject> extension = asset->root()->createObjectIfNeeded(kExtensions)->createObjectIfNeeded(kExtensionOpen3DGC);
+            shared_ptr<JSONObject> decompressedViews = extension->createObjectIfNeeded(kDecompressedViews);
+            // And create a decompressedView in it.
+            decompressedViews->setValue(decompressedViewName, decompressedView);
+        }
         //testDecode(mesh, bstream);
+
+        // Write the bytestream out as the final compressed data.
         outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
         asset->setGeometryByteLength(asset->getGeometryByteLength() + bstream.GetSize());
+        bufferOffset = static_cast<unsigned int>(outputStream->length());
 
-        if (ifs.GetCoordIndex()) {
-            free(ifs.GetCoordIndex());
+        size_t rem = bufferOffset % 4;
+        if (rem) {
+            char pad[3] = { 0 };
+            size_t paddingForAlignment = 4 - rem;
+            outputStream->write(pad, paddingForAlignment);
+            bufferOffset += paddingForAlignment;
+        }
+
+        // Write any vertex data that wasn't compressed
+        auto uncompressedVertexBufferView = make_shared<GLTFBufferView>();
+        uncompressedVertexBufferView->setString(kBuffer, asset->getSharedBufferId());
+        uncompressedVertexBufferView->setByteOffset(bufferOffset);
+        uncompressedVertexBufferView->setByteLength(0);
+        uncompressedVertexBufferView->setInt32(kTarget, asset->profile()->getGLenumForString("ARRAY_BUFFER"));
+
+        accessorOffset = 0;
+        for (Semantic semantic : semantics) {
+            size_t attributesCount = mesh->getMeshAttributesCountForSemantic(semantic);
+            
+            if (!semanticIsCompressible(semantic)) {
+                for (size_t j = 0; j < attributesCount; j++) {
+                    shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
+                    unsigned int vCount = meshAttribute->getCount();
+                    size_t componentsPerElement = meshAttribute->componentsPerElement();
+
+                    void *buffer = meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
+                    unsigned int byteLength = vCount * meshAttribute->elementByteLength();
+                    outputStream->write(static_cast<const char *>(buffer), byteLength);
+                    uncompressedVertexBufferView->setByteLength(uncompressedVertexBufferView->getByteLength() + byteLength);
+
+                    meshAttribute->setBufferView(uncompressedVertexBufferView);
+                    meshAttribute->setByteOffset(accessorOffset);
+                    accessorOffset += byteLength;
+                }
+            }
+        }
+
+        asset->convertionResults()->setUnsignedInt32("trianglesCount", allTrianglesCount);
+        asset->convertionResults()->setUnsignedInt32("verticesCount", allIndicesCount);
+
+        if (allConcatenatedIndices) {
+            delete allConcatenatedIndices;
         }
         
         if (primitiveIDs) {
-            free(primitiveIDs);
+            delete primitiveIDs;
         }
     }
     
     void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset* asset) {
-        GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
+        GLTFOutputStream *const outputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         Real max[32];
         Real min[32];
         O3DGCStreamType streamType = CONFIG_STRING(asset, "compressionMode")  == "ascii" ? O3DGC_STREAM_TYPE_ASCII : O3DGC_STREAM_TYPE_BINARY;
@@ -550,8 +687,9 @@ namespace GLTF
         
         //write
         size_t byteOffset = 0;
+        // TODO: animation compression?
         bool shouldEncodeOpen3DGC = CONFIG_STRING(asset, "compressionType")  == "Open3DGC";
-        GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset->createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();;
+        GLTFOutputStream *const outputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
         
@@ -563,15 +701,14 @@ namespace GLTF
                 byteLength = outputStream->length() - byteOffset;
                 
                 shared_ptr<JSONObject> extensionsObject = parameter->createObjectIfNeeded(kExtensions);
-                shared_ptr<JSONObject> compressionObject = extensionsObject->createObjectIfNeeded("Open3DGC-compression");
-                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
+                shared_ptr<JSONObject> compressionObject = extensionsObject->createObjectIfNeeded(kExtensionOpen3DGC);
+                shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded(kDecompressedView);
                 
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", byteLength);
                 compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
                 compressionDataObject->setString(kType, "SCALAR");
                 compressionDataObject->setUnsignedInt32(kComponentType, profile->getGLenumForString("UNSIGNED_BYTE"));
-
             }
         } else {
             outputStream->write((const char*)buffer, byteLength);
