@@ -188,7 +188,7 @@ namespace GLTF
                 inputLength = vertexData.getLength(indexOfSet);
             } else {
                 // for unpatched version of OpenCOLLADA we need this work-around.
-                id = GLTF::GLTFUtils::generateIDForType("buffer").c_str();
+                id = GLTF::GLTFUtils::generateIDForType(kBufferView.c_str()).c_str();
                 componentsPerElement = 3; //only normal and positions should reach this code
                 inputLength = vertexData.getLength(0);
             }

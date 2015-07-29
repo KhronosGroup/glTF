@@ -55,7 +55,7 @@ namespace GLTF
     _data((unsigned char*)data),
     _ownData(ownData) {
 		this->setUnsignedInt32(kByteLength, (unsigned int)byteLength);
-        this->_ID = GLTFUtils::generateIDForType("buffer");
+        this->_ID = GLTFUtils::generateIDForType(kBuffer.c_str());
     }
     
     GLTFBuffer::GLTFBuffer(std::string ID,void *data, size_t byteLength, bool ownData): JSONObject(),

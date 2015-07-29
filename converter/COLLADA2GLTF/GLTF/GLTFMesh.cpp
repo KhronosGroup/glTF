@@ -39,7 +39,7 @@ namespace GLTF
     GLTFMesh::GLTFMesh() : JSONObject() , _subMeshes(nullptr) {
         this->_subMeshes = nullptr;
         this->_remapTableForPositions = nullptr;
-        this->_ID = GLTFUtils::generateIDForType("mesh");
+        this->_ID = GLTFUtils::generateIDForType(kMesh.c_str());
     }
     
     GLTFMesh::~GLTFMesh() {

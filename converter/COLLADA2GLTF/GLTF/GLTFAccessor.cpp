@@ -35,7 +35,7 @@ using namespace std;
 namespace GLTF 
 {
     void GLTFAccessor::_generateID()  {
-        this->_ID = GLTFUtils::generateIDForType("accessor");
+        this->_ID = GLTFUtils::generateIDForType(kAccessor.c_str());
     }
     
     GLTFAccessor::GLTFAccessor(shared_ptr<GLTFProfile> profile, const std::string& componentType, const std::string& type):

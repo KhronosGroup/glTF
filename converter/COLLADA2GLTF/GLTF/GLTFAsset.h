@@ -25,7 +25,6 @@ namespace GLTF
 #define CONFIG_INT32(asset, X) (asset->converterConfig()->config()->getInt32(X))
 #define CONFIG_UINT32(asset, X) (asset->converterConfig()->config()->getUInt32(X))
 
-    const std::string kRawOutputStream = "rawOutputStream";
     const std::string kCompressionOutputStream = "compression";
 
     class GLTFAnimationFlattener;
