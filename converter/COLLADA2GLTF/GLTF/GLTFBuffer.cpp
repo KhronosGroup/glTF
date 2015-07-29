@@ -106,7 +106,8 @@ namespace GLTF
         this->setByteOffset(byteOffset);
     }
     
-    GLTFBufferView::GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength) : JSONObject() {
+    GLTFBufferView::GLTFBufferView(std::string ID, shared_ptr <GLTF::GLTFBuffer> buffer, size_t byteOffset, size_t byteLength)
+        : JSONObject(), _ID(ID) {
         this->_setBuffer(buffer);
         this->setByteLength(byteLength);
         this->setByteOffset(byteOffset);

@@ -19,11 +19,10 @@ namespace GLTF
         virtual ~GLTFAssetValueEvaluator() {};
     };
     
-#define CONFIG_BOOL(asset,X) (asset->converterConfig()->config()->getBool(X))
-#define CONFIG_STRING(asset, X) (asset->converterConfig()->config()->getString(X))
-#define CONFIG_DOUBLE(asset, X) (asset->converterConfig()->config()->getDouble(X))
-#define CONFIG_INT32(asset, X) (asset->converterConfig()->config()->getInt32(X))
-#define CONFIG_UINT32(asset, X) (asset->converterConfig()->config()->getUInt32(X))
+#define CONFIG_BOOL(asset, X) ((asset)->converterConfig()->config()->getBool(X))
+#define CONFIG_STRING(asset, X) ((asset)->converterConfig()->config()->getString(X))
+#define CONFIG_DOUBLE(asset, X) ((asset)->converterConfig()->config()->getDouble(X))
+#define CONFIG_INT32(asset, X) ((asset)->converterConfig()->config()->getInt32(X))
 
     const std::string kCompressionOutputStream = "compression";
 
