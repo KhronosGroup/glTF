@@ -270,7 +270,7 @@ namespace GLTF
         
         // Get a list of the glTF primitives
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-        unsigned int primitivesCount = static_cast<unsigned int>(primitives.size());
+        unsigned int primitivesCount = (unsigned int) primitives.size();
         
         // The following loop runs through primitives to gather the total number of indices...
         unsigned int allIndicesCount = 0;
@@ -280,7 +280,7 @@ namespace GLTF
         for (unsigned int i = 0; i < primitivesCount; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
             shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
-            unsigned int indicesCount = static_cast<unsigned int>(uniqueIndices->getCount());
+            unsigned int indicesCount = (unsigned int) uniqueIndices->getCount();
             // FIXME: assumes triangles. (For now, we are guarded from issues by
             // canEncodeOpen3DGCMesh, which will prevent compression of anything
             // that isn't triangles.)
@@ -306,7 +306,7 @@ namespace GLTF
             allTrianglesCount += trianglesCount;
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
             shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
-            unsigned int indicesCount = static_cast<unsigned int>(uniqueIndices->getCount());
+            unsigned int indicesCount = (unsigned int) uniqueIndices->getCount();
             auto indicesBufferView = uniqueIndices->getBufferView();
             unsigned int *indicesPtr = static_cast<unsigned int *>(indicesBufferView->getBufferDataByApplyingOffset());
             for (unsigned int j = 0; j < indicesCount; j++) {
@@ -329,7 +329,7 @@ namespace GLTF
         std::vector<GLTF::Semantic> semantics = mesh->allSemantics();
         o3dgc::SC3DMCEncodeParams params;
         // The vertex count for all attributes will be the same - the number of vertices total.
-        size_t vertexCount = 0;
+        unsigned long vertexCount = 0;
         // This is used to define an index for each float attribute (any float attribute other than POSITION or NORMAL).
         unsigned int nFloatAttributes = 0;
         // This is used to define an index for each float attribute (any int attribute).
@@ -345,8 +345,8 @@ namespace GLTF
             
             for (size_t j = 0; j < attributesCount; j++) {
                 shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
-                vertexCount = meshAttribute->getCount();
-                size_t componentsPerElement = meshAttribute->componentsPerElement();
+                vertexCount = (unsigned long) meshAttribute->getCount();
+                unsigned long componentsPerElement = static_cast<unsigned long>(meshAttribute->componentsPerElement());
 
                 if (!semanticIsCompressible(semantic)) {
                     continue;
@@ -420,6 +420,7 @@ namespace GLTF
         
         // Inform the encoder and IFS of a few things.
         ifs.SetNumFloatAttributes(nFloatAttributes);
+        ifs.SetNumIntAttributes(nIntAttributes);
         ifs.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
         params.SetNumFloatAttributes(nFloatAttributes);
         //Open3DGC binary is disabled  // TODO: What does this mean? It looks like it works, at least. But o3dgc.js can't load it. -kainino0x
@@ -475,7 +476,7 @@ namespace GLTF
         // Once the temporary bufferViews have been handled, replace them with the real ones.
         // (But don't do this until after compression has accessed the buffer data.)
         // For indices:
-        unsigned int indicesOffset = 0;
+        size_t indicesOffset = 0;
         for (unsigned int i = 0; i < primitivesCount; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
             shared_ptr<GLTF::GLTFAccessor> uniqueIndices = primitive->getIndices();
@@ -485,7 +486,7 @@ namespace GLTF
         }
 
         // Since accessors point into _decompressed_ data, we have to simulate the layout.
-        unsigned accessorOffset = 0;
+        unsigned int accessorOffset = 0;
 
         // For vertex data:
         for (Semantic semantic : semantics) {
@@ -494,13 +495,13 @@ namespace GLTF
             if (semanticIsCompressible(semantic)) {
                 for (size_t j = 0; j < attributesCount; j++) {
                     shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
-                    unsigned int vCount = meshAttribute->getCount();
+                    unsigned int vCount = (unsigned int) meshAttribute->getCount();
                     size_t componentsPerElement = meshAttribute->componentsPerElement();
 
                     meshAttribute->setBufferView(vertexBufferView);
                     meshAttribute->setByteOffset(accessorOffset);
-                    auto attributeSize = vCount * meshAttribute->elementByteLength();
-                    accessorOffset += attributeSize;
+                    size_t attributeSize = vCount * meshAttribute->elementByteLength();
+                    accessorOffset += (unsigned int) attributeSize;
                     vertexBufferView->setByteLength(vertexBufferView->getByteLength() + attributeSize);
                 }
             }
@@ -527,14 +528,14 @@ namespace GLTF
         // Write the bytestream out as the final compressed data.
         outputStream->write((const char*)bstream.GetBuffer(0), bstream.GetSize());
         asset->setGeometryByteLength(asset->getGeometryByteLength() + bstream.GetSize());
-        bufferOffset = static_cast<unsigned int>(outputStream->length());
+        bufferOffset = (unsigned int) outputStream->length();
 
         size_t rem = bufferOffset % 4;
         if (rem) {
             char pad[3] = { 0 };
             size_t paddingForAlignment = 4 - rem;
             outputStream->write(pad, paddingForAlignment);
-            bufferOffset += paddingForAlignment;
+            bufferOffset += (unsigned int) paddingForAlignment;
         }
 
         // Write any vertex data that wasn't compressed
@@ -551,17 +552,17 @@ namespace GLTF
             if (!semanticIsCompressible(semantic)) {
                 for (size_t j = 0; j < attributesCount; j++) {
                     shared_ptr<GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
-                    unsigned int vCount = meshAttribute->getCount();
+                    unsigned int vCount = (unsigned int) meshAttribute->getCount();
                     size_t componentsPerElement = meshAttribute->componentsPerElement();
 
                     void *buffer = meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
-                    unsigned int byteLength = vCount * meshAttribute->elementByteLength();
+                    size_t byteLength = vCount * meshAttribute->elementByteLength();
                     outputStream->write(static_cast<const char *>(buffer), byteLength);
                     uncompressedVertexBufferView->setByteLength(uncompressedVertexBufferView->getByteLength() + byteLength);
 
                     meshAttribute->setBufferView(uncompressedVertexBufferView);
                     meshAttribute->setByteOffset(accessorOffset);
-                    accessorOffset += byteLength;
+                    accessorOffset += (unsigned int) byteLength;
                 }
             }
         }
