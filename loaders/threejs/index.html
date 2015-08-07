@@ -126,8 +126,8 @@
 				</div>
 			</div>
 		</div>
-        <script src="libs/three.js.r65/three.js"></script>
-        <script src="libs/three.js.r65/controls/OrbitControls.js"></script>
+        <script src="libs/three.js.r71/three.js"></script>
+        <script src="libs/three.js.r71/controls/OrbitControls.js"></script>
         <script src="../glTF-parser.js"></script>
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
@@ -378,7 +378,7 @@
 		                 shadows:true },
 	                 { name : "Virtual City", url : "/glTFTests/vc-new/vc/vc.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
-		                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0), 
+		                 objectRotation: new THREE.Euler(-Math.PI, 0, 0), 
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
 		             { name : "Monster", url : "/glTFTests/monster/monster.gltf", 
 			                 cameraPos: new THREE.Vector3(30, 10, 70), 
@@ -421,7 +421,8 @@
 			      		shadows:true },
 	                 { name : "Super Murdoch", url : "../../model/SuperMurdoch/SuperMurdoch.gltf", 
              			cameraPos: new THREE.Vector3(0, 10, 50), 
-	             		objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
+			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+			      		objectPosition: new THREE.Vector3(0, -10, 0),
              			addLights:true,
              			addGround:true,
              			shadows:true },
