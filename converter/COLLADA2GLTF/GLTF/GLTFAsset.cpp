@@ -934,11 +934,14 @@ namespace GLTF
         size_t animationLength = rawOutputStream->length();
         size_t compressionLength = 0;
         size_t previousLength = animationLength;
+
+        std::vector<bool> meshCompressibleMap;
                 
         //save all meshes as compressed
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
             bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
+            meshCompressibleMap.push_back(compressMesh);
             if (compressMesh) {
                 writeCompressedMesh(mesh, this);
             }
@@ -951,8 +954,7 @@ namespace GLTF
         //save all indices
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
-            if (!compressMesh) {
+            if (!meshCompressibleMap[i]) {
                 writeMeshIndices(mesh, previousLength, this);
             }
         }
@@ -974,8 +976,7 @@ namespace GLTF
         //save all mesh attributes
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
-            if (!compressMesh) {
+            if (!meshCompressibleMap[i]) {
                 writeMeshAttributes(mesh, previousLength, this);
             }
         }
@@ -994,7 +995,7 @@ namespace GLTF
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
 
-            bool compressMesh = (CONFIG_STRING(this, "compressionType") == "Open3DGC") && canEncodeOpen3DGCMesh(mesh, this->_profile);
+            bool compressMesh = meshCompressibleMap[i];
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             
             //serialize attributes

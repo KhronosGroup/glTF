@@ -689,7 +689,7 @@ namespace GLTF
         //write
         size_t byteOffset = 0;
         // TODO: animation compression?
-        bool shouldEncodeOpen3DGC = CONFIG_STRING(asset, "compressionType")  == "Open3DGC";
+        bool shouldEncodeOpen3DGC = false; //CONFIG_STRING(asset, "compressionType") == "Open3DGC";
         GLTFOutputStream *const outputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         byteOffset = outputStream->length();
         parameter->setUnsignedInt32("byteOffset", byteOffset);
