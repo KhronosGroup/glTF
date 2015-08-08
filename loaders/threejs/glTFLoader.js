@@ -1259,9 +1259,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                                     	material.skinning = true;
         	                            
-                                    	threeMesh.boneInverses = [];
         	                            var jointNames = skin.jointNames;
         	                            var joints = [];
+                                        threeMesh.skeleton.bones = [];
+                                        threeMesh.skeleton.boneInverses = [];
+                                        threeMesh.skeleton.boneMatrices = new Float32Array( 16 * jointNames.length );
         	                            var i, len = jointNames.length;
         	                            for (i = 0; i < len; i++) {
         	                            	var jointName = jointNames[i];
@@ -1271,7 +1273,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         	                                	
         	                                	joint.skin = threeMesh;
         	                                    joints.push(joint);
-        	                                    threeMesh.bones.push(joint);
+        	                                    threeMesh.skeleton.bones.push(joint);
         	                                    
         	                                    var m = skin.inverseBindMatrices;
         	                    	            var mat = new THREE.Matrix4().set(
@@ -1280,8 +1282,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         	                                            m[i * 16 + 2],  m[i * 16 + 6],  m[i * 16 + 10], m[i * 16 + 14],
         	                                            m[i * 16 + 3],  m[i * 16 + 7],  m[i * 16 + 11], m[i * 16 + 15]
         	                                        );
-        	                                    threeMesh.boneInverses.push(mat);
-        	                                    threeMesh.pose();
+        	                                    threeMesh.skeleton.boneInverses.push(mat);
+        	                                    threeMesh.skeleton.pose();
         	                                    
         	                                } else {
         	                                    console.log("WARNING: jointName:"+jointName+" cannot be found in skeleton:"+skeleton);
