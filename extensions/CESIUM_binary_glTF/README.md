@@ -29,21 +29,31 @@ To solve this, this extension introduces a container format, _Binary glTF_.  In 
 
 ## Binary glTF Layout
 
-Binary glTF is little endian.  It has a 20-byte header followed by the glTF resources, including the JSON:
+Binary glTF is little endian.  It has a binary 20-byte preamble followed by the structured header and the binary body, containing the glTF resources:
 
 **Figure 1**: Binary glTF layout.
 
 ![](layout.png)
 
-`magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.  `version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension.  `length` is the total length of the Binary glTF, including the header, in bytes.  `jsonOffset` is the offset, in bytes, from the start of the arraybuffer to the start of the glTF JSON.  `jsonLength` is the length of the glTF JSON in bytes.
+`magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
-`jsonOffset` and `jsonLength` are used to access the JSON.  This extension does not define where the JSON is in the arraybuffer nor does it define where the JSON is stored relative to the embedded data.  Figure 1 illustrates that the embedded data may come before or after the JSON (or both).  Pragmatically, exporter implementations may find it easier to write the JSON after the embedded data to make computing `byteOffset` and `byteLength` for bufferviews straightforward.
+`version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension.
 
-The start of the embedded data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
+`length` is the total length of the Binary glTF, including the header, in bytes.
+
+`headerLength` is the length, in bytes, of the structured header.
+
+`headerFormat` specifies the format of the structured header. Currently, the only allowed value is '0', which stands for JSON.
+
+The structured header holds the structured glTF description, as it would usually be provided within a .gltf file.
+By reading the header first, an implementation is able to progressively retrieve resources from the binary body.
+This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD).
+
+The start of the binary body data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
 
 Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
 
-_TODO: the code below is out-of-sync with Cesium_
+_TODO: the code below is out-of-sync with Cesium and the Frauhofer SRC implementations_
 
 **Listing 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.11/Source/Core/getStringFromTypedArray.js).
 ```javascript
@@ -83,15 +93,15 @@ Binary glTF also supported embedded base64-encoded resources, but it would be in
 
 ## glTF Schema Updates
 
-This extension introduces an explicitly named `buffer` called `CESIUM_binary_glTF`.  This buffer is an implicit reference to the arraybuffer that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF arrayBuffer as the buffer.  `bufferViews` that reference this `buffer` work as usual.
+This extension introduces an explicitly named `buffer` called `binary_glTF`.  This buffer is an implicit reference to the arraybuffer that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF arrayBuffer as the buffer.  `bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `CESIUM_binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
 
 **Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
 ```json
 "a_shader" : {
     "extensions" : {
-        "CESIUM_binary_glTF" : {
+        "binary_glTF" : {
             "bufferview" : ...
         }
     }
@@ -102,7 +112,7 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 ```json
 "an_image" : {
     "extensions" : {
-        "CESIUM_binary_glTF" : {
+        "binary_glTF" : {
             "bufferview" : ...,
             "mimeType" : "image/png",
             "height" : 256,
