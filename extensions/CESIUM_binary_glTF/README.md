@@ -6,7 +6,7 @@
 * Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
 * Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
 * Max Limper, [@mlimper_cg](https://twitter.com/mlimper_cg)
-* Maik Thoener, [@mthoener](https://twitter.com/mthoener)
+* Maik Thöner, [@mthoener](https://twitter.com/mthoener)
 
 ## Status
 
