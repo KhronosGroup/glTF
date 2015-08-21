@@ -1,10 +1,12 @@
-# CESIUM_binary_glTF
+# binary_glTF
 
 ## Contributors
 
 * Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
 * Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
 * Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
+* Max Limper, [@mlimper_cg](https://twitter.com/mlimper_cg)
+* Maik Thoener, [@mthoener](https://twitter.com/mthoener)
 
 ## Status
 
@@ -19,7 +21,7 @@ Written against the glTF 0.8 spec.
 glTF provides two delivery options that can be also be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), images, and shaders.
-* glTF JSON embeds base64-encoded binary data, images, and shaders inline using data uris.
+* glTF JSON embeds base64-encoded binary data, images, and shaders inline using data URIs.
 
 glTF is commonly criticized for requiring either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
@@ -161,6 +163,7 @@ Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)),
 
 \* All files gzipped except for stand-alone images.
 
+
 ## Known Implementations
 
 ### Runtime
@@ -171,12 +174,17 @@ Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)),
 
 * Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
 * colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
+* SRC writer source code ([code](http://x3dom.org/src/files/src_writer_source.zip))
 
 ## Resources
 
 * Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
 * base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
 * [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
+* SRC project page (paper, background, basic writer) - [http://x3dom.org/src/](http://x3dom.org/src/)
 
 <a name="BenchData">
 * [1] Raw data for benchmarks using compression available in [BenchData](BenchData/README.md) supplemental.
+
+<a name="SRCPaper">
+* [2] SRC paper [http://x3dom.org/src/files/Web3d2014_SRC.pdf](http://x3dom.org/src/files/Web3d2014_SRC.pdf)
