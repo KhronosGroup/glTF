@@ -24,7 +24,7 @@
         "version" : {
             "type" : "string",
             "description" : "The glTF version.",
-            "default" : "0.8"
+            "required" : true
         }
     },
     "additionalProperties" : false
