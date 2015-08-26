@@ -58,14 +58,15 @@ namespace GLTF
         return vec4;
     }
 
-    //-- Writer
+    //-- Default Writer
     
-    GLTFWriter::GLTFWriter():
-    _writer(0) {
+    GLTFDefaultWriter::GLTFDefaultWriter() :
+        _writer(0)
+    {
         _fd = 0;
     }
 
-    bool GLTFWriter::initWithPath(const std::string &path) {
+    bool GLTFDefaultWriter::initWithPath(const std::string &path) {
         this->_fd = fopen(path.c_str(), "w");
         if (this->_fd) {
             this->_fileStream = new rapidjson::FileStream(this->_fd);
@@ -78,7 +79,7 @@ namespace GLTF
         return false;
     }
         
-    GLTFWriter::~GLTFWriter() {
+    GLTFDefaultWriter::~GLTFDefaultWriter() {
         if (_fd) {
             delete this->_fileStream;
             delete this->_writer;
@@ -87,7 +88,7 @@ namespace GLTF
     }
         
     //base
-    void GLTFWriter::writeArray(JSONArray* array, void *context) {
+    void GLTFDefaultWriter::writeArray(JSONArray* array, void *context) {
         this->_writer->StartArray();
         
         vector <shared_ptr <JSONValue> > values = array->values();
@@ -99,7 +100,7 @@ namespace GLTF
         this->_writer->EndArray();
     }
     
-    void GLTFWriter::writeObject(JSONObject* object, void *context) {
+    void GLTFDefaultWriter::writeObject(JSONObject* object, void *context) {
         this->_writer->StartObject(); 
 
         vector <std::string> keys = object->getAllKeys();
@@ -116,7 +117,7 @@ namespace GLTF
         this->_writer->EndObject(); 
     }
     
-    void GLTFWriter::writeNumber(JSONNumber* number, void *context) {
+    void GLTFDefaultWriter::writeNumber(JSONNumber* number, void *context) {
         JSONNumber::JSONNumberType type = number->getNumberType();
         
         switch (type) {
@@ -144,11 +145,11 @@ namespace GLTF
         }
     }
         
-    void GLTFWriter::writeString(JSONString* str, void *context) {
+    void GLTFDefaultWriter::writeString(JSONString* str, void *context) {
         this->_writer->String(str->getCString());
     }
     
-    void GLTFWriter::write(JSONValue* value, void* context) {
+    void GLTFDefaultWriter::write(JSONValue* value, void* context) {
         JSONType jsonType = value->getJSONType();
         
         if (jsonType == kJSONNumber) {

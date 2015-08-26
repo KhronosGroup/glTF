@@ -62,7 +62,7 @@ namespace GLTF
     class COLLADA2GLTF_EXPORT GLTFAsset : public GLTFAssetValueEvaluator, public JSONValueApplier
     {
     public:
-        GLTFAsset();
+        GLTFAsset(std::shared_ptr<GLTFWriter> writer = 0);
 
         std::shared_ptr <GLTFConfig> converterConfig();
         std::shared_ptr <JSONObject> convertionResults();
@@ -90,11 +90,14 @@ namespace GLTF
         size_t getAnimationByteLength();
 
         void setOutputFilePath(const std::string& outputFilePath);
-        std::string getOutputFilePath();
+        const std::string& getOutputFilePath();
         std::string getOutputFolderPath();
 
         void setInputFilePath(const std::string& inputFilePath);
-        std::string getInputFilePath();
+        const std::string& getInputFilePath();
+
+        void setInputFileData(const std::string& inputFileData);
+        const std::string& getInputFileData();
 
         void setDistanceScale(double distanceScale);
         double getDistanceScale();
@@ -173,6 +176,7 @@ namespace GLTF
 
         unsigned int                    _prefix;
         std::string                     _inputFilePath;
+        std::string                     _inputFileData;
         std::string                     _outputFilePath;
         std::string                     _bundleOutputPath;
         std::string                     _sharedBufferId;
@@ -184,7 +188,7 @@ namespace GLTF
         UniqueIDToJSONValue             _uniqueIDToJSONValue;
 
         NameToOutputStream              _nameToOutputStream;
-        GLTF::GLTFWriter                _writer;
+        std::shared_ptr<GLTF::GLTFWriter>   _writer;
 
         std::vector <std::shared_ptr<GLTFAssetModifier> > _assetModifiers;
 

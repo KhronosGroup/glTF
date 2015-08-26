@@ -133,6 +133,8 @@ set(GLTF_SOURCES
     GLTF/GLTFOutputStream.cpp
     GLTF/GLTFConfig.cpp
     GLTF/GLTFConfig.h
+    GLTF/GLTFCleanupEvaluator.h
+    GLTF/GLTFCleanupEvaluator.cpp
 
     profiles/webgl-1.0/webgl-idl.h
     profiles/webgl-1.0/GLTFWebGL_1_0_Profile.cpp
