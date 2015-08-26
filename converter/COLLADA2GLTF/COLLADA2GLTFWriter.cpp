@@ -78,9 +78,22 @@ namespace GLTF
                 
         COLLADAFW::Root root(&this->_loader, this);
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-        if (!root.loadDocument(asset->getInputFilePath())) {
-            delete _extraDataHandler;
-            return false;
+        const std::string& fileData = asset->getInputFileData();
+        if (fileData.empty())
+        {
+            // We don't have any data so read the file
+            if (!root.loadDocument(asset->getInputFilePath())) {
+                delete _extraDataHandler;
+                return false;
+            }
+        }
+        else
+        {
+            // We have the data in memory so use it
+            if (!root.loadDocument(asset->getInputFilePath(), fileData.data(), fileData.size())) {
+                delete _extraDataHandler;
+                return false;
+            }
         }
         
         asset->write();
@@ -1103,20 +1116,34 @@ namespace GLTF
         this->_asset->setValueForUniqueId(imageUID, image);
         this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
         images->setValue(openCOLLADAImage->getOriginalId(), image);
+
+        shared_ptr<JSONObject> extras = this->_extraDataHandler->getExtras(openCOLLADAImage->getUniqueId());
+        if (extras->contains("has_alpha"))
+        {
+            image->setBool("has_alpha", extras->getBool("has_alpha"));
+        }
         
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
+        if (is_dataUri(imageURI.originalStr()))
+        {
+            // We already have a data uri so just use it
+            image->setString(kURI, imageURI.originalStr());
+            return true;
+        }
+
         std::string relPathFile = imageURI.getPathFile();
-		if (imageURI.getPathDir().substr(0, 2) != "./") {
-			relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
+        std::string pathDir = getPathDir(imageURI);
+        if (pathDir.substr(0, 2) != "./") {
+            relPathFile = pathDir + imageURI.getPathFile();
 		}
 		else {
-			relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
+            relPathFile = pathDir.substr(2) + imageURI.getPathFile();
 		}
         
         if (CONFIG_BOOL(_asset, "embedResources"))
         {
             COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
-            std::string imageFullPath = COLLADABU::URI::uriDecode(inputURI.getPathDir() + relPathFile);
+            std::string imageFullPath = COLLADABU::URI::uriDecode(getPathDir(inputURI) + relPathFile);
 
             std::ifstream fin(imageFullPath, ios::in | ios::binary);
             if (fin.is_open())

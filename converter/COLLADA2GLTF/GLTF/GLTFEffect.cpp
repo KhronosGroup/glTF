@@ -25,6 +25,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include "GLTFAsset.h"
 #include "../shaders/commonProfileShaders.h"
 
 using namespace rapidjson;

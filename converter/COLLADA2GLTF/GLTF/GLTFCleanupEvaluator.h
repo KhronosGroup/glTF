@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet
+// Copyright (c) 2015, Analytical Graphics, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,12 +21,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_OPENCOLLADA_UTILS_H__
-#define __GLTF_OPENCOLLADA_UTILS_H__
+#ifndef __GLTFCLEANUPEVALUATOR__
+#define __GLTFCLEANUPEVALUATOR__
 
-std::shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix);
-void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m);
-std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode);
-std::string COLLADA2GLTF_EXPORT getPathDir(const COLLADABU::URI& uri);
+namespace GLTF
+{
+    // Run at the end of processing directly before writing the file
+    // We can cleanup anything that needs to be cleaned up in here
+
+    class GLTFCleanupEvaluator : public GLTFAssetValueEvaluator {
+    public:
+        void evaluationWillStart(GLTFAsset*);
+        void evaluate(JSONValue* value, GLTFAsset* asset);
+        void evaluationDidComplete(GLTFAsset* asset);
+    };
+}
 
 #endif

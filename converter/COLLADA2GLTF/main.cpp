@@ -39,6 +39,7 @@
 
 #include "COLLADA2GLTFWriter.h"
 #include "JSONObject.h"
+#include "GLTFOpenCOLLADAUtils.h"
 
 using namespace rapidjson;
 #if __cplusplus <= 199711L
@@ -111,7 +112,7 @@ static std::string replacePathExtensionWith(const std::string& inputFile, const 
 {
     COLLADABU::URI inputFileURI(inputFile.c_str());
     
-    std::string pathDir = inputFileURI.getPathDir();
+    std::string pathDir = getPathDir(inputFileURI);
     std::string fileBase = inputFileURI.getPathFileBase();
     
     return pathDir + fileBase + "." + extension;

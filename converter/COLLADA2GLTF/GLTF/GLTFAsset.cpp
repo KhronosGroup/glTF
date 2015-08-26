@@ -4,8 +4,10 @@
 #include "../GitSHA1.h"
 #include "GLTF-Open3DGC.h"
 #include "GLTFFlipUVModifier.h"
+#include "GLTFCleanupEvaluator.h"
 #include "geometryHelpers.h"
 #include "../shaders/commonProfileShaders.h"
+#include <GLTFOpenCOLLADAUtils.h>
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -149,10 +151,16 @@ namespace GLTF
         return id;
     }
     
-	GLTFAsset::GLTFAsset() :
+    GLTFAsset::GLTFAsset(std::shared_ptr<GLTFWriter> writer) :
         _isBundle(false),
-        _distanceScale(1.0)
+        _distanceScale(1.0),
+        _writer(writer)
     {
+        if (!_writer)
+        {
+            _writer = std::make_shared<GLTFDefaultWriter>();
+        }
+
         this->_trackedResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_trackedOutputResourcesPath = shared_ptr<JSONObject> (new JSONObject());
         this->_converterConfig = shared_ptr<GLTFConfig> (new GLTFConfig());
@@ -206,7 +214,7 @@ namespace GLTF
 				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
 				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
 
-				std::string folder = outputURI.getPathDir();
+                std::string folder = getPathDir(outputURI);
 				std::string fileName = inputURI.getPathFileBase();
 
 				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
@@ -341,13 +349,13 @@ namespace GLTF
         this->_outputFilePath = outputFilePath;
     }
     
-    std::string GLTFAsset::getOutputFilePath() {
+    const std::string& GLTFAsset::getOutputFilePath() {
         return this->_outputFilePath;
     }
     
     std::string GLTFAsset::getOutputFolderPath() {
         COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-        std::string folder = outputURI.getPathDir();
+        std::string folder = getPathDir(outputURI);
         return folder;
     }
     
@@ -357,8 +365,18 @@ namespace GLTF
         this->_convertionMetaData->setString("source", inputFilePath);
     }
     
-    std::string GLTFAsset::getInputFilePath() {
+    const std::string& GLTFAsset::getInputFilePath() {
         return this->_inputFilePath;
+    }
+
+    void GLTFAsset::setInputFileData(const std::string& inputFileData)
+    {
+        this->_inputFileData = inputFileData;
+    }
+
+    const std::string& GLTFAsset::getInputFileData()
+    {
+        return this->_inputFileData;
     }
 
     void GLTFAsset::setDistanceScale(double distanceScale)
@@ -377,7 +395,7 @@ namespace GLTF
         } else {
             COLLADABU::URI aURI(this->_inputFilePath.c_str());
             COLLADABU::URI inputURI(path.c_str());
-            inputURI.setPathDir(aURI.getPathDir() + inputURI.getPathDir());
+            inputURI.setPathDir(getPathDir(aURI) + getPathDir(inputURI));
             return inputURI.getURIString();
         }
     }
@@ -399,7 +417,7 @@ namespace GLTF
                     COLLADABU::URI outputImagePathURI(inputImagePath.c_str());
                     
                     COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
-                    std::string folder = outputURI.getPathDir();
+                    std::string folder = getPathDir(outputURI);
                     std::string outputPath = folder + outputImagePathURI.getPathFile();
                     
                     std::ifstream f1(inputImagePath.c_str(), std::fstream::binary);
@@ -420,7 +438,7 @@ namespace GLTF
         this->_root = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
         this->_root->createObjectIfNeeded(kNodes);
         
-        this->_writer.initWithPath(this->getOutputFilePath().c_str());
+        this->_writer->initWithPath(this->getOutputFilePath().c_str());
     }
     
     //FIXME:legacy
@@ -435,7 +453,6 @@ namespace GLTF
     }
     
     void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
-        
     }
     
     void GLTFAsset::_performValuesEvaluation() {
@@ -454,7 +471,7 @@ namespace GLTF
             this->_evaluators[i]->evaluationDidComplete(this);
         }
         
-        this->_root->write(&this->_writer, this);
+        this->_root->write(this->_writer.get(), this);
     }
 
     void GLTFAsset::apply(JSONValue* value, void *context) {
@@ -484,11 +501,11 @@ namespace GLTF
     }
     
     void GLTFAsset::_writeJSONResource(const std::string &path, shared_ptr<JSONObject> obj) {
-        GLTF::GLTFWriter resultsWriter;
+        std::shared_ptr<GLTF::GLTFWriter> resultsWriter = std::make_shared<GLTF::GLTFDefaultWriter>();
         COLLADABU::URI outputURI(this->resourceOuputPathForPath(path));
         std::string aPath = this->getOutputFolderPath() + outputURI.getPathFile();
-        resultsWriter.initWithPath(aPath);
-        obj->write(&resultsWriter);
+        resultsWriter->initWithPath(aPath);
+        obj->write(resultsWriter.get());
         
         if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
             this->log("[Resource]: write JSON resource at path:%s\n", aPath.c_str());
@@ -956,7 +973,8 @@ namespace GLTF
         }
         
         this->assetModifiers().insert(this->assetModifiers().begin(), shared_ptr<GLTFFlipUVModifier>(new GLTFFlipUVModifier()));
-        
+        this->addValueEvaluator(std::make_shared<GLTFCleanupEvaluator>());
+
         this->launchModifiers();
         
         size_t verticesLength = 0;

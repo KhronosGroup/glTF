@@ -83,4 +83,30 @@ std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode) {
     return opaqueStr;
 }
 
+//
+// The OpenCOLLADA URI class has a getPathDir but it doesn't handle
+//  absolute Windows paths correctly. It thinks the drive letter is the
+//  scheme. Even if you specify a URI with a file:// scheme the path
+//  is returned with a leading / before the drive letter, which is also
+//  incorrect.
+//
+std::string getPathDir(const COLLADABU::URI& uri)
+{
+    std::string result = uri.getPathDir();
+#ifdef _WIN32
+    if (!result.empty() && result[0] == '/')
+    {
+        if (uri.scheme().size() == 1)
+        {
+            result = uri.scheme() + ":" + result;
+        }
+        else if (GLTF::GLTFUtils::isAbsolutePath(uri.toNativePath()))
+        {
+            result = result.substr(1, result.size() - 1);
+        }
+    }
+#endif
+    return result;
+}
+
 

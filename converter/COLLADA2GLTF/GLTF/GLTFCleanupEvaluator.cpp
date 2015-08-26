@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Fabrice Robinet
+// Copyright (c) 2015, Analytical Graphics, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -21,12 +21,40 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_OPENCOLLADA_UTILS_H__
-#define __GLTF_OPENCOLLADA_UTILS_H__
+#include "GLTF.h"
+#include "GLTFAsset.h"
+#include "GLTFCleanupEvaluator.h"
+#include "JSONObject.h"
+#include <memory>
 
-std::shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix);
-void fillFloatPtrFromOpenCOLLADAMatrix4(const COLLADABU::Math::Matrix4 &matrix, float *m);
-std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode);
-std::string COLLADA2GLTF_EXPORT getPathDir(const COLLADABU::URI& uri);
+namespace GLTF
+{
 
-#endif
+    void GLTFCleanupEvaluator::evaluationWillStart(GLTFAsset*)
+    {
+
+    };
+
+    void GLTFCleanupEvaluator::evaluate(JSONValue* value, GLTFAsset* asset)
+    {
+
+    }
+
+    void GLTFCleanupEvaluator::evaluationDidComplete(GLTFAsset* asset)
+    {
+        // Remove some extra info we stored in images
+        if (asset->root()->contains(kImages))
+        {
+            std::shared_ptr<JSONObject> images = asset->root()->getObject(kImages);
+            std::vector<std::string> imageKeys = images->getAllKeys();
+            for (size_t i = 0; i < imageKeys.size(); i++) {
+                std::shared_ptr<JSONObject> image = images->getObject(imageKeys[i]);
+                if (image->contains("has_alpha"))
+                {
+                    image->removeValue("has_alpha");
+                }
+            }
+        }
+    }
+}
+
