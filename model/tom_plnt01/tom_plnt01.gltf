@@ -1,0 +1,1801 @@
+{
+    "accessors": {
+        "IBM_geom-tom_plnt01-skin1": {
+            "bufferView": "bufferView_123",
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5,
+            "type": "MAT4"
+        },
+        "accessor_102": {
+            "bufferView": "bufferView_124",
+            "byteOffset": 6078,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 23349,
+            "type": "SCALAR"
+        },
+        "accessor_104": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 20000,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6656,
+            "max": [
+                0.146432,
+                0.249898,
+                0.859122
+            ],
+            "min": [
+                -0.168671,
+                -0.235158,
+                -0.00206097
+            ],
+            "type": "VEC3"
+        },
+        "accessor_106": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 99872,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 6656,
+            "max": [
+                0.999969,
+                0.999603,
+                0.999937
+            ],
+            "min": [
+                -0.998252,
+                -0.999986,
+                -0.99948
+            ],
+            "type": "VEC3"
+        },
+        "accessor_108": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 179744,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 6656,
+            "max": [
+                0.975174,
+                0.979075
+            ],
+            "min": [
+                0.0134477,
+                0.0277823
+            ],
+            "type": "VEC2"
+        },
+        "accessor_117": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 232992,
+            "byteStride": 16,
+            "componentType": 5126,
+            "count": 6656,
+            "max": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "type": "VEC4"
+        },
+        "accessor_120": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 339488,
+            "byteStride": 16,
+            "componentType": 5126,
+            "count": 6656,
+            "max": [
+                3,
+                0,
+                1,
+                2
+            ],
+            "min": [
+                3,
+                0,
+                0,
+                0
+            ],
+            "type": "VEC4"
+        },
+        "accessor_21": {
+            "bufferView": "bufferView_124",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 2280,
+            "type": "SCALAR"
+        },
+        "accessor_23": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 420,
+            "max": [
+                2.806,
+                2.5761,
+                0.341197
+            ],
+            "min": [
+                -2.34971,
+                -2.57603,
+                -0.0368642
+            ],
+            "type": "VEC3"
+        },
+        "accessor_25": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 5040,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 420,
+            "max": [
+                0.474453,
+                0.362381,
+                0.999999
+            ],
+            "min": [
+                -0.327457,
+                -0.365953,
+                0.871881
+            ],
+            "type": "VEC3"
+        },
+        "accessor_27": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 10080,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 420,
+            "max": [
+                0.999501,
+                0.999501
+            ],
+            "min": [
+                0.000499487,
+                0.000499487
+            ],
+            "type": "VEC2"
+        },
+        "accessor_48": {
+            "bufferView": "bufferView_124",
+            "byteOffset": 4632,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 723,
+            "type": "SCALAR"
+        },
+        "accessor_50": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 14208,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 181,
+            "max": [
+                0.0297341,
+                0.0262595,
+                0.000581554
+            ],
+            "min": [
+                -0.0300457,
+                -0.0348823,
+                -0.0523319
+            ],
+            "type": "VEC3"
+        },
+        "accessor_52": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 16380,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 181,
+            "max": [
+                0.993542,
+                0.985274,
+                0.999906
+            ],
+            "min": [
+                -0.999091,
+                -0.992872,
+                -0.995833
+            ],
+            "type": "VEC3"
+        },
+        "accessor_54": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 18552,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 181,
+            "max": [
+                0.698368,
+                0.288351
+            ],
+            "min": [
+                0.0134477,
+                0.0277823
+            ],
+            "type": "VEC2"
+        },
+        "accessor_75": {
+            "bufferView": "bufferView_124",
+            "byteOffset": 4560,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 36,
+            "type": "SCALAR"
+        },
+        "accessor_77": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 13440,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.0683039,
+                0.0683039,
+                0.00683039
+            ],
+            "min": [
+                -0.0683039,
+                -0.0683039,
+                0
+            ],
+            "type": "VEC3"
+        },
+        "accessor_79": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 13728,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": "VEC3"
+        },
+        "accessor_81": {
+            "bufferView": "bufferView_125",
+            "byteOffset": 14016,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                1,
+                1
+            ],
+            "min": [
+                0,
+                0
+            ],
+            "type": "VEC2"
+        }
+    },
+    "animations": {},
+    "asset": {
+        "generator": "collada2gltf@d0bbe4ce1ac0dea2efee7bb5a4d1b9e3345c3efe",
+        "premultipliedAlpha": true,
+        "profile": "WebGL 1.0.2",
+        "version": 0.8
+    },
+    "bufferViews": {
+        "bufferView_123": {
+            "buffer": "tom_plnt01",
+            "byteLength": 320,
+            "byteOffset": 0
+        },
+        "bufferView_124": {
+            "buffer": "tom_plnt01",
+            "byteLength": 52776,
+            "byteOffset": 320,
+            "target": 34963
+        },
+        "bufferView_125": {
+            "buffer": "tom_plnt01",
+            "byteLength": 445984,
+            "byteOffset": 53096,
+            "target": 34962
+        }
+    },
+    "buffers": {
+        "tom_plnt01": {
+            "byteLength": 499080,
+            "type": "arraybuffer",
+            "uri": "tom_plnt01.bin"
+        }
+    },
+    "cameras": {
+        "camera_0": {
+            "perspective": {
+                "xfov": 73.7398,
+                "zfar": 25.4,
+                "znear": 0.0254
+            },
+            "type": "perspective"
+        }
+    },
+    "images": {
+        "tom_plnt_dif_jpg": {
+            "uri": "1_tom_plnt_dif.jpg"
+        },
+        "wf_island_grnd_jpg": {
+            "uri": "0_wf_island_grnd.jpg"
+        }
+    },
+    "lights": {
+        "EnvironmentAmbientLight": {
+            "ambient": {
+                "color": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "type": "ambient"
+        },
+        "Omni001-light": {
+            "point": {
+                "color": [
+                    1,
+                    1,
+                    1
+                ],
+                "constantAttenuation": 1,
+                "linearAttenuation": 0,
+                "quadraticAttenuation": 0
+            },
+            "type": "point"
+        },
+        "Sky001-light": {
+            "point": {
+                "color": [
+                    0.95,
+                    0.95,
+                    1
+                ],
+                "constantAttenuation": 1,
+                "linearAttenuation": 0,
+                "quadraticAttenuation": 0
+            },
+            "type": "point"
+        }
+    },
+    "materials": {
+        "Material__48": {
+            "instanceTechnique": {
+                "technique": "technique0",
+                "values": {
+                    "ambient": "texture_wf_island_grnd_jpg",
+                    "diffuse": "texture_wf_island_grnd_jpg",
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 0,
+                    "specular": [
+                        0.9,
+                        0.9,
+                        0.9,
+                        1
+                    ]
+                }
+            },
+            "name": "Material__48"
+        },
+        "tom_plant": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": "texture_tom_plnt_dif_jpg",
+                    "bump": "texture_tom_plnt_dif_jpg",
+                    "diffuse": "texture_tom_plnt_dif_jpg",
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 0,
+                    "specular": [
+                        0.9,
+                        0.9,
+                        0.9,
+                        1
+                    ]
+                }
+            },
+            "name": "tom_plant"
+        },
+        "tom_plant-variant-3": {
+            "instanceTechnique": {
+                "technique": "technique2",
+                "values": {
+                    "ambient": "texture_tom_plnt_dif_jpg",
+                    "bump": "texture_tom_plnt_dif_jpg",
+                    "diffuse": "texture_tom_plnt_dif_jpg",
+                    "emission": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "shininess": 0,
+                    "specular": [
+                        0.9,
+                        0.9,
+                        0.9,
+                        1
+                    ]
+                }
+            },
+            "name": "tom_plant"
+        }
+    },
+    "meshes": {
+        "geom-Plane001": {
+            "name": "Plane001",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_25",
+                        "POSITION": "accessor_23",
+                        "TEXCOORD_0": "accessor_27"
+                    },
+                    "indices": "accessor_21",
+                    "material": "Material__48",
+                    "primitive": 4
+                }
+            ]
+        },
+        "geom-global_transform": {
+            "name": "global_transform",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_79",
+                        "POSITION": "accessor_77",
+                        "TEXCOORD_0": "accessor_81"
+                    },
+                    "indices": "accessor_75",
+                    "material": "Material__48",
+                    "primitive": 4
+                }
+            ]
+        },
+        "geom-tom_hero": {
+            "name": "tom_hero",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_52",
+                        "POSITION": "accessor_50",
+                        "TEXCOORD_0": "accessor_54"
+                    },
+                    "indices": "accessor_48",
+                    "material": "tom_plant",
+                    "primitive": 4
+                }
+            ]
+        },
+        "geom-tom_plnt01": {
+            "name": "tom_plnt01",
+            "primitives": [
+                {
+                    "attributes": {
+                        "JOINT": "accessor_120",
+                        "NORMAL": "accessor_106",
+                        "POSITION": "accessor_104",
+                        "TEXCOORD_0": "accessor_108",
+                        "WEIGHT": "accessor_117"
+                    },
+                    "indices": "accessor_102",
+                    "material": "tom_plant-variant-3",
+                    "primitive": 4
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "node-Birth_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Birth_001"
+        },
+        "node-Camera001": {
+            "camera": "camera_0",
+            "children": [],
+            "matrix": [
+                -0.75471,
+                -0.656058,
+                -4.47035e-008,
+                0,
+                0.0114506,
+                -0.0131724,
+                0.999848,
+                0,
+                -0.655959,
+                0.754595,
+                0.0174535,
+                0,
+                -1.36214,
+                1.67174,
+                0.352139,
+                1
+            ],
+            "name": "Camera001"
+        },
+        "node-Camera001.Target": {
+            "children": [],
+            "matrix": [
+                -0.754709,
+                -0.65606,
+                4.90281e-007,
+                0,
+                0.0114504,
+                -0.0131715,
+                0.999848,
+                0,
+                -0.65596,
+                0.754594,
+                0.0174528,
+                0,
+                -0.0523942,
+                0.165056,
+                0.31729,
+                1
+            ],
+            "name": "Camera001.Target"
+        },
+        "node-Display_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Display_001"
+        },
+        "node-Display_002": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Display_002"
+        },
+        "node-Event_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Event_001"
+        },
+        "node-Event_002": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Event_002"
+        },
+        "node-Omni001": {
+            "children": [],
+            "light": "Omni001-light",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -1.07496,
+                0.517064,
+                5.95295,
+                1
+            ],
+            "name": "Omni001"
+        },
+        "node-Particle_View_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Particle_View_001"
+        },
+        "node-Plane001": {
+            "children": [],
+            "matrix": [
+                0.248484,
+                0,
+                0,
+                0,
+                0,
+                0.248484,
+                0,
+                0,
+                0,
+                0,
+                0.248484,
+                0,
+                -0.066551,
+                0,
+                0,
+                1
+            ],
+            "meshes": [
+                "geom-Plane001"
+            ],
+            "name": "Plane001"
+        },
+        "node-Position_Object_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Position_Object_001"
+        },
+        "node-Render_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Render_001"
+        },
+        "node-Rotation_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Rotation_001"
+        },
+        "node-Shape_Instance_001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Shape_Instance_001"
+        },
+        "node-Sky001": {
+            "children": [],
+            "light": "Sky001-light",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -1.53232,
+                2.78319,
+                0,
+                1
+            ],
+            "name": "Sky001"
+        },
+        "node-bn_tomplnt_brnch01a": {
+            "children": [
+                "node-bn_tomplnt_brnch01b"
+            ],
+            "jointName": "joint0",
+            "matrix": [
+                -0.0470559,
+                0.674785,
+                0.736513,
+                0,
+                0.0298654,
+                -0.73605,
+                0.676268,
+                0,
+                0.998446,
+                0.0538187,
+                0.0144828,
+                0,
+                0.39867,
+                0.00577502,
+                0.0187531,
+                1
+            ],
+            "name": "bn_tomplnt_brnch01a"
+        },
+        "node-bn_tomplnt_brnch01b": {
+            "children": [
+                "node-bn_tomplnt_brnch01c"
+            ],
+            "jointName": "joint1",
+            "matrix": [
+                0.31431,
+                -0.291543,
+                -0.118698,
+                0,
+                0.166041,
+                -0.141932,
+                0.788274,
+                0,
+                -0.554504,
+                -0.601284,
+                0.00853776,
+                0,
+                0.0844007,
+                0.00670904,
+                -0.00413759,
+                1
+            ],
+            "name": "bn_tomplnt_brnch01b"
+        },
+        "node-bn_tomplnt_brnch01c": {
+            "children": [],
+            "jointName": "joint2",
+            "matrix": [
+                1.09888,
+                -0.529565,
+                0.0812221,
+                0,
+                0.530412,
+                1.10145,
+                0.00534735,
+                0,
+                -0.0754948,
+                0.030433,
+                1.21981,
+                0,
+                0.222859,
+                0,
+                3.02791e-008,
+                1
+            ],
+            "name": "bn_tomplnt_brnch01c"
+        },
+        "node-bn_tomplnt_stem": {
+            "children": [
+                "node-bn_tomplnt_stem_nb",
+                "node-bn_tomplnt_brnch01a"
+            ],
+            "jointName": "joint3",
+            "matrix": [
+                -0.0104818,
+                -0.0466554,
+                0.998856,
+                0,
+                -0.999945,
+                -5.68894e-006,
+                -0.0104935,
+                0,
+                0.000495263,
+                -0.998911,
+                -0.0466528,
+                0,
+                -0.00649656,
+                0.00445244,
+                0.0149891,
+                1
+            ],
+            "name": "bn_tomplnt_stem"
+        },
+        "node-bn_tomplnt_stem_nb": {
+            "children": [],
+            "jointName": "joint4",
+            "matrix": [
+                0.254788,
+                3.68124e-005,
+                -0.00119448,
+                0,
+                -8.51666e-005,
+                0.589414,
+                -9.37061e-009,
+                0,
+                0.00276325,
+                3.8519e-007,
+                0.589408,
+                0,
+                0.846096,
+                -4.24287e-007,
+                -3.97413e-008,
+                1
+            ],
+            "name": "bn_tomplnt_stem_nb"
+        },
+        "node-global_transform": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0.0223599,
+                1
+            ],
+            "meshes": [
+                "geom-global_transform"
+            ],
+            "name": "global_transform"
+        },
+        "node-tom_hero": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "meshes": [
+                "geom-tom_hero"
+            ],
+            "name": "tom_hero"
+        },
+        "node-tom_plnt01": {
+            "children": [],
+            "instanceSkin": {
+                "meshes": [
+                    "geom-tom_plnt01"
+                ],
+                "skeletons": [
+                    "node-bn_tomplnt_stem"
+                ],
+                "skin": "geom-tom_plnt01-skin1"
+            },
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "tom_plnt01"
+        },
+        "node_0": {
+            "children": [],
+            "light": "EnvironmentAmbientLight",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "EnvironmentAmbientLight"
+        },
+        "node_24": {
+            "children": [
+                "node_0",
+                "node-Plane001",
+                "node-Sky001",
+                "node-Omni001",
+                "node-Particle_View_001",
+                "node-Birth_001",
+                "node-Render_001",
+                "node-Display_001",
+                "node-Event_001",
+                "node-Shape_Instance_001",
+                "node-Position_Object_001",
+                "node-Rotation_001",
+                "node-Event_002",
+                "node-Display_002",
+                "node-Camera001",
+                "node-Camera001.Target",
+                "node-tom_hero",
+                "node-global_transform",
+                "node-tom_plnt01",
+                "node-bn_tomplnt_stem"
+            ],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Y_UP_Transform"
+        }
+    },
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_normal",
+                "a_position",
+                "a_texcoord0"
+            ],
+            "fragmentShader": "tom_plnt010FS",
+            "vertexShader": "tom_plnt010VS"
+        },
+        "program_1": {
+            "attributes": [
+                "a_normal",
+                "a_position",
+                "a_texcoord0"
+            ],
+            "fragmentShader": "tom_plnt011FS",
+            "vertexShader": "tom_plnt011VS"
+        },
+        "program_2": {
+            "attributes": [
+                "a_joint",
+                "a_normal",
+                "a_position",
+                "a_texcoord0",
+                "a_weight"
+            ],
+            "fragmentShader": "tom_plnt012FS",
+            "vertexShader": "tom_plnt012VS"
+        }
+    },
+    "samplers": {
+        "sampler_0": {
+            "magFilter": 9729,
+            "minFilter": 9729,
+            "wrapS": 10497,
+            "wrapT": 10497
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "node_24"
+            ]
+        }
+    },
+    "shaders": {
+        "tom_plnt010FS": {
+            "type": 35632,
+            "uri": "tom_plnt010FS.glsl"
+        },
+        "tom_plnt010VS": {
+            "type": 35633,
+            "uri": "tom_plnt010VS.glsl"
+        },
+        "tom_plnt011FS": {
+            "type": 35632,
+            "uri": "tom_plnt011FS.glsl"
+        },
+        "tom_plnt011VS": {
+            "type": 35633,
+            "uri": "tom_plnt011VS.glsl"
+        },
+        "tom_plnt012FS": {
+            "type": 35632,
+            "uri": "tom_plnt012FS.glsl"
+        },
+        "tom_plnt012VS": {
+            "type": 35633,
+            "uri": "tom_plnt012VS.glsl"
+        }
+    },
+    "skins": {
+        "geom-tom_plnt01-skin1": {
+            "bindShapeMatrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -0.0428829,
+                0.0743561,
+                1.02284,
+                1
+            ],
+            "inverseBindMatrices": "IBM_geom-tom_plnt01-skin1",
+            "jointNames": [
+                "joint0",
+                "joint1",
+                "joint2",
+                "joint3",
+                "joint4"
+            ]
+        }
+    },
+    "techniques": {
+        "technique0": {
+            "parameters": {
+                "ambient": {
+                    "type": 35678
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "light0Color": {
+                    "type": 35665,
+                    "value": [
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "light1Color": {
+                    "type": 35665,
+                    "value": [
+                        0.95,
+                        0.95,
+                        1
+                    ]
+                },
+                "light1ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light1LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Sky001",
+                    "type": 35676
+                },
+                "light2Color": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "light2ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light2LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Omni001",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35666
+                },
+                "texcoord0": {
+                    "semantic": "TEXCOORD_0",
+                    "type": 35664
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Blinn",
+                            "parameters": [
+                                "ambient",
+                                "diffuse",
+                                "emission",
+                                "light0Color",
+                                "light1Color",
+                                "light1ConstantAttenuation",
+                                "light1LinearAttenuation",
+                                "light1QuadraticAttenuation",
+                                "light1Transform",
+                                "light2Color",
+                                "light2ConstantAttenuation",
+                                "light2LinearAttenuation",
+                                "light2QuadraticAttenuation",
+                                "light2Transform",
+                                "modelViewMatrix",
+                                "normalMatrix",
+                                "projectionMatrix",
+                                "shininess",
+                                "specular"
+                            ],
+                            "texcoordBindings": {
+                                "ambient": "TEXCOORD_0",
+                                "diffuse": "TEXCOORD_0"
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_texcoord0": "texcoord0"
+                        },
+                        "program": "program_0",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_diffuse": "diffuse",
+                            "u_emission": "emission",
+                            "u_light0Color": "light0Color",
+                            "u_light1Color": "light1Color",
+                            "u_light1ConstantAttenuation": "light1ConstantAttenuation",
+                            "u_light1LinearAttenuation": "light1LinearAttenuation",
+                            "u_light1QuadraticAttenuation": "light1QuadraticAttenuation",
+                            "u_light1Transform": "light1Transform",
+                            "u_light2Color": "light2Color",
+                            "u_light2ConstantAttenuation": "light2ConstantAttenuation",
+                            "u_light2LinearAttenuation": "light2LinearAttenuation",
+                            "u_light2QuadraticAttenuation": "light2QuadraticAttenuation",
+                            "u_light2Transform": "light2Transform",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_shininess": "shininess",
+                            "u_specular": "specular"
+                        }
+                    },
+                    "states": {
+                        "enable": [
+                            2884,
+                            2929
+                        ]
+                    }
+                }
+            }
+        },
+        "technique1": {
+            "parameters": {
+                "ambient": {
+                    "type": 35678
+                },
+                "bump": {
+                    "type": 35678
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "light0Color": {
+                    "type": 35665,
+                    "value": [
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "light1Color": {
+                    "type": 35665,
+                    "value": [
+                        0.95,
+                        0.95,
+                        1
+                    ]
+                },
+                "light1ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light1LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Sky001",
+                    "type": 35676
+                },
+                "light2Color": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "light2ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light2LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Omni001",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35666
+                },
+                "texcoord0": {
+                    "semantic": "TEXCOORD_0",
+                    "type": 35664
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Blinn",
+                            "parameters": [
+                                "ambient",
+                                "bump",
+                                "diffuse",
+                                "emission",
+                                "light0Color",
+                                "light1Color",
+                                "light1ConstantAttenuation",
+                                "light1LinearAttenuation",
+                                "light1QuadraticAttenuation",
+                                "light1Transform",
+                                "light2Color",
+                                "light2ConstantAttenuation",
+                                "light2LinearAttenuation",
+                                "light2QuadraticAttenuation",
+                                "light2Transform",
+                                "modelViewMatrix",
+                                "normalMatrix",
+                                "projectionMatrix",
+                                "shininess",
+                                "specular"
+                            ],
+                            "texcoordBindings": {
+                                "ambient": "TEXCOORD_0",
+                                "bump": "TEXCOORD_0",
+                                "diffuse": "TEXCOORD_0"
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_texcoord0": "texcoord0"
+                        },
+                        "program": "program_1",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_bump": "bump",
+                            "u_diffuse": "diffuse",
+                            "u_emission": "emission",
+                            "u_light0Color": "light0Color",
+                            "u_light1Color": "light1Color",
+                            "u_light1ConstantAttenuation": "light1ConstantAttenuation",
+                            "u_light1LinearAttenuation": "light1LinearAttenuation",
+                            "u_light1QuadraticAttenuation": "light1QuadraticAttenuation",
+                            "u_light1Transform": "light1Transform",
+                            "u_light2Color": "light2Color",
+                            "u_light2ConstantAttenuation": "light2ConstantAttenuation",
+                            "u_light2LinearAttenuation": "light2LinearAttenuation",
+                            "u_light2QuadraticAttenuation": "light2QuadraticAttenuation",
+                            "u_light2Transform": "light2Transform",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_shininess": "shininess",
+                            "u_specular": "specular"
+                        }
+                    },
+                    "states": {
+                        "enable": [
+                            2884,
+                            2929
+                        ]
+                    }
+                }
+            }
+        },
+        "technique2": {
+            "parameters": {
+                "ambient": {
+                    "type": 35678
+                },
+                "bump": {
+                    "type": 35678
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": 35666
+                },
+                "jointMat": {
+                    "count": 5,
+                    "semantic": "JOINTMATRIX",
+                    "type": 35676
+                },
+                "light0Color": {
+                    "type": 35665,
+                    "value": [
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "light1Color": {
+                    "type": 35665,
+                    "value": [
+                        0.95,
+                        0.95,
+                        1
+                    ]
+                },
+                "light1ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light1LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light1Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Sky001",
+                    "type": 35676
+                },
+                "light2Color": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "light2ConstantAttenuation": {
+                    "type": 5126,
+                    "value": 1
+                },
+                "light2LinearAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2QuadraticAttenuation": {
+                    "type": 5126,
+                    "value": 0
+                },
+                "light2Transform": {
+                    "semantic": "MODELVIEW",
+                    "source": "node-Omni001",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35666
+                },
+                "texcoord0": {
+                    "semantic": "TEXCOORD_0",
+                    "type": 35664
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": 35666
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Blinn",
+                            "parameters": [
+                                "ambient",
+                                "bump",
+                                "diffuse",
+                                "emission",
+                                "jointMat",
+                                "light0Color",
+                                "light1Color",
+                                "light1ConstantAttenuation",
+                                "light1LinearAttenuation",
+                                "light1QuadraticAttenuation",
+                                "light1Transform",
+                                "light2Color",
+                                "light2ConstantAttenuation",
+                                "light2LinearAttenuation",
+                                "light2QuadraticAttenuation",
+                                "light2Transform",
+                                "modelViewMatrix",
+                                "normalMatrix",
+                                "projectionMatrix",
+                                "shininess",
+                                "specular"
+                            ],
+                            "texcoordBindings": {
+                                "ambient": "TEXCOORD_0",
+                                "bump": "TEXCOORD_0",
+                                "diffuse": "TEXCOORD_0"
+                            }
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_joint": "joint",
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_texcoord0": "texcoord0",
+                            "a_weight": "weight"
+                        },
+                        "program": "program_2",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_bump": "bump",
+                            "u_diffuse": "diffuse",
+                            "u_emission": "emission",
+                            "u_jointMat": "jointMat",
+                            "u_light0Color": "light0Color",
+                            "u_light1Color": "light1Color",
+                            "u_light1ConstantAttenuation": "light1ConstantAttenuation",
+                            "u_light1LinearAttenuation": "light1LinearAttenuation",
+                            "u_light1QuadraticAttenuation": "light1QuadraticAttenuation",
+                            "u_light1Transform": "light1Transform",
+                            "u_light2Color": "light2Color",
+                            "u_light2ConstantAttenuation": "light2ConstantAttenuation",
+                            "u_light2LinearAttenuation": "light2LinearAttenuation",
+                            "u_light2QuadraticAttenuation": "light2QuadraticAttenuation",
+                            "u_light2Transform": "light2Transform",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_shininess": "shininess",
+                            "u_specular": "specular"
+                        }
+                    },
+                    "states": {
+                        "enable": [
+                            2884,
+                            2929
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "textures": {
+        "texture_tom_plnt_dif_jpg": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_0",
+            "source": "tom_plnt_dif_jpg",
+            "target": 3553,
+            "type": 5121
+        },
+        "texture_wf_island_grnd_jpg": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_0",
+            "source": "wf_island_grnd_jpg",
+            "target": 3553,
+            "type": 5121
+        }
+    }
+}

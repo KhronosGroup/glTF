@@ -202,6 +202,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         var geometry = ctx.geometry;
         geometry.indexArray = glResource;
         geometry.checkFinished();
+
+        theLoader.checkComplete();
         return true;
     };
 
@@ -319,6 +321,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         var geom = ctx.geometry;
         geom.loadedAttributes++;
         geom.checkFinished();
+
+        theLoader.checkComplete();
         return true;
     };
 
@@ -420,6 +424,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     	var parameter = ctx.parameter;
     	parameter.data = glResource;
     	animation.handleParameterLoaded(parameter);
+    	theLoader.checkComplete();
         return true;
     };
 
@@ -487,6 +492,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     InverseBindMatricesDelegate.prototype.resourceAvailable = function(glResource, ctx) {
     	var skin = ctx.skin;
     	skin.inverseBindMatrices = glResource;
+        theLoader.checkComplete();
         return true;
     };
 
@@ -1618,9 +1624,24 @@ THREE.glTFLoader.prototype.callLoadedCallback = function() {
 }
 
 THREE.glTFLoader.prototype.checkComplete = function() {
+	var resourcesLoading = [];
+	for (var rs in THREE.GLTFLoaderUtils._resourcesStatus) {
+		if (THREE.GLTFLoaderUtils._resourcesStatus[rs] > 0) {
+			resourcesLoading.push(rs);
+		}
+	}
+
+	// if (resourcesLoading.length > 0) {
+	// 	console.log("STILL LOADING:");
+	// 	for (var i in resourcesLoading) {
+	// 		console.log('\t' + resourcesLoading[i]);			
+	// 	}
+	// }
+	
 	if (this.meshesLoaded == this.meshesRequested 
 			&& this.shadersLoaded == this.shadersRequested
-			&& this.animationsLoaded == this.animationsRequested)
+			&& this.animationsLoaded == this.animationsRequested
+			&& resourcesLoading.length == 0)
 	{
 		
 		for (var i = 0; i < this.pendingMeshes.length; i++) {
