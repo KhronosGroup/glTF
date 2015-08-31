@@ -174,7 +174,7 @@ Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)),
 \* All files gzipped except for stand-alone images.
 
 These tests were performed with the CESIUM_binary_glTF implementation.
-With SRC [[2]], there is another, slightly different implementation of Binary glTF, but the difference of benchmark results is insignificant.
+With SRC [[2]](#SRCPaper), there is another, slightly different implementation of Binary glTF, but the difference of benchmark results is insignificant.
 
 
 ## Known Implementations
