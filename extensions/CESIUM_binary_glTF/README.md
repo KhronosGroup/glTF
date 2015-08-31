@@ -1,4 +1,4 @@
-# binary_glTF
+# CESIUM_binary_glTF
 
 ## Contributors
 
