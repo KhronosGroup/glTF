@@ -93,33 +93,118 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return nElements;
     }
 
-    function replaceShaderSemantics(shader, material) {
-        var s = shader;
+    function replaceShaderDefinitions(shader, material) {
+/*        var s = shader;
         s = s.replace(/a_position/g, 'position');
         s = s.replace(/a_normal/g, 'normal');
         s = s.replace(/a_texcoord0/g, 'uv');
         s = s.replace(/u_normalMatrix/g, 'normalMatrix');
         s = s.replace(/u_modelViewMatrix/g, 'modelViewMatrix');
         s = s.replace(/u_projectionMatrix/g, 'projectionMatrix');
+        return s;*/
+
+        var program = material.params.program;
+        var shaderParams = material.params.parameters;
+        var params = {};
+
+        for (var uniform in program.uniforms) {
+            var pname = program.uniforms[uniform];
+            var shaderParam = shaderParams[pname];
+            var semantic = shaderParam.semantic;
+            if (semantic) {
+                params[uniform] = shaderParam;
+            }
+        }
+
+        for (var attribute in program.attributes) {
+            var pname = program.attributes[attribute];
+            var shaderParam = shaderParams[pname];
+            var semantic = shaderParam.semantic;
+            if (semantic) {
+                params[attribute] = shaderParam;
+            }
+        }
+
+
+        var s = shader;
+        var r = "";
+        for (var pname in params) {
+            var param = params[pname];
+            var semantic = param.semantic;
+
+            // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
+            //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
+
+            r = eval("/" + pname + "/g");
+            
+            switch (semantic) {
+                case "POSITION" :
+                    s = s.replace(r, 'position');
+                    break;
+                case "NORMAL" :
+                    s = s.replace(r, 'normal');
+                    break;
+                case "TEXCOORD_0" :
+                    s = s.replace(r, 'uv');
+                    break;
+                case "MODELVIEW" :
+                    if (!param.source) {
+                        s = s.replace(r, 'modelViewMatrix');
+                    }
+                    break;
+                case "MODELVIEWINVERSETRANSPOSE" :
+                    if (!param.source) {
+                       s = s.replace(r, 'normalMatrix');
+                    }
+                    break;
+                case "PROJECTION" :
+                    if (!param.source) {
+                        s = s.replace(r, 'projectionMatrix');
+                    }
+                    break;
+
+                default :
+                    break;
+            }
+
+        }
+
         return s;
     }
 
+    function replaceShaderSemantics(material) {
+
+        var fragmentShader = theLoader.shaders[material.params.fragmentShader];
+        if (fragmentShader) {
+            fragmentShader = replaceShaderDefinitions(fragmentShader, material);
+            theLoader.shaders[material.params.fragmentShader] = fragmentShader;
+        }
+        
+        var vertexShader = theLoader.shaders[material.params.vertexShader];
+        if (vertexShader) {
+            vertexShader = replaceShaderDefinitions(vertexShader, material);
+            theLoader.shaders[material.params.vertexShader] = vertexShader;
+        }
+
+    }
+
     function createShaderMaterial(material, geometry) {
-            
+        
+        // replace named attributes and uniforms with Three.js built-ins    
+        replaceShaderSemantics(material);
+
         var fragmentShader = theLoader.shaders[material.params.fragmentShader];
         if (!fragmentShader) {
             console.log("ERROR: Missing fragment shader definition:", material.params.fragmentShader);
             return new THREE.MeshPhongMaterial;
         }
-        fragmentShader = replaceShaderSemantics(fragmentShader, material);
         
         var vertexShader = theLoader.shaders[material.params.vertexShader];
         if (!vertexShader) {
             console.log("ERROR: Missing vertex shader definition:", material.params.vertexShader);
             return new THREE.MeshPhongMaterial;
         }
-        vertexShader = replaceShaderSemantics(vertexShader, material);
-        
+
         var shaderMaterial = new THREE.RawShaderMaterial( {
 
             fragmentShader: fragmentShader,
