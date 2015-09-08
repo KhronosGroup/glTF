@@ -35,6 +35,7 @@
 
 #define _GL_STR(X) #X
 #define _GL(X) (this->_profile->getGLenumForString(_GL_STR(X)));
+#include <GLTFOpenCOLLADAUtils.h>
 
 
 typedef enum {
@@ -187,10 +188,8 @@ namespace GLTF
         }
         
         shared_ptr<JSONObject> tr = parameters->getObject("transparency");
-        
         double transparency = tr->getDouble("value");
-        
-        return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
+        return transparency;
     }
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
@@ -214,10 +213,20 @@ namespace GLTF
                 
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
+                    // If the user adds an <has_alpha> extra tag to the image then we override
+                    //  what the image actually contain as far as weather there is alpha or not.
+                    if (image->contains("has_alpha"))
+                    {
+                        return !image->getBool("has_alpha");
+                    }
                     std::string imagePath = image->getString(kURI);
-                    COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
-                    std::string imageFullPath = inputURI.getPathDir() + imagePath;
-                    if (imageHasAlpha(imageFullPath.c_str()))
+                    if (!is_dataUri(imagePath))
+                    {
+                        COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
+                        imagePath = getPathDir(inputURI) + imagePath;
+                    }
+
+                    if (imageHasAlpha(imagePath.c_str()))
                         return false;
                 } else {
                     static bool printedOnce = false;
@@ -307,32 +316,6 @@ namespace GLTF
      return lightsHash;
      }
      */
-    static std::string buildTechniqueHash(shared_ptr<JSONObject> parameters, shared_ptr<JSONObject> techniqueExtras, GLTFAsset* asset) {
-        std::string techniqueHash = "";
-        bool doubleSided = false;
-        unsigned int jointsCount = 0;
-        
-        techniqueHash += buildSlotHash(parameters, "diffuse", asset);
-        techniqueHash += buildSlotHash(parameters, "ambient", asset);
-        techniqueHash += buildSlotHash(parameters, "emission", asset);
-        techniqueHash += buildSlotHash(parameters, "specular", asset);
-        techniqueHash += buildSlotHash(parameters, "reflective", asset);
-        techniqueHash += buildSlotHash(parameters, "bump", asset);
-        
-        //techniqueHash += buildLightsHash(parameters, techniqueExtras, context);
-        
-        if (techniqueExtras) {
-            jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
-            doubleSided = techniqueExtras->getBool(kDoubleSided);
-        }
-        
-        techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
-        techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
-        techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
-        techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
-        
-        return techniqueHash;
-    }
     
     bool writeShaderIfNeeded(const std::string& shaderId,  const std::string& shaderString, GLTFAsset *asset, unsigned int type)
     {
@@ -355,7 +338,7 @@ namespace GLTF
 				//also write the file on disk
 				if (shaderString.size() > 0) {
 					COLLADABU::URI outputURI(asset->getOutputFilePath());
-					std::string shaderPath = outputURI.getPathDir() + path;
+                    std::string shaderPath = getPathDir(outputURI) + path;
 					GLTF::GLTFUtils::writeData(shaderPath, "w", (unsigned char*)shaderString.c_str(), shaderString.size());
 					if (!CONFIG_BOOL(asset, "outputProgress") && asset->converterConfig()->boolForKeyPath("verboseLogging")) {
 						asset->log("[shader]: %s\n", shaderPath.c_str());
@@ -890,6 +873,8 @@ namespace GLTF
                         shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                         
                         shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                        if (!lights->contains(lightUID->getString()))
+                            continue;
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                         
                         if (light != nullptr) {
@@ -1071,6 +1056,8 @@ namespace GLTF
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                     
                     shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                    if (!lights->contains(lightUID->getString()))
+                        continue;
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
                     if (light == nullptr)
                         continue;
@@ -1304,17 +1291,55 @@ namespace GLTF
     }
     
     std::string getTechniqueKey(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset)  {
-        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> parameters = techniqueGenerator->getObject(kValues);
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
+        shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
+
+        //build a hash based on attributes to be integrated to the techniqueHash
+        std::string attributesHash = "";
+        vector <std::string> allAttributes = attributeSemantics->getAllKeys();
+        sort(allAttributes.begin(), allAttributes.end());
+        for (size_t i = 0 ; i < allAttributes.size() ; i++) {
+            std::string attribute = allAttributes[i];
+            shared_ptr<JSONArray> sets = attributeSemantics->getArray(attribute);
+            attributesHash += attribute;
+            unsigned int setHash = 0;
+            for (size_t k = 0 ; k < sets->getCount() ; k++) {
+                shared_ptr<JSONNumber> nb = static_pointer_cast<JSONNumber>(sets->values()[k]);
+                setHash += nb->getUnsignedInt32();
+            }
+            attributesHash += GLTFUtils::toString(setHash);
+        }
         
-        return buildTechniqueHash(values, techniqueExtras, asset);
+        std::string techniqueHash = attributesHash;
+        bool doubleSided = false;
+        unsigned int jointsCount = 0;
+        
+        techniqueHash += buildSlotHash(parameters, "diffuse", asset);
+        techniqueHash += buildSlotHash(parameters, "ambient", asset);
+        techniqueHash += buildSlotHash(parameters, "emission", asset);
+        techniqueHash += buildSlotHash(parameters, "specular", asset);
+        techniqueHash += buildSlotHash(parameters, "reflective", asset);
+        techniqueHash += buildSlotHash(parameters, "bump", asset);
+        
+        if (techniqueExtras) {
+            jointsCount = techniqueExtras->getUnsignedInt32("jointsCount");
+            doubleSided = techniqueExtras->getBool(kDoubleSided);
+        }
+        
+        techniqueHash += "double_sided:" + GLTFUtils::toString(doubleSided);
+        techniqueHash += "jointsCount:" + GLTFUtils::toString(jointsCount);
+        techniqueHash += "opaque:"+ GLTFUtils::toString(isOpaque(parameters, asset));
+        techniqueHash += "hasTransparency:"+ GLTFUtils::toString(hasTransparency(parameters, asset));
+        
+        return techniqueHash;
     }
 
     
     std::string getReferenceTechniqueID(shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset) {
         
         std::string techniqueHash = getTechniqueKey(techniqueGenerator, asset);
-        shared_ptr<JSONObject> values = techniqueGenerator->getObject("values");
+        shared_ptr<JSONObject> values = techniqueGenerator->getObject(kValues);
         shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
         std::string lightingModel = techniqueGenerator->getString("lightingModel");
         shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");

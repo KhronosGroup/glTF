@@ -20,6 +20,7 @@ namespace GLTF
 {
 
 	static const char* DOUBLE_SIDED = "double_sided";
+    static const char* HAS_ALPHA = "has_alpha";
 /*
 	static const char* MAX_EXTRA_ATTRIBUTE_CAST_SHADOWS = "cast_shadows";
 	static const char* MAX_EXTRA_ATTRIBUTE_COLOR_MAP_AMOUNT = "color_map_amount";
@@ -98,6 +99,12 @@ namespace GLTF
             mExtraTagType = EXTRA_TAG_TYPE_DOUBLE_SIDED;
             return true;
         }
+
+        if (strcmp(elementName, HAS_ALPHA) == 0) {
+            //Should be in image
+            mExtraTagType = EXTRA_TAG_TYPE_HAS_ALPHA;
+            return true;
+        }
         
         if (strcmp(elementName, "ambient_diffuse_lock") == 0) {
             mExtraTagType = EXTRA_TAG_TYPE_LOCK_AMBIENT_DIFFUSE;
@@ -171,6 +178,15 @@ namespace GLTF
             bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
             if ( !failed ) {
                 extras->setBool(kDoubleSided, val);
+            }
+        }
+
+        if (mExtraTagType == EXTRA_TAG_TYPE_HAS_ALPHA) {
+            const  COLLADASaxFWL::ParserChar* buffer = mTextBuffer.c_str();
+            shared_ptr <JSONObject> extras = getExtras(mCurrentElementUniqueId);
+            bool val = GeneratedSaxParser::Utils::toBool(&buffer, failed);
+            if (!failed) {
+                extras->setBool("has_alpha", val);
             }
         }
         

@@ -58,3 +58,55 @@ shared_ptr <GLTF::JSONArray> serializeOpenCOLLADAMatrix4(const COLLADABU::Math::
     return array;
 }
 
+std::string opaqueModeToString(COLLADAFW::EffectCommon::OpaqueMode opaqueMode) {
+
+    std::string opaqueStr;
+    
+    switch (opaqueMode) {
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
+            opaqueStr = "A_ONE";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO:
+            opaqueStr = "A_ZERO";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
+            opaqueStr = "RGB_ZERO";
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE:
+            opaqueStr = "RGB_ONE";
+            break;
+        default:
+        case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
+            opaqueStr = "UNSPECIFIED_OPAQUE";
+            break;
+    }
+    return opaqueStr;
+}
+
+//
+// The OpenCOLLADA URI class has a getPathDir but it doesn't handle
+//  absolute Windows paths correctly. It thinks the drive letter is the
+//  scheme. Even if you specify a URI with a file:// scheme the path
+//  is returned with a leading / before the drive letter, which is also
+//  incorrect.
+//
+std::string getPathDir(const COLLADABU::URI& uri)
+{
+    std::string result = uri.getPathDir();
+#ifdef _WIN32
+    if (!result.empty() && result[0] == '/')
+    {
+        if (uri.scheme().size() == 1)
+        {
+            result = uri.scheme() + ":" + result;
+        }
+        else if (GLTF::GLTFUtils::isAbsolutePath(uri.toNativePath()))
+        {
+            result = result.substr(1, result.size() - 1);
+        }
+    }
+#endif
+    return result;
+}
+
+

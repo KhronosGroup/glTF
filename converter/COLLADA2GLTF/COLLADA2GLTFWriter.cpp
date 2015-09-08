@@ -78,9 +78,22 @@ namespace GLTF
                 
         COLLADAFW::Root root(&this->_loader, this);
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
-        if (!root.loadDocument(asset->getInputFilePath())) {
-            delete _extraDataHandler;
-            return false;
+        const std::string& fileData = asset->getInputFileData();
+        if (fileData.empty())
+        {
+            // We don't have any data so read the file
+            if (!root.loadDocument(asset->getInputFilePath())) {
+                delete _extraDataHandler;
+                return false;
+            }
+        }
+        else
+        {
+            // We have the data in memory so use it
+            if (!root.loadDocument(asset->getInputFilePath(), fileData.data(), fileData.size())) {
+                delete _extraDataHandler;
+                return false;
+            }
         }
         
         asset->write();
@@ -106,11 +119,45 @@ namespace GLTF
 	void COLLADA2GLTFWriter::finish() {
 	}
     
+    
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
+    bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
         GLTFAsset* asset = this->_asset.get();
         shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded(kAsset);
         std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
+        
+        const COLLADAFW::FileInfo::ValuePairPointerArray& valuePairs = globalAsset->getValuePairArray();
+        for ( size_t i = 0, count = valuePairs.getCount(); i < count; ++i)
+        {
+            const COLLADAFW::FileInfo::ValuePair* valuePair = valuePairs[i];
+			const COLLADAFW::String& key = valuePair->first;
+			const COLLADAFW::String& value = valuePair->second;
+            const char *sketchUp = "Google SketchUp";
+            
+            if ((key == "authoring_tool") && value.length() > 0) {
+                if (value.find(sketchUp) != string::npos) {
+                    //isolate x.y (version) that is the latest token from a string that is possibily x.y.z
+                    size_t end = value.find_last_of(" ", value.length() - 1);
+                    if ( end != string::npos) {
+                        std::string version = value.substr(end);
+                        size_t major = version.find(".", 0);
+                        if (major != string::npos) {
+                            size_t minor = version.find(".", major + 1);
+                            if (minor != string::npos) {
+                                version = version.substr(0, minor);
+                                float sketchUpVersion = atof(version.c_str());
+                                if (sketchUpVersion < 7.1) {
+                                    asset->converterConfig()->config()->setBool("invertTransparency", true);
+                                    this->_asset->log("WARNING: Fixing transparency - by inverting it - as we convert an asset generated from SketchUp version:%s \n", version.c_str());
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }
         
         assetObject->setString("generator",version);
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
@@ -154,12 +201,45 @@ namespace GLTF
 	//--------------------------------------------------------------------
             
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon) {
+        static bool loggedOnce = false;
         GLTFAsset* asset = this->_asset.get();
         //super naive for now, also need to check sketchup work-around
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
         }
-        float transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+        
+        COLLADAFW::EffectCommon::OpaqueMode opaqueMode;
+        float transparency = 1.0;
+        
+        opaqueMode = effectCommon->getOpaqueMode();
+
+        switch (opaqueMode) {
+            
+            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(1.0 - transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+                if (!loggedOnce) {
+                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
+                    loggedOnce = true;
+                }
+            }
+                break;
+            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+                if (!loggedOnce) {
+                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
+                    loggedOnce = true;
+                }
+            }
+                break;
+            case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
+            default:
+                transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+                break;
+        }
         
         return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
@@ -1036,48 +1116,62 @@ namespace GLTF
         this->_asset->setValueForUniqueId(imageUID, image);
         this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
         images->setValue(openCOLLADAImage->getOriginalId(), image);
+
+        shared_ptr<JSONObject> extras = this->_extraDataHandler->getExtras(openCOLLADAImage->getUniqueId());
+        if (extras->contains("has_alpha"))
+        {
+            image->setBool("has_alpha", extras->getBool("has_alpha"));
+        }
         
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
+        if (is_dataUri(imageURI.originalStr()))
+        {
+            // We already have a data uri so just use it
+            image->setString(kURI, imageURI.originalStr());
+            return true;
+        }
+
         std::string relPathFile = imageURI.getPathFile();
-		if (imageURI.getPathDir().substr(0, 2) != "./") {
-			relPathFile = imageURI.getPathDir() + imageURI.getPathFile();
+        std::string pathDir = getPathDir(imageURI);
+        if (pathDir.substr(0, 2) != "./") {
+            relPathFile = pathDir + imageURI.getPathFile();
 		}
 		else {
-			relPathFile = imageURI.getPathDir().substr(2) + imageURI.getPathFile();
+            relPathFile = pathDir.substr(2) + imageURI.getPathFile();
 		}
         
         if (CONFIG_BOOL(_asset, "embedResources"))
-		{
-			COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
-			std::string imageFullPath = inputURI.getPathDir() + relPathFile;
+        {
+            COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
+            std::string imageFullPath = COLLADABU::URI::uriDecode(getPathDir(inputURI) + relPathFile);
 
-			std::ifstream fin(imageFullPath, ios::in | ios::binary);
-			if (fin.is_open())
-			{
-				std::ostringstream ss;
-				ss << fin.rdbuf();
-				COLLADABU::URI u(imageFullPath);
-				std::string ext = u.getPathExtension();
-				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-				std::string contentType = "application/octet-stream";
-				if (ext == "png")
-				{
-					contentType = "image/png";
-				}
-				else if (ext == "gif")
-				{
-					contentType = "image/gif";
-				}
-				else if (ext == "jpg" || ext == "jpeg")
-				{
-					contentType = "image/jpeg";
-				}
+            std::ifstream fin(imageFullPath, ios::in | ios::binary);
+            if (fin.is_open())
+            {
+                std::ostringstream ss;
+                ss << fin.rdbuf();
+                COLLADABU::URI u(imageFullPath);
+                std::string ext = u.getPathExtension();
+                std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+                std::string contentType = "application/octet-stream";
+                if (ext == "png")
+                {
+	                contentType = "image/png";
+                }
+                else if (ext == "gif")
+                {
+	                contentType = "image/gif";
+                }
+                else if (ext == "jpg" || ext == "jpeg")
+                {
+	                contentType = "image/jpeg";
+                }
 
-				image->setString(kURI, create_dataUri(ss.str(), contentType));
+                image->setString(kURI, create_dataUri(ss.str(), contentType));
 
-				return true;
-			}
-		}
+                return true;
+            }
+        }
 		
         image->setString(kURI, COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
         
@@ -1168,32 +1262,35 @@ namespace GLTF
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
         
-        for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
-            const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+        if (animatedTargets)
+        {
+            for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
+                const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
 
-            shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
+                shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
 
-            // Can be null if there are no keyframes
-            if (cvtAnimation)
-            {
-                AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
-                for (size_t j = 0; j < animatedTargets->size(); j++) {
-                    shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
-                    shared_ptr<GLTFAnimationFlattener> animationFlattener;
-                    std::string targetUID = animatedTarget->getString(kTarget);
-                    if (animationFlattenerMap->count(targetUID) == 0) {
-                        //FIXME: assuming node here is wrong
-                        COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-                        animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
-                        (*animationFlattenerMap)[targetUID] = animationFlattener;
+                // Can be null if there are no keyframes
+                if (cvtAnimation)
+                {
+                    AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
+                    for (size_t j = 0; j < animatedTargets->size(); j++) {
+                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
+                        shared_ptr<GLTFAnimationFlattener> animationFlattener;
+                        std::string targetUID = animatedTarget->getString(kTarget);
+                        if (animationFlattenerMap->count(targetUID) == 0) {
+                            //FIXME: assuming node here is wrong
+                            COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
+                            animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
+                            (*animationFlattenerMap)[targetUID] = animationFlattener;
+                        }
                     }
-                }
 
-                cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
+                    cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
 
-                if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
-                    //if an animation failed to convert, we don't want to keep track of it.
-                    animations->removeValue(animationBindings[i].animation.toAscii());
+                    if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
+                        //if an animation failed to convert, we don't want to keep track of it.
+                        animations->removeValue(animationBindings[i].animation.toAscii());
+                    }
                 }
             }
         }
