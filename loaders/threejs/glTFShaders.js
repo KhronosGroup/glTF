@@ -37,9 +37,10 @@ THREE.glTFShaders = ( function () {
 })();
 
 // Construction/initialization
-THREE.glTFShader = function(material, parameters, object, scene) {
+THREE.glTFShader = function(material, parameters, program, object, scene) {
 	this.material = material;
 	this.parameters = parameters;
+	this.program = program;
 	this.object = object;
 	this.scene = scene;
 	this.semantics = {};
@@ -55,9 +56,9 @@ THREE.glTFShader.prototype.bindParameters = function() {
 		}
 	}
 
-	for (var parameter in this.parameters) {
-
-		var param = this.parameters[parameter];
+	for (var uniform in this.program.uniforms) {
+		var pname = this.program.uniforms[uniform];
+		var param = this.parameters[pname];
 		if (param.semantic) {
 
 			if (param.source) {
@@ -67,12 +68,41 @@ THREE.glTFShader.prototype.bindParameters = function() {
 				param.sourceObject = this.object;
 			}			
 
-			console.log("parameter:", param );
+			param.uniform = this.material.uniforms[uniform];
+			this.semantics[pname] = param;
+
+			console.log("parameter:", pname, param );
 		}
 	}
+
 }
 
 // Update - update all the uniform values
 THREE.glTFShader.prototype.update = function() {
 
+	for (var sname in this.semantics) {
+		var semantic = this.semantics[sname];
+        
+        switch (semantic.semantic) {
+            case "MODELVIEW" :
+            	var m4 = semantic.uniform.value;
+            	if (semantic.sourceObject._modelViewMatrix) {
+	            	m4.copy(semantic.sourceObject._modelViewMatrix);            		
+            	}
+                break;
+
+            case "MODELVIEWINVERSETRANSPOSE" :
+            	var m4 = semantic.uniform.value;
+            	if (semantic.sourceObject._normalMatrix) {
+	            	m4.copy(semantic.sourceObject._normalMatrix);            		
+            	}
+                break;
+
+            default :
+                
+                break;
+        }
+
+
+	}
 }
