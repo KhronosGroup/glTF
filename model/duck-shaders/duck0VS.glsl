@@ -13,6 +13,6 @@ void main(void) {
 vec4 pos = modelViewMatrix * vec4(position,1.0);
 v_normal = u_normalMatrix * normal;
 v_texcoord0 = uv;
-v_light0Direction = vec3(0., 0., -1.); // mat3(u_light0Transform) * vec3(0.,0.,1.);
+v_light0Direction = mat3(u_light0Transform) * vec3(0.,0.,1.); 
 gl_Position = projectionMatrix * pos;
 }

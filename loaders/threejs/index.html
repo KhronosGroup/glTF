@@ -132,6 +132,7 @@
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
         <script src="glTFAnimation.js"></script>
+        <script src="glTFShaders.js"></script>
 
         <script>
         	var orbitControls = null;
@@ -312,6 +313,8 @@
     						animation.play();
 	    				}
     				}
+
+    				THREE.glTFShaders.bindShaderParameters();
                                        
                     scene.add( object );
                     onWindowResize();
