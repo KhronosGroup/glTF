@@ -71,7 +71,7 @@ THREE.glTFShader.prototype.bindParameters = function() {
 			param.uniform = this.material.uniforms[uniform];
 			this.semantics[pname] = param;
 
-			console.log("parameter:", pname, param );
+			//console.log("parameter:", pname, param );
 		}
 	}
 
@@ -83,7 +83,7 @@ THREE.glTFShader.prototype.update = function() {
 	for (var sname in this.semantics) {
 		var semantic = this.semantics[sname];
         
-        switch (semantic.semantic) {
+        switch (semantic.semantic && semantic.sourceObject) {
             case "MODELVIEW" :
             	var m4 = semantic.uniform.value;
             	if (semantic.sourceObject._modelViewMatrix) {

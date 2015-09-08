@@ -93,6 +93,17 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return nElements;
     }
 
+    function replaceShaderSemantics(shader, material) {
+        var s = shader;
+        s = s.replace(/a_position/g, 'position');
+        s = s.replace(/a_normal/g, 'normal');
+        s = s.replace(/a_texcoord0/g, 'uv');
+        s = s.replace(/u_normalMatrix/g, 'normalMatrix');
+        s = s.replace(/u_modelViewMatrix/g, 'modelViewMatrix');
+        s = s.replace(/u_projectionMatrix/g, 'projectionMatrix');
+        return s;
+    }
+
     function createShaderMaterial(material, geometry) {
             
         var fragmentShader = theLoader.shaders[material.params.fragmentShader];
@@ -100,12 +111,14 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             console.log("ERROR: Missing fragment shader definition:", material.params.fragmentShader);
             return new THREE.MeshPhongMaterial;
         }
+        fragmentShader = replaceShaderSemantics(fragmentShader, material);
         
         var vertexShader = theLoader.shaders[material.params.vertexShader];
         if (!vertexShader) {
             console.log("ERROR: Missing vertex shader definition:", material.params.vertexShader);
             return new THREE.MeshPhongMaterial;
         }
+        vertexShader = replaceShaderSemantics(vertexShader, material);
         
         var shaderMaterial = new THREE.RawShaderMaterial( {
 
@@ -783,7 +796,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         var uvalue;
 
                         // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
-                        console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
+                        //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
 
                         
                         switch (ptype) {
