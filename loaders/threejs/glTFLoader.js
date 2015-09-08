@@ -7,7 +7,7 @@ THREE.glTFLoader = function (showStatus) {
     this.useBufferGeometry = (THREE.glTFLoader.useBufferGeometry !== undefined ) ?
             THREE.glTFLoader.useBufferGeometry : true;
     this.useShaders = (THREE.glTFLoader.useShaders !== undefined ) ?
-            THREE.glTFLoader.useShaders : true;
+            THREE.glTFLoader.useShaders : false;
     this.meshesRequested = 0;
     this.meshesLoaded = 0;
     this.pendingMeshes = [];
@@ -150,6 +150,50 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     function LoadTexture(src) {
         if(!src) { return null; }
         return THREE.ImageUtils.loadTexture(src);
+    }
+
+    function CreateTexture(resources, resource) {
+        var texturePath = null;
+        var textureParams = null;
+
+        if (resource)
+        {
+            var texture = resource;
+            if (texture) {
+                var textureEntry = resources.getEntry(texture);
+                if (textureEntry) {
+                    {
+                        var imageEntry = resources.getEntry(textureEntry.description.source);
+                        if (imageEntry) {
+                            texturePath = imageEntry.description.uri;
+                        }
+                        
+                        var samplerEntry = resources.getEntry(textureEntry.description.sampler);
+                        if (samplerEntry) {
+                            textureParams = samplerEntry.description;
+                        }
+                    }
+                }
+            }                    
+        }
+
+        var texture = LoadTexture(texturePath);
+        if (texture && textureParams) {
+            
+            if (textureParams.wrapS == WebGLRenderingContext.REPEAT)
+                texture.wrapS = THREE.RepeatWrapping;
+
+            if (textureParams.wrapT == WebGLRenderingContext.REPEAT)
+                texture.wrapT = THREE.RepeatWrapping;
+            
+            if (textureParams.magFilter == WebGLRenderingContext.LINEAR)
+                texture.magFilter = THREE.LinearFilter;
+
+//                  if (textureParams.minFilter == "LINEAR")
+//                      texture.minFilter = THREE.LinearFilter;
+        }
+
+        return texture;
     }
 
     // Geometry processing
@@ -751,48 +795,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 break;
                             case WebGLRenderingContext.SAMPLER_2D :
                                 utype = "t";
-
-                                var texturePath = null;
-                                var textureParams = null;
-                                var resource = values[pname];
-                                if (resource)
-                                {
-                                    var texture = resource;
-                                    if (texture) {
-                                        var textureEntry = this.resources.getEntry(texture);
-                                        if (textureEntry) {
-                                            {
-                                                var imageEntry = this.resources.getEntry(textureEntry.description.source);
-                                                if (imageEntry) {
-                                                    texturePath = imageEntry.description.uri;
-                                                }
-                                                
-                                                var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
-                                                if (samplerEntry) {
-                                                    textureParams = samplerEntry.description;
-                                                }
-                                            }
-                                        }
-                                    }                    
-                                }
-
-                                var texture = LoadTexture(texturePath);
-                                if (texture && textureParams) {
-                                    
-                                    if (textureParams.wrapS == WebGLRenderingContext.REPEAT)
-                                        texture.wrapS = THREE.RepeatWrapping;
-
-                                    if (textureParams.wrapT == WebGLRenderingContext.REPEAT)
-                                        texture.wrapT = THREE.RepeatWrapping;
-                                    
-                                    if (textureParams.magFilter == WebGLRenderingContext.LINEAR)
-                                        texture.magFilter = THREE.LinearFilter;
-
-                //                  if (textureParams.minFilter == "LINEAR")
-                //                      texture.minFilter = THREE.LinearFilter;
-                                    
-                                    uvalue = texture;
-                                }
+                                uvalue = values[pname] ? CreateTexture(this.resources, values[pname]) : null;
                                 break;
                             default :
                                 console.log("Unknown shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
@@ -867,97 +870,20 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     }
                 }
                 
-                var texturePath = null;
-                var textureParams = null;
-                var diffuse = values.diffuse;
-                if (diffuse)
-                {
-                    var texture = diffuse;
-                    if (texture) {
-                        var textureEntry = this.resources.getEntry(texture);
-                        if (textureEntry) {
-                            {
-                                var imageEntry = this.resources.getEntry(textureEntry.description.source);
-                                if (imageEntry) {
-                                    texturePath = imageEntry.description.uri;
-                                }
-                                
-                                var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
-                                if (samplerEntry) {
-                                    textureParams = samplerEntry.description;
-                                }
-                            }
-                        }
-                    }                    
-                }
+                params.map = CreateTexture(this.resources, values.diffuse);
+                params.envMap = CreateTexture(this.resources, values.reflective);;
 
-                var texture = LoadTexture(texturePath);
-                if (texture && textureParams) {
-                    
-                    if (textureParams.wrapS == WebGLRenderingContext.REPEAT)
-                        texture.wrapS = THREE.RepeatWrapping;
-
-                    if (textureParams.wrapT == WebGLRenderingContext.REPEAT)
-                        texture.wrapT = THREE.RepeatWrapping;
-                    
-                    if (textureParams.magFilter == WebGLRenderingContext.LINEAR)
-                        texture.magFilter = THREE.LinearFilter;
-
-//                  if (textureParams.minFilter == "LINEAR")
-//                      texture.minFilter = THREE.LinearFilter;
-                    
-                    params.map = texture;
-                }
-
-                var envMapPath = null;
-                var envMapParams = null;
-                var reflective = values.reflective;
-                if (reflective)
-                {
-                    var texture = reflective;
-                    if (texture) {
-                        var textureEntry = this.resources.getEntry(texture);
-                        if (textureEntry) {
-                            {
-                                var imageEntry = this.resources.getEntry(textureEntry.description.source);
-                                if (imageEntry) {
-                                    envMapPath = imageEntry.description.uri;
-                                }
-                                
-                                var samplerEntry = this.resources.getEntry(textureEntry.description.sampler);
-                                if (samplerEntry) {
-                                    envMapParams = samplerEntry.description;
-                                }
-                            }
-                        }
-                    }                    
-                }
-
-                var texture = LoadTexture(envMapPath);
-                if (texture && envMapParams) {
-                    
-                    if (envMapParams.wrapS == WebGLRenderingContext.REPEAT)
-                        texture.wrapS = THREE.RepeatWrapping;
-
-                    if (envMapParams.wrapT == WebGLRenderingContext.REPEAT)
-                        texture.wrapT = THREE.RepeatWrapping;
-                    
-                    if (envMapParams.magFilter == WebGLRenderingContext.LINEAR)
-                        texture.magFilter = THREE.LinearFilter;
-
-//                  if (envMapParams.minFilter == WebGLRenderingContext.LINEAR)
-//                      texture.minFilter = THREE.LinearFilter;
-                    
-                    params.envMap = texture;
-                }
-                
+         
                 var shininess = values.shininesss || values.shininess; // N.B.: typo in converter!
                 if (shininess)
                 {
                     shininess = shininess;
                 }
                 
-                var diffuseColor = !texturePath ? diffuse : null;
+                var diffuseColor = null;
+                if (!params.map) {
+                    diffuseColor = values.diffuse;
+                }
                 var opacity = 1.0;
                 if (values.hasOwnProperty("transparency"))
                 {
@@ -971,7 +897,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 params.opacity = opacity;
                 params.transparent = opacity < 1.0;
                 // hack hack hack
-                if (texturePath && texturePath.toLowerCase().indexOf(".png") != -1)
+                if (params.map && params.map.sourceFile.toLowerCase().indexOf(".png") != -1)
                     params.transparent = true;
                 
                 if (!(shininess === undefined))
