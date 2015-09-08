@@ -7,7 +7,7 @@ THREE.glTFLoader = function (showStatus) {
     this.useBufferGeometry = (THREE.glTFLoader.useBufferGeometry !== undefined ) ?
             THREE.glTFLoader.useBufferGeometry : true;
     this.useShaders = (THREE.glTFLoader.useShaders !== undefined ) ?
-            THREE.glTFLoader.useShaders : false;
+            THREE.glTFLoader.useShaders : true;
     this.meshesRequested = 0;
     this.meshesLoaded = 0;
     this.pendingMeshes = [];
@@ -780,6 +780,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                             case WebGLRenderingContext.FLOAT_VEC3 :
                                 utype = "v3";
                                 uvalue = new THREE.Vector3;
+                                if (shaderParams[pname]) {
+                                    var v3 = shaderParams[pname].value;
+                                    uvalue.fromArray(v3);
+                                }
                                 break;
                             case WebGLRenderingContext.FLOAT_VEC4 :
                                 utype = "v4";
@@ -792,6 +796,29 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                             case WebGLRenderingContext.FLOAT_MAT4 :
                                 utype = "m4";
                                 uvalue = new THREE.Matrix4;
+                                if (shaderParams[pname]) {
+                                    var source = shaderParams[pname].source;
+/*                                    if (source == "directionalLight1") {
+                                        uvalue.set(
+                                        -0.954692,
+                                        0.218143,
+                                        -0.202428,
+                                        0,
+                                        0.0146721,
+                                        0.713885,
+                                        0.700109,
+                                        0,
+                                        0.297235,
+                                        0.665418,
+                                        -0.684741,
+                                        0,
+                                        1.48654,
+                                        1.83672,
+                                        -2.92179,
+                                        1
+                                    );
+                                    }*/
+                                }
                                 break;
                             case WebGLRenderingContext.SAMPLER_2D :
                                 utype = "t";
