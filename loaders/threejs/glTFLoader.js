@@ -476,6 +476,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 primitive.mesh = new THREE.Mesh(primitive.geometry, primitive.material);
             }*/
             var material = primitive.material;
+            var materialParams = material.params;
             if (!(material instanceof THREE.Material)) {
                 material = createShaderMaterial(material, primitive.geometry.geometry);
             }
@@ -483,6 +484,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
             threeMesh.castShadow = true;
             threeNode.add(threeMesh);
+
+            if (material instanceof THREE.ShaderMaterial) {
+                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, threeMesh,
+                    theLoader.rootObj);
+                THREE.glTFShaders.add(glTFShader);
+
+            }
         });
     };
 
@@ -761,16 +769,21 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 
                 params.uniforms = {};
                 params.attributes = {};
+                params.parameters = shaderParams;
                 if (program) {
                     params.fragmentShader = program.description.fragmentShader;
                     params.vertexShader = program.description.vertexShader;
                     for (var uniform in instanceProgram.uniforms) {
                         var pname = instanceProgram.uniforms[uniform];
-                        var ptype = shaderParams[pname].type;
+                        var shaderParam = shaderParams[pname];
+                        var ptype = shaderParam.type;
+                        var value = values[pname];
                         var utype = "";
                         var uvalue;
 
                         // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
+                        console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
+
                         
                         switch (ptype) {
                             case WebGLRenderingContext.FLOAT :
@@ -780,26 +793,50 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                             case WebGLRenderingContext.FLOAT_VEC3 :
                                 utype = "v3";
                                 uvalue = new THREE.Vector3;
-                                if (shaderParams[pname]) {
-                                    var v3 = shaderParams[pname].value;
+                                if (shaderParam && shaderParam.value) {
+                                    var v3 = shaderParam.value;
                                     uvalue.fromArray(v3);
+                                }
+                                if (value) {
+                                    uvalue.fromArray(value);
                                 }
                                 break;
                             case WebGLRenderingContext.FLOAT_VEC4 :
                                 utype = "v4";
                                 uvalue = new THREE.Vector4;
+                                if (shaderParam && shaderParam.value) {
+                                    var v4 = shaderParam.value;
+                                    uvalue.fromArray(v4);
+                                }
+                                if (value) {
+                                    uvalue.fromArray(value);
+                                }
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT3 :
                                 utype = "m3";
                                 uvalue = new THREE.Matrix3;
+                                if (shaderParam && shaderParam.value) {
+                                    var m3 = shaderParam.value;
+                                    uvalue.fromArray(m3);
+                                }
+                                if (value) {
+                                    uvalue.fromArray(value);
+                                }
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT4 :
                                 utype = "m4";
                                 uvalue = new THREE.Matrix4;
-                                if (shaderParams[pname]) {
-                                    var source = shaderParams[pname].source;
-/*                                    if (source == "directionalLight1") {
-                                        uvalue.set(
+
+                                if (shaderParam && shaderParam.value) {
+                                    var m4 = shaderParam.value;
+                                    uvalue.fromArray(m4);
+                                }
+                                if (value) {
+                                    uvalue.fromArray(value);
+
+                                }
+                                if (pname == "light0Transform") {
+                                    uvalue.set(
                                         -0.954692,
                                         0.218143,
                                         -0.202428,
@@ -815,14 +852,14 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                         1.48654,
                                         1.83672,
                                         -2.92179,
-                                        1
-                                    );
-                                    }*/
+                                        1);
                                 }
+
+
                                 break;
                             case WebGLRenderingContext.SAMPLER_2D :
                                 utype = "t";
-                                uvalue = values[pname] ? CreateTexture(this.resources, values[pname]) : null;
+                                uvalue = value ? CreateTexture(this.resources, value) : null;
                                 break;
                             default :
                                 console.log("Unknown shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
@@ -1690,6 +1727,7 @@ THREE.glTFLoader.prototype.callLoadedCallback = function() {
             scene : this.rootObj,
             cameras : this.loader.cameras,
             animations : this.loader.animations,
+            shaders : this.loader.shaders,
     };
     
     this.callback(result);
