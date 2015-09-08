@@ -486,8 +486,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             threeNode.add(threeMesh);
 
             if (material instanceof THREE.ShaderMaterial) {
-                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, threeMesh,
-                    theLoader.rootObj);
+                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
+                    materialParams.program, threeMesh, theLoader.rootObj);
                 THREE.glTFShaders.add(glTFShader);
 
             }
@@ -769,6 +769,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 
                 params.uniforms = {};
                 params.attributes = {};
+                params.program = instanceProgram;
                 params.parameters = shaderParams;
                 if (program) {
                     params.fragmentShader = program.description.fragmentShader;
@@ -835,7 +836,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     uvalue.fromArray(value);
 
                                 }
-                                if (pname == "light0Transform") {
+/*                                if (pname == "light0Transform") {
                                     uvalue.set(
                                         -0.954692,
                                         0.218143,
@@ -853,7 +854,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                         1.83672,
                                         -2.92179,
                                         1);
-                                }
+                                }*/
 
 
                                 break;
