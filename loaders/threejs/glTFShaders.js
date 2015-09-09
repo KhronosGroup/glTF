@@ -82,27 +82,33 @@ THREE.glTFShader.prototype.update = function() {
 
 	for (var sname in this.semantics) {
 		var semantic = this.semantics[sname];
-        
-        switch (semantic.semantic && semantic.sourceObject) {
-            case "MODELVIEW" :
-            	var m4 = semantic.uniform.value;
-            	if (semantic.sourceObject._modelViewMatrix) {
-	            	m4.copy(semantic.sourceObject._modelViewMatrix);            		
-            	}
-                break;
+        if (semantic && semantic.sourceObject) {
+	        switch (semantic.semantic) {
+	            case "MODELVIEW" :
+	            	var m4 = semantic.uniform.value;
+	            	if (semantic.sourceObject._modelViewMatrix) {
+		            	m4.copy(semantic.sourceObject._modelViewMatrix);            		
+	            	}
+	                break;
 
-            case "MODELVIEWINVERSETRANSPOSE" :
-            	var m4 = semantic.uniform.value;
-            	if (semantic.sourceObject._normalMatrix) {
-	            	m4.copy(semantic.sourceObject._normalMatrix);            		
-            	}
-                break;
+	            case "MODELVIEWINVERSETRANSPOSE" :
+	            	var m4 = semantic.uniform.value;
+	            	if (semantic.sourceObject._normalMatrix) {
+		            	m4.copy(semantic.sourceObject._normalMatrix);            		
+	            	}
+	                break;
 
-            default :
-                
-                break;
+	            case "PROJECTION" :
+	            	var m4 = semantic.uniform.value;
+	            	if (semantic.sourceObject._projectionMatrix) {
+		            	m4.copy(semantic.sourceObject._projectionMatrix);            		
+	            	}
+	                break;
+
+	            default :
+	                console.log("Unhandled shader semantic", semantic)
+	                break;
+	        }
         }
-
-
 	}
 }
