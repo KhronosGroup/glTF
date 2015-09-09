@@ -210,6 +210,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             fragmentShader: fragmentShader,
             vertexShader: vertexShader,
             uniforms: material.params.uniforms,
+            transparent: material.params.transparent,
 
         } );
 
@@ -887,7 +888,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         switch (ptype) {
                             case WebGLRenderingContext.FLOAT :
                                 utype = "f";
-                                uvalue = 0;
+                                uvalue = value;
+                                if (pname == "transparency") {
+                                    var USE_A_ONE = true; // for now, hack because file format isn't telling us
+                                    var opacity =  USE_A_ONE ? value : (1.0 - value);
+                                    uvalue = opacity;
+                                    params.transparent = true;                                    
+                                }
                                 break;
                             case WebGLRenderingContext.FLOAT_VEC3 :
                                 utype = "v3";
