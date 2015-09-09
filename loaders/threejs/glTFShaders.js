@@ -20,10 +20,10 @@ THREE.glTFShaders = ( function () {
 			}
 		},
 
-		bindShaderParameters: function() {
+		bindShaderParameters: function(scene) {
 			for (i = 0; i < shaders.length; i++)
 			{
-				shaders[i].bindParameters();
+				shaders[i].bindParameters(scene);
 			}
 		},
 
@@ -42,14 +42,13 @@ THREE.glTFShader = function(material, parameters, program, object, scene) {
 	this.parameters = parameters;
 	this.program = program;
 	this.object = object;
-	this.scene = scene;
 	this.semantics = {};
 	this.m4 = new THREE.Matrix4;
 }
 
 
 // bindUniforms - connect the uniform values to their source parameters
-THREE.glTFShader.prototype.bindParameters = function() {
+THREE.glTFShader.prototype.bindParameters = function(scene) {
 
 	function findObject(o, param) { 
 		if (o.glTFID == param.source) {
@@ -63,7 +62,7 @@ THREE.glTFShader.prototype.bindParameters = function() {
 		if (param.semantic) {
 
 			if (param.source) {
-				this.scene.traverse(function(o) { findObject(o, param)});
+				scene.traverse(function(o) { findObject(o, param)});
 			}
 			else {
 				param.sourceObject = this.object;
