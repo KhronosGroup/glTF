@@ -20,6 +20,12 @@ THREE.glTFShaders = ( function () {
 			}
 		},
 
+		removeAll: function(shader) {
+
+			// probably want to clean up the shaders, too, but not for now
+			shaders = [];
+		},
+
 		bindShaderParameters: function(scene) {
 			for (i = 0; i < shaders.length; i++)
 			{
