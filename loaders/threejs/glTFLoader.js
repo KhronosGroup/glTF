@@ -1306,7 +1306,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 }
                 
                 threeNode.name = description.name;
-                
+                threeNode.glTFID = entryID;
+
                 this.resources.setEntry(entryID, threeNode, description);
 
                 var m = description.matrix;

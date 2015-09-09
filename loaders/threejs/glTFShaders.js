@@ -51,7 +51,7 @@ THREE.glTFShader = function(material, parameters, program, object, scene) {
 THREE.glTFShader.prototype.bindParameters = function() {
 
 	function findObject(o, param) { 
-		if (o.name == param.source) {
+		if (o.glTFID == param.source) {
 			param.sourceObject = o;
 		}
 	}
