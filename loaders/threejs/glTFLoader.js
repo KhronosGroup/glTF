@@ -17,6 +17,7 @@ THREE.glTFLoader = function (showStatus) {
     this.shadersRequested = 0;
     this.shadersLoaded = 0;
     this.shaders = {};
+    THREE.glTFShaders.removeAll();
     THREE.Loader.call( this, showStatus );
 
     this.idx = {};
