@@ -27,10 +27,10 @@ THREE.glTFShaders = ( function () {
 			}
 		},
 
-		update : function() {
+		update : function(scene, camera) {
 			for (i = 0; i < shaders.length; i++)
 			{
-				shaders[i].update();
+				shaders[i].update(scene, camera);
 			}
 		},
 	};
@@ -44,6 +44,7 @@ THREE.glTFShader = function(material, parameters, program, object, scene) {
 	this.object = object;
 	this.scene = scene;
 	this.semantics = {};
+	this.m4 = new THREE.Matrix4;
 }
 
 
@@ -78,7 +79,7 @@ THREE.glTFShader.prototype.bindParameters = function() {
 }
 
 // Update - update all the uniform values
-THREE.glTFShader.prototype.update = function() {
+THREE.glTFShader.prototype.update = function(scene, camera) {
 
 	for (var sname in this.semantics) {
 		var semantic = this.semantics[sname];
@@ -86,23 +87,20 @@ THREE.glTFShader.prototype.update = function() {
 	        switch (semantic.semantic) {
 	            case "MODELVIEW" :
 	            	var m4 = semantic.uniform.value;
-	            	if (semantic.sourceObject._modelViewMatrix) {
-		            	m4.copy(semantic.sourceObject._modelViewMatrix);            		
-	            	}
+	            	m4.multiplyMatrices( camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld );
 	                break;
 
 	            case "MODELVIEWINVERSETRANSPOSE" :
-	            	var m4 = semantic.uniform.value;
-	            	if (semantic.sourceObject._normalMatrix) {
-		            	m4.copy(semantic.sourceObject._normalMatrix);            		
-	            	}
+	            	var m3 = semantic.uniform.value;
+	            	this.m4.multiplyMatrices( camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld );
+					m3.getNormalMatrix( this.m4 );
 	                break;
 
 	            case "PROJECTION" :
 	            	var m4 = semantic.uniform.value;
-	            	if (semantic.sourceObject._projectionMatrix) {
-		            	m4.copy(semantic.sourceObject._projectionMatrix);            		
-	            	}
+	            	m4.copy(camera.projectionMatrix);            		
 	                break;
 
 	            default :
