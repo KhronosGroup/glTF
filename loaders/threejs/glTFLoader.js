@@ -1858,7 +1858,7 @@ THREE.glTFLoader.prototype.checkComplete = function() {
 
         this.loader.createAnimations();
         this.loader.createMeshAnimations(this.rootObj);
-        THREE.glTFShaders.bindShaderParameters(scene);
+        THREE.glTFShaders.bindShaderParameters(this.rootObj);
 
         this.callLoadedCallback();
     }
