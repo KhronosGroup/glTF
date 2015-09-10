@@ -132,6 +132,7 @@
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
         <script src="glTFAnimation.js"></script>
+        <script src="glTFShaders.js"></script>
 
         <script>
         	var orbitControls = null;
@@ -215,7 +216,7 @@
 	                        ambient: 0x888888,
 	                        shading: THREE.SmoothShading,
 	                    });
-	                ground = new THREE.Mesh( new THREE.PlaneGeometry(1024, 1024), groundMaterial);
+	                ground = new THREE.Mesh( new THREE.PlaneBufferGeometry(1024, 1024), groundMaterial);
 
 	                if (sceneInfo.shadows) {
 		                ground.receiveShadow = true;
@@ -312,7 +313,7 @@
     						animation.play();
 	    				}
     				}
-                                       
+
                     scene.add( object );
                     onWindowResize();
 
@@ -340,6 +341,7 @@
             function animate() {
                 requestAnimationFrame( animate );
                 THREE.glTFAnimator.update();
+                THREE.glTFShaders.update(scene, camera);
                 if (cameraIndex == 0)
                     orbitControls.update();
                 render();
@@ -371,7 +373,7 @@
 
 			var sceneList = 
 				[
-	                 { name : "Duck", url : "../../model/duck/duck.gltf", 
+	                 { name : "Duck", url : "../../model/duck-shaders/duck.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, -5),
 		                 addLights:true,
 		                 addGround:true,
@@ -411,7 +413,9 @@
 	                 { name : "Wine Rack", url : "../../model/wine/wine.gltf",
 		             	 cameraPos: new THREE.Vector3(60, 30, 100), 
 		             	 objectPosition: new THREE.Vector3(-60, 0, -20),
-		             	 addLights:true },
+		                 objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+		             	 addLights:true,
+		             	 addGround:true},
 	                 { name : "Rambler", url : "../../model/rambler/Rambler.gltf", 
 			      		cameraPos: new THREE.Vector3(0, 10, 50), 
 			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
