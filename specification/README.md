@@ -84,11 +84,11 @@ glTF has been designed to meet the following goals:
 
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
 * *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
-* *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no behaviors-- other than rendering and animation.
+* *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to use load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, lights, cameras, animations, into their applications. glTF strives to preserve all of this information for use in the downstream application.
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of vendor-specific and experimental extensions.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no lights, cameras, animations and other features typically found in runtime systems, and much semantic information would be lost in the translation. By supporting those common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no lights, cameras, animations and other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
 glTF is **not** intended to be human-readable, though by virtue of being represented in JSON, it is developer-friendly.
 
@@ -125,10 +125,12 @@ Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It 
 
 <a name="scene-graph"></a>
 ## The Scene Graph
-### Transforms and Matrices
+
 ### Nodes and Hierarchy
 
 Mention tree vs. DAG here and discuss how we're simplifying for V1.
+
+### Transforms
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
