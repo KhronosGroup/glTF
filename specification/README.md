@@ -4,6 +4,9 @@
 
 *Draft, Version 1.0*
 
+The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+
+
 > 
 _This is a draft specification; it is incomplete and may change before ratification.  We have made it available early in the spirit of transparency to receive early community feedback.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback._
 
@@ -29,7 +32,9 @@ Contributors
   * [The glTF Ecosystem](#glTFecosystem)
 * [Concepts](#concepts)
 * [Properties Reference](#properties)
+* [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
+* [Conformance](#conformance)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
@@ -47,7 +52,7 @@ Traditional 3D modeling formats have been designed to store data for offline use
 
 Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets to a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats, and duplicated efforts in the content creation pipeline. 3D assets exported for one application can not be reused in another application without going back to the original modeling tool-specific source and performing another proprietary export step.
 
-With the advent of mobile- and web-based 3D computing, new classes of 3D applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online 3D applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users and between applications.
+With the advent of mobile- and web-based 3D computing, new classes of 3D applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online 3D applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
 glTF solves these problems by providing a compact runtime format that can be rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional processing. Using this approach, glTF is able to faithfully preserve full hierarchial scenes with nodes, meshes, cameras, lights, materials and animations, while enabling efficient delivery and fast loading.
 
@@ -77,13 +82,13 @@ Assets defined in other formats, such as images and GLSL shader source code, may
 
 glTF has been designed to meet the following goals:
 
-* *Compact file sizes.* While web applications like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data. The glTF JSON file is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than their text counterparts.
-* *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files. For example, binary data for meshes can be loaded into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
-* *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no behaviors-- other than rendering and animation-- nor does it specify user interactions.
+* *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
+* *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
+* *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no behaviors-- other than rendering and animation.
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to use load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, lights, cameras, animations, into their applications. glTF strives to preserve all of this information for use in the downstream application.
-* *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF supports a mechanism that allows the addition of vendor-specific and experimental extensions.
+* *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of vendor-specific and experimental extensions.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it stopped there, there would be no lights, cameras, animations and other features typically found in runtime systems, and much semantic information would be lost in the translation. By supporting those common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no lights, cameras, animations and other features typically found in runtime systems, and much semantic information would be lost in the translation. By supporting those common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
 glTF is **not** intended to be human-readable, though by virtue of being represented in JSON, it is developer-friendly.
 
@@ -115,12 +120,59 @@ Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It 
 <a name="concepts"></a>
 # Concepts
 
-This section will describe each of the high-level concepts here, e.g. accessors, buffers, views, semantics, yadayada
+*This section is non-normative.*
+
+
+<a name="scene-graph"></a>
+## The Scene Graph
+### Transforms and Matrices
+### Nodes and Hierarchy
+
+Mention tree vs. DAG here and discuss how we're simplifying for V1.
+
+<a name="accessing-binary-data"></a>
+## Accessing Binary Data
+### Buffers and Buffer Views
+### Accessors
+
+<a name="geometry-and-meshes"></a>
+## Geometry and Meshes
+### Primitives
+### Meshes
+### Skins
+
+<a name="materials-and-shading"></a>
+## Materials and Shading
+### Techniques
+### Passes
+### Programs
+### Shader Semantics
+### Render States
+### Common Techniques
+
+<a name="cameras"></a>
+## Cameras
+
+<a name="lights"></a>
+## Lights
+
+<a name="animations"></a>
+## Animations
+
+<a name="metadata"></a>
+## Metadata
 
 <a name="properties"></a>
 # Properties Reference
 
-This section will have a detailed reference on each property. e.g. `asset`. This is more than what is currently in the scheme. A one-line description and comment isn't enough, we need to fully specify behavior for each property.
+This section will have a detailed reference on each property. e.g. `asset`. This is more than what is currently in the schema. A one-line description and comment isn't enough, we need to fully specify behavior for each property.
+
+<a name="binarytypes"></a>
+# Binary Types Reference
+
+This section will describe the format for each of the GL types stored in the binary file. A reference to the GL spec for each type might be enough
+
+<mark>*Todo: Patrick please advise on how to tackle this*</mark>
 
 <a name="schema"></a>
 # JSON Schema
@@ -171,7 +223,10 @@ This section will have a detailed reference on each property. e.g. `asset`. This
    * <a href="techniquePassStates.schema.json">`technique/pass/states`</a>
    * <a href="texture.schema.json">`texture`</a>
 
+<a name="conformance"></a>
+# Conformance
 
+<mark>*Todo: how do we tackle this?*</mark>
 
 <a name="acknowledgements"></a>
 # Acknowledgments
