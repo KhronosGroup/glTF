@@ -135,7 +135,7 @@ The Khronos Group is maintaining [COLLADA2GLTF](https://github.com/KhronosGroup/
 
 For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/model/duck).
 
-> glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified, and other new and unique concepts not found in COLLADA.
+> glTF is not part of the COLLADA standard; it is being developed as its own independent specification. While glTF has some designs borrowed from COLLADA (in greatly simplified form), there are many other new concepts not found in COLLADA, motivated by the unique requirements for fast transmission and loading.
 
 **FBX-glTF**
 
