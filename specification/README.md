@@ -29,8 +29,17 @@ Contributors
   * [glTF Basics](#glTFbasics)
   * [Design Goals](#designgoals)
   * [File Extensions and MIME Types](#mimetypes)
-  * [The glTF Ecosystem](#glTFecosystem)
+  * [The glTF Ecosystem](#glTF-ecosystem)
 * [Concepts](#concepts)
+  * [File Structure](#file-structure)
+  * [The Scene Graph](#scene-graph)
+  * [Accessing Binary Data](#binary-data)
+  * [Geometry and Meshes](#geometry-and-meshes)
+  * [Materials and Shading](#materials-and-shading)
+  * [Cameras](#cameras)
+  * [Lights](#lights)
+  * [Animations](#animations)
+  * [Metadata](#metadata)
 * [Properties Reference](#properties)
 * [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
@@ -105,27 +114,50 @@ The following are intentionally **not** goals for the initial design of glTF:
 * `*.glsl` files use `text/plain`
 * Texture files use the official `image/*` type based on the specific image format.
 
-<a name="glTFecosystem"></a>
+
+<a name="glTF-ecosystem"></a>
 ## The glTF Ecosystem
 
-<mark>*This all needs to get updated*</mark>
+glTF can be combined with freely available open-source tools, enabling an open ecosystem for the development of content and applications.
 
-glTF can be combined with freely available open-source tools, enabling an open ecosystem that will foster the adoption adoption of glTF.  In particular, the Khronos Group is maintaining [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF), a converter from the COLLADA 3D interchange standard [ reference here ] to glTF. The COLLADA2GLTF pipeline is depicted in the figure below.
+### Loaders, Importers and Playback Engines
+
+<mark>*list here*</mark>
+
+### File Converters and Exporters
+
+**COLLADA2GLTF**
+
+The Khronos Group is maintaining [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF), a converter from the COLLADA 3D interchange standard [ reference here ] to glTF. The COLLADA2GLTF pipeline is depicted in the figure below.
 
 ![](figures/COLLADA2GLTF.png)
 
- 
-
-> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs. 
 
 For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/model/duck).
 
-Finally, glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified.
+> glTF is not part of COLLADA, that is, it is not a COLLADA profile.  It is its own specification with many designs borrowed from COLLADA and simplified, and other new and unique concepts not found in COLLADA.
+
+**FBX-glTF**
+
+Autodesk has developed an initial implementation of a [converter](https://github.com/cyrillef/FBX-glTF) from its FBX format to glTF.
+ 
+<a name="geometry-compression"></a>
+### Extensions
+
+There is already work underway to define compression extensions and/or work with outside organizations to define compression techniques suitable for use with glTF. These will be defined as glTF extensions.
+
+
+> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+
+
 
 <a name="concepts"></a>
 # Concepts
 
 *This section is non-normative.*
+
+<a name="file-structure"></a>
+## File Structure
 
 
 <a name="scene-graph"></a>
@@ -139,14 +171,55 @@ Mention tree vs. DAG here and discuss how we're simplifying for V1.
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
+
+
 ### Buffers and Buffer Views
+
+A *buffer* is data stored as binary blobs in a file. The buffer can contain a combination of geometry, animation, and skins. Buffer data is little endian.
+
+Binary blobs allow efficient creation of GL buffers andtextures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
+
+A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer, and an integer data length. The bufferView also defines a target data type (ARRAY_BUFFER,ELEMENT_BUFFER, animation/skin) so that the implementation can readily create and populate buffers in memory.
+
+buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
+
 ### Accessors
 
+All large data for meshes, skins and animations is stored in buffers and retrieved via accessors.
+
+An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. FLOAT) and a data type (e.g. VEC3), which when combined define the complete data type for each array. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+
 <a name="geometry-and-meshes"></a>
+
 ## Geometry and Meshes
-### Primitives
+
+Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skin, defined in its `instanceSkin` property.
+
 ### Meshes
+
+In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for calls to glDrawElements.
+
+The following example defines a mesh containing one triangle set primitive:
+
+    "primitives": [
+        {
+            "attributes": {
+                "NORMAL": "accessor_25",
+                "POSITION": "accessor_23",
+                "TEXCOORD_0": "accessor_27"
+            },
+            "indices": "accessor_21",
+            "material": "blinn3-fx",
+            "primitive": 4
+        }
+    ]
+
+                    
+                    
 ### Skins
+
+*TBD*
+
 
 <a name="materials-and-shading"></a>
 ## Materials and Shading
@@ -156,6 +229,7 @@ Mention tree vs. DAG here and discuss how we're simplifying for V1.
 ### Shader Semantics
 ### Render States
 ### Common Techniques
+### Textures
 
 <a name="cameras"></a>
 ## Cameras
