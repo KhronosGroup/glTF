@@ -144,15 +144,6 @@ For a simple example, see the converted [COLLADA duck model](https://github.com/
 **FBX-glTF**
 
 Autodesk has developed an initial implementation of a [converter](https://github.com/cyrillef/FBX-glTF) from its FBX format to glTF.
- 
-<a name="geometry-compression"></a>
-### Extensions
-
-There is already work underway to define compression extensions and/or work with outside organizations to define compression techniques suitable for use with glTF. These will be defined as glTF extensions.
-
-
-> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
-
 
 
 <a name="concepts"></a>
@@ -162,7 +153,7 @@ There is already work underway to define compression extensions and/or work with
 
 <a name="file-structure"></a>
 ## File Structure
-
+<mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
 <a name="scene-graph"></a>
 ## The Scene Graph
@@ -171,9 +162,11 @@ There is already work underway to define compression extensions and/or work with
 
 The glTF asset defines one or *nodes*, that is, the objects comprising the scene to render. 
 
-Each node can as its contents meshes, a skin, a camera or a light, defined in the `meshes`, `instanceSkin`, `camera` and `light` properties, respectively.
+Each node can contain one or more meshes, a skin, a camera or a light, defined in the `meshes`, `instanceSkin`, `camera` and `light` properties, respectively.
 
-Nodes also have a `name` property (optional), and transform properties as described in the next section.
+Nodes have a optional `name` property.
+
+Node also have transform properties, as described in the next section.
 
 Nodes are organized in a parent-child hierarchy known informally as the *scene graph*. 
 
@@ -197,7 +190,7 @@ The node `node-Box03` has two children, `node_199` and `node-Camera10`. Each of 
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). 
 
-In the example below, `node-Box03` is defines non-default rotation and scale.
+In the example below, `node-Box03` is defines non-default rotation and translation.
 
     "node-Box03": {
         "children": [
