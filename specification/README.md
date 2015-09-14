@@ -172,6 +172,7 @@ Nodes are organized in a parent-child hierarchy known informally as the *scene g
 
 The scene graph is defined using a node's `children` property, as in the following example:
 
+```json
     "node-Box03": {
         "children": [
             "node_199",
@@ -180,6 +181,7 @@ The scene graph is defined using a node's `children` property, as in the followi
         "name": "Box03",
         ...
     },
+```
 
 The node `node-Box03` has two children, `node_199` and `node-Camera10`. Each of those nodes could in turn have their own children, creating a hierarchy of nodes.
 
@@ -250,9 +252,11 @@ The next example defines the transformation for a camera node using the `matrix`
 
 A *buffer* is data stored as binary blobs in a file. The buffer can contain a combination of geometry, animation, and skins. Buffer data is little endian.
 
-Binary blobs allow efficient creation of GL buffers andtextures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
+Binary blobs allow efficient creation of GL buffers and
+textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer, and an integer data length. The bufferView also defines a target data type (ARRAY_BUFFER,ELEMENT_BUFFER, animation/skin) so that the implementation can readily create and populate buffers in memory.
+A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer, and an integer data length. The bufferView also defines a target data type (ARRAY_BUFFER,
+ELEMENT_BUFFER, animation/skin) so that the implementation can readily create and populate buffers in memory.
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
 
