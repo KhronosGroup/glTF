@@ -160,7 +160,7 @@ Autodesk has developed an initial implementation of a [converter](https://github
 
 ### Nodes and Hierarchy
 
-The glTF asset defines one or *nodes*, that is, the objects comprising the scene to render. 
+The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render. 
 
 Each node can contain one or more meshes, a skin, a camera or a light, defined in the `meshes`, `instanceSkin`, `camera` and `light` properties, respectively.
 
@@ -168,24 +168,23 @@ Nodes have a optional `name` property.
 
 Node also have transform properties, as described in the next section.
 
-Nodes are organized in a parent-child hierarchy known informally as the *scene graph*. 
+Nodes are organized in a parent-child hierarchy known informally as the *node hierarchy*. 
 
-The scene graph is defined using a node's `children` property, as in the following example:
+The node hierarchy is defined using a node's `children` property, as in the following example:
 
 ```json
-    "node-Box03": {
+    "node-box": {
         "children": [
-            "node_199",
-            "node-Camera10"
+            "node_1",
+            "node-camera_1"
         ],
-        "name": "Box03",
-        ...
+        "name": "Box",
     },
 ```
 
-The node `node-Box03` has two children, `node_199` and `node-Camera10`. Each of those nodes could in turn have their own children, creating a hierarchy of nodes.
+The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have their own children, creating a hierarchy of nodes.
 
->For Version 1.0 conformance, the glTF scene graph is not a directed acyclic graph (DAG) as the name would imply, but a strict tree. That is, no node may be a direct or indirect descendant of more then one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
+>For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
 
 
 ### Transforms
@@ -194,12 +193,13 @@ Any node can define a local space transformation either by supplying a `matrix` 
 
 In the example below, `node-Box03` is defines non-default rotation and translation.
 
-    "node-Box03": {
+```json
+    "node-box": {
         "children": [
-            "node_199",
-            "node-Camera10"
+            "node_1",
+            "node-camera_1"
         ],
-        "name": "Box03",
+        "name": "Box",
         "rotation": [
             0.0787344,
             -0.00904895,
@@ -217,11 +217,13 @@ In the example below, `node-Box03` is defines non-default rotation and translati
             2.0922
         ]
     },
+```
 
 The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
 
-    "node-Camera01": {
-        "camera": "camera_13",
+```json
+    "node-camera_1": {
+        "camera": "camera_1",
         "children": [],
         "matrix": [
             -0.99975,
@@ -243,6 +245,7 @@ The next example defines the transformation for a camera node using the `matrix`
         ],
         "name": "Camera01"
     },
+```
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
@@ -274,10 +277,11 @@ Any node can contain one or more meshes, defined in its `meshes` property. Any n
 
 ### Meshes
 
-In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for calls to glDrawElements. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that coresponds to the GL primitive type (e.g. triangle set).
+In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL drawElements calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that coresponds to the GL primitive type (e.g. triangle set).
 
 The following example defines a mesh containing one triangle set primitive:
 
+```json
     "primitives": [
         {
             "attributes": {
@@ -290,7 +294,7 @@ The following example defines a mesh containing one triangle set primitive:
             "primitive": 4
         }
     ]
-
+```
                     
                     
 ### Skins
@@ -309,7 +313,7 @@ A material is an instance of a technique plus values.
 
 ### Passes
 
-<mark>*Todo: I think we're only doing default passes right now right? No multi-pass yet?*</mark>
+<mark>*Todo: Patrick please write up.*</mark>
 
 ### Programs
 
