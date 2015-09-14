@@ -63,7 +63,7 @@ Applications seeking high performance rarely load modeling formats directly; ins
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
-glTF solves these problems by providing a compact runtime format that can be rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional processing. Using this approach, glTF is able to faithfully preserve full hierarchial scenes with nodes, meshes, cameras, lights, materials and animations, while enabling efficient delivery and fast loading.
+glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchial scenes with nodes, meshes, cameras, lights, materials and animations, while enabling efficient delivery and fast loading.
 
 <a name="glTFbasics"></a>
 
@@ -103,6 +103,10 @@ The following are intentionally **not** goals for the initial design of glTF:
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not a container format.* Supporting assets can be encoded within the JSON file as data URIs, allowing for the delivery of the entire asset in a single file. However there is no provision for embedding multiple independent files within the same archive/package.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
+
+Version 1.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
+
+> The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
@@ -165,9 +169,85 @@ There is already work underway to define compression extensions and/or work with
 
 ### Nodes and Hierarchy
 
-Mention tree vs. DAG here and discuss how we're simplifying for V1.
+The glTF asset defines one or *nodes*, that is, the objects comprising the scene to render. 
+
+Each node can as its contents meshes, a skin, a camera or a light, defined in the `meshes`, `instanceSkin`, `camera` and `light` properties, respectively.
+
+Nodes also have a `name` property (optional), and transform properties as described in the next section.
+
+Nodes are organized in a parent-child hierarchy known informally as the *scene graph*. 
+
+The scene graph is defined using a node's `children` property, as in the following example:
+
+    "node-Box03": {
+        "children": [
+            "node_199",
+            "node-Camera10"
+        ],
+        "name": "Box03",
+        ...
+    },
+
+The node `node-Box03` has two children, `node_199` and `node-Camera10`. Each of those nodes could in turn have their own children, creating a hierarchy of nodes.
+
+>For Version 1.0 conformance, the glTF scene graph is not a directed acyclic graph (DAG) as the name would imply, but a strict tree. That is, no node may be a direct or indirect descendant of more then one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
+
 
 ### Transforms
+
+Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). 
+
+In the example below, `node-Box03` is defines non-default rotation and scale.
+
+    "node-Box03": {
+        "children": [
+            "node_199",
+            "node-Camera10"
+        ],
+        "name": "Box03",
+        "rotation": [
+            0.0787344,
+            -0.00904895,
+            0.996855,
+            2.91345
+        ],
+        "scale": [
+            1,
+            1,
+            1
+        ],
+        "translation": [
+            -17.7082,
+            -11.4156,
+            2.0922
+        ]
+    },
+
+The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
+
+    "node-Camera01": {
+        "camera": "camera_13",
+        "children": [],
+        "matrix": [
+            -0.99975,
+            -0.00679829,
+            0.0213218,
+            0,
+            0.00167596,
+            0.927325,
+            0.374254,
+            0,
+            -0.0223165,
+            0.374196,
+            -0.927081,
+            0,
+            -0.0115543,
+            0.194711,
+            -0.478297,
+            1
+        ],
+        "name": "Camera01"
+    },
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
@@ -197,7 +277,7 @@ Any node can contain one or more meshes, defined in its `meshes` property. Any n
 
 ### Meshes
 
-In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for calls to glDrawElements.
+In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for calls to glDrawElements. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that coresponds to the GL primitive type (e.g. triangle set).
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -223,10 +303,24 @@ The following example defines a mesh containing one triangle set primitive:
 
 <a name="materials-and-shading"></a>
 ## Materials and Shading
+
+A material is an instance of a technique plus values.
+
 ### Techniques
+
+<mark>*Todo: Patrick I'll need help describing techniques and passes and how they relate to each other. Any concept document I can crib for this?*</mark>
+
 ### Passes
+
+<mark>*Todo: I think we're only doing default passes right now right? No multi-pass yet?*</mark>
+
 ### Programs
-### Shader Semantics
+
+program and instanceProgram. 
+
+### Shader Attributes, Uniforms and Semantics
+
+
 ### Render States
 ### Common Techniques
 ### Textures
