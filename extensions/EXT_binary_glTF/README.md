@@ -2,15 +2,11 @@
 
 ## Contributors
 
-* Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
-* Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
-* Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
-* Max Limper, [@mlimper_cg](https://twitter.com/mlimper_cg)
-* Maik Thöner, [@mthoener](https://twitter.com/mthoener)
-
-## Status
-
-Draft
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+* Tom Fili, Cesium, [@CesiumFili](https://twitter.com/CesiumFili)
+* Kai Ninomiya, Cesium, [@kainino0x](https://twitter.com/kainino0x)
+* Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
+* Maik Thöner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
 
 ## Dependencies
 
@@ -23,9 +19,9 @@ glTF provides two delivery options that can be also be used together:
 * glTF JSON points to external binary data (geometry, key frames, skins), images, and shaders.
 * glTF JSON embeds base64-encoded binary data, images, and shaders inline using data URIs.
 
-glTF is commonly criticized for requiring either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+For these data, glTF requires either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
-To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parses with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
+To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parsed with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
 
 ## Binary glTF Layout
 
@@ -43,47 +39,13 @@ Binary glTF is little endian.  It has a binary 20-byte preamble followed by the 
 
 `headerLength` is the length, in bytes, of the structured header.
 
-`headerFormat` specifies the format of the structured header. Currently, the only allowed value is '0', which stands for JSON.
+`headerFormat` specifies the format of the structured header. Currently, the only allowed value is `0`, which stands for JSON.
 
 The structured header holds the structured glTF description, as it would usually be provided within a .gltf file.
 By reading the header first, an implementation is able to progressively retrieve resources from the binary body.
 This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD).
 
 The start of the binary body data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
-
-Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
-
-_TODO: the code below is out-of-sync with Cesium and the Frauhofer SRC implementations_
-
-**Listing 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.11/Source/Core/getStringFromTypedArray.js).
-```javascript
-var sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
-
-var magic = getStringFromTypedArray(arrayBuffer, 0, 4);
-if (magic !== 'glTF') {
-    // Not Binary glTF
-}
-
-var view = new DataView(arrayBuffer);
-var byteOffset = sizeOfUint32;  // Skip magic number
-
-var version = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-if (version !== 1) {
-    // This only handles version 1.
-}
-
-byteOffset += sizeOfUint32;  // Skip length
-
-var jsonOffset = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-
-var jsonLength = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-
-var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
-var json = JSON.parse(jsonString)
-```
 
 Strings in the Binary glTF, i.e., JSON or shaders, are UTF-8.
 
@@ -95,10 +57,10 @@ Binary glTF also supported embedded base64-encoded resources, but it would be in
 
 This extension introduces an explicitly named `buffer` called `binary_glTF`.  This buffer is an implicit reference to the arraybuffer that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF arrayBuffer as the buffer.  `bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties that should be used insted of the `uri` property.  See Listings 2 and 3.
 
 **Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
-```json
+```javascript
 "a_shader" : {
     "extensions" : {
         "binary_glTF" : {
@@ -108,8 +70,8 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 }
 ```
 
-**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer.  See Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/loadImageFromTypedArray.js) helper function.
-```json
+**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (for example, see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
+```javascript
 "an_image" : {
     "extensions" : {
         "binary_glTF" : {
@@ -134,9 +96,30 @@ TODO
 
 Use `model/vnd.gltf.binary`.
 
-## Experimental Results
+## Known Implementations
 
-Based on extensive experimentation (below & [[1]](#BenchData)) using Cesium's glTF loader, different configurations are recommended for different scenarios.
+### Runtime
+
+* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
+
+### Tools
+
+* Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
+* colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
+* SRC writer source code ([code](http://x3dom.org/src/files/src_writer_source.zip))
+
+## Resources
+
+* Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357) and [#400](https://github.com/KhronosGroup/glTF/pull/400)
+* base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
+* [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on CESIUM_binary_glTF the Cesium blog
+* SRC project page (paper, background, basic writer) - [http://x3dom.org/src/](http://x3dom.org/src/)
+
+## Performance Results
+
+_This section is non-normative._
+
+Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF and Cesium's glTF loader (only trivial differences to EXT_binary_glTF), different configurations are recommended for different scenarios.
 
 * To minimize file size and number of files, use Binary glTF (gzipped), and external compressed image files (PNG, JPEG, etc.) to avoid significant decompression overhead.
 * If a single file is desired, use Binary glTF (gzipped) with all files embedded.
@@ -173,31 +156,5 @@ Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)),
 
 \* All files gzipped except for stand-alone images.
 
-These tests were performed with the CESIUM_binary_glTF implementation.
-With SRC [[2]](#SRCPaper), there is another, slightly different implementation of Binary glTF, but the difference of benchmark results is insignificant.
-
-
-## Known Implementations
-
-### Runtime
-
-* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
-
-### Tools
-
-* Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
-* colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
-* SRC writer source code ([code](http://x3dom.org/src/files/src_writer_source.zip))
-
-## Resources
-
-* Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
-* base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
-* [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
-* SRC project page (paper, background, basic writer) - [http://x3dom.org/src/](http://x3dom.org/src/)
-
 <a name="BenchData">
 * [1] Raw data for benchmarks using compression available in [BenchData](BenchData/README.md) supplemental.
-
-<a name="SRCPaper">
-* [2] SRC paper [http://x3dom.org/src/files/Web3d2014_SRC.pdf](http://x3dom.org/src/files/Web3d2014_SRC.pdf)
