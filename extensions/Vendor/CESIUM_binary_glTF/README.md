@@ -8,7 +8,7 @@
 
 ## Status
 
-Do not use this extension; instead, use [EXT_binary_glTF](../MultiVendor/EXT_binary_glTF).  This extension was used in Cesium 1.10 to 1.14.  The spec is for historic context.
+Do not use this extension; instead, use [EXT_binary_glTF](../../MultiVendor/EXT_binary_glTF).  This extension was used in Cesium 1.10 to 1.14.  This spec is for historic context.
 
 ## Dependencies
 
