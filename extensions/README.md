@@ -1,4 +1,4 @@
-# glTF Extensions Registry
+# glTF Extension Registry
 
 ## Multi-vendor extensions
 
@@ -43,7 +43,7 @@ This allows an engine to quickly determine if it supports the extensions needed 
 
 ## Creating Extensions
 
-To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extensions Registry (top of this file).
+To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
