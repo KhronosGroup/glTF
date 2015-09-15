@@ -8,13 +8,13 @@
 
 * [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
 
-## About glTF Extensions
+# About glTF Extensions
 
-glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data), new parameter semantics, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
+glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved ids, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
 
-### Extension Mechanics
+## Extension Mechanics
 
-All glTF object properties (see [glTFProperty.schema.json](https://github.com/KhronosGroup/glTF/blob/master/specification/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics and reserved ids.
+All glTF object properties (see [glTFProperty.schema.json](https://github.com/KhronosGroup/glTF/blob/master/specification/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved ids, and new formats containing glTF.
 
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 
@@ -31,44 +31,46 @@ Examples include:
 ```
 * **New parameter semantics**: `CESIUM_RTC` introduces the `CESIUM_RTC_MODELVIEW` semantic.
 * **Reserved ids**: `EXT_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
+* **New container formats**: `EXT_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
 
-All extensions used in a model are listed as strings in the top-level `allExtensions` array, e.g.,
+All extensions used in a model are listed as strings in the top-level `extensionsUsed` array, e.g.,
 ```javascript
-"allExtensions" : [
+"extensionsUsed" : [
    "EXT_binary_glTF"
 ]
 ```
 This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the the `extensions` property of all objects.
 
-### Creating Extensions
+## Creating Extensions
 
-**TODO: Link to a template extension**
+To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extensions Registry (top of this file).
 
-### Promoting Extensions
+Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
-#### Vendor Extensions
+## Promoting Extensions
+
+### Vendor Extensions
 
 A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/) requesting one.  Requests should include:
-* The name of the requested prefix.
+* The name of the prefix.
 * The name of the vendor using the prefix.
 * The `extension` GitHub label.
+
 Vendor extension names start with the prefix followed by an underscore, e.g., `CESIUM_`.
 
-To include a vendor extension in the glTF Extensions Registry (this file), add the extension to the top part of this file and open a pull request.
+Vendor extensions are not covered by the Khronos IP framework.
 
-Vendor extensions are not yet (or sometimes ever) ratified by Khronos and therefore are not covered by the Khronos IP framework.
+### Multi-Vendor Extensions
 
-#### Multi-Vendor Extensions
+When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `EXT_binary_glTF`.
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a request labled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name, e.g., `CESIUM_binary_glTF` became `EXT_binary_glTF` (which included changes).
+Multi-vendor extensions are not covered by the Khronos IP framework.
 
-Multi-vendor extensions are not ratified by Khronos and therefore are not covered by the Khronos IP framework.
-
-#### Khronos Extensions
+### Khronos Extensions
 
 Khronos extensions use the reserved `KHR` prefix and are ratified by Khronos and therefore are covered by the Khronos IP framework.  Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
 
-### Extensions vs. Extras
+## Extensions vs. Extras
 
 In addition to extensions, the `extras` object can also be used to extend glTF.  This is completely separate from extensions.
 
@@ -83,4 +85,4 @@ All glTF object properties allow adding new properties to an `extras` object sub
     }
 }
 ```
-This enables glTF models to contain application-specific properties without creating a full glTF extension.  This may be preferred for niche use cases.
+This enables glTF models to contain application-specific properties without creating a full glTF extension.  This may be preferred for niche use cases where an extension would not be widely adopted.
