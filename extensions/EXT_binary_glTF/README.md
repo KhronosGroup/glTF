@@ -29,7 +29,7 @@ Binary glTF is little endian.  It has a binary 20-byte preamble followed by the 
 
 **Figure 1**: Binary glTF layout.
 
-![](layout.png)
+![](figures/layout.png)
 
 `magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
