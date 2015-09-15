@@ -155,7 +155,7 @@ The file extension to be used with Binary glTF is `.glb`.
 
 ## MIME Type
 
-Use `model/vnd.gltf.binary`.
+Use `model/gltf+binary`.
 
 
 ## Known Implementations
