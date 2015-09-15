@@ -1,4 +1,4 @@
-# binary_glTF
+# EXT_binary_glTF
 
 ## Contributors
 
@@ -14,7 +14,7 @@ Draft
 
 ## Dependencies
 
-Written against the glTF 0.8 spec.
+Written against the glTF draft 1.0 spec.
 
 ## Overview
 
