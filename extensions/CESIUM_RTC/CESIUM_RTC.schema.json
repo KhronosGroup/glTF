@@ -12,7 +12,7 @@
             },
             "minItems" : 3,
             "maxItems" : 3            
-        },
+        }
     },
     "additionalProperties" : false
 }
