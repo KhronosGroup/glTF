@@ -44,6 +44,7 @@ Contributors
 * [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
 * [Conformance](#conformance)
+* [Annotated Example](#annotated-example)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
@@ -126,7 +127,23 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 <mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
 <a name="scene-graph"></a>
-## The Scene Graph
+
+## Scenes
+
+The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary property `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
+
+The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
+
+```
+"scene": "defaultScene",
+"scenes": {
+    "defaultScene": {
+        "nodes": [
+            "node_1"
+        ]
+    }
+},
+```
 
 ### Nodes and Hierarchy
 
@@ -556,6 +573,7 @@ This section will describe the format for each of the GL types stored in the bin
 
 <a name="acknowledgements"></a>
 
+<a name="annotated-example"></a>
 # Annotated Example
 
 ## The Scene
