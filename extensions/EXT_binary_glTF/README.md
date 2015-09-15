@@ -29,59 +29,58 @@ This binary blob (which can be a file, for example) is divided into three subseq
 * The structured glTF scene description, entitled the `scene`
 * The binary `body`
 
-The scene part can refer external resources as usual, and can reference resources stored within the binary body.
+The `scene` part can refer external resources as usual, and can reference resources stored within the binary `body`.
 Informally, this is like embedding the glTF JSON, images, and shaders in an .bin file.
 
 ## Binary glTF Layout
 
-Binary glTF is little endian. Figure 1 shows an overview of the three parts of a Binary glTF file.
+Binary glTF is little endian. Figure 1 shows an overview of the three parts of a Binary glTF asset.
 
 **Figure 1**: Binary glTF layout.
 
 ![](figures/layout.png)
 
-The following sections show the structure of the three different parts more in detail.
+The following sections describe the structure of the three parts more in detail.
 
 ### Header
 
-The 20-byte header always consists of the following five 4-byte entries:
+The 20-byte header consists of the following five 4-byte entries:
 
 * `magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
 * `version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension. Examples of currently available versions are shown in Table 1.
 
-* `length` is the total length of the Binary glTF, including header, scene and body, in bytes.
+* `length` is the total length of the Binary glTF, including `header`, `scene` and `body`, in bytes.
 
-* `sceneLength` is the length, in bytes, of the structured glTF `scene`.
+* `sceneLength` is the length, in bytes, of the glTF `scene`.
 
-* `sceneFormat` specifies the format of the structured glTF `scene`. A list of all valid  values currently available is provided within Table 2.
+* `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is provided within Table 2.
 
 _TODO: should there be a more sophisticated way of specifying the version, such as major-minor-maintenance, or major-minor? Maybe major-minor as two 16 bit values?
 
-**Table 1**: Example values for 'version'
+**Table 1**: Example values for `version`
 
-| Decimal | Hex        | Short Description | Comment                    |
-|--------:|-----------:|------------------:|---------------------------:|
-| 1       | 0x00000001 | Version 1         |                            |
+| Decimal | Hex        | Description |
+|--------:|-----------:|------------:|
+| 1       | 0x00000001 | Version 1   |
 
 
-**Table 2**: Valid values for 'sceneFormat'
+**Table 2**: Valid values for `sceneFormat`
 
-| Decimal | Hex        | Short Description | Comment                    |
-|--------:|-----------:|------------------:|---------------------------:|
-| 0       | 0x00000000 | JSON              | JavaScript Object Notation |
+| Decimal | Hex        | Description |
+|--------:|-----------:|------------:|
+| 0       | 0x00000000 | JSON        |
 
 
 ### Scene
 
 The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in a non-binary version of glTF.
-In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF scene from the arraybuffer. 
-A scene encoded as JSON can be parsed with `JSON.parse` as usual.
+In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF scene from the arraybuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 
 By reading the `scene` first, an implementation is able to progressively retrieve resources from the binary body.
-This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD of a mesh).
+This way, it is also possible to read only a selected subset of resources from a binary glTF asset (for instance, the coarsest LOD of a mesh).
 
-Elements of the scene can refer to binary data within the body, using a special buffer entitled `binary_glTF`.
+Elements of the `scene` can refer to binary data within the `body`, using a special buffer with id `"binary_glTF"`.
 For more details, see section [glTF Schema Updates](#gltf-schema-updates).
 
 Binary glTF still supports external resources.
@@ -91,8 +90,9 @@ An advantage of Binary glTF over glTF is that resources can be embedded without 
 
 ### Body
 
-The binary body carries the actual payload of the Binary glTF file.
-Strings inside this binary body, i.e., JSON or shaders, are encoded using UTF-8.
+The binary body is the binary payload for geometry, animation key frames, skins, images, and shaders.
+Strings inside this binary body, i.e., GLSL source code, are encoded using UTF-8.
+
 The special buffer entitled `binary_glTF` can be used to address the content of the binary body.
 An offset of zero, for example, means that the start of the binary body is addressed.
 
@@ -100,12 +100,12 @@ An offset of zero, for example, means that the start of the binary body is addre
 ## glTF Schema Updates
 
 This extension introduces an explicitly named `buffer` called `binary_glTF`.
-This buffer is an implicit reference to the binary body of the Binary glTF file.
-It only has one property, `"type": "arraybuffer"`. 
-When a runtime encounters this, it should use the Binary glTF body as the buffer.
+This buffer is an implicit reference to the binary body of the Binary glTF asset. 
+It's `type` will be `"arraybuffer"`, and a runtime can ignore the `uri` property since the buffer refers to the Binary glTF `body` section, not an external resource.
+When a runtime encounters this buffer, it should use the Binary glTF body as the buffer.
 `bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties that should be used insted of the `uri` property.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `EXT_binary_glTF` extension properties that should be used insted of the `uri` property.
 See Listings 2 and 3.
 
 **Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
@@ -113,26 +113,26 @@ See Listings 2 and 3.
 "extensionsUsed" : [
     "EXT_binary_glTF"
 ]
-...
+// ...
 "a_shader" : {
     "extensions" : {
         "EXT_binary_glTF" : {
-            "bufferview" : ...
+            "bufferview" : // ...
         }
     }
 }
 ```
 
-**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (for example, see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
+**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arraybuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (for example, see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
 ```javascript
 "extensionsUsed" : [
     "EXT_binary_glTF"
 ]
-...
+// ...
 "an_image" : {
     "extensions" : {
         "EXT_binary_glTF" : {
-            "bufferview" : ...,
+            "bufferview" : // ...,
             "mimeType" : "image/png",
             "height" : 256,
             "width" : 512
@@ -141,11 +141,10 @@ See Listings 2 and 3.
 }
 ```
 
-## Schema
+## JSON Schema
 
-* [image](schema/EXT_binary_glTF.image.schema.json)
-* [shader](schema/EXT_binary_glTF.shader.schema.json)
-
+* [image](schema/EXT_binary_glTF.image.schema.json) `EXT_binary_glTF` extensions object
+* [shader](schema/EXT_binary_glTF.shader.schema.json) `EXT_binary_glTF` extensions object
 
 ## File Extension
 
