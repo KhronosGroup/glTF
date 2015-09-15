@@ -283,7 +283,8 @@ The vertex shader computes the screen space position of each vertex, using the w
 
 In addition, the shader computes the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` that will be used in the fragment shader. The normal vector and light direction are computed using matrices that are based on the state of the current camera and lights. The runtime determines how to pass these values based on *semantics*, described in the next section.
 
-```precision highp float;
+```
+precision highp float;
 attribute vec3 a_position;
 attribute vec3 a_normal;
 varying vec3 v_normal;
