@@ -29,7 +29,6 @@ Contributors
   * [glTF Basics](#glTFbasics)
   * [Design Goals](#designgoals)
   * [File Extensions and MIME Types](#mimetypes)
-  * [The glTF Ecosystem](#glTF-ecosystem)
 * [Concepts](#concepts)
   * [File Structure](#file-structure)
   * [The Scene Graph](#scene-graph)
@@ -40,6 +39,7 @@ Contributors
   * [Lights](#lights)
   * [Animations](#animations)
   * [Metadata](#metadata)
+  * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
 * [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
@@ -78,8 +78,6 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
 
-<mark>*Todo: Patrick where did we land on allow binary data to be encoded as data URIs?*</mark>
-
 <mark>*Todo: diagram here*</mark>
 
 <mark>*Todo: sample fragment here*</mark>
@@ -101,7 +99,6 @@ The design of glTF takes a pragmatic approach. The format is meant to mirror the
 The following are intentionally **not** goals for the initial design of glTF:
 
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
-* *glTF is not a container format.* Supporting assets can be encoded within the JSON file as data URIs, allowing for the delivery of the entire asset in a single file. However there is no provision for embedding multiple independent files within the same archive/package.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
 Version 1.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
@@ -111,39 +108,12 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
 
-<mark>*why vnd.gltf? gltf is not vendor-specific*</mark>
+<mark>*Todo: someone needs to get a MIME type recommendation going with IETF...*</mark>
 
-* `*.gltf` files use `model/vnd.gltf+json`
+* `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
 * `*.glsl` files use `text/plain`
 * Texture files use the official `image/*` type based on the specific image format.
-
-
-<a name="glTF-ecosystem"></a>
-## The glTF Ecosystem
-
-glTF can be combined with freely available open-source tools, enabling an open ecosystem for the development of content and applications.
-
-### Loaders, Importers and Playback Engines
-
-<mark>*list here*</mark>
-
-### File Converters and Exporters
-
-**COLLADA2GLTF**
-
-The Khronos Group is maintaining [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/tree/master/converter/COLLADA2GLTF), a converter from the COLLADA 3D interchange standard [ reference here ] to glTF. The COLLADA2GLTF pipeline is depicted in the figure below.
-
-![](figures/COLLADA2GLTF.png)
-
-
-For a simple example, see the converted [COLLADA duck model](https://github.com/KhronosGroup/glTF/tree/master/model/duck).
-
-> glTF is not part of the COLLADA standard; it is being developed as its own independent specification. While glTF has some designs borrowed from COLLADA (in greatly simplified form), there are many other new concepts not found in COLLADA, motivated by the unique requirements for fast transmission and loading.
-
-**FBX-glTF**
-
-Autodesk has developed an initial implementation of a [converter](https://github.com/cyrillef/FBX-glTF) from its FBX format to glTF.
 
 
 <a name="concepts"></a>
@@ -305,7 +275,8 @@ The following example defines a mesh containing one triangle set primitive:
 <a name="materials-and-shading"></a>
 ## Materials and Shading
 
-A material is an instance of a technique plus values.
+A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs. 
+
 
 ### Techniques
 
@@ -317,13 +288,104 @@ A material is an instance of a technique plus values.
 
 ### Programs
 
-program and instanceProgram. 
+GLSL shader programs are stored in the asset's `programs` property. This property is a dictionary containing one or more named objects, one for each program.
+
+Each program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively. 
+
+```json
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_normal",
+                "a_position",
+                "a_texcoord0"
+            ],
+            "fragmentShader": "duck0FS",
+            "vertexShader": "duck0VS"
+        }
+    },
+```
+
+Shaders are stored in the asset's `shaders` property, a dictionary containing one or more named shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+
+```json
+    "shaders": {
+        "duck0FS": {
+            "type": 35632,
+            "uri": "duck0FS.glsl"
+        },
+        "duck0VS": {
+            "type": 35633,
+            "uri": "duck0VS.glsl"
+        }
+    },
+```    
+
+A program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the attributes, program identifier, and a `uniforms` attribute. The `uniforms` attribute is described in the next section.
+
+```json
+    "instanceProgram": {
+        "attributes": {
+            "a_normal": "normal",
+            "a_position": "position",
+            "a_texcoord0": "texcoord0"
+        },
+        "program": "program_0",
+        "uniforms": {
+            "u_ambient": "ambient",
+            "u_diffuse": "diffuse",
+            "u_emission": "emission",
+            "u_light0Color": "light0Color",
+            "u_light0Transform": "light0Transform",
+            "u_modelViewMatrix": "modelViewMatrix",
+            "u_normalMatrix": "normalMatrix",
+            "u_projectionMatrix": "projectionMatrix",
+            "u_shininess": "shininess",
+            "u_specular": "specular"
+        }
+    },
+```
+
+
+<mark>*Todo:Patrick why did we decide to duplicate the attributes in the instanceProgram?*</mark>
+
 
 ### Shader Attributes, Uniforms and Semantics
 
 
 ### Render States
 ### Common Techniques
+
+In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a convenience for both exporters and runtimes
+
+<mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the later, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
+
+```json
+    "details": {
+        "commonProfile": {
+            "extras": {
+                "doubleSided": false
+            },
+            "lightingModel": "Blinn",
+            "parameters": [
+                "ambient",
+                "diffuse",
+                "emission",
+                "light0Color",
+                "light0Transform",
+                "modelViewMatrix",
+                "normalMatrix",
+                "projectionMatrix",
+                "shininess",
+                "specular"
+            ],
+            "texcoordBindings": {
+                "diffuse": "TEXCOORD_0"
+            }
+        },
+        "type": "COLLADA-1.4.1/commonProfile"
+```
+
 ### Textures
 
 <a name="cameras"></a>
@@ -337,6 +399,9 @@ program and instanceProgram.
 
 <a name="metadata"></a>
 ## Metadata
+
+<a name="specifying-extensions"></a>
+## Specifying Extensions
 
 <a name="properties"></a>
 # Properties Reference
