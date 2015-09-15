@@ -1,3 +1,5 @@
+# glTF Extension Reserved Prefixes
+
 The following extension prefixes are reserved:
 
 * `CESIUM` - Cesium extensions
