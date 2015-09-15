@@ -62,13 +62,14 @@ _TODO: should there be a more sophisticated way of specifying the version, such 
 * `sceneFormat` specifies the format of the structured glTF `scene`. A list of all valid  values currently available is provided within Table 2.
 
 **Table 1**: Example values for 'version'
+
 | Decimal | Hex        | Short Description | Comment                    |
 |--------:|-----------:|------------------:|---------------------------:|
 | 1       | 0x00000001 | Version 1         |                            |
 
 
-<<<<<<< HEAD:extensions/binary_glTF/README.md
 **Table 2**: Valid values for 'sceneFormat'
+
 | Decimal | Hex        | Short Description | Comment                    |
 |--------:|-----------:|------------------:|---------------------------:|
 | 0       | 0x00000000 | JSON              | JavaScript Object Notation |
