@@ -89,6 +89,8 @@ An advantage of Binary glTF over glTF is that resources can be embedded without 
 
 The binary `body` is the binary payload for geometry, animation key frames, skins, images, and shaders.
 
+The start of `body` is 4-byte aligned to ease its use with JavaScript Typed Arrays.
+
 The buffer with id equal to `"binary_glTF"` is used to address the content of the binary `body`.
 An offset of zero addresses the first byte of the binary `body`.
 
