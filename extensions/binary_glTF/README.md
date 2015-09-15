@@ -25,25 +25,58 @@ glTF provides two delivery options that can be also be used together:
 
 glTF is commonly criticized for requiring either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
-To solve this, this extension introduces a container format, _Binary glTF_.  In Binary glTF, glTF resources (JSON, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`.  The `TextDecoder` JavaScript API can be used to extract the glTF JSON from the arraybuffer.  The JSON can be parses with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`. Informally, this is like embedding the JSON, images, and shaders in the .bin file.
+To solve this, this extension introduces a container format, _Binary glTF_.
+In Binary glTF, glTF resources (JSON data, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`. 
+This binary blob (which can be a file, for example) is always divided into three different, subsequent parts:
+
+* A 20-byte preamble, entitled the `header`
+* The structured glTF scene description (also denoted as `scene`)
+* The binary `body`
+
+The scene part can then refer to external resources (as usual), but also to resources stored within the binary file body.
+Informally, this is like embedding the JSON, images, and shaders in an .bin file.
+
+
+_TODO: this is browser implementation stuff
+In a browser, the `TextDecoder` JavaScript API can be used to extract the glTF scene from the arraybuffer. 
+A scene encoded as JSON can be parsed with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`.
+
 
 ## Binary glTF Layout
 
-Binary glTF is little endian.  It has a binary 20-byte preamble followed by the structured header and the binary body, containing the glTF resources:
+Binary glTF is little endian. Figure 1 shows an overview of the three parts of a Binary glTF file.
 
 **Figure 1**: Binary glTF layout.
 
 ![](layout.png)
 
-`magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
+The following sections show the structure of the three different parts more in detail.
 
-`version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension.
+### Header
 
-`length` is the total length of the Binary glTF, including the header, in bytes.
+The 20-byte header always consists of the following five 4-byte entries:
 
-`headerLength` is the length, in bytes, of the structured header.
+* `magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
-`headerFormat` specifies the format of the structured header. Currently, the only allowed value is '0', which stands for JSON.
+* `version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension. Examples of currently available versions are shown in Table 1.
+_TODO: should there be a more sophisticated way of specifying the version, such as major-minor-maintenance, or major-minor? Maybe major-minor as two 16 bit values?
+
+* `length` is the total length of the Binary glTF, including header, scene and body, in bytes.
+
+* `sceneLength` is the length, in bytes, of the structured glTF `scene`.
+
+* `sceneFormat` specifies the format of the structured glTF `scene`. A list of all valid  values currently available is provided within Table 2.
+
+**Table 1**: Example values for 'version'
+| Decimal | Hex        | Short Description | Comment                    |
+|--------:|-----------:|------------------:|---------------------------:|
+| 1       | 0x00000001 | Version 1         |                            |
+
+
+**Table 2**: Valid values for 'sceneFormat'
+| Decimal | Hex        | Short Description | Comment                    |
+|--------:|-----------:|------------------:|---------------------------:|
+| 0       | 0x00000000 | JSON              | JavaScript Object Notation |
 
 The structured header holds the structured glTF description, as it would usually be provided within a .gltf file.
 By reading the header first, an implementation is able to progressively retrieve resources from the binary body.
