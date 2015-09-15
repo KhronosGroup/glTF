@@ -32,9 +32,6 @@ This binary blob (which can be a file, for example) is always divided into three
 The scene part can then refer to external resources (as usual), but also to resources stored within the binary file body.
 Informally, this is like embedding the JSON, images, and shaders in an .bin file.
 
-_TODO: this is browser implementation stuff
-In a browser, the `TextDecoder` JavaScript API can be used to extract the glTF scene from the arraybuffer. 
-A scene encoded as JSON can be parsed with `JSON.parse` as usual, and then the arraybuffer is treated as a glTF `buffer`.
 
 ## Binary glTF Layout
 
@@ -53,13 +50,14 @@ The 20-byte header always consists of the following five 4-byte entries:
 * `magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
 * `version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension. Examples of currently available versions are shown in Table 1.
-_TODO: should there be a more sophisticated way of specifying the version, such as major-minor-maintenance, or major-minor? Maybe major-minor as two 16 bit values?
 
 * `length` is the total length of the Binary glTF, including header, scene and body, in bytes.
 
 * `sceneLength` is the length, in bytes, of the structured glTF `scene`.
 
 * `sceneFormat` specifies the format of the structured glTF `scene`. A list of all valid  values currently available is provided within Table 2.
+
+_TODO: should there be a more sophisticated way of specifying the version, such as major-minor-maintenance, or major-minor? Maybe major-minor as two 16 bit values?
 
 **Table 1**: Example values for 'version'
 
@@ -78,10 +76,13 @@ _TODO: should there be a more sophisticated way of specifying the version, such 
 ### Scene
 
 The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in a non-binary version of glTF.
+In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF scene from the arraybuffer. 
+A scene encoded as JSON can be parsed with `JSON.parse` as usual.
+
 By reading the `scene` first, an implementation is able to progressively retrieve resources from the binary body.
 This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD of a mesh).
 
-By referring to a special buffer entitled `binary_glTF`, elements of the scene can refer to binary data within the body.
+Elements of the scene can refer to binary data within the body, using a special buffer entitled `binary_glTF`.
 For more details, see section [glTF Schema Updates](#gltf-schema-updates).
 
 Binary glTF still supports external resources.
@@ -95,7 +96,6 @@ The binary body carries the actual payload of the Binary glTF file.
 Strings inside this binary body, i.e., JSON or shaders, are encoded using UTF-8.
 The special buffer entitled `binary_glTF` can be used to address the content of the binary body.
 An offset of zero, for example, means that the start of the binary body is addressed.
-
 
 
 ## glTF Schema Updates
@@ -150,11 +150,13 @@ See Listings 2 and 3.
 
 ## File Extension
 
-`.bgltf` or `.bgl`or `.bgt`
+The file extension to be used with Binary glTF is `.glb`.
+
 
 ## MIME Type
 
 Use `model/vnd.gltf.binary`.
+
 
 ## Known Implementations
 
@@ -188,7 +190,7 @@ Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF an
 The following observations are made from file size and benchmark data:
 
 * JSON, mesh data, and animation data are highly compressible.
-* Already-compressed textures (PNG, JPEG) are not very compressible.  Adding compression (e.g. by embedding them into a Binary glTF file which will be gzipped) adds significant CPU overhead with little size benefit.
+* Already-compressed textures (PNG, JPEG) are not very compressible. Adding compression (e.g. by embedding them into a Binary glTF file which will be gzipped) adds significant CPU overhead with little size benefit.
 
 Using the Cesium [aircraft model](https://github.com/AnalyticalGraphicsInc/cesium/tree/master/Apps/SampleData/models/CesiumAir), which contains 5,984 triangles with two texture atlases and a simple animation without skinning, statistics and results for the common glTF setups are:
 
