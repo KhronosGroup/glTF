@@ -14,27 +14,26 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-glTF provides two delivery options that can be also be used together:
+glTF provides two delivery options that can also be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), images, and shaders.
 * glTF JSON embeds base64-encoded binary data, images, and shaders inline using data URIs.
 
-For these data, glTF requires either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
+For these resources, glTF requires either separate requests or extra space due to base64-encoding.  Base64-encoding requires extra processing to decode and increases the file size (by ~33% for encoded resources).  While gzip mitigates the file size increase, decompression and decoding still add significant loading time.
 
 To solve this, this extension introduces a container format, _Binary glTF_.
-In Binary glTF, glTF resources (JSON data, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`. 
+In Binary glTF, a glTF asset (JSON, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`. 
 This binary blob (which can be a file, for example) is divided into three subsequent parts:
 
 * A 20-byte preamble, entitled the `header`
 * The structured glTF scene description, entitled the `scene`
 * The binary `body`
 
-The `scene` part can refer external resources as usual, and can reference resources stored within the binary `body`.
-Informally, this is like embedding the glTF JSON, images, and shaders in an .bin file.
+The `scene` part can refer to external resources as usual, and can also reference resources stored within the binary `body`.
 
 ## Binary glTF Layout
 
-Binary glTF is little endian. Figure 1 shows an overview of the three parts of a Binary glTF asset.
+Binary glTF is little endian and strings are encoded using UTF-8.  Figure 1 shows an overview of the three parts of a Binary glTF asset.
 
 **Figure 1**: Binary glTF layout.
 
@@ -48,17 +47,15 @@ The 20-byte header consists of the following five 4-byte entries:
 
 * `magic` is the ASCII string `'glTF'`, and can be used to identify the arraybuffer as Binary glTF.
 
-* `version` is an `uint32` that indicates the version of the Binary glTF container format, which is `1` for this version of the extension. Examples of currently available versions are shown in Table 1.
+* `version` is an `uint32` that indicates the version of the Binary glTF container format. Currently available versions are shown in Table 1.
 
-* `length` is the total length of the Binary glTF, including `header`, `scene` and `body`, in bytes.
+* `length` is the total length of the Binary glTF, including `header`, `scene`, and `body`, in bytes.
 
 * `sceneLength` is the length, in bytes, of the glTF `scene`.
 
-* `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is provided within Table 2.
+* `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is in Table 2.
 
-_TODO: should there be a more sophisticated way of specifying the version, such as major-minor-maintenance, or major-minor? Maybe major-minor as two 16 bit values?
-
-**Table 1**: Example values for `version`
+**Table 1**: Valid values for `version`
 
 | Decimal | Hex        | Description |
 |--------:|-----------:|------------:|
@@ -74,14 +71,14 @@ _TODO: should there be a more sophisticated way of specifying the version, such 
 
 ### Scene
 
-The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in a non-binary version of glTF.
+The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in glTF without this extension.
 In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF scene from the arraybuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 
 By reading the `scene` first, an implementation is able to progressively retrieve resources from the binary body.
-This way, it is also possible to read only a selected subset of resources from a binary glTF asset (for instance, the coarsest LOD of a mesh).
+This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
 
-Elements of the `scene` can refer to binary data within the `body`, using a special buffer with id `"binary_glTF"`.
-For more details, see section [glTF Schema Updates](#gltf-schema-updates).
+Elements of the `scene` can refer to binary data within the `body`, using a special buffer with an id equal to `"binary_glTF"`.
+For more details, see [glTF Schema Updates](#gltf-schema-updates) below.
 
 Binary glTF still supports external resources.
 For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF.
@@ -90,25 +87,23 @@ An advantage of Binary glTF over glTF is that resources can be embedded without 
 
 ### Body
 
-The binary body is the binary payload for geometry, animation key frames, skins, images, and shaders.
-Strings inside this binary body, i.e., GLSL source code, are encoded using UTF-8.
+The binary `body` is the binary payload for geometry, animation key frames, skins, images, and shaders.
 
-The special buffer entitled `binary_glTF` can be used to address the content of the binary body.
-An offset of zero, for example, means that the start of the binary body is addressed.
-
+The buffer with id equal to `"binary_glTF"` is used to address the content of the binary `body`.
+An offset of zero addresses the first byte of the binary `body`.
 
 ## glTF Schema Updates
 
-This extension introduces an explicitly named `buffer` called `binary_glTF`.
-This buffer is an implicit reference to the binary body of the Binary glTF asset. 
-It's `type` will be `"arraybuffer"`, and a runtime can ignore the `uri` property since the buffer refers to the Binary glTF `body` section, not an external resource.
-When a runtime encounters this buffer, it should use the Binary glTF body as the buffer.
+As mentioned above, Binary glTF introduces a `buffer` with id equal to `"binary_glTF"`.
+This buffer is an implicit reference to the binary `body` of the Binary glTF asset. 
+Its `type` property is `"arraybuffer"`, and a runtime can ignore the `uri` property since the buffer refers to the Binary glTF `body` section, not an external resource.
+When a runtime encounters this buffer, it should use the Binary glTF `body` as the buffer.
 `bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `EXT_binary_glTF` extension properties that should be used insted of the `uri` property.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `EXT_binary_glTF` extension properties that should be used instead of the `uri` property.
 See Listings 2 and 3.
 
-**Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
+**Listing 2**: A `shader` referencing a `bufferView` to access an embedded shader source.
 ```javascript
 "extensionsUsed" : [
     "EXT_binary_glTF"
@@ -117,13 +112,13 @@ See Listings 2 and 3.
 "a_shader" : {
     "extensions" : {
         "EXT_binary_glTF" : {
-            "bufferview" : // ...
+            "bufferView" : // ...
         }
     }
 }
 ```
 
-**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arraybuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (for example, see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
+**Listing 3**: An `image` referencing a `bufferView` and with metadata useful for loading the image from the arraybuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
 ```javascript
 "extensionsUsed" : [
     "EXT_binary_glTF"
@@ -132,7 +127,7 @@ See Listings 2 and 3.
 "an_image" : {
     "extensions" : {
         "EXT_binary_glTF" : {
-            "bufferview" : // ...,
+            "bufferView" : // ...,
             "mimeType" : "image/png",
             "height" : 256,
             "width" : 512
@@ -141,7 +136,9 @@ See Listings 2 and 3.
 }
 ```
 
-## JSON Schema
+### JSON Schema
+
+For full details on the `EXT_binary_glTF` extension properties, see the schema:
 
 * [image](schema/EXT_binary_glTF.image.schema.json) `EXT_binary_glTF` extensions object
 * [shader](schema/EXT_binary_glTF.shader.schema.json) `EXT_binary_glTF` extensions object
@@ -166,20 +163,20 @@ Use `model/gltf+binary`.
 
 * Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
 * colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
-* SRC writer source code ([code](http://x3dom.org/src/files/src_writer_source.zip))
+* SRC writer ([code](http://x3dom.org/src/files/src_writer_source.zip))
 
 ## Resources
 
 * Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357) and [#400](https://github.com/KhronosGroup/glTF/pull/400)
 * base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
 * [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on CESIUM_binary_glTF the Cesium blog
-* SRC project page (paper, background, basic writer) - [http://x3dom.org/src/](http://x3dom.org/src/)
+* [SRC project](http://x3dom.org/src/) (paper, background, basic writer)
 
 ## Performance Results
 
 _This section is non-normative._
 
-Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF and Cesium's glTF loader (only trivial differences to EXT_binary_glTF), different configurations are recommended for different scenarios.
+Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF (only trivial differences to EXT_binary_glTF) and the glTF loader in Cesium 1.10, different configurations are recommended for different scenarios.
 
 * To minimize file size and number of files, use Binary glTF (gzipped), and external compressed image files (PNG, JPEG, etc.) to avoid significant decompression overhead.
 * If a single file is desired, use Binary glTF (gzipped) with all files embedded.
