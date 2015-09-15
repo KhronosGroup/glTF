@@ -5,7 +5,7 @@
     "description" : "Root glTF property.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
-        "allExtensions" : {
+        "extensionsUsed" : {
             "type" : "array",
             "description" : "Names of extensions used throughout model.  WebGL: see getSupportedExtensions() and getExtension().",
             "items" : {
