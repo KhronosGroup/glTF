@@ -478,6 +478,8 @@ In addition to supporting arbitrary GLSL shader programs, glTF allows the abilit
 <a name="specifying-extensions"></a>
 ## Specifying Extensions
 
+<mark>*Todo: Patrick please do preliminary writeup.*</mark>
+
 <a name="properties"></a>
 # Properties Reference
 
