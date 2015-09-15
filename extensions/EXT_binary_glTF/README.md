@@ -74,29 +74,50 @@ _TODO: should there be a more sophisticated way of specifying the version, such 
 |--------:|-----------:|------------------:|---------------------------:|
 | 0       | 0x00000000 | JSON              | JavaScript Object Notation |
 
-The structured header holds the structured glTF description, as it would usually be provided within a .gltf file.
-By reading the header first, an implementation is able to progressively retrieve resources from the binary body.
-This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD).
 
-The start of the binary body data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
+### Scene
 
-Strings in the Binary glTF, i.e., JSON or shaders, are UTF-8.
+The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in a non-binary version of glTF.
+By reading the `scene` first, an implementation is able to progressively retrieve resources from the binary body.
+This way, it is also possible to read only a selected subset of resources from a binary glTF file (for instance, the coarsest LOD of a mesh).
 
-Binary glTF still supports external resources.  For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF.
+By referring to a special buffer entitled `binary_glTF`, elements of the scene can refer to binary data within the body.
+For more details, see section [glTF Schema Updates](#gltf-schema-updates).
 
-Binary glTF also supported embedded base64-encoded resources, but it would be inefficient to use them.  An advantage of Binary glTF over glTF is that resources can be embedded without paying the size and client-side decoding costs of base64-encoding.
+Binary glTF still supports external resources.
+For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF.
+Embedded base64-encoded resources are also still supported, but it would be inefficient to use them.
+An advantage of Binary glTF over glTF is that resources can be embedded without paying the size and client-side decoding costs of base64-encoding.
+
+### Body
+
+The binary body carries the actual payload of the Binary glTF file.
+Strings inside this binary body, i.e., JSON or shaders, are encoded using UTF-8.
+The special buffer entitled `binary_glTF` can be used to address the content of the binary body.
+An offset of zero, for example, means that the start of the binary body is addressed.
+
+
 
 ## glTF Schema Updates
 
-This extension introduces an explicitly named `buffer` called `binary_glTF`.  This buffer is an implicit reference to the arraybuffer that is the Binary glTF.  It only has one property, `"type": "arraybuffer"`.  When a runtime encounters this, it should use the already loaded Binary glTF arrayBuffer as the buffer.  `bufferViews` that reference this `buffer` work as usual.
+This extension introduces an explicitly named `buffer` called `binary_glTF`.
+This buffer is an implicit reference to the binary body of the Binary glTF file.
+It only has one property, `"type": "arraybuffer"`. 
+When a runtime encounters this, it should use the Binary glTF body as the buffer.
+`bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties that should be used insted of the `uri` property.  See Listings 2 and 3.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `binary_glTF` extension properties that should be used insted of the `uri` property.
+See Listings 2 and 3.
 
 **Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
 ```javascript
+"extensionsUsed" : [
+    "EXT_binary_glTF"
+]
+...
 "a_shader" : {
     "extensions" : {
-        "binary_glTF" : {
+        "EXT_binary_glTF" : {
             "bufferview" : ...
         }
     }
@@ -105,9 +126,13 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
 
 **Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (for example, see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
 ```javascript
+"extensionsUsed" : [
+    "EXT_binary_glTF"
+]
+...
 "an_image" : {
     "extensions" : {
-        "binary_glTF" : {
+        "EXT_binary_glTF" : {
             "bufferview" : ...,
             "mimeType" : "image/png",
             "height" : 256,
@@ -123,7 +148,7 @@ TODO
 
 ## File Extension
 
-`.bgltf`
+`.bgltf` or `.bgl`or `.bgt`
 
 ## MIME Type
 
