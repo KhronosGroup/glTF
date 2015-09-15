@@ -234,13 +234,16 @@ The next example defines the transformation for a camera node using the `matrix`
     },
 ```
 
+
+<mark>*Todo:conformance - what if author supplies both matrix and TRS? Which wins? Undefined?*</mark>
+
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
 
 
 ### Buffers and Buffer Views
 
-A *buffer* is data stored as binary blobs in a file. The buffer can contain a combination of geometry, animation, and skins. Buffer data is little endian.
+A *buffer* is data stored as a binary blob in a file. The buffer can contain a combination of geometry, animation, and skins. 
 
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
@@ -249,6 +252,8 @@ A *bufferView* represents a subset of data in a buffer, defined by an integer of
 ELEMENT_BUFFER, animation/skin) so that the implementation can readily create and populate buffers in memory.
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
+
+Buffer data is little endian.
 
 ### Accessors
 
@@ -294,7 +299,7 @@ The following example defines a mesh containing one triangle set primitive:
 
 A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
-Materials are stored in the assets `materials` property, a dictionary containing one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse color, emission, shininess and specular color.
+Materials are stored in the assets `materials` property, a dictionary containing one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess and specular color.
 
 ```
 "materials": {
@@ -419,8 +424,9 @@ The `uniforms` property specifies the uniform variables that will be passed to t
 
 ### Common Techniques
 
-In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a hint for runtimes that have built-in support for the common techniques.
+In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a hint for runtimes that have built-in support for the common techniques. If the runtime does have built-in support for the common technique, it can use its own shader implementation in favor of the supplied GLSL programs.
 
+Common techniques are defined in the `details` property of a technique's render pass, which can contain the property `commonProfile`. The following example shows the definition of a common Blinn shader technique. The `commonProfile` property designates which parameters of the technique will be used in the shader, identifies the lighting model (Blinn), and includes any extra parameters used by the shader but not described in the technique in the property `extras`.
 
 ```json
     "details": {
@@ -448,48 +454,90 @@ In addition to supporting arbitrary GLSL shader programs, glTF allows the abilit
         "type": "COLLADA-1.4.1/commonProfile"
 ```
 
+<mark>*Todo: do we have a complete list of common shading techniques? The Three.js loader currently supports Blinn/Phong, Lambert and Unlit.*</mark>
 
 <mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the latter, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
 
 ### Textures
 
-Textures can be used as uniform inputs to shaders. 
+Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
 
 ```
 "materials": {
-    "blinn-1": {
+    "shader-1": {
         "instanceTechnique": {
             "technique": "technique1",
             "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
                 "diffuse": "texture_file2",
-                "emission": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "shininess": 38.4,
-                "specular": [
-                    0,
-                    0,
-                    0,
-                    1
-                ]
             }
         },
-        "name": "blinn3"
+        "name": "shader_1"
+    }
+},
+```
+
+
+Textures are stored in the `textures` property, a dictionary. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of texImage2D() for more details.
+
+```
+"textures": {
+    "texture_file2": {
+        "format": 6408,
+        "internalFormat": 6408,
+        "sampler": "sampler_0",
+        "source": "file2",
+        "target": 3553,
+        "type": 5121
+    }
+}
+```
+ 
+Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
+
+```
+"images": {
+    "file2": {
+        "uri": "duckCM.png"
+    }
+},
+```
+
+Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+
+
+```
+"samplers": {
+    "sampler_0": {
+        "magFilter": 9729,
+        "minFilter": 9987,
+        "wrapS": 10497,
+        "wrapT": 10497
     }
 },
 ```
 
 <a name="cameras"></a>
 ## Cameras
+
+Cameras define the viewport projection. The projection can be perspective or orthographic.
+
+Cameras are stored in the asset using the dictionary property `cameras`. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+
+The following example defines a perspective camera with 
+
+```
+"cameras": {
+    "camera_0": {
+        "perspective": {
+            "aspect_ratio": 1.5,
+            "yfov": 37.8492,
+            "zfar": 100,
+            "znear": 0.01
+        },
+        "type": "perspective"
+    }
+},
+```
 
 <a name="lights"></a>
 ## Lights

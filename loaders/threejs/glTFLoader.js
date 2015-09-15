@@ -1213,6 +1213,15 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                     if (!aspect_ratio)
                         aspect_ratio = 1; 
+
+                    if (xfov === undefined) {
+                        if (yfov)
+                        {
+                            // According to COLLADA spec...
+                            // aspect_ratio = xfov / yfov
+                            xfov = yfov * aspect_ratio;
+                        }
+                    }
                     
                     if (yfov === undefined)
                     {
@@ -1225,9 +1234,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         
                     }
                     
-                    if (yfov)
+                    if (xfov)
                     {
-                        camera = new THREE.PerspectiveCamera(yfov, aspect_ratio, znear, zfar);
+                        camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
                     }
                 }
                 else
