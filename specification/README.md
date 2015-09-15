@@ -275,82 +275,43 @@ The following example defines a mesh containing one triangle set primitive:
 <a name="materials-and-shading"></a>
 ## Materials and Shading
 
-A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs. 
+A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
-The following example shows the GLSL source code for a Phong shader program that will be referenced by the example JSON used throughout this section. 
-
-The vertex shader computes the screen space position of each vertex, using the world space transform defined in `u_modelViewMatrix` and the perspective projection defined in `u_projectionMatrix`. 
-
-In addition, the shader computes the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` that will be used in the fragment shader. The normal vector and light direction are computed using matrices that are based on the state of the current camera and lights. The runtime determines how to pass these values based on *semantics*, described in the next section.
+Materials are stored in the assets `materials` property, a dictionary containing one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse color, emission, shininess and specular color.
 
 ```
-precision highp float;
-attribute vec3 a_position;
-attribute vec3 a_normal;
-varying vec3 v_normal;
-uniform mat3 u_normalMatrix;
-uniform mat4 u_modelViewMatrix;
-uniform mat4 u_projectionMatrix;
-attribute vec2 a_texcoord0;
-varying vec2 v_texcoord0;
-varying vec3 v_light0Direction;
-uniform mat4 u_light0Transform;
-void main(void) {
-vec4 pos = u_modelViewMatrix * vec4(a_position,1.0);
-v_normal = u_normalMatrix * a_normal;
-v_texcoord0 = a_texcoord0;
-v_light0Direction = mat3(u_light0Transform) * vec3(0.,0.,1.);
-gl_Position = u_projectionMatrix * pos;
-}
+"materials": {
+    "blinn-1": {
+        "instanceTechnique": {
+            "technique": "technique1",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": "texture_file2",
+                "emission": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "shininess": 38.4,
+                "specular": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        },
+        "name": "blinn3"
+    }
+},
 ```
 
-The fragment shader computes the fragment color using the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` computed by the vertex shader, as well as several material properties defined as uniforms, including ambient color, emissive color and a diffuse texture.
-
-```
-precision highp float;
-varying vec3 v_normal;
-uniform vec4 u_ambient;
-varying vec2 v_texcoord0;
-uniform sampler2D u_diffuse;
-uniform vec4 u_emission;
-uniform vec4 u_specular;
-uniform float u_shininess;
-varying vec3 v_light0Direction;
-uniform vec3 u_light0Color;
-void main(void) {
-vec3 normal = normalize(v_normal);
-vec4 color = vec4(0., 0., 0., 0.);
-vec4 diffuse = vec4(0., 0., 0., 1.);
-vec3 diffuseLight = vec3(0., 0., 0.);
-vec4 emission;
-vec4 ambient;
-vec4 specular;
-ambient = u_ambient;
-diffuse = texture2D(u_diffuse, v_texcoord0);
-emission = u_emission;
-specular = u_specular;
-vec3 specularLight = vec3(0., 0., 0.);
-{
-float specularIntensity = 0.;
-float attenuation = 1.0;
-vec3 l = normalize(v_light0Direction);
-vec3 h = normalize(l+vec3(0.,0.,1.));
-specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;
-specularLight += u_light0Color * specularIntensity;
-diffuseLight += u_light0Color * max(dot(normal,l), 0.) * attenuation;
-}
-specular.xyz *= specularLight;
-color.xyz += specular.xyz;
-diffuse.xyz *= diffuseLight;
-color.xyz += diffuse.xyz;
-color.xyz += emission.xyz;
-color = vec4(color.rgb * diffuse.a, diffuse.a);
-gl_FragColor = color;
-}
-
-```
-
-The rest of this section describes how the glTF JSON syntax specifies these shader programs to the runtime, so that it can properly set up each shader's attributes and uniforms.
 
 ### Techniques
 
@@ -361,6 +322,8 @@ The rest of this section describes how the glTF JSON syntax specifies these shad
 <mark>*Todo: Patrick please write up.*</mark>
 
 ### Programs, Attributes and Uniforms
+
+#### Programs
 
 GLSL shader programs are stored in the asset's `programs` property. This property is a dictionary containing one or more named objects, one for each program.
 
@@ -395,6 +358,8 @@ Shader source files are stored in the asset's `shaders` property, a dictionary c
     },
 ```    
 
+#### Program Instances
+
 A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and a `attributes` and `uniforms` properties.
 
 ```json
@@ -419,7 +384,12 @@ A shader program may be instanced multiple times within the glTF asset, via the 
         }
     },
 ```
+
+#### Attributes
+
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
+
+#### Uniforms
 
 The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
@@ -432,9 +402,8 @@ The `uniforms` property specifies the uniform variables that will be passed to t
 
 ### Common Techniques
 
-In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a convenience for both exporters and runtimes
+In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a hint for runtimes that have built-in support for the common techniques.
 
-<mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the later, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
 
 ```json
     "details": {
@@ -462,7 +431,45 @@ In addition to supporting arbitrary GLSL shader programs, glTF allows the abilit
         "type": "COLLADA-1.4.1/commonProfile"
 ```
 
+
+<mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the latter, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
+
 ### Textures
+
+Textures can be used as uniform inputs to shaders. 
+
+```
+"materials": {
+    "blinn-1": {
+        "instanceTechnique": {
+            "technique": "technique1",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": "texture_file2",
+                "emission": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "shininess": 38.4,
+                "specular": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
+        },
+        "name": "blinn3"
+    }
+},
+```
 
 <a name="cameras"></a>
 ## Cameras
@@ -548,6 +555,86 @@ This section will describe the format for each of the GL types stored in the bin
 <mark>*Todo: how do we tackle this?*</mark>
 
 <a name="acknowledgements"></a>
+
+# Annotated Example
+
+## The Scene
+
+## The Shader Source Code
+
+The following example shows the GLSL source code for a Phong shader program that will be referenced by the example JSON used throughout this section. The vertex shader computes the screen space position of each vertex, using the world space transform defined in `u_modelViewMatrix` and the perspective projection defined in `u_projectionMatrix`. 
+
+In addition, the shader computes the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` that will be used in the fragment shader. The normal vector and light direction are computed using matrices that are based on the state of the current camera and lights. The runtime determines how to pass these values based on *semantics*, described later in this section.
+
+```
+precision highp float;
+attribute vec3 a_position;
+attribute vec3 a_normal;
+varying vec3 v_normal;
+uniform mat3 u_normalMatrix;
+uniform mat4 u_modelViewMatrix;
+uniform mat4 u_projectionMatrix;
+attribute vec2 a_texcoord0;
+varying vec2 v_texcoord0;
+varying vec3 v_light0Direction;
+uniform mat4 u_light0Transform;
+void main(void) {
+vec4 pos = u_modelViewMatrix * vec4(a_position,1.0);
+v_normal = u_normalMatrix * a_normal;
+v_texcoord0 = a_texcoord0;
+v_light0Direction = mat3(u_light0Transform) * vec3(0.,0.,1.);
+gl_Position = u_projectionMatrix * pos;
+}
+```
+
+The fragment shader computes the fragment color using the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` computed by the vertex shader, as well as several material properties defined as uniform variables, including ambient color, emissive color and a diffuse texture.
+
+```
+precision highp float;
+varying vec3 v_normal;
+uniform vec4 u_ambient;
+varying vec2 v_texcoord0;
+uniform sampler2D u_diffuse;
+uniform vec4 u_emission;
+uniform vec4 u_specular;
+uniform float u_shininess;
+varying vec3 v_light0Direction;
+uniform vec3 u_light0Color;
+void main(void) {
+vec3 normal = normalize(v_normal);
+vec4 color = vec4(0., 0., 0., 0.);
+vec4 diffuse = vec4(0., 0., 0., 1.);
+vec3 diffuseLight = vec3(0., 0., 0.);
+vec4 emission;
+vec4 ambient;
+vec4 specular;
+ambient = u_ambient;
+diffuse = texture2D(u_diffuse, v_texcoord0);
+emission = u_emission;
+specular = u_specular;
+vec3 specularLight = vec3(0., 0., 0.);
+{
+float specularIntensity = 0.;
+float attenuation = 1.0;
+vec3 l = normalize(v_light0Direction);
+vec3 h = normalize(l+vec3(0.,0.,1.));
+specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;
+specularLight += u_light0Color * specularIntensity;
+diffuseLight += u_light0Color * max(dot(normal,l), 0.) * attenuation;
+}
+specular.xyz *= specularLight;
+color.xyz += specular.xyz;
+diffuse.xyz *= diffuseLight;
+color.xyz += diffuse.xyz;
+color.xyz += emission.xyz;
+color = vec4(color.rgb * diffuse.a, diffuse.a);
+gl_FragColor = color;
+}
+
+```
+
+
+
 # Acknowledgments
 
 * Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
