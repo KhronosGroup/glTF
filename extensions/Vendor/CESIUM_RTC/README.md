@@ -2,8 +2,8 @@
 
 ## Contributors
 
-* Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
-* Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+* Tom Fili, Cesium, [@CesiumFili](https://twitter.com/CesiumFili)
 
 ## Status
 
@@ -11,7 +11,7 @@ Experimental
 
 ## Dependencies
 
-Written against the glTF 0.8 spec.
+Written against the glTF draft 1.0 spec.
 
 ## Overview
 

@@ -2,13 +2,13 @@
 
 ## Contributors
 
-* Patrick Cozzi, [@pjcozzi](https://twitter.com/pjcozzi)
-* Tom Fili, [@CesiumFili](https://twitter.com/CesiumFili)
-* Kai Ninomiya, [@kainino0x](https://twitter.com/kainino0x)
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
+* Tom Fili, Cesium, [@CesiumFili](https://twitter.com/CesiumFili)
+* Kai Ninomiya, Cesium, [@kainino0x](https://twitter.com/kainino0x)
 
 ## Status
 
-Draft
+Do not use this extension; instead, use [EXT_binary_glTF](../MultiVendor/EXT_binary_glTF).  This extension was used in Cesium 1.10 to 1.14.  The spec is for historic context.
 
 ## Dependencies
 
@@ -39,40 +39,6 @@ Binary glTF is little endian.  It has a 20-byte header followed by the glTF reso
 
 The start of the embedded data is 4-byte aligned to ease its use with JavaScript Typed Arrays.
 
-Given an `arrayBuffer` with Binary glTF, Listing 1 shows how to parse the header and access the JSON.
-
-_TODO: the code below is out-of-sync with Cesium_
-
-**Listing 1**: Parsing Binary glTF.  This uses a `TextDecoder` wrapper in Cesium, [`getStringFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.11/Source/Core/getStringFromTypedArray.js).
-```javascript
-var sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
-
-var magic = getStringFromTypedArray(arrayBuffer, 0, 4);
-if (magic !== 'glTF') {
-    // Not Binary glTF
-}
-
-var view = new DataView(arrayBuffer);
-var byteOffset = sizeOfUint32;  // Skip magic number
-
-var version = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-if (version !== 1) {
-    // This only handles version 1.
-}
-
-byteOffset += sizeOfUint32;  // Skip length
-
-var jsonOffset = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-
-var jsonLength = view.getUint32(byteOffset, true);
-byteOffset += sizeOfUint32;
-
-var jsonString = getStringFromTypedArray(arrayBuffer, jsonOffset, jsonLength);
-var json = JSON.parse(jsonString)
-```
-
 Strings in the Binary glTF, i.e., JSON or shaders, are UTF-8.
 
 Binary glTF still supports external resources.  For example, an application that wants to download textures on demand may embed everything except images in the Binary glTF.
@@ -85,23 +51,23 @@ This extension introduces an explicitly named `buffer` called `CESIUM_binary_glT
 
 To support embedded shaders and images, `shader` and `image` glTF properties have new `CESIUM_binary_glTF` extension properties and no longer require the `uri` property.  See Listings 2 and 3.
 
-**Listing 2**: A `shader` referencing a `bufferview` to access an embedded shader source.
-```json
+**Listing 2**: A `shader` referencing a `bufferView` to access an embedded shader source.
+```javascript
 "a_shader" : {
     "extensions" : {
         "CESIUM_binary_glTF" : {
-            "bufferview" : ...
+            "bufferView" : // ...
         }
     }
 }
 ```
 
-**Listing 3**: An `image` referencing a `bufferview` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer.  See Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/bgltf/Source/Core/loadImageFromTypedArray.js) helper function.
-```json
+**Listing 3**: An `image` referencing a `bufferView` and with metadata useful for loading the image from the arrayBuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer.  See Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function.
+```javascript
 "an_image" : {
     "extensions" : {
         "CESIUM_binary_glTF" : {
-            "bufferview" : ...,
+            "bufferView" : // ...,
             "mimeType" : "image/png",
             "height" : 256,
             "width" : 512
@@ -109,10 +75,6 @@ To support embedded shaders and images, `shader` and `image` glTF properties hav
     }
 }
 ```
-
-## Schema
-
-TODO
 
 ## File Extension
 
@@ -122,7 +84,24 @@ TODO
 
 Use `model/vnd.gltf.binary`.
 
-## Experimental Results
+## Known Implementations
+
+### Runtime
+
+* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
+
+### Tools
+
+* Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
+* colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
+
+## Resources
+
+* Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
+* base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
+* [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
+
+## Performance Results
 
 Based on extensive experimentation (below & [[1]](#BenchData)) using Cesium's glTF loader, different configurations are recommended for different scenarios.
 
@@ -160,23 +139,6 @@ Using the 1200 12th Ave model (thanks to [Cube Cities](http://cubecities.com/)),
 ![](BenchData/thumb/1200_12th.jpg)
 
 \* All files gzipped except for stand-alone images.
-
-## Known Implementations
-
-### Runtime
-
-* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
-
-### Tools
-
-* Cesium COLLADA-to-glTF Converter ([app](http://cesiumjs.org/convertmodel.html))
-* colladaToBglTFConverter ([code](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter))
-
-## Resources
-
-* Discussion - [#357](https://github.com/KhronosGroup/glTF/issues/357)
-* base64-encoded data in glTF - [#68](https://github.com/KhronosGroup/glTF/issues/68)
-* [Faster 3D Models with Binary glTF](http://cesiumjs.org/2015/06/01/Binary-glTF/) article on the Cesium blog
 
 <a name="BenchData">
 * [1] Raw data for benchmarks using compression available in [BenchData](BenchData/README.md) supplemental.
