@@ -5,19 +5,17 @@
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 * Tom Fili, Cesium, [@CesiumFili](https://twitter.com/CesiumFili)
 
-## Status
-
-Experimental
-
 ## Dependencies
 
 Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/)].
+Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point values.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/)].
 
 In this technique, each position is defined relative to an origin (the _center_) such that 32-bit floating-point precision is adequate to describe the distance between each position and the center.  These relative positions are stored in the glTF vertex data.  At runtime, the positions are transformed with a modified model-view matrix that makes the center relative to the eye.  This avoids 32-bit subtraction of large translation components on the GPU.
+
+## glTF Schema Updates
 
 This extension adds:
 * A new `CESIUM_RTC` property to the `extensions` property of the top-level glTF object.  `CESIUM_RTC` contains one property: `center`, an array of three numbers (`x`, `y`, `z`) that define the center in an application-specific coordinate system.  For example, in virtual globe applications, this may be WGS84 coordinates.  In a spatial data structure, this may be the origin of the node containing the model.  See [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json) and Listing 2 below.
@@ -40,7 +38,7 @@ modelViewRTC[14] = rtcCenterEye.z;
 ```
 
 **Listing 2**: Example glTF JSON.
-```json
+```javascript
 "extensions": {
     "CESIUM_RTC": {
         "center": [6378137.0, 0.0, 0.0]
@@ -49,7 +47,7 @@ modelViewRTC[14] = rtcCenterEye.z;
 ```
 
 **Listing 3**: Example parameter with the `CESIUM_RTC_MODELVIEW` semantic.
-```json
+```javascript
 "techniques": {
     "technique0": {
         "parameters": {
@@ -57,15 +55,15 @@ modelViewRTC[14] = rtcCenterEye.z;
                 "semantic": "CESIUM_RTC_MODELVIEW",
                 "type": 35676
              },
-             ...
+             // ...
          }
      }
  }
 ```
 
-## Schema
+### JSON Schema
 
-[CESIUM_RTC.schema.json](CESIUM_RTC.schema.json)
+See [CESIUM_RTC.schema.json](CESIUM_RTC.schema.json).
 
 ## Known Implementations
 
