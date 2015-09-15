@@ -23,15 +23,14 @@ For these data, glTF requires either separate requests or extra space due to bas
 
 To solve this, this extension introduces a container format, _Binary glTF_.
 In Binary glTF, glTF resources (JSON data, .bin, images, and shaders) can be stored in a binary blob accessed in JavaScript as an `ArrayBuffer`. 
-This binary blob (which can be a file, for example) is always divided into three different, subsequent parts:
+This binary blob (which can be a file, for example) is divided into three subsequent parts:
 
 * A 20-byte preamble, entitled the `header`
-* The structured glTF scene description (also denoted as `scene`)
+* The structured glTF scene description, entitled the `scene`
 * The binary `body`
 
-The scene part can then refer to external resources (as usual), but also to resources stored within the binary file body.
-Informally, this is like embedding the JSON, images, and shaders in an .bin file.
-
+The scene part can refer external resources as usual, and can reference resources stored within the binary body.
+Informally, this is like embedding the glTF JSON, images, and shaders in an .bin file.
 
 ## Binary glTF Layout
 
