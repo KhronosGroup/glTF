@@ -16,7 +16,7 @@ Written against the glTF 0.8 spec.
 
 ## Overview
 
-glTF provides two delivery options that can be also be used together:
+glTF provides two delivery options that can also be used together:
 
 * glTF JSON points to external binary data (geometry, key frames, skins), images, and shaders.
 * glTF JSON embeds base64-encoded binary data, images, and shaders inline using data uris.
