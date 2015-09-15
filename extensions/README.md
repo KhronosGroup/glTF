@@ -7,7 +7,6 @@
 ## Vendor extensions
 
 * [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
-* [CESIUM_binary_glTF](Vendor/CESIUM_binary_glTF/README.md)
 
 ## About glTF Extensions
 
