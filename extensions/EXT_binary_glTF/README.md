@@ -144,7 +144,9 @@ See Listings 2 and 3.
 
 ## Schema
 
-TODO
+* [image](schema/EXT_binary_glTF.image.schema.json)
+* [shader](schema/EXT_binary_glTF.shader.schema.json)
+
 
 ## File Extension
 
