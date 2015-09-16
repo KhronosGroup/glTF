@@ -323,7 +323,7 @@ textures since they require no additional parsing, except perhaps decompression.
 
 All buffers are stored in the assets `buffers` property.
 
-The following example defines a buffer named `duck`. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI. 
+The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI. 
 
 ```json
     "buffers": {
@@ -337,7 +337,7 @@ The following example defines a buffer named `duck`. The `byteLength` property s
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
 
-The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view named `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
+The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
 
 ```json
@@ -468,7 +468,7 @@ Each skin is defined by a `bindShapeMatrix` property, which describes how pose t
 
 #### Skin Instances
 
-A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains skeletons; each skeleton is the root of a node hierarchy. The `skin` property contains the name of the skin to instance.
+A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains skeletons; each skeleton is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance.
 
 
 ```json
@@ -682,7 +682,7 @@ Each technique contains one or more *render passes* the define the programs used
 
 >The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
 
-The technique's `passes` property is a object containing all the named passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL render states to enable for that pass, such as `CULL_FACE` (2884) and `DEPTH_TEST` (2929).
+The technique's `passes` property is a object containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL render states to enable for that pass, such as `CULL_FACE` (2884) and `DEPTH_TEST` (2929).
 
 ```json
 "pass": "defaultPass",
@@ -703,7 +703,7 @@ The technique's `passes` property is a object containing all the named passes fo
 
 #### Programs
 
-GLSL shader programs are stored in the asset's `programs` property. This property contains one or more named objects, one for each program.
+GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
 
 Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively. 
 
@@ -721,7 +721,7 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
-Shader source files are stored in the asset's `shaders` property, which contains one or more named shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+Shader source files are stored in the asset's `shaders` property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```json
 "shaders": {
@@ -922,9 +922,9 @@ Lights are contained in nodes and thus can be transformed. Their world-space pos
 <a name="animations"></a>
 ## Animations
 
-glTF supports key frame animations of nodes' transforms. This can be used for articulated animation or skinned animation. In either case, nodes in the hierarchy have their transforms changed over time. Key frame data is stored in buffers and referenced in animations using accessors.
+glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-All animations are stored in the `animations` property of the asset by id. An animation is define
+All animations are stored in the `animations` property of the asset. An animation is define
 
 > glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transforms.
 
