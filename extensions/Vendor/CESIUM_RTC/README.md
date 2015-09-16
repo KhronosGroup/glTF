@@ -5,13 +5,13 @@
 * Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 * Tom Fili, Cesium, [@CesiumFili](https://twitter.com/CesiumFili)
 
-## Dependencies
-
-Written against the glTF draft 1.0 spec.
-
 ## Status
 
 Stable
+
+## Dependencies
+
+Written against the glTF draft 1.0 spec.
 
 ## Overview
 
