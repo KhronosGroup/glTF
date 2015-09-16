@@ -1,5 +1,5 @@
 {
-    "allExtensions" : ["EXT_texture_filter_anisotropic", "Example root-level extension"],
+    "extensionsUsed" : ["EXT_texture_filter_anisotropic", "Example root-level extension"],
     "extensions" : {
         "Example root-level extension" : {
             "extension specific" : "value"
