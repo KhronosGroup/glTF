@@ -241,7 +241,7 @@ The next example defines the transformation for a camera node using the `matrix`
 
 <mark>*Todo: add*</mark>
 
-glTF uses a right-handed coordinate system Y up and positive Z pointing out of the screen.
+glTF uses a right-handed coordinate system with Y up and positive Z pointing out of the screen.
 
 The units for all linear distances are meters.
 
