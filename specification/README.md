@@ -237,9 +237,15 @@ The next example defines the transformation for a camera node using the `matrix`
 
 <mark>*Todo:conformance - what if author supplies both matrix and TRS? Which wins? Undefined?*</mark>
 
-### Coordinate System
+### Coordinate System and Units
 
 <mark>*Todo: add*</mark>
+
+glTF uses a right-handed coordinate system Y up and positive Z pointing out of the screen.
+
+The units for all linear distances are meters.
+
+All angles are in radians unless otherwise specified.
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
