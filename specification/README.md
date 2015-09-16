@@ -31,7 +31,8 @@ Contributors
   * [File Extensions and MIME Types](#mimetypes)
 * [Concepts](#concepts)
   * [File Structure](#file-structure)
-  * [Scenes](#scene)
+  * [IDs and Names](#ids-and-names)
+  * [Scenes](#scenes)
   * [Accessing Binary Data](#binary-data)
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
@@ -125,8 +126,73 @@ glTF uses URIs to reference buffers, shaders, and image resources. These URIs ma
 ## File Structure
 <mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
-<a name="scene"></a>
+<a name="ids-and-names"></a>
+## IDs and Names
 
+_IDs_ are internal string identifiers used to reference parts of a glTF asset, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's ID.  For example:
+
+```javascript
+"buffers": {
+    "a-buffer-id" : {
+        "byteLength" : 1024,
+        "type" : "arraybuffer",
+        "uri" : "path-to.bin"
+    }
+},
+"bufferViews" : {
+    "a-bufferView-id" : {
+        "buffer" : "a-buffer-id",
+        "byteLength" : 512,
+        "byteOffset" : 0
+    }
+}
+```
+
+In this example, `"a-buffer-id"` and `"a-bufferView-id"` are IDs.  The bufferView refers to the buffer using the buffer's ID: `"buffer" : "a-buffer-id"`.
+
+IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `lights`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique. 
+
+For example, the following is **not** allowed:
+
+```javascript
+"buffers": {
+    "an-id" : {
+        // ...
+    }
+},
+"bufferViews" : {
+    "an-id" : { // Not allowed since this ID is already used
+        // ...
+    }
+}
+```
+
+IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are each in their own namespace.  IDs are unique within the object as enforced by JSON.  For example, the following **is** allowed:
+
+```javascript
+"animations" : {
+    "animation-0" : {
+        // ...
+        "samplers" : {
+            "animation-sampler-id" : {
+                // ...
+            }
+        }
+    },
+    "animation-1" : {
+        // ...
+        "samplers" : {
+            "animation-sampler-id" : { // Does not collide with the sampler ID in the other animation
+                // ...
+            }
+        }
+    }
+}
+```
+
+Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
+
+<a name="scenes"></a>
 ## Scenes
 
 The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary property `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
@@ -855,6 +921,12 @@ Lights are contained in nodes and thus can be transformed. Their world-space pos
 
 <a name="animations"></a>
 ## Animations
+
+glTF supports key frame animations of nodes' transforms. This can be used for articulated animation or skinned animation. In either case, nodes in the hierarchy have their transforms changed over time. Key frame data is stored in buffers and referenced in animations using accessors.
+
+All animations are stored in the `animations` property of the asset by id. An animation is define
+
+> glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transforms.
 
 <a name="metadata"></a>
 ## Metadata
