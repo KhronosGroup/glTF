@@ -53,7 +53,7 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 
 ### Vendor Extensions
 
-A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/) requesting one.  Requests should include:
+A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
 * The name of the prefix.
 * The name of the vendor using the prefix.
 * The `extension` GitHub label.
