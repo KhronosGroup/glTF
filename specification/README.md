@@ -924,10 +924,75 @@ Lights are contained in nodes and thus can be transformed. Their world-space pos
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-All animations are stored in the `animations` property of the asset. An animation is define
+> Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transforms.
 
-> glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transforms.
+All animations are stored in the `animations` property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frames, samplers (`samplers` property) that interpolate between the key frames, and a `count` property indicating the number of key frame inputs present in the parameters data. The value in `count` must be less than or equal to number of entries in the shortest parameters value.
 
+The following example defines an animating camera node. 
+
+```json
+        "animation_0": {
+            "channels": [
+                {
+                    "sampler": "animation_0_scale_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "scale"
+                    }
+                },
+                {
+                    "sampler": "animation_0_translation_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_0_rotation_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 901,
+            "parameters": {
+                "TIME": "animAccessor_0",
+                "rotation": "animAccessor_3",
+                "scale": "animAccessor_1",
+                "translation": "animAccessor_2"
+            },
+            "samplers": {
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_0_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_0_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+```
+
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
+
+The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation, rotation and scale. Each of these inputs is stored in a buffer and accessed via an accessor.
+
+Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
+
+> Note: glTF 1.0 animation samplers only support linear interpolation.
+
+glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
+
+        
 <a name="metadata"></a>
 ## Metadata
 
