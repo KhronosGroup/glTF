@@ -428,6 +428,9 @@ The following example defines a mesh containing one triangle set primitive:
         }
     ]
 ```
+
+> **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitives `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by `attributes` property (they are all equal for a given primitive).
+
                     
                     
 ### Skins
