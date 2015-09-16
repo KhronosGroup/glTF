@@ -148,7 +148,7 @@ The following example defines a glTF asset with a single scene, `defaultScene`, 
 
 The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render. 
 
-Each node can contain one or more meshes, a skin, a camera or a light, defined in the `meshes`, `instanceSkin`, `camera` and `light` properties, respectively.
+Each node can contain one or more meshes, a skin, a joint name, a camera or a light, defined in the `meshes`, `instanceSkin`, `jointName`, `camera` and `light` properties, respectively.
 
 Nodes have a optional `name` property.
 
@@ -366,7 +366,137 @@ The following example defines a mesh containing one triangle set primitive:
                     
 ### Skins
 
-*TBD*
+All skins are stored in the `skins` property of the asset, by name.
+Each skin is defined by a `bindShapeMatrix` property, which describes how pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each join name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+  
+
+```json
+    "skins": {
+        "skin_1": {
+            "bindShapeMatrix": [
+                0,
+                -0.804999,
+                0.172274,
+                0,
+                0,
+                0.172274,
+                0.804999,
+                0,
+                -0.823226,
+                0,
+                0,
+                0,
+                -127.093,
+                -393.418,
+                597.2,
+                1
+            ],
+            "inverseBindMatrices": "bind-matrices_1",
+            "jointNames": [
+                "Bone1",
+                "Bone2",
+            ]
+        }
+    },
+```
+
+#### Skin Instances
+
+A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains skeletons; each skeleton is the root of a node hierarchy. The `skin` property contains the name of the skin to instance.
+
+
+```json
+    "node_1": {
+        "children": [],
+        "instanceSkin": {
+            "meshes": [
+                "skinned-mesh_1"
+            ],
+            "skeletons": [
+                "skeleton-root_1"
+            ],
+            "skin": "skin_1"
+        },
+```
+
+#### Attaching a Mesh to a Skin
+
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+
+```json
+    "meshes": {
+        "skinned-mesh_1": {
+            "name": "skinned-mesh_1",
+            "primitives": [
+                {
+                    "attributes": {
+                        "JOINT": "accessor_179",
+                        "NORMAL": "accessor_165",
+                        "POSITION": "accessor_163",
+                        "TEXCOORD_0": "accessor_167",
+                        "WEIGHT": "accessor_176"
+                    },
+                    "indices": "accessor_161",
+                    "material": "material_1",
+                    "primitive": 4
+                }
+            ]
+        }
+    },
+```
+
+
+#### Joint Hierarchy
+
+The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint using the `jointName` property. Any joints listed in the skin's `jointNames` property must correspond to a node that has the same `jointName` property. The following example defines a joint hierarchy of two joints with `root-node` at the root, identified as a joint using the joint name `Bone1`.
+
+```json
+    "nodes": {
+        "root-node": {
+            "children": [
+                "child-node"
+            ],
+            "jointName": "Bone1",
+            "name": "root",
+            "rotation": [
+                0.888952,
+                0.414921,
+                0.19392,
+                0.0773304
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                4.61599,
+                -2.032e-06,
+                -5.08e-08
+            ]
+        },
+        "child-node": {
+            "children": [],
+            "jointName": "Bone2",
+            "name": "head",
+            "rotation": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                8.76635,
+                4.318e-07,
+                -1.778e-07
+            ]
+        },
+```
 
 
 <a name="materials-and-shading"></a>
