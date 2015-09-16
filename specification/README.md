@@ -79,10 +79,6 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
 
-<mark>*Todo: diagram here*</mark>
-
-<mark>*Todo: sample fragment here*</mark>
-
 <a name="designgoals"></a>
 
 ## Design Goals
@@ -303,11 +299,11 @@ Buffer data is little endian.
 
 All large data for meshes, skins and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. FLOAT) and a data type (e.g. VEC3), which when combined define the complete data type for each array. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
 
 All accessors are stored in the asset's `accessors` property.
 
-The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a VEC3 for retrieving the primitive's position data.
+The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
 
 ```json
 "accessors": {
@@ -418,7 +414,7 @@ Materials are stored in the assets `materials` property, which contains one or m
 
 A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` property. Each technique has zero or more parameters; each parameter is defined by type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
 
-The following fragment illustrates some technique parameters. The property `ambient` is defined as a FLOAT_VEC4 type; `diffuse` is defined as a SAMPLER_2D; and `light0color` is defined as a FLOAT_VEC3 with a default color value of white. 
+The following fragment illustrates some technique parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a SAMPLER_2D; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
 
 ```json
 "techniques": {
@@ -467,8 +463,8 @@ Table 1. Uniform Semantics
 
 | Semantic                     | Type         | Description |
 |:----------------------------:|:------------:|-------------|
-| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parents.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
-| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its parents. |
+| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parent's.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
+| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its ancestors. |
 | `VIEW`                       | `FLOAT_MAT4` | Transforms from world to view coordinates using the active camera node. |
 | `PROJECTION`                 | `FLOAT_MAT4` | Transforms from view to clip coordinates using the active camera node. |
 | `MODELVIEW`                  | `FLOAT_MAT4` | Combined `MODEL` and `VIEW`. |
@@ -490,7 +486,7 @@ Each technique contains one or more *render passes* the define the programs used
 
 >The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
 
-The technique's `passes` property is a object containing all the named passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL states to enable for that pass.
+The technique's `passes` property is a object containing all the named passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL render states to enable for that pass, such as `CULL_FACE` (2884) and `DEPTH_TEST` (2929).
 
 ```json
 "pass": "defaultPass",
@@ -571,20 +567,10 @@ A shader program may be instanced multiple times within the glTF asset, via the 
 },
 ```
 
-#### Attributes
-
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
-
-#### Uniforms
 
 The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
-<mark>*Todo:Patrick why did we decide to duplicate the attributes in the instanceProgram? Or alternately, why do we even specify the attributes in the program object at all?*</mark>
-
-
-### Render States
-
-<mark>*Todo: Patrick can you help a brother out? How are render states actually used? Do you use them in Cesium?*</mark>
 
 ### Common Techniques
 
