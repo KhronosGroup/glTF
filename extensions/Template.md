@@ -4,6 +4,10 @@
 
 * TODO: Name, affiliation, and contact info for each contributor
 
+## Status
+
+TODO: Draft or Stable
+
 ## Dependencies
 
 Written against the glTF draft 1.0 spec.

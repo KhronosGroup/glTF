@@ -9,6 +9,10 @@
 
 Written against the glTF draft 1.0 spec.
 
+## Status
+
+Stable
+
 ## Overview
 
 Massive world graphics applications have position vertex attributes with precision requirements that result in jittering artifacts when naively rendered with 32-bit floating-point values.  This extension introduces the metadata required to implement the _Relative To Center_ (RTC) high-precision rendering technique described by [[Ohlarik08](http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/)].

@@ -8,6 +8,10 @@
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Maik Thöner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
 
+## Status
+
+Draft (not ratified yet)
+
 ## Dependencies
 
 Written against the glTF draft 1.0 spec.
