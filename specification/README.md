@@ -614,6 +614,13 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 },
 ```
 
+> **Mipmapping Implementation Note**: When a sampler's minification filter (`sampler.minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap` function.
+
+
+> **Non-Power-Of-Two Texture Implementation Note**: glTF does not guarantee that a texture's dimensions are a power-of-two.  At runtime, if a texture's width or height is not a power-of-two, the texture needs to be resized so its dimensions are powers-of-two if the `sampler` the texture references:
+> * Has wrapping mode (either `sampler.wrapS` or `sampler.wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
+> * Has a minification filter (`sampler.minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
+
 <a name="cameras"></a>
 ## Cameras
 
