@@ -3,6 +3,7 @@
 ## Multi-vendor extensions
 
 * [EXT_binary_glTF](MultiVendor/EXT_binary_glTF/README.md)
+* [EXT_QUANTIZED_ATTRIBUTES](MultiVendor/EXT_QUANTIZED_ATTRIBUTES/README.md)
 
 ## Vendor extensions
 
