@@ -31,7 +31,7 @@ Contributors
   * [File Extensions and MIME Types](#mimetypes)
 * [Concepts](#concepts)
   * [File Structure](#file-structure)
-  * [The Scene Graph](#scene-graph)
+  * [Scenes](#scene)
   * [Accessing Binary Data](#binary-data)
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
@@ -126,7 +126,7 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 ## File Structure
 <mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
-<a name="scene-graph"></a>
+<a name="scene"></a>
 
 ## Scenes
 
@@ -236,6 +236,10 @@ The next example defines the transformation for a camera node using the `matrix`
 
 
 <mark>*Todo:conformance - what if author supplies both matrix and TRS? Which wins? Undefined?*</mark>
+
+### Coordinate System
+
+<mark>*Todo: add*</mark>
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
