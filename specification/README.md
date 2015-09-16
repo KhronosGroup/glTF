@@ -337,11 +337,77 @@ Materials are stored in the assets `materials` property, a dictionary containing
 
 ### Techniques
 
-<mark>*Todo: Patrick I'll need help describing techniques and passes and how they relate to each other. Any concept document I can crib for this?*</mark>
+A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property. Each technique has zero or more parameters; each parameter is defined by type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
 
-### Passes
+The following fragment illustrates some technique parameters. The property `ambient` is defined as a FLOAT_VEC4 type; `diffuse` is defined as a SAMPLER_2D; and `light0color` is defined as a FLOAT_VEC3 with a default color value of white. 
 
-<mark>*Todo: Patrick please write up.*</mark>
+```json
+"techniques": {
+    "technique1": {
+        "parameters": {
+            "ambient": {
+                "type": 35666
+            },
+            "diffuse": {
+                "type": 35678
+            },
+            "light0Color": {
+                "type": 35665,
+                "value": [
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "light0Transform": {
+                "semantic": "MODELVIEW",
+                "source": "directionalLight1",
+                "type": 35676
+            },
+
+
+```
+
+
+#### Semantics
+
+Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
+
+In the above example, the parameter `light0Transform` defines the MODELVIEW semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
+
+If no source property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
+
+```json
+"projectionMatrix": {
+    "semantic": "PROJECTION",
+    "type": 35676
+}
+```
+
+<mark>Todo: do we need a table here listing all the semantics and their meanings? Or in a reference section since this section is non-normative?</mark>
+
+#### Render Passes
+
+Each technique contains one or more *render passes* the define the programs used in each pass, and the render states to enable during each pass. 
+
+>The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
+
+The technique's `passes` property is a dictionary containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL states to enable for that pass.
+
+```json
+"pass": "defaultPass",
+"passes": {
+    "defaultPass": {
+        "instanceProgram": {
+        },
+        "states": {
+            "enable": [
+                2884,
+                2929
+            ]
+        }
+    }
+```
 
 ### Programs, Attributes and Uniforms
 
@@ -368,16 +434,16 @@ Each shader program includes an `attributes` property, which specifies the verte
 Shader source files are stored in the asset's `shaders` property, a dictionary containing one or more named shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```json
-    "shaders": {
-        "duck0FS": {
-            "type": 35632,
-            "uri": "duck0FS.glsl"
-        },
-        "duck0VS": {
-            "type": 35633,
-            "uri": "duck0VS.glsl"
-        }
+"shaders": {
+    "duck0FS": {
+        "type": 35632,
+        "uri": "duck0FS.glsl"
     },
+    "duck0VS": {
+        "type": 35633,
+        "uri": "duck0VS.glsl"
+    }
+},
 ```    
 
 #### Program Instances
@@ -385,26 +451,26 @@ Shader source files are stored in the asset's `shaders` property, a dictionary c
 A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and a `attributes` and `uniforms` properties.
 
 ```json
-    "instanceProgram": {
-        "attributes": {
-            "a_normal": "normal",
-            "a_position": "position",
-            "a_texcoord0": "texcoord0"
-        },
-        "program": "program_0",
-        "uniforms": {
-            "u_ambient": "ambient",
-            "u_diffuse": "diffuse",
-            "u_emission": "emission",
-            "u_light0Color": "light0Color",
-            "u_light0Transform": "light0Transform",
-            "u_modelViewMatrix": "modelViewMatrix",
-            "u_normalMatrix": "normalMatrix",
-            "u_projectionMatrix": "projectionMatrix",
-            "u_shininess": "shininess",
-            "u_specular": "specular"
-        }
+"instanceProgram": {
+    "attributes": {
+        "a_normal": "normal",
+        "a_position": "position",
+        "a_texcoord0": "texcoord0"
     },
+    "program": "program_0",
+    "uniforms": {
+        "u_ambient": "ambient",
+        "u_diffuse": "diffuse",
+        "u_emission": "emission",
+        "u_light0Color": "light0Color",
+        "u_light0Transform": "light0Transform",
+        "u_modelViewMatrix": "modelViewMatrix",
+        "u_normalMatrix": "normalMatrix",
+        "u_projectionMatrix": "projectionMatrix",
+        "u_shininess": "shininess",
+        "u_specular": "specular"
+    }
+},
 ```
 
 #### Attributes
@@ -429,28 +495,28 @@ In addition to supporting arbitrary GLSL shader programs, glTF allows the abilit
 Common techniques are defined in the `details` property of a technique's render pass, which can contain the property `commonProfile`. The following example shows the definition of a common Blinn shader technique. The `commonProfile` property designates which parameters of the technique will be used in the shader, identifies the lighting model (Blinn), and includes any extra parameters used by the shader but not described in the technique in the property `extras`.
 
 ```json
-    "details": {
-        "commonProfile": {
-            "extras": {
-                "doubleSided": false
-            },
-            "lightingModel": "Blinn",
-            "parameters": [
-                "ambient",
-                "diffuse",
-                "emission",
-                "light0Color",
-                "light0Transform",
-                "modelViewMatrix",
-                "normalMatrix",
-                "projectionMatrix",
-                "shininess",
-                "specular"
-            ],
-            "texcoordBindings": {
-                "diffuse": "TEXCOORD_0"
-            }
+"details": {
+    "commonProfile": {
+        "extras": {
+            "doubleSided": false
         },
+        "lightingModel": "Blinn",
+        "parameters": [
+            "ambient",
+            "diffuse",
+            "emission",
+            "light0Color",
+            "light0Transform",
+            "modelViewMatrix",
+            "normalMatrix",
+            "projectionMatrix",
+            "shininess",
+            "specular"
+        ],
+        "texcoordBindings": {
+            "diffuse": "TEXCOORD_0"
+        }
+    },
         "type": "COLLADA-1.4.1/commonProfile"
 ```
 
@@ -519,11 +585,11 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 <a name="cameras"></a>
 ## Cameras
 
-Cameras define the viewport projection. The projection can be perspective or orthographic.
+Cameras define viewport projections. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics auch as PROJECTION.
 
 Cameras are stored in the asset using the dictionary property `cameras`. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-The following example defines a perspective camera with 
+The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
 
 ```
 "cameras": {
@@ -536,17 +602,62 @@ The following example defines a perspective camera with
         },
         "type": "perspective"
     }
-},
+}
 ```
+
+The implementation
 
 <a name="lights"></a>
 ## Lights
+
+Lights define light sources in the scene.
+
+Lights are stored in the asset using the dictionary property `lights`. Each camera defines a `light` property that designates the type of light (`ambient`, `directional`, `point` or `spot`), and a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white directional light.
+
+
+```json
+    "lights": {
+        "directionalLightShape1-lib": {
+            "directional": {
+                "color": [
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "type": "directional"
+        }
+    }
+```
+
+Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
 
 <a name="animations"></a>
 ## Animations
 
 <a name="metadata"></a>
 ## Metadata
+
+Asset metadata is described in the `asset` property. The asset metadata contains the following properties:
+
+* a `copyright` property denoting authorship
+* a `generator` property describing the tool, if any, that generated the asset
+* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL see getContext() with premultipliedAlpha)
+* a profile designation
+* a `version` property denoting the specification version
+
+Only the `version` property is required. Example:
+
+```json
+"asset": {
+    "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+    "premultipliedAlpha": true,
+    "profile": "WebGL 1.0.2",
+    "version": 0.8
+}
+```
+
+<mark>*Todo: Patrick what do we say about profiles, if anything?.*</mark>
 
 <a name="specifying-extensions"></a>
 ## Specifying Extensions
@@ -622,84 +733,6 @@ This section will describe the format for each of the GL types stored in the bin
 <a name="acknowledgements"></a>
 
 <a name="annotated-example"></a>
-# Annotated Example
-
-## The Scene
-
-## The Shader Source Code
-
-The following example shows the GLSL source code for a Phong shader program that will be referenced by the example JSON used throughout this section. The vertex shader computes the screen space position of each vertex, using the world space transform defined in `u_modelViewMatrix` and the perspective projection defined in `u_projectionMatrix`. 
-
-In addition, the shader computes the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` that will be used in the fragment shader. The normal vector and light direction are computed using matrices that are based on the state of the current camera and lights. The runtime determines how to pass these values based on *semantics*, described later in this section.
-
-```
-precision highp float;
-attribute vec3 a_position;
-attribute vec3 a_normal;
-varying vec3 v_normal;
-uniform mat3 u_normalMatrix;
-uniform mat4 u_modelViewMatrix;
-uniform mat4 u_projectionMatrix;
-attribute vec2 a_texcoord0;
-varying vec2 v_texcoord0;
-varying vec3 v_light0Direction;
-uniform mat4 u_light0Transform;
-void main(void) {
-vec4 pos = u_modelViewMatrix * vec4(a_position,1.0);
-v_normal = u_normalMatrix * a_normal;
-v_texcoord0 = a_texcoord0;
-v_light0Direction = mat3(u_light0Transform) * vec3(0.,0.,1.);
-gl_Position = u_projectionMatrix * pos;
-}
-```
-
-The fragment shader computes the fragment color using the varying values `v_normal`, `v_texcoord0` and `v_light0Direction` computed by the vertex shader, as well as several material properties defined as uniform variables, including ambient color, emissive color and a diffuse texture.
-
-```
-precision highp float;
-varying vec3 v_normal;
-uniform vec4 u_ambient;
-varying vec2 v_texcoord0;
-uniform sampler2D u_diffuse;
-uniform vec4 u_emission;
-uniform vec4 u_specular;
-uniform float u_shininess;
-varying vec3 v_light0Direction;
-uniform vec3 u_light0Color;
-void main(void) {
-vec3 normal = normalize(v_normal);
-vec4 color = vec4(0., 0., 0., 0.);
-vec4 diffuse = vec4(0., 0., 0., 1.);
-vec3 diffuseLight = vec3(0., 0., 0.);
-vec4 emission;
-vec4 ambient;
-vec4 specular;
-ambient = u_ambient;
-diffuse = texture2D(u_diffuse, v_texcoord0);
-emission = u_emission;
-specular = u_specular;
-vec3 specularLight = vec3(0., 0., 0.);
-{
-float specularIntensity = 0.;
-float attenuation = 1.0;
-vec3 l = normalize(v_light0Direction);
-vec3 h = normalize(l+vec3(0.,0.,1.));
-specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;
-specularLight += u_light0Color * specularIntensity;
-diffuseLight += u_light0Color * max(dot(normal,l), 0.) * attenuation;
-}
-specular.xyz *= specularLight;
-color.xyz += specular.xyz;
-diffuse.xyz *= diffuseLight;
-color.xyz += diffuse.xyz;
-color.xyz += emission.xyz;
-color = vec4(color.rgb * diffuse.a, diffuse.a);
-gl_FragColor = color;
-}
-
-```
-
-
 
 # Acknowledgments
 
