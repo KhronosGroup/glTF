@@ -114,8 +114,11 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
 * `*.glsl` files use `text/plain`
-* Texture files use the official `image/*` type based on the specific image format.
+* Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: .jpg, .png, .bmp, and .gif. 
 
+## URIs
+
+glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs to embed resources in the JSON. This allows the application to decide the best approach for delivery: if assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
 <a name="concepts"></a>
 # Concepts
