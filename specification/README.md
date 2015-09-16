@@ -242,8 +242,6 @@ The next example defines the transformation for a camera node using the `matrix`
 
 ### Coordinate System and Units
 
-<mark>*Todo: add*</mark>
-
 glTF uses a right-handed coordinate system with Y up and positive Z pointing out of the screen.
 
 The units for all linear distances are meters.
@@ -261,8 +259,41 @@ A *buffer* is data stored as a binary blob in a file. The buffer can contain a c
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer, and an integer data length. The bufferView also defines a target data type (ARRAY_BUFFER,
-ELEMENT_BUFFER, animation/skin) so that the implementation can readily create and populate buffers in memory.
+All buffers are stored in the assets `buffers` property.
+
+The following example defines a buffer named `duck`. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI. 
+
+```json
+    "buffers": {
+        "duck": {
+            "byteLength": 102040,
+            "type": "arraybuffer",
+            "uri": "duck.bin"
+        }
+    },
+```
+
+A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
+
+The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view named `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
+
+
+```json
+    "bufferViews": {
+        "bufferView_29": {
+            "buffer": "duck",
+            "byteLength": 25272,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        "bufferView_30": {
+            "buffer": "duck",
+            "byteLength": 76768,
+            "byteOffset": 25272,
+            "target": 34962
+        }
+    },
+```
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
 
@@ -273,6 +304,41 @@ Buffer data is little endian.
 All large data for meshes, skins and animations is stored in buffers and retrieved via accessors.
 
 An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. FLOAT) and a data type (e.g. VEC3), which when combined define the complete data type for each array. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+
+All accessors are stored in the asset's `accessors` property.
+
+The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a VEC3 for retrieving the primitive's position data.
+
+```json
+"accessors": {
+    "accessor_21": {
+        "bufferView": "bufferView_29",
+        "byteOffset": 0,
+        "byteStride": 0,
+        "componentType": 5123,
+        "count": 12636,
+        "type": "SCALAR"
+    },
+    "accessor_23": {
+        "bufferView": "bufferView_30",
+        "byteOffset": 0,
+        "byteStride": 12,
+        "componentType": 5126,
+        "count": 2399,
+        "max": [
+            0.961799,
+            1.6397,
+            0.539252
+        ],
+        "min": [
+            -0.692985,
+            0.0992937,
+            -0.613282
+        ],
+        "type": "VEC3"
+    },
+```
+
 
 <a name="geometry-and-meshes"></a>
 
@@ -312,7 +378,7 @@ The following example defines a mesh containing one triangle set primitive:
 
 A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
-Materials are stored in the assets `materials` property, a dictionary containing one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess and specular color.
+Materials are stored in the assets `materials` property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess and specular color.
 
 ```
 "materials": {
@@ -350,7 +416,7 @@ Materials are stored in the assets `materials` property, a dictionary containing
 
 ### Techniques
 
-A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property. Each technique has zero or more parameters; each parameter is defined by type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
+A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` property. Each technique has zero or more parameters; each parameter is defined by type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
 
 The following fragment illustrates some technique parameters. The property `ambient` is defined as a FLOAT_VEC4 type; `diffuse` is defined as a SAMPLER_2D; and `light0color` is defined as a FLOAT_VEC3 with a default color value of white. 
 
@@ -424,7 +490,7 @@ Each technique contains one or more *render passes* the define the programs used
 
 >The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
 
-The technique's `passes` property is a dictionary containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL states to enable for that pass.
+The technique's `passes` property is a object containing all the named passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL states to enable for that pass.
 
 ```json
 "pass": "defaultPass",
@@ -445,7 +511,7 @@ The technique's `passes` property is a dictionary containing all the passes for 
 
 #### Programs
 
-GLSL shader programs are stored in the asset's `programs` property. This property is a dictionary containing one or more named objects, one for each program.
+GLSL shader programs are stored in the asset's `programs` property. This property contains one or more named objects, one for each program.
 
 Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively. 
 
@@ -463,7 +529,7 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
-Shader source files are stored in the asset's `shaders` property, a dictionary containing one or more named shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+Shader source files are stored in the asset's `shaders` property, which contains one or more named shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```json
 "shaders": {
@@ -575,7 +641,7 @@ Textures can be used as uniform inputs to shaders. The following material defini
 ```
 
 
-Textures are stored in the `textures` property, a dictionary. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of texImage2D() for more details.
+All textures are stored in the asset's `textures` property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of texImage2D() for more details.
 
 ```
 "textures": {
@@ -590,7 +656,7 @@ Textures are stored in the `textures` property, a dictionary. A texture is defin
 }
 ```
  
-Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
+Images referred to by textures are stored in the `images` property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
 
 ```
 "images": {
@@ -600,7 +666,7 @@ Images referred to by textures are stored in the `images` dictionary property of
 },
 ```
 
-Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
 
 ```
@@ -626,7 +692,7 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 
 Cameras define viewport projections. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics auch as PROJECTION.
 
-Cameras are stored in the asset using the dictionary property `cameras`. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+Cameras are stored in the asset's `cameras` property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
 The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
 
@@ -651,7 +717,7 @@ The implementation
 
 Lights define light sources in the scene.
 
-Lights are stored in the asset using the dictionary property `lights`. Each camera defines a `light` property that designates the type of light (`ambient`, `directional`, `point` or `spot`), and a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white directional light.
+Lights are stored in the asset's `lights` property. Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); then, a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
 
 
 ```json
