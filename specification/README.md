@@ -397,7 +397,26 @@ If no source property is supplied for a semantic, the semantic is implied in a c
 }
 ```
 
-<mark>Todo: do we need a table here listing all the semantics and their meanings? Or in a reference section since this section is non-normative?</mark>
+Table 1. Uniform Semantics
+
+| Semantic                     | Type         | Description |
+|:----------------------------:|:------------:|-------------|
+| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parents.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
+| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its parents. |
+| `VIEW`                       | `FLOAT_MAT4` | Transforms from world to view coordinates using the active camera node. |
+| `PROJECTION`                 | `FLOAT_MAT4` | Transforms from view to clip coordinates using the active camera node. |
+| `MODELVIEW`                  | `FLOAT_MAT4` | Combined `MODEL` and `VIEW`. |
+| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | Combined `MODEL`, `VIEW`, and `PROJECTION`. |
+| `MODELINVERSE`               | `FLOAT_MAT4` | Inverse of `MODEL`. |
+| `VIEWINVERSE`                | `FLOAT_MAT4` | Inverse of `VIEW`. |
+| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | Inverse of `PROJECTION`. |
+| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | Inverse of `MODELVIEW`. |
+| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | Inverse of `MODELVIEWPROJECTION`. |
+| `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
+| `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
+| `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
+
+Attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
 #### Render Passes
 
