@@ -802,7 +802,7 @@ Shader source files are stored in the asset's `shaders` property, which contains
 
 #### Program Instances
 
-A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and a `attributes` and `uniforms` properties.
+A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and `attributes` and `uniforms` properties.
 
 ```json
 "instanceProgram": {
@@ -887,7 +887,7 @@ Textures can be used as uniform inputs to shaders. The following material defini
 ```
 
 
-All textures are stored in the asset's `textures` property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of texImage2D() for more details.
+All textures are stored in the asset's `textures` property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
 ```
 "textures": {
@@ -926,12 +926,12 @@ Samplers are stored in the `samplers` property of the asset. Each sampler specif
 },
 ```
 
-> **Mipmapping Implementation Note**: When a sampler's minification filter (`sampler.minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap` function.
+> **Mipmapping Implementation Note**: When a sampler's minification filter (`minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap()` function.
 
 
 > **Non-Power-Of-Two Texture Implementation Note**: glTF does not guarantee that a texture's dimensions are a power-of-two.  At runtime, if a texture's width or height is not a power-of-two, the texture needs to be resized so its dimensions are powers-of-two if the `sampler` the texture references:
-> * Has wrapping mode (either `sampler.wrapS` or `sampler.wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
-> * Has a minification filter (`sampler.minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
+> * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
+> * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
 <a name="cameras"></a>
 ## Cameras
@@ -940,7 +940,7 @@ Cameras define viewport projections. The projection can be perspective or orthog
 
 Cameras are stored in the asset's `cameras` property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
+The following example defines a perspective camera with supplied values for Y field of view (in degrees), aspect ratio, and near and far clipping planes.
 
 ```
 "cameras": {
@@ -955,8 +955,6 @@ The following example defines a perspective camera with supplied values for Y fi
     }
 }
 ```
-
-The implementation
 
 <a name="lights"></a>
 ## Lights
@@ -988,9 +986,9 @@ Lights are contained in nodes and thus can be transformed. Their world-space pos
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-> Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transforms.
+> Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-All animations are stored in the `animations` property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frames, samplers (`samplers` property) that interpolate between the key frames, and a `count` property indicating the number of key frame inputs present in the parameters data. The value in `count` must be less than or equal to number of entries in the shortest parameters value.
+All animations are stored in the `animations` property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, samplers that interpolate between the key frames (the `samplers` property) , and a `count` property indicating the number of key frame inputs present in the parameters data. The value in `count` must be less than or equal to number of entries in the shortest parameters value.
 
 The following example defines an animating camera node. 
 
@@ -1064,7 +1062,7 @@ Asset metadata is described in the `asset` property. The asset metadata contains
 
 * a `copyright` property denoting authorship
 * a `generator` property describing the tool, if any, that generated the asset
-* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL see getContext() with premultipliedAlpha)
+* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
 * a profile designation
 * a `version` property denoting the specification version
 
@@ -1084,7 +1082,27 @@ Only the `version` property is required. Example:
 <a name="specifying-extensions"></a>
 ## Specifying Extensions
 
-<mark>*Todo: Patrick please do preliminary writeup.*</mark>
+glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example.
+
+```javascript
+"a_shader" : {
+    "extensions" : {
+        "binary_glTF" : {
+            "bufferView" : // ...
+        }
+    }
+}
+```
+
+All extensions used in a model are listed the top-level `extensionsUsed` dictionary object, e.g.,
+
+```javascript
+"extensionsUsed" : [
+   "EXT_binary_glTF"
+]
+```
+
+For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
 
 <a name="properties"></a>
 # Properties Reference
