@@ -1,8 +1,10 @@
 # glTF Extension Registry
 
-## Multi-vendor extensions
+## Draft Khronos extensions
 
-* [EXT_binary_glTF](MultiVendor/EXT_binary_glTF/README.md)
+_Draft Khronos extensions are not ratified yet._
+
+* [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
 
 ## Vendor extensions
 
@@ -19,7 +21,7 @@ All glTF object properties (see [glTFProperty.schema.json](https://github.com/Kh
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 
 Examples include:
-* **New properties**: `EXT_binary_glTF` introduces a `bufferView` property for shaders, e.g.,
+* **New properties**: `KHR_binary_glTF` introduces a `bufferView` property for shaders, e.g.,
 ```javascript
 "a_shader" : {
     "extensions" : {
@@ -30,13 +32,13 @@ Examples include:
 }
 ```
 * **New parameter semantics**: `CESIUM_RTC` introduces the `CESIUM_RTC_MODELVIEW` semantic.
-* **Reserved ids**: `EXT_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
-* **New container formats**: `EXT_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
+* **Reserved ids**: `KHR_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
+* **New container formats**: `KHR_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
 
 All extensions used in a model are listed as strings in the top-level `extensionsUsed` array, e.g.,
 ```javascript
 "extensionsUsed" : [
-   "EXT_binary_glTF"
+   "KHR_binary_glTF"
 ]
 ```
 This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the the `extensions` property of all objects.
@@ -51,7 +53,7 @@ Extensions start as a vendor extension, then can become a multi-vendor extension
 
 ### Vendor Extensions
 
-A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/) requesting one.  Requests should include:
+A list of vendor prefixes is maintained in [Prefixes.md](Prefixes.md).  Any vendor, not just Khronos members, can request an extension prefix by submitting an [issue on GitHub](https://github.com/KhronosGroup/glTF/issues/new) requesting one.  Requests should include:
 * The name of the prefix.
 * The name of the vendor using the prefix.
 * The `extension` GitHub label.
@@ -62,13 +64,13 @@ Vendor extensions are not covered by the Khronos IP framework.
 
 ### Multi-Vendor Extensions
 
-When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `EXT_binary_glTF`.
+When an extension is implemented by more than one vendor, its name can use the reserved `EXT` prefix.  To promote a vendor extension to a multi-vendor extension, open a pull request labled `extension` that contains a new copy of the extension (even if there aren't any changes) with the new name using the `EXT` prefix, e.g., `KHR_binary_glTF`.
 
 Multi-vendor extensions are not covered by the Khronos IP framework.
 
 ### Khronos Extensions
 
-Khronos extensions use the reserved `KHR` prefix and are ratified by Khronos and therefore are covered by the Khronos IP framework.  Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
+Khronos extensions use the reserved `KHR` prefix and are ratified by Khronos and therefore are covered by the Khronos IP framework.  Extensions that are intended to be ratified can also use the `KHR` prefix to avoid name/code/version thrashing.  Khronos members can submit an extension for ratification, which is then voted on by the Khronos Board of Promoters.
 
 ## Extensions vs. Extras
 

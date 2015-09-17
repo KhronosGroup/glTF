@@ -1,4 +1,4 @@
-# EXT_binary_glTF
+# KHR_binary_glTF
 
 ## Contributors
 
@@ -7,6 +7,10 @@
 * Kai Ninomiya, Cesium, [@kainino0x](https://twitter.com/kainino0x)
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Maik Thöner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
+
+## Status
+
+Draft (not ratified yet)
 
 ## Dependencies
 
@@ -102,18 +106,18 @@ Its `type` property is `"arraybuffer"`, and a runtime can ignore the `uri` prope
 When a runtime encounters this buffer, it should use the Binary glTF `body` as the buffer.
 `bufferViews` that reference this `buffer` work as usual.
 
-To support embedded shaders and images, `shader` and `image` glTF properties have new `EXT_binary_glTF` extension properties that should be used instead of the `uri` property.
+To support embedded shaders and images, `shader` and `image` glTF properties have new `KHR_binary_glTF` extension properties that should be used instead of the `uri` property.
 See Listings 2 and 3.
 
 **Listing 2**: A `shader` referencing a `bufferView` to access an embedded shader source.
 ```javascript
 "extensionsUsed" : [
-    "EXT_binary_glTF"
+    "KHR_binary_glTF"
 ]
 // ...
 "a_shader" : {
     "extensions" : {
-        "EXT_binary_glTF" : {
+        "KHR_binary_glTF" : {
             "bufferView" : // ...
         }
     }
@@ -123,12 +127,12 @@ See Listings 2 and 3.
 **Listing 3**: An `image` referencing a `bufferView` and with metadata useful for loading the image from the arraybuffer.  In JavaScript, `Blob` can be used as the source for an `Image` to extract an image from the arraybuffer (see Cesium's [`loadImageFromTypedArray`](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/loadImageFromTypedArray.js) helper function).
 ```javascript
 "extensionsUsed" : [
-    "EXT_binary_glTF"
+    "KHR_binary_glTF"
 ]
 // ...
 "an_image" : {
     "extensions" : {
-        "EXT_binary_glTF" : {
+        "KHR_binary_glTF" : {
             "bufferView" : // ...,
             "mimeType" : "image/png",
             "height" : 256,
@@ -140,10 +144,10 @@ See Listings 2 and 3.
 
 ### JSON Schema
 
-For full details on the `EXT_binary_glTF` extension properties, see the schema:
+For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [image](schema/EXT_binary_glTF.image.schema.json) `EXT_binary_glTF` extensions object
-* [shader](schema/EXT_binary_glTF.shader.schema.json) `EXT_binary_glTF` extensions object
+* [image](schema/KHR_binary_glTF.image.schema.json) `KHR_binary_glTF` extensions object
+* [shader](schema/KHR_binary_glTF.shader.schema.json) `KHR_binary_glTF` extensions object
 
 ## File Extension
 
@@ -178,7 +182,7 @@ Use `model/gltf+binary`.
 
 _This section is non-normative._
 
-Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF (only trivial differences to EXT_binary_glTF) and the glTF loader in Cesium 1.10, different configurations are recommended for different scenarios.
+Based on experimentation (below & [[1]](#BenchData)) using CESIUM_binary_glTF (only trivial differences to KHR_binary_glTF) and the glTF loader in Cesium 1.10, different configurations are recommended for different scenarios.
 
 * To minimize file size and number of files, use Binary glTF (gzipped), and external compressed image files (PNG, JPEG, etc.) to avoid significant decompression overhead.
 * If a single file is desired, use Binary glTF (gzipped) with all files embedded.
