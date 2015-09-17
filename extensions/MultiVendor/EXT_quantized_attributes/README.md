@@ -15,10 +15,10 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-Vertex Attributes, as they are used to render 3D meshes, usually come with 32 bit floating-point precision.
-However, for many applications, this precision is much more than what would actually be required.
-Therefore, a common optimization to save bandwidth and memory is to use vertex data in a less precise fixed-point format, for example using 16 bits.
-In many cases, this approach does not introduce any visible loss of quality in the rendered image, but it significantly speeds up loading time.
+Vertex attributes, as they are used to render 3D meshes, usually come with 32-bit floating-point precision.
+However, for many applications, this precision is much more than is required.
+Therefore, a common optimization to save bandwidth and memory is to use vertex data in a less precise fixed-point format, for example, using 16 bits.
+In many cases, this approach does not introduce any visible quality loss in the rendered image, but it significantly speeds up loading time.
 Moreover, since less memory is needed, it becomes possible to use the same amount of memory for even larger models.
 
 This extension provides a straightforward method for compression of vertex attributes, using a fixed-point data format with reduced precision.
@@ -35,10 +35,10 @@ The [paper](#lee-10-compression) "Mesh Geometry Compression for Mobile Graphics"
 #### <a name="choosing-a-range-for-normalization"></a>Choosing a Range for Normalization
 
 To quantize a given attribute, the first step is to compute a range.
-This step is needed for normalization on the encoder side, and later also for de-normalization on the decoder side.
+This step is needed for normalization on the encoder side, and later for de-normalization on the decoder side.
 There are various possibilities to pick reference values for normalization.
-For 3D vertex positions, for example, a good quality is achieved by using the 3D bounding box of the model.
-In the case of glTF writers, this information is often already available, since glTF supports the optional `min` and `max` properties for accessors.
+For 3D vertex positions, for example, good quality is achieved by using the 3D bounding box of the model.
+In the case of glTF writers, this information is often already available, since glTF supports the optional `min` and `max` accessor properties.
 
 Another way, for example, is to use the same bounding box, tiled across the scene, to the quantize data of different meshes.
 Although this means that more information gets lost than for tight fitting, it allows to efficiently hide cracks that could otherwise occur at borders between different meshes.
@@ -47,12 +47,12 @@ For reasons like this, it is important to note at this point that the bounding b
 
 #### Encoding Attribute Values
 
-Using the normalization method of choice, mapping all values to be compressed to a floating-point unit range _[0, 1]^n_ is the first step of the compression algorithm.
-Here, _n_ is the number of components (for example, 3 for 3D vertex positions).
+Using the normalization method of choice, mapping all values to be compressed to a floating-point unit range `[0, 1]^n` is the first step of the compression algorithm.
+Here, `n` is the number of components (for example, 3 for 3D vertex positions).
 This mapping can be achieved by first subtracting by the minimum normalization value from a given value and then dividing by the range of the respective component.
 
-From the floating-point unit range, values are then linearly mapped to the unsigned integer range _[0, 2^p - 1]_, where p is the precision in bits.
-For example, for 16 bit precision, we will map all values to the integer range _[0, 65535]_.
+From the floating-point unit range, values are then linearly mapped to the unsigned integer range `[0, 2^p - 1]`, where p is the precision in bits.
+For example, for 16-bit precision, we will map all values to the integer range `[0, 65535]`.
 This is just a multiplication operation, with an additional conversion from floating-point to integer format.
 During this last step, the crucial loss of precision takes place.
 
@@ -61,7 +61,7 @@ During this last step, the crucial loss of precision takes place.
 
 Uncompressing values from the quantized unsigned integer range back to their original range is straightforward.
 All that has to be done is to perform the inverse operations of the encoding algorithm:
-First, values are linearly mapped from the integer range back to the floating-point range _[0, 1]_.
+First, values are linearly mapped from the integer range back to the floating-point range `[0, 1]`.
 This can be achieved by converting from integer format to floating point and then performing a division operation.
 Second, the resulting values are multiplied by the range used for normalization.
 Finally, the minimum normalization value is added to the result, in order to achieve the correct offset.
@@ -73,7 +73,7 @@ To represent the decode matrix, this extension introduces one additional propert
 This property must be an array of 1 to 16 values, with a size matching the homogeneous decode matrix for the respective accessor.
 For example, quantized 3D vertex positions will require a 4x4 matrix with 16 entries, while quantized 2D texture coordinates will require a 3x3 matrix with 9 entries.
 
-A great advantage of this method is that renderers can use the GPU to efficiently perform decoding of each vertex during rendering.
+A great advantage of this method is that runtime engines can use the GPU to efficiently perform decoding of each vertex during rendering.
 One way to do this would be to pass the matrix to a vertex shader and perform the decoding before multiplying with a model-view matrix.
 However, it is even possible to multiply the decode matrix with the model-view matrix in advance.
 This way, no special adaptions are necessary inside the shader in order to render compressed data.
@@ -91,14 +91,13 @@ Therefore, this extension introduces two new, optional properties,`decodedMin` a
 
 The following example illustrates three different, valid accessors:
 
-```
+```javascript
 "extensionsUsed" : [
     "EXT_quantized_attributes"
 ]
 // ...
 "an_accessor" : {
-    // standard glTF properties
-    // ...
+    // ... standard glTF properties
     "extensions" : {
         "EXT_quantized_attributes" : {
             decodeMatrix : [1, 0, 0, 0, ...]
@@ -106,15 +105,13 @@ The following example illustrates three different, valid accessors:
     }
 },
 "another_accessor" : {
-    // standard glTF properties
-    // ...    
+    // ... standard glTF properties
 },
 "a_last_accessor" : {
-    // standard glTF properties
-    // ...
+    // ... standard glTF properties
     "extensions" : {
         "EXT_quantized_attributes" : {
-            decodeMatrix : [1, 0, 0, 0, ...],
+            decodeMatrix : [1, 0, 0, 0, /* ... */],
             decodedMin : [1,2,3],
             decodedMax : [3,4,5]            
         }
@@ -137,7 +134,7 @@ For full details on the EXT_quantized_attributes extension properties, see the s
 ## Known Implementations
 
 The [SRC](http://x3dom.org/src/) implementation by Fraunhofer IGD features a similar technology, which has served as a basis for this proposal.
-Note, however, that SRC uses two attributes for decoding (_decodeOffset_ and _decodeScale_), instead of using a matrix.
+Note, however, that SRC uses two attributes for decoding (`decodeOffset` and `decodeScale`), instead of using a matrix.
 
 
 ## Resources
