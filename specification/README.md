@@ -685,7 +685,7 @@ Each technique contains one or more *render passes* the define the programs used
 
 >The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
 
-The technique's `passes` property is a object containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, an array of GL render states to enable for that pass, such as `CULL_FACE` (2884) and `DEPTH_TEST` (2929).
+The technique's `passes` property is a object containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, described in the next section.
 
 ```json
 "pass": "defaultPass",
@@ -702,6 +702,64 @@ The technique's `passes` property is a object containing all the passes for that
     }
 ```
 
+#### Render States
+
+Render states define the fixed-function GL state when a primitive is rendered.  `states` contains two properties:
+
+* `enable`: an array of integers corresponding to boolean GL states that should be enabled using GL's `enable` function.
+* `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments to the GL function.
+
+Valid values for elements in the `enable` array are: `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `pass`, all of these boolean GL states are disabled.
+
+Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are: `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
+
+The following example `states` object indicates to enable all boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
+
+```javascript
+"states" : {
+    "enable" : [ 3042,  // BLEND
+        			2884,  // CULL_FACE
+        			2929,  // DEPTH_TEST
+        			32823, // POLYGON_OFFSET_FILL
+        			32926, // SAMPLE_ALPHA_TO_COVERAGE
+        			3089   // SCISSOR_TEST
+        			], // empty by default
+    "functions" : {
+      "blendColor": [0.0, 0.0, 0.0, 0.0], // (red, green, blue, alpha)
+      "blendEquationSeparate" : [
+                 32774, // FUNC_ADD (rgb)
+                 32774  // FUNC_ADD (alpha)
+                 ],
+      "blendFuncSeparate" : [
+      				1,     // ONE (srcRGB)
+      				1,     // ONE (srcAlpha)
+      				0,     // ZERO (dstRGB)
+      				0,     // ZERO (dstAlpha)
+      				],
+      "colorMask"  : [true, true, true, true], // (red, green, blue, alpha)
+      "cullFace"   : [1029], // BACK
+      "depthFunc"  : [LESS], // 513
+      "depthMask"  : [true],
+      "depthRange" : [0.0, 1.0], // (zNear, zFar)
+      "frontFace"  : [2305], // CCW
+      "lineWidth"  : [1.0],
+      "polygonOffset" : [0.0, 0.0], // (factor, units)
+      "scissor"    : [0, 0, 0, 0], // (x, y, width, height)
+    }
+}
+```
+
+The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
+```javascript
+"states": {
+    "enable": [
+        2884,
+        2929
+    ]
+}
+```
+
+> **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then only making GL state function calls for the states that vary between techniques.
 ### Programs, Attributes and Uniforms
 
 #### Programs
