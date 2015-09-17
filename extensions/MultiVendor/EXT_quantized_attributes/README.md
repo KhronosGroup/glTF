@@ -1,5 +1,6 @@
 # EXT_quantized_attributes 
 
+
 ## Contributors
 
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
@@ -10,6 +11,7 @@
 ## Dependencies
 
 Written against the glTF draft 1.0 spec.
+
 
 ## Overview
 
@@ -27,10 +29,10 @@ The process of resampling floating-point data to a grid with fixed spacing is co
 
 Within the following, the typical process of quantizing mesh attribute data is shown.
 It is not the only possible way to perform data quantization, but it should illustrate how the method works in general, and why decoding can finally be executed using a matrix.
-The [paper](resources) "Mesh Geometry Compression for Mobile Graphics" by Lee et al. describes this method more in detail, and it also provides a practical analysis of results.
+The [paper](#lee-10-compression) "Mesh Geometry Compression for Mobile Graphics" by Lee et al. describes this method more in detail, and it also provides a practical analysis of results.
 
 
-#### Choosing a Range for Normalization
+#### <a name="choosing-a-range-for-normalization"></a>Choosing a Range for Normalization
 
 To quantize a given attribute, the first step is to compute a range.
 This step is needed for normalization on the encoder side, and later also for de-normalization on the decoder side.
@@ -81,7 +83,7 @@ This way, no special adaptions are necessary inside the shader in order to rende
 
 The new `decodeMatrix` property introduced by this extension belongs to the accessor of the respective attribute.
 
-As already discussed [earlier in this document](choosing-a-range-for-normalization), the range chosen for normalization and de-normalization of vertex positions, for example, must not be identical with their bounding box.
+As already discussed in section [Choosing a Range for Normalization](#choosing-a-range-for-normalization), the range chosen for normalization and de-normalization of vertex positions, for example, must not be identical with their bounding box.
 To obtain information such as bounding boxes, glTF accessors already contain the optional `min` and `max` values.
 However, this values might not have been provided, and even if they are provided, they apply to the encoded, compressed data.
 One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it might desirable to save the overhead of matrix multiplication.
@@ -90,6 +92,10 @@ Therefore, this extension introduces two new, optional properties,`decodedMin` a
 The following example illustrates three different, valid accessors:
 
 ```
+"extensionsUsed" : [
+    "EXT_quantized_attributes"
+]
+// ...
 "an_accessor" : {
     // standard glTF properties
     // ...
@@ -128,13 +134,13 @@ For full details on the EXT_quantized_attributes extension properties, see the s
 * [accessor](schema/EXT_quantized_attributes.accessors.schema.json) `EXT_quantized_attributes` extensions object
 
 
-
 ## Known Implementations
 
 The [SRC](http://x3dom.org/src/) implementation by Fraunhofer IGD features a similar technology, which has served as a basis for this proposal.
 Note, however, that SRC uses two attributes for decoding (_decodeOffset_ and _decodeScale_), instead of using a matrix.
 
+
 ## Resources
-* Lee, J., Choe, S., and Lee, S. 2010. _Mesh geometry compression for mobile graphics._ In _Proc. CCNC_, 301–305 [paper](http://cg.postech.ac.kr/research/mesh_comp_mobile/mesh_comp_mobile_conference.pdf)
+* <a name="lee-10-compression"></a>Lee, J., Choe, S., and Lee, S. 2010. _Mesh geometry compression for mobile graphics._ In _Proc. CCNC_, 301–305 [paper](http://cg.postech.ac.kr/research/mesh_comp_mobile/mesh_comp_mobile_conference.pdf)
 * [SRC project](http://x3dom.org/src/) (paper, background, basic writer)
 * SRC writer ([code](http://x3dom.org/src/files/src_writer_source.zip))
