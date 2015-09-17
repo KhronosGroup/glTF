@@ -683,11 +683,11 @@ Attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, 
 
 #### Render Passes
 
-Each technique contains one or more *render passes* the define the programs used in each pass, and the render states to enable during each pass. 
+Each technique contains one or more *render passes* that define the programs used in each pass, and the render states to enable during each pass. 
 
 >The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
 
-The technique's `passes` property is a object containing all the passes for that technique. The `pass` property defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, described in the next section.
+The technique's `passes` property is an object containing all the passes for that technique. The `pass` property (singular) defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, described in the next section.
 
 ```json
 "pass": "defaultPass",
@@ -762,6 +762,7 @@ The following example shows a typical `"states"` object for closed opaque geomet
 ```
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then only making GL state function calls for the states that vary between techniques.
+
 ### Programs, Attributes and Uniforms
 
 #### Programs
