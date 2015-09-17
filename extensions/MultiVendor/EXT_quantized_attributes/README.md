@@ -1,4 +1,4 @@
-# EXT_QUANTIZED_ATTRIBUTES 
+# EXT_quantized_attributes 
 
 ## Contributors
 
@@ -19,7 +19,7 @@ In many cases, this approach does not introduce any visible loss of quality in t
 Moreover, since less memory is needed, it becomes possible to use the same amount of memory for even larger models.
 
 This extension provides a straightforward method for compression of vertex attributes, using a fixed-point data format with reduced precision.
-The process of resampling floating-point data to a grid with fixed spacing is commonly referred to as _quantization_, which is why this extension is entitled EXT_QUANTIZED_ATTRIBUTES.
+The process of resampling floating-point data to a grid with fixed spacing is commonly referred to as _quantization_, which is why this extension is entitled EXT_quantized_attributes.
 
 ### Quantization Scheme and Decode Matrix
 
