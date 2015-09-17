@@ -400,6 +400,72 @@ The following fragment shows two accessors, a scalar accessor for retrieving a p
     },
 ```
 
+#### Accessor Attribute Size
+
+The following tables can be used to compute the size of an accessor's attribute type.
+
+| `componentType` | Size in bytes |
+|:-:|:-:|
+| `5120` (BYTE) | 1 |
+| `5121`(UNSIGNED_BYTE) | 1 |
+| `5122` (SHORT) | 2 |
+| `5123` (UNSIGNED_SHORT) | 2 |
+| `5126` (FLOAT) | 4 |
+
+| `type` | Number of components |
+|:-:|:-:|
+| `"SCALAR"` | 1 |
+| `"VEC2"` | 2 |
+| `"VEC3"` | 3 |
+| `"VEC4"` | 4 |
+| `"MAT2"` | 4 |
+| `"MAT3"` | 9 |
+| `"MAT4"` | 16 |
+
+The size of an accessor's attribute type, in bytes, is 
+`(size in bytes of the 'componentType') * (number of components defined by 'type')`.
+
+For example:
+
+```javascript
+"accessor_1": {
+    "bufferView": "bufferView_1",
+    "byteOffset": 7032,
+    "byteStride": 12,
+    "componentType": 5126, // FLOAT
+    "count": 586,
+    "type": "VEC3"
+}
+```
+
+In this accessor, the `componentType` is `5126` (FLOAT) so each component is four bytes.  The `type` is `"VEC3"` so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
+
+#### BufferView and Accessor Byte Alignment
+
+The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's attribute type.
+
+> **Implementation Note:** This allows a runtime to efficiently create a single arraybuffer from a glTF `buffer` or an arraybuffer per `bufferView`, and then use an `accessor` to create a typed array view (e.g., `Float32Array`) into an arraybuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
+
+Consider the following example:
+
+```javascript
+"bufferView_1": {
+    "buffer": "buffer_1",
+    "byteLength": 17136,
+    "byteOffset": 620,
+    "target": 34963
+},
+"accessor_1": {
+    "bufferView": "bufferView_1",
+    "byteOffset": 4608,
+    "byteStride": 0,
+    "componentType": 5123, // UNSIGNED_SHORT
+    "count": 5232,
+    "type": "SCALAR"
+}
+```
+The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
+
 
 <a name="geometry-and-meshes"></a>
 
