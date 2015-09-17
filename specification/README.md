@@ -615,7 +615,7 @@ A technique describes the shading used for a material. Each technique has zero o
 
 The asset's techniques are stored in the `techniques` dictionary property.
 
-The following fragment illustrates some technique parameters. The property `ambient` is defined as a FLOAT\_VEC4 type; `diffuse` is defined as a SAMPLER\_2D; and `light0color` is defined as a FLOAT\_VEC3 with a default color value of white. 
+The following fragment illustrates some technique parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
 
 ```json
 "techniques": {
@@ -647,9 +647,9 @@ The following fragment illustrates some technique parameters. The property `ambi
 
 #### Semantics
 
-Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
+Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
 
-In the above example, the parameter `light0Transform` defines the MODELVIEW semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
+In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
 
 If no source property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
 
