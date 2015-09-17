@@ -3,6 +3,7 @@
 ## Contributors
 
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
+* Miguel Sousa, Fraunhofer IGD, [@mfportela](https://twitter.com/mfportela)
 * Maik Thöner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
 
 
