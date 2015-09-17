@@ -229,7 +229,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
             "node_1",
             "node-camera_1"
         ],
-        "name": "Box",
+        "name": "Box"
     },
 ```
 
