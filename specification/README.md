@@ -45,7 +45,6 @@ Contributors
 * [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
 * [Conformance](#conformance)
-* [Annotated Example](#annotated-example)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
@@ -1171,9 +1170,6 @@ This section will describe the format for each of the GL types stored in the bin
 <mark>*Todo: how do we tackle this?*</mark>
 
 <a name="acknowledgements"></a>
-
-<a name="annotated-example"></a>
-
 # Acknowledgments
 
 * Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
