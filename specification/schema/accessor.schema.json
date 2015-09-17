@@ -46,14 +46,18 @@
             "description" : "Maximum value of each component in this attribute.",
             "items" : {
                 "type" : "number"
-            }
+            },
+            "minItems" : 1,
+            "maxItems" : 16
         },
         "min" : {
             "type" : "array",
             "description" : "Minimum value of each component in this attribute.",
             "items" : {
                 "type" : "number"
-            }
+            },
+            "minItems" : 1,
+            "maxItems" : 16
         }
     },
     "additionalProperties" : false

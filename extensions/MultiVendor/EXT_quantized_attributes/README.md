@@ -131,7 +131,7 @@ The third accessor from the example uses decompression and additionally provides
 
 For full details on the EXT_quantized_attributes extension properties, see the schema:
 
-* [accessor](schema/EXT_quantized_attributes.accessors.schema.json) `EXT_quantized_attributes` extensions object
+* [accessor](schema/EXT_quantized_attributes.accessor.schema.json) `EXT_quantized_attributes` extensions object
 
 
 ## Known Implementations
