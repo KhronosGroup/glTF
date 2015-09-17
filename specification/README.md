@@ -611,9 +611,11 @@ Materials are stored in the assets `materials` property, which contains one or m
 
 ### Techniques
 
-A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` property. Each technique has zero or more parameters; each parameter is defined by type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
+A technique describes the shading used for a material. Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
 
-The following fragment illustrates some technique parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a SAMPLER_2D; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
+The asset's techniques are stored in the `techniques` dictionary property.
+
+The following fragment illustrates some technique parameters. The property `ambient` is defined as a FLOAT\_VEC4 type; `diffuse` is defined as a SAMPLER\_2D; and `light0color` is defined as a FLOAT\_VEC3 with a default color value of white. 
 
 ```json
 "techniques": {
@@ -645,7 +647,7 @@ The following fragment illustrates some technique parameters. The property `ambi
 
 #### Semantics
 
-Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
+Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
 
 In the above example, the parameter `light0Transform` defines the MODELVIEW semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
 
