@@ -106,7 +106,7 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
 
-<mark>*Todo: someone needs to get a MIME type recommendation going with IETF...*</mark>
+<mark>*Todo: someone needs to get a MIME type RFC going with IANA...*</mark>
 
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
@@ -115,7 +115,7 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 
 ## URIs
 
-glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs to embed resources in the JSON. This allows the application to decide the best approach for delivery: if assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
+glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
 <a name="concepts"></a>
 # Concepts
@@ -243,7 +243,7 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). 
 
-In the example below, `node-Box03` is defines non-default rotation and translation.
+In the example below, `node-box` defines non-default rotation and translation.
 
 ```json
     "node-box": {
@@ -436,7 +436,7 @@ The following example defines a mesh containing one triangle set primitive:
 ### Skins
 
 All skins are stored in the `skins` property of the asset, by name.
-Each skin is defined by a `bindShapeMatrix` property, which describes how pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each join name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
   
 
 ```json
@@ -471,7 +471,7 @@ Each skin is defined by a `bindShapeMatrix` property, which describes how pose t
 
 #### Skin Instances
 
-A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains skeletons; each skeleton is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance.
+A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
 
 
 ```json
@@ -488,7 +488,7 @@ A skin is instanced within a node using the node's `instanceSkin` property. The 
         },
 ```
 
-#### Attaching a Mesh to a Skin
+#### Skinned Mesh Attributes
 
 The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
 
