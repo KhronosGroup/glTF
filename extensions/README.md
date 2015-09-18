@@ -4,6 +4,7 @@
 
 * [EXT_binary_glTF](MultiVendor/EXT_binary_glTF/README.md)
 * [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+
 _Draft Khronos extensions are not ratified yet._
 
 ## Vendor extensions
