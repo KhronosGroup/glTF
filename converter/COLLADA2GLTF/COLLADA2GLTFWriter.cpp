@@ -161,7 +161,7 @@ namespace GLTF
         
         assetObject->setString("generator",version);
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
-        assetObject->setString(kProfile, asset->profile()->id());
+        assetObject->setValue(kProfile, asset->profile()->id());
         assetObject->setDouble(kVersion, glTFVersion);
 
         _metersPerUnit = globalAsset->getUnit().getLinearUnitMeter();

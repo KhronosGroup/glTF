@@ -375,7 +375,7 @@ namespace GLTF
         }
         
         cvtPrimitive->setMaterialObjectID((unsigned int)openCOLLADAMeshPrimitive->getMaterialId());
-        cvtPrimitive->setPrimitive(profile->getGLenumForString(type));
+        cvtPrimitive->setMode(profile->getGLenumForString(type));
         
         //count of indices , it must be the same for all kind of indices
         size_t count = openCOLLADAMeshPrimitive->getPositionIndices().getCount();

@@ -622,5 +622,12 @@ namespace GLTF
         }
     }
 
-    std::string GLTFWebGL_1_0_Profile::id() { return "WebGL 1.0.2"; }
+    std::shared_ptr<GLTF::JSONObject> GLTFWebGL_1_0_Profile::id()
+    {
+        auto id = std::make_shared<JSONObject>();
+        id->setString("api", "WebGL");
+        id->setString("version", "1.0.2");
+
+        return id;
+    }
 }

@@ -214,7 +214,7 @@ namespace GLTF
         
         for (unsigned int i = 0 ; i < primitivesCount ; i++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-            if (primitive->getPrimitive() != profile->getGLenumForString("TRIANGLES")) {
+            if (primitive->getMode() != profile->getGLenumForString("TRIANGLES")) {
                 return false;
             }
         }

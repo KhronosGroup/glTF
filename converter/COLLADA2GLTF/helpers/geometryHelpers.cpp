@@ -659,7 +659,7 @@ namespace GLTF
             size_t j = 0;
             unsigned int primitiveCount = 0;
             unsigned int targetIndicesCount = 0;
-            if (primitive->getPrimitive() == profile->getGLenumForString("TRIANGLES")) {
+            if (primitive->getMode() == profile->getGLenumForString("TRIANGLES")) {
                 unsigned int indicesPerElementCount = 3;
 				primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
                 for (j = nextPrimitiveIndex ; j < primitiveCount ; j++) {
@@ -685,7 +685,7 @@ namespace GLTF
                     }
                 }
             }
-            else if (primitive->getPrimitive() == profile->getGLenumForString("LINES")) {
+            else if (primitive->getMode() == profile->getGLenumForString("LINES")) {
                 unsigned int indicesPerElementCount = 2;
                 primitiveCount = (unsigned int)indices->getCount() / indicesPerElementCount;
                 for (j = nextPrimitiveIndex; j < primitiveCount; j++) {

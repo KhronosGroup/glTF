@@ -54,8 +54,8 @@ namespace GLTF
         GLTFPrimitive(const GLTFPrimitive& primitive);
         virtual ~GLTFPrimitive();
                 
-        unsigned int getPrimitive();
-        void setPrimitive(unsigned int type);
+        unsigned int getMode();
+        void setMode(unsigned int type);
 
         std::string getMaterialID();
         void setMaterialID(std::string materialID);

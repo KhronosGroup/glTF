@@ -33,7 +33,7 @@ namespace GLTF
         GLTFWebGL_1_0_Profile();
         virtual ~GLTFWebGL_1_0_Profile();
 
-        std::string id();
+        std::shared_ptr<GLTF::JSONObject> id();
         unsigned int getGLTypeForComponentTypeAndType(const std::string& componentType, const std::string& type);
         std::string getGLSLTypeForGLType(unsigned int glType);
         size_t getComponentsCountForGLType(unsigned int glType);

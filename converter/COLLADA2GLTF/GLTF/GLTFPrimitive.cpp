@@ -48,7 +48,7 @@ namespace GLTF
     {
         this->_allVertexAttributes = primitive._allVertexAttributes;
         GLTFPrimitive *pr = const_cast<GLTFPrimitive*>(&primitive);
-        this->setPrimitive(pr->getPrimitive());
+        this->setMode(pr->getMode());
         this->setMaterialID(pr->getMaterialID());
         this->_materialObjectID = primitive._materialObjectID;
         this->_uniqueIndices = primitive._uniqueIndices;
@@ -90,12 +90,12 @@ namespace GLTF
         this->_allVertexAttributes.push_back(VertexAttribute);
     }    
         
-    unsigned int GLTFPrimitive::getPrimitive() {
-        return this->getUnsignedInt32(kPrimitive);
+    unsigned int GLTFPrimitive::getMode() {
+        return this->getUnsignedInt32(kMode);
     }
     
-    void GLTFPrimitive::setPrimitive(unsigned int type) {
-        this->setUnsignedInt32(kPrimitive, type);
+    void GLTFPrimitive::setMode(unsigned int type) {
+        this->setUnsignedInt32(kMode, type);
     }
     
     std::string GLTFPrimitive::getMaterialID() {

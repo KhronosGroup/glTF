@@ -45,6 +45,7 @@ const std::string kMax = "max";
 const std::string kIndices = "indices";
 const std::string kMaterial = "material";
 const std::string kMaterials = "materials";
+const std::string kMode = "mode";
 const std::string kPrimitive = "primitive";
 const std::string kName = "name";
 const std::string kExtensions = "extensions";
