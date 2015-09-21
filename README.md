@@ -64,3 +64,4 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 * glTF: Designing an Open-Standard Runtime Asset Format in [GPU Pro 5](http://gpupro.blogspot.com/), May 2014
 * [Building a WebGL Santa with Cesium and glTF](http://cesiumjs.org/2013/12/23/Building-A-WebGL-Santa-with-Cesium-and-glTF/), December 2013
 * [glTF update](http://www.slideshare.net/auradeluxe/gltf-update-with-tony-parisi), August 2013
+* [How I got involved in glTF and Khronos](http://blog.virtualglobebook.com/2013/03/how-i-got-involved-in-gltf-and-khronos.html), March 2013
