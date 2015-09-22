@@ -494,6 +494,10 @@ The following example defines a mesh containing one triangle set primitive:
     ]
 ```
 
+Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
+
+Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `TEXCOORD_0`, `TEXCOORD_1`, etc.
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitives `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by `attributes` property (they are all equal for a given primitive).
 
                     
@@ -702,7 +706,7 @@ The following fragment illustrates some technique parameters. The property `ambi
             },
             "light0Transform": {
                 "semantic": "MODELVIEW",
-                "source": "directionalLight1",
+                "node": "directionalLight1",
                 "type": 35676
             },
 ```
@@ -712,9 +716,9 @@ The following fragment illustrates some technique parameters. The property `ambi
 
 Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
 
-In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
+In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `node`, in this case the node `directionalight1`, which refers to a light node. 
 
-If no source property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
+If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
 
 ```javascript
 "projectionMatrix": {
@@ -742,7 +746,6 @@ Table 1. Uniform Semantics
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 
-Attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
 #### Render Passes
 
