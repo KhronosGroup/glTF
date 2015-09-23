@@ -53,7 +53,7 @@ THREE.glTFShader = function(material, parameters, program, object, scene) {
 }
 
 
-// bindUniforms - connect the uniform values to their source parameters
+// bindParameters - connect the uniform values to their source parameters
 THREE.glTFShader.prototype.bindParameters = function(scene) {
 
 	function findObject(o, param) { 
@@ -77,7 +77,7 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 			param.uniform = this.material.uniforms[uniform];
 			this.semantics[pname] = param;
 
-			//console.log("parameter:", pname, param );
+			console.log("parameter:", pname, param );
 		}
 	}
 
@@ -106,6 +106,10 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	            case "PROJECTION" :
 	            	var m4 = semantic.uniform.value;
 	            	m4.copy(camera.projectionMatrix);            		
+	                break;
+
+	            case "JOINTMATRIX" :
+	                console.log("Joint:", semantic)
 	                break;
 
 	            default :

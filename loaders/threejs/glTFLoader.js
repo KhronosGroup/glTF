@@ -1461,6 +1461,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 mesh.primitives.forEach(function(primitive) {
 
                                     var material = primitive.material;
+                                    var materialParams = material.params;
                                     if (!(material instanceof THREE.Material)) {
                                         material = createShaderMaterial(material, primitive.geometry.geometry);
                                     }
@@ -1526,6 +1527,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     if (threeMesh) {
                                         threeMesh.castShadow = true;
                                         node.add(threeMesh);
+
+                                        if (material instanceof THREE.ShaderMaterial) {
+                                            var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
+                                                materialParams.program, threeMesh, theLoader.rootObj);
+                                            THREE.glTFShaders.add(glTFShader);
+
+                                        }
                                     }
                                     
                                 }, this);                               
