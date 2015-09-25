@@ -27,7 +27,7 @@ This drawback of having to parallelize (and align) downloads for a progressive r
 
 This extension introduces the concept of buffer `chunks`. By interleaving content for transmission, buffers can be retrieved progressively, using a limited amount of steps for progression.
 
-**Figure 1**: Binary glTF layout.
+**Figure 1**: A binary glTF file, progressively streamed to the GPU by interleaving chunks for transmission.
 
 ![](img/streaming.jpg)
 
