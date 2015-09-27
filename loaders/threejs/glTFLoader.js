@@ -163,6 +163,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
+                case "WEIGHT" :
+                    s = s.replace(r, 'skinWeight');
+                    break;
+                case "JOINT" :
+                    s = s.replace(r, 'skinIndex');
+                    break;
 
                 default :
                     break;
@@ -586,8 +592,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             threeNode.add(threeMesh);
 
             if (material instanceof THREE.ShaderMaterial) {
-                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
-                    materialParams.program, threeMesh, theLoader.rootObj);
+                var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
                 THREE.glTFShaders.add(glTFShader);
 
             }
@@ -1549,9 +1554,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                         threeMesh.castShadow = true;
                                         node.add(threeMesh);
 
+                                        materialParams.joints = joints;
                                         if (material instanceof THREE.ShaderMaterial) {
-                                            var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
-                                                materialParams.program, threeMesh, theLoader.rootObj);
+                                            var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
                                             THREE.glTFShaders.add(glTFShader);
 
                                         }

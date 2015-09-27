@@ -43,10 +43,11 @@ THREE.glTFShaders = ( function () {
 })();
 
 // Construction/initialization
-THREE.glTFShader = function(material, parameters, program, object, scene) {
+THREE.glTFShader = function(material, params, object, scene) {
 	this.material = material;
-	this.parameters = parameters;
-	this.program = program;
+	this.parameters = params.parameters;
+	this.program = params.program;
+	this.joints = params.joints;
 	this.object = object;
 	this.semantics = {};
 	this.m4 = new THREE.Matrix4;
@@ -77,6 +78,12 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 			param.uniform = this.material.uniforms[uniform];
 			this.semantics[pname] = param;
 
+			if (param.semantic == "JOINTMATRIX") {
+				var m4v = param.uniform.value;
+				for (var vi = 0; vi < m4v.length; vi++) {
+					m4v[vi] = this.joints[vi].matrixWorld;
+				}
+			}
 			//console.log("parameter:", pname, param );
 		}
 	}
@@ -109,6 +116,12 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	                break;
 
 	            case "JOINTMATRIX" :
+	            /*
+	            	var m4v = semantic.uniform.value;
+	            	for (var mi = 0; mi < m4v.length; mi++) {
+	            		m4v[mi].copy(this.joints[mi].matrixWorld);
+	            	}
+	            */
 	                //console.log("Joint:", semantic)
 	                break;
 
