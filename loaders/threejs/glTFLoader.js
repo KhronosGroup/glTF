@@ -878,9 +878,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         var pname = instanceProgram.uniforms[uniform];
                         var shaderParam = shaderParams[pname];
                         var ptype = shaderParam.type;
+                        var pcount = shaderParam.count;
                         var value = values[pname];
                         var utype = "";
                         var uvalue;
+                        var ulength;
 
                         // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
                         //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
@@ -931,16 +933,35 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 }
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT4 :
-                                utype = "m4";
-                                uvalue = new THREE.Matrix4;
+                                if (pcount !== undefined) {
+                                    utype = "m4v";
+                                    uvalue = new Array(pcount);
+                                    for (var mi = 0; mi < pcount; mi++) {
+                                        uvalue[mi] = new THREE.Matrix4;
+                                    }
+                                    ulength = pcount;
 
-                                if (shaderParam && shaderParam.value) {
-                                    var m4 = shaderParam.value;
-                                    uvalue.fromArray(m4);
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4v = shaderParam.value;
+                                        uvalue.fromArray(m4v);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
-                                if (value) {
-                                    uvalue.fromArray(value);
+                                else {
+                                    utype = "m4";
+                                    uvalue = new THREE.Matrix4;
 
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4 = shaderParam.value;
+                                        uvalue.fromArray(m4);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
 /*                                if (pname == "light0Transform") {
                                     uvalue.set(
@@ -974,7 +995,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         }
 
 
-                        var udecl = { type : utype, value : uvalue };
+                        var udecl = { type : utype, value : uvalue, length : ulength };
 
                         params.uniforms[uniform] = udecl;
                     }
