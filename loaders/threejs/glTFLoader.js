@@ -1554,8 +1554,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                         threeMesh.castShadow = true;
                                         node.add(threeMesh);
 
-                                        materialParams.joints = joints;
                                         if (material instanceof THREE.ShaderMaterial) {
+                                            materialParams.joints = joints;
                                             var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
                                             THREE.glTFShaders.add(glTFShader);
 

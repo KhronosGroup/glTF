@@ -81,7 +81,7 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 			if (param.semantic == "JOINTMATRIX") {
 				var m4v = param.uniform.value;
 				for (var vi = 0; vi < m4v.length; vi++) {
-					m4v[vi] = this.joints[vi].matrixWorld;
+					m4v[vi] = this.joints[vi].matrix;
 				}
 			}
 			//console.log("parameter:", pname, param );
