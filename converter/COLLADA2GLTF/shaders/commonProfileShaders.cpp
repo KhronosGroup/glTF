@@ -1133,7 +1133,7 @@ namespace GLTF
                             shared_ptr <JSONObject> lightColorParameter = addValue("fs", "uniform", vec3Type, 1, lightColor, asset);
                             lightColorParameter->setValue("value", description->getValue("color"));
                             shared_ptr <JSONObject> lightTransformParameter = addValue("vs", "uniform", mat4Type, 1, lightTransform, asset);
-                            lightTransformParameter->setValue(kSource, nodesIds[j]);
+                            lightTransformParameter->setValue(kNode, nodesIds[j]);
                             lightTransformParameter->setString(kSemantic, MODELVIEW);
                             
                             if (lightType == "directional") {
@@ -1155,7 +1155,7 @@ namespace GLTF
                             
                             if (lightType == "spot") {
                                 shared_ptr <JSONObject> lightInverseTransformParameter = addValue("fs", "uniform", mat4Type, 1, lightInverseTransform, asset);
-                                lightInverseTransformParameter->setValue(kSource, nodesIds[j]);
+                                lightInverseTransformParameter->setValue(kNode, nodesIds[j]);
                                 lightInverseTransformParameter->setString(kSemantic, MODELVIEWINVERSE);
                                 
                                 shared_ptr <JSONObject> lightFallOffExponentParameter = addValue("fs", "uniform", floatType, 1, lightFallOffExponent, asset);
