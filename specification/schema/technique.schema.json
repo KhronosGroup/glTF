@@ -1,0 +1,44 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "technique",
+    "type" : "object",
+    "description" : "Specifies shading and its inputs.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties": {
+        "parameters" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniqueParameters.schema.json"
+            },
+            "default" : {}
+        },
+        "attributes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniqueAttribute.schema.json"
+            },
+            "default" : {}
+        },
+        "program" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "Specifies the program id (property name).",
+            "required" : true
+        },
+        "uniforms" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "techniqueUniform.schema.json"
+            },
+            "default" : {}
+        },
+        "states" : {
+            "extends" : { "$ref" : "techniqueStates.schema.json" },
+            "description" : "Fixed-function rendering states.",
+            "default" : {}
+        }
+    },
+    "additionalProperties" : false
+}

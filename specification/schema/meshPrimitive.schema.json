@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "mesh/primitive",
+    "type" : "object",
+    "description" : "Geometry and material.  WebGL: see drawElements() and drawArrays().",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "attributes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "meshPrimitiveAttribute.schema.json"
+            },
+            "default" : {}
+        },
+        "indices" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using drawArrays()."
+        },
+        "material" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the material to apply to this primitive when rendering.",
+            "required" : true
+        },
+        "mode" : {
+            "type" : "integer",
+            "description" : "The type of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).",
+            "enum" : [0, 1, 2, 3, 4, 5, 6],
+            "default" : 4
+        }
+    },
+    "additionalProperties" : false
+}

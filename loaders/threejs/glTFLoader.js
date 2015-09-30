@@ -163,6 +163,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
+                case "WEIGHT" :
+                    s = s.replace(r, 'skinWeight');
+                    break;
+                case "JOINT" :
+                    s = s.replace(r, 'skinIndex');
+                    break;
 
                 default :
                     break;
@@ -586,8 +592,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             threeNode.add(threeMesh);
 
             if (material instanceof THREE.ShaderMaterial) {
-                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
-                    materialParams.program, threeMesh, theLoader.rootObj);
+                var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
                 THREE.glTFShaders.add(glTFShader);
 
             }
@@ -878,9 +883,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         var pname = instanceProgram.uniforms[uniform];
                         var shaderParam = shaderParams[pname];
                         var ptype = shaderParam.type;
+                        var pcount = shaderParam.count;
                         var value = values[pname];
                         var utype = "";
                         var uvalue;
+                        var ulength;
 
                         // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
                         //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
@@ -931,16 +938,35 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 }
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT4 :
-                                utype = "m4";
-                                uvalue = new THREE.Matrix4;
+                                if (pcount !== undefined) {
+                                    utype = "m4v";
+                                    uvalue = new Array(pcount);
+                                    for (var mi = 0; mi < pcount; mi++) {
+                                        uvalue[mi] = new THREE.Matrix4;
+                                    }
+                                    ulength = pcount;
 
-                                if (shaderParam && shaderParam.value) {
-                                    var m4 = shaderParam.value;
-                                    uvalue.fromArray(m4);
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4v = shaderParam.value;
+                                        uvalue.fromArray(m4v);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
-                                if (value) {
-                                    uvalue.fromArray(value);
+                                else {
+                                    utype = "m4";
+                                    uvalue = new THREE.Matrix4;
 
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4 = shaderParam.value;
+                                        uvalue.fromArray(m4);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
 /*                                if (pname == "light0Transform") {
                                     uvalue.set(
@@ -974,7 +1000,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         }
 
 
-                        var udecl = { type : utype, value : uvalue };
+                        var udecl = { type : utype, value : uvalue, length : ulength };
 
                         params.uniforms[uniform] = udecl;
                     }
@@ -1213,6 +1239,15 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                     if (!aspect_ratio)
                         aspect_ratio = 1; 
+
+                    if (xfov === undefined) {
+                        if (yfov)
+                        {
+                            // According to COLLADA spec...
+                            // aspect_ratio = xfov / yfov
+                            xfov = yfov * aspect_ratio;
+                        }
+                    }
                     
                     if (yfov === undefined)
                     {
@@ -1225,9 +1260,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         
                     }
                     
-                    if (yfov)
+                    if (xfov)
                     {
-                        camera = new THREE.PerspectiveCamera(yfov, aspect_ratio, znear, zfar);
+                        camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
                     }
                 }
                 else
@@ -1452,6 +1487,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 mesh.primitives.forEach(function(primitive) {
 
                                     var material = primitive.material;
+                                    var materialParams = material.params;
                                     if (!(material instanceof THREE.Material)) {
                                         material = createShaderMaterial(material, primitive.geometry.geometry);
                                     }
@@ -1517,6 +1553,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     if (threeMesh) {
                                         threeMesh.castShadow = true;
                                         node.add(threeMesh);
+
+                                        if (material instanceof THREE.ShaderMaterial) {
+                                            materialParams.joints = joints;
+                                            var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
+                                            THREE.glTFShaders.add(glTFShader);
+
+                                        }
                                     }
                                     
                                 }, this);                               

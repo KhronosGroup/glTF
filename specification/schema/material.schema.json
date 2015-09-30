@@ -1,0 +1,22 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "material",
+    "type" : "object",
+    "description" : "An instance of a technique with parameter value overrides.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties": {
+        "technique" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the technique. TODO: define technique when this is undefined",
+        },
+        "values" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "materialValues.schema.json"
+            },
+            "default" : {}
+        }
+    },
+    "additionalProperties" : false
+}
