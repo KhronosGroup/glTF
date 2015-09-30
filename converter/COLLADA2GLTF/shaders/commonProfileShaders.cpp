@@ -558,68 +558,8 @@ namespace GLTF
         shared_ptr <GLTFProfile> _profile;
     };
     
-    class Pass {
-    public:
-        Pass(GLTFAsset * asset) {
-            this->_profile = asset->profile();
-            this->_instanceProgram = new GLSLProgram(asset);
-        }
-
-        ~Pass() {
-            delete _instanceProgram;
-        }
-        
-        GLSLProgram* instanceProgram() {
-            return this->_instanceProgram;
-        }
-        
-        shared_ptr <JSONObject> getDetails(const std::string &lightingModel,
-                                           shared_ptr<JSONObject> values,
-                                           shared_ptr<JSONObject> techniqueExtras,
-                                           shared_ptr<JSONObject> texcoordBindings,
-                                           GLTFAsset *asset) {
-            shared_ptr <JSONObject> details(new JSONObject());
-            
-            shared_ptr <JSONObject> commonProfile = details->createObjectIfNeeded("commonProfile");
-            shared_ptr <JSONObject> extras = commonProfile->createObjectIfNeeded("extras");
-            
-            details->setString(kType, "COLLADA-1.4.1/commonProfile");
-            
-            shared_ptr<JSONArray> parameters(new JSONArray());
-            
-            shared_ptr <JSONObject> uniforms = _instanceProgram->uniforms();
-            vector <std::string> keys = uniforms->getAllKeys();
-            for (size_t i = 0 ; i < keys.size() ; i++) {
-                std::string parameter = uniforms->getString(keys[i]);
-                parameters->appendValue(shared_ptr <JSONValue> (new JSONString( parameter)));
-            }
-            commonProfile->setValue("parameters", parameters);
-            
-            commonProfile->setString("lightingModel", lightingModel);
-            
-            extras->setBool("doubleSided", techniqueExtras->getBool(kDoubleSided));
-            
-            if (texcoordBindings->getKeysCount() > 0) {
-                commonProfile->setValue("texcoordBindings", texcoordBindings);
-            }
-            
-            return details;
-        }
-        
-    private:
-        GLSLProgram* _instanceProgram;
-        shared_ptr <GLTFProfile> _profile;
-        shared_ptr <JSONObject> states;
-    };
-    
     class Technique {
-    public:
-        
-        //FIXME: pass id when we support multipass
-        Pass* getPass() {
-            return this->_pass;
-        }
-        
+    public:        
         unsigned int typeForSemanticAttribute(const std::string& semantic) {
             static std::map<std::string , unsigned int> typeForSemanticAttribute;
             
@@ -670,14 +610,12 @@ namespace GLTF
             parameter->setString(kSemantic, semantic);
             parameter->setUnsignedInt32(kType,  type);
             _parameters->setValue(parameterID, parameter);
-            
-            //FIXME: should not assume default pass / default program
-            GLSLProgram* program = _pass->instanceProgram();
-            GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
+
+            GLSLShader* shader = (vertexOrFragment == "vs") ? _program->vertexShader() : _program->fragmentShader();
             if (uniformOrAttribute == "attribute") {
-                program->attributes()->setString(symbol, parameterID);
+                _program->attributes()->setString(symbol, parameterID);
             } else if (uniformOrAttribute == "uniform") {
-                program->uniforms()->setString(symbol, parameterID);
+                _program->uniforms()->setString(symbol, parameterID);
             } else {
                 return false;
             }
@@ -686,7 +624,7 @@ namespace GLTF
                 shader->addAttribute(symbol, type);
                 
                 if (includesVarying) {
-                    program->addVarying("v_" + parameterID, type);
+                    _program->addVarying("v_" + parameterID, type);
                 }
             } else {
                 shader->addUniform(symbol, type, count, forcesAsAnArray);
@@ -717,12 +655,11 @@ namespace GLTF
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
             
             //FIXME: should not assume default pass / default program
-            GLSLProgram* program = _pass->instanceProgram();
-            GLSLShader* shader = (vertexOrFragment == "vs") ? program->vertexShader() : program->fragmentShader();
+            GLSLShader* shader = (vertexOrFragment == "vs") ? _program->vertexShader() : _program->fragmentShader();
             if (uniformOrAttribute == "attribute") {
-                program->attributes()->setString(symbol, parameterID);
+                _program->attributes()->setString(symbol, parameterID);
             } else if (uniformOrAttribute == "uniform") {
-                program->uniforms()->setString(symbol, parameterID);
+                _program->uniforms()->setString(symbol, parameterID);
             } else {
                 asset->log("cannot add semantic of unknown kind %s\n", uniformOrAttribute.c_str());
             }
@@ -756,6 +693,7 @@ namespace GLTF
                   shared_ptr<JSONObject> texcoordBindings,
                   GLTFAsset *asset) {
             
+            this->_program = new GLSLProgram(asset);
             GLTFLightingModel lightingModel = _lightingModelFromString(lm);
             
             this->_profile = asset->profile();
@@ -766,7 +704,6 @@ namespace GLTF
             unsigned int sampler2DType = _GL(SAMPLER_2D);
             unsigned int floatType = _GL(FLOAT);
             
-            this->_pass = new Pass(asset);
             this->_parameters = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
             
             shared_ptr <JSONObject> inputParameters = values;
@@ -792,10 +729,9 @@ namespace GLTF
             std::vector <std::string> allUniforms;
             std::string shaderName = techniqueID;
             
-            GLSLProgram* program = this->_pass->instanceProgram();
-            GLSLShader* vertexShader = program->vertexShader();
-            GLSLShader* fragmentShader = program->fragmentShader();
-            program->setName(shaderName);
+            GLSLShader* vertexShader = _program->vertexShader();
+            GLSLShader* fragmentShader = _program->fragmentShader();
+            _program->setName(shaderName);
             
             //position attribute
             addSemantic("vs", "attribute",
@@ -983,7 +919,7 @@ namespace GLTF
                     if (slot == "reflective") {
                         texVSymbol = texcoordVaryingSymbol + GLTFUtils::toString(declaredTexcoordVaryings.size());
                         unsigned int reflectiveType = typeForSemanticAttribute("REFLECTIVE");
-                        program->addVarying(texVSymbol, reflectiveType);
+                        _program->addVarying(texVSymbol, reflectiveType);
                         
                         //Update Vertex shader for reflection
                         std::string normalType = vertexShader->GLSLTypeForGLType(vec3Type);
@@ -1005,7 +941,7 @@ namespace GLTF
                             
                             addSemantic("vs", "attribute",
                                         semantic, "texcoord" + GLTFUtils::toString(declaredTexcoordAttributes.size()), 1, false);
-                            program->addVarying(texVSymbol, typeForSemanticAttribute(semantic));
+                            _program->addVarying(texVSymbol, typeForSemanticAttribute(semantic));
                             
                             vertexShader->appendCode("%s = %s;\n", texVSymbol.c_str(), texSymbol.c_str());
                             declaredTexcoordAttributes[semantic] = texSymbol;
@@ -1113,9 +1049,9 @@ namespace GLTF
                         } else {
                             char varyingLightDirection[100];
                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
-                            program->addVarying(varyingLightDirection, vec3Type);
+                            _program->addVarying(varyingLightDirection, vec3Type);
                             if ((vertexShader->hasSymbol("v_position") == false) && ((lightingModel == phong) || (lightType == "spot"))) {
-                                program->addVarying("v_position", vec3Type);
+                                _program->addVarying("v_position", vec3Type);
                                 vertexShader->appendCode("v_position = pos.xyz;\n");
                             }
                             fragmentShader->appendCode("{\n");
@@ -1270,18 +1206,23 @@ namespace GLTF
         }
 
         ~Technique() {
-            delete _pass;
+            delete _program;
         }
         
         shared_ptr <GLTF::JSONObject> parameters() {
             return _parameters;
         }
+
+        GLSLProgram* instanceProgram()
+        {
+            return _program;
+        }
         
     private:
-        Pass *_pass;
         shared_ptr <GLTF::JSONObject> _parameters;
         shared_ptr <GLTFProfile> _profile;
-        
+        GLSLProgram* _program;
+        shared_ptr <JSONObject> states;
     };
 
     static TechniqueHashToTechniqueID techniqueHashToTechniqueID;
@@ -1344,6 +1285,7 @@ namespace GLTF
         std::string lightingModel = techniqueGenerator->getString("lightingModel");
         shared_ptr<JSONObject> attributeSemantics = techniqueGenerator->getObject("attributeSemantics");
         shared_ptr<JSONObject> texcoordBindings = techniqueGenerator->getObject("texcoordBindings");
+        shared_ptr<JSONObject> referenceTechnique(new JSONObject());
         
         shared_ptr <JSONObject> techniquesObject = asset->root()->createObjectIfNeeded("techniques");
         
@@ -1356,16 +1298,11 @@ namespace GLTF
             return techniqueID;
         
         GLTF::Technique glTFTechnique(lightingModel, attributeSemantics, techniqueID, values, techniqueExtras, texcoordBindings, asset);
-        GLTF::Pass *glTFPass = glTFTechnique.getPass();
-        
-        std::string passName("defaultPass");
-        //if the technique has not been serialized, first thing create the default pass for this technique
-        shared_ptr <GLTF::JSONObject> pass(new GLTF::JSONObject());
-        
+       
         shared_ptr <GLTF::JSONObject> states = createStatesForTechnique(values, techniqueExtras, asset);
-        pass->setValue("states", states);
+        referenceTechnique->setValue("states", states);
         
-        GLSLProgram* glTFProgram = glTFPass->instanceProgram();
+        GLSLProgram* glTFProgram = glTFTechnique.instanceProgram();
         GLSLShader* vs = glTFProgram->vertexShader();
         GLSLShader* fs = glTFProgram->fragmentShader();
                 
@@ -1383,32 +1320,20 @@ namespace GLTF
         shared_ptr <JSONObject> programsObject = asset->root()->createObjectIfNeeded("programs");
         std::string programID = "program_" + GLTFUtils::toString(programsObject->getKeysCount());
         shared_ptr <GLTF::JSONObject> program(new GLTF::JSONObject());
-        shared_ptr <GLTF::JSONObject> instanceProgram(new GLTF::JSONObject());
         
-        instanceProgram->setValue("uniforms", glTFProgram->uniforms());
-        instanceProgram->setValue("attributes", glTFProgram->attributes());
-        pass->setValue("instanceProgram", instanceProgram);
-        instanceProgram->setString("program", programID);
+        referenceTechnique->setValue("uniforms", glTFProgram->uniforms());
+        referenceTechnique->setValue("attributes", glTFProgram->attributes());
+        
+        referenceTechnique->setString("program", programID);
         programsObject->setValue(programID, program);
         
         program->setValue("attributes", glTFProgram->attributes()->keys());
         program->setString("vertexShader", shaderVS);
         program->setString("fragmentShader", shaderFS);
         
-        shared_ptr<JSONObject> referenceTechnique(new JSONObject());
-        
-        referenceTechnique->setValue("parameters", glTFTechnique.parameters());
-        referenceTechnique->setString("pass", passName);
-        
-        shared_ptr <GLTF::JSONObject> passes = referenceTechnique->createObjectIfNeeded("passes");
-        
-        passes->setValue(passName, pass);
+        referenceTechnique->setValue("parameters", glTFTechnique.parameters());       
+
         techniquesObject->setValue(techniqueID, referenceTechnique);
-        
-        if (CONFIG_BOOL(asset, "exportPassDetails")) {
-            shared_ptr <JSONObject> details = glTFPass->getDetails(lightingModel, values, techniqueExtras, texcoordBindings, asset);
-            pass->setValue("details", details);
-        }
         
         return techniqueID;
     }    
