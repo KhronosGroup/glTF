@@ -6,8 +6,7 @@
     "properties" : {
         "aspectRatio" : {
             "type" : "number",
-            "description" : "The floating-point aspect ratio of the field of view.",
-            "required" : true,
+            "description" : "The floating-point aspect ratio of the field of view.  When this is undefined, use the aspect ratio of the canvas.",
             "minimum" : 0.0
         },
         "yfov" : {
