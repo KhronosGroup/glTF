@@ -1,9 +1,6 @@
 [submodule "specification/validator/JSV"]
 	path = specification/validator/JSV
 	url = https://github.com/garycourt/JSV.git
-[submodule "converter/COLLADA2GLTF/dependencies/OpenCOLLADA"]
-	path = converter/COLLADA2GLTF/dependencies/OpenCOLLADA
-	url = https://github.com/KhronosGroup/OpenCOLLADA.git
 [submodule "COLLADA2GLTF/dependencies/OpenCOLLADA"]
 	path = COLLADA2GLTF/dependencies/OpenCOLLADA
 	url = https://github.com/KhronosGroup/OpenCOLLADA.git
