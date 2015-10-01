@@ -37,6 +37,7 @@
 #include "commonProfileShaders.h"
 #include "helpers/encodingHelpers.h"
 #include "COLLADAFWFileInfo.h"
+#include "Math/COLLADABUMathPrerequisites.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -46,6 +47,11 @@ using namespace COLLADAFW;
 using namespace COLLADABU;
 using namespace COLLADASaxFWL;
 using namespace rapidjson;
+
+namespace
+{
+    const double radianPerDegree = Math::PI / 180.0;
+}
 
 namespace GLTF
 {
@@ -1044,26 +1050,36 @@ namespace GLTF
                 cameraObject->setString(kType, "orthographic");
                 cameraObject->setValue("orthographic", projectionObject);
                 switch (camera->getDescriptionType()) {
-                    case Camera::UNDEFINED: //!< The perspective camera object is invalid
-                        //FIXME: handle error
+                    case Camera::UNDEFINED: //!< The orthographic camera object is invalid
+                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting to 1.\n");
                         break;
-                    case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
+                    case Camera::SINGLE_X: //!< Only xmag. ymag default to 1.
+                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting ymag to 1.\n");
                         projectionObject->setDouble("xmag", camera->getXMag().getValue());
+                        projectionObject->setDouble("ymag", 1.0);
                         break;
-                    case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
+                    case Camera::SINGLE_Y: //!< Only ymag. xmag defaults to 1.
+                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting xmag to 1.\n");
+                        projectionObject->setDouble("xmag", 1.0);
                         projectionObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
-                    case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
+                    case Camera::X_AND_Y: //!< xmag and ymag.
                         projectionObject->setDouble("xmag", camera->getXMag().getValue());
                         projectionObject->setDouble("ymag", camera->getYMag().getValue());
                         break;
-                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
-                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
-                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xmag. Compute ymag.
+                        {
+                            double x = camera->getXMag().getValue();
+                            projectionObject->setDouble("xmag", x);
+                            projectionObject->setDouble("ymag", x / camera->getAspectRatio().getValue());
+                        }
                         break;
-                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
-                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio ymag. Compute xmag.
+                        {
+                            double y = camera->getYMag().getValue();
+                            projectionObject->setDouble("xmag", y * camera->getAspectRatio().getValue());
+                            projectionObject->setDouble("ymag", y);
+                        }
                         break;
                 }
                 
@@ -1075,24 +1091,31 @@ namespace GLTF
                 cameraObject->setValue("perspective", projectionObject);
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The perspective camera object is invalid
-                        //FIXME: handle error
+                    case Camera::SINGLE_X: //!< Only xfov. Default yfov to 1.0.
+                        this->_asset->log("WARNING: Invalid perspective camera. At least yfov must be provided. Defaulting yfov to 1.\n");
+                        projectionObject->setDouble("yfov", 1.0);
                         break;
-                    case Camera::SINGLE_X: //!< Only xfov or xmag, respectively describes the camera
-                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
+                    case Camera::SINGLE_Y: //!< Only yfov. Use aspect ratio of the canvas.
+                        projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
                         break;
-                    case Camera::SINGLE_Y: //!< Only yfov or ymag, respectively describes the camera
-                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
+                    case Camera::X_AND_Y: //!< xfov and yfov. Compute aspect ratio.
+                        {
+                            double x = camera->getXFov().getValue() * radianPerDegree;
+                            double y = camera->getYFov().getValue() * radianPerDegree;
+                            projectionObject->setDouble("yfov", y);
+                            projectionObject->setDouble("aspect_ratio", x / y);
+                        }
                         break;
-                    case Camera::X_AND_Y: //!< xfov and yfov or xmag and ymag, respectively describe the camera
-                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
-                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
+                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov. Compute yfov.
+                        {
+                            double x = camera->getXFov().getValue() * radianPerDegree;
+                            double aspect_ratio = camera->getAspectRatio().getValue();
+                            projectionObject->setDouble("yfov", x / aspect_ratio);
+                            projectionObject->setDouble("aspect_ratio", aspect_ratio);
+                        }
                         break;
-                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov or xmag, respectively describe the camera
-                        projectionObject->setDouble("xfov", camera->getXFov().getValue());
-                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
-                        break;
-                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov or <mag, respectivelydescribe the camera
-                        projectionObject->setDouble("yfov", camera->getYFov().getValue());
+                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov.
+                        projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
                         projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
                         break;
                 }
