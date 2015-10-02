@@ -351,7 +351,8 @@ namespace GLTF
             InstanceCamera* instanceCamera = instanceCameras[0];
             shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
             
-            std::string cameraId = uniqueIdWithType(kCamera, instanceCamera->getInstanciatedObjectId());
+            std::string id = instanceCamera->getInstanciatedObjectId().toAscii();
+            std::string cameraId = this->_asset->getOriginalId(id);
             nodeObject->setString(kCamera, cameraId);
             
             //FIXME: just handle the first camera within a node now
@@ -1037,9 +1038,15 @@ namespace GLTF
         shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> projectionObject(new GLTF::JSONObject());
 
-        std::string id = uniqueIdWithType(kCamera, camera->getUniqueId());
-        
-        camerasObject->setValue(id, cameraObject);
+        std::string cameraUID = camera->getUniqueId().toAscii();
+        this->_asset->setValueForUniqueId(cameraUID, cameraObject);
+        this->_asset->setOriginalId(cameraUID, camera->getOriginalId());
+        camerasObject->setValue(camera->getOriginalId(), cameraObject);
+
+        if (!camera->getName().empty())
+        {
+            cameraObject->setString(kName, camera->getName());
+        }
         
         switch (camera->getCameraType()) {
             case Camera::UNDEFINED_CAMERATYPE:
@@ -1140,6 +1147,11 @@ namespace GLTF
         this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
         images->setValue(openCOLLADAImage->getOriginalId(), image);
 
+        if (!openCOLLADAImage->getName().empty())
+        {
+            image->setString(kName, openCOLLADAImage->getName());
+        }
+
         shared_ptr<JSONObject> extras = this->_extraDataHandler->getExtras(openCOLLADAImage->getUniqueId());
         if (extras->contains("has_alpha"))
         {
@@ -1234,7 +1246,7 @@ namespace GLTF
             case COLLADAFW::Light::SPOT_LIGHT: {
                 glTFLight->setString(kType, "spot");
 
-                float fallOffAngle =  (float)light->getFallOffAngle().getValue();
+                float fallOffAngle =  (float)light->getFallOffAngle().getValue() * radianPerDegree;
                 float fallOffExponent = (float)light->getFallOffExponent().getValue();
                 
                 description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
@@ -1251,13 +1263,15 @@ namespace GLTF
         
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString(kType), description);
+
+        if (!light->getName().empty())
+        {
+            glTFLight->setString(kName, light->getName());
+        }
         
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
         this->_asset->setOriginalId(lightId, light->getOriginalId());
-        
-        shared_ptr<JSONArray> lightsIds = this->_asset->root()->createArrayIfNeeded("lightsIds");
-        lightsIds->appendValue(shared_ptr<JSONString>(new JSONString(light->getOriginalId())));
         
 		return true;
 	}
