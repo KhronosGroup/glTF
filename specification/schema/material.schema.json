@@ -5,10 +5,17 @@
     "description" : "An instance of a technique with parameter value overrides.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
-        "instanceTechnique" : {
-            "extends" : { "$ref" : "materialInstanceTechnique.schema.json" },
-            "description" : "An instance of a technique with parameter value overrides.",
-            "required" : true
+        "technique" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id (JSON property name) of the technique. TODO: define technique when this is undefined",
+        },
+        "values" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "materialValues.schema.json"
+            },
+            "default" : {}
         }
     },
     "additionalProperties" : false
