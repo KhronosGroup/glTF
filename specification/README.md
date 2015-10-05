@@ -13,7 +13,7 @@ _This is a draft specification; it is incomplete and may change before ratificat
 Editors
 
 * Patrick Cozzi, Cesium
-* Tony Parisi, WEVR
+* Tony Parisi, Third Eye
 
 Contributors
 
@@ -644,32 +644,30 @@ Materials are stored in the assets `materials` property, which contains one or m
 ```javascript
 "materials": {
     "blinn-1": {
-        "instanceTechnique": {
-            "technique": "technique1",
-            "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "diffuse": "texture_file2",
-                "emission": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "shininess": 38.4,
-                "specular": [
-                    0,
-                    0,
-                    0,
-                    1
-                ]
-            }
-        },
-        "name": "blinn3"
+        "technique": "technique1",
+        "values": {
+            "ambient": [
+                0,
+                0,
+                0,	
+                1
+            ],
+            "diffuse": "texture_file2",
+            "emission": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "shininess": 38.4,
+            "specular": [
+                0,
+                0,
+                0,
+                1
+            ]
+        }
+        "name": "blinn1"
     }
 },
 ```
