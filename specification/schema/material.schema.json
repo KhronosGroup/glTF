@@ -7,7 +7,7 @@
     "properties": {
         "technique" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the technique. TODO: define technique when this is undefined",
+            "description" : "The id (JSON property name) of the technique. TODO: define technique when this is undefined"
         },
         "values" : {
             "properties" : {
