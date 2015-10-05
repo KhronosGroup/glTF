@@ -714,7 +714,7 @@ The following fragment illustrates some technique parameters. The property `ambi
 
 #### Semantics
 
-Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
+Technique parameters may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
 
 In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `node`, in this case the node `directionalight1`, which refers to a light node. 
 
@@ -746,33 +746,9 @@ Table 1. Uniform Semantics
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 
-
-#### Render Passes
-
-Each technique contains one or more *render passes* that define the programs used in each pass, and the render states to enable during each pass. 
-
->The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
-
-The technique's `passes` property is an object containing all the passes for that technique. The `pass` property (singular) defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, described in the next section.
-
-```javascript
-"pass": "defaultPass",
-"passes": {
-    "defaultPass": {
-        "instanceProgram": {
-        },
-        "states": {
-            "enable": [
-                2884,
-                2929
-            ]
-        }
-    }
-```
-
 #### Render States
 
-Render states define the fixed-function GL state when a primitive is rendered.  `states` contains two properties:
+Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
 
 * `enable`: an array of integers corresponding to boolean GL states that should be enabled using GL's `enable` function.
 * `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments to the GL function.
@@ -829,8 +805,6 @@ The following example shows a typical `"states"` object for closed opaque geomet
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then only making GL state function calls for the states that vary between techniques.
 
-### Programs, Attributes and Uniforms
-
 #### Programs
 
 GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
@@ -868,10 +842,12 @@ Shader source files are stored in the asset's `shaders` property, which contains
 
 #### Program Instances
 
-A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and `attributes` and `uniforms` properties.
+A shader program may be instanced multiple times within the glTF asset, via the `program` property of a technique. `program` specifies the program identifier.
+
+Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
+
 
 ```javascript
-"instanceProgram": {
     "attributes": {
         "a_normal": "normal",
         "a_position": "position",
@@ -889,8 +865,7 @@ A shader program may be instanced multiple times within the glTF asset, via the 
         "u_projectionMatrix": "projectionMatrix",
         "u_shininess": "shininess",
         "u_specular": "specular"
-    }
-},
+    },
 ```
 
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
