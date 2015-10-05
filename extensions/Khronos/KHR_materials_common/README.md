@@ -59,11 +59,19 @@ Lambert
 
 Constant
 
+<a name="lights"></a>
 ## Lights
+
+Lights define light sources in the scene.
+
+Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
 
 ### Defining Lights
 
-Lights are defined within a dictionary property in the file, by adding an `extensions` property to the top-level glTF object and defining its `KHR_materials_common` property with a `lights` dictionary object inside it. The `lights` property can contain one or more objects, as follows:
+Lights are defined within a dictionary property in the file, by adding an `extensions` property to the top-level glTF object and defining its `KHR_materials_common` property with a `lights` dictionary object inside it. 
+
+Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); then, a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
+
 
 ```javascript
     "extensions": {
@@ -89,7 +97,6 @@ Lights are defined within a dictionary property in the file, by adding an `exten
 
 IDs of any property within the `lights` extension property are treated like other glTF IDs, i.e. they are added to the global ID space.
 
-The `type` property specifies the type of light. Valid light types are `directional`, `point`, `spot` and `ambient`. A property with name corresponding to the `type` property's value defines the parameter values for the light. In the above example, the `directional` property contains an object with a diffuse light color stored in the `color` property.
 
 ### Adding Light Instances to Nodes
 
@@ -109,7 +116,7 @@ Lights are glTF scene objects: they have position and orientation, which can be 
     }
 ```
 
-### Common Light Types
+### Light Types
 
 Directional
 
@@ -118,6 +125,16 @@ Point
 Spot
 
 Ambient
+
+<a name="schema"></a>
+## JSON Schema
+
+   * <a href="schema/light.schema.json">`light`</a>
+   * <a href="schema/lightAmbient.schema.json">`light/ambient`</a>
+   * <a href="schema/lightDirectional.schema.json">`light/directional`</a>
+   * <a href="schema/lightPoint.schema.json">`light/point`</a>
+   * <a href="schema/lightSpot.schema.json">`light/spot`</a>
+
 
 <a name="conformance"></a>
 ## Conformance

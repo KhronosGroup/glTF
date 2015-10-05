@@ -13,7 +13,7 @@ _This is a draft specification; it is incomplete and may change before ratificat
 Editors
 
 * Patrick Cozzi, Cesium
-* Tony Parisi, Third Eye
+* Tony Parisi, WEVR
 
 Contributors
 
@@ -956,31 +956,6 @@ The following example defines a perspective camera with supplied values for Y fi
 }
 ```
 
-<a name="lights"></a>
-## Lights
-
-Lights define light sources in the scene.
-
-Lights are stored in the asset's `lights` property. Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); then, a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
-
-
-```javascript
-    "lights": {
-        "directionalLightShape1-lib": {
-            "directional": {
-                "color": [
-                    1,
-                    1,
-                    1
-                ]
-            },
-            "type": "directional"
-        }
-    }
-```
-
-Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
-
 <a name="animations"></a>
 ## Animations
 
@@ -1135,11 +1110,6 @@ This section will describe the format for each of the GL types stored in the bin
    * <a href="schema/extras.schema.json">`extras`</a>
    * <a href="schema/glTF.schema.json">`glTF`</a> (root property for model)
    * <a href="schema/image.schema.json">`image`</a>
-   * <a href="schema/light.schema.json">`light`</a>
-   * <a href="schema/lightAmbient.schema.json">`light/ambient`</a>
-   * <a href="schema/lightDirectional.schema.json">`light/directional`</a>
-   * <a href="schema/lightPoint.schema.json">`light/point`</a>
-   * <a href="schema/lightSpot.schema.json">`light/spot`</a>
    * <a href="schema/material.schema.json">`material`</a>
    * <a href="schema/materialInstanceTechnique.schema.json">`material/instanceTechnique`</a>
    * <a href="schema/materialInstanceTechniqueValues.schema.json">`material/instanceTechnique/values`</a>
