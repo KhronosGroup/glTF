@@ -49,15 +49,31 @@ Common materials are defined by adding an `extensions` property to any glTF mate
         },
 ```
 
-### Common Material Types
+### Material Types
 
-Blinn
+#### Blinn
 
-Phong
+```javascript
+    "materials": {
+            "blinn1": {
+                "extensions": {
+                    "KHR_materials_common" : {
+                        "technique" : "BLINN",
+                        "values": {
+                            "diffuse": [0.5,0.5,0.5,1]
+                        }
+                    }
+                }
+            }
+        },
+```
 
-Lambert
+#### Phong
 
-Constant
+#### Lambert
+
+#### Constant
+
 
 <a name="lights"></a>
 ## Lights
