@@ -98,6 +98,11 @@ var global = window;
                     return path;
                 }
 
+                var isDataUriRegex = /^data:/;
+                if (isDataUriRegex.test(path)) {
+                    return path;
+                }
+                
                 return this.baseURL + path;
             }
         },

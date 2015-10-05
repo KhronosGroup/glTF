@@ -255,6 +255,98 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     function LoadTexture(src) {
         if(!src) { return null; }
+
+        var isDataUriRegex = /^data:/;
+
+        var loadImage = function(url, success, error) {
+            var image = new Image();
+
+            image.onload = function() {
+                success(image);
+            };
+
+            if (typeof error !== 'undefined') {
+                image.onerror = error;
+            }
+
+            image.src = url;
+        };
+
+        function loadImageFromTypedArray(uint8Array, format) {
+            //>>includeStart('debug', pragmas.debug);
+            if (!defined(uint8Array)) {
+                throw new DeveloperError('uint8Array is required.');
+            }
+
+            if (!defined(format)) {
+                throw new DeveloperError('format is required.');
+            }
+            //>>includeEnd('debug');
+
+            var blob = new Blob([uint8Array], {
+                type : format
+            });
+
+        };     
+
+        function decodeDataUriText(isBase64, data) {
+            var result = decodeURIComponent(data);
+            if (isBase64) {
+                return atob(result);
+            }
+            return result;
+        }
+
+        function decodeDataUriArrayBuffer(isBase64, data) {
+            var byteString = decodeDataUriText(isBase64, data);
+            var buffer = new ArrayBuffer(byteString.length);
+            var view = new Uint8Array(buffer);
+            for (var i = 0; i < byteString.length; i++) {
+                view[i] = byteString.charCodeAt(i);
+            }
+            return buffer;
+        }
+
+        function decodeDataUri(dataUriRegexResult, responseType) {
+            responseType = typeof responseType !== 'undefined' ? responseType : '';
+            var mimeType = dataUriRegexResult[1];
+            var isBase64 = !!dataUriRegexResult[2];
+            var data = dataUriRegexResult[3];
+
+            switch (responseType) {
+            case '':
+            case 'text':
+                return decodeDataUriText(isBase64, data);
+            case 'ArrayBuffer':
+                return decodeDataUriArrayBuffer(isBase64, data);
+            case 'blob':
+                var buffer = decodeDataUriArrayBuffer(isBase64, data);
+                return new Blob([buffer], {
+                    type : mimeType
+                });
+            case 'document':
+                var parser = new DOMParser();
+                return parser.parseFromString(decodeDataUriText(isBase64, data), mimeType);
+            case 'json':
+                return JSON.parse(decodeDataUriText(isBase64, data));
+            default:
+                throw 'Unhandled responseType: ' + responseType;
+            }
+        }
+
+        var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
+        var dataUriRegexResult = dataUriRegex.exec(src);
+        if (dataUriRegexResult !== null) {
+            var texture = new THREE.Texture;
+            var blob = decodeDataUri(dataUriRegexResult, 'blob');
+            var blobUrl = window.URL.createObjectURL(blob);
+            loadImage(blobUrl, function(img) {
+                texture.image = img;
+                texture.needsUpdate = true;
+            });
+            return texture;
+        }
+   
         return THREE.ImageUtils.loadTexture(src);
     }
 
@@ -1161,6 +1253,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                         mesh.addPrimitive(geometry, materialEntry.object);
 
+                        var allAttributes = Object.keys(primitiveDescription.attributes);
+
+                        // count them first, async issues otherwise
+                        allAttributes.forEach( function(semantic) {
+                            geometry.totalAttributes++;
+                        }, this);
+
                         var indices = this.resources.getEntry(primitiveDescription.indices);
                         var bufferEntry = this.resources.getEntry(indices.description.bufferView);
                         var indicesObject = {
@@ -1179,9 +1278,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         }*/
 
                         // Load Vertex Attributes
-                        var allAttributes = Object.keys(primitiveDescription.attributes);
                         allAttributes.forEach( function(semantic) {
-                            geometry.totalAttributes++;
 
                             var attribute;
                             var attributeID = primitiveDescription.attributes[semantic];
