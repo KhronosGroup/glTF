@@ -22,7 +22,7 @@ Many 3D tools and WebGL runtimes support built-in implementations of common mate
 
 This extension defines four light types: `diffuse`, `point`, `spot`, and `ambient`; and the material types `blinn`, `phong`, `lambert` and `constant`, for Blinn, Blinn-Phong, Lamber and Unlit ("constant" color) materials, respectively.
 
-If this extension is supported, it will be used to apply shading to any visuals defined with common material types. If it is not supported, and no technique is supplied in the material, then default shading will be applied per the rules defined in the base specification.
+The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
 
 ## Materials
 
@@ -119,5 +119,11 @@ Spot
 
 Ambient
 
-
+<a name="conformance"></a>
 ## Conformance
+
+If this extension is supported, it will be used to apply shading to any visuals defined with common material types. 
+
+If a material contains this extension as well as a technique instance, the runtime can use its own shader implementation in favor of the supplied technique. 
+
+If the extension is not supported, and no technique is supplied in the material, then default shading will be applied per the rules defined in the base specification. 

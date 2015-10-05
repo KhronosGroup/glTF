@@ -868,42 +868,6 @@ The `attributes` property specifies the vertex attributes of the data that will 
 The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
 
-### Common Techniques
-
-In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a hint for runtimes that have built-in support for the common techniques. If the runtime does have built-in support for the common technique, it can use its own shader implementation in favor of the supplied GLSL programs.
-
-Common techniques are defined in the `details` property of a technique's render pass, which can contain the property `commonProfile`. The following example shows the definition of a common Blinn shader technique. The `commonProfile` property designates which parameters of the technique will be used in the shader, identifies the lighting model (Blinn), and includes any extra parameters used by the shader but not described in the technique in the property `extras`.
-
-```javascript
-"details": {
-    "commonProfile": {
-        "extras": {
-            "doubleSided": false
-        },
-        "lightingModel": "Blinn",
-        "parameters": [
-            "ambient",
-            "diffuse",
-            "emission",
-            "light0Color",
-            "light0Transform",
-            "modelViewMatrix",
-            "normalMatrix",
-            "projectionMatrix",
-            "shininess",
-            "specular"
-        ],
-        "texcoordBindings": {
-            "diffuse": "TEXCOORD_0"
-        }
-    },
-        "type": "COLLADA-1.4.1/commonProfile"
-```
-
-<mark>*Todo: do we have a complete list of common shading techniques? The Three.js loader currently supports Blinn/Phong, Lambert and Unlit.*</mark>
-
-<mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the latter, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
-
 ### Textures
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
