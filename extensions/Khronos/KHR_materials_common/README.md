@@ -57,19 +57,22 @@ Table 1 lists properties that are shared among several of the common material ty
 
 Table 1. Common Material Shared Properties
 
-| Property                     | Type         | Description | Default Value
-|:----------------------------:|:------------:|-------------|---------------|
-| `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object. Applies to Blinn-Phong, Phong, and Lambert materials. | [0,0,0,1] |
-| `diffuse`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the amount of light diffusely reflected from the surface of the object. Applies to Blinn-Phong and Phong materials. | [0,0,0,1] |
-| `emission`                   | `FLOAT_VEC4` | RGBA value for light emitted by the surface of the object. Applies to Blinn-Phong, Phong, and Lambert materials. | [0,0,0,1] |
-| `index_of_refraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 1.0 |
-| `reflective`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of a perfect mirror reflection. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | [0,0,0,1] |
-| `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 0.0 |
-| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object [need to explain the units here k-factor right?]. Applies to Blinn-Phong and Phong materials. | [0,0,0,1] |
-| `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. Applies to Blinn-Phong and Phong materials. | 0.0 |
-| `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 1.0 |
+| Property                     | Type         | Description | Default Value | Applies To |
+|:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
+| `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `diffuse`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `emission`                   | `FLOAT_VEC4` | RGBA value for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `index_of_refraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `reflective`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object [need to explain the units here k-factor right?]. | [0,0,0,1] | `BLINN`, `PHONG` |
+| `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
+| `technique`                    | string | Declares the lighting technique used. Must be one of `BLINN`, `PHONG`, `LAMBERT`, or `CONSTANT` | "" | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 
 #### Blinn-Phong
+
+Blinn-Phong approximation. Uses all of the common material properties defined in Table 1. The following example defines a Blinn-Phong lit material with a diffuse texture, moderate shininess and red specular highlights. 
 
 ```javascript
     "materials": {
@@ -78,27 +81,10 @@ Table 1. Common Material Shared Properties
                 "KHR_materials_common" : {
 					   "technique" : "BLINN",
 						"values": {
-						    "ambient": [
-						        0,
-						        0,
-						        0,
-						        1
-						    ],
-						    "diffuse": [
-						        0,
-						        0,
-						        0,
-						        1
-						    ],
-						    "emission": [
-						        0,
-						        0,
-						        0,
-						        1
-						    ],
-						    "shininess": 0,
+						    "diffuse": "texture_1",
+						    "shininess": 10,
 						    "specular": [
-						        0,
+						        1,
 						        0,
 						        0,
 						        1
@@ -112,10 +98,83 @@ Table 1. Common Material Shared Properties
 
 #### Phong
 
+Phong lighting. Uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a white diffuse color, environment map texture and high reflectivity.
+
+```javascript
+    "materials": {
+        "blinn1": {
+            "extensions": {
+                "KHR_materials_common" : {
+					   "technique" : "PHONG",
+						"values": {
+						    "diffuse": [
+						    	1,
+						    	1,
+						    	1,
+						    	1
+						    ],
+						    "relective": "texture_envmap",
+						    "refectivity": 1
+						}
+					}
+            }
+        }
+        },
+```
+
 #### Lambert
+
+Lambert shading does not reflect specular highlights; therefore the common material properties `specular` and `shininess` are not used. All other properties from Table 1 apply.
+
+The following example defines a Lambert lit material with a 50% gray emissive color and a diffuse texture map.
+
+```javascript
+    "materials": {
+        "blinn1": {
+            "extensions": {
+                "KHR_materials_common" : {
+					   "technique" : "LAMBERT",
+						"values": {
+							"diffuse": "texture_1",
+						    "emission": [
+						    	0.5,
+						    	0.5,
+						    	0.5,
+						    	1
+						    ],
+						}
+					}
+            }
+        }
+        },
+```
 
 #### Constant
 
+Constant shading does not reflect light sources in the scene; therefore the common material properties `ambient`, `diffuse`, `specular` and `shininess` are not used. All other properties from Table 1 apply.
+
+The following example defines a Constant lit material with a 50% gray emissive color and 50% opacity.
+
+```javascript
+    "materials": {
+        "blinn1": {
+            "extensions": {
+                "KHR_materials_common" : {
+					   "technique" : "CONSTANT",
+						"values": {
+							"emissive": [
+								0.5,
+								0.5,
+								0.5,
+								1
+							],
+							"transparency": 0.5
+						}
+					}
+            }
+        }
+        },
+```
 
 <a name="lights"></a>
 ## Lights
@@ -128,7 +187,7 @@ Lights are contained in nodes and thus can be transformed. Their world-space pos
 
 Lights are defined within a dictionary property in the file, by adding an `extensions` property to the top-level glTF object and defining its `KHR_materials_common` property with a `lights` dictionary object inside it. 
 
-Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); then, a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
+Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); a property of that same name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
 
 
 ```javascript
@@ -176,9 +235,28 @@ Lights are glTF scene objects: they have position and orientation, which can be 
 
 ### Light Types
 
-Directional
+#### Common Light Shared Properties
 
-Point
+Table 2 lists properties that are shared among several of the common light types.
+
+Table 2. Common Light Shared Properties
+
+| Property                     | Type         | Description | Default Value | Applies To |
+|:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
+| `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
+| `direction`                   | `FLOAT_VEC4` | Vector defining direction of directional and spot lights. | [0,0,-1] | `directional`, `spot` |
+| `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
+| `type`                    | string | Declares the type of the light. Must be one of `ambient`, `directional`, `point` or `spot` | "" | `ambient`, `directional`, `point`, `spot` |
+
+#### Directional
+
+Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the common properties `color` and `direction` described in Table 2.
+
+### Point
+
+Point lights emit light from a specific location over a given distance. In addition to the `color` and `distance` properties described in Table 2, point lights define the following properties:
+
+
 
 Spot
 
