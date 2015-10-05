@@ -30,7 +30,6 @@ Contributors
   * [Design Goals](#designgoals)
   * [File Extensions and MIME Types](#mimetypes)
 * [Concepts](#concepts)
-  * [File Structure](#file-structure)
   * [IDs and Names](#ids-and-names)
   * [Scenes](#scenes)
   * [Accessing Binary Data](#binary-data)
@@ -122,8 +121,6 @@ glTF uses URIs to reference buffers, shaders, and image resources. These URIs ma
 *This section is non-normative.*
 
 <a name="file-structure"></a>
-## File Structure
-<mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
 <a name="ids-and-names"></a>
 ## IDs and Names
