@@ -20,7 +20,7 @@ glTF does not define a lighting model, instead relegating shading of visuals to 
 
 Many 3D tools and WebGL runtimes support built-in implementations of common material and light types. Using this extension, tools can export a much more compact representation of materials and lights. In addition, a runtimes with built-in lighting can apply its built-in light values to visuals shaded with common materials found in the glTF file. 
 
-This extension defines four light types: `diffuse`, `point`, `spot`, and `ambient`; and the material types `blinn`, `phong`, `lambert` and `constant`, for Blinn, Blinn-Phong, Lamber and Unlit ("constant" color) materials, respectively.
+This extension defines four light types: `directional`, `point`, `spot`, and `ambient`; and the material types `blinn`, `phong`, `lambert` and `constant`, for Blinn-Phong, Phong, Lambert and Unlit ("constant" color) materials, respectively.
 
 The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
 
@@ -51,20 +51,62 @@ Common materials are defined by adding an `extensions` property to any glTF mate
 
 ### Material Types
 
-#### Blinn
+#### Common Material Shared Properties
+
+Table 1 lists properties that are shared among several of the common material types.
+
+Table 1. Common Material Shared Properties
+
+| Property                     | Type         | Description | Default Value
+|:----------------------------:|:------------:|-------------|---------------|
+| `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object. Applies to Blinn-Phong, Phong, and Lambert materials. | [0,0,0,1] |
+| `diffuse`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the amount of light diffusely reflected from the surface of the object. Applies to Blinn-Phong and Phong materials. | [0,0,0,1] |
+| `emission`                   | `FLOAT_VEC4` | RGBA value for light emitted by the surface of the object. Applies to Blinn-Phong, Phong, and Lambert materials. | [0,0,0,1] |
+| `index_of_refraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 1.0 |
+| `reflective`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of a perfect mirror reflection. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | [0,0,0,1] |
+| `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 0.0 |
+| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object [need to explain the units here k-factor right?]. Applies to Blinn-Phong and Phong materials. | [0,0,0,1] |
+| `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. Applies to Blinn-Phong and Phong materials. | 0.0 |
+| `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. Applies to Blinn-Phong, Phong, Lambert and Constant materials. | 1.0 |
+
+#### Blinn-Phong
 
 ```javascript
     "materials": {
-            "blinn1": {
-                "extensions": {
-                    "KHR_materials_common" : {
-                        "technique" : "BLINN",
-                        "values": {
-                            "diffuse": [0.5,0.5,0.5,1]
-                        }
-                    }
-                }
+        "blinn1": {
+            "extensions": {
+                "KHR_materials_common" : {
+					   "technique" : "BLINN",
+						"values": {
+						    "ambient": [
+						        0,
+						        0,
+						        0,
+						        1
+						    ],
+						    "diffuse": [
+						        0,
+						        0,
+						        0,
+						        1
+						    ],
+						    "emission": [
+						        0,
+						        0,
+						        0,
+						        1
+						    ],
+						    "shininess": 0,
+						    "specular": [
+						        0,
+						        0,
+						        0,
+						        1
+						    ]
+						}
+					}
             }
+        }
         },
 ```
 
