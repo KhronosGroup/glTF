@@ -37,7 +37,7 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "Specifies if the attribute is a scale, vector, or matrix.",
+            "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
             "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
             "required" : true
         },        
