@@ -13,7 +13,7 @@ _This is a draft specification; it is incomplete and may change before ratificat
 Editors
 
 * Patrick Cozzi, Cesium
-* Tony Parisi, Third Eye
+* Tony Parisi, WEVR
 
 Contributors
 
