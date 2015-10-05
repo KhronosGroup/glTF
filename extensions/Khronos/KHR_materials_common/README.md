@@ -65,7 +65,7 @@ Table 1. Common Material Shared Properties
 | `index_of_refraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `reflective`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object [need to explain the units here k-factor right?]. | [0,0,0,1] | `BLINN`, `PHONG` |
+| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object *[need to explain the units here k-factor right?]*. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
 | `technique`                    | string | Declares the lighting technique used. Must be one of `BLINN`, `PHONG`, `LAMBERT`, or `CONSTANT` | "" | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
@@ -244,26 +244,41 @@ Table 2. Common Light Shared Properties
 | Property                     | Type         | Description | Default Value | Applies To |
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
+| `constant_attenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
 | `direction`                   | `FLOAT_VEC4` | Vector defining direction of directional and spot lights. | [0,0,-1] | `directional`, `spot` |
 | `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
+| `linear_attenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `type`                    | string | Declares the type of the light. Must be one of `ambient`, `directional`, `point` or `spot` | "" | `ambient`, `directional`, `point`, `spot` |
+
+### Ambient
+
+Ambient lights define constant lighting throughout the scene, as reflected in the `ambient` property of any material. Ambient lights support only the `color` common light property described in Table 2.
 
 #### Directional
 
-Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the common properties `color` and `direction` described in Table 2.
+Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the common light properties `color` and `direction` described in Table 2.
 
 ### Point
 
-Point lights emit light from a specific location over a given distance. In addition to the `color` and `distance` properties described in Table 2, point lights define the following properties:
+Point lights emit light in all directions over a given distance. Point lights support the `color`, `constant_attenuation`, `distance` and `linear_attenuation` common light properties described in Table 2. Point lights do not have a direction.
 
 
+### Spot
 
-Spot
+Sport lights emit light in a directions over a given distance. Spot lights support the `color`, `constant_attenuation`, `direction`, `distance` and `linear_attenuation` common light properties described in Table 2. Spot lights also define the following properties:
 
-Ambient
+Table 3. Spot Light Properties
+
+| Property                     | Type         | Description | Default Value |
+|:----------------------------:|:------------:|:-----------:|:-------------:|
+| `falloff_angle`              | `FLOAT` | Falloff angle for the spot light, in radians.| PI / 2 |
+| `falloff_exponent`           | `FLOAT` | Falloff exponent for the spotlight. *[need to define range and semantics]* | 0 |
+
 
 <a name="schema"></a>
 ## JSON Schema
+
+*To-do: Patrick need schema for each of the material types... can you help?*
 
    * <a href="schema/light.schema.json">`light`</a>
    * <a href="schema/lightAmbient.schema.json">`light/ambient`</a>
