@@ -191,7 +191,7 @@ Whereas IDs are used for internal glTF references, _names_ are used for applicat
 <a name="scenes"></a>
 ## Scenes
 
-The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary property `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
+The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary object `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
 
 The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
 
@@ -672,18 +672,18 @@ Materials are stored in the assets `materials` property, which contains one or m
 },
 ```
 
+The `technique` property is optional; [define defaults here]
 
 ### Techniques
 
-A technique describes the shading used for a material. Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
+A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
 
-The asset's techniques are stored in the `techniques` dictionary property.
-
-The following fragment illustrates some technique parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
+The following example shows a technique and the properties it defines. This section describes each property in detail.
 
 ```javascript
 "techniques": {
     "technique1": {
+    	 // parameter definitions
         "parameters": {
             "ambient": {
                 "type": 35666
@@ -703,8 +703,43 @@ The following fragment illustrates some technique parameters. The property `ambi
                 "semantic": "MODELVIEW",
                 "node": "directionalLight1",
                 "type": 35676
-            },
+            }
+            // more parameters
+        },
+    	// program, attributes and uniforms definitions
+	    "attributes": {
+	        "a_normal": "normal",
+	        "a_position": "position",
+	        "a_texcoord0": "texcoord0"
+	    },
+	    "program": "program_0",
+	    "uniforms": {
+	        "u_ambient": "ambient",
+	        "u_diffuse": "diffuse",
+	        "u_emission": "emission",
+	        "u_light0Color": "light0Color",
+	        "u_light0Transform": "light0Transform",
+	        "u_modelViewMatrix": "modelViewMatrix",
+	        "u_normalMatrix": "normalMatrix",
+	        "u_projectionMatrix": "projectionMatrix",
+	        "u_shininess": "shininess",
+	        "u_specular": "specular"
+	    },
+		// render states
+		"states": {
+		    "enable": [
+		        2884,
+		        2929
+		    ]
+		}
+        
 ```
+
+#### Parameters
+
+Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique. 
+
+The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
 
 
 #### Semantics
@@ -740,6 +775,39 @@ Table 1. Uniform Semantics
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
+
+
+#### Program Instances
+
+The `program` property of a technique creates an instance of a shader program. The value of the property is the ID of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
+
+Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
+
+
+```javascript
+    "attributes": {
+        "a_normal": "normal",
+        "a_position": "position",
+        "a_texcoord0": "texcoord0"
+    },
+    "program": "program_0",
+    "uniforms": {
+        "u_ambient": "ambient",
+        "u_diffuse": "diffuse",
+        "u_emission": "emission",
+        "u_light0Color": "light0Color",
+        "u_light0Transform": "light0Transform",
+        "u_modelViewMatrix": "modelViewMatrix",
+        "u_normalMatrix": "normalMatrix",
+        "u_projectionMatrix": "projectionMatrix",
+        "u_shininess": "shininess",
+        "u_specular": "specular"
+    },
+```
+
+The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
+
+The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
 #### Render States
 
@@ -790,15 +858,16 @@ The following example `states` object indicates to enable all boolean states (se
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
 ```javascript
-"states": {
-    "enable": [
-        2884,
-        2929
-    ]
-}
+	"states": {
+	    "enable": [
+	        2884,
+	        2929
+	    ]
+	}
 ```
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then only making GL state function calls for the states that vary between techniques.
+
 
 #### Programs
 
@@ -820,6 +889,8 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
+#### Shaders
+
 Shader source files are stored in the asset's `shaders` property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```javascript
@@ -835,53 +906,18 @@ Shader source files are stored in the asset's `shaders` property, which contains
 },
 ```    
 
-#### Program Instances
-
-A shader program may be instanced multiple times within the glTF asset, via the `program` property of a technique. `program` specifies the program identifier.
-
-Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
-
-
-```javascript
-    "attributes": {
-        "a_normal": "normal",
-        "a_position": "position",
-        "a_texcoord0": "texcoord0"
-    },
-    "program": "program_0",
-    "uniforms": {
-        "u_ambient": "ambient",
-        "u_diffuse": "diffuse",
-        "u_emission": "emission",
-        "u_light0Color": "light0Color",
-        "u_light0Transform": "light0Transform",
-        "u_modelViewMatrix": "modelViewMatrix",
-        "u_normalMatrix": "normalMatrix",
-        "u_projectionMatrix": "projectionMatrix",
-        "u_shininess": "shininess",
-        "u_specular": "specular"
-    },
-```
-
-The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
-
-The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
-
-
-### Textures
+#### Textures
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
 
 ```javascript
 "materials": {
-    "shader-1": {
-        "instanceTechnique": {
-            "technique": "technique1",
-            "values": {
-                "diffuse": "texture_file2",
-            }
-        },
-        "name": "shader_1"
+    "material-1": {
+        "technique": "technique1",
+        "values": {
+            "diffuse": "texture_file2",
+        }
+        "name": "material_1"
     }
 },
 ```
@@ -901,6 +937,8 @@ All textures are stored in the asset's `textures` property. A texture is defined
     }
 }
 ```
+
+#### Images
  
 Images referred to by textures are stored in the `images` property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
 
@@ -911,6 +949,8 @@ Images referred to by textures are stored in the `images` property of the asset.
     }
 },
 ```
+
+#### Samplers
 
 Samplers are stored in the `samplers` property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
