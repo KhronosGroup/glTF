@@ -1339,6 +1339,8 @@ namespace GLTF
 	bool COLLADA2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData ) {
         shared_ptr <GLTFSkin> glTFSkin(new GLTFSkin(skinControllerData->getOriginalId()));
         shared_ptr <GLTFProfile> profile = this->_asset->profile();
+
+        glTFSkin->setString(kName, skinControllerData->getName());
         
         glTFSkin->setBindShapeMatrix(serializeOpenCOLLADAMatrix4(skinControllerData->getBindShapeMatrix()));
         
