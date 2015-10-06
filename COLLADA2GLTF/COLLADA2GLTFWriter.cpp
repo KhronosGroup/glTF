@@ -1059,6 +1059,8 @@ namespace GLTF
                 switch (camera->getDescriptionType()) {
                     case Camera::UNDEFINED: //!< The orthographic camera object is invalid
                         this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting to 1.\n");
+                        projectionObject->setDouble("xmag", 1.0);
+                        projectionObject->setDouble("ymag", 1.0);
                         break;
                     case Camera::SINGLE_X: //!< Only xmag. ymag default to 1.
                         this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting ymag to 1.\n");
