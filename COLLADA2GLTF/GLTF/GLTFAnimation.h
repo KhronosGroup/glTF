@@ -72,6 +72,7 @@ namespace GLTF
         std::shared_ptr <JSONObject> _targets;
         AnimationFlattenerForTargetUIDSharedPtr _animationFlattenerForTargetUID;
         std::map<std::string , std::shared_ptr<GLTFBufferView> > _bufferViews;
+        size_t _count;
     };
     
 }

@@ -37,7 +37,7 @@ namespace GLTF
 {
     //-- GLTFAnimation
     
-    GLTFAnimation::GLTFAnimation() : JSONObject() {
+    GLTFAnimation::GLTFAnimation() : JSONObject(), _count(0) {
         this->createObjectIfNeeded(kSamplers);
         this->createArrayIfNeeded(kChannels);
         this->createObjectIfNeeded(kParameters);
@@ -52,11 +52,11 @@ namespace GLTF
     }
 
     size_t GLTFAnimation::getCount() {
-        return this->getUnsignedInt32(kCount);
+        return _count;
     }
     
     void GLTFAnimation::setCount(size_t count) {
-		this->setUnsignedInt32(kCount, (unsigned int)count);
+        _count = count;
     }
      
     shared_ptr <JSONObject> GLTFAnimation::parameters() {
