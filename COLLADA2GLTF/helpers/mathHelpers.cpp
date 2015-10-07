@@ -142,20 +142,17 @@ namespace GLTF
             }
         }
         
-        COLLADABU::Math::Matrix3 amat3( row[0][0], row[1][0], row[2][0],
+        COLLADABU::Math::Matrix3 amat3(row[0][0], row[1][0], row[2][0],
                                        row[0][1], row[1][1], row[2][1],
                                        row[0][2], row[1][2], row[2][2]);
-        COLLADABU::Math::Real angle;
-        COLLADABU::Math::Vector3 axis;
-        //COLLADABU::Math::Quaternion aquat = QuaternionFromMatrix(amat3);
         COLLADABU::Math::Quaternion aquat;
         aquat.fromRotationMatrix(amat3);
         aquat.normalise();
-        aquat.toAngleAxis(angle, axis);
-        tran[U_ROTATEX] = axis.x;
-        tran[U_ROTATEY] = axis.y;
-        tran[U_ROTATEZ] = axis.z;
-        tran[U_ROTATEW] = angle;
+
+        tran[U_ROTATEX] = aquat.x;
+        tran[U_ROTATEY] = aquat.y;
+        tran[U_ROTATEZ] = aquat.z;
+        tran[U_ROTATEW] = aquat.w;
         
         return true;
     }

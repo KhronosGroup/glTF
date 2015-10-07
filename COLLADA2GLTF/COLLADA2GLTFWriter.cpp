@@ -442,7 +442,7 @@ namespace GLTF
             if (exportTranslation)
                 nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
             
-            //hum what should be the identity for axis angle ? https://github.com/KhronosGroup/glTF/issues/197
+            // Rotation is a quaternion [V, s]
             nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
 
             bool exportScale = !(!exportDefaultValues && ((scale[0] == 1) && (scale[1] == 1) && (scale[2] == 1)));
