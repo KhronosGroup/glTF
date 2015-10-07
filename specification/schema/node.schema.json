@@ -50,7 +50,7 @@
         },
         "rotation" : {
             "type" : "array",
-            "description" : "The node's quaternion rotation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "description" : "The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
