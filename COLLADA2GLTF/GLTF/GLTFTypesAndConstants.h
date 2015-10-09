@@ -79,7 +79,6 @@ const std::string kSources = "sources";
 const std::string kSource = "source";
 const std::string kSkin = "skin";
 const std::string kSkins = "skins";
-const std::string kInstanceSkin = "instanceSkin";
 const std::string kImages = "images";
 const std::string kImage = "image";
 const std::string kCamera = "camera";

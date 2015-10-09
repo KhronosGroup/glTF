@@ -476,7 +476,6 @@ namespace GLTF
                                                meshUniqueId.toAscii(),
                                                materialBindings);
                     
-                    shared_ptr<JSONObject> instanceSkin(new JSONObject());
                     shared_ptr<JSONArray> skeletons(new JSONArray());
                     
                     for (size_t k = 0 ; k < instanceController->skeletons().size() ; k++) {
@@ -484,9 +483,8 @@ namespace GLTF
                         skeletons->appendValue(shared_ptr<JSONString>(new JSONString(skeleton)));
                     }
                     
-                    instanceSkin->setValue("skeletons", skeletons);
-                    instanceSkin->setString(kSkin, skin->getId());
-                    nodeObject->setValue(kInstanceSkin, instanceSkin);
+                    nodeObject->setValue("skeletons", skeletons);
+                    nodeObject->setString(kSkin, skin->getId());
                 }
             }
         }

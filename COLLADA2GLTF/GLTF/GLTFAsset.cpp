@@ -764,15 +764,12 @@ namespace GLTF
             return false;
         
         size_t jointsCount = 0;
-        if (node->contains(kInstanceSkin)) {
-            shared_ptr <JSONObject> instanceSkin = node->getObject(kInstanceSkin);
-            if (instanceSkin->contains(kSkin)) {
-                std::string skinOriginalID = instanceSkin->getString(kSkin);
-                shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
-                std::vector <std::string> skinUIDs = skins->getAllKeys();
-                shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
-                jointsCount = skin->getJointsCount();
-            }
+        if (node->contains(kSkin)) {
+            std::string skinOriginalID = node->getString(kSkin);
+            shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
+            std::vector <std::string> skinUIDs = skins->getAllKeys();
+            shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
+            jointsCount = skin->getJointsCount();
         }
         shared_ptr <JSONArray> meshesArray = nullptr;
 
@@ -797,11 +794,10 @@ namespace GLTF
                 meshUID = meshUID.substr(meshesInNodePrefix.length());
                 meshesArray = node->createArrayIfNeeded(kMeshes);
             } else if (meshUID.find(meshesInSkinningPrefix) == 0) {
-                assert(node->contains(kInstanceSkin));
+                assert(node->contains(kSkin));
                 meshesInSkinning = true;
-                shared_ptr<JSONObject> instanceSkin = node->getObject(kInstanceSkin);
                 meshUID = meshUID.substr(meshesInSkinningPrefix.length());
-                meshesArray = instanceSkin->createArrayIfNeeded(kMeshes);
+                meshesArray = node->createArrayIfNeeded(kMeshes);
             }
             
             assert(meshesInSkinning || meshesInNode);
