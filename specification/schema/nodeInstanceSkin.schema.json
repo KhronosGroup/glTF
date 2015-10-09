@@ -6,7 +6,7 @@
     "properties": {
         "skeletons" : {
             "type" : "array",
-            "description" : "The id (JSON property name) of skeleton nodes.",
+            "description" : "The id (JSON property name) of skeleton nodes.  Each node defines a subtree, which has a jointName of the corresponding element in the referenced skin.joints.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
