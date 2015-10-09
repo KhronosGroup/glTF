@@ -237,7 +237,7 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 ### Transforms
 
-Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). 
+Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` quaternion value in the local coordinate system.
 
 In the example below, `node-box` defines non-default rotation and translation.
 
@@ -249,10 +249,10 @@ In the example below, `node-box` defines non-default rotation and translation.
         ],
         "name": "Box",
         "rotation": [
-            0.0787344,
-            -0.00904895,
-            0.996855,
-            2.91345
+            0,
+            0,
+            1,
+            0
         ],
         "scale": [
             1,
