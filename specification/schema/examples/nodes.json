@@ -41,13 +41,13 @@
         "skin_node_id": {
             "children": [],
             "instanceSkin": {
+                "meshes": [
+                    "skin_mesh_id"
+                ],
                 "skeletons": [
                     "joint id in skin"
                 ],
                 "skin": "skin_id",
-                "sources": [
-                    "skin_mesh_id"
-                ],
 	            "extensions" : {
 	               "extension_name" : {
 	                  "extension specific" : "value"
@@ -62,7 +62,7 @@
         },
         "joint_node_id": {
             "children": [],
-            "joint": "joint id",
+            "jointName": "joint name",
             "name": "user-defined name of joint node",
             "rotation" : [ 1.0, 0.0, 0.0, 0.0 ],
             "scale" : [ 1.0, 1.0, 1.0 ],
