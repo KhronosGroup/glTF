@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "mesh/primitive",
     "type" : "object",
-    "description" : "Geometry and material.  WebGL: see drawElements() and drawArrays().",
+    "description" : "Geometry and material.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {
@@ -15,7 +15,7 @@
         },
         "indices" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using drawArrays()."
+            "description" : "The id (JSON property name) of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`."
         },
         "material" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
@@ -29,5 +29,6 @@
             "default" : 4
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "gltf_webgl" : "`drawElements()` and `drawArrays()`"
 }
