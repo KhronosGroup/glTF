@@ -17,7 +17,7 @@
         },
         "inverseBindMatrices" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the accessor containing the floating-point 4x4 inverse-bind matrices.",
+            "description" : "The id of the accessor containing the floating-point 4x4 inverse-bind matrices.",
             "required" : true        
         },
         "jointNames" : {

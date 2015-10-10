@@ -18,12 +18,12 @@
         },
         "fragmentShader" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the fragment shader.",
+            "description" : "The id of the fragment shader.",
             "required" : true
         },
         "vertexShader" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the vertex shader.",
+            "description" : "The id of the vertex shader.",
             "required" : true
         }
     },

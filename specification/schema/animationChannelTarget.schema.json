@@ -6,7 +6,7 @@
     "properties" : {
         "id" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the node to target.",
+            "description" : "The id of the node to target.",
             "required" : true
         },
         "path" : {

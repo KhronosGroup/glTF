@@ -25,7 +25,7 @@
         },
         "node" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the node whose transform is used as the parameter's value."
+            "description" : "The id of the node whose transform is used as the parameter's value."
         },
         "value" : {
             "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],

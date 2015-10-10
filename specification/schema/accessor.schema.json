@@ -7,7 +7,7 @@
     "properties" : {
         "bufferView" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the buffer-view.",
+            "description" : "The id of the buffer-view.",
             "required" : true
         },
         "byteOffset" : {

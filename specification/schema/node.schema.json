@@ -7,11 +7,11 @@
     "properties" : {
         "camera" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the camera referenced by this node."
+            "description" : "The id of the camera referenced by this node."
         },
         "children" : {
             "type" : "array",
-            "description" : "The ids (JSON property name) of this node's children.",
+            "description" : "The ids of this node's children.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
@@ -20,16 +20,16 @@
         },
         "skeletons" : {
             "type" : "array",
-            "description" : "The id (JSON property name) of skeleton nodes.",
+            "description" : "The id of skeleton nodes.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The id (JSON property name) of skeleton nodes.  Each node defines a subtree, which has a jointName of the corresponding element in the referenced skin.joints."            
+            "gltf_detailedDescription" : "The id of skeleton nodes.  Each node defines a subtree, which has a jointName of the corresponding element in the referenced skin.joints."            
         },
         "skin" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the skin referenced by this node."
+            "description" : "The id of the skin referenced by this node."
         },
         "jointName" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
@@ -37,7 +37,7 @@
         },
         "light" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the light referenced by this node."
+            "description" : "The id of the light referenced by this node."
         },
         "matrix" : {
             "type" : "array",
@@ -53,12 +53,12 @@
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The ids (JSON property names) of the meshes in this node.",
+            "description" : "The ids of the meshes in this node.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The ids (JSON property names) of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
+            "gltf_detailedDescription" : "The ids of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
         },
         "rotation" : {
             "type" : "array",

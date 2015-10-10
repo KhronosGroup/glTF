@@ -118,7 +118,7 @@
         },
         "scene" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the default scene."
+            "description" : "The id of the default scene."
         },
         "scenes" : {
             "properties" : {
