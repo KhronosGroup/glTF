@@ -1191,5 +1191,5 @@ This section will describe the format for each of the GL types stored in the bin
 <a name="references"></a>
 # References
 
-* [WebGL 1.0.2 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
+* [WebGL 1.0.3 spec](https://www.khronos.org/registry/webgl/specs/1.0.3/)
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
