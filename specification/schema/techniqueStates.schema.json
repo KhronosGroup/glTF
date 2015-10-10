@@ -12,7 +12,8 @@
                 "enum" : [3042, 2884, 2929, 32823, 32926, 3089]
             },
             "uniqueItems" : true,
-            "default" : []
+            "default" : [],
+            "gltf_webgl" : "`enable()` and `disable()`"
         },
         "functions" : {
             "$schema" : "http://json-schema.org/draft-03/schema",
@@ -29,7 +30,8 @@
                     },
                     "minItems" : 4,
                     "maxItems" : 4,
-                    "default" : [0.0, 0.0, 0.0, 0.0]
+                    "default" : [0.0, 0.0, 0.0, 0.0],
+                    "gltf_webgl" : "`blendColor()`"
                 },
                 "blendEquationSeparate" : {
                     "type" : "array",
@@ -40,7 +42,8 @@
                     },
                     "minItems" : 2,
                     "maxItems" : 2,
-                    "default" : [32774, 32774]
+                    "default" : [32774, 32774],
+                    "gltf_webgl" : "`blendEquationSeparate()`"
                 },
                 "blendFuncSeparate" : {
                     "type" : "array",
@@ -51,7 +54,8 @@
                     },
                     "minItems" : 4,
                     "maxItems" : 4,
-                    "default" : [1, 1, 0, 0]
+                    "default" : [1, 1, 0, 0],
+                    "gltf_webgl" : "`blendFuncSeparate()`"
                 },
                 "colorMask" : {
                     "type" : "array",
@@ -61,7 +65,8 @@
                     },
                     "minItems" : 4,
                     "maxItems" : 4,
-                    "default" : [true, true, true, true]
+                    "default" : [true, true, true, true],
+                    "gltf_webgl" : "`colorMask()`"
                 },
                 "cullFace" : {
                     "type" : "array",
@@ -72,7 +77,8 @@
                     },
                     "minItems" : 1,
                     "maxItems" : 1,
-                    "default" : [1029]
+                    "default" : [1029],
+                    "gltf_webgl" : "`cullFace()`"
                 },
                 "depthFunc" : {
                     "type" : "array",
@@ -83,7 +89,8 @@
                     },
                     "minItems" : 1,
                     "maxItems" : 1,
-                    "default" : [513]
+                    "default" : [513],
+                    "gltf_webgl" : "`depthFunc()`"
                 },
                 "depthMask" : {
                     "type" : "array",
@@ -93,7 +100,8 @@
                     },
                     "minItems" : 1,
                     "maxItems" : 1,
-                    "default" : [true]
+                    "default" : [true],
+                    "gltf_webgl" : "`depthMask()`"
                 },
                 "depthRange" : {
                     "type" : "array",
@@ -103,7 +111,8 @@
                     },
                     "minItems" : 2,
                     "maxItems" : 2,
-                    "default" : [0.0, 1.0]
+                    "default" : [0.0, 1.0],
+                    "gltf_webgl" : "`depthRange()`"
                 },
                 "frontFace" : {
                     "type" : "array",
@@ -114,7 +123,8 @@
                     },
                     "minItems" : 1,
                     "maxItems" : 1,
-                    "default" : [2305]
+                    "default" : [2305],
+                    "gltf_webgl" : "`frontFace()`"
                 },
                 "lineWidth" : {
                     "type" : "array",
@@ -126,7 +136,8 @@
                     },
                     "minItems" : 1,
                     "maxItems" : 1,
-                    "default" : [1.0]
+                    "default" : [1.0],
+                    "gltf_webgl" : "`lineWidth()`"
                 },
                 "polygonOffset" : {
                     "type" : "array",
@@ -136,7 +147,8 @@
                     },
                     "minItems" : 2,
                     "maxItems" : 2,
-                    "default" : [0.0, 0.0]
+                    "default" : [0.0, 0.0],
+                    "gltf_webgl" : "`polygonOffset()`"
                 },
                 "scissor" : {
                     "type" : "array",
@@ -146,7 +158,8 @@
                     },
                     "minItems" : 4,
                     "maxItems" : 4,
-                    "default" : [0.0, 0.0, 0.0, 0.0]
+                    "default" : [0.0, 0.0, 0.0, 0.0],
+                    "gltf_webgl" : "`scissor()`"
                 }
             },
             "additionalProperties" : false

@@ -40,13 +40,14 @@
         },
         "matrix" : {
             "type" : "array",
-            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.  WebGL: see uniformMatrix4fv with the transpose parameter equal to false.",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
             "items" : {
                 "type": "number"
             },
             "minItems" : 16,
             "maxItems" : 16,
-            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+            "gltf_webgl" : "`uniformMatrix4fv()` with the transpose parameter equal to false"
         },
         "meshes" : {
             "type" : "array",
