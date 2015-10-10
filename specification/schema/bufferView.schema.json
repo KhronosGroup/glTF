@@ -24,8 +24,9 @@
         },
         "target" : {
             "type" : "integer",
-            "description" : "Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER). When not provided, the buffer-view contains animation or skin data.",
+            "description" : "The target that the WebGL buffer should be bound to.",
             "enum" : [34962, 34963],
+            "gltf_detailedDescription" : "The target that the WebGL buffer should be bound to.  Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER).  When this is not provided, the buffer-view contains animation or skin data.",
             "gltf_webgl" : "`bindBuffer()`"
         }
     },

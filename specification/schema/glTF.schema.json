@@ -162,8 +162,7 @@
         }
     },
     "dependencies" : {
-        "scene" : "scenes",
-        "scenes" : "scene"
+        "scene" : "scenes"
     },
     "additionalProperties" : false
 }
