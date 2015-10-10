@@ -7,7 +7,7 @@
     "properties" : {
         "input" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe input, e.g., time.  This parameter must have type FLOAT.  The values represents time in seconds with time[0] >= 0.0, and monotonically increasing values, i.e. time[n + 1] >= time[n].",
+            "description" : "The id (JSON property name) of a parameter in this animation to use as keyframe input, e.g., time.  This parameter must have type FLOAT.  The values represent time in seconds with time[0] >= 0.0, and monotonically increasing values, i.e. time[n + 1] >= time[n].",
             "required" : true
         },
         "interpolation" : {
@@ -15,6 +15,7 @@
             "description" : "Interpolation algorithm.",
             "enum" : ["LINEAR"],
             "default" : "LINEAR"
+            "gltf_detailedDescription" : "Interpolation algorithm.  When an animation targets a node's rotation and the animation's interpolation is LINEAR, spherical linear interpolation (slerp) should be used to interpolate quaternions.",
         },
         "output" : {
             "extends" : { "$ref" : "glTFid.schema.json" },

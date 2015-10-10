@@ -23,7 +23,7 @@
         },
         "program" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "Specifies the program id (property name).",
+            "description" : "The id (JSON property name) of the program.",
             "required" : true
         },
         "uniforms" : {

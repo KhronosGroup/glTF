@@ -17,17 +17,18 @@
         },
         "inverseBindMatrices" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "Accessor id (JSON property name) containing the FLOAT_MAT4 inverse-bind matrices.",
+            "description" : "The id (JSON property name) of the accessor containing the floating-point 4x4 inverse-bind matrices.",
             "required" : true        
         },
         "jointNames" : {
             "type" : "array",
-            "description" : "Joint names of the joints (nodes with a joint property) in this skin.  The array length is the same as the count property of the inverseBindMatrices accessor, and the same as the length of any skeletons array referencing the skin.",
+            "description" : "Joint names of the joints (nodes with a jointName property) in this skin.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "required" : true        
+            "required" : true,
+            "gltf_detailedDescription" : "Joint names of the joints (nodes with a jointName property) in this skin.  The array length is the same as the count property of the inverseBindMatrices accessor, and the same as the length of any skeletons array referencing the skin."
         }
     },
     "additionalProperties" : false

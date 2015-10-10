@@ -7,7 +7,7 @@
     "properties" : {
         "sampler" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of a sampler in this animation to use to compute the value for the target, e.g., translation, rotation, or scale.",
+            "description" : "The id (JSON property name) of a sampler in this animation to use to compute the value for the target, e.g., a node's translation, rotation, or scale.",
             "required" : true
         },
         "target" : {
