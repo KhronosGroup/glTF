@@ -2,20 +2,20 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "accessor",
     "type" : "object",
-    "description" : "A typed accessor into a buffer-view.",
+    "description" : "A typed accessor into a bufferView.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bufferView" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the buffer-view.",
+            "description" : "The id of the bufferView.",
             "required" : true
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset relative to the buffer-view in bytes.",
+            "description" : "The offset relative to the bufferView in bytes.",
             "minimum" : 0,
             "required" : true,
-            "gltf_detailedDescription" : "The offset relative to the buffer-view in bytes.  This must be a multiple of the size of the data type.",
+            "gltf_detailedDescription" : "The offset relative to the bufferView in bytes.  This must be a multiple of the size of the data type.",
             "gltf_webgl" : "`vertexAttribPointer()` offset parameter"
         },
         "byteStride" : {
