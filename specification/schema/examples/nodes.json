@@ -40,23 +40,13 @@
         },
         "skin_node_id": {
             "children": [],
-            "instanceSkin": {
-                "meshes": [
-                    "skin_mesh_id"
-                ],
-                "skeletons": [
-                    "joint id in skin"
-                ],
-                "skin": "skin_id",
-	            "extensions" : {
-	               "extension_name" : {
-	                  "extension specific" : "value"
-	               }
-	            },
-                "extras" : {
-                    "Application specific" : "The extra object can contain any properties."
-                }     
-            },
+            "meshes": [
+                "skin_mesh_id"
+            ],
+            "skeletons": [
+                "joint id in skin"
+            ],
+            "skin": "skin_id",
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "user-defined name of skin node"
         },
