@@ -25,10 +25,6 @@
                         1
                     ]
                 },
-                "lightTransform": {
-                    "node": "directional_light_node_id",
-                    "type": 35676
-                },
                 "modelViewMatrix": {
                     "semantic": "MODELVIEW",
                     "type": 35676
@@ -81,7 +77,6 @@
                 "u_ambient": "ambient",
                 "u_diffuse": "diffuse",
                 "u_lightColor": "lightColor",
-                "u_lightTransformMatrix": "lightTransform",
                 "u_modelViewMatrix": "modelViewMatrix",
                 "u_projectionMatrix": "projectionMatrix",
                 "u_normalMatrix": "normalMatrix"
