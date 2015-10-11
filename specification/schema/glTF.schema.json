@@ -68,14 +68,6 @@
             },
             "default" : {}
         },
-        "lights" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "light.schema.json"
-            },
-            "default" : {}
-        },
         "materials" : {
             "properties" : {
             },

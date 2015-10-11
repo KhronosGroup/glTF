@@ -32,12 +32,6 @@
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "user-defined name of camera node"
         },
-        "light_node_id": {
-            "children": [],
-            "light": "light_id",
-            "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-            "name": "user-defined name of light node"
-        },
         "skin_node_id": {
             "children": [],
             "meshes": [

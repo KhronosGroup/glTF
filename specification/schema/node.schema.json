@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node",
     "type" : "object",
-    "description" : "A node in the node hierarchy.  A node will have either camera, light, meshes, or skeletons/skin/meshes properties defined.",
+    "description" : "A node in the node hierarchy.  A node can have either camera, meshes, or skeletons/skin/meshes properties defined.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "camera" : {
@@ -34,10 +34,6 @@
         "jointName" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "Name used when this node is a joint in a skin."
-        },
-        "light" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the light referenced by this node."
         },
         "matrix" : {
             "type" : "array",

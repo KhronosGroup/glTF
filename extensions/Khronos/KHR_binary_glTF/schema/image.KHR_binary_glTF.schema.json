@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "EXT_binary_glTF image extension",
+    "title" : "KHR_binary_glTF image extension",
     "type" : "object",
     "properties" : {
         "bufferView" : {
