@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "animation/channel",
+    "title" : "channel",
     "type" : "object",
     "description" : "Targets a sampler at a glTF property.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },

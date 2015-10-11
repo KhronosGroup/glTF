@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "animation/parameter",
+    "title" : "parameter",
     "extends" : { "$ref" : "glTFid.schema.json" },
     "description" : "The id of the accessor containing keyframes for this parameter.",
     "additionalProperties" : false

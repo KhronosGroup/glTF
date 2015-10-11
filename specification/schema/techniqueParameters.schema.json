@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "technique/parameter",
+    "title" : "parameter",
     "type" : "object",
     "description" : "Uniform and attribute inputs to a technique.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },

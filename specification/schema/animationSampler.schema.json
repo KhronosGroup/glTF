@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "animation/sampler",
+    "title" : "sampler",
     "type" : "object",
     "description" : "Combines input and output parameters with an interpolation algorithm.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },

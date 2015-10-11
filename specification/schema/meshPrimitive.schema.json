@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "mesh/primitive",
+    "title" : "primitive",
     "type" : "object",
     "description" : "Geometry and material.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },

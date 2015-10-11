@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "asset",
+    "title" : "profile",
     "type" : "object",
     "description" : "Specifies the target rendering API and version, e.g., WebGL 1.0.3.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
