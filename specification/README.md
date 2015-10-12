@@ -1623,8 +1623,71 @@ Application-specific data.
 <a name="reference-buffer"></a>
 ## buffer
 
+A buffer points to binary geometry, animation, or skins.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**uri**|`string`|The uri of the buffer.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the buffer in bytes.|No, default: `0`|
+|**type**|`string`|XMLHttpRequest `responseType`.|No, default: `"arraybuffer"`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
 * **Example**: [buffers.json](schema/examples/buffers.json)
+
+### buffer.uri :white_check_mark: 
+
+The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Format**: uri
+
+### buffer.byteLength
+
+The length of the buffer in bytes.
+
+* **Type**: `integer`
+* **Required**: No, default: `0`
+* **Minimum**:` >= 0`
+
+### buffer.type
+
+XMLHttpRequest `responseType`.
+
+* **Type**: `string`
+* **Required**: No, default: `"arraybuffer"`
+* **Allowed values**: `"arraybuffer"`, `"text"`
+
+### buffer.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### buffer.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### buffer.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
 
 
 <!-- ======================================================================= -->
