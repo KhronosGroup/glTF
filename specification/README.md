@@ -1386,7 +1386,60 @@ Application-specific data.
 <a name="reference-animation.sampler"></a>
 ## animation.sampler
 
+Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**input**|`string`|The id of a parameter in this animation to use as keyframe input, e.g., time.| :white_check_mark: Yes|
+|**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
+|**output**|`string`|The id of a parameter in this animation to use as keyframe output.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
+
+### sampler.input :white_check_mark: 
+
+The id of a parameter in this animation to use as keyframe input.  This parameter must have type `FLOAT`.  The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e. `time[n + 1] >= time[n]`.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### sampler.interpolation
+
+Interpolation algorithm.  When an animation targets a node's rotation and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions.
+
+* **Type**: `string`
+* **Required**: No, default: `"LINEAR"`
+* **Allowed values**: `"LINEAR"`
+
+### sampler.output :white_check_mark: 
+
+The id of a parameter in this animation to use as keyframe output.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### sampler.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### sampler.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
