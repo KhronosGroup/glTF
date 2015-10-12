@@ -1,0 +1,6 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "values",
+    "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
+    "description" : "Parameter values that override the values in the technique with the same parameter name."
+}

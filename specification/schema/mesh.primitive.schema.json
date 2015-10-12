@@ -1,0 +1,36 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "primitive",
+    "type" : "object",
+    "description" : "Geometry and material.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "attributes" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "mesh.primitive.attribute.schema.json"
+            },
+            "default" : {}
+        },
+        "indices" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the accessor that contains the indices.",
+            "gltf_detailedDescription" : "The id of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`."            
+        },
+        "material" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the material to apply to this primitive when rendering.",
+            "required" : true
+        },
+        "mode" : {
+            "type" : "integer",
+            "description" : "The type of primitives to render.",
+            "enum" : [0, 1, 2, 3, 4, 5, 6],
+            "default" : 4,
+            "gltf_detailedDescription" : "The type of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN)."
+        }
+    },
+    "additionalProperties" : false,
+    "gltf_webgl" : "`drawElements()` and `drawArrays()`"
+}

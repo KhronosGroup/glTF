@@ -1,0 +1,5755 @@
+{
+    "animations": {
+        "animation_0": {
+            "channels": [
+                {
+                    "sampler": "animation_0_translation_sampler",
+                    "target": {
+                        "id": "node-Hip",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_0_rotation_sampler",
+                    "target": {
+                        "id": "node-Hip",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_0_scale_sampler",
+                    "target": {
+                        "id": "node-Hip",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 1152,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 22096,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 43040,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 6388,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_0_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_0_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_1": {
+            "channels": [
+                {
+                    "sampler": "animation_1_translation_sampler",
+                    "target": {
+                        "id": "node-Chest",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_1_rotation_sampler",
+                    "target": {
+                        "id": "node-Chest",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_1_scale_sampler",
+                    "target": {
+                        "id": "node-Chest",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 58748,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 79692,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 100636,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 63984,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_1_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_1_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_1_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_10": {
+            "channels": [
+                {
+                    "sampler": "animation_10_translation_sampler",
+                    "target": {
+                        "id": "node-Left_Thigh",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_10_rotation_sampler",
+                    "target": {
+                        "id": "node-Left_Thigh",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_10_scale_sampler",
+                    "target": {
+                        "id": "node-Left_Thigh",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 577112,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 598056,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 619000,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 582348,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_10_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_10_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_10_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_11": {
+            "channels": [
+                {
+                    "sampler": "animation_11_translation_sampler",
+                    "target": {
+                        "id": "node-Left_Shin",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_11_rotation_sampler",
+                    "target": {
+                        "id": "node-Left_Shin",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_11_scale_sampler",
+                    "target": {
+                        "id": "node-Left_Shin",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 634708,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 655652,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 676596,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 639944,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_11_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_11_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_11_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_12": {
+            "channels": [
+                {
+                    "sampler": "animation_12_translation_sampler",
+                    "target": {
+                        "id": "node-Left_Foot",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_12_rotation_sampler",
+                    "target": {
+                        "id": "node-Left_Foot",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_12_scale_sampler",
+                    "target": {
+                        "id": "node-Left_Foot",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 692304,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 713248,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 734192,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 697540,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_12_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_12_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_12_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_13": {
+            "channels": [
+                {
+                    "sampler": "animation_13_translation_sampler",
+                    "target": {
+                        "id": "node-Camera001",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_13_rotation_sampler",
+                    "target": {
+                        "id": "node-Camera001",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_13_scale_sampler",
+                    "target": {
+                        "id": "node-Camera001",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 749900,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 770844,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 791788,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 755136,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_13_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_13_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_13_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_2": {
+            "channels": [
+                {
+                    "sampler": "animation_2_translation_sampler",
+                    "target": {
+                        "id": "node-Head",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_2_rotation_sampler",
+                    "target": {
+                        "id": "node-Head",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_2_scale_sampler",
+                    "target": {
+                        "id": "node-Head",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 116344,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 137288,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 158232,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 121580,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_2_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_2_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_2_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_3": {
+            "channels": [
+                {
+                    "sampler": "animation_3_translation_sampler",
+                    "target": {
+                        "id": "node-Right_Shoulder",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_3_rotation_sampler",
+                    "target": {
+                        "id": "node-Right_Shoulder",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_3_scale_sampler",
+                    "target": {
+                        "id": "node-Right_Shoulder",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 173940,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 194884,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 215828,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 179176,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_3_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_3_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_3_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_4": {
+            "channels": [
+                {
+                    "sampler": "animation_4_translation_sampler",
+                    "target": {
+                        "id": "node-Right_Forearm",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_4_rotation_sampler",
+                    "target": {
+                        "id": "node-Right_Forearm",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_4_scale_sampler",
+                    "target": {
+                        "id": "node-Right_Forearm",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 231536,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 252480,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 273424,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 236772,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_4_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_4_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_4_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_5": {
+            "channels": [
+                {
+                    "sampler": "animation_5_translation_sampler",
+                    "target": {
+                        "id": "node-Left_Shoulder",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_5_rotation_sampler",
+                    "target": {
+                        "id": "node-Left_Shoulder",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_5_scale_sampler",
+                    "target": {
+                        "id": "node-Left_Shoulder",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 289132,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 310076,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 331020,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 294368,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_5_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_5_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_5_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_6": {
+            "channels": [
+                {
+                    "sampler": "animation_6_translation_sampler",
+                    "target": {
+                        "id": "node-Left_Forearm",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_6_rotation_sampler",
+                    "target": {
+                        "id": "node-Left_Forearm",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_6_scale_sampler",
+                    "target": {
+                        "id": "node-Left_Forearm",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 346728,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 367672,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 388616,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 351964,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_6_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_6_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_6_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_7": {
+            "channels": [
+                {
+                    "sampler": "animation_7_translation_sampler",
+                    "target": {
+                        "id": "node-Right_Thigh",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_7_rotation_sampler",
+                    "target": {
+                        "id": "node-Right_Thigh",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_7_scale_sampler",
+                    "target": {
+                        "id": "node-Right_Thigh",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 404324,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 425268,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 446212,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 409560,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_7_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_7_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_7_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_8": {
+            "channels": [
+                {
+                    "sampler": "animation_8_translation_sampler",
+                    "target": {
+                        "id": "node-Right_Shin",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_8_rotation_sampler",
+                    "target": {
+                        "id": "node-Right_Shin",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_8_scale_sampler",
+                    "target": {
+                        "id": "node-Right_Shin",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 461920,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 482864,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 503808,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 467156,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_8_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_8_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_8_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_9": {
+            "channels": [
+                {
+                    "sampler": "animation_9_translation_sampler",
+                    "target": {
+                        "id": "node-Right_Foot",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "animation_9_rotation_sampler",
+                    "target": {
+                        "id": "node-Right_Foot",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "animation_9_scale_sampler",
+                    "target": {
+                        "id": "node-Right_Foot",
+                        "path": "scale"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 519516,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 540460,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "scale": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 561404,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1345",
+                    "byteOffset": 524752,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "animation_9_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "animation_9_scale_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "scale"
+                },
+                "animation_9_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        }
+    },
+    "asset": {
+        "generator": "collada2gltf@56f7808827ee7654ffb72162b7cbdf4b8be7aedb"
+    },
+    "attributes": {
+        "attribute_1183": {
+            "bufferView": "bufferView_1343",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "count": 33042,
+            "max": [
+                3.81405,
+                6.01823,
+                0.838978
+            ],
+            "min": [
+                -4.10807,
+                -0.0017727,
+                -1.12004
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_1185": {
+            "bufferView": "bufferView_1343",
+            "byteOffset": 396504,
+            "byteStride": 12,
+            "count": 33042,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_1187": {
+            "bufferView": "bufferView_1343",
+            "byteOffset": 793008,
+            "byteStride": 8,
+            "count": 33042,
+            "max": [
+                0.993203,
+                0.97479
+            ],
+            "min": [
+                0.0172094,
+                0.012533
+            ],
+            "type": "FLOAT_VEC2"
+        },
+        "attribute_1252": {
+            "bufferView": "bufferView_1343",
+            "byteOffset": 1057344,
+            "byteStride": 16,
+            "count": 33042,
+            "max": [
+                1,
+                0.692007,
+                0.552371,
+                0.537818
+            ],
+            "min": [
+                4.70135e-06,
+                0,
+                0,
+                0
+            ],
+            "type": "FLOAT_VEC4"
+        },
+        "attribute_1255": {
+            "bufferView": "bufferView_1343",
+            "byteOffset": 1586016,
+            "byteStride": 16,
+            "count": 33042,
+            "max": [
+                17,
+                12,
+                15,
+                16
+            ],
+            "min": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "type": "FLOAT_VEC4"
+        }
+    },
+    "bufferViews": {
+        "bufferView_1343": {
+            "buffer": "brainsteam2.bin",
+            "byteLength": 2114688,
+            "byteOffset": 0,
+            "target": "ARRAY_BUFFER"
+        },
+        "bufferView_1344": {
+            "buffer": "brainsteam2.bin",
+            "byteLength": 370212,
+            "byteOffset": 2114688,
+            "target": "ELEMENT_ARRAY_BUFFER"
+        },
+        "bufferView_1345": {
+            "buffer": "brainsteam2.bin",
+            "byteLength": 807496,
+            "byteOffset": 2484900
+        }
+    },
+    "buffers": {
+        "brainsteam2.bin": {
+            "byteLength": 3292396,
+            "path": "brainsteam2.bin"
+        }
+    },
+    "cameras": {
+        "camera_0": {
+            "projection": "perspective",
+            "xfov": 30,
+            "zfar": 1000,
+            "znear": 1
+        }
+    },
+    "indices": {
+        "indices_1007": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 0,
+            "count": 2778,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1010": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 5556,
+            "count": 5928,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1013": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 17412,
+            "count": 1134,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1016": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 19680,
+            "count": 6240,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1019": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 32160,
+            "count": 312,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1022": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 32784,
+            "count": 1512,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1025": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 35808,
+            "count": 4740,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1028": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 45288,
+            "count": 912,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1031": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 47112,
+            "count": 216,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1034": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 47544,
+            "count": 2136,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1037": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 51816,
+            "count": 3696,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1040": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 59208,
+            "count": 2286,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1043": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 63780,
+            "count": 2160,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1046": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 68100,
+            "count": 2400,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1049": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 72900,
+            "count": 192,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1052": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 73284,
+            "count": 2772,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1055": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 78828,
+            "count": 312,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1058": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 79452,
+            "count": 2280,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1061": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 84012,
+            "count": 1680,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1064": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 87372,
+            "count": 1080,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1067": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 89532,
+            "count": 1392,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1070": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 92316,
+            "count": 3456,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1073": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 99228,
+            "count": 6996,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1076": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 113220,
+            "count": 9456,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1079": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 132132,
+            "count": 7080,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1082": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 146292,
+            "count": 19836,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1085": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 185964,
+            "count": 8064,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1088": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 202092,
+            "count": 5736,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1091": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 213564,
+            "count": 3318,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1094": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 220200,
+            "count": 2880,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1097": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 225960,
+            "count": 1536,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1100": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 229032,
+            "count": 7308,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1103": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 243648,
+            "count": 3528,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1106": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 250704,
+            "count": 1344,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1109": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 253392,
+            "count": 5406,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1112": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 264204,
+            "count": 1092,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1115": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 266388,
+            "count": 960,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1118": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 268308,
+            "count": 1842,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1121": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 271992,
+            "count": 1260,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1124": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 274512,
+            "count": 432,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1127": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 275376,
+            "count": 5958,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1130": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 287292,
+            "count": 1488,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1133": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 290268,
+            "count": 8688,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1136": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 307644,
+            "count": 768,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1139": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 309180,
+            "count": 300,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1142": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 309780,
+            "count": 2280,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1145": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 314340,
+            "count": 228,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1148": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 314796,
+            "count": 156,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1151": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 315108,
+            "count": 228,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1154": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 315564,
+            "count": 864,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1157": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 317292,
+            "count": 4536,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1160": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 326364,
+            "count": 480,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1163": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 327324,
+            "count": 432,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1166": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 328188,
+            "count": 3150,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1169": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 334488,
+            "count": 4632,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1172": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 343752,
+            "count": 8922,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1175": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 361596,
+            "count": 3066,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1178": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 367728,
+            "count": 576,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1181": {
+            "bufferView": "bufferView_1344",
+            "byteOffset": 368880,
+            "count": 666,
+            "type": "UNSIGNED_SHORT"
+        }
+    },
+    "materials": {
+        "Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.541176,
+                            0.541176,
+                            0.541176,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "Stem"
+        },
+        "TubeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0784314,
+                            0.184314,
+                            0.207843,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "TubeStem"
+        },
+        "ankleBracketStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "ankleBracketStem"
+        },
+        "ankleStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "ankleStem"
+        },
+        "armBoltStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armBoltStem"
+        },
+        "armFilletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armFilletStem"
+        },
+        "armPlateStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.509804,
+                            0.458824,
+                            0.376471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armPlateStem"
+        },
+        "armTrussStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.513726,
+                            0.454902,
+                            0.372549,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armTrussStem"
+        },
+        "bStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0196078,
+                            0.164706,
+                            0.2,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bStem"
+        },
+        "barStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.192157,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barStem"
+        },
+        "barrel1Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.352941,
+                            0.352941,
+                            0.352941,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barrel1Stem"
+        },
+        "barrel2Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.12549,
+                            0.12549,
+                            0.12549,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barrel2Stem"
+        },
+        "bayonetStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bayonetStem"
+        },
+        "boltStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.290196,
+                            0.290196,
+                            0.290196,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699962,
+                            0.699962,
+                            0.699962,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "boltStem"
+        },
+        "bracketStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.384314,
+                            0.34902,
+                            0.282353,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bracketStem"
+        },
+        "calfCoverStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.356863,
+                            0.32549,
+                            0.278431,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "calfCoverStem"
+        },
+        "calfStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.682353,
+                            0.635294,
+                            0.533333,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "calfStem"
+        },
+        "canInnerStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.360784,
+                            0.360784,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canInnerStem"
+        },
+        "canisterInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.498039,
+                            0.498039,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canisterInStem"
+        },
+        "canisterOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.537255,
+                            0.537255,
+                            0.537255,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canisterOutStem"
+        },
+        "componentStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.521569,
+                            0.462745,
+                            0.376471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "componentStem"
+        },
+        "componentsStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.745098,
+                            0.45098,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699962,
+                            0.699962,
+                            0.699962,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "componentsStem"
+        },
+        "coverStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "coverStem"
+        },
+        "discInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.462745,
+                            0.407843,
+                            0.329412,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "discInStem"
+        },
+        "discStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.188235,
+                            0.156863,
+                            0.121569,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "discStem"
+        },
+        "exhaustGunStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.505882,
+                            0.505882,
+                            0.505882,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "exhaustGunStem"
+        },
+        "eyeRimStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "eyeRimStem"
+        },
+        "eyeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "eyeStem"
+        },
+        "filletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filletStem"
+        },
+        "filterInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.359991,
+                            0.359991,
+                            0.359991,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filterInStem"
+        },
+        "filterOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.419608,
+                            0.419608,
+                            0.411765,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filterOutStem"
+        },
+        "footFlangeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.968628,
+                            0.968628,
+                            0.968628,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "footFlangeStem"
+        },
+        "footStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0196078,
+                            0.145098,
+                            0.176471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "footStem"
+        },
+        "frameInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.168627,
+                            0.141176,
+                            0.109804,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.698039,
+                            0.698039,
+                            0.698039,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "frameInStem"
+        },
+        "headCaseStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.862745,
+                            0.65098,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headCaseStem"
+        },
+        "headFilletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.254902,
+                            0.254902,
+                            0.254902,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headFilletStem"
+        },
+        "headGrillStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.709804,
+                            0.541176,
+                            0.254902,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headGrillStem"
+        },
+        "headHornStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.827451,
+                            0.517647,
+                            0.0627451,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headHornStem"
+        },
+        "hexStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.243137,
+                            0.196078,
+                            0.156863,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "hexStem"
+        },
+        "hipSphereStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.262745,
+                            0.262745,
+                            0.262745,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "hipSphereStem"
+        },
+        "intestineInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.207294,
+                            0.19881,
+                            0.709987,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "intestineInStem"
+        },
+        "intestineOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.431373,
+                            0.2,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "intestineOutStem"
+        },
+        "knee2Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "knee2Stem"
+        },
+        "kneeGuardStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.45098,
+                            0.380392,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "kneeGuardStem"
+        },
+        "kneeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "kneeStem"
+        },
+        "neckSinkStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.917647,
+                            0.686275,
+                            0.270588,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "neckSinkStem"
+        },
+        "off": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.670588,
+                            0.407843,
+                            0.0588235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "off"
+        },
+        "pinStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.268193,
+                            0.258503,
+                            0.549996,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "pinStem"
+        },
+        "pipeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.454902,
+                            0.219608,
+                            0.0196078,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "pipeStem"
+        },
+        "plugStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.458824,
+                            0.458824,
+                            0.458824,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "plugStem"
+        },
+        "radiatorStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.764706,
+                            0.486275,
+                            0.0784314,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "radiatorStem"
+        },
+        "rpgStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "rpgStem"
+        },
+        "shockInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.482353,
+                            0.870588,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shockInStem"
+        },
+        "shockOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.266667,
+                            0.337255,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shockOutStem"
+        },
+        "shoulderBStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0235294,
+                            0.117647,
+                            0.141176,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shoulderBStem"
+        },
+        "shoulderPodStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shoulderPodStem"
+        },
+        "skeletonStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.270588,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699901,
+                            0.699901,
+                            0.699901,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "skeletonStem"
+        },
+        "thighPadStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.45098,
+                            0.380392,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "thighPadStem"
+        },
+        "thighStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.898039,
+                            0.898039,
+                            0.898039,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "emission",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "shininess",
+                        "value": 1
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "thighStem"
+        }
+    },
+    "meshes": {
+        "geom-Figure_2_node": {
+            "name": "Figure_2_node",
+            "primitives": [
+                {
+                    "indices": "indices_1007",
+                    "material": "frameInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1010",
+                    "material": "componentsStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1013",
+                    "material": "Stem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1016",
+                    "material": "footStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1019",
+                    "material": "footFlangeStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1022",
+                    "material": "kneeStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1025",
+                    "material": "hipSphereStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1028",
+                    "material": "filletStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1031",
+                    "material": "thighStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1034",
+                    "material": "thighPadStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1037",
+                    "material": "plugStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1040",
+                    "material": "discInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1043",
+                    "material": "TubeStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1046",
+                    "material": "componentStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1049",
+                    "material": "hexStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1052",
+                    "material": "kneeGuardStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1055",
+                    "material": "calfStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1058",
+                    "material": "ankleBracketStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1061",
+                    "material": "ankleStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1064",
+                    "material": "calfCoverStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1067",
+                    "material": "knee2Stem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1070",
+                    "material": "skeletonStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1073",
+                    "material": "bracketStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1076",
+                    "material": "coverStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1079",
+                    "material": "barStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1082",
+                    "material": "intestineOutStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1085",
+                    "material": "neckSinkStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1088",
+                    "material": "shockOutStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1091",
+                    "material": "shockInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1094",
+                    "material": "discStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1097",
+                    "material": "canisterInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1100",
+                    "material": "canisterOutStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1103",
+                    "material": "canInnerStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1106",
+                    "material": "pipeStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1109",
+                    "material": "off",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1112",
+                    "material": "boltStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1115",
+                    "material": "intestineInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1118",
+                    "material": "armPlateStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1121",
+                    "material": "shoulderPodStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1124",
+                    "material": "armFilletStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1127",
+                    "material": "bStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1130",
+                    "material": "armBoltStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1133",
+                    "material": "shoulderBStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1136",
+                    "material": "armTrussStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1139",
+                    "material": "pinStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1142",
+                    "material": "radiatorStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1145",
+                    "material": "rpgStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1148",
+                    "material": "bayonetStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1151",
+                    "material": "barrel2Stem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1154",
+                    "material": "barrel1Stem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1157",
+                    "material": "filterOutStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1160",
+                    "material": "filterInStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1163",
+                    "material": "exhaustGunStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1166",
+                    "material": "headFilletStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1169",
+                    "material": "headCaseStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1172",
+                    "material": "headGrillStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1175",
+                    "material": "headHornStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1178",
+                    "material": "eyeStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                },
+                {
+                    "indices": "indices_1181",
+                    "material": "eyeRimStem",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1255",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1252"
+                    }
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "node-Body": {
+            "children": [
+                "node-Hip"
+            ],
+            "matrix": [
+                0.999999,
+                2.35856e-07,
+                0.00135923,
+                0,
+                0,
+                1,
+                -0.000173522,
+                0,
+                -0.00135923,
+                0.000173522,
+                0.999999,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Body"
+        },
+        "node-Camera001": {
+            "camera": "camera_0",
+            "children": [],
+            "name": "Camera001",
+            "rotation": [
+                0.99986,
+                -0.00937862,
+                -0.0138584,
+                1.19003
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -2.78348,
+                -119.844,
+                77.5124
+            ]
+        },
+        "node-Camera001.Target": {
+            "children": [],
+            "matrix": [
+                -1.62921e-07,
+                -1,
+                0,
+                0,
+                -4.37114e-08,
+                7.12149e-15,
+                1,
+                0,
+                -1,
+                1.62921e-07,
+                -4.37114e-08,
+                0,
+                1.24654e-06,
+                28.5176,
+                18.0899,
+                1
+            ],
+            "name": "Camera001.Target"
+        },
+        "node-Chest": {
+            "children": [
+                "node-Head",
+                "node-Right_Shoulder",
+                "node-Left_Shoulder"
+            ],
+            "jointId": "joint1",
+            "name": "Chest",
+            "rotation": [
+                0.576368,
+                0.617805,
+                -0.534899,
+                0.255206
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -5.96046e-08,
+                0.3526,
+                -0.0774
+            ]
+        },
+        "node-Figure_2_node": {
+            "children": [],
+            "instanceSkin": {
+                "skeletons": [
+                    "node-Hip"
+                ],
+                "skin": "geom-Figure_2_node-skin1",
+                "sources": [
+                    "geom-Figure_2_node"
+                ]
+            },
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Figure_2_node"
+        },
+        "node-Head": {
+            "children": [],
+            "jointId": "joint2",
+            "name": "Head",
+            "rotation": [
+                -0.49772,
+                -0.847103,
+                0.186255,
+                1.36768
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                1.72,
+                -0.0515997
+            ]
+        },
+        "node-Hip": {
+            "children": [
+                "node-Chest",
+                "node-Right_Thigh",
+                "node-Left_Thigh"
+            ],
+            "jointId": "joint0",
+            "name": "Hip",
+            "rotation": [
+                0.140172,
+                -0.744836,
+                0.652358,
+                0.20618
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.183008,
+                2.92829,
+                -0.274501
+            ]
+        },
+        "node-Left_Foot": {
+            "children": [
+                "node-lToe"
+            ],
+            "jointId": "joint16",
+            "name": "Left_Foot",
+            "rotation": [
+                0.469943,
+                0.49224,
+                0.732703,
+                0.220304
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.0172,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "node-Left_Forearm": {
+            "children": [
+                "node-lMid1",
+                "node-lPinky1",
+                "node-lThumb1"
+            ],
+            "jointId": "joint6",
+            "name": "Left_Forearm",
+            "rotation": [
+                0.0138612,
+                -0.928648,
+                0.370704,
+                1.71657
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.608725,
+                0.0255165,
+                -0.00860023
+            ]
+        },
+        "node-Left_Shin": {
+            "children": [
+                "node-Left_Foot"
+            ],
+            "jointId": "joint15",
+            "name": "Left_Shin",
+            "rotation": [
+                0.0729501,
+                0.775114,
+                -0.627596,
+                0.381078
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.086,
+                -1.1696,
+                -0.0946
+            ]
+        },
+        "node-Left_Shoulder": {
+            "children": [
+                "node-Left_Forearm"
+            ],
+            "jointId": "joint5",
+            "name": "Left_Shoulder",
+            "rotation": [
+                0.925365,
+                0.084176,
+                -0.369613,
+                1.8727
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                1.376,
+                1.118,
+                -0.0429999
+            ]
+        },
+        "node-Left_Thigh": {
+            "children": [
+                "node-Left_Shin"
+            ],
+            "jointId": "joint14",
+            "name": "Left_Thigh",
+            "rotation": [
+                -0.692762,
+                -0.71755,
+                -0.0721285,
+                0.30724
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "node-Omni001": {
+            "children": [],
+            "matrix": [
+                -1.62921e-07,
+                -1,
+                0,
+                0,
+                -4.37114e-08,
+                7.12149e-15,
+                1,
+                0,
+                -1,
+                1.62921e-07,
+                -4.37114e-08,
+                0,
+                -7.33732e-06,
+                -167.858,
+                83.322,
+                1
+            ],
+            "name": "Omni001"
+        },
+        "node-Omni002": {
+            "children": [],
+            "matrix": [
+                -1.62921e-07,
+                -1,
+                0,
+                0,
+                -4.37114e-08,
+                7.12149e-15,
+                1,
+                0,
+                -1,
+                1.62921e-07,
+                -4.37114e-08,
+                0,
+                -2.406e-06,
+                -55.0429,
+                -11.9431,
+                1
+            ],
+            "name": "Omni002"
+        },
+        "node-Poser_scene_root": {
+            "children": [
+                "node-Body",
+                "node-Figure_2_node"
+            ],
+            "matrix": [
+                12,
+                0,
+                0,
+                0,
+                0,
+                -5.24537e-07,
+                12,
+                0,
+                0,
+                -12,
+                -5.24537e-07,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Poser_scene_root"
+        },
+        "node-Right_Foot": {
+            "children": [
+                "node-rToe"
+            ],
+            "jointId": "joint12",
+            "name": "Right_Foot",
+            "rotation": [
+                -0.843241,
+                -0.359252,
+                0.399854,
+                0.320219
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.0171999,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "node-Right_Forearm": {
+            "children": [],
+            "jointId": "joint4",
+            "name": "Right_Forearm",
+            "rotation": [
+                0.545081,
+                0.73713,
+                -0.399408,
+                1.13379
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.627801,
+                0.0429999,
+                -0.00859928
+            ]
+        },
+        "node-Right_Shin": {
+            "children": [
+                "node-Right_Foot"
+            ],
+            "jointId": "joint11",
+            "name": "Right_Shin",
+            "rotation": [
+                0.999453,
+                -0.0312705,
+                0.0107159,
+                0.676472
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.086,
+                -1.1696,
+                -0.0945998
+            ]
+        },
+        "node-Right_Shoulder": {
+            "children": [
+                "node-Right_Forearm"
+            ],
+            "jointId": "joint3",
+            "name": "Right_Shoulder",
+            "rotation": [
+                0.820947,
+                0.255344,
+                0.51073,
+                1.69148
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -1.376,
+                1.118,
+                -0.0429999
+            ]
+        },
+        "node-Right_Thigh": {
+            "children": [
+                "node-Right_Shin"
+            ],
+            "jointId": "joint10",
+            "name": "Right_Thigh",
+            "rotation": [
+                -0.909077,
+                0.0532662,
+                -0.413209,
+                0.782331
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "node-lMid1": {
+            "children": [],
+            "jointId": "joint7",
+            "matrix": [
+                0.953127,
+                -0.302003,
+                -0.0185333,
+                0,
+                0.288709,
+                0.926081,
+                -0.242941,
+                0,
+                0.0905321,
+                0.226203,
+                0.969864,
+                0,
+                1.34347,
+                0.00888386,
+                0.0516002,
+                1
+            ],
+            "name": "lMid1"
+        },
+        "node-lPinky1": {
+            "children": [],
+            "jointId": "joint8",
+            "matrix": [
+                0.830135,
+                0.556967,
+                -0.025775,
+                0,
+                -0.555408,
+                0.82198,
+                -0.125978,
+                0,
+                -0.0489793,
+                0.118895,
+                0.991698,
+                0,
+                1.3515,
+                0.0708213,
+                0.18912,
+                1
+            ],
+            "name": "lPinky1"
+        },
+        "node-lThumb1": {
+            "children": [],
+            "jointId": "joint9",
+            "matrix": [
+                0.998883,
+                -0.0312525,
+                0.0354336,
+                0,
+                0.0265097,
+                0.991522,
+                0.127208,
+                0,
+                -0.0391088,
+                -0.126126,
+                0.991243,
+                0,
+                1.35358,
+                -0.071113,
+                0.180495,
+                1
+            ],
+            "name": "lThumb1"
+        },
+        "node-lToe": {
+            "children": [],
+            "jointId": "joint17",
+            "matrix": [
+                1,
+                0,
+                5.98277e-11,
+                0,
+                0,
+                1,
+                -5.82077e-11,
+                0,
+                1.72179e-10,
+                -5.82077e-11,
+                1,
+                0,
+                1.49012e-08,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "lToe"
+        },
+        "node-rToe": {
+            "children": [],
+            "jointId": "joint13",
+            "matrix": [
+                1,
+                1.86265e-09,
+                -1.39698e-08,
+                0,
+                -5.58794e-09,
+                1,
+                2.98023e-08,
+                0,
+                2.28174e-08,
+                0,
+                1,
+                0,
+                0,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "rToe"
+        },
+        "node_0": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "EnvironmentAmbientLight"
+        }
+    },
+    "profile": "WebGL 1.0",
+    "programs": {
+        "program_0": {
+            "fragmentShader": "brainsteam20FS",
+            "vertexShader": "brainsteam20VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "node_0",
+                "node-Poser_scene_root",
+                "node-Camera001",
+                "node-Camera001.Target",
+                "node-Omni001",
+                "node-Omni002"
+            ]
+        }
+    },
+    "shaders": {
+        "brainsteam20FS": {
+            "path": "brainsteam20FS.glsl"
+        },
+        "brainsteam20VS": {
+            "path": "brainsteam20VS.glsl"
+        }
+    },
+    "skins": {
+        "geom-Figure_2_node-skin1": {
+            "bindShapeMatrix": [
+                12,
+                0,
+                0,
+                0,
+                0,
+                -5.24537e-07,
+                12,
+                0,
+                0,
+                -12,
+                -5.24537e-07,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "inverseBindMatrices": {
+                "bufferView": "bufferView_1345",
+                "byteOffset": 0,
+                "count": 18,
+                "type": "FLOAT_MAT4"
+            },
+            "joints": [
+                "joint0",
+                "joint1",
+                "joint2",
+                "joint3",
+                "joint4",
+                "joint5",
+                "joint6",
+                "joint7",
+                "joint8",
+                "joint9",
+                "joint10",
+                "joint11",
+                "joint12",
+                "joint13",
+                "joint14",
+                "joint15",
+                "joint16",
+                "joint17"
+            ]
+        }
+    },
+    "techniques": {
+        "technique1": {
+            "parameters": {
+                "diffuse": {
+                    "type": "FLOAT_VEC4"
+                },
+                "emission": {
+                    "type": "FLOAT_VEC4"
+                },
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": "FLOAT_VEC4"
+                },
+                "jointMat": {
+                    "semantic": "JOINT_MATRIX",
+                    "type": "FLOAT_MAT4"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": "FLOAT_VEC4"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_joint": "joint",
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_weight": "weight"
+                        },
+                        "program": "program_0",
+                        "uniforms": {
+                            "u_diffuse": "diffuse",
+                            "u_emission": "emission",
+                            "u_jointMat": "jointMat",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
+                    },
+                    "states": {
+                        "blendEnable": false,
+                        "cullFaceEnable": true,
+                        "depthMask": true,
+                        "depthTestEnable": true
+                    }
+                }
+            }
+        }
+    }
+}

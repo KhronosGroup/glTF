@@ -7,7 +7,7 @@
     "properties" : {
         "nodes" : {
             "type" : "array",
-            "description" : "The ids (JSON property names) for each root node.",
+            "description" : "The ids of each root node.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },

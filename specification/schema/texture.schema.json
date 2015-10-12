@@ -2,43 +2,52 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "texture",
     "type" : "object",
-    "description" : "A texture and its sampler.  WebGL: see createTexture(), deleteTexture(), bindTexture(), texImage2D(), and texParameterf().",
+    "description" : "A texture and its sampler.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "format": {
             "type" : "integer",
-            "description" : "6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  WebGL: see texImage2D() format parameter.",
+            "description" : "The texture's format.",
             "enum" : [6406, 6407, 6408, 6409, 6410],
-            "default" : 6408
+            "default" : 6408,
+            "gltf_detailedDescription" : "The texture's format.  Valid values are 6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).",
+            "gltf_webgl" : "`texImage2D()` format parameter"
         },
         "internalFormat": {
             "type" : "integer",
-            "description" : "6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  Defaults to same value as format.  WebGL: see internalFormat() format parameter.",
+            "description" : "The texture's internal format.",
             "enum" : [6406, 6407, 6408, 6409, 6410],
-            "default" : 6408
+            "default" : 6408,
+            "gltf_detailedDescription" : "The texture's internal format.  Valid values are 6406 (ALPHA), 6407 (RGB), 6408 (RGBA), 6409 (LUMINANCE), and 6410 (LUMINANCE_ALPHA).  Defaults to same value as format.",
+            "gltf_webgl" : "`texImage2D()` internalFormat parameter"
         },
         "sampler" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the sampler used by this texture.",
+            "description" : "The id of the sampler used by this texture.",
             "required" : true
         },
         "source" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the image used by this texture.",
+            "description" : "The id of the image used by this texture.",
             "required" : true
         },
         "target": {
             "type" : "integer",
-            "description" : "3553 (TEXTURE_2D). WebGL: see bindTexture().",
+            "description" : "The target that the WebGL texture should be bound to.",
             "enum" : [3553],
-            "default" : 3553
+            "default" : 3553,
+            "gltf_detailedDescription" : "The target that the WebGL texture should be bound to.  Valid values are 3553 (TEXTURE_2D).",
+            "gltf_webgl" : "`bindTexture()`"
         },
         "type": {
             "type" : "integer",
-            "description" : "5121 (UNSIGNED_BYTE), 33635 (UNSIGNED_SHORT_5_6_5), 32819 (UNSIGNED_SHORT_4_4_4_4), and 32820 (UNSIGNED_SHORT_5_5_5_1). WebGL: see texImage2D() type property.",
+            "description" : "Texel datatype.",
             "enum" : [5121, 33635, 32819, 32820],
-            "default" : 5121
+            "default" : 5121,
+            "gltf_detailedDescription" : "Texel datatype.  Valid values are 5121 (UNSIGNED_BYTE), 33635 (UNSIGNED_SHORT_5_6_5), 32819 (UNSIGNED_SHORT_4_4_4_4), and 32820 (UNSIGNED_SHORT_5_5_5_1).",
+            "gltf_webgl" : "`texImage2D()` type parameter"
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
 }

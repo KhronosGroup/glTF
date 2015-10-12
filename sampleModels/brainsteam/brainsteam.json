@@ -1,0 +1,3887 @@
+{
+    "accessors": {
+        "accessor_64": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 1152,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_65": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 221064,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_66": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 16860,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_67": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 242008,
+            "count": 1309,
+            "type": 35665
+        },
+        "accessor_68": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 32568,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_69": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 257716,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_70": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 48276,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_71": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 278660,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_72": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 63984,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_73": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 299604,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_74": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 79692,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_75": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 320548,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_76": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 95400,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_77": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 341492,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_78": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 111108,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_79": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 362436,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_80": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 126816,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_81": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 383380,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_82": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 142524,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_83": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 404324,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_84": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 158232,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_85": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 425268,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_86": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 173940,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_87": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 446212,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_88": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 189648,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_89": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 467156,
+            "count": 1309,
+            "type": 35666
+        },
+        "accessor_90": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 205356,
+            "count": 1309,
+            "type": 5126
+        },
+        "accessor_91": {
+            "bufferView": "bufferView_1373",
+            "byteOffset": 488100,
+            "count": 1309,
+            "type": 35666
+        },
+        "attribute_1183": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "count": 32676,
+            "max": [
+                3.81405,
+                6.01823,
+                0.838978
+            ],
+            "min": [
+                -4.10807,
+                -0.0017727,
+                -1.12004
+            ],
+            "type": 35665
+        },
+        "attribute_1185": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 392112,
+            "byteStride": 12,
+            "count": 32676,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": 35665
+        },
+        "attribute_1187": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 784224,
+            "byteStride": 8,
+            "count": 32676,
+            "max": [
+                0.993203,
+                0.97479
+            ],
+            "min": [
+                0.0172094,
+                0.012533
+            ],
+            "type": 35664
+        },
+        "attribute_1364": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 1045632,
+            "byteStride": 16,
+            "count": 32676,
+            "max": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "min": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "type": 35666
+        },
+        "attribute_1367": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 1568448,
+            "byteStride": 16,
+            "count": 32676,
+            "max": [
+                17,
+                0,
+                0,
+                0
+            ],
+            "min": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "type": 35666
+        },
+        "indices_1007": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 0,
+            "count": 2778,
+            "type": 5123
+        },
+        "indices_1010": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 5556,
+            "count": 5928,
+            "type": 5123
+        },
+        "indices_1013": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 17412,
+            "count": 1134,
+            "type": 5123
+        },
+        "indices_1016": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 19680,
+            "count": 6240,
+            "type": 5123
+        },
+        "indices_1019": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 32160,
+            "count": 312,
+            "type": 5123
+        },
+        "indices_1022": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 32784,
+            "count": 1512,
+            "type": 5123
+        },
+        "indices_1025": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 35808,
+            "count": 4740,
+            "type": 5123
+        },
+        "indices_1028": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 45288,
+            "count": 912,
+            "type": 5123
+        },
+        "indices_1031": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 47112,
+            "count": 216,
+            "type": 5123
+        },
+        "indices_1034": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 47544,
+            "count": 2136,
+            "type": 5123
+        },
+        "indices_1037": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 51816,
+            "count": 3696,
+            "type": 5123
+        },
+        "indices_1040": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 59208,
+            "count": 2286,
+            "type": 5123
+        },
+        "indices_1043": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 63780,
+            "count": 2160,
+            "type": 5123
+        },
+        "indices_1046": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 68100,
+            "count": 2400,
+            "type": 5123
+        },
+        "indices_1049": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 72900,
+            "count": 192,
+            "type": 5123
+        },
+        "indices_1052": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 73284,
+            "count": 2772,
+            "type": 5123
+        },
+        "indices_1055": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 78828,
+            "count": 312,
+            "type": 5123
+        },
+        "indices_1058": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 79452,
+            "count": 2280,
+            "type": 5123
+        },
+        "indices_1061": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 84012,
+            "count": 1680,
+            "type": 5123
+        },
+        "indices_1064": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 87372,
+            "count": 1080,
+            "type": 5123
+        },
+        "indices_1067": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 89532,
+            "count": 1392,
+            "type": 5123
+        },
+        "indices_1070": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 92316,
+            "count": 3456,
+            "type": 5123
+        },
+        "indices_1073": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 99228,
+            "count": 6996,
+            "type": 5123
+        },
+        "indices_1076": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 113220,
+            "count": 9456,
+            "type": 5123
+        },
+        "indices_1079": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 132132,
+            "count": 7080,
+            "type": 5123
+        },
+        "indices_1082": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 146292,
+            "count": 19836,
+            "type": 5123
+        },
+        "indices_1085": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 185964,
+            "count": 8064,
+            "type": 5123
+        },
+        "indices_1088": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 202092,
+            "count": 5736,
+            "type": 5123
+        },
+        "indices_1091": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 213564,
+            "count": 3318,
+            "type": 5123
+        },
+        "indices_1094": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 220200,
+            "count": 2880,
+            "type": 5123
+        },
+        "indices_1097": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 225960,
+            "count": 1536,
+            "type": 5123
+        },
+        "indices_1100": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 229032,
+            "count": 7308,
+            "type": 5123
+        },
+        "indices_1103": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 243648,
+            "count": 3528,
+            "type": 5123
+        },
+        "indices_1106": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 250704,
+            "count": 1344,
+            "type": 5123
+        },
+        "indices_1109": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 253392,
+            "count": 5406,
+            "type": 5123
+        },
+        "indices_1112": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 264204,
+            "count": 1092,
+            "type": 5123
+        },
+        "indices_1115": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 266388,
+            "count": 960,
+            "type": 5123
+        },
+        "indices_1118": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 268308,
+            "count": 1842,
+            "type": 5123
+        },
+        "indices_1121": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 271992,
+            "count": 1260,
+            "type": 5123
+        },
+        "indices_1124": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 274512,
+            "count": 432,
+            "type": 5123
+        },
+        "indices_1127": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 275376,
+            "count": 5958,
+            "type": 5123
+        },
+        "indices_1130": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 287292,
+            "count": 1488,
+            "type": 5123
+        },
+        "indices_1133": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 290268,
+            "count": 8688,
+            "type": 5123
+        },
+        "indices_1136": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 307644,
+            "count": 768,
+            "type": 5123
+        },
+        "indices_1139": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 309180,
+            "count": 300,
+            "type": 5123
+        },
+        "indices_1142": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 309780,
+            "count": 2280,
+            "type": 5123
+        },
+        "indices_1145": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 314340,
+            "count": 228,
+            "type": 5123
+        },
+        "indices_1148": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 314796,
+            "count": 156,
+            "type": 5123
+        },
+        "indices_1151": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 315108,
+            "count": 228,
+            "type": 5123
+        },
+        "indices_1154": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 315564,
+            "count": 864,
+            "type": 5123
+        },
+        "indices_1157": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 317292,
+            "count": 4536,
+            "type": 5123
+        },
+        "indices_1160": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 326364,
+            "count": 480,
+            "type": 5123
+        },
+        "indices_1163": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 327324,
+            "count": 432,
+            "type": 5123
+        },
+        "indices_1166": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 328188,
+            "count": 3150,
+            "type": 5123
+        },
+        "indices_1169": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 334488,
+            "count": 4632,
+            "type": 5123
+        },
+        "indices_1172": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 343752,
+            "count": 8922,
+            "type": 5123
+        },
+        "indices_1175": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 361596,
+            "count": 3066,
+            "type": 5123
+        },
+        "indices_1178": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 367728,
+            "count": 576,
+            "type": 5123
+        },
+        "indices_1181": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 368880,
+            "count": 666,
+            "type": 5123
+        }
+    },
+    "animations": {
+        "animation_0": {
+            "channels": [
+                {
+                    "sampler": "animation_0_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2hip_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_64",
+                "rotation": "accessor_65"
+            },
+            "samplers": {
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_12": {
+            "channels": [
+                {
+                    "sampler": "animation_12_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rShldr_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_72",
+                "rotation": "accessor_73"
+            },
+            "samplers": {
+                "animation_12_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_15": {
+            "channels": [
+                {
+                    "sampler": "animation_15_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rForeArm_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_74",
+                "rotation": "accessor_75"
+            },
+            "samplers": {
+                "animation_15_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_18": {
+            "channels": [
+                {
+                    "sampler": "animation_18_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lShldr_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_76",
+                "rotation": "accessor_77"
+            },
+            "samplers": {
+                "animation_18_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_21": {
+            "channels": [
+                {
+                    "sampler": "animation_21_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lForeArm_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_78",
+                "rotation": "accessor_79"
+            },
+            "samplers": {
+                "animation_21_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_24": {
+            "channels": [
+                {
+                    "sampler": "animation_24_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rThigh_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_80",
+                "rotation": "accessor_81"
+            },
+            "samplers": {
+                "animation_24_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_27": {
+            "channels": [
+                {
+                    "sampler": "animation_27_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rShin_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_82",
+                "rotation": "accessor_83"
+            },
+            "samplers": {
+                "animation_27_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_3": {
+            "channels": [
+                {
+                    "sampler": "animation_3_translation_sampler",
+                    "target": {
+                        "id": "Figure_2hip_2_node",
+                        "path": "translation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_66",
+                "translation": "accessor_67"
+            },
+            "samplers": {
+                "animation_3_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "animation_30": {
+            "channels": [
+                {
+                    "sampler": "animation_30_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rFoot_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_84",
+                "rotation": "accessor_85"
+            },
+            "samplers": {
+                "animation_30_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_33": {
+            "channels": [
+                {
+                    "sampler": "animation_33_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lThigh_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_86",
+                "rotation": "accessor_87"
+            },
+            "samplers": {
+                "animation_33_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_36": {
+            "channels": [
+                {
+                    "sampler": "animation_36_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lShin_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_88",
+                "rotation": "accessor_89"
+            },
+            "samplers": {
+                "animation_36_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_39": {
+            "channels": [
+                {
+                    "sampler": "animation_39_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lFoot_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_90",
+                "rotation": "accessor_91"
+            },
+            "samplers": {
+                "animation_39_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_6": {
+            "channels": [
+                {
+                    "sampler": "animation_6_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2chest_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_68",
+                "rotation": "accessor_69"
+            },
+            "samplers": {
+                "animation_6_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_9": {
+            "channels": [
+                {
+                    "sampler": "animation_9_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2head_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": "accessor_70",
+                "rotation": "accessor_71"
+            },
+            "samplers": {
+                "animation_9_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        }
+    },
+    "asset": {
+        "generator": "collada2gltf@fb6d6e65e66c3b0013c75a8d1e63650f4309bf77"
+    },
+    "bufferViews": {
+        "bufferView_1371": {
+            "buffer": "brainsteam",
+            "byteLength": 2091264,
+            "byteOffset": 0,
+            "target": 34962
+        },
+        "bufferView_1372": {
+            "buffer": "brainsteam",
+            "byteLength": 370212,
+            "byteOffset": 2091264,
+            "target": 34963
+        },
+        "bufferView_1373": {
+            "buffer": "brainsteam",
+            "byteLength": 509044,
+            "byteOffset": 2461476
+        }
+    },
+    "buffers": {
+        "brainsteam": {
+            "byteLength": 2970520,
+            "path": "brainsteam.bin",
+            "type": "arraybuffer"
+        }
+    },
+    "materials": {
+        "effect-material-Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.541176,
+                        0.541176,
+                        0.541176,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "Stem"
+        },
+        "effect-material-TubeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.0784314,
+                        0.184314,
+                        0.207843,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "TubeStem"
+        },
+        "effect-material-ankleBracketStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.482353,
+                        0.435294,
+                        0.360784,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "ankleBracketStem"
+        },
+        "effect-material-ankleStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "ankleStem"
+        },
+        "effect-material-armBoltStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "armBoltStem"
+        },
+        "effect-material-armFilletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "armFilletStem"
+        },
+        "effect-material-armPlateStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.509804,
+                        0.458824,
+                        0.376471,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "armPlateStem"
+        },
+        "effect-material-armTrussStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.513726,
+                        0.454902,
+                        0.372549,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "armTrussStem"
+        },
+        "effect-material-bStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.0196078,
+                        0.164706,
+                        0.2,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "bStem"
+        },
+        "effect-material-barStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0,
+                        0.192157,
+                        0.243137,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "barStem"
+        },
+        "effect-material-barrel1Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.352941,
+                        0.352941,
+                        0.352941,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "barrel1Stem"
+        },
+        "effect-material-barrel2Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.12549,
+                        0.12549,
+                        0.12549,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "barrel2Stem"
+        },
+        "effect-material-bayonetStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.988235,
+                        0.988235,
+                        0.988235,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "bayonetStem"
+        },
+        "effect-material-boltStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.290196,
+                        0.290196,
+                        0.290196,
+                        1
+                    ],
+                    "specular": [
+                        0.699962,
+                        0.699962,
+                        0.699962,
+                        1
+                    ]
+                }
+            },
+            "name": "boltStem"
+        },
+        "effect-material-bracketStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.384314,
+                        0.34902,
+                        0.282353,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "bracketStem"
+        },
+        "effect-material-calfCoverStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.356863,
+                        0.32549,
+                        0.278431,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "calfCoverStem"
+        },
+        "effect-material-calfStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.682353,
+                        0.635294,
+                        0.533333,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "calfStem"
+        },
+        "effect-material-canInnerStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.360784,
+                        0.360784,
+                        0.360784,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "canInnerStem"
+        },
+        "effect-material-canisterInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.498039,
+                        0.498039,
+                        0.498039,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "canisterInStem"
+        },
+        "effect-material-canisterOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.537255,
+                        0.537255,
+                        0.537255,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "canisterOutStem"
+        },
+        "effect-material-componentStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.521569,
+                        0.462745,
+                        0.376471,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "componentStem"
+        },
+        "effect-material-componentsStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.745098,
+                        0.45098,
+                        0,
+                        1
+                    ],
+                    "specular": [
+                        0.699962,
+                        0.699962,
+                        0.699962,
+                        1
+                    ]
+                }
+            },
+            "name": "componentsStem"
+        },
+        "effect-material-coverStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.482353,
+                        0.435294,
+                        0.360784,
+                        1
+                    ],
+                    "specular": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            },
+            "name": "coverStem"
+        },
+        "effect-material-discInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.462745,
+                        0.407843,
+                        0.329412,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "discInStem"
+        },
+        "effect-material-discStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.188235,
+                        0.156863,
+                        0.121569,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "discStem"
+        },
+        "effect-material-exhaustGunStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.505882,
+                        0.505882,
+                        0.505882,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "exhaustGunStem"
+        },
+        "effect-material-eyeRimStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "eyeRimStem"
+        },
+        "effect-material-eyeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.988235,
+                        0.988235,
+                        0.988235,
+                        1
+                    ],
+                    "specular": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            },
+            "name": "eyeStem"
+        },
+        "effect-material-filletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.988235,
+                        0.988235,
+                        0.988235,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "filletStem"
+        },
+        "effect-material-filterInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.359991,
+                        0.359991,
+                        0.359991,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "filterInStem"
+        },
+        "effect-material-filterOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.419608,
+                        0.419608,
+                        0.411765,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "filterOutStem"
+        },
+        "effect-material-footFlangeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.968628,
+                        0.968628,
+                        0.968628,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "footFlangeStem"
+        },
+        "effect-material-footStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.0196078,
+                        0.145098,
+                        0.176471,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "footStem"
+        },
+        "effect-material-frameInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.168627,
+                        0.141176,
+                        0.109804,
+                        1
+                    ],
+                    "specular": [
+                        0.698039,
+                        0.698039,
+                        0.698039,
+                        1
+                    ]
+                }
+            },
+            "name": "frameInStem"
+        },
+        "effect-material-headCaseStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.862745,
+                        0.65098,
+                        0.243137,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "headCaseStem"
+        },
+        "effect-material-headFilletStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.254902,
+                        0.254902,
+                        0.254902,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "headFilletStem"
+        },
+        "effect-material-headGrillStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.709804,
+                        0.541176,
+                        0.254902,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "headGrillStem"
+        },
+        "effect-material-headHornStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.827451,
+                        0.517647,
+                        0.0627451,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "headHornStem"
+        },
+        "effect-material-hexStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.243137,
+                        0.196078,
+                        0.156863,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "hexStem"
+        },
+        "effect-material-hipSphereStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.262745,
+                        0.262745,
+                        0.262745,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "hipSphereStem"
+        },
+        "effect-material-intestineInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.207294,
+                        0.19881,
+                        0.709987,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "intestineInStem"
+        },
+        "effect-material-intestineOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.431373,
+                        0.2,
+                        0,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "intestineOutStem"
+        },
+        "effect-material-knee2Stem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "knee2Stem"
+        },
+        "effect-material-kneeGuardStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.498039,
+                        0.45098,
+                        0.380392,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "kneeGuardStem"
+        },
+        "effect-material-kneeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.482353,
+                        0.435294,
+                        0.360784,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "kneeStem"
+        },
+        "effect-material-neckSinkStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.917647,
+                        0.686275,
+                        0.270588,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "neckSinkStem"
+        },
+        "effect-material-off": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.670588,
+                        0.407843,
+                        0.0588235,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "off"
+        },
+        "effect-material-pinStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.268193,
+                        0.258503,
+                        0.549996,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "pinStem"
+        },
+        "effect-material-pipeStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.454902,
+                        0.219608,
+                        0.0196078,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "pipeStem"
+        },
+        "effect-material-plugStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.458824,
+                        0.458824,
+                        0.458824,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "plugStem"
+        },
+        "effect-material-radiatorStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.764706,
+                        0.486275,
+                        0.0784314,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "radiatorStem"
+        },
+        "effect-material-rpgStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "rpgStem"
+        },
+        "effect-material-shockInStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0,
+                        0.482353,
+                        0.870588,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "shockInStem"
+        },
+        "effect-material-shockOutStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0,
+                        0.266667,
+                        0.337255,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "shockOutStem"
+        },
+        "effect-material-shoulderBStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.0235294,
+                        0.117647,
+                        0.141176,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "shoulderBStem"
+        },
+        "effect-material-shoulderPodStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "specular": [
+                        0.7,
+                        0.7,
+                        0.7,
+                        1
+                    ]
+                }
+            },
+            "name": "shoulderPodStem"
+        },
+        "effect-material-skeletonStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0,
+                        0.270588,
+                        0.243137,
+                        1
+                    ],
+                    "specular": [
+                        0.699901,
+                        0.699901,
+                        0.699901,
+                        1
+                    ]
+                }
+            },
+            "name": "skeletonStem"
+        },
+        "effect-material-thighPadStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.498039,
+                        0.45098,
+                        0.380392,
+                        1
+                    ],
+                    "specular": [
+                        0.699992,
+                        0.699992,
+                        0.699992,
+                        1
+                    ]
+                }
+            },
+            "name": "thighPadStem"
+        },
+        "effect-material-thighStem": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": {
+                    "ambient": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "diffuse": [
+                        0.898039,
+                        0.898039,
+                        0.898039,
+                        1
+                    ],
+                    "specular": [
+                        0.699977,
+                        0.699977,
+                        0.699977,
+                        1
+                    ]
+                }
+            },
+            "name": "thighStem"
+        }
+    },
+    "meshes": {
+        "Figure_2_geometry": {
+            "name": "Figure_2_geometry",
+            "primitives": [
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1007",
+                    "material": "effect-material-frameInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1010",
+                    "material": "effect-material-componentsStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1013",
+                    "material": "effect-material-Stem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1016",
+                    "material": "effect-material-footStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1019",
+                    "material": "effect-material-footFlangeStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1022",
+                    "material": "effect-material-kneeStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1025",
+                    "material": "effect-material-hipSphereStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1028",
+                    "material": "effect-material-filletStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1031",
+                    "material": "effect-material-thighStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1034",
+                    "material": "effect-material-thighPadStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1037",
+                    "material": "effect-material-plugStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1040",
+                    "material": "effect-material-discInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1043",
+                    "material": "effect-material-TubeStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1046",
+                    "material": "effect-material-componentStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1049",
+                    "material": "effect-material-hexStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1052",
+                    "material": "effect-material-kneeGuardStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1055",
+                    "material": "effect-material-calfStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1058",
+                    "material": "effect-material-ankleBracketStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1061",
+                    "material": "effect-material-ankleStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1064",
+                    "material": "effect-material-calfCoverStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1067",
+                    "material": "effect-material-knee2Stem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1070",
+                    "material": "effect-material-skeletonStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1073",
+                    "material": "effect-material-bracketStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1076",
+                    "material": "effect-material-coverStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1079",
+                    "material": "effect-material-barStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1082",
+                    "material": "effect-material-intestineOutStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1085",
+                    "material": "effect-material-neckSinkStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1088",
+                    "material": "effect-material-shockOutStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1091",
+                    "material": "effect-material-shockInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1094",
+                    "material": "effect-material-discStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1097",
+                    "material": "effect-material-canisterInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1100",
+                    "material": "effect-material-canisterOutStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1103",
+                    "material": "effect-material-canInnerStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1106",
+                    "material": "effect-material-pipeStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1109",
+                    "material": "effect-material-off",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1112",
+                    "material": "effect-material-boltStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1115",
+                    "material": "effect-material-intestineInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1118",
+                    "material": "effect-material-armPlateStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1121",
+                    "material": "effect-material-shoulderPodStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1124",
+                    "material": "effect-material-armFilletStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1127",
+                    "material": "effect-material-bStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1130",
+                    "material": "effect-material-armBoltStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1133",
+                    "material": "effect-material-shoulderBStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1136",
+                    "material": "effect-material-armTrussStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1139",
+                    "material": "effect-material-pinStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1142",
+                    "material": "effect-material-radiatorStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1145",
+                    "material": "effect-material-rpgStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1148",
+                    "material": "effect-material-bayonetStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1151",
+                    "material": "effect-material-barrel2Stem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1154",
+                    "material": "effect-material-barrel1Stem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1157",
+                    "material": "effect-material-filterOutStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1160",
+                    "material": "effect-material-filterInStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1163",
+                    "material": "effect-material-exhaustGunStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1166",
+                    "material": "effect-material-headFilletStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1169",
+                    "material": "effect-material-headCaseStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1172",
+                    "material": "effect-material-headGrillStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1175",
+                    "material": "effect-material-headHornStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1178",
+                    "material": "effect-material-eyeStem",
+                    "primitive": 4
+                },
+                {
+                    "attributes": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    },
+                    "indices": "indices_1181",
+                    "material": "effect-material-eyeRimStem",
+                    "primitive": 4
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "Figure_2BODY_2_node": {
+            "children": [
+                "Figure_2hip_2_node"
+            ],
+            "jointId": "Figure_2BODY_2_node",
+            "matrix": [
+                0.999999,
+                2.35856e-07,
+                0.00135923,
+                0,
+                0,
+                1,
+                -0.000173522,
+                0,
+                -0.00135923,
+                0.000173522,
+                0.999999,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Body"
+        },
+        "Figure_2_node": {
+            "children": [],
+            "instanceSkin": {
+                "skeletons": [
+                    "Figure_2BODY_2_node"
+                ],
+                "skin": "Figure_2-skin",
+                "sources": [
+                    "Figure_2_geometry"
+                ]
+            },
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Figure_2_node"
+        },
+        "Figure_2chest_2_node": {
+            "children": [
+                "Figure_2head_2_node",
+                "Figure_2rShldr_2_node",
+                "Figure_2lShldr_2_node"
+            ],
+            "jointId": "Figure_2chest_2_node",
+            "name": "Chest",
+            "rotation": [
+                0.576369,
+                0.617805,
+                -0.534899,
+                0.255206
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                0.3526,
+                -0.0774
+            ]
+        },
+        "Figure_2head_2_node": {
+            "children": [],
+            "jointId": "Figure_2head_2_node",
+            "name": "Head",
+            "rotation": [
+                -0.49772,
+                -0.847103,
+                0.186255,
+                1.36768
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                1.72,
+                -0.0516
+            ]
+        },
+        "Figure_2hip_2_node": {
+            "children": [
+                "Figure_2chest_2_node",
+                "Figure_2rThigh_2_node",
+                "Figure_2lThigh_2_node"
+            ],
+            "jointId": "Figure_2hip_2_node",
+            "name": "Hip",
+            "rotation": [
+                0.140172,
+                -0.744836,
+                0.652358,
+                0.20618
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.183008,
+                2.92829,
+                -0.274501
+            ]
+        },
+        "Figure_2lFoot_2_node": {
+            "children": [
+                "Figure_2lToe_2_node"
+            ],
+            "jointId": "Figure_2lFoot_2_node",
+            "name": "Left_Foot",
+            "rotation": [
+                0.469943,
+                0.49224,
+                0.732703,
+                0.220304
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.0172,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "Figure_2lForeArm_2_node": {
+            "children": [
+                "Figure_2lMid1_2_node",
+                "Figure_2lPinky1_2_node",
+                "Figure_2lThumb1_2_node"
+            ],
+            "jointId": "Figure_2lForeArm_2_node",
+            "name": "Left_Forearm",
+            "rotation": [
+                0.0138611,
+                -0.928648,
+                0.370704,
+                1.71657
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.608725,
+                0.0255162,
+                -0.00859999
+            ]
+        },
+        "Figure_2lMid1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lMid1_2_node",
+            "matrix": [
+                0.953127,
+                -0.302003,
+                -0.0185332,
+                0,
+                0.288709,
+                0.926081,
+                -0.242941,
+                0,
+                0.0905321,
+                0.226203,
+                0.969864,
+                0,
+                1.34347,
+                0.00888387,
+                0.0516,
+                1
+            ],
+            "name": "lMid1"
+        },
+        "Figure_2lPinky1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lPinky1_2_node",
+            "matrix": [
+                0.830135,
+                0.556967,
+                -0.025775,
+                0,
+                -0.555408,
+                0.82198,
+                -0.125978,
+                0,
+                -0.0489793,
+                0.118895,
+                0.991698,
+                0,
+                1.3515,
+                0.0708213,
+                0.18912,
+                1
+            ],
+            "name": "lPinky1"
+        },
+        "Figure_2lShin_2_node": {
+            "children": [
+                "Figure_2lFoot_2_node"
+            ],
+            "jointId": "Figure_2lShin_2_node",
+            "name": "Left_Shin",
+            "rotation": [
+                0.0729501,
+                0.775114,
+                -0.627596,
+                0.381078
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.086,
+                -1.1696,
+                -0.0946
+            ]
+        },
+        "Figure_2lShldr_2_node": {
+            "children": [
+                "Figure_2lForeArm_2_node"
+            ],
+            "jointId": "Figure_2lShldr_2_node",
+            "name": "Left_Shoulder",
+            "rotation": [
+                0.925365,
+                0.0841759,
+                -0.369613,
+                1.8727
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                1.376,
+                1.118,
+                -0.043
+            ]
+        },
+        "Figure_2lThigh_2_node": {
+            "children": [
+                "Figure_2lShin_2_node"
+            ],
+            "jointId": "Figure_2lThigh_2_node",
+            "name": "Left_Thigh",
+            "rotation": [
+                -0.692762,
+                -0.71755,
+                -0.0721285,
+                0.30724
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "Figure_2lThumb1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lThumb1_2_node",
+            "matrix": [
+                0.998883,
+                -0.0312525,
+                0.0354337,
+                0,
+                0.0265097,
+                0.991522,
+                0.127208,
+                0,
+                -0.0391088,
+                -0.126126,
+                0.991243,
+                0,
+                1.35358,
+                -0.071113,
+                0.180495,
+                1
+            ],
+            "name": "lThumb1"
+        },
+        "Figure_2lToe_2_node": {
+            "children": [],
+            "jointId": "Figure_2lToe_2_node",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "lToe"
+        },
+        "Figure_2rFoot_2_node": {
+            "children": [
+                "Figure_2rToe_2_node"
+            ],
+            "jointId": "Figure_2rFoot_2_node",
+            "name": "Right_Foot",
+            "rotation": [
+                -0.843241,
+                -0.359252,
+                0.399854,
+                0.320219
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.0172,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "Figure_2rForeArm_2_node": {
+            "children": [],
+            "jointId": "Figure_2rForeArm_2_node",
+            "name": "Right_Forearm",
+            "rotation": [
+                0.545081,
+                0.73713,
+                -0.399408,
+                1.13379
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.6278,
+                0.043,
+                -0.00859999
+            ]
+        },
+        "Figure_2rShin_2_node": {
+            "children": [
+                "Figure_2rFoot_2_node"
+            ],
+            "jointId": "Figure_2rShin_2_node",
+            "name": "Right_Shin",
+            "rotation": [
+                0.999453,
+                -0.0312705,
+                0.0107159,
+                0.676472
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.086,
+                -1.1696,
+                -0.0946
+            ]
+        },
+        "Figure_2rShldr_2_node": {
+            "children": [
+                "Figure_2rForeArm_2_node"
+            ],
+            "jointId": "Figure_2rShldr_2_node",
+            "name": "Right_Shoulder",
+            "rotation": [
+                0.820947,
+                0.255344,
+                0.51073,
+                1.69148
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -1.376,
+                1.118,
+                -0.043
+            ]
+        },
+        "Figure_2rThigh_2_node": {
+            "children": [
+                "Figure_2rShin_2_node"
+            ],
+            "jointId": "Figure_2rThigh_2_node",
+            "name": "Right_Thigh",
+            "rotation": [
+                -0.909077,
+                0.0532662,
+                -0.413209,
+                0.782331
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "Figure_2rToe_2_node": {
+            "children": [],
+            "jointId": "Figure_2rToe_2_node",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "rToe"
+        },
+        "Poser_scene_root": {
+            "children": [
+                "Figure_2BODY_2_node",
+                "Figure_2_node"
+            ],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Poser_scene_root"
+        }
+    },
+    "profile": "WebGL 1.0.2",
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_joint",
+                "a_normal",
+                "a_position",
+                "a_weight"
+            ],
+            "fragmentShader": "brainsteam0FS",
+            "vertexShader": "brainsteam0VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "Poser_scene_root"
+            ]
+        }
+    },
+    "shaders": {
+        "brainsteam0FS": {
+            "path": "brainsteam0FS.glsl"
+        },
+        "brainsteam0VS": {
+            "path": "brainsteam0VS.glsl"
+        }
+    },
+    "skins": {
+        "Figure_2-skin": {
+            "bindShapeMatrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "inverseBindMatrices": {
+                "bufferView": "bufferView_1373",
+                "byteOffset": 0,
+                "count": 18,
+                "type": 35676
+            },
+            "joints": [
+                "Figure_2hip_2_node",
+                "Figure_2chest_2_node",
+                "Figure_2head_2_node",
+                "Figure_2rShldr_2_node",
+                "Figure_2rForeArm_2_node",
+                "Figure_2lShldr_2_node",
+                "Figure_2lForeArm_2_node",
+                "Figure_2lMid1_2_node",
+                "Figure_2lPinky1_2_node",
+                "Figure_2lThumb1_2_node",
+                "Figure_2rThigh_2_node",
+                "Figure_2rShin_2_node",
+                "Figure_2rFoot_2_node",
+                "Figure_2rToe_2_node",
+                "Figure_2lThigh_2_node",
+                "Figure_2lShin_2_node",
+                "Figure_2lFoot_2_node",
+                "Figure_2lToe_2_node"
+            ]
+        }
+    },
+    "techniques": {
+        "technique1": {
+            "parameters": {
+                "ambient": {
+                    "type": 35666
+                },
+                "diffuse": {
+                    "type": 35666
+                },
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": 35666
+                },
+                "jointMat": {
+                    "semantic": "JOINT_MATRIX",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "specular": {
+                    "type": 35666
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": 35666
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "details": {
+                        "commonProfile": {
+                            "extras": {
+                                "doubleSided": false
+                            },
+                            "lightingModel": "Phong",
+                            "parameters": [
+                                "ambient",
+                                "diffuse",
+                                "jointMat",
+                                "modelViewMatrix",
+                                "normalMatrix",
+                                "projectionMatrix",
+                                "specular"
+                            ]
+                        },
+                        "type": "COLLADA-1.4.1/commonProfile"
+                    },
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_joint": "joint",
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_weight": "weight"
+                        },
+                        "program": "program_0",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_diffuse": "diffuse",
+                            "u_jointMat": "jointMat",
+                            "u_modelViewMatrix": "modelViewMatrix",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_specular": "specular"
+                        }
+                    },
+                    "states": {
+                        "blendEnable": 0,
+                        "cullFaceEnable": 1,
+                        "depthMask": 1,
+                        "depthTestEnable": 1
+                    }
+                }
+            }
+        }
+    }
+}

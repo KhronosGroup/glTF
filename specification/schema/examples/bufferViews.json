@@ -4,7 +4,7 @@
             "buffer" : "buffer_id",
             "byteLength": 76768,
             "byteOffset": 0,
-            "name": "user-defined name of buffer-view with vertices",
+            "name": "user-defined name of bufferView with vertices",
             "target": 34962,
             "extensions" : {
                "extension_name" : {
@@ -19,7 +19,7 @@
             "buffer" : "buffer_id",
             "byteLength": 25272,
             "byteOffset": 76768,
-            "name": "user-defined name of buffer-view with indices",
+            "name": "user-defined name of bufferView with indices",
             "target": 34963,
             "extensions" : {
                "extension_name" : {

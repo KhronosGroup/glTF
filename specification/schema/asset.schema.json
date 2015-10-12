@@ -14,11 +14,12 @@
         },
         "premultipliedAlpha" : {
             "type" : "boolean",
-            "description" : "Specifies if the shaders were generated with premultiplied alpha.  WebGL: see getContext() with premultipliedAlpha",
-            "default" : false
+            "description" : "Specifies if the shaders were generated with premultiplied alpha.",
+            "default" : false,
+            "gltf_webgl" : "`getContext()` with premultipliedAlpha"
         },
         "profile" : {
-            "extends" : { "$ref" : "assetProfile.schema.json" },
+            "extends" : { "$ref" : "asset.profile.schema.json" },
             "default" : {}
         },
         "version" : {

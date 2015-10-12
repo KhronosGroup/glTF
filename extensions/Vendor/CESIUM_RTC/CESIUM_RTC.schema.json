@@ -11,7 +11,8 @@
                 "type" : "number"
             },
             "minItems" : 3,
-            "maxItems" : 3            
+            "maxItems" : 3,
+            "required" : true
         }
     },
     "additionalProperties" : false

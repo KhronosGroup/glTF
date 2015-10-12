@@ -2,32 +2,37 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "accessor",
     "type" : "object",
-    "description" : "A typed accessor into a buffer-view.",
+    "description" : "A typed accessor into a bufferView.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bufferView" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the buffer-view.",
+            "description" : "The id of the bufferView.",
             "required" : true
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset relative to the buffer-view in bytes.  Must be a multiple of the size of the data type.  WebGL: see vertexAttribPointer() offset parameter.",
+            "description" : "The offset relative to the bufferView in bytes.",
             "minimum" : 0,
-            "required" : true
+            "required" : true,
+            "gltf_detailedDescription" : "The offset relative to the bufferView in bytes.  This must be a multiple of the size of the data type.",
+            "gltf_webgl" : "`vertexAttribPointer()` offset parameter"
         },
         "byteStride" : {
             "type" : "integer",
-            "description" : "The stride, in bytes, between attributes referenced by this accessor.  When 0, the attributes are tightly packed.  WebGL: see vertexAttribPointer() stride parameter.",
+            "description" : "The stride, in bytes, between attributes referenced by this accessor.",
             "minimum" : 0,
             "maximum" : 255,
-            "default" : 0
+            "default" : 0,
+            "gltf_detailedDescription" : "The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.",
+            "gltf_webgl" : "`vertexAttribPointer()` stride parameter"
         },
         "componentType" : {
             "type" : "integer",
-            "description" : "Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  Corresponding typed arrays: Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array.",
+            "description" : "The datatype of components in the attribute.",
             "enum" : [5120, 5121, 5122, 5123, 5126],
-            "required" : true
+            "required" : true,
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  The corresponding typed arrays are Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array."
         },
         "count" : {
             "type" : "integer",
@@ -37,7 +42,7 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "Specifies if the attribute is a scale, vector, or matrix.",
+            "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
             "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
             "required" : true
         },        
@@ -48,7 +53,9 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 16
+            "maxItems" : 16,
+            "gltf_detailedDescription" : "Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property."
+
         },
         "min" : {
             "type" : "array",
@@ -57,7 +64,8 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 16
+            "maxItems" : 16,
+            "gltf_detailedDescription" : "Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property."
         }
     },
     "additionalProperties" : false
