@@ -1,0 +1,17 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "WEB3D_streaming bufferView extension",
+    "type" : "object",
+    "properties" : {
+        "chunks" : {
+            "type" : "array",
+            "description" : "Array of chunk indices, defining the chunks of this bufferView.",
+            "items" : {
+                "type" : "number"
+            }
+            "minItems" : 1,
+            "required" : true
+        }
+    },
+    "additionalProperties" : false
+}

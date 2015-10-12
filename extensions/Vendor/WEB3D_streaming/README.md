@@ -110,14 +110,14 @@ Example:
 }
 ```
 
-A `bufferView` uses the new property `bufferChunks` to specify a list of indices to `bufferChunk` objects.
+As can be seen from the example, a `bufferView` uses the new property `chunks` to specify a list of indices to `bufferChunk` objects.
 If a `bufferView` refers to the special `buffer` that is the binary file body (`"binary_glTF"`), it has to use this list of `bufferChunk` objects.
 Apart from that, as usual, a `bufferView` can still refer to other `buffer` objects than the binary file body.
 
 When a list of indices `bufferChunk` objects is used to refer to the binary file body from a `bufferView`, the (required) parameter `byteOffset` can be ignored, since this information is already contained within the first referenced `bufferChunk`.
 Still, for clarity, it is recommended that the value of `byteOffset` should always match this value.
 If the optional property `byteLength` of `bufferView` is used, the value must match the sum of the `byteLength` properties of all referenced `bufferChunk` objects.
-This value can be used to conventiently pre-allocate a buffer that is able to exactly accommodate all chunks of the `bufferView`, without having to explicity compute the size.
+This value can be used to conveniently pre-allocate a buffer that is able to exactly accommodate all chunks of the `bufferView`, without having to explicity compute the size.
 
 Be aware that, unlike for regular binary glTF content, the bytes referred to by a `bufferView` can in general _not_ be retrieved as a range (`byteOffset`, `byteOffset` + `byteLength`),
 since the chunks referred to by the `bufferView` might be interleaved with other buffer chunks.
@@ -125,7 +125,9 @@ since the chunks referred to by the `bufferView` might be interleaved with other
 
 ## JSON Schema
 
-TODO
+* [glTF](schema/WEB3D_streaming.glTF.schema.json) update to the root `glTF` schema (`bufferChunks` property)
+* [bufferChunk](schema/WEB3D_streaming.bufferChunk.schema.json) `bufferChunk` schema
+* [bufferView](schema/WEB3D_streaming.bufferView.schema.json) update to the `bufferView` schema (`chunks` property)
 
 
 ## Known Implementations
