@@ -41,7 +41,6 @@ Contributors
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
-* [Binary Types Reference](#binarytypes)
 * [Conformance](#conformance)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
@@ -1693,12 +1692,57 @@ Application-specific data.
 * **Example**: [textures.json](schema/examples/textures.json)
 
 
+<<<<<<< HEAD
 <a name="binarytypes"></a>
 # Binary Types Reference
 
 This section will describe the format for each of the GL types stored in the binary file. A reference to the GL spec for each type might be enough
 
 <mark>*Todo: Patrick please advise on how to tackle this*</mark>
+=======
+<a name="schema"></a>
+# JSON Schema
+
+   * <a href="schema/accessor.schema.json">`accessor`</a>
+   * <a href="schema/animation.schema.json">`animation`</a>
+   * <a href="schema/animationChannel.schema.json">`animation/channel`</a>
+   * <a href="schema/animationChannelTarget.schema.json">`animation/channel/target`</a>
+   * <a href="schema/animationParameter.schema.json">`animation/parameter`</a>
+   * <a href="schema/animationSampler.schema.json">`animation/sampler`</a>
+   * <a href="schema/asset.schema.json">`asset`</a>
+   * <a href="schema/buffer.schema.json">`buffer`</a>
+   * <a href="schema/bufferView.schema.json">`bufferView`</a>
+   * <a href="schema/camera.schema.json">`camera`</a>
+   * <a href="schema/cameraOrthographic.schema.json">`camera/orthographic`</a>
+   * <a href="schema/cameraPerspective.schema.json">`camera/perspective`</a>
+   * <a href="schema/extension.schema.json">`extension`</a>
+   * <a href="schema/extras.schema.json">`extras`</a>
+   * <a href="schema/glTF.schema.json">`glTF`</a> (root property for model)
+   * <a href="schema/image.schema.json">`image`</a>
+   * <a href="schema/material.schema.json">`material`</a>
+   * <a href="schema/materialInstanceTechnique.schema.json">`material/instanceTechnique`</a>
+   * <a href="schema/materialInstanceTechniqueValues.schema.json">`material/instanceTechnique/values`</a>
+   * <a href="schema/mesh.schema.json">`mesh`</a>
+   * <a href="schema/meshPrimitive.schema.json">`mesh/primitive`</a>
+   * <a href="schema/meshPrimitiveAttribute.schema.json">`mesh/primitive/attribute`</a>
+   * <a href="schema/node.schema.json">`node`</a>
+   * <a href="schema/program.schema.json">`program`</a>
+   * <a href="schema/sampler.schema.json">`sampler`</a>
+   * <a href="schema/scene.schema.json">`scene`</a>
+   * <a href="schema/shader.schema.json">`shader`</a>
+   * <a href="schema/skin.schema.json">`skin`</a>
+   * <a href="schema/technique.schema.json">`technique`</a>
+   * <a href="schema/techniqueParameters.schema.json">`technique/parameters`</a>
+   * <a href="schema/techniquePass.schema.json">`technique/pass`</a>
+   * <a href="schema/techniquePassDetails.schema.json">`technique/pass/details`</a>
+   * <a href="schema/techniquePassDetailsCommonProfile.schema.json">`technique/pass/details/commonProfile`</a>
+   * <a href="schema/techniquePassDetailsCommonProfileTexcoordBindings.schema.json">`technique/pass/details/commonProfile/texcoordBindings`</a>
+   * <a href="schema/techniquePassInstanceProgram.schema.json">`technique/pass/instanceProgram`</a>
+   * <a href="schema/techniquePassInstanceProgramAttribute.schema.json">`technique/pass/instanceProgram/attribute`</a>
+   * <a href="schema/techniquePassInstanceProgramUniform.schema.json">`technique/pass/instanceProgram/uniform`</a>
+   * <a href="schema/techniquePassStates.schema.json">`technique/pass/states`</a>
+   * <a href="schema/texture.schema.json">`texture`</a>
+>>>>>>> origin/spec-1.0
 
 <a name="conformance"></a>
 # Conformance
