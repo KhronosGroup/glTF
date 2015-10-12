@@ -2043,7 +2043,7 @@ The material appearance of a primitive.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**technique**|`string`|The id of the technique.|No|
+|**technique**|`string`|The id of the [technique](#reference-technique).|No|
 |**values**|`object`|A dictionary object of parameter values.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
