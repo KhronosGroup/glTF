@@ -1666,7 +1666,7 @@ XMLHttpRequest `responseType`.
 
 ### buffer.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a buffer and a bufferView could have the same name, or two buffers could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -1745,7 +1745,7 @@ The target that the WebGL buffer should be bound to.  Valid values correspond to
 
 ### bufferView.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a bufferView and a buffer could have the same name, or two bufferViews could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -1812,7 +1812,7 @@ Specifies if the camera uses a perspective or orthographic projection.  Based on
 
 ### camera.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a camera and a buffer could have the same name, or two cameras could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2012,7 +2012,7 @@ The uri of the image.  Relative paths are relative to the .gltf file.  Instead o
 
 ### image.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., an image and a buffer could have the same name, or two images could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2072,7 +2072,7 @@ A dictionary object of parameter values.  Parameters with the same name as the t
 
 ### material.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a material and a buffer could have the same name, or two materials could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
