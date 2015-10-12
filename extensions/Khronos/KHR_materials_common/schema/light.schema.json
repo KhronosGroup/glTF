@@ -6,19 +6,19 @@
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "ambient" : {
-            "extends" : { "$ref" : "lightAmbient.schema.json" },
+            "extends" : { "$ref" : "light.ambient.schema.json" },
             "description" : "Ambient light source."
         },
         "directional" : {
-            "extends" : { "$ref" : "lightDirectional.schema.json" },
+            "extends" : { "$ref" : "light.directional.schema.json" },
             "description" : "Directional light source."
         },
         "point" : {
-            "extends" : { "$ref" : "lightPoint.schema.json" },
+            "extends" : { "$ref" : "light.point.schema.json" },
             "description" : "Point light source."
         },
         "spot" : {
-            "extends" : { "$ref" : "lightSpot.schema.json" },
+            "extends" : { "$ref" : "light.spot.schema.json" },
             "description" : "Spot light source."
         },
         "type" : {
