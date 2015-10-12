@@ -1150,16 +1150,17 @@ For more information on glTF extensions, consult the [extensions registry specif
    * [uniform](#reference-technique.uniform)
 * [texture](#reference-texture)
 
-
 <a name="reference-accessor"></a>
 ## accessor
 
-**JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
+* **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
+* **Example**: [accessors.json](/schema/examples/accessors.json)
 
 <a name="reference-animation"></a>
 ## animation
 
-**JSON schema**: [animation.schema.json](schema/animation.schema.json)
+* **JSON schema**: [animation.schema.json](schema/animation.schema.json)
+* **Example**: [animations.json](/schema/examples/animations.json)
 
 <a name="reference-animation.channel"></a>
 ### channel
@@ -1184,7 +1185,8 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-asset"></a>
 ## asset
 
-**JSON schema**: [asset.schema.json](schema/asset.schema.json)
+* **JSON schema**: [asset.schema.json](schema/asset.schema.json)
+* **Example**: [asset.json](/schema/examples/asset.json)
 
 <a name="reference-asset.profile"></a>
 ### profile
@@ -1194,17 +1196,20 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-buffer"></a>
 ## buffer
 
-**JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
+* **JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
+* **Example**: [buffers.json](/schema/examples/buffers.json)
 
 <a name="reference-bufferView"></a>
 ## bufferView
 
-**JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
+* **JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
+* **Example**: [bufferViews.json](/schema/examples/bufferViews.json)
 
 <a name="reference-camera"></a>
 ## camera
 
-**JSON schema**: [camera.schema.json](schema/camera.schema.json)
+* **JSON schema**: [camera.schema.json](schema/camera.schema.json)
+* **Example**: [cameras.json](/schema/examples/cameras.json)
 
 <a name="reference-camera.orthographic"></a>
 ### orthographic
@@ -1224,12 +1229,14 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-image"></a>
 ## image
 
-**JSON schema**: [image.schema.json](schema/image.schema.json)
+* **JSON schema**: [image.schema.json](schema/image.schema.json)
+* **Example**: [images.json](/schema/examples/images.json)
 
 <a name="reference-material"></a>
 ## material
 
-**JSON schema**: [material.schema.json](schema/material.schema.json)
+* **JSON schema**: [material.schema.json](schema/material.schema.json)
+* **Example**: [materials.json](/schema/examples/materials.json)
 
 <a name="reference-material.values"></a>
 ### values
@@ -1239,7 +1246,8 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-mesh"></a>
 ## mesh
 
-**JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
+* **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
+* **Example**: [meshes.json](/schema/examples/meshes.json)
 
 <a name="reference-mesh.primitive"></a>
 ### primitive
@@ -1254,37 +1262,44 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-node"></a>
 ## node
 
-**JSON schema**: [node.schema.json](schema/node.schema.json)
+* **JSON schema**: [node.schema.json](schema/node.schema.json)
+* **Example**: [nodes.json](/schema/examples/nodes.json)
 
 <a name="reference-program"></a>
 ## program
 
-**JSON schema**: [program.schema.json](schema/program.schema.json)
+* **JSON schema**: [program.schema.json](schema/program.schema.json)
+* **Example**: [programs.json](/schema/examples/programs.json)
 
 <a name="reference-sampler"></a>
 ## sampler
 
-**JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
+* **JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
+* **Example**: [samplers.json](/schema/examples/samplers.json)
 
 <a name="reference-scene"></a>
 ## scene
 
-**JSON schema**: [scene.schema.json](schema/scene.schema.json)
+* **JSON schema**: [scene.schema.json](schema/scene.schema.json)
+* **Example**: [scenes.json](/schema/examples/scenes.json)
 
 <a name="reference-shader"></a>
 ## shader
 
-**JSON schema**: [shader.schema.json](schema/shader.schema.json)
+* **JSON schema**: [shader.schema.json](schema/shader.schema.json)
+* **Example**: [shaders.json](/schema/examples/shaders.json)
 
 <a name="reference-skin"></a>
 ## skin
 
-**JSON schema**: [skin.schema.json](schema/skin.schema.json)
+* **JSON schema**: [skin.schema.json](schema/skin.schema.json)
+* **Example**: [skins.json](/schema/examples/skins.json)
 
 <a name="reference-technique"></a>
 ## technique
 
-**JSON schema**: [technique.schema.json](schema/technique.schema.json)
+* **JSON schema**: [technique.schema.json](schema/technique.schema.json)
+* **Example**: [techniques.json](/schema/examples/techniques.json)
 
 <a name="reference-technique.attribute"></a>
 ### attribute
@@ -1309,7 +1324,8 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-texture"></a>
 ## texture
 
-**JSON schema**: [texture.schema.json](schema/texture.schema.json)
+* **JSON schema**: [texture.schema.json](schema/texture.schema.json)
+* **Example**: [textures.json](/schema/examples/textures.json)
 
 <a name="binarytypes"></a>
 # Binary Types Reference
