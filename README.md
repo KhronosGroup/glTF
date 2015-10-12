@@ -57,6 +57,7 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 
 ## Tutorials and Presentations
 
+* [The state of WebGL and glTF](https://www.khronos.org/assets/uploads/developers/library/2015-graphical-web/WebGL-and-glTF-Graphical-Web_Sep15.pdf), September 2015
 * [glTF ecosystem and mesh compression update](https://www.khronos.org/webgl/wiki_1_15/images/GlTF_Update_SIGGRAPH_Aug15.pdf), August 2015
 * [glTF and the WebGL Art Pipeline](http://www.slideshare.net/auradeluxe/gltf-and-the-webgl-art-pipeline-march-2015), March 2015
 * [Writing an FBX importer / Exporter plug-in](http://around-the-corner.typepad.com/adn/2015/01/writing-an-fbx-importer-exporter-plug-in.html), January 2015
@@ -65,3 +66,4 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 * glTF: Designing an Open-Standard Runtime Asset Format in [GPU Pro 5](http://gpupro.blogspot.com/), May 2014
 * [Building a WebGL Santa with Cesium and glTF](http://cesiumjs.org/2013/12/23/Building-A-WebGL-Santa-with-Cesium-and-glTF/), December 2013
 * [glTF update](http://www.slideshare.net/auradeluxe/gltf-update-with-tony-parisi), August 2013
+* [How I got involved in glTF and Khronos](http://blog.virtualglobebook.com/2013/03/how-i-got-involved-in-gltf-and-khronos.html), March 2013

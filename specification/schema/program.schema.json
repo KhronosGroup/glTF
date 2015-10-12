@@ -2,29 +2,31 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "program",
     "type" : "object",
-    "description" : "A shader program.  WebGL: see attachShader(), bindAttribLocation(), createProgram(), deleteProgram(), getProgramParameter(), getProgramInfoLog(), linkProgram(), useProgram(), and validateProgram().",
+    "description" : "A shader program.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "attributes" : {
             "type" : "array",
-            "description" : "Names of GLSL vertex shader attributes.  WebGL: see bindAttribLocation().",
+            "description" : "Names of GLSL vertex shader attributes.",
             "items" : {
                 "type" : "string",
                 "minLength" : "1",
                 "maxLength" : "256"
             },
-            "default" : []
+            "default" : [],
+            "gltf_webgl" : "`bindAttribLocation()`"
         },
         "fragmentShader" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the fragment shader.",
+            "description" : "The id of the fragment shader.",
             "required" : true
         },
         "vertexShader" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the vertex shader.",
+            "description" : "The id of the vertex shader.",
             "required" : true
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "gltf_webgl" : "`attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`"
 }

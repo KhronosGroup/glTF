@@ -8,7 +8,7 @@
         "channels" : {
             "type" : "array",
             "items" : {
-                "$ref" : "animationChannel.schema.json"
+                "$ref" : "animation.channel.schema.json"
             },
             "default" : []
         },
@@ -16,7 +16,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "animationParameter.schema.json"
+                "$ref" : "animation.parameter.schema.json"
             },
             "default" : {}
         },
@@ -24,7 +24,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "animationSampler.schema.json"
+                "$ref" : "animation.sampler.schema.json"
             },
             "default" : {}
         }

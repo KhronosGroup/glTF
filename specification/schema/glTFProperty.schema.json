@@ -4,11 +4,7 @@
     "type" : "object",
     "properties" : {
         "extensions" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "extension.schema.json"
-            }
+            "$ref" : "extension.schema.json"
         },
         "extras" : {
             "$ref" : "extras.schema.json"
