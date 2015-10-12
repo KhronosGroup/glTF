@@ -15,7 +15,7 @@
             "description" : "Interpolation algorithm.",
             "enum" : ["LINEAR"],
             "default" : "LINEAR",
-            "gltf_detailedDescription" : "Interpolation algorithm.  When an animation targets a node's rotation and the animation's interpolation is LINEAR, spherical linear interpolation (slerp) should be used to interpolate quaternions.",
+            "gltf_detailedDescription" : "Interpolation algorithm.  When an animation targets a node's rotation and the animation's interpolation is LINEAR, spherical linear interpolation (slerp) should be used to interpolate quaternions."
         },
         "output" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
