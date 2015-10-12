@@ -1150,6 +1150,8 @@ For more information on glTF extensions, consult the [extensions registry specif
    * [uniform](#reference-technique.uniform)
 * [texture](#reference-texture)
 
+
+<!-- ======================================================================= -->
 <a name="reference-accessor"></a>
 ## accessor
 
@@ -1264,176 +1266,325 @@ Application-specific data.
 * **Required**: No
 
 
+<!-- ======================================================================= -->
 <a name="reference-animation"></a>
 ## animation
 
 * **JSON schema**: [animation.schema.json](schema/animation.schema.json)
 * **Example**: [animations.json](schema/examples/animations.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-animation.channel"></a>
 ## animation.channel
 
+Targets an animation's sampler at a node's property.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**sampler**|`string`|The id of a sampler in this animation to use to compute the value for the target.| :white_check_mark: Yes|
+|**target**|`[animation.channel.target](#reference-animation.channel.target)`|The id of the node and TRS property to target.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [animation.channel.schema.json](schema/animation.channel.schema.json)
 
+### channel.sampler :white_check_mark: 
+
+The id of a sampler in this animation to use to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS).
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### channel.target :white_check_mark: 
+
+The id of the node and TRS property to target.
+
+* **Type**: `[animation.channel.target](#reference-animation.channel.target)`
+* **Required**: Yes
+
+### channel.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### channel.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- ======================================================================= -->
 <a name="reference-animation.channel.target"></a>
 ## animation.channel.target
 
+The id of the node and TRS property that an animation channel targets.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**id**|`string`|The id of the node to target.| :white_check_mark: Yes|
+|**path**|`string`|The name of the node's TRS property to modify.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [animation.channel.target.schema.json](schema/animation.channel.target.schema.json)
 
+### target.id :white_check_mark: 
+
+The id of the node to target.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### target.path :white_check_mark: 
+
+The name of the node's TRS property to modify.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Allowed values**: `"translation"`, `"rotation"`, `"scale"`
+
+### target.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### target.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- ======================================================================= -->
 <a name="reference-animation.parameter"></a>
 ## animation.parameter
 
 **JSON schema**: [animation.parameter.schema.json](schema/animation.parameter.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-animation.sampler"></a>
 ## animation.sampler
 
 **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-asset"></a>
 ## asset
 
 * **JSON schema**: [asset.schema.json](schema/asset.schema.json)
 * **Example**: [asset.json](schema/examples/asset.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-asset.profile"></a>
 ## asset.profile
 
 **JSON schema**: [asset.profile.schema.json](schema/asset.profile.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-buffer"></a>
 ## buffer
 
 * **JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
 * **Example**: [buffers.json](schema/examples/buffers.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-bufferView"></a>
 ## bufferView
 
 * **JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
 * **Example**: [bufferViews.json](schema/examples/bufferViews.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-camera"></a>
 ## camera
 
 * **JSON schema**: [camera.schema.json](schema/camera.schema.json)
 * **Example**: [cameras.json](schema/examples/cameras.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-camera.orthographic"></a>
 ## camera.orthographic
 
 **JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-camera.perspective"></a>
 ## camera.perspective
 
 **JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-glTF"></a>
 ## glTF
 
 **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-image"></a>
 ## image
 
 * **JSON schema**: [image.schema.json](schema/image.schema.json)
 * **Example**: [images.json](schema/examples/images.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-material"></a>
 ## material
 
 * **JSON schema**: [material.schema.json](schema/material.schema.json)
 * **Example**: [materials.json](schema/examples/materials.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-material.values"></a>
 ## material.values
 
 **JSON schema**: [material.values.schema.json](schema/material.values.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-mesh"></a>
 ## mesh
 
 * **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
 * **Example**: [meshes.json](schema/examples/meshes.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-mesh.primitive"></a>
 ## mesh.primitive
 
 **JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-mesh.primitive.attribute"></a>
 ## mesh.primitive.attribute
 
 **JSON schema**: [mesh.primitive.attribute.schema.json](schema/mesh.primitive.attribute.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-node"></a>
 ## node
 
 * **JSON schema**: [node.schema.json](schema/node.schema.json)
 * **Example**: [nodes.json](schema/examples/nodes.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-program"></a>
 ## program
 
 * **JSON schema**: [program.schema.json](schema/program.schema.json)
 * **Example**: [programs.json](schema/examples/programs.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-sampler"></a>
 ## sampler
 
 * **JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
 * **Example**: [samplers.json](schema/examples/samplers.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-scene"></a>
 ## scene
 
 * **JSON schema**: [scene.schema.json](schema/scene.schema.json)
 * **Example**: [scenes.json](schema/examples/scenes.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-shader"></a>
 ## shader
 
 * **JSON schema**: [shader.schema.json](schema/shader.schema.json)
 * **Example**: [shaders.json](schema/examples/shaders.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-skin"></a>
 ## skin
 
 * **JSON schema**: [skin.schema.json](schema/skin.schema.json)
 * **Example**: [skins.json](schema/examples/skins.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-technique"></a>
 ## technique
 
 * **JSON schema**: [technique.schema.json](schema/technique.schema.json)
 * **Example**: [techniques.json](schema/examples/techniques.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-technique.attribute"></a>
 ## technique.attribute
 
 **JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-technique.parameters"></a>
 ## technique.parameters
 
 **JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-technique.states"></a>
 ## technique.states
 
 **JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-technique.uniform"></a>
 ## technique.uniform
 
 **JSON schema**: [technique.uniform.schema.json](schema/technique.uniform.schema.json)
 
+
+<!-- ======================================================================= -->
 <a name="reference-texture"></a>
 ## texture
 
 * **JSON schema**: [texture.schema.json](schema/texture.schema.json)
 * **Example**: [textures.json](schema/examples/textures.json)
+
 
 <a name="binarytypes"></a>
 # Binary Types Reference
