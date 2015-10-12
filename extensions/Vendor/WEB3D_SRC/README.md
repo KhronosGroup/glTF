@@ -12,14 +12,14 @@
 Written against the glTF draft 1.0 spec.
 
 Required extensions:
-* EXT_binary_glTF
+* KHR_binary_glTF
 * EXT_quantized_attributes
 
 
 ## Overview
 
 With glTF, it is possible to transport information about meshes, but also about scene data.
-This data may include lighting, scene hierarchy, cameras, as well as other aspects of the scene.
+This data may include scene hierarchy, cameras, as well as other aspects of the scene.
 However, it is not clear how a glTF scene could be integrated into an existing scene graph, such as a VRML or X3D scene.
 
 This extension introduces the notion of using glTF as a `Shape Resource Container` (SRC) within an X3D scene.
@@ -41,7 +41,7 @@ That recommendation is, however, non-normative, and it is only provided for illu
 
 This extension depends on the following two extensions:
 
-* EXT_binary_glTF
+* KHR_binary_glTF
 * EXT_quantized_attributes
 
 This decision was made for practical reasons.
@@ -53,7 +53,7 @@ Therefore, an SRC file is always a `Binary glTF` file.
 For clarity, it is recommended that SRC files use the standard Binary glTF extenstion `.glb`.
 This is also due to the fact that SRC does not introduce any changes to the glTF schema.
 Therefore, it is possible that an implementation does not support SRC,
-but supports the extensions `EXT_binary_glTF` and `EXT_quantized_attributes`,
+but supports the extensions `KHR_binary_glTF` and `EXT_quantized_attributes`,
 loads and displays SRC content correctly.
 
 As SRC does not introduce any changes _within_ the binary glTF files,
@@ -81,7 +81,7 @@ This is a recommended subset of the whole data available within the glTF schema.
 Since glTF can be used to specify a much wider variety of scene data,
 it cannot be guaranteed that a given SRC file does _not_ contain more information that 
 this recommended subset.
-For example, information about lights or cameras might also be contained inside the SRC file.
+For example, information about cameras might also be contained inside the SRC file.
 This is due to the fact that SRC files are simply Binary glTF files, using the same schema as other Binary glTF content.
 However, it is strongly recommended to only use the recommended subset,
 as implementations dealing with SRC files will most likely ignore any other kinds of scene data.
@@ -103,6 +103,9 @@ the following rules should be used:
   exactly one identifier within the glTF scene of the SRC file.
 * Identifiers provided after the hash delimiter correspond to a unique name of a `mesh`,
   a `material`, or a `texture`. Other identifiers within the glTF scene of the SRC file are ignored.
+  
+Since all top-level glTF objects (including `mesh`, `material` and `texture`) share the namespace, it is generally not possible to use the same identifier for different kinds of data.
+  
 
 #### Examples
 
@@ -120,13 +123,9 @@ Suppose the glTF scene description within the SRC file `src-example.glb` would c
                     },
                     "indices": "accessor_id3",
                     "material": "material_id1",
-                    "primitive": 4,
-		            "extensions" : {},
-                    "extras" : {}     
+                    "primitive": 4 
                 }
-            ],
-            "extensions" : {},
-            "extras" : {}     
+            ] 
         },
         "bunny_mesh": {
             "name": "A 3D mesh of a bunny.",
@@ -139,13 +138,9 @@ Suppose the glTF scene description within the SRC file `src-example.glb` would c
                     },
                     "indices": "accessor_id7",
                     "material": "material_id2",
-                    "primitive": 4,
-		            "extensions" : {},
-                    "extras" : {}     
+                    "primitive": 4   
                 }
-            ],
-            "extensions" : {},
-            "extras" : {}     
+            ]
         }
     }
 ```
