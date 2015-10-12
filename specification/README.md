@@ -2215,9 +2215,10 @@ Application-specific data.
 <a name="acknowledgements"></a>
 # Acknowledgments
 
-* Brandon Jones, Google
+* Sarah Chow, Cesium
 * Tom Fili, Cesium
 * Scott Hunter, Analytical Graphics, Inc.
+* Brandon Jones, Google
 * Ed Mackey, Analytical Graphics, Inc.
 
 <a name="references"></a>
