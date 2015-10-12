@@ -8,7 +8,7 @@
             "description" : "Array of chunk indices, defining the chunks of this bufferView.",
             "items" : {
                 "type" : "number"
-            }
+            },
             "minItems" : 1,
             "required" : true
         }
