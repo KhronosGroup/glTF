@@ -7,12 +7,13 @@
     "properties" : {
         "extensionsUsed" : {
             "type" : "array",
-            "description" : "Names of extensions used throughout model.  WebGL: see getSupportedExtensions() and getExtension().",
+            "description" : "Names of extensions used throughout model.",
             "items" : {
                 "type" : "string"
             },
             "uniqueItems" : true,
-            "default" : []
+            "default" : [],
+            "gltf_webgl" : "`getSupportedExtensions()` and `getExtension()`"
         },
         "accessors" : {
             "properties" : {
@@ -67,14 +68,6 @@
             },
             "default" : {}
         },
-        "lights" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "light.schema.json"
-            },
-            "default" : {}
-        },
         "materials" : {
             "properties" : {
             },
@@ -117,7 +110,7 @@
         },
         "scene" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the default scene."
+            "description" : "The id of the default scene."
         },
         "scenes" : {
             "properties" : {
@@ -161,8 +154,7 @@
         }
     },
     "dependencies" : {
-        "scene" : "scenes",
-        "scenes" : "scene"
+        "scene" : "scenes"
     },
     "additionalProperties" : false
 }

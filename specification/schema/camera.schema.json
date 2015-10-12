@@ -6,11 +6,11 @@
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "orthographic" : {
-            "extends" : { "$ref" : "cameraOrthographic.schema.json" },
+            "extends" : { "$ref" : "camera.orthographic.schema.json" },
             "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
         },
         "perspective" : {
-            "extends" : { "$ref" : "cameraPerspective.schema.json" },
+            "extends" : { "$ref" : "camera.perspective.schema.json" },
             "description" : "A perspective camera containing properties to create a perspective projection matrix."
         },
         "type" : {

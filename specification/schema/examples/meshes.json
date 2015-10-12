@@ -11,7 +11,7 @@
                     },
                     "indices": "accessor_id3",
                     "material": "material_id",
-                    "primitive": 4,
+                    "mode": 4,
 		            "extensions" : {
 		               "extension_name" : {
 		                  "extension specific" : "value"

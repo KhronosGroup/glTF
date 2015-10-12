@@ -32,37 +32,21 @@
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "user-defined name of camera node"
         },
-        "light_node_id": {
-            "children": [],
-            "light": "light_id",
-            "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-            "name": "user-defined name of light node"
-        },
         "skin_node_id": {
             "children": [],
-            "instanceSkin": {
-                "skeletons": [
-                    "joint id in skin"
-                ],
-                "skin": "skin_id",
-                "sources": [
-                    "skin_mesh_id"
-                ],
-	            "extensions" : {
-	               "extension_name" : {
-	                  "extension specific" : "value"
-	               }
-	            },
-                "extras" : {
-                    "Application specific" : "The extra object can contain any properties."
-                }     
-            },
+            "meshes": [
+                "skin_mesh_id"
+            ],
+            "skeletons": [
+                "joint id in skin"
+            ],
+            "skin": "skin_id",
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "user-defined name of skin node"
         },
         "joint_node_id": {
             "children": [],
-            "joint": "joint id",
+            "jointName": "joint name",
             "name": "user-defined name of joint node",
             "rotation" : [ 1.0, 0.0, 0.0, 0.0 ],
             "scale" : [ 1.0, 1.0, 1.0 ],
