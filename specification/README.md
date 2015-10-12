@@ -1121,7 +1121,6 @@ For more information on glTF extensions, consult the [extensions registry specif
 * [animation](#reference-animation)
    * [channel](#reference-animation.channel)
       * [target](#reference-animation.channel.target)
-   * [parameter](#reference-animation.parameter)
    * [sampler](#reference-animation.sampler)
 * [asset](#reference-asset)
    * [profile](#reference-asset.profile)
@@ -1270,8 +1269,70 @@ Application-specific data.
 <a name="reference-animation"></a>
 ## animation
 
+A keyframe animation.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**channels**|[`animation.channel[]`](#reference-animation.channel)|An array of channels, each of which targets an animation's sampler at a node's property.|No, default: `[]`|
+|**parameters**|`object`|A dictionary object of strings whose values are ids of accessors with keyframe data, e.g., time, translation, rotation, etc.|No, default: `{}`|
+|**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler)s that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [animation.schema.json](schema/animation.schema.json)
 * **Example**: [animations.json](schema/examples/animations.json)
+
+### animation.channels
+
+An array of channels, each of which targets an animation's sampler at a node's property.
+
+* **Type**: [`animation.channel[]`](#reference-animation.channel)
+* **Required**: No, default: `[]`
+
+### animation.parameters
+
+A dictionary object of strings whose values are ids of accessors with keyframe data, e.g., time, translation, rotation, etc.
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `string`
+
+### animation.samplers
+
+A dictionary object of [`animation.sampler`](#reference-animation.sampler)s that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `object`
+
+### animation.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### animation.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### animation.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
 
 
 <!-- ======================================================================= -->
@@ -1373,13 +1434,6 @@ Application-specific data.
 
 * **Type**: `any`
 * **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-animation.parameter"></a>
-## animation.parameter
-
-**JSON schema**: [animation.parameter.schema.json](schema/animation.parameter.schema.json)
 
 
 <!-- ======================================================================= -->

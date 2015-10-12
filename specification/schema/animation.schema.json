@@ -15,7 +15,7 @@
         },
         "parameters" : {
             "type" : "object",
-            "description" : "A dictionary object containing accessors with keyframe data, e.g., time, translation, rotation, etc.",
+            "description" : "A dictionary object of strings whose values are ids of accessors with keyframe data, e.g., time, translation, rotation, etc.",
             "properties" : {
             },
             "additionalProperties" : {
