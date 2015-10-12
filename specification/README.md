@@ -2037,8 +2037,60 @@ Application-specific data.
 <a name="reference-material"></a>
 ## material
 
+The material appearance of a primitive.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**technique**|`string`|The id of the technique.|No|
+|**values**|`object`|A dictionary object of parameter values.|No, default: `{}`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [material.schema.json](schema/material.schema.json)
 * **Example**: [materials.json](schema/examples/materials.json)
+
+### material.technique
+
+The id of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+### material.values
+
+A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value.
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `number`, `boolean`, `string`, `number[]`, or `boolean[]`
+
+### material.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### material.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### material.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

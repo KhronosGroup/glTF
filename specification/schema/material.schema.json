@@ -2,20 +2,24 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "material",
     "type" : "object",
-    "description" : "An instance of a technique with parameter value overrides.",
+    "description" : "The material appearance of a primitive.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "technique" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the technique. TODO: define technique when this is undefined"
+            "description" : "The id of the technique.",
+            "gltf_detailedDescription" : "The id of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color."
         },
         "values" : {
+            "type" : "object",
+            "description" : "A dictionary object of parameter values.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "material.values.schema.json"
             },
-            "default" : {}
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value."
         }
     },
     "additionalProperties" : false
