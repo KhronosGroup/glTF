@@ -1285,7 +1285,7 @@ Targets an animation's sampler at a node's property.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**sampler**|`string`|The id of a sampler in this animation to use to compute the value for the target.| :white_check_mark: Yes|
-|**target**|`[animation.channel.target](#reference-animation.channel.target)`|The id of the node and TRS property to target.| :white_check_mark: Yes|
+|**target**|[`animation.channel.target`](#reference-animation.channel.target)|The id of the node and TRS property to target.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -1305,7 +1305,7 @@ The id of a sampler in this animation to use to compute the value for the target
 
 The id of the node and TRS property to target.
 
-* **Type**: `[animation.channel.target](#reference-animation.channel.target)`
+* **Type**: [`animation.channel.target`](#reference-animation.channel.target)
 * **Required**: Yes
 
 ### channel.extensions
