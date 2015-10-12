@@ -1976,13 +1976,62 @@ Application-specific data.
 
 **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
+TODO
+TODO
+TODO
+TODO
+TODO
+
 
 <!-- ======================================================================= -->
 <a name="reference-image"></a>
 ## image
 
+Image data used to create a texture.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**uri**|`string`|The uri of the image.| :white_check_mark: Yes|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [image.schema.json](schema/image.schema.json)
 * **Example**: [images.json](schema/examples/images.json)
+
+### image.uri :white_check_mark: 
+
+The uri of the image.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.  The image format must be jpg, png, bmp, or gif.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Format**: uri
+
+### image.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### image.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### image.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
