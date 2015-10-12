@@ -41,7 +41,6 @@ Contributors
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
-* [Binary Types Reference](#binarytypes)
 * [JSON Schema](#schema)
 * [Conformance](#conformance)
 * [Acknowledgements](#acknowledgements)
@@ -1119,13 +1118,6 @@ For more information on glTF extensions, consult the [extensions registry specif
 # Properties Reference
 
 This section will have a detailed reference on each property. e.g. `asset`. This is more than what is currently in the schema. A one-line description and comment isn't enough, we need to fully specify behavior for each property.
-
-<a name="binarytypes"></a>
-# Binary Types Reference
-
-This section will describe the format for each of the GL types stored in the binary file. A reference to the GL spec for each type might be enough
-
-<mark>*Todo: Patrick please advise on how to tackle this*</mark>
 
 <a name="schema"></a>
 # JSON Schema
