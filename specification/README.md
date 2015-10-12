@@ -13,7 +13,7 @@ _This is a draft specification; it is incomplete and may change before ratificat
 Editors
 
 * Patrick Cozzi, Cesium
-* Tony Parisi, Third Eye
+* Tony Parisi, WEVR
 
 Contributors
 
@@ -30,7 +30,6 @@ Contributors
   * [Design Goals](#designgoals)
   * [File Extensions and MIME Types](#mimetypes)
 * [Concepts](#concepts)
-  * [File Structure](#file-structure)
   * [IDs and Names](#ids-and-names)
   * [Scenes](#scenes)
   * [Accessing Binary Data](#binary-data)
@@ -64,7 +63,7 @@ Applications seeking high performance rarely load modeling formats directly; ins
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
-glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchial scenes with nodes, meshes, cameras, lights, materials and animations, while enabling efficient delivery and fast loading.
+glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchial scenes with nodes, meshes, cameras, materials and animations, while enabling efficient delivery and fast loading.
 
 <a name="glTFbasics"></a>
 
@@ -72,7 +71,7 @@ glTF solves these problems by providing a vendor- and runtime-neutral format tha
 
 glTF assets are JSON files plus supporting external data. Specifically, a glTF asset is represented by:
 
-* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, lights, cameras, as well as descriptor information for meshes, shaders, animations and other constructs
+* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, shaders, animations and other constructs
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL shader source code
@@ -88,10 +87,10 @@ glTF has been designed to meet the following goals:
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
 * *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
 * *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
-* *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, lights, cameras, animations, into their applications. glTF strives to preserve all of this information for use in the downstream application.
+* *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no lights, cameras, animations and other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations and other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
 The following are intentionally **not** goals for the initial design of glTF:
 
@@ -122,8 +121,6 @@ glTF uses URIs to reference buffers, shaders, and image resources. These URIs ma
 *This section is non-normative.*
 
 <a name="file-structure"></a>
-## File Structure
-<mark>*Todo:take a quick tour of the JSON file, how properties are laid out, etc.*</mark>
 
 <a name="ids-and-names"></a>
 ## IDs and Names
@@ -149,7 +146,7 @@ _IDs_ are internal string identifiers used to reference parts of a glTF asset, e
 
 In this example, `"a-buffer-id"` and `"a-bufferView-id"` are IDs.  The bufferView refers to the buffer using the buffer's ID: `"buffer": "a-buffer-id"`.
 
-IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `lights`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique. 
+IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique. 
 
 For example, the following is **not** allowed:
 
@@ -194,7 +191,7 @@ Whereas IDs are used for internal glTF references, _names_ are used for applicat
 <a name="scenes"></a>
 ## Scenes
 
-The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary property `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
+The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary object `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time. 
 
 The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
 
@@ -213,7 +210,7 @@ The following example defines a glTF asset with a single scene, `defaultScene`, 
 
 The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render. 
 
-Each node can contain one or more meshes, a skin, a joint name, a camera or a light, defined in the `meshes`, `instanceSkin`, `jointName`, `camera` and `light` properties, respectively.
+Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
 
 Nodes have a optional `name` property.
 
@@ -240,7 +237,7 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 ### Transforms
 
-Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). 
+Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
 In the example below, `node-box` defines non-default rotation and translation.
 
@@ -252,10 +249,10 @@ In the example below, `node-box` defines non-default rotation and translation.
         ],
         "name": "Box",
         "rotation": [
-            0.0787344,
-            -0.00904895,
-            0.996855,
-            2.91345
+            0,
+            0,
+            1,
+            0
         ],
         "scale": [
             1,
@@ -471,7 +468,7 @@ The size of the accessor attribute type is two bytes (the `componentType` is uns
 
 ## Geometry and Meshes
 
-Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skin, defined in its `instanceSkin` property.
+Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
 
 ### Meshes
 
@@ -494,14 +491,17 @@ The following example defines a mesh containing one triangle set primitive:
     ]
 ```
 
+Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
+
+Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `TEXCOORD_0`, `TEXCOORD_1`, etc.
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitives `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by `attributes` property (they are all equal for a given primitive).
 
                     
                     
 ### Skins
 
-All skins are stored in the `skins` property of the asset, by name.
-Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
   
 
 ```javascript
@@ -536,21 +536,18 @@ Each skin is defined by a `bindShapeMatrix` property, which describes how to pos
 
 #### Skin Instances
 
-A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
-
+A skin is instanced within a node using a combination of the node's `meshes`, `skeletons` and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
 
 ```javascript
     "node_1": {
         "children": [],
-        "instanceSkin": {
-            "meshes": [
-                "skinned-mesh_1"
-            ],
-            "skeletons": [
-                "skeleton-root_1"
-            ],
-            "skin": "skin_1"
-        },
+        "meshes": [
+            "skinned-mesh_1"
+        ],
+        "skeletons": [
+            "skeleton-root_1"
+        ],
+        "skin": "skin_1"
 ```
 
 #### Skinned Mesh Attributes
@@ -643,48 +640,46 @@ Materials are stored in the assets `materials` property, which contains one or m
 ```javascript
 "materials": {
     "blinn-1": {
-        "instanceTechnique": {
-            "technique": "technique1",
-            "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "diffuse": "texture_file2",
-                "emission": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "shininess": 38.4,
-                "specular": [
-                    0,
-                    0,
-                    0,
-                    1
-                ]
-            }
-        },
-        "name": "blinn3"
+        "technique": "technique1",
+        "values": {
+            "ambient": [
+                0,
+                0,
+                0,	
+                1
+            ],
+            "diffuse": "texture_file2",
+            "emission": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "shininess": 38.4,
+            "specular": [
+                0,
+                0,
+                0,
+                1
+            ]
+        }
+        "name": "blinn1"
     }
 },
 ```
 
+The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object shall be rendered using a default material with 50% gray emissive color.
 
 ### Techniques
 
-A technique describes the shading used for a material. Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader.
+A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
 
-The asset's techniques are stored in the `techniques` dictionary property.
-
-The following fragment illustrates some technique parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
+The following example shows a technique and the properties it defines. This section describes each property in detail.
 
 ```javascript
 "techniques": {
     "technique1": {
+    	 // parameter definitions
         "parameters": {
             "ambient": {
                 "type": 35666
@@ -702,19 +697,54 @@ The following fragment illustrates some technique parameters. The property `ambi
             },
             "light0Transform": {
                 "semantic": "MODELVIEW",
-                "source": "directionalLight1",
+                "node": "directionalLight1",
                 "type": 35676
-            },
+            }
+            // more parameters
+        },
+    	// program, attributes and uniforms definitions
+	    "attributes": {
+	        "a_normal": "normal",
+	        "a_position": "position",
+	        "a_texcoord0": "texcoord0"
+	    },
+	    "program": "program_0",
+	    "uniforms": {
+	        "u_ambient": "ambient",
+	        "u_diffuse": "diffuse",
+	        "u_emission": "emission",
+	        "u_light0Color": "light0Color",
+	        "u_light0Transform": "light0Transform",
+	        "u_modelViewMatrix": "modelViewMatrix",
+	        "u_normalMatrix": "normalMatrix",
+	        "u_projectionMatrix": "projectionMatrix",
+	        "u_shininess": "shininess",
+	        "u_specular": "specular"
+	    },
+		// render states
+		"states": {
+		    "enable": [
+		        2884,
+		        2929
+		    ]
+		}
+        
 ```
+
+#### Parameters
+
+Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique. 
+
+The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white. 
 
 
 #### Semantics
 
-Techniques may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
+Technique parameters may also optionally define a *semantic* - an enumerated value describing how the runtime is to interpret the data to be passed to the shader. 
 
-In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `source`, in this case the node `directionalight1`, which refers to a light node. 
+In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node reference in the property `node`, in this case the node `directionalight1`, which refers to a node that contains a light source.
 
-If no source property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
+If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, the semantic applies to the current camera, as in the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix.
 
 ```javascript
 "projectionMatrix": {
@@ -742,34 +772,42 @@ Table 1. Uniform Semantics
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
 
-Attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
-#### Render Passes
+#### Program Instances
 
-Each technique contains one or more *render passes* that define the programs used in each pass, and the render states to enable during each pass. 
+The `program` property of a technique creates an instance of a shader program. The value of the property is the ID of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
 
->The V1.0 specification only supports single-pass rendering: a runtime is only required to render a single pass, and all tools should only generate a single pass. The multi-pass data structure has been put in place to accommodate a future multi-pass capability.
+Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
 
-The technique's `passes` property is an object containing all the passes for that technique. The `pass` property (singular) defines which passes are used in the technique. Each pass is defined as an instance of a program (the `instanceProgram` property, described in detail below), and a `states` property, described in the next section.
 
 ```javascript
-"pass": "defaultPass",
-"passes": {
-    "defaultPass": {
-        "instanceProgram": {
-        },
-        "states": {
-            "enable": [
-                2884,
-                2929
-            ]
-        }
-    }
+    "attributes": {
+        "a_normal": "normal",
+        "a_position": "position",
+        "a_texcoord0": "texcoord0"
+    },
+    "program": "program_0",
+    "uniforms": {
+        "u_ambient": "ambient",
+        "u_diffuse": "diffuse",
+        "u_emission": "emission",
+        "u_light0Color": "light0Color",
+        "u_light0Transform": "light0Transform",
+        "u_modelViewMatrix": "modelViewMatrix",
+        "u_normalMatrix": "normalMatrix",
+        "u_projectionMatrix": "projectionMatrix",
+        "u_shininess": "shininess",
+        "u_specular": "specular"
+    },
 ```
+
+The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
+
+The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
 #### Render States
 
-Render states define the fixed-function GL state when a primitive is rendered.  `states` contains two properties:
+Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
 
 * `enable`: an array of integers corresponding to boolean GL states that should be enabled using GL's `enable` function.
 * `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments to the GL function.
@@ -816,17 +854,16 @@ The following example `states` object indicates to enable all boolean states (se
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
 ```javascript
-"states": {
-    "enable": [
-        2884,
-        2929
-    ]
-}
+	"states": {
+	    "enable": [
+	        2884,
+	        2929
+	    ]
+	}
 ```
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then only making GL state function calls for the states that vary between techniques.
 
-### Programs, Attributes and Uniforms
 
 #### Programs
 
@@ -848,6 +885,8 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
+#### Shaders
+
 Shader source files are stored in the asset's `shaders` property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```javascript
@@ -863,88 +902,18 @@ Shader source files are stored in the asset's `shaders` property, which contains
 },
 ```    
 
-#### Program Instances
-
-A shader program may be instanced multiple times within the glTF asset, via the `instanceProgram` property of the render pass. `instanceProgram` specifies the program identifier, and `attributes` and `uniforms` properties.
-
-```javascript
-"instanceProgram": {
-    "attributes": {
-        "a_normal": "normal",
-        "a_position": "position",
-        "a_texcoord0": "texcoord0"
-    },
-    "program": "program_0",
-    "uniforms": {
-        "u_ambient": "ambient",
-        "u_diffuse": "diffuse",
-        "u_emission": "emission",
-        "u_light0Color": "light0Color",
-        "u_light0Transform": "light0Transform",
-        "u_modelViewMatrix": "modelViewMatrix",
-        "u_normalMatrix": "normalMatrix",
-        "u_projectionMatrix": "projectionMatrix",
-        "u_shininess": "shininess",
-        "u_specular": "specular"
-    }
-},
-```
-
-The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameters defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
-
-The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
-
-
-### Common Techniques
-
-In addition to supporting arbitrary GLSL shader programs, glTF allows the ability to specify common shading techniques such as Blinn, Lambert and Phong without the need to supply the GLSL shader code. This is included as a hint for runtimes that have built-in support for the common techniques. If the runtime does have built-in support for the common technique, it can use its own shader implementation in favor of the supplied GLSL programs.
-
-Common techniques are defined in the `details` property of a technique's render pass, which can contain the property `commonProfile`. The following example shows the definition of a common Blinn shader technique. The `commonProfile` property designates which parameters of the technique will be used in the shader, identifies the lighting model (Blinn), and includes any extra parameters used by the shader but not described in the technique in the property `extras`.
-
-```javascript
-"details": {
-    "commonProfile": {
-        "extras": {
-            "doubleSided": false
-        },
-        "lightingModel": "Blinn",
-        "parameters": [
-            "ambient",
-            "diffuse",
-            "emission",
-            "light0Color",
-            "light0Transform",
-            "modelViewMatrix",
-            "normalMatrix",
-            "projectionMatrix",
-            "shininess",
-            "specular"
-        ],
-        "texcoordBindings": {
-            "diffuse": "TEXCOORD_0"
-        }
-    },
-        "type": "COLLADA-1.4.1/commonProfile"
-```
-
-<mark>*Todo: do we have a complete list of common shading techniques? The Three.js loader currently supports Blinn/Phong, Lambert and Unlit.*</mark>
-
-<mark>*Todo: Patrick we really need to think about conformance here. Does a conforming implementation have to support both shaders and common techniques? Or just shaders, where the common techniques are a hint? Or just the common techniques... if the latter, then what does a conforming implementation do with shader code? Ignore it in favor of the common technique?*</mark>
-
-### Textures
+#### Textures
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
 
 ```javascript
 "materials": {
-    "shader-1": {
-        "instanceTechnique": {
-            "technique": "technique1",
-            "values": {
-                "diffuse": "texture_file2",
-            }
-        },
-        "name": "shader_1"
+    "material-1": {
+        "technique": "technique1",
+        "values": {
+            "diffuse": "texture_file2",
+        }
+        "name": "material_1"
     }
 },
 ```
@@ -964,6 +933,8 @@ All textures are stored in the asset's `textures` property. A texture is defined
     }
 }
 ```
+
+#### Images
  
 Images referred to by textures are stored in the `images` property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
 
@@ -974,6 +945,8 @@ Images referred to by textures are stored in the `images` property of the asset.
     }
 },
 ```
+
+#### Samplers
 
 Samplers are stored in the `samplers` property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
@@ -1018,31 +991,6 @@ The following example defines a perspective camera with supplied values for Y fi
     }
 }
 ```
-
-<a name="lights"></a>
-## Lights
-
-Lights define light sources in the scene.
-
-Lights are stored in the asset's `lights` property. Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point` or `spot`); then, a property of that name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
-
-
-```javascript
-    "lights": {
-        "directionalLightShape1-lib": {
-            "directional": {
-                "color": [
-                    1,
-                    1,
-                    1
-                ]
-            },
-            "type": "directional"
-        }
-    }
-```
-
-Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
 
 <a name="animations"></a>
 ## Animations
@@ -1198,11 +1146,6 @@ This section will describe the format for each of the GL types stored in the bin
    * <a href="schema/extras.schema.json">`extras`</a>
    * <a href="schema/glTF.schema.json">`glTF`</a> (root property for model)
    * <a href="schema/image.schema.json">`image`</a>
-   * <a href="schema/light.schema.json">`light`</a>
-   * <a href="schema/lightAmbient.schema.json">`light/ambient`</a>
-   * <a href="schema/lightDirectional.schema.json">`light/directional`</a>
-   * <a href="schema/lightPoint.schema.json">`light/point`</a>
-   * <a href="schema/lightSpot.schema.json">`light/spot`</a>
    * <a href="schema/material.schema.json">`material`</a>
    * <a href="schema/materialInstanceTechnique.schema.json">`material/instanceTechnique`</a>
    * <a href="schema/materialInstanceTechniqueValues.schema.json">`material/instanceTechnique/values`</a>
@@ -1210,7 +1153,6 @@ This section will describe the format for each of the GL types stored in the bin
    * <a href="schema/meshPrimitive.schema.json">`mesh/primitive`</a>
    * <a href="schema/meshPrimitiveAttribute.schema.json">`mesh/primitive/attribute`</a>
    * <a href="schema/node.schema.json">`node`</a>
-   * <a href="schema/nodeInstanceSkin.schema.json">`node/instanceSkin`</a>
    * <a href="schema/program.schema.json">`program`</a>
    * <a href="schema/sampler.schema.json">`sampler`</a>
    * <a href="schema/scene.schema.json">`scene`</a>

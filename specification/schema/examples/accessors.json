@@ -1,6 +1,6 @@
 {
     "accessors" : {
-        "an_accessor" : {
+        "accessor_id" : {
             "bufferView" : "bufferViewWithVertices_id",
             "byteOffset" : 0,
             "byteStride" : 3,

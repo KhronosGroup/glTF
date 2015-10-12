@@ -9,22 +9,35 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "techniqueParameters.schema.json"
+                "$ref" : "technique.parameters.schema.json"
             },
             "default" : {}
         },
-        "pass" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id (JSON property name) of the default pass to use.",
-            "required" : true
-        },
-        "passes" : {
+        "attributes" : {
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "techniquePass.schema.json"
+                "$ref" : "technique.attribute.schema.json"
             },
+            "default" : {}
+        },
+        "program" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the program.",
             "required" : true
+        },
+        "uniforms" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.uniform.schema.json"
+            },
+            "default" : {}
+        },
+        "states" : {
+            "extends" : { "$ref" : "technique.states.schema.json" },
+            "description" : "Fixed-function rendering states.",
+            "default" : {}
         }
     },
     "additionalProperties" : false

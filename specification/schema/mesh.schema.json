@@ -9,7 +9,7 @@
             "type" : "array",
             "description" : "Primitives that define geometry and material.",
             "items" : {
-                "$ref" : "meshPrimitive.schema.json"
+                "$ref" : "mesh.primitive.schema.json"
             },
             "default" : []
         }

@@ -1,0 +1,13 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "KHR_materials_common node extension parameter extension",
+    "type" : "object",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "node" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the node whose transform is used as the parameter's value."
+        }
+    },
+    "additionalProperties" : false
+}

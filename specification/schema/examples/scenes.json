@@ -5,8 +5,7 @@
             "name": "user-defined scene name",
             "nodes": [
                 "mesh_node_id",
-                "camera_node_id",
-                "light_node_id"
+                "camera_node_id"
             ],
             "extensions" : {
                "extension_name" : {
