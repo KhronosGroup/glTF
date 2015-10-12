@@ -668,7 +668,7 @@ Materials are stored in the assets `materials` property, which contains one or m
 },
 ```
 
-The `technique` property is optional; [define defaults here]
+The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object shall be rendered using a default material with 50% gray emissive color.
 
 ### Techniques
 
@@ -1186,5 +1186,5 @@ This section will describe the format for each of the GL types stored in the bin
 <a name="references"></a>
 # References
 
-* [WebGL 1.0.3 spec](https://www.khronos.org/registry/webgl/specs/1.0.3/)
+* [WebGL 1.0.2 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
 * [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
