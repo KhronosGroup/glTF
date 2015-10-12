@@ -1155,8 +1155,6 @@ For more information on glTF extensions, consult the [extensions registry specif
 
 A typed view into a [bufferView](#reference-bufferView).  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
 
-**Type**: `object`
-
 **Properties**
 
 |   |Type|Description|Required|
@@ -1273,22 +1271,22 @@ Application-specific data.
 * **Example**: [animations.json](schema/examples/animations.json)
 
 <a name="reference-animation.channel"></a>
-### channel
+## animation.channel
 
 **JSON schema**: [animation.channel.schema.json](schema/animation.channel.schema.json)
 
 <a name="reference-animation.channel.target"></a>
-#### target
+## animation.channel.target
 
 **JSON schema**: [animation.channel.target.schema.json](schema/animation.channel.target.schema.json)
 
 <a name="reference-animation.parameter"></a>
-### parameter
+## animation.parameter
 
 **JSON schema**: [animation.parameter.schema.json](schema/animation.parameter.schema.json)
 
 <a name="reference-animation.sampler"></a>
-### sampler
+## animation.sampler
 
 **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
 
@@ -1299,7 +1297,7 @@ Application-specific data.
 * **Example**: [asset.json](schema/examples/asset.json)
 
 <a name="reference-asset.profile"></a>
-### profile
+## asset.profile
 
 **JSON schema**: [asset.profile.schema.json](schema/asset.profile.schema.json)
 
@@ -1322,12 +1320,12 @@ Application-specific data.
 * **Example**: [cameras.json](schema/examples/cameras.json)
 
 <a name="reference-camera.orthographic"></a>
-### orthographic
+## camera.orthographic
 
 **JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
 
 <a name="reference-camera.perspective"></a>
-### perspective
+## camera.perspective
 
 **JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
 
@@ -1349,7 +1347,7 @@ Application-specific data.
 * **Example**: [materials.json](schema/examples/materials.json)
 
 <a name="reference-material.values"></a>
-### values
+## material.values
 
 **JSON schema**: [material.values.schema.json](schema/material.values.schema.json)
 
@@ -1360,12 +1358,12 @@ Application-specific data.
 * **Example**: [meshes.json](schema/examples/meshes.json)
 
 <a name="reference-mesh.primitive"></a>
-### primitive
+## mesh.primitive
 
 **JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
 
 <a name="reference-mesh.primitive.attribute"></a>
-#### attribute
+## mesh.primitive.attribute
 
 **JSON schema**: [mesh.primitive.attribute.schema.json](schema/mesh.primitive.attribute.schema.json)
 
@@ -1412,22 +1410,22 @@ Application-specific data.
 * **Example**: [techniques.json](schema/examples/techniques.json)
 
 <a name="reference-technique.attribute"></a>
-### attribute
+## technique.attribute
 
 **JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
 
 <a name="reference-technique.parameters"></a>
-### parameters
+## technique.parameters
 
 **JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
 
 <a name="reference-technique.states"></a>
-### states
+## technique.states
 
 **JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
 
 <a name="reference-technique.uniform"></a>
-### uniform
+## technique.uniform
 
 **JSON schema**: [technique.uniform.schema.json](schema/technique.uniform.schema.json)
 
