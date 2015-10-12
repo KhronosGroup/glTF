@@ -1,0 +1,24 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "camera",
+    "type" : "object",
+    "description" : "A camera's projection.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "orthographic" : {
+            "extends" : { "$ref" : "camera.orthographic.schema.json" },
+            "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
+        },
+        "perspective" : {
+            "extends" : { "$ref" : "camera.perspective.schema.json" },
+            "description" : "A perspective camera containing properties to create a perspective projection matrix."
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Specifies if the camera uses a perspective or orthographic projection.",
+            "enum" : ["perspective", "orthographic"],
+            "required" : true
+        }
+    },
+    "additionalProperties" : false
+}

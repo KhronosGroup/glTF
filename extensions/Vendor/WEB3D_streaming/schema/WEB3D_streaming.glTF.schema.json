@@ -1,0 +1,21 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "WEB3D_streaming glTF extension",
+    "type" : "object",
+    "properties" : {       
+        "bufferChunks" : {
+            "type" : "array",
+            "description" : "Chunks that are combined into the binary body of this binary glTF file.",
+            "items" :
+            {                
+                "properties" : {
+                },
+                "additionalProperties" : {
+                    "$ref" : "WEB3D_streaming.bufferChunk.schema.json"
+                }
+            },            
+            "required" : true
+        }
+    },
+    "additionalProperties" : false
+}

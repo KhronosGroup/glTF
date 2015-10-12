@@ -1,0 +1,36 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "EXT_quantized_attributes accessor extension",
+    "type" : "object",
+    "properties" : {
+         "decodeMatrix" : {
+            "type" : "array",
+            "description" : "A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 16,
+            "required" : true
+        },
+        "decodedMax" : {
+            "type" : "array",
+            "description" : "Maximum decoded value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 16
+        },
+        "decodedMin" : {
+            "type" : "array",
+            "description" : "Minimum decoded value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 16
+        }    
+    },
+    "additionalProperties" : false
+}

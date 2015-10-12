@@ -1,0 +1,37 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "animation",
+    "type" : "object",
+    "description" : "Keyframe animation.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "channels" : {
+            "type" : "array",
+            "items" : {
+                "$ref" : "animation.channel.schema.json"
+            },
+            "default" : []
+        },
+        "parameters" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.parameter.schema.json"
+            },
+            "default" : {}
+        },
+        "samplers" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.sampler.schema.json"
+            },
+            "default" : {}
+        }
+    },
+    "dependencies" : {
+        "channels" : "samplers",
+        "samplers" : "parameters"
+    },
+    "additionalProperties" : false
+}
