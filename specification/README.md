@@ -210,7 +210,7 @@ The following example defines a glTF asset with a single scene, `defaultScene`, 
 
 The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render. 
 
-Each node can contain one or more meshes, a skin, a joint name, or a camera, defined in the `meshes`, `instanceSkin`, `jointName`, and `camera` properties, respectively.
+Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
 
 Nodes have a optional `name` property.
 
@@ -468,7 +468,7 @@ The size of the accessor attribute type is two bytes (the `componentType` is uns
 
 ## Geometry and Meshes
 
-Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skin, defined in its `instanceSkin` property.
+Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
 
 ### Meshes
 
@@ -501,8 +501,7 @@ Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JO
                     
 ### Skins
 
-All skins are stored in the `skins` property of the asset, by name.
-Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
   
 
 ```javascript
@@ -537,21 +536,18 @@ Each skin is defined by a `bindShapeMatrix` property, which describes how to pos
 
 #### Skin Instances
 
-A skin is instanced within a node using the node's `instanceSkin` property. The meshes for a skin instance are defined in the skin instance's `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
-
+A skin is instanced within a node using a combination of the node's `meshes`, `skeletons` and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
 
 ```javascript
     "node_1": {
         "children": [],
-        "instanceSkin": {
-            "meshes": [
-                "skinned-mesh_1"
-            ],
-            "skeletons": [
-                "skeleton-root_1"
-            ],
-            "skin": "skin_1"
-        },
+        "meshes": [
+            "skinned-mesh_1"
+        ],
+        "skeletons": [
+            "skeleton-root_1"
+        ],
+        "skin": "skin_1"
 ```
 
 #### Skinned Mesh Attributes
@@ -1157,7 +1153,6 @@ This section will describe the format for each of the GL types stored in the bin
    * <a href="schema/meshPrimitive.schema.json">`mesh/primitive`</a>
    * <a href="schema/meshPrimitiveAttribute.schema.json">`mesh/primitive/attribute`</a>
    * <a href="schema/node.schema.json">`node`</a>
-   * <a href="schema/nodeInstanceSkin.schema.json">`node/instanceSkin`</a>
    * <a href="schema/program.schema.json">`program`</a>
    * <a href="schema/sampler.schema.json">`sampler`</a>
    * <a href="schema/scene.schema.json">`scene`</a>
