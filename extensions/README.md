@@ -10,6 +10,7 @@ _Draft Khronos extensions are not ratified yet._
 ## Vendor extensions
 
 * [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
+* [WEB3D_streaming](Vendor/WEB3D_streaming/README.md)
 
 # About glTF Extensions
 
