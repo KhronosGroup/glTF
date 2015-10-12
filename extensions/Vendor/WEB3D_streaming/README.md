@@ -54,20 +54,10 @@ The following rules apply to valid buffer chunks:
   Actually, since the `bufferChunk` objects are given in their order within the binary body, an implementation could compute this value for each `bufferChunk`, knowing that the first `bufferChunk` will start at an offset of zero, and taking into account the individual lenghts of the `bufferChunk` objects.
   However, providing this information explicitly as the `byteOffset` property eases implementation of this feature.
 
-`bufferChunks` are introduced as a basic layer for addressing binary data, and the standard glTF layer of `bufferViews` must refer to those `bufferChunks` to address binary data within the binary file body.
-Note that, this way, `bufferChunks` can only be used for the special buffer that represents the binary file body, entitled `"binary_glTF"`.
+`bufferChunks` are introduced as a basic layer for addressing binary data, and the standard glTF layer of `bufferViews` must refer to those as an array of indices, entitled `chunks`, to address binary data within the binary file body.
+Note that, this way, `bufferChunk` objects can only be used for the special buffer that represents the binary file body, entitled `"binary_glTF"`.
 
-A `bufferView` uses the new property `bufferChunks` to specify a list of indices to `bufferChunk` objects.
-If a `bufferView` refers to the special `buffer` that is the binary file body (`"binary_glTF"`), it has to use this list of `bufferChunk` objects.
-Apart from that, as usual, a `bufferView` can still refer to other `buffer` objects than the binary file body.
 
-When a list of indices `bufferChunk` objects is used to refer to the binary file body from a `bufferView`, the (required) parameter `byteOffset` can be ignored, since this information is already contained within the first referenced `bufferChunk`.
-Still, for clarity, it is recommended that the value of `byteOffset` should always match this value.
-If the optional property `byteLength` of `bufferView` is used, the value must match the sum of the `byteLength` properties of all referenced `bufferChunk` objects.
-This value can be used to conventiently pre-allocate a buffer that is able to exactly accommodate all chunks of the `bufferView`, without having to explicity compute the size.
-
-Be aware that, unlike for regular binary glTF content, the bytes referred to by a `bufferView` can in general _not_ be retrieved as a range (`byteOffset`, `byteOffset` + `byteLength`),
-since the chunks referred to by the `bufferView` might be interleaved with other buffer chunks.
 
 Example:
 
@@ -98,7 +88,9 @@ Example:
 // ...
 "bufferViews" : {
     "indexDataView0" : {
-        "byteOffset" : 0, //will be ignored by reader
+        "buffer"     : "binary_glTF",
+        "target"     : 34963,  //ELEMENT_ARRAY_BUFFER
+        "byteOffset" : 0,      //will be ignored by reader
         "byteLength" : 3072,
         "extensions" : {
             "WEB3D_streaming" : {
@@ -106,7 +98,9 @@ Example:
             }
     }
     "attribDataView0" : {
-        "byteOffset" : 1024, //will be ignored by reader
+        "buffer"     : "binary_glTF",
+        "target"     : 34962, //ARRAY_BUFFER
+        "byteOffset" : 1024,  //will be ignored by reader
         "byteLength" : 3072,
         "extensions" : {
             "WEB3D_streaming" : {
@@ -115,6 +109,19 @@ Example:
     }
 }
 ```
+
+A `bufferView` uses the new property `bufferChunks` to specify a list of indices to `bufferChunk` objects.
+If a `bufferView` refers to the special `buffer` that is the binary file body (`"binary_glTF"`), it has to use this list of `bufferChunk` objects.
+Apart from that, as usual, a `bufferView` can still refer to other `buffer` objects than the binary file body.
+
+When a list of indices `bufferChunk` objects is used to refer to the binary file body from a `bufferView`, the (required) parameter `byteOffset` can be ignored, since this information is already contained within the first referenced `bufferChunk`.
+Still, for clarity, it is recommended that the value of `byteOffset` should always match this value.
+If the optional property `byteLength` of `bufferView` is used, the value must match the sum of the `byteLength` properties of all referenced `bufferChunk` objects.
+This value can be used to conventiently pre-allocate a buffer that is able to exactly accommodate all chunks of the `bufferView`, without having to explicity compute the size.
+
+Be aware that, unlike for regular binary glTF content, the bytes referred to by a `bufferView` can in general _not_ be retrieved as a range (`byteOffset`, `byteOffset` + `byteLength`),
+since the chunks referred to by the `bufferView` might be interleaved with other buffer chunks.
+
 
 ## JSON Schema
 
