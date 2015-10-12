@@ -9,7 +9,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "meshPrimitiveAttribute.schema.json"
+                "$ref" : "mesh.primitive.attribute.schema.json"
             },
             "default" : {}
         },

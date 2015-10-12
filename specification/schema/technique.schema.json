@@ -9,7 +9,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "techniqueParameters.schema.json"
+                "$ref" : "technique.parameters.schema.json"
             },
             "default" : {}
         },
@@ -17,7 +17,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "techniqueAttribute.schema.json"
+                "$ref" : "technique.attribute.schema.json"
             },
             "default" : {}
         },
@@ -30,12 +30,12 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "techniqueUniform.schema.json"
+                "$ref" : "technique.uniform.schema.json"
             },
             "default" : {}
         },
         "states" : {
-            "extends" : { "$ref" : "techniqueStates.schema.json" },
+            "extends" : { "$ref" : "technique.states.schema.json" },
             "description" : "Fixed-function rendering states.",
             "default" : {}
         }

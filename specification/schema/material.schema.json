@@ -13,7 +13,7 @@
             "properties" : {
             },
             "additionalProperties" : {
-                "$ref" : "materialValues.schema.json"
+                "$ref" : "material.values.schema.json"
             },
             "default" : {}
         }

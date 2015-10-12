@@ -11,7 +11,7 @@
             "required" : true
         },
         "target" : {
-            "extends" : { "$ref" : "animationChannelTarget.schema.json" },
+            "extends" : { "$ref" : "animation.channel.target.schema.json" },
             "description" : "The glTF property to target from an animation channel.",
             "required" : true
         }
