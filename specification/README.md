@@ -1153,117 +1153,117 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="reference-accessor"></a>
 ## accessor
 
-    A typed view into a [bufferView](#reference-bufferView).  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
+A typed view into a [bufferView](#reference-bufferView).  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
 
-    **Type**: `object`
+**Type**: `object`
 
-    **Properties**
+**Properties**
 
-    |   |Type|Description|Required|
-    |---|----|-----------|--------|
-    |**bufferView**|`string`|The id of the bufferView.| :white_check_mark: Yes|
-    |**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes.| :white_check_mark: Yes|
-    |**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
-    |**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
-    |**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
-    |**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
-    |**max**|`number[1-16]`|Maximum value of each component in this attribute.|No|
-    |**min**|`number[1-16]`|Minimum value of each component in this attribute.|No|
-    |**name**|`string`|The user-defined name of this object.|No|
-    |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-    |**extras**|`any`|Application-specific data.|No|
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferView**|`string`|The id of the bufferView.| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes.| :white_check_mark: Yes|
+|**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
+|**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
+|**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
+|**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
+|**max**|`number[1-16]`|Maximum value of each component in this attribute.|No|
+|**min**|`number[1-16]`|Minimum value of each component in this attribute.|No|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
 
-    Additional properties are not allowed.
+Additional properties are not allowed.
 
-    * **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
-    * **Example**: [accessors.json](schema/examples/accessors.json)
+* **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
+* **Example**: [accessors.json](schema/examples/accessors.json)
 
-    ### accessor.bufferView :white_check_mark: 
+### accessor.bufferView :white_check_mark: 
 
-    The id of the bufferView.
+The id of the bufferView.
 
-    * **Type**: `string`
-    * **Required**: Yes
-    * **Minimum Length**`: >= 1`
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
 
-    ### accessor.byteOffset :white_check_mark: 
+### accessor.byteOffset :white_check_mark: 
 
-    The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the data type.
+The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the data type.
 
-    * **Type**: `integer`
-    * **Required**: Yes
-    * **Minimum**:` >= 0`
-    * **Related WebGL functions**: `vertexAttribPointer()` offset parameter
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+* **Related WebGL functions**: `vertexAttribPointer()` offset parameter
 
-    ### accessor.byteStride
+### accessor.byteStride
 
-    The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.
+The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.
 
-    * **Type**: `integer`
-    * **Required**: No, default: `0`
-    * **Minimum**:` >= 0`
-    * **Maximum**:` <= 255`
-    * **Related WebGL functions**: `vertexAttribPointer()` stride parameter
+* **Type**: `integer`
+* **Required**: No, default: `0`
+* **Minimum**:` >= 0`
+* **Maximum**:` <= 255`
+* **Related WebGL functions**: `vertexAttribPointer()` stride parameter
 
-    ### accessor.componentType :white_check_mark: 
+### accessor.componentType :white_check_mark: 
 
-    The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
+The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
 
-    * **Type**: `integer`
-    * **Required**: Yes
-    * **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5126`
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5126`
 
-    ### accessor.count :white_check_mark: 
+### accessor.count :white_check_mark: 
 
-    The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.
+The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.
 
-    * **Type**: `integer`
-    * **Required**: Yes
-    * **Minimum**:` >= 1`
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**:` >= 1`
 
-    ### accessor.type :white_check_mark: 
+### accessor.type :white_check_mark: 
 
-    Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix.
+Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix.
 
-    * **Type**: `string`
-    * **Required**: Yes
-    * **Allowed values**: `"SCALAR"`, `"VEC2"`, `"VEC3"`, `"VEC4"`, `"MAT2"`, `"MAT3"`, `"MAT4"`
+* **Type**: `string`
+* **Required**: Yes
+* **Allowed values**: `"SCALAR"`, `"VEC2"`, `"VEC3"`, `"VEC4"`, `"MAT2"`, `"MAT3"`, `"MAT4"`
 
-    ### accessor.max
+### accessor.max
 
-    Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
 
-    * **Type**: `number[1-16]`
-    * **Required**: No
+* **Type**: `number[1-16]`
+* **Required**: No
 
-    ### accessor.min
+### accessor.min
 
-    Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
 
-    * **Type**: `number[1-16]`
-    * **Required**: No
+* **Type**: `number[1-16]`
+* **Required**: No
 
-    ### accessor.name
+### accessor.name
 
-    The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
 
-    * **Type**: `string`
-    * **Required**: No
+* **Type**: `string`
+* **Required**: No
 
-    ### accessor.extensions
+### accessor.extensions
 
-    Dictionary object with extension-specific objects.
+Dictionary object with extension-specific objects.
 
-    * **Type**: `object`
-    * **Required**: No
-    * **Type of each property**: `object`
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
 
-    ### accessor.extras
+### accessor.extras
 
-    Application-specific data.
+Application-specific data.
 
-    * **Type**: `any`
-    * **Required**: No
+* **Type**: `any`
+* **Required**: No
 
 
 <a name="reference-animation"></a>
