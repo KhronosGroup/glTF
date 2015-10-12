@@ -1499,15 +1499,124 @@ Application-specific data.
 <a name="reference-asset"></a>
 ## asset
 
+Metadata about the glTF asset.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**copyright**|`string`|A copyright message suitable for display to credit the content creator.|No|
+|**generator**|`string`|Tool that generated this glTF model.  Useful for debugging.|No|
+|**premultipliedAlpha**|`boolean`|Specifies if the shaders were generated with premultiplied alpha.|No, default: `false`|
+|**profile**|[`asset.profile`](#reference-asset.profile)|Specifies the target rendering API and version, e.g., WebGL 1.0.3.|No, default: `{}`|
+|**version**|`string`|The glTF version.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [asset.schema.json](schema/asset.schema.json)
 * **Example**: [asset.json](schema/examples/asset.json)
+
+### asset.copyright
+
+A copyright message suitable for display to credit the content creator.
+
+* **Type**: `string`
+* **Required**: No
+
+### asset.generator
+
+Tool that generated this glTF model.  Useful for debugging.
+
+* **Type**: `string`
+* **Required**: No
+
+### asset.premultipliedAlpha
+
+Specifies if the shaders were generated with premultiplied alpha.
+
+* **Type**: `boolean`
+* **Required**: No, default: `false`
+* **Related WebGL functions**: `getContext()` with premultipliedAlpha
+
+### asset.profile
+
+Specifies the target rendering API and version, e.g., WebGL 1.0.3.
+
+* **Type**: [`asset.profile`](#reference-asset.profile)
+* **Required**: No, default: `{}`
+
+### asset.version :white_check_mark: 
+
+The glTF version.
+
+* **Type**: `string`
+* **Required**: Yes
+
+### asset.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### asset.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
 <a name="reference-asset.profile"></a>
 ## asset.profile
 
+Specifies the target rendering API and version, e.g., WebGL 1.0.3.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**api**|`string`|Specifies the target rendering API.|No, default: `"WebGL"`|
+|**version**|`string`|The API version.|No, default: `"1.0.3"`|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [asset.profile.schema.json](schema/asset.profile.schema.json)
+
+### profile.api
+
+Specifies the target rendering API.
+
+* **Type**: `string`
+* **Required**: No, default: `"WebGL"`
+
+### profile.version
+
+The API version.
+
+* **Type**: `string`
+* **Required**: No, default: `"1.0.3"`
+
+### profile.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### profile.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
