@@ -28,7 +28,9 @@ The [conformance](#conformance) section specifies what an implementation must to
 
 ### Extending Materials
 
-Common materials are defined by adding an `extensions` property to any glTF material, and defining its `KHR_materials_common` property. For example, the following defines a material with a Lambert shader with 50% gray diffuse color:
+Common materials are defined by adding an `extensions` property to any glTF material, and defining its `KHR_materials_common` property. Each material has two properties: `technique`, which specifies the shading technique used e.g. `BLINN`, and `values` which contains a set of technique-specific values.
+
+For example, the following defines a material with a Lambert shader with 50% gray diffuse color:
 
 ```javascript
     "materials": {
@@ -53,26 +55,25 @@ Common materials are defined by adding an `extensions` property to any glTF mate
 
 #### Common Material Shared Properties
 
-Table 1 lists properties that are shared among several of the common material types.
+Table 1 lists properties that can appear in the `values` property of a common material, and that are shared among several of the common material types.
 
 Table 1. Common Material Shared Properties
 
 | Property                     | Type         | Description | Default Value | Applies To |
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
-| `diffuse`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
-| `emission`                   | `FLOAT_VEC4` | RGBA value for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `index_of_refraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `reflective`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture id for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `indexOfRefraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT` |
+| `reflective`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
 | `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `specular`                    | `FLOAT_VEC4` or `SAMPLER_2D` | RGBA value or texture sampler defining the color of light specularly reflected from the surface of the object *[need to explain the units here k-factor right?]*. | [0,0,0,1] | `BLINN`, `PHONG` |
+| `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
-| `technique`                    | string | Declares the lighting technique used. Must be one of `BLINN`, `PHONG`, `LAMBERT`, or `CONSTANT` | "" | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 
 #### Blinn-Phong
 
-Blinn-Phong approximation. Uses all of the common material properties defined in Table 1. The following example defines a Blinn-Phong lit material with a diffuse texture, moderate shininess and red specular highlights. 
+When the value of `technique` is `BLINN`, this defines a material lit with a Blinn-Phong approximation. Blinn-Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Blinn-Phong lit material with a diffuse texture, moderate shininess and red specular highlights. 
 
 ```javascript
     "materials": {
@@ -98,7 +99,7 @@ Blinn-Phong approximation. Uses all of the common material properties defined in
 
 #### Phong
 
-Phong lighting. Uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a white diffuse color, environment map texture and high reflectivity.
+When the value of `technique` is `PHONG`, this defines a material lit with a Phong lighting equation. Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a white diffuse color, environment map texture and high reflectivity.
 
 ```javascript
     "materials": {
@@ -124,9 +125,9 @@ Phong lighting. Uses all of the common material properties defined in Table 1. T
 
 #### Lambert
 
-Lambert shading does not reflect specular highlights; therefore the common material properties `specular` and `shininess` are not used. All other properties from Table 1 apply.
+When the value of `technique` is `LAMBERT`, this defines a material shaded using Lambert shading. Lambert shading does not reflect specular highlights; therefore the common material properties `specular` and `shininess` are not used. All other properties from Table 1 apply.
 
-The following example defines a Lambert lit material with a 50% gray emissive color and a diffuse texture map.
+The following example defines a Lambert shaded material with a 50% gray emissive color and a diffuse texture map.
 
 ```javascript
     "materials": {
@@ -151,7 +152,7 @@ The following example defines a Lambert lit material with a 50% gray emissive co
 
 #### Constant
 
-Constant shading does not reflect light sources in the scene; therefore the common material properties `ambient`, `diffuse`, `specular` and `shininess` are not used. All other properties from Table 1 apply.
+When the value of `technique` is `CONSTANT`, this defines a material that uses constant shading. Constant shading does not reflect light sources in the scene; therefore the common material properties `ambient`, `diffuse`, `reflective`, `reflectivity`, `specular` and `shininess` are not used. All other properties from Table 1 apply.
 
 The following example defines a Constant lit material with a 50% gray emissive color and 50% opacity.
 
@@ -176,12 +177,21 @@ The following example defines a Constant lit material with a 50% gray emissive c
         },
 ```
 
+### Interaction Between Attribute Semantics and Common Materials
+
+The base specification defines attribute semantics for mesh primitives. The common materials in this extension shall support the semantics `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`. For array semantics such as texture coordinates, the implemention is only required to support the 0th set of coordinates i.e. `TEXCOORD_0`.
+
+If a conforming implementation of this extension supports skinned animations, then the common materials described in this extension must also support hardware skinning in its vertex and fragment shader programs.
+
+
 <a name="lights"></a>
 ## Lights
 
 Lights define light sources in the scene.
 
 Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
+
+A conforming implementation of this extension must be able to load light data defined in the asset, but it is not obligated to render the asset using those lights. 
 
 ### Defining Lights
 
