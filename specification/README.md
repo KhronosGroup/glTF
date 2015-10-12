@@ -1118,11 +1118,11 @@ For more information on glTF extensions, consult the [extensions registry specif
 # Properties Reference
 
 * [accessor](#reference-accessor)
+* [animation](#reference-animation)
    * [channel](#reference-animation.channel)
       * [target](#reference-animation.channel.target)
    * [parameter](#reference-animation.parameter)
    * [sampler](#reference-animation.sampler)
-* [animation](#reference-animation)
 * [asset](#reference-asset)
    * [profile](#reference-asset.profile)
 * [buffer](#reference-buffer)
@@ -1156,6 +1156,11 @@ For more information on glTF extensions, consult the [extensions registry specif
 
 **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
 
+<a name="reference-animation"></a>
+## animation
+
+**JSON schema**: [animation.schema.json](schema/animation.schema.json)
+
 <a name="reference-animation.channel"></a>
 ### channel
 
@@ -1175,11 +1180,6 @@ For more information on glTF extensions, consult the [extensions registry specif
 ### sampler
 
 **JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
-
-<a name="reference-animation"></a>
-## animation
-
-**JSON schema**: [animation.schema.json](schema/animation.schema.json)
 
 <a name="reference-asset"></a>
 ## asset
