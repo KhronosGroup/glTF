@@ -42,7 +42,6 @@ Contributors
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
 * [Binary Types Reference](#binarytypes)
-* [JSON Schema](#schema)
 * [Conformance](#conformance)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
@@ -1118,7 +1117,199 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="properties"></a>
 # Properties Reference
 
-This section will have a detailed reference on each property. e.g. `asset`. This is more than what is currently in the schema. A one-line description and comment isn't enough, we need to fully specify behavior for each property.
+* [accessor](#reference-accessor)
+   * [channel](#reference-animation.channel)
+      * [target](#reference-animation.channel.target)
+   * [parameter](#reference-animation.parameter)
+   * [sampler](#reference-animation.sampler)
+* [animation](#reference-animation)
+* [asset](#reference-asset)
+   * [profile](#reference-asset.profile)
+* [buffer](#reference-buffer)
+* [bufferView](#reference-bufferView)
+* [camera](#reference-camera)
+   * [orthographic](#reference-camera.orthographic)
+   * [perspective](#reference-camera.perspective)
+* [glTF](#reference-glTF) (root property for model)
+* [image](#reference-image)
+* [material](#reference-material)
+   * [values](#reference-material.values)
+* [mesh](#reference-mesh)
+   * [primitive](#reference-mesh.primitive)
+      * [attribute](#reference-mesh.primitive.attribute)
+* [node](#reference-node)
+* [program](#reference-program)
+* [sampler](#reference-sampler)
+* [scene](#reference-scene)
+* [shader](#reference-shader)
+* [skin](#reference-skin)
+* [technique](#reference-technique)
+   * [attribute](#reference-technique.attribute)
+   * [parameters](#reference-technique.parameters)
+   * [states](#reference-technique.states)
+   * [uniform](#reference-technique.uniform)
+* [texture](#reference-texture)
+
+
+<a name="reference-accessor"></a>
+## accessor
+
+**JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
+
+<a name="reference-animation.channel"></a>
+### channel
+
+**JSON schema**: [animation.channel.schema.json](schema/animation.channel.schema.json)
+
+<a name="reference-animation.channel.target"></a>
+#### target
+
+**JSON schema**: [animation.channel.target.schema.json](schema/animation.channel.target.schema.json)
+
+<a name="reference-animation.parameter"></a>
+### parameter
+
+**JSON schema**: [animation.parameter.schema.json](schema/animation.parameter.schema.json)
+
+<a name="reference-animation.sampler"></a>
+### sampler
+
+**JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
+
+<a name="reference-animation"></a>
+## animation
+
+**JSON schema**: [animation.schema.json](schema/animation.schema.json)
+
+<a name="reference-asset"></a>
+## asset
+
+**JSON schema**: [asset.schema.json](schema/asset.schema.json)
+
+<a name="reference-asset.profile"></a>
+### profile
+
+**JSON schema**: [asset.profile.schema.json](schema/asset.profile.schema.json)
+
+<a name="reference-buffer"></a>
+## buffer
+
+**JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
+
+<a name="reference-bufferView"></a>
+## bufferView
+
+**JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
+
+<a name="reference-camera"></a>
+## camera
+
+**JSON schema**: [camera.schema.json](schema/camera.schema.json)
+
+<a name="reference-camera.orthographic"></a>
+### orthographic
+
+**JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
+
+<a name="reference-camera.perspective"></a>
+### perspective
+
+**JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
+
+<a name="reference-glTF"></a>
+## glTF
+
+**JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
+
+<a name="reference-image"></a>
+## image
+
+**JSON schema**: [image.schema.json](schema/image.schema.json)
+
+<a name="reference-material"></a>
+## material
+
+**JSON schema**: [material.schema.json](schema/material.schema.json)
+
+<a name="reference-material.values"></a>
+### values
+
+**JSON schema**: [material.values.schema.json](schema/material.values.schema.json)
+
+<a name="reference-mesh"></a>
+## mesh
+
+**JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
+
+<a name="reference-mesh.primitive"></a>
+### primitive
+
+**JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
+
+<a name="reference-mesh.primitive.attribute"></a>
+#### attribute
+
+**JSON schema**: [mesh.primitive.attribute.schema.json](schema/mesh.primitive.attribute.schema.json)
+
+<a name="reference-node"></a>
+## node
+
+**JSON schema**: [node.schema.json](schema/node.schema.json)
+
+<a name="reference-program"></a>
+## program
+
+**JSON schema**: [program.schema.json](schema/program.schema.json)
+
+<a name="reference-sampler"></a>
+## sampler
+
+**JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
+
+<a name="reference-scene"></a>
+## scene
+
+**JSON schema**: [scene.schema.json](schema/scene.schema.json)
+
+<a name="reference-shader"></a>
+## shader
+
+**JSON schema**: [shader.schema.json](schema/shader.schema.json)
+
+<a name="reference-skin"></a>
+## skin
+
+**JSON schema**: [skin.schema.json](schema/skin.schema.json)
+
+<a name="reference-technique"></a>
+## technique
+
+**JSON schema**: [technique.schema.json](schema/technique.schema.json)
+
+<a name="reference-technique.attribute"></a>
+### attribute
+
+**JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
+
+<a name="reference-technique.parameters"></a>
+### parameters
+
+**JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
+
+<a name="reference-technique.states"></a>
+### states
+
+**JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
+
+<a name="reference-technique.uniform"></a>
+### uniform
+
+**JSON schema**: [technique.uniform.schema.json](schema/technique.uniform.schema.json)
+
+<a name="reference-texture"></a>
+## texture
+
+**JSON schema**: [texture.schema.json](schema/texture.schema.json)
 
 <a name="binarytypes"></a>
 # Binary Types Reference
@@ -1126,49 +1317,6 @@ This section will have a detailed reference on each property. e.g. `asset`. This
 This section will describe the format for each of the GL types stored in the binary file. A reference to the GL spec for each type might be enough
 
 <mark>*Todo: Patrick please advise on how to tackle this*</mark>
-
-<a name="schema"></a>
-# JSON Schema
-
-   * <a href="schema/accessor.schema.json">`accessor`</a>
-   * <a href="schema/animation.schema.json">`animation`</a>
-   * <a href="schema/animationChannel.schema.json">`animation/channel`</a>
-   * <a href="schema/animationChannelTarget.schema.json">`animation/channel/target`</a>
-   * <a href="schema/animationParameter.schema.json">`animation/parameter`</a>
-   * <a href="schema/animationSampler.schema.json">`animation/sampler`</a>
-   * <a href="schema/asset.schema.json">`asset`</a>
-   * <a href="schema/buffer.schema.json">`buffer`</a>
-   * <a href="schema/bufferView.schema.json">`bufferView`</a>
-   * <a href="schema/camera.schema.json">`camera`</a>
-   * <a href="schema/cameraOrthographic.schema.json">`camera/orthographic`</a>
-   * <a href="schema/cameraPerspective.schema.json">`camera/perspective`</a>
-   * <a href="schema/extension.schema.json">`extension`</a>
-   * <a href="schema/extras.schema.json">`extras`</a>
-   * <a href="schema/glTF.schema.json">`glTF`</a> (root property for model)
-   * <a href="schema/image.schema.json">`image`</a>
-   * <a href="schema/material.schema.json">`material`</a>
-   * <a href="schema/materialInstanceTechnique.schema.json">`material/instanceTechnique`</a>
-   * <a href="schema/materialInstanceTechniqueValues.schema.json">`material/instanceTechnique/values`</a>
-   * <a href="schema/mesh.schema.json">`mesh`</a>
-   * <a href="schema/meshPrimitive.schema.json">`mesh/primitive`</a>
-   * <a href="schema/meshPrimitiveAttribute.schema.json">`mesh/primitive/attribute`</a>
-   * <a href="schema/node.schema.json">`node`</a>
-   * <a href="schema/program.schema.json">`program`</a>
-   * <a href="schema/sampler.schema.json">`sampler`</a>
-   * <a href="schema/scene.schema.json">`scene`</a>
-   * <a href="schema/shader.schema.json">`shader`</a>
-   * <a href="schema/skin.schema.json">`skin`</a>
-   * <a href="schema/technique.schema.json">`technique`</a>
-   * <a href="schema/techniqueParameters.schema.json">`technique/parameters`</a>
-   * <a href="schema/techniquePass.schema.json">`technique/pass`</a>
-   * <a href="schema/techniquePassDetails.schema.json">`technique/pass/details`</a>
-   * <a href="schema/techniquePassDetailsCommonProfile.schema.json">`technique/pass/details/commonProfile`</a>
-   * <a href="schema/techniquePassDetailsCommonProfileTexcoordBindings.schema.json">`technique/pass/details/commonProfile/texcoordBindings`</a>
-   * <a href="schema/techniquePassInstanceProgram.schema.json">`technique/pass/instanceProgram`</a>
-   * <a href="schema/techniquePassInstanceProgramAttribute.schema.json">`technique/pass/instanceProgram/attribute`</a>
-   * <a href="schema/techniquePassInstanceProgramUniform.schema.json">`technique/pass/instanceProgram/uniform`</a>
-   * <a href="schema/techniquePassStates.schema.json">`technique/pass/states`</a>
-   * <a href="schema/texture.schema.json">`texture`</a>
 
 <a name="conformance"></a>
 # Conformance
@@ -1178,8 +1326,8 @@ This section will describe the format for each of the GL types stored in the bin
 <a name="acknowledgements"></a>
 # Acknowledgments
 
-* Brandon Jones, for the first version of Three.js loader and all his support in the early days of this project.
-* Tom Fili, Analytical Graphics, Inc.
+* Brandon Jones, Google
+* Tom Fili, Cesium
 * Scott Hunter, Analytical Graphics, Inc.
 * Ed Mackey, Analytical Graphics, Inc.
 
