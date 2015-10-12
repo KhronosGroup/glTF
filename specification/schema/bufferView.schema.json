@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "bufferView",
     "type" : "object",
-    "description" : "A view into a buffer.",
+    "description" : "A view into a buffer generally representing a subset of the buffer.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "buffer" : {

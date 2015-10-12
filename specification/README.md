@@ -1688,14 +1688,85 @@ Application-specific data.
 * **Required**: No
 
 
-
-
 <!-- ======================================================================= -->
 <a name="reference-bufferView"></a>
 ## bufferView
 
+A view into a [buffer](#reference-buffer) generally representing a subset of the buffer.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**buffer**|`string`|The id of the buffer.| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset into the buffer in bytes.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the bufferView in bytes.|No, default: `0`|
+|**target**|`integer`|The target that the WebGL buffer should be bound to.|No|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
 * **Example**: [bufferViews.json](schema/examples/bufferViews.json)
+
+### bufferView.buffer :white_check_mark: 
+
+The id of the buffer.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### bufferView.byteOffset :white_check_mark: 
+
+The offset into the buffer in bytes.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+### bufferView.byteLength
+
+The length of the bufferView in bytes.
+
+* **Type**: `integer`
+* **Required**: No, default: `0`
+* **Minimum**:` >= 0`
+
+### bufferView.target
+
+The target that the WebGL buffer should be bound to.  Valid values correspond to WebGL enums: `34962` (ARRAY_BUFFER) and `34963` (ELEMENT_ARRAY_BUFFER).  When this is not provided, the bufferView contains animation or skin data.
+
+* **Type**: `integer`
+* **Required**: No
+* **Allowed values**: `34962`, `34963`
+* **Related WebGL functions**: `bindBuffer()`
+
+### bufferView.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### bufferView.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### bufferView.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
 
 
 <!-- ======================================================================= -->
