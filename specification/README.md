@@ -1767,28 +1767,207 @@ Application-specific data.
 * **Required**: No
 
 
-
-
 <!-- ======================================================================= -->
 <a name="reference-camera"></a>
 ## camera
 
+A camera's projection.  A node can reference a camera id to apply a transform to place the camera in the scene.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**orthographic**|[`camera.orthographic`](#reference-camera.orthographic)|An orthographic camera containing properties to create an orthographic projection matrix.|No|
+|**perspective**|[`camera.perspective`](#reference-camera.perspective)|A perspective camera containing properties to create a perspective projection matrix.|No|
+|**type**|`string`|Specifies if the camera uses a perspective or orthographic projection.| :white_check_mark: Yes|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [camera.schema.json](schema/camera.schema.json)
 * **Example**: [cameras.json](schema/examples/cameras.json)
+
+### camera.orthographic
+
+An orthographic camera containing properties to create an orthographic projection matrix.
+
+* **Type**: [`camera.orthographic`](#reference-camera.orthographic)
+* **Required**: No
+
+### camera.perspective
+
+A perspective camera containing properties to create a perspective projection matrix.
+
+* **Type**: [`camera.perspective`](#reference-camera.perspective)
+* **Required**: No
+
+### camera.type :white_check_mark: 
+
+Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Allowed values**: `"perspective"`, `"orthographic"`
+
+### camera.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### camera.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### camera.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
 <a name="reference-camera.orthographic"></a>
 ## camera.orthographic
 
+An orthographic camera containing properties to create an orthographic projection matrix.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**xmag**|`number`|The floating-point horizontal magnification of the view.| :white_check_mark: Yes|
+|**ymag**|`number`|The floating-point vertical magnification of the view.| :white_check_mark: Yes|
+|**zfar**|`number`|The floating-point distance to the far clipping plane.| :white_check_mark: Yes|
+|**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
+
+### orthographic.xmag :white_check_mark: 
+
+The floating-point horizontal magnification of the view.
+
+* **Type**: `number`
+* **Required**: Yes
+
+### orthographic.ymag :white_check_mark: 
+
+The floating-point vertical magnification of the view.
+
+* **Type**: `number`
+* **Required**: Yes
+
+### orthographic.zfar :white_check_mark: 
+
+The floating-point distance to the far clipping plane.
+
+* **Type**: `number`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+### orthographic.znear :white_check_mark: 
+
+The floating-point distance to the near clipping plane.
+
+* **Type**: `number`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+### orthographic.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### orthographic.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
 <a name="reference-camera.perspective"></a>
 ## camera.perspective
 
+A perspective camera containing properties to create a perspective projection matrix.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**aspectRatio**|`number`|The floating-point aspect ratio of the field of view.|No|
+|**yfov**|`number`|The floating-point vertical field of view in radians.| :white_check_mark: Yes|
+|**zfar**|`number`|The floating-point distance to the far clipping plane.| :white_check_mark: Yes|
+|**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
+
+### perspective.aspectRatio
+
+The floating-point aspect ratio of the field of view.  When this is undefined, the aspect ratio of the canvas is used.
+
+* **Type**: `number`
+* **Required**: No
+* **Minimum**:` >= 0`
+
+### perspective.yfov :white_check_mark: 
+
+The floating-point vertical field of view in radians.
+
+* **Type**: `number`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+### perspective.zfar :white_check_mark: 
+
+The floating-point distance to the far clipping plane.  zfar must be greater than znear.
+
+* **Type**: `number`
+* **Required**: Yes
+* **Minimum**:` > 0`
+
+### perspective.znear :white_check_mark: 
+
+The floating-point distance to the near clipping plane.  zfar must be greater than znear.
+
+* **Type**: `number`
+* **Required**: Yes
+* **Minimum**:` > 0`
+
+### perspective.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### perspective.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

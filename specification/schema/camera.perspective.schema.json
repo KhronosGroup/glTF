@@ -2,6 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "perspective",
     "type" : "object",
+    "description" : "A perspective camera containing properties to create a perspective projection matrix.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "aspectRatio" : {
@@ -20,13 +21,17 @@
             "type" : "number",
             "description" : "The floating-point distance to the far clipping plane.",
             "required" : true,
-            "exclusiveMinimum" : 0.0
+            "minimum" : 0.0,
+            "exclusiveMinimum" : true,
+            "gltf_detailedDescription" : "The floating-point distance to the far clipping plane.  zfar must be greater than znear."
         },
         "znear" : {
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
             "required" : true,
-            "exclusiveMinimum" : 0.0
+            "minimum" : 0.0,
+            "exclusiveMinimum" : true,
+            "gltf_detailedDescription" : "The floating-point distance to the near clipping plane.  zfar must be greater than znear."
         }
     },
     "additionalProperties" : false
