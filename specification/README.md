@@ -2995,9 +2995,149 @@ Application-specific data.
 
 <!-- ======================================================================= -->
 <a name="reference-technique.states.functions"></a>
-## technique.states.functions
+## functions
+
+Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**blendColor**|`number[4]`|Floating-point values passed to `blendColor()`. [red, green, blue, alpha]|No, default: `[0,0,0,0]`|
+|**blendEquationSeparate**|`integer[2]`|Integer values passed to `blendEquationSeparate()`.|No, default: `[32774,32774]`|
+|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,1,0,0]`|
+|**colorMask**|`boolean[4]`|Boolean values passed to `colorMask()`. [red, green, blue, alpha].|No, default: `[true,true,true,true]`|
+|**cullFace**|`integer[1]`|Integer value passed to `cullFace()`.|No, default: `[1029]`|
+|**depthFunc**|`integer[1]`|Integer values passed to depthFunc().|No, default: `[513]`|
+|**depthMask**|`boolean[1]`|Boolean value passed to `depthMask()`.|No, default: `[true]`|
+|**depthRange**|`number[2]`|Floating-point values passed to `depthRange()`. [zNear, zFar]|No, default: `[0,1]`|
+|**frontFace**|`integer[1]`|Integer value passed to `frontFace()`.|No, default: `[2305]`|
+|**lineWidth**|`number[1]`|Floating-point value passed to `lineWidth()`.|No, default: `[1]`|
+|**polygonOffset**|`number[2]`|Floating-point value passed to `polygonOffset()`.  [factor, units]|No, default: `[0,0]`|
+|**scissor**|`number[4]`|Floating-point value passed to `scissor()`.  [x, y, width, height].|No, default: `[0,0,0,0]`|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
 
 **JSON schema**: [technique.states.functions.schema.json](schema/technique.states.functions.schema.json)
+
+### functions.blendColor
+
+Floating-point values passed to `blendColor()`. [red, green, blue, alpha]
+
+* **Type**: `number[4]`
+* **Required**: No, default: `[0,0,0,0]`
+* **Related WebGL functions**: `blendColor()`
+
+### functions.blendEquationSeparate
+
+Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. Valid values correspond to WebGL enums: `32774` (FUNC_ADD), `32778` (FUNC_SUBTRACT), and `32779` (FUNC_REVERSE_SUBTRACT).
+
+* **Type**: `integer[2]`
+   * Each element in the array must be one of the following values: `32774`, `32778`, `32779`.
+* **Required**: No, default: `[32774,32774]`
+* **Related WebGL functions**: `blendEquationSeparate()`
+
+### functions.blendFuncSeparate
+
+Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAlpha]. Valid values correspond to WebGL enums: `0` (ZERO), `1` (ONE), `768` (SRC_COLOR), `769` (ONE_MINUS_SRC_COLOR), `774` (DST_COLOR), `775` (ONE_MINUS_DST_COLOR), `770` (SRC_ALPHA), `771` (ONE_MINUS_SRC_ALPHA), `772` (DST_ALPHA), `773` (ONE_MINUS_DST_ALPHA), `32769` (CONSTANT_COLOR), `32770` (ONE_MINUS_CONSTANT_COLOR), `32771` (CONSTANT_ALPHA), `32772` (ONE_MINUS_CONSTANT_ALPHA), and `776` (SRC_ALPHA_SATURATE).
+
+* **Type**: `integer[4]`
+   * Each element in the array must be one of the following values: `0`, `1`, `768`, `769`, `774`, `775`, `770`, `771`, `772`, `773`, `32769`, `32770`, `32771`, `32772`, `776`.
+* **Required**: No, default: `[1,1,0,0]`
+* **Related WebGL functions**: `blendFuncSeparate()`
+
+### functions.colorMask
+
+Boolean values passed to `colorMask()`. [red, green, blue, alpha].
+
+* **Type**: `boolean[4]`
+* **Required**: No, default: `[true,true,true,true]`
+* **Related WebGL functions**: `colorMask()`
+
+### functions.cullFace
+
+Integer value passed to `cullFace()`. Valid values correspond to WebGL enums: `1028` (FRONT), `1029` (BACK), and `1032` (FRONT_AND_BACK).
+
+* **Type**: `integer[1]`
+   * Each element in the array must be one of the following values: `1028`, `1029`, `1032`.
+* **Required**: No, default: `[1029]`
+* **Related WebGL functions**: `cullFace()`
+
+### functions.depthFunc
+
+Integer values passed to depthFunc(). Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).
+
+* **Type**: `integer[1]`
+   * Each element in the array must be one of the following values: `512`, `513`, `515`, `514`, `516`, `517`, `518`, `519`.
+* **Required**: No, default: `[513]`
+* **Related WebGL functions**: `depthFunc()`
+
+### functions.depthMask
+
+Boolean value passed to `depthMask()`.
+
+* **Type**: `boolean[1]`
+* **Required**: No, default: `[true]`
+* **Related WebGL functions**: `depthMask()`
+
+### functions.depthRange
+
+Floating-point values passed to `depthRange()`. [zNear, zFar]
+
+* **Type**: `number[2]`
+* **Required**: No, default: `[0,1]`
+* **Related WebGL functions**: `depthRange()`
+
+### functions.frontFace
+
+Integer value passed to frontFace().  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).
+
+* **Type**: `integer[1]`
+   * Each element in the array must be one of the following values: `2304`, `2305`.
+* **Required**: No, default: `[2305]`
+* **Related WebGL functions**: `frontFace()`
+
+### functions.lineWidth
+
+Floating-point value passed to `lineWidth()`.
+
+* **Type**: `number[1]`
+   * Each element in the array must be greater than `0`.
+* **Required**: No, default: `[1]`
+* **Related WebGL functions**: `lineWidth()`
+
+### functions.polygonOffset
+
+Floating-point value passed to `polygonOffset()`.  [factor, units]
+
+* **Type**: `number[2]`
+* **Required**: No, default: `[0,0]`
+* **Related WebGL functions**: `polygonOffset()`
+
+### functions.scissor
+
+Floating-point value passed to `scissor()`.  [x, y, width, height].  The default is the dimensions of the canvas when the WebGL context is created.  width and height must be greater than zero.
+
+* **Type**: `number[4]`
+* **Required**: No, default: `[0,0,0,0]`
+* **Related WebGL functions**: `scissor()`
+
+### functions.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### functions.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
