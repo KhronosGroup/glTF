@@ -2102,7 +2102,7 @@ A set of primitives to be rendered.  A node can contain one or more meshes.  A n
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**primitives**|[`mesh.primitive[]`](reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|No, default: `[]`|
+|**primitives**|[`mesh.primitive[]`](#reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|No, default: `[]`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2116,7 +2116,7 @@ Additional properties are not allowed.
 
 An array of primitives, each defining geometry to be rendered with a material.
 
-* **Type**: [`mesh.primitive[]`](reference-mesh.primitive)
+* **Type**: [`mesh.primitive[]`](#reference-mesh.primitive)
 * **Required**: No, default: `[]`
 
 ### mesh.name
