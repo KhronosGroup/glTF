@@ -2217,8 +2217,132 @@ Application-specific data.
 <a name="reference-node"></a>
 ## node
 
+A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties.  If none are provided, the transform is the identity.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**camera**|`string`|The id of the [camera](#reference-camera) referenced by this node.|No|
+|**children**|`string[]`|The ids of this node's children.|No, default: `[]`|
+|**skeletons**|`string[]`|The id of skeleton nodes.|No|
+|**skin**|`string`|The id of the [skin](#reference-skin) referenced by this node.|No|
+|**jointName**|`string`|Name used when this node is a joint in a skin.|No|
+|**matrix**|`number[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
+|**meshes**|`string[]`|The ids of the [meshes](#reference-mesh) in this node.|No|
+|**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.|No, default: `[0,0,0,0.1]`|
+|**scale**|`number[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
+|**translation**|`number[3]`|The node's translation.|No, default: `[0,0,0]`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [node.schema.json](schema/node.schema.json)
 * **Example**: [nodes.json](schema/examples/nodes.json)
+
+### node.camera
+
+The id of the camera referenced by this node.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+### node.children
+
+The ids of this node's children.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+   * Each element in the array must have length greater than or equal to `1`.
+* **Required**: No, default: `[]`
+
+### node.skeletons
+
+The id of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+   * Each element in the array must have length greater than or equal to `1`.
+* **Required**: No
+
+### node.skin
+
+The id of the skin referenced by this node.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+### node.jointName
+
+Name used when this node is a joint in a skin.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+### node.matrix
+
+A floating-point 4x4 transformation matrix stored in column-major order.
+
+* **Type**: `number[16]`
+* **Required**: No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`
+* **Related WebGL functions**: `uniformMatrix4fv()` with the transpose parameter equal to false
+
+### node.meshes
+
+The ids of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+   * Each element in the array must have length greater than or equal to `1`.
+* **Required**: No
+
+### node.rotation
+
+The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.
+
+* **Type**: `number[4]`
+* **Required**: No, default: `[0,0,0,0.1]`
+
+### node.scale
+
+The node's non-uniform scale.
+
+* **Type**: `number[3]`
+* **Required**: No, default: `[1,1,1]`
+
+### node.translation
+
+The node's translation.
+
+* **Type**: `number[3]`
+* **Required**: No, default: `[0,0,0]`
+
+### node.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### node.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### node.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

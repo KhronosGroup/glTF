@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "node",
     "type" : "object",
-    "description" : "A node in the node hierarchy.  A node can have either camera, meshes, or skeletons/skin/meshes properties defined.",
+    "description" : "A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties.  If none are provided, the transform is the identity.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "camera" : {
@@ -25,7 +25,7 @@
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The id of skeleton nodes.  Each node defines a subtree, which has a jointName of the corresponding element in the referenced skin.joints."            
+            "gltf_detailedDescription" : "The id of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`."            
         },
         "skin" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
@@ -44,7 +44,7 @@
             "minItems" : 16,
             "maxItems" : 16,
             "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
-            "gltf_detailedDescription" : "A floating-point 4x4 transformation matrix stored in column-major order.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity.",
+            "gltf_detailedDescription" : "A floating-point 4x4 transformation matrix stored in column-major order.",
             "gltf_webgl" : "`uniformMatrix4fv()` with the transpose parameter equal to false"
         },
         "meshes" : {
@@ -64,8 +64,7 @@
             },
             "minItems" : 4,
             "maxItems" : 4,
-            "default" : [ 1.0, 0.0, 0.0, 0.0 ],
-            "gltf_detailedDescription" : "The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity."
+            "default" : [ 0.0, 0.0, 0.0, 0.1 ]
         },
         "scale" : {
             "type" : "array",
@@ -75,8 +74,7 @@
             },
             "minItems" : 3,
             "maxItems" : 3,
-            "default" : [ 1.0, 1.0, 1.0 ],
-            "gltf_detailedDescription" : "The node's non-uniform scale.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity."
+            "default" : [ 1.0, 1.0, 1.0 ]
         },
         "translation" : {
             "type" : "array",
@@ -86,8 +84,7 @@
             },
             "minItems" : 3,
             "maxItems" : 3,
-            "default" : [ 0.0, 0.0, 0.0 ],
-            "gltf_detailedDescription" : "The node's translation.  A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.  If none are provided, the transform is the identity."
+            "default" : [ 0.0, 0.0, 0.0 ]
         }
     },
     "dependencies" : {
