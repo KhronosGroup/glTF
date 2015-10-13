@@ -1108,48 +1108,48 @@ For more information on glTF extensions, consult the [extensions registry specif
 <a name="properties"></a>
 # Properties Reference
 
-* [accessor](#reference-accessor)
-* [animation](#reference-animation)
-   * [channel](#reference-animation.channel)
-      * [target](#reference-animation.channel.target)
-   * [sampler](#reference-animation.sampler)
-* [asset](#reference-asset)
-   * [profile](#reference-asset.profile)
-* [buffer](#reference-buffer)
-* [bufferView](#reference-bufferView)
-* [camera](#reference-camera)
-   * [orthographic](#reference-camera.orthographic)
-   * [perspective](#reference-camera.perspective)
-* [glTF](#reference-glTF) (root object for an asset)
-* [image](#reference-image)
-* [material](#reference-material)
-* [mesh](#reference-mesh)
-   * [primitive](#reference-mesh.primitive)
-* [node](#reference-node)
-* [program](#reference-program)
-* [sampler](#reference-sampler)
-* [scene](#reference-scene)
-* [shader](#reference-shader)
-* [skin](#reference-skin)
-* [technique](#reference-technique)
-   * [parameters](#reference-technique.parameters)
-   * [states](#reference-technique.states)
-      * [functions](#reference-technique.states.functions)
-* [texture](#reference-texture)
+* [`accessor`](#reference-accessor)
+* [`animation`](#reference-animation)
+   * [`channel`](#reference-animation.channel)
+      * [`target`](#reference-animation.channel.target)
+   * [`sampler`](#reference-animation.sampler)
+* [`asset`](#reference-asset)
+   * [`profile`](#reference-asset.profile)
+* [`buffer`](#reference-buffer)
+* [`bufferView`](#reference-bufferView)
+* [`camera`](#reference-camera)
+   * [`orthographic`](#reference-camera.orthographic)
+   * [`perspective`](#reference-camera.perspective)
+* [`glTF`](#reference-glTF) (root object for an asset)
+* [`image`](#reference-image)
+* [`material`](#reference-material)
+* [`mesh`](#reference-mesh)
+   * [`primitive`](#reference-mesh.primitive)
+* [`node`](#reference-node)
+* [`program`](#reference-program)
+* [`sampler`](#reference-sampler)
+* [`scene`](#reference-scene)
+* [`shader`](#reference-shader)
+* [`skin`](#reference-skin)
+* [`technique`](#reference-technique)
+   * [`parameters`](#reference-technique.parameters)
+   * [`states`](#reference-technique.states)
+      * [`functions`](#reference-technique.states.functions)
+* [`texture`](#reference-texture)
 
 
 <!-- ======================================================================= -->
 <a name="reference-accessor"></a>
 ## accessor
 
-A typed view into a [bufferView](#reference-bufferView).  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
+A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**bufferView**|`string`|The id of the bufferView.| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset relative to the start of the bufferView in bytes.| :white_check_mark: Yes|
+|**bufferView**|`string`|The id of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
 |**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
 |**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
 |**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
@@ -1167,7 +1167,7 @@ Additional properties are not allowed.
 
 ### accessor.bufferView :white_check_mark: 
 
-The id of the bufferView.
+The id of the [`bufferView`](#reference-bufferView).
 
 * **Type**: `string`
 * **Required**: Yes
@@ -1175,7 +1175,7 @@ The id of the bufferView.
 
 ### accessor.byteOffset :white_check_mark: 
 
-The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the data type.
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the data type.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -1319,8 +1319,6 @@ Application-specific data.
 
 * **Type**: `any`
 * **Required**: No
-
-
 
 
 <!-- ======================================================================= -->
@@ -1681,14 +1679,14 @@ Application-specific data.
 <a name="reference-bufferView"></a>
 ## bufferView
 
-A view into a [buffer](#reference-buffer) generally representing a subset of the buffer.
+A view into a [`buffer`](#reference-buffer) generally representing a subset of the buffer.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**buffer**|`string`|The id of the buffer.| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset into the buffer in bytes.| :white_check_mark: Yes|
+|**buffer**|`string`|The id of the [`buffer`](#reference-buffer).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset into the [`buffer`](#reference-buffer) in bytes.| :white_check_mark: Yes|
 |**byteLength**|`integer`|The length of the bufferView in bytes.|No, default: `0`|
 |**target**|`integer`|The target that the WebGL buffer should be bound to.|No|
 |**name**|`string`|The user-defined name of this object.|No|
@@ -1702,7 +1700,7 @@ Additional properties are not allowed.
 
 ### bufferView.buffer :white_check_mark: 
 
-The id of the buffer.
+The id of the [`buffer`](#reference-buffer).
 
 * **Type**: `string`
 * **Required**: Yes
@@ -1710,7 +1708,7 @@ The id of the buffer.
 
 ### bufferView.byteOffset :white_check_mark: 
 
-The offset into the buffer in bytes.
+The offset into the [`buffer`](#reference-buffer) in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -2303,7 +2301,7 @@ An array of primitives, each defining geometry to be rendered with a material.
 
 ### mesh.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a mesh and a buffer could have the same name, or two meshes could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2405,13 +2403,13 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**camera**|`string`|The id of the [camera](#reference-camera) referenced by this node.|No|
+|**camera**|`string`|The id of the [`camera`](#reference-camera) referenced by this node.|No|
 |**children**|`string[]`|The ids of this node's children.|No, default: `[]`|
 |**skeletons**|`string[]`|The id of skeleton nodes.|No|
 |**skin**|`string`|The id of the [`skin`](#reference-skin) referenced by this node.|No|
 |**jointName**|`string`|Name used when this node is a joint in a skin.|No|
 |**matrix**|`number[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
-|**meshes**|`string[]`|The ids of the [`mesh`es](#reference-mesh) in this node.|No|
+|**meshes**|`string[]`|The ids of the [`mesh`](#reference-mesh) objects in this node.|No|
 |**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.|No, default: `[0,0,0,0.1]`|
 |**scale**|`number[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
 |**translation**|`number[3]`|The node's translation.|No, default: `[0,0,0]`|
@@ -2506,7 +2504,7 @@ The node's translation.
 
 ### node.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a node and a buffer could have the same name, or two nodes could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2578,7 +2576,7 @@ The id of the vertex [`shader`](#reference-shader).
 
 ### program.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a program and a buffer could have the same name, or two programs could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2662,7 +2660,7 @@ t wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE
 
 ### sampler.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a sampler and a buffer could have the same name, or two samplers could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2714,7 +2712,7 @@ The ids of each root [`node`](#reference-node).
 
 ### scene.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a scene and a buffer could have the same name, or two scenes could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2776,7 +2774,7 @@ The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VER
 
 ### shader.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a shader and a buffer could have the same name, or two shaders could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2845,7 +2843,7 @@ Joint names of the joints (nodes with a `jointName` property) in this skin.  The
 
 ### skin.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a skin and a buffer could have the same name, or two skins could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -2931,7 +2929,7 @@ Fixed-function rendering states.
 
 ### technique.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a technique and a buffer could have the same name, or two techniques could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
@@ -3299,7 +3297,7 @@ Texel datatype.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE),
 
 ### texture.name
 
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+The user-defined name of this object.  This is not necessarily unique, e.g., a texture and a buffer could have the same name, or two textures could even have the same name.
 
 * **Type**: `string`
 * **Required**: No
