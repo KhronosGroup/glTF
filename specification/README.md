@@ -2505,8 +2505,54 @@ Application-specific data.
 <a name="reference-scene"></a>
 ## scene
 
+The root nodes of a scene.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**nodes**|`string[]`|The ids of each root [node](#reference-node).|No, default: `[]`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [scene.schema.json](schema/scene.schema.json)
 * **Example**: [scenes.json](schema/examples/scenes.json)
+
+### scene.nodes
+
+The ids of each root [node](#reference-node).
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+   * Each element in the array must have length greater than or equal to `1`.
+* **Required**: No, default: `[]`
+
+### scene.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### scene.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### scene.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
 
 
 <!-- ======================================================================= -->
