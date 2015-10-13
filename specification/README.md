@@ -42,7 +42,6 @@ Contributors
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
-* [References](#references)
 
 <a name="introduction"></a>
 # Introduction
@@ -3326,9 +3325,3 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Ed Mackey, Analytical Graphics, Inc.
-
-<a name="references"></a>
-# References
-
-* [WebGL 1.0.2 spec](https://www.khronos.org/registry/webgl/specs/1.0/)
-* [COLLADA 1.5 spec](http://www.khronos.org/files/collada_spec_1_5.pdf)
