@@ -1274,7 +1274,7 @@ A keyframe animation.
 |---|----|-----------|--------|
 |**channels**|[`animation.channel[]`](#reference-animation.channel)|An array of channels, each of which targets an animation's sampler at a node's property.|No, default: `[]`|
 |**parameters**|`object`|A dictionary object of strings whose values are ids of accessors with keyframe data, e.g., time, translation, rotation, etc.|No, default: `{}`|
-|**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler)s that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
+|**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1301,7 +1301,7 @@ A dictionary object of strings whose values are ids of accessors with keyframe d
 
 ### animation.samplers
 
-A dictionary object of [`animation.sampler`](#reference-animation.sampler)s that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
+A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -1978,24 +1978,24 @@ The root object for a glTF asset.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**accessors**|`object`|A dictionary object of [`accessor`](#reference-accessor)s.|No, default: `{}`|
-|**animations**|`object`|A dictionary object of keyframe [`animation`](#reference-animation)s.|No, default: `{}`|
+|**accessors**|`object`|A dictionary object of [`accessor`](#reference-accessor) objects.|No, default: `{}`|
+|**animations**|`object`|A dictionary object of keyframe [`animation`](#reference-animation) objects.|No, default: `{}`|
 |**asset**|[`asset`](#reference-asset)|Metadata about the glTF asset.|No, default: `{}`|
-|**buffers**|`object`|A dictionary object of [`buffer`](#reference-buffer)s.|No, default: `{}`|
-|**bufferViews**|`object`|A dictionary object of [`bufferView`](#reference-bufferView)s.|No, default: `{}`|
-|**cameras**|`object`|A dictionary object of [`camera`](#reference-camera)s.|No, default: `{}`|
-|**images**|`object`|A dictionary object of [`image`](#reference-image)s.|No, default: `{}`|
-|**materials**|`object`|A dictionary object of [`material`](#reference-material)s.|No, default: `{}`|
+|**buffers**|`object`|A dictionary object of [`buffer`](#reference-buffer) objects.|No, default: `{}`|
+|**bufferViews**|`object`|A dictionary object of [`bufferView`](#reference-bufferView) objects.|No, default: `{}`|
+|**cameras**|`object`|A dictionary object of [`camera`](#reference-camera) objects.|No, default: `{}`|
+|**images**|`object`|A dictionary object of [`image`](#reference-image) objects.|No, default: `{}`|
+|**materials**|`object`|A dictionary object of [`material`](#reference-material) objects.|No, default: `{}`|
 |**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh)es.|No, default: `{}`|
-|**nodes**|`object`|A dictionary object of [`node`](#reference-node)s.|No, default: `{}`|
-|**programs**|`object`|A dictionary object of [`program`](#reference-program)s.|No, default: `{}`|
-|**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler)s.|No, default: `{}`|
+|**nodes**|`object`|A dictionary object of [`node`](#reference-node) objects.|No, default: `{}`|
+|**programs**|`object`|A dictionary object of [`program`](#reference-program) objects.|No, default: `{}`|
+|**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler) objects.|No, default: `{}`|
 |**scene**|`string`|The id of the default scene.|No|
-|**scenes**|`object`|A dictionary object of [`scene`](#reference-scene)s.|No, default: `{}`|
-|**shaders**|`object`|A dictionary object of [`shader`](#reference-shader)s.|No, default: `{}`|
-|**skins**|`object`|A dictionary object of [`skin`](#reference-skin)s.|No, default: `{}`|
-|**techniques**|`object`|A dictionary object of [`technique`](#reference-technique)s.|No, default: `{}`|
-|**textures**|`object`|A dictionary object of [`texture`](#reference-texture)s.|No, default: `{}`|
+|**scenes**|`object`|A dictionary object of [`scene`](#reference-scene) objects.|No, default: `{}`|
+|**shaders**|`object`|A dictionary object of [`shader`](#reference-shader) objects.|No, default: `{}`|
+|**skins**|`object`|A dictionary object of [`skin`](#reference-skin) objects.|No, default: `{}`|
+|**techniques**|`object`|A dictionary object of [`technique`](#reference-technique) objects.|No, default: `{}`|
+|**textures**|`object`|A dictionary object of [`texture`](#reference-texture) objects.|No, default: `{}`|
 |**extensionsUsed**|`string[]`|Names of extensions used somewhere in this asset.|No, default: `[]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2006,7 +2006,7 @@ Additional properties are not allowed.
 
 ### glTF.accessors
 
-A dictionary object of [`accessor`](#reference-accessor)s.  The name of each accessor is an id in the global glTF namespace that is used to reference the accessor.  An accessor is a A typed view into a bufferView.
+A dictionary object of [`accessor`](#reference-accessor) objects.  The name of each accessor is an id in the global glTF namespace that is used to reference the accessor.  An accessor is a A typed view into a bufferView.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2014,7 +2014,7 @@ A dictionary object of [`accessor`](#reference-accessor)s.  The name of each acc
 
 ### glTF.animations
 
-A dictionary object of keyframe [`animation`](#reference-animation)s.  The name of each animation is an id in the global glTF namespace that is used to reference the animation.
+A dictionary object of keyframe [`animation`](#reference-animation) objects.  The name of each animation is an id in the global glTF namespace that is used to reference the animation.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2029,7 +2029,7 @@ Metadata about the glTF asset.
 
 ### glTF.buffers
 
-A dictionary object of [`buffer`](#reference-buffer)s.  The name of each buffer is an id in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins.
+A dictionary object of [`buffer`](#reference-buffer) objects.  The name of each buffer is an id in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2037,7 +2037,7 @@ A dictionary object of [`buffer`](#reference-buffer)s.  The name of each buffer 
 
 ### glTF.bufferViews
 
-A dictionary object of [`bufferView`](#reference-bufferView)s.  The name of each bufferView is an id in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer.
+A dictionary object of [`bufferView`](#reference-bufferView) objects.  The name of each bufferView is an id in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2045,7 +2045,7 @@ A dictionary object of [`bufferView`](#reference-bufferView)s.  The name of each
 
 ### glTF.cameras
 
-A dictionary object of [`camera`](#reference-camera)s.  The name of each camera is an id in the global glTF namespace that is used to reference the camera.  A camera defines a projection matrix.
+A dictionary object of [`camera`](#reference-camera) objects.  The name of each camera is an id in the global glTF namespace that is used to reference the camera.  A camera defines a projection matrix.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2053,7 +2053,7 @@ A dictionary object of [`camera`](#reference-camera)s.  The name of each camera 
 
 ### glTF.images
 
-A dictionary object of [`image`](#reference-image)s.  The name of each image is an id in the global glTF namespace that is used to reference the image.  An image defines data used to create a texture.
+A dictionary object of [`image`](#reference-image) objects.  The name of each image is an id in the global glTF namespace that is used to reference the image.  An image defines data used to create a texture.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2061,7 +2061,7 @@ A dictionary object of [`image`](#reference-image)s.  The name of each image is 
 
 ### glTF.materials
 
-A dictionary object of [`material`](#reference-material)s.  The name of each material is an id in the global glTF namespace that is used to reference the material.  A material defines the appearance of a primitive.
+A dictionary object of [`material`](#reference-material) objects.  The name of each material is an id in the global glTF namespace that is used to reference the material.  A material defines the appearance of a primitive.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2077,7 +2077,7 @@ A dictionary object of [`mesh`](#reference-mesh)es.  The name of each mesh is an
 
 ### glTF.nodes
 
-A dictionary object of [`node`](#reference-node)s in the node hierarchy.  The name of each node is an id in the global glTF namespace that is used to reference the node.
+A dictionary object of [`node`](#reference-node) objects in the node hierarchy.  The name of each node is an id in the global glTF namespace that is used to reference the node.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2085,7 +2085,7 @@ A dictionary object of [`node`](#reference-node)s in the node hierarchy.  The na
 
 ### glTF.programs
 
-A dictionary object of shader [`program`](#reference-program)s.  The name of each program is an id in the global glTF namespace that is used to reference the program.
+A dictionary object of shader [`program`](#reference-program) objects.  The name of each program is an id in the global glTF namespace that is used to reference the program.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2093,7 +2093,7 @@ A dictionary object of shader [`program`](#reference-program)s.  The name of eac
 
 ### glTF.samplers
 
-A dictionary object of [`sampler`](#reference-sampler)s.  The name of each sampler is an id in the global glTF namespace that is used to reference the sampler.  A sampler contains properties for texture filtering and wrapping modes.
+A dictionary object of [`sampler`](#reference-sampler) objects.  The name of each sampler is an id in the global glTF namespace that is used to reference the sampler.  A sampler contains properties for texture filtering and wrapping modes.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2109,7 +2109,7 @@ The id of the default scene.
 
 ### glTF.scenes
 
-A dictionary object of [`scene`](#reference-scene)s.  The name of each scene is an id in the global glTF namespace that is used to reference the scene.
+A dictionary object of [`scene`](#reference-scene) objects.  The name of each scene is an id in the global glTF namespace that is used to reference the scene.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2117,7 +2117,7 @@ A dictionary object of [`scene`](#reference-scene)s.  The name of each scene is 
 
 ### glTF.shaders
 
-A dictionary object of [`shader`](#reference-shader)s.  The name of each shader is an id in the global glTF namespace that is used to reference the shader.
+A dictionary object of [`shader`](#reference-shader) objects.  The name of each shader is an id in the global glTF namespace that is used to reference the shader.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2125,7 +2125,7 @@ A dictionary object of [`shader`](#reference-shader)s.  The name of each shader 
 
 ### glTF.skins
 
-A dictionary object of [`skin`](#reference-skin)s.  The name of each skin is an id in the global glTF namespace that is used to reference the skin.  A skin is defined by joints and matrices.
+A dictionary object of [`skin`](#reference-skin) objects.  The name of each skin is an id in the global glTF namespace that is used to reference the skin.  A skin is defined by joints and matrices.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2133,7 +2133,7 @@ A dictionary object of [`skin`](#reference-skin)s.  The name of each skin is an 
 
 ### glTF.techniques
 
-A dictionary object of [`technique`](#reference-technique)s.  The name of each technique is an id in the global glTF namespace that is used to reference the technique.  A technique is a template for a material appearance.
+A dictionary object of [`technique`](#reference-technique) objects.  The name of each technique is an id in the global glTF namespace that is used to reference the technique.  A technique is a template for a material appearance.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2141,7 +2141,7 @@ A dictionary object of [`technique`](#reference-technique)s.  The name of each t
 
 ### glTF.textures
 
-A dictionary object of [`texture`](#reference-texture)s.  The name of each texture is an id in the global glTF namespace that is used to reference the texture.
+A dictionary object of [`texture`](#reference-texture) objects.  The name of each texture is an id in the global glTF namespace that is used to reference the texture.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
