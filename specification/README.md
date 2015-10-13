@@ -2553,14 +2553,66 @@ Application-specific data.
 * **Required**: No
 
 
-
-
 <!-- ======================================================================= -->
 <a name="reference-shader"></a>
 ## shader
 
+A vertex or fragment shader.
+
+**Related WebGL functions**: `createShader()`, `deleteShader()`, `shaderSource()`, `compileShader()`, `getShaderParameter()`, and `getShaderInfoLog()`
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**uri**|`string`|The uri of the GLSL source.| :white_check_mark: Yes|
+|**type**|`integer`|The shader stage.| :white_check_mark: Yes|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [shader.schema.json](schema/shader.schema.json)
 * **Example**: [shaders.json](schema/examples/shaders.json)
+
+### shader.uri :white_check_mark: 
+
+The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Format**: uri
+
+### shader.type :white_check_mark: 
+
+The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VERTEX_SHADER).
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `35632`, `35633`
+
+### shader.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### shader.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### shader.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

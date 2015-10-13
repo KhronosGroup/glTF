@@ -17,7 +17,7 @@
             "description" : "The shader stage.",
             "enum" : [35632, 35633],
             "required" : true,
-            "gltf_detailedDescription" : "The shader stage.  Allowed values are 35632 (FRAGMENT_SHADER) and 35633 (VERTEX_SHADER)."
+            "gltf_detailedDescription" : "The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VERTEX_SHADER)."
         }
     },
     "additionalProperties" : false,
