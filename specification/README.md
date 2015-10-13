@@ -2421,8 +2421,84 @@ Application-specific data.
 <a name="reference-sampler"></a>
 ## sampler
 
+Texture sampler properties for filtering and wrapping modes.
+
+**Related WebGL functions**: `texParameterf()`
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**magFilter**|`integer`|Magnification filter.|No, default: `9729`|
+|**minFilter**|`integer`|Minification filter.|No, default: `9986`|
+|**wrapS**|`integer`|s wrapping mode.|No, default: `10497`|
+|**wrapT**|`integer`|t wrapping mode.|No, default: `10497`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
 * **Example**: [samplers.json](schema/examples/samplers.json)
+
+### sampler.magFilter
+
+Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).
+
+* **Type**: `integer`
+* **Required**: No, default: `9729`
+* **Allowed values**: `9728`, `9729`
+* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_MAG_FILTER
+
+### sampler.minFilter
+
+Minification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST), `9729` (LINEAR), `9984` (NEAREST_MIPMAP_NEAREST), `9985` (LINEAR_MIPMAP_NEAREST), `9986` (NEAREST_MIPMAP_LINEAR), and `9987` (LINEAR_MIPMAP_LINEAR).
+
+* **Type**: `integer`
+* **Required**: No, default: `9986`
+* **Allowed values**: `9728`, `9729`, `9984`, `9985`, `9986`, `9987`
+* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_MIN_FILTER
+
+### sampler.wrapS
+
+s wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).
+
+* **Type**: `integer`
+* **Required**: No, default: `10497`
+* **Allowed values**: `33071`, `33648`, `10497`
+* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_WRAP_S
+
+### sampler.wrapT
+
+t wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).
+
+* **Type**: `integer`
+* **Required**: No, default: `10497`
+* **Allowed values**: `33071`, `33648`, `10497`
+* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_WRAP_T
+
+### sampler.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### sampler.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### sampler.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

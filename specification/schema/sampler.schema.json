@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "sampler",
     "type" : "object",
-    "description" : "Texture sampler properties.",
+    "description" : "Texture sampler properties for filtering and wrapping modes.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "magFilter": {
