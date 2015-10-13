@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "extension",
     "type" : "object",
-    "description" : "Properties specific an extension.",
+    "description" : "Dictionary object with extension-specific objects.",
     "properties" : {
     },
     "additionalProperties" : {

@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "values",
     "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
-    "description" : "Parameter values that override the values in the technique with the same parameter name."
+    "description" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value."
 }

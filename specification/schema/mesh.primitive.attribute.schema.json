@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "attribute",
     "extends" : { "$ref" : "glTFid.schema.json" },
-    "description" : "The id of the accessor that contains the attribute."
+    "description" : "A dictionary object of strings, where each string is the id of the accessor containing an attribute."
 }

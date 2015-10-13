@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "accessor",
     "type" : "object",
-    "description" : "A typed accessor into a bufferView.",
+    "description" : "A typed view into a bufferView.  A bufferView contain raw binary data.  An accessors provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "bufferView" : {
@@ -12,10 +12,10 @@
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset relative to the bufferView in bytes.",
+            "description" : "The offset relative to the start of the bufferView in bytes.",
             "minimum" : 0,
             "required" : true,
-            "gltf_detailedDescription" : "The offset relative to the bufferView in bytes.  This must be a multiple of the size of the data type.",
+            "gltf_detailedDescription" : "The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the data type.",
             "gltf_webgl" : "`vertexAttribPointer()` offset parameter"
         },
         "byteStride" : {
@@ -32,19 +32,21 @@
             "description" : "The datatype of components in the attribute.",
             "enum" : [5120, 5121, 5122, 5123, 5126],
             "required" : true,
-            "gltf_detailedDescription" : "The datatype of components in the attribute.  Valid values are BYTE (5120), UNSIGNED_BYTE (5121), SHORT (5122), UNSIGNED_SHORT (5123), FLOAT (5126).  The corresponding typed arrays are Int8Array, Uint8Array, Int16Array, Uint16Array, and Float32Array."
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively."
         },
         "count" : {
             "type" : "integer",
-            "description" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.",
+            "description" : "The number of attributes referenced by this accessor.",
             "minimum" : 1,
-            "required" : true
+            "required" : true,
+            "gltf_detailedDescription" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components."
         },
         "type" : {
             "type" : "string",
             "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
             "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
-            "required" : true
+            "required" : true,
+            "gltf_detailedDescription" : "Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix."
         },        
         "max" : {
             "type" : "array",

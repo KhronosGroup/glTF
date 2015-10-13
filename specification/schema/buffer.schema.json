@@ -2,7 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "buffer",
     "type" : "object",
-    "description" : "Buffers contain geometry, animation, or skins.",
+    "description" : "A buffer points to binary geometry, animation, or skins.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
         "uri" : {
@@ -20,7 +20,7 @@
         },
         "type" : {
             "type" : "string",
-            "description" : "XMLHttpRequest responseType.",
+            "description" : "XMLHttpRequest `responseType`.",
             "enum" : ["arraybuffer", "text"],
             "default" : "arraybuffer"
         }

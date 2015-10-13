@@ -2,6 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "asset",
     "type" : "object",
+    "description" : "Metadata about the glTF asset.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "copyright" : {

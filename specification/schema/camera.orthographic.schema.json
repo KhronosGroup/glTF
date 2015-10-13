@@ -2,6 +2,7 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "orthographic",
     "type" : "object",
+    "description" : "An orthographic camera containing properties to create an orthographic projection matrix.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "xmag" : {

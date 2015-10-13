@@ -2,18 +2,23 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "technique",
     "type" : "object",
-    "description" : "Specifies shading and its inputs.",
+    "description" : "A template for a material appearances.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
         "parameters" : {
+            "type" : "object",
+            "description" : "A dictionary object of technique.parameters objects.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.parameters.schema.json"
             },
-            "default" : {}
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value."
         },
         "attributes" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings that maps GLSL attribute names to technique parameter ids.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -27,6 +32,8 @@
             "required" : true
         },
         "uniforms" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings that maps GLSL uniform names to technique parameter ids.",
             "properties" : {
             },
             "additionalProperties" : {

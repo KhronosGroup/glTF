@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "extras",
     "type" : "any",
-    "description" : "Optional application-specific data."
+    "description" : "Application-specific data."
 }

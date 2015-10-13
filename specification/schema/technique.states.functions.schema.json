@@ -1,0 +1,155 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "functions",
+    "type" : "object",
+    "description" : "Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "blendColor" : {
+            "type" : "array",
+            "description" : "Floating-point values passed to `blendColor()`. [red, green, blue, alpha]",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [0.0, 0.0, 0.0, 0.0],
+            "gltf_webgl" : "`blendColor()`"
+        },
+        "blendEquationSeparate" : {
+            "type" : "array",
+            "description" : "Integer values passed to `blendEquationSeparate()`.",
+            "items" : {
+                "type" : "integer",
+                "enum" : [32774, 32778, 32779]
+            },
+            "minItems" : 2,
+            "maxItems" : 2,
+            "default" : [32774, 32774],
+            "gltf_detailedDescription" : "Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. Valid values correspond to WebGL enums: `32774` (FUNC_ADD), `32778` (FUNC_SUBTRACT), and `32779` (FUNC_REVERSE_SUBTRACT).",
+            "gltf_webgl" : "`blendEquationSeparate()`"
+        },
+        "blendFuncSeparate" : {
+            "type" : "array",
+            "description" : "Integer values passed to `blendFuncSeparate()`.",
+            "items" : {
+                "type" : "integer",
+                "enum" : [0, 1, 768, 769, 774, 775, 770, 771, 772, 773, 32769, 32770, 32771, 32772, 776]
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [1, 1, 0, 0],
+            "gltf_detailedDescription" : "Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAlpha]. Valid values correspond to WebGL enums: `0` (ZERO), `1` (ONE), `768` (SRC_COLOR), `769` (ONE_MINUS_SRC_COLOR), `774` (DST_COLOR), `775` (ONE_MINUS_DST_COLOR), `770` (SRC_ALPHA), `771` (ONE_MINUS_SRC_ALPHA), `772` (DST_ALPHA), `773` (ONE_MINUS_DST_ALPHA), `32769` (CONSTANT_COLOR), `32770` (ONE_MINUS_CONSTANT_COLOR), `32771` (CONSTANT_ALPHA), `32772` (ONE_MINUS_CONSTANT_ALPHA), and `776` (SRC_ALPHA_SATURATE).",
+            "gltf_webgl" : "`blendFuncSeparate()`"
+        },
+        "colorMask" : {
+            "type" : "array",
+            "description" : "Boolean values passed to `colorMask()`. [red, green, blue, alpha].",
+            "items" : {
+                "type" : "boolean"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [true, true, true, true],
+            "gltf_webgl" : "`colorMask()`"
+        },
+        "cullFace" : {
+            "type" : "array",
+            "description" : "Integer value passed to `cullFace()`.",
+            "items" : {
+                "type" : "integer",
+                "enum" : [1028, 1029, 1032]
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "default" : [1029],
+            "gltf_detailedDescription" : "Integer value passed to `cullFace()`. Valid values correspond to WebGL enums: `1028` (FRONT), `1029` (BACK), and `1032` (FRONT_AND_BACK).",
+            "gltf_webgl" : "`cullFace()`"
+        },
+        "depthFunc" : {
+            "type" : "array",
+            "description" : "Integer values passed to depthFunc().",
+            "items" : {
+                "type" : "integer",
+                "enum" : [512, 513, 515, 514, 516, 517, 518, 519]
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "default" : [513],
+            "gltf_detailedDescription" : "Integer values passed to depthFunc(). Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).",
+            "gltf_webgl" : "`depthFunc()`"
+        },
+        "depthMask" : {
+            "type" : "array",
+            "description" : "Boolean value passed to `depthMask()`.",
+            "items" : {
+                "type" : "boolean"
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "default" : [true],
+            "gltf_webgl" : "`depthMask()`"
+        },
+        "depthRange" : {
+            "type" : "array",
+            "description" : "Floating-point values passed to `depthRange()`. [zNear, zFar]",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 2,
+            "maxItems" : 2,
+            "default" : [0.0, 1.0],
+            "gltf_webgl" : "`depthRange()`"
+        },
+        "frontFace" : {
+            "type" : "array",
+            "description" : "Integer value passed to `frontFace()`.",
+            "items" : {
+                "type" : "integer",
+                "enum" : [2304, 2305]
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "default" : [2305],
+            "gltf_detailedDescription" : "Integer value passed to frontFace().  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).",
+            "gltf_webgl" : "`frontFace()`"
+        },
+        "lineWidth" : {
+            "type" : "array",
+            "description" : "Floating-point value passed to `lineWidth()`.",
+            "items" : {
+                "type" : "number",
+                "minimum" : 0.0,
+                "exclusiveMinimum" : true
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "default" : [1.0],
+            "gltf_webgl" : "`lineWidth()`"
+        },
+        "polygonOffset" : {
+            "type" : "array",
+            "description" : "Floating-point value passed to `polygonOffset()`.  [factor, units]",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 2,
+            "maxItems" : 2,
+            "default" : [0.0, 0.0],
+            "gltf_webgl" : "`polygonOffset()`"
+        },
+        "scissor" : {
+            "type" : "array",
+            "description" : "Floating-point value passed to `scissor()`.  [x, y, width, height].",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [0.0, 0.0, 0.0, 0.0],
+            "gltf_detailedDescription" : "Floating-point value passed to `scissor()`.  [x, y, width, height].  The default is the dimensions of the canvas when the WebGL context is created.  width and height must be greater than zero.",
+            "gltf_webgl" : "`scissor()`"
+        }
+    },
+    "additionalProperties" : false
+}
