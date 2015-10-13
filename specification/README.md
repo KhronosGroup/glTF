@@ -2619,8 +2619,69 @@ Application-specific data.
 <a name="reference-skin"></a>
 ## skin
 
+Joints and matrices defining a skin.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bindShapeMatrix**|`number[16]`|Floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
+|**inverseBindMatrices**|`string`|The id of the accessor containing the floating-point 4x4 inverse-bind matrices.| :white_check_mark: Yes|
+|**jointNames**|`string[]`|Joint names of the joints (nodes with a `jointName` property) in this skin.| :white_check_mark: Yes|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [skin.schema.json](schema/skin.schema.json)
 * **Example**: [skins.json](schema/examples/skins.json)
+
+### skin.bindShapeMatrix
+
+Floating-point 4x4 transformation matrix stored in column-major order.
+
+* **Type**: `number[16]`
+* **Required**: No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`
+
+### skin.inverseBindMatrices :white_check_mark: 
+
+The id of the accessor containing the floating-point 4x4 inverse-bind matrices.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### skin.jointNames :white_check_mark: 
+
+Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the length of any skeletons array referencing the skin.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+   * Each element in the array must have length greater than or equal to `1`.
+* **Required**: Yes
+
+### skin.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### skin.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### skin.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->

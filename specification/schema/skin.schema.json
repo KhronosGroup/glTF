@@ -22,13 +22,13 @@
         },
         "jointNames" : {
             "type" : "array",
-            "description" : "Joint names of the joints (nodes with a jointName property) in this skin.",
+            "description" : "Joint names of the joints (nodes with a `jointName` property) in this skin.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
             "required" : true,
-            "gltf_detailedDescription" : "Joint names of the joints (nodes with a jointName property) in this skin.  The array length is the same as the count property of the inverseBindMatrices accessor, and the same as the length of any skeletons array referencing the skin."
+            "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the length of any skeletons array referencing the skin."
         }
     },
     "additionalProperties" : false
