@@ -1134,6 +1134,7 @@ For more information on glTF extensions, consult the [extensions registry specif
 * [technique](#reference-technique)
    * [parameters](#reference-technique.parameters)
    * [states](#reference-technique.states)
+      * [functions](#reference-technique.states.functions)
 * [texture](#reference-texture)
 
 
@@ -2942,9 +2943,61 @@ Application-specific data.
 
 <!-- ======================================================================= -->
 <a name="reference-technique.states"></a>
-## technique.states
+## states
+
+Fixed-function rendering states.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**enable**|`integer[]`|WebGL states to enable.|No, default: `[]`|
+|**functions**|[`technique.states.functions`](#reference-technique.states.functions)|Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
 
 **JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
+
+### states.enable
+
+WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), `32926` (SAMPLE_ALPHA_TO_COVERAGE), and `3089` (SCISSOR_TEST).
+
+* **Type**: `integer[]`
+   * Each element in the array must be unique.
+   * Each element in the array must be one of the following values: `3042`, `2884`, `2929`, `32823`, `32926`, `3089`.
+* **Required**: No, default: `[]`
+* **Related WebGL functions**: `enable()` and `disable()`
+
+### states.functions
+
+Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
+
+* **Type**: [`technique.states.functions`](#reference-technique.states.functions)
+* **Required**: No
+
+### states.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### states.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+
+<!-- ======================================================================= -->
+<a name="reference-technique.states.functions"></a>
+## technique.states.functions
+
+**JSON schema**: [technique.states.functions.schema.json](schema/technique.states.functions.schema.json)
 
 
 <!-- ======================================================================= -->

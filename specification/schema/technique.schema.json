@@ -7,14 +7,14 @@
     "properties": {
         "parameters" : {
             "type" : "object",
-            "description" : "A dictionary object of parameter technique.parameters objects.",
+            "description" : "A dictionary object of technique.parameters objects.",
             "properties" : {
             },
             "additionalProperties" : {
                 "$ref" : "technique.parameters.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of parameter technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value."
+            "gltf_detailedDescription" : "A dictionary object of technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value."
         },
         "attributes" : {
             "type" : "object",
