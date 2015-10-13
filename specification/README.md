@@ -41,7 +41,6 @@ Contributors
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
-* [Conformance](#conformance)
 * [Acknowledgements](#acknowledgements)
 * [References](#references)
 
@@ -101,8 +100,6 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
-
-<mark>*Todo: someone needs to get a MIME type RFC going with IANA...*</mark>
 
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
@@ -292,9 +289,6 @@ The next example defines the transformation for a camera node using the `matrix`
         "name": "Camera01"
     },
 ```
-
-
-<mark>*Todo:conformance - what if author supplies both matrix and TRS? Which wins? Undefined?*</mark>
 
 ### Coordinate System and Units
 
@@ -1085,8 +1079,6 @@ Only the `version` property is required. Example:
     "version": 0.8
 }
 ```
-
-<mark>*Todo: Patrick what do we say about profiles, if anything?.*</mark>
 
 <a name="specifying-extensions"></a>
 ## Specifying Extensions
@@ -3012,11 +3004,6 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
-
-<a name="conformance"></a>
-# Conformance
-
-<mark>*Todo: how do we tackle this?*</mark>
 
 <a name="acknowledgements"></a>
 # Acknowledgments
