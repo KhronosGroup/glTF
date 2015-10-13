@@ -1132,10 +1132,8 @@ For more information on glTF extensions, consult the [extensions registry specif
 * [shader](#reference-shader)
 * [skin](#reference-skin)
 * [technique](#reference-technique)
-   * [attribute](#reference-technique.attribute)
    * [parameters](#reference-technique.parameters)
    * [states](#reference-technique.states)
-   * [uniform](#reference-technique.uniform)
 * [texture](#reference-texture)
 
 
@@ -2876,17 +2874,70 @@ Application-specific data.
 
 
 <!-- ======================================================================= -->
-<a name="reference-technique.attribute"></a>
-## technique.attribute
-
-**JSON schema**: [technique.attribute.schema.json](schema/technique.attribute.schema.json)
-
-
-<!-- ======================================================================= -->
 <a name="reference-technique.parameters"></a>
 ## technique.parameters
 
+An attribute or uniform input to a [`technique`](#reference-technique), and an optional semantic and value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**count**|`integer`|When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.|No|
+|**type**|`integer`|The datatype.| :white_check_mark: Yes|
+|**semantic**|`string`|Identifies a parameter with a well-known meaning.|No|
+|**value**|`number`, `boolean`, `string`, `number[]`, or `boolean[]`|The value of the parameter.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
+
+### parameter.count
+
+When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is array with length equal to count times the number of components in the type, e.g., `3` for `FLOAT_VEC3`.
+
+* **Type**: `integer`
+* **Required**: No
+* **Minimum**:` >= 1`
+
+### parameter.type :white_check_mark: 
+
+The datatype.  Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
+
+### parameter.semantic
+
+Identifies a parameter with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4).  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, `"JOINTMATRIX"`, and `"WEIGHT"`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g, `"TEXCOORD_0"`.
+
+* **Type**: `string`
+* **Required**: No
+
+### parameter.value
+
+The value of the parameter.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.
+
+* **Type**: `number`, `boolean`, `string`, `number[]`, or `boolean[]`
+* **Required**: No
+
+### parameter.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### parameter.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
@@ -2894,13 +2945,6 @@ Application-specific data.
 ## technique.states
 
 **JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.uniform"></a>
-## technique.uniform
-
-**JSON schema**: [technique.uniform.schema.json](schema/technique.uniform.schema.json)
 
 
 <!-- ======================================================================= -->

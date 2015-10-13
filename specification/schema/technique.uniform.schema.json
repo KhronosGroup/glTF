@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "uniform",
     "extends" : { "$ref" : "glTFid.schema.json" },
-    "description" : "Maps GLSL uniform names to technique parameter ids."
+    "description" : "A dictionary object of strings that maps GLSL uniform names to technique parameter ids."
 }
