@@ -1986,7 +1986,7 @@ The root object for a glTF asset.
 |**cameras**|`object`|A dictionary object of [`camera`](#reference-camera) objects.|No, default: `{}`|
 |**images**|`object`|A dictionary object of [`image`](#reference-image) objects.|No, default: `{}`|
 |**materials**|`object`|A dictionary object of [`material`](#reference-material) objects.|No, default: `{}`|
-|**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh)es.|No, default: `{}`|
+|**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh) objects.|No, default: `{}`|
 |**nodes**|`object`|A dictionary object of [`node`](#reference-node) objects.|No, default: `{}`|
 |**programs**|`object`|A dictionary object of [`program`](#reference-program) objects.|No, default: `{}`|
 |**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler) objects.|No, default: `{}`|
@@ -2069,7 +2069,7 @@ A dictionary object of [`material`](#reference-material) objects.  The name of e
 
 ### glTF.meshes
 
-A dictionary object of [`mesh`](#reference-mesh)es.  The name of each mesh is an id in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered.
+A dictionary object of [`mesh`](#reference-mesh) objects.  The name of each mesh is an id in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
