@@ -2870,8 +2870,86 @@ Application-specific data.
 <a name="reference-technique"></a>
 ## technique
 
+A template for a material appearances.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**parameters**|`object`|A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.|No, default: `{}`|
+|**attributes**|`object`|A dictionary object of strings that maps GLSL attribute names to technique parameter ids.|No, default: `{}`|
+|**program**|`string`|The id of the program.| :white_check_mark: Yes|
+|**uniforms**|`object`|A dictionary object of strings that maps GLSL uniform names to technique parameter ids.|No, default: `{}`|
+|**states**|[`technique.states`](#reference-technique.states)|Fixed-function rendering states.|No, default: `{}`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [technique.schema.json](schema/technique.schema.json)
 * **Example**: [techniques.json](schema/examples/techniques.json)
+
+### technique.parameters
+
+A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `object`
+
+### technique.attributes
+
+A dictionary object of strings that maps GLSL attribute names to technique parameter ids.
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `string`
+
+### technique.program :white_check_mark: 
+
+The id of the program.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### technique.uniforms
+
+A dictionary object of strings that maps GLSL uniform names to technique parameter ids.
+
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `string`
+
+### technique.states
+
+Fixed-function rendering states.
+
+* **Type**: [`technique.states`](#reference-technique.states)
+* **Required**: No, default: `{}`
+
+### technique.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### technique.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### technique.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
