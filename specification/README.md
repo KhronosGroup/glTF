@@ -2042,7 +2042,7 @@ The material appearance of a primitive.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**technique**|`string`|The id of the [technique](#reference-technique).|No|
+|**technique**|`string`|The id of the [`technique`](#reference-technique).|No|
 |**values**|`object`|A dictionary object of parameter values.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -2154,7 +2154,7 @@ Geometry to be rendered with the given material.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**attributes**|`object`|A dictionary object of strings, where each string is the id of the [accessor](#reference-accessor) containing an attribute.|No, default: `{}`|
+|**attributes**|`object`|A dictionary object of strings, where each string is the id of the [`accessor`](#reference-accessor) containing an attribute.|No, default: `{}`|
 |**indices**|`string`|The id of the accessor that contains the indices.|No|
 |**material**|`string`|The id of the material to apply to this primitive when rendering.| :white_check_mark: Yes|
 |**mode**|`integer`|The type of primitives to render.|No, default: `4`|
@@ -2226,10 +2226,10 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 |**camera**|`string`|The id of the [camera](#reference-camera) referenced by this node.|No|
 |**children**|`string[]`|The ids of this node's children.|No, default: `[]`|
 |**skeletons**|`string[]`|The id of skeleton nodes.|No|
-|**skin**|`string`|The id of the [skin](#reference-skin) referenced by this node.|No|
+|**skin**|`string`|The id of the [`skin`](#reference-skin) referenced by this node.|No|
 |**jointName**|`string`|Name used when this node is a joint in a skin.|No|
 |**matrix**|`number[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
-|**meshes**|`string[]`|The ids of the [meshes](#reference-mesh) in this node.|No|
+|**meshes**|`string[]`|The ids of the [`mesh`es](#reference-mesh) in this node.|No|
 |**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.|No, default: `[0,0,0,0.1]`|
 |**scale**|`number[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
 |**translation**|`number[3]`|The node's translation.|No, default: `[0,0,0]`|
@@ -2358,8 +2358,8 @@ A shader program, including its vertex and fragment shader, and names of vertex 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**attributes**|`string[]`|Names of GLSL vertex shader attributes.|No, default: `[]`|
-|**fragmentShader**|`string`|The id of the fragment [shader](#reference-shader).| :white_check_mark: Yes|
-|**vertexShader**|`string`|The id of the vertex [shader](#reference-shader).| :white_check_mark: Yes|
+|**fragmentShader**|`string`|The id of the fragment [`shader`](#reference-shader).| :white_check_mark: Yes|
+|**vertexShader**|`string`|The id of the vertex [`shader`](#reference-shader).| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2380,7 +2380,7 @@ Names of GLSL vertex shader attributes.
 
 ### program.fragmentShader :white_check_mark: 
 
-The id of the fragment shader.
+The id of the fragment [`shader`](#reference-shader).
 
 * **Type**: `string`
 * **Required**: Yes
@@ -2388,7 +2388,7 @@ The id of the fragment shader.
 
 ### program.vertexShader :white_check_mark: 
 
-The id of the vertex shader.
+The id of the vertex [`shader`](#reference-shader).
 
 * **Type**: `string`
 * **Required**: Yes
@@ -2511,7 +2511,7 @@ The root nodes of a scene.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**nodes**|`string[]`|The ids of each root [node](#reference-node).|No, default: `[]`|
+|**nodes**|`string[]`|The ids of each root [`node`](#reference-node).|No, default: `[]`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2523,7 +2523,7 @@ Additional properties are not allowed.
 
 ### scene.nodes
 
-The ids of each root [node](#reference-node).
+The ids of each root [`node`](#reference-node).
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
@@ -2724,8 +2724,102 @@ Application-specific data.
 <a name="reference-texture"></a>
 ## texture
 
+A texture and its [`sampler`](#reference-sampler).
+
+**Related WebGL functions**: `createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**format**|`integer`|The texture's format.|No, default: `6408`|
+|**internalFormat**|`integer`|The texture's internal format.|No, default: `6408`|
+|**sampler**|`string`|The id of the [`sampler`](#reference-sampler) used by this texture.| :white_check_mark: Yes|
+|**source**|`string`|The id of the [`image`](#reference-image) used by this texture.| :white_check_mark: Yes|
+|**target**|`integer`|The target that the WebGL texture should be bound to.|No, default: `3553`|
+|**type**|`integer`|Texel datatype.|No, default: `5121`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [texture.schema.json](schema/texture.schema.json)
 * **Example**: [textures.json](schema/examples/textures.json)
+
+### texture.format
+
+The texture's format.  Valid values correspond to WebGL enums: `6406` (ALPHA), `6407` (RGB), `6408` (RGBA), `6409` (LUMINANCE), and `6410` (LUMINANCE_ALPHA).
+
+* **Type**: `integer`
+* **Required**: No, default: `6408`
+* **Allowed values**: `6406`, `6407`, `6408`, `6409`, `6410`
+* **Related WebGL functions**: `texImage2D()` format parameter
+
+### texture.internalFormat
+
+The texture's internal format.  Valid values correspond to WebGL enums: `6406` (ALPHA), `6407` (RGB), `6408` (RGBA), `6409` (LUMINANCE), and `6410` (LUMINANCE_ALPHA).  Defaults to same value as format.
+
+* **Type**: `integer`
+* **Required**: No, default: `6408`
+* **Allowed values**: `6406`, `6407`, `6408`, `6409`, `6410`
+* **Related WebGL functions**: `texImage2D()` internalFormat parameter
+
+### texture.sampler :white_check_mark: 
+
+The id of the [`sampler`](#reference-sampler) used by this texture.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### texture.source :white_check_mark: 
+
+The id of the [`image`](#reference-image) used by this texture.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### texture.target
+
+The target that the WebGL texture should be bound to.  Valid values correspond to WebGL enums: `3553` (TEXTURE_2D).
+
+* **Type**: `integer`
+* **Required**: No, default: `3553`
+* **Allowed values**: `3553`
+* **Related WebGL functions**: `bindTexture()`
+
+### texture.type
+
+Texel datatype.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `33635` (UNSIGNED_SHORT_5_6_5), `32819` (UNSIGNED_SHORT_4_4_4_4), and `32820` (UNSIGNED_SHORT_5_5_5_1).
+
+* **Type**: `integer`
+* **Required**: No, default: `5121`
+* **Allowed values**: `5121`, `33635`, `32819`, `32820`
+* **Related WebGL functions**: `texImage2D()` type parameter
+
+### texture.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### texture.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### texture.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <a name="conformance"></a>
