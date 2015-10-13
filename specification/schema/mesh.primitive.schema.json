@@ -2,10 +2,12 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "primitive",
     "type" : "object",
-    "description" : "Geometry and material.",
+    "description" : "Geometry to be rendered with the given material.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "attributes" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings, where each string is the id of the accessor containing an attribute.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -28,7 +30,7 @@
             "description" : "The type of primitives to render.",
             "enum" : [0, 1, 2, 3, 4, 5, 6],
             "default" : 4,
-            "gltf_detailedDescription" : "The type of primitives to render.  Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN)."
+            "gltf_detailedDescription" : "The type of primitives to render.  Allowed values are 0 (`POINTS`), 1 (`LINES`), 2 (`LINE_LOOP`), 3 (`LINE_STRIP`), 4 (`TRIANGLES`), 5 (`TRIANGLE_STRIP`), and 6 (`TRIANGLE_FAN`)."
         }
     },
     "additionalProperties" : false,

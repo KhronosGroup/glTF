@@ -1133,7 +1133,6 @@ For more information on glTF extensions, consult the [extensions registry specif
 * [material](#reference-material)
 * [mesh](#reference-mesh)
    * [primitive](#reference-mesh.primitive)
-      * [attribute](#reference-mesh.primitive.attribute)
 * [node](#reference-node)
 * [program](#reference-program)
 * [sampler](#reference-sampler)
@@ -2097,22 +2096,121 @@ Application-specific data.
 <a name="reference-mesh"></a>
 ## mesh
 
+A set of primitives to be rendered.  A node can contain one or more meshes.  A node's transform places the mesh in the scene.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**primitives**|[`mesh.primitive[]`](reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|No, default: `[]`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
 * **Example**: [meshes.json](schema/examples/meshes.json)
+
+### mesh.primitives
+
+An array of primitives, each defining geometry to be rendered with a material.
+
+* **Type**: [`mesh.primitive[]`](reference-mesh.primitive)
+* **Required**: No, default: `[]`
+
+### mesh.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### mesh.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### mesh.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
 <a name="reference-mesh.primitive"></a>
 ## mesh.primitive
 
+Geometry to be rendered with the given material.
+
+**Related WebGL functions**: `drawElements()` and `drawArrays()`
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**attributes**|`object`|A dictionary object of strings, where each string is the id of the [accessor](#reference-accessor) containing an attribute.|No, default: `{}`|
+|**indices**|`string`|The id of the accessor that contains the indices.|No|
+|**material**|`string`|The id of the material to apply to this primitive when rendering.| :white_check_mark: Yes|
+|**mode**|`integer`|The type of primitives to render.|No, default: `4`|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 **JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
 
+### primitive.attributes
 
-<!-- ======================================================================= -->
-<a name="reference-mesh.primitive.attribute"></a>
-## mesh.primitive.attribute
+A dictionary object of strings, where each string is the id of the accessor containing an attribute.
 
-**JSON schema**: [mesh.primitive.attribute.schema.json](schema/mesh.primitive.attribute.schema.json)
+* **Type**: `object`
+* **Required**: No, default: `{}`
+* **Type of each property**: `string`
+
+### primitive.indices
+
+The id of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
+
+### primitive.material :white_check_mark: 
+
+The id of the material to apply to this primitive when rendering.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### primitive.mode
+
+The type of primitives to render.  Allowed values are 0 (`POINTS`), 1 (`LINES`), 2 (`LINE_LOOP`), 3 (`LINE_STRIP`), 4 (`TRIANGLES`), 5 (`TRIANGLE_STRIP`), and 6 (`TRIANGLE_FAN`).
+
+* **Type**: `integer`
+* **Required**: No, default: `4`
+* **Allowed values**: `0`, `1`, `2`, `3`, `4`, `5`, `6`
+
+### primitive.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### primitive.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
