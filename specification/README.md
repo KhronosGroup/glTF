@@ -2349,8 +2349,72 @@ Application-specific data.
 <a name="reference-program"></a>
 ## program
 
+A shader program, including its vertex and fragment shader, and names of vertex shader attributes.
+
+**Related WebGL functions**: `attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**attributes**|`string[]`|Names of GLSL vertex shader attributes.|No, default: `[]`|
+|**fragmentShader**|`string`|The id of the fragment [shader](#reference-shader).| :white_check_mark: Yes|
+|**vertexShader**|`string`|The id of the vertex [shader](#reference-shader).| :white_check_mark: Yes|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
 * **JSON schema**: [program.schema.json](schema/program.schema.json)
 * **Example**: [programs.json](schema/examples/programs.json)
+
+### program.attributes
+
+Names of GLSL vertex shader attributes.
+
+* **Type**: `string[]`
+   * Each element in the array must have length between `1` and `256`.
+* **Required**: No, default: `[]`
+* **Related WebGL functions**: `bindAttribLocation()`
+
+### program.fragmentShader :white_check_mark: 
+
+The id of the fragment shader.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### program.vertexShader :white_check_mark: 
+
+The id of the vertex shader.
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**`: >= 1`
+
+### program.name
+
+The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+
+* **Type**: `string`
+* **Required**: No
+
+### program.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### program.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 
 <!-- ======================================================================= -->
