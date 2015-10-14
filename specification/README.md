@@ -291,11 +291,11 @@ The next example defines the transformation for a camera node using the `matrix`
 
 ### Coordinate System and Units
 
-glTF uses a right-handed coordinate system with Y up and positive Z pointing out of the screen.
+glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z. glTF defines the y axis as up.
 
 The units for all linear distances are meters.
 
-All angles are in radians unless otherwise specified.
+All angles are in radians.
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
@@ -303,12 +303,14 @@ All angles are in radians unless otherwise specified.
 
 ### Buffers and Buffer Views
 
-A *buffer* is data stored as a binary blob in a file. The buffer can contain a combination of geometry, animation, and skins. 
+A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins. 
 
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
-All buffers are stored in the assets `buffers` property.
+Buffer data is little endian.
+
+All buffers are stored in the asset's `buffers` dictionary property.
 
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI. 
 
@@ -346,15 +348,14 @@ The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bu
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
 
-Buffer data is little endian.
 
 ### Accessors
 
 All large data for meshes, skins and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
 
-All accessors are stored in the asset's `accessors` property.
+All accessors are stored in the asset's `accessors` dictionary property.
 
 The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
 
@@ -463,7 +464,7 @@ Any node can contain one or more meshes, defined in its `meshes` property. Any n
 
 ### Meshes
 
-In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL drawElements calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that coresponds to the GL primitive type (e.g. triangle set).
+In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that coresponds to the GL primitive type (e.g. triangle list).
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -492,7 +493,7 @@ Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JO
                     
 ### Skins
 
-All skins are stored in the `skins` property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
   
 
 ```javascript
@@ -626,7 +627,7 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 
 A material is defined as an instance of a shading technique along with parameterized values, e.g. light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
-Materials are stored in the assets `materials` property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess and specular color.
+Materials are stored in the asset's `materials` dictionary property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess and specular color.
 
 ```javascript
 "materials": {
@@ -878,7 +879,7 @@ Each shader program includes an `attributes` property, which specifies the verte
 
 #### Shaders
 
-Shader source files are stored in the asset's `shaders` property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
 ```javascript
 "shaders": {
@@ -910,7 +911,7 @@ Textures can be used as uniform inputs to shaders. The following material defini
 ```
 
 
-All textures are stored in the asset's `textures` property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
+All textures are stored in the asset's `textures` dictionary property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
 ```javascript
 "textures": {
@@ -927,7 +928,7 @@ All textures are stored in the asset's `textures` property. A texture is defined
 
 #### Images
  
-Images referred to by textures are stored in the `images` property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
+Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and reference via data URI. For example:
 
 ```javascript
 "images": {
@@ -939,7 +940,7 @@ Images referred to by textures are stored in the `images` property of the asset.
 
 #### Samplers
 
-Samplers are stored in the `samplers` property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
 
 ```javascript
@@ -963,18 +964,18 @@ Samplers are stored in the `samplers` property of the asset. Each sampler specif
 <a name="cameras"></a>
 ## Cameras
 
-Cameras define viewport projections. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics auch as PROJECTION.
+A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics auch as PROJECTION.
 
-Cameras are stored in the asset's `cameras` property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-The following example defines a perspective camera with supplied values for Y field of view (in degrees), aspect ratio, and near and far clipping planes.
+The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
 
 ```javascript
 "cameras": {
     "camera_0": {
         "perspective": {
             "aspect_ratio": 1.5,
-            "yfov": 37.8492,
+            "yfov": 0.660593,
             "zfar": 100,
             "znear": 0.01
         },
@@ -990,7 +991,7 @@ glTF supports articulated and skinned animation via key frame animations of node
 
 > Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-All animations are stored in the `animations` property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, samplers that interpolate between the key frames (the `samplers` property) , and a `count` property indicating the number of key frame inputs present in the parameters data. The value in `count` must be less than or equal to number of entries in the shortest parameters value.
+All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
 
 The following example defines an animating camera node. 
 
@@ -1074,7 +1075,13 @@ Only the `version` property is required. Example:
 "asset": {
     "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
     "premultipliedAlpha": true,
-    "profile": "WebGL 1.0.2",
+    "profile" : {
+        "api" : "WebGL",
+        "version" : "1.0.3",
+        "extras" : {
+            "Application specific" : "The extra object can contain any properties."
+        }  
+    },
     "version": 0.8
 }
 ```
