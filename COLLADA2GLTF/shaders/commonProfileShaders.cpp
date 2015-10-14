@@ -808,7 +808,9 @@ namespace GLTF
                         shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                         shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
                         
-                        shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+                        shared_ptr<JSONObject> extension = asset->root()->createObjectIfNeeded(kExtensions);
+                        shared_ptr<JSONObject> khrMaterialsCommon = extension->createObjectIfNeeded("KHR_materials_common");
+                        shared_ptr<JSONObject> lights = khrMaterialsCommon->createObjectIfNeeded(kLights);
                         if (!lights->contains(lightUID->getString()))
                             continue;
                         shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());
@@ -987,11 +989,13 @@ namespace GLTF
                     addValue("fs", "uniform", shininessObject->getUnsignedInt32(kType) , 1, "shininess", asset);
                 }
                 
+                shared_ptr<JSONObject> extension = asset->root()->createObjectIfNeeded(kExtensions);
+                shared_ptr<JSONObject> khrMaterialsCommon = extension->createObjectIfNeeded("KHR_materials_common");
+                shared_ptr<JSONObject> lights = khrMaterialsCommon->createObjectIfNeeded(kLights);
                 for (size_t i = 0 ; i < ids.size() ; i++) {
                     shared_ptr<JSONString> lightUID = static_pointer_cast<JSONString>(ids[i]);
                     shared_ptr<JSONArray> lightsNodesIds = static_pointer_cast<JSONArray>(asset->_uniqueIDOfLightToNodes[lightUID->getString()]);
-                    
-                    shared_ptr<JSONObject> lights = asset->root()->createObjectIfNeeded("lights");
+
                     if (!lights->contains(lightUID->getString()))
                         continue;
                     shared_ptr<JSONObject> light = lights->getObject(lightUID->getString());

@@ -82,7 +82,8 @@ static const OptionDescriptor options[] = {
 	{ "h",              no_argument,        "-h -> help" },
 	{ "r",              no_argument,        "-r -> verbose logging" },
 	{ "e",				no_argument,		"-e -> embed resources (bin, shaders, available textures) in glTF file" },
-    { "n",              no_argument,        "-n -> don't combine animations with the same target" }
+    { "n",              no_argument,        "-n -> don't combine animations with the same target" },
+    { "k",              no_argument,        "-k -> export materials and lights using KHR_materials_common extension" }
 };
 
 static const int OPTIONS_COUNT = sizeof(options) / sizeof(OptionDescriptor);
@@ -150,7 +151,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:g:idpl:c:m:vhsre", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:g:idpl:c:m:vhsrek", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -238,6 +239,9 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
             }
             case 'n':
                 converterConfig->config()->setBool("noCombineAnimations", true);
+                break;
+            case 'k':
+                converterConfig->config()->setBool("useKhrMaterialsCommon", true);
                 break;
 			default:
                 shouldShowHelp = true;

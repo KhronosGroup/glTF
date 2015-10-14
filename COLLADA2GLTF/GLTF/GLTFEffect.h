@@ -55,6 +55,9 @@ namespace GLTF
 
         void setValues(std::shared_ptr <JSONObject>);
         std::shared_ptr <JSONObject> getValues();
+
+        void setKhrMaterialsCommonValues(std::shared_ptr <JSONObject>);
+        std::shared_ptr <JSONObject> getKhrMaterialsCommonValues();
         
         void addSemanticForTexcoordName(const std::string &texcoord, const std::string &semantic);
         SemanticArrayPtr getSemanticsForTexcoordName(const std::string &texcoord);
@@ -67,6 +70,7 @@ namespace GLTF
         std::string _lightingModel;
         std::shared_ptr <JSONObject> _techniqueGenerator;
         std::shared_ptr <JSONObject> _values;
+        std::shared_ptr <JSONObject> _khrMaterialsCommonValues;
         TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
     };
 }

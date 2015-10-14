@@ -847,6 +847,12 @@ namespace GLTF
                 this->log("[Info]: current working directory:%s\n", cwd);
 
         }
+
+        if (CONFIG_BOOL(this, "useKhrMaterialsCommon"))
+        {
+            shared_ptr<GLTF::JSONArray> extensionsUsed = this->_root->createArrayIfNeeded(kExtensionsUsed);
+            extensionsUsed->appendValue(std::make_shared<JSONString>("KHR_materials_common"));
+        }
         
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);

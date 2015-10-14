@@ -242,8 +242,10 @@ namespace GLTF
                 break;
             case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
             case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
-            default:
-                transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+            default: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            }
                 break;
         }
         
@@ -550,8 +552,10 @@ namespace GLTF
         count = (unsigned int)instanceLights.getCount();
         
         //For a given light, keep track of all the nodes holding it
-        if (count) {
-            shared_ptr<JSONObject> lights = this->_asset->root()->createObjectIfNeeded(kLights);
+        if (count && CONFIG_BOOL(asset, "useKhrMaterialsCommon")) {
+            shared_ptr<JSONObject> extension = this->_asset->root()->createObjectIfNeeded(kExtensions);
+            shared_ptr<JSONObject> khrMaterialsCommon = extension->createObjectIfNeeded("KHR_materials_common");
+            shared_ptr<JSONObject> lights = khrMaterialsCommon->createObjectIfNeeded(kLights);
             for (unsigned int i = 0 ; i < count ; i++) {
                 InstanceLight* instanceLight  = instanceLights[i];
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
@@ -575,9 +579,11 @@ namespace GLTF
             }
             //We just want a single light per node
             //https://github.com/KhronosGroup/glTF/issues/13
-            //nodeObject->setValue("lights", lightsInNode);
-            if (lightsInNode->values().size() > 0) {
-                nodeObject->setValue(kLight, lightsInNode->values()[0]);
+            //lightKhrMaterialsCommon->setValue("lights", lightsInNode);
+            if (lightsInNode->values().size() > 0 && CONFIG_BOOL(asset, "useKhrMaterialsCommon")) {
+                shared_ptr<JSONObject> lightExtension = nodeObject->createObjectIfNeeded(kExtensions);
+                shared_ptr<JSONObject> lightKhrMaterialsCommon = lightExtension->createObjectIfNeeded("KHR_materials_common");
+                lightKhrMaterialsCommon->setValue(kLight, lightsInNode->values()[0]);
                 if (count > 1) {
                     //FR: AFAIK no authoring tool export multiple light per node, but we'll warn if that's the case
                     //To fix this, dummy sub nodes should be created.
@@ -831,6 +837,7 @@ namespace GLTF
         assert(asset);
         assert(cvtEffect);
         shared_ptr <JSONObject> values = cvtEffect->getValues();
+        shared_ptr <JSONObject> khrMaterialsCommonValues = cvtEffect->getKhrMaterialsCommonValues();
         std::string originalImageUID = asset->getOriginalId(sampler->getSourceImage().toAscii());
         GLTFProfile* profile = asset->profile().get();
 
@@ -865,6 +872,7 @@ namespace GLTF
         
         slotObject->setString("value", textureUID);
         values->setValue(slotName, slotObject);
+        khrMaterialsCommonValues->setValue(slotName, slotObject);
     }
     
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
@@ -872,6 +880,7 @@ namespace GLTF
                                               shared_ptr <GLTFEffect> cvtEffect,
                                               shared_ptr <JSONObject> extras) {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
+        shared_ptr <JSONObject> khrMaterialsCommonValues = cvtEffect->getKhrMaterialsCommonValues();
         GLTFAsset *asset = this->_asset.get();
         GLTFProfile* profile = asset->profile().get();
 
@@ -920,7 +929,7 @@ namespace GLTF
         
         //retrieve the type, parameterName -> symbol -> type
         double red = 1, green = 1, blue = 1, alpha = 1;
-        if (slot.isColor() && (slotName != "reflective")) {
+        if (slot.isColor()) {
             const Color& color = slot.getColor();
             if (slot.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
                 red = color.getRed();
@@ -928,11 +937,15 @@ namespace GLTF
                 blue = color.getBlue();
                 alpha = color.getAlpha();
             }
+
             shared_ptr <JSONObject> slotObject(new JSONObject());
             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
             slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
-            values->setValue(slotName, slotObject);
-            
+            khrMaterialsCommonValues->setValue(slotName, slotObject);
+            if (slotName != "reflective")
+            {
+                values->setValue(slotName, slotObject);
+            }
         } else if (slot.isTexture()) {
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
@@ -960,8 +973,10 @@ namespace GLTF
             
             shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(effect->getOriginalId()));
             shared_ptr <JSONObject> values(new JSONObject());
+            shared_ptr <JSONObject> khrMaterialsCommonValues(new JSONObject());
             
             cvtEffect->setValues(values);
+            cvtEffect->setKhrMaterialsCommonValues(khrMaterialsCommonValues);
             
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
             
@@ -1003,6 +1018,7 @@ namespace GLTF
                 transparency->setDouble("value", this->getTransparency(effectCommon));
                 transparency->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 values->setValue("transparency", transparency);
+                khrMaterialsCommonValues->setValue("transparency", transparency);
             }
             
             //should check if has specular first and the lighting model (if not lambert)
@@ -1015,6 +1031,23 @@ namespace GLTF
                 shininessObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
                 shininessObject->setDouble("value", shininess);
                 values->setValue("shininess", shininessObject);
+                khrMaterialsCommonValues->setValue("shininess", shininessObject);
+            }
+
+            double indexOfRefraction = effectCommon->getIndexOfRefraction().getFloatValue();
+            if (indexOfRefraction >= 0) {
+                shared_ptr <JSONObject> indexOfRefractionObject(new JSONObject());
+                indexOfRefractionObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
+                indexOfRefractionObject->setDouble("value", indexOfRefraction);
+                khrMaterialsCommonValues->setValue("indexOfRefraction", indexOfRefractionObject);
+            }
+
+            double reflectivity = effectCommon->getReflectivity().getFloatValue();
+            if (reflectivity >= 0) {
+                shared_ptr <JSONObject> reflectivityObject(new JSONObject());
+                reflectivityObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
+                reflectivityObject->setDouble("value", reflectivity);
+                khrMaterialsCommonValues->setValue("reflectivity", reflectivityObject);
             }
             
             shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
@@ -1215,6 +1248,11 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeLight( const COLLADAFW::Light* light ) {
+        if (!CONFIG_BOOL(this->_asset, "useKhrMaterialsCommon"))
+        {
+            return false;
+        }
+
         //FIXME: add projection
         shared_ptr <JSONObject> glTFLight(new JSONObject());
         shared_ptr <JSONObject> description(new JSONObject());
@@ -1272,6 +1310,9 @@ namespace GLTF
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
         this->_asset->setOriginalId(lightId, light->getOriginalId());
+
+        shared_ptr<JSONArray> lightsIds = this->_asset->root()->createArrayIfNeeded("lightsIds");
+        lightsIds->appendValue(std::make_shared<JSONString>(light->getOriginalId()));
         
 		return true;
 	}
