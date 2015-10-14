@@ -555,7 +555,7 @@ namespace GLTF
         count = (unsigned int)instanceLights.getCount();
         
         //For a given light, keep track of all the nodes holding it
-        if (count && CONFIG_BOOL(asset, "useKhrMaterialsCommon")) {
+        if (count) {
             shared_ptr<JSONObject> extension = this->_asset->root()->createObjectIfNeeded(kExtensions);
             shared_ptr<JSONObject> khrMaterialsCommon = extension->createObjectIfNeeded("KHR_materials_common");
             shared_ptr<JSONObject> lights = khrMaterialsCommon->createObjectIfNeeded(kLights);
@@ -1251,11 +1251,6 @@ namespace GLTF
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeLight( const COLLADAFW::Light* light ) {
-        if (!CONFIG_BOOL(this->_asset, "useKhrMaterialsCommon"))
-        {
-            return false;
-        }
-
         //FIXME: add projection
         shared_ptr <JSONObject> glTFLight(new JSONObject());
         shared_ptr <JSONObject> description(new JSONObject());

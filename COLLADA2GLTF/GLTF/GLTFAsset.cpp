@@ -465,7 +465,13 @@ namespace GLTF
         //these apply MUST be before the removeValue lightsIds that follows
         this->_root->apply(__eval, this);
         this->_root->apply(this, this);
+
+        // Remove light information if its not needed
         this->_root->removeValue("lightsIds");
+        if (!CONFIG_BOOL(this, "useKhrMaterialsCommon"))
+        {
+            this->_root->removeValue(kExtensions);
+        }
         
         for (size_t i = 0 ; i < count ; i++) {
             this->_evaluators[i]->evaluationDidComplete(this);
