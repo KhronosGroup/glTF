@@ -240,8 +240,13 @@ namespace GLTF
                 }
             }
                 break;
+            
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE: {
+                ColorOrTexture transparent = effectCommon->getTransparent();
+                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            }
+                break;
             case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
-            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
             default:
                 transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
                 break;
