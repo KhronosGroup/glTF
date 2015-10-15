@@ -88,7 +88,7 @@ glTF has been designed to meet the following goals:
 
 The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
-The following are outside the scopt of the initial design of glTF:
+The following are outside the scope of the initial design of glTF:
 
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
@@ -991,7 +991,7 @@ glTF supports articulated and skinned animation via key frame animations of node
 
 > Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property).
+All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
 
 The following example defines an animating camera node. 
 
