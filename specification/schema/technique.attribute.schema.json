@@ -2,5 +2,5 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "attribute",
     "extends" : { "$ref" : "glTFid.schema.json" },
-    "description" : "A dictionary object of strings that maps GLSL attribute names to technique parameter ids."
+    "description" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs."
 }

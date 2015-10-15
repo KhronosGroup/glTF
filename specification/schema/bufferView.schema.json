@@ -7,7 +7,7 @@
     "properties" : {
         "buffer" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the buffer.",
+            "description" : "The ID of the buffer.",
             "required" : true
         },
         "byteOffset" : {
