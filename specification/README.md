@@ -812,34 +812,35 @@ The following example `states` object indicates to enable all Boolean states (se
 
 ```javascript
 "states": {
-    "enable": [ 3042,  // BLEND
-                    2884,  // CULL_FACE
-                    2929,  // DEPTH_TEST
-                    32823, // POLYGON_OFFSET_FILL
-                    32926, // SAMPLE_ALPHA_TO_COVERAGE
-                    3089   // SCISSOR_TEST
-                    ], // empty by default
+    "enable": [
+        3042,  // BLEND
+        2884,  // CULL_FACE
+        2929,  // DEPTH_TEST
+        32823, // POLYGON_OFFSET_FILL
+        32926, // SAMPLE_ALPHA_TO_COVERAGE
+        3089   // SCISSOR_TEST
+    ], // empty by default
     "functions": {
       "blendColor": [0.0, 0.0, 0.0, 0.0], // (red, green, blue, alpha)
       "blendEquationSeparate": [
-                 32774, // FUNC_ADD (rgb)
-                 32774  // FUNC_ADD (alpha)
-                 ],
+          32774, // FUNC_ADD (rgb)
+          32774  // FUNC_ADD (alpha)
+      ],
       "blendFuncSeparate": [
-                    1,     // ONE (srcRGB)
-                    1,     // ONE (srcAlpha)
-                    0,     // ZERO (dstRGB)
-                    0,     // ZERO (dstAlpha)
-                    ],
-      "colorMask"  : [true, true, true, true], // (red, green, blue, alpha)
-      "cullFace"   : [1029], // BACK
-      "depthFunc"  : [LESS], // 513
-      "depthMask"  : [true],
+          1,     // ONE (srcRGB)
+          1,     // ONE (srcAlpha)
+          0,     // ZERO (dstRGB)
+          0      // ZERO (dstAlpha)
+      ],
+      "colorMask": [true, true, true, true], // (red, green, blue, alpha)
+      "cullFace": [1029], // BACK
+      "depthFunc": [LESS], // 513
+      "depthMask": [true],
       "depthRange": [0.0, 1.0], // (zNear, zFar)
-      "frontFace"  : [2305], // CCW
-      "lineWidth"  : [1.0],
+      "frontFace": [2305], // CCW
+      "lineWidth": [1.0],
       "polygonOffset": [0.0, 0.0], // (factor, units)
-      "scissor"    : [0, 0, 0, 0], // (x, y, width, height)
+      "scissor": [0, 0, 0, 0], // (x, y, width, height)
     }
 }
 ```
