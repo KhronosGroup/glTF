@@ -673,6 +673,8 @@ Materials are stored in the assets `materials` dictionary property, which contai
 
 The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.
 
+**non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
+
 ### Techniques
 
 A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
