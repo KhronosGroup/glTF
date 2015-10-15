@@ -168,6 +168,10 @@ namespace GLTF
             khrMaterialsCommon->setString(kTechnique, lightingModel);
             shared_ptr<JSONObject> materialsCommonValues(new JSONObject());
 
+            if (doubleSided)
+            {
+                materialsCommonValues->setBool("doubleSided", doubleSided);
+            }
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "emission");
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "indexOfRefraction");
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "reflective");
