@@ -7,7 +7,7 @@
     "properties" : {
         "attributes" : {
             "type" : "object",
-            "description" : "A dictionary object of strings, where each string is the id of the accessor containing an attribute.",
+            "description" : "A dictionary object of strings, where each string is the ID of the accessor containing an attribute.",
             "properties" : {
             },
             "additionalProperties" : {
@@ -17,12 +17,12 @@
         },
         "indices" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the accessor that contains the indices.",
-            "gltf_detailedDescription" : "The id of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`."            
+            "description" : "The ID of the accessor that contains the indices.",
+            "gltf_detailedDescription" : "The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`."            
         },
         "material" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the material to apply to this primitive when rendering.",
+            "description" : "The ID of the material to apply to this primitive when rendering.",
             "required" : true
         },
         "mode" : {

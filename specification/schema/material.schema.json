@@ -7,8 +7,8 @@
     "properties": {
         "technique" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the technique.",
-            "gltf_detailedDescription" : "The id of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color."
+            "description" : "The ID of the technique.",
+            "gltf_detailedDescription" : "The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color."
         },
         "values" : {
             "type" : "object",

@@ -68,7 +68,7 @@
         },
         "depthFunc" : {
             "type" : "array",
-            "description" : "Integer values passed to depthFunc().",
+            "description" : "Integer values passed to `depthFunc()`.",
             "items" : {
                 "type" : "integer",
                 "enum" : [512, 513, 515, 514, 516, 517, 518, 519]
@@ -76,7 +76,7 @@
             "minItems" : 1,
             "maxItems" : 1,
             "default" : [513],
-            "gltf_detailedDescription" : "Integer values passed to depthFunc(). Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).",
+            "gltf_detailedDescription" : "Integer values passed to `depthFunc()`. Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).",
             "gltf_webgl" : "`depthFunc()`"
         },
         "depthMask" : {
@@ -111,7 +111,7 @@
             "minItems" : 1,
             "maxItems" : 1,
             "default" : [2305],
-            "gltf_detailedDescription" : "Integer value passed to frontFace().  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).",
+            "gltf_detailedDescription" : "Integer value passed to `frontFace()`.  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).",
             "gltf_webgl" : "`frontFace()`"
         },
         "lineWidth" : {
