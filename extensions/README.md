@@ -2,9 +2,10 @@
 
 ## Draft Khronos extensions
 
-_Draft Khronos extensions are not ratified yet._
-
 * [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+* [EXT_quantized_attributes](MultiVendor/EXT_quantized_attributes/README.md)
+
+_Draft Khronos extensions are not ratified yet._
 
 ## Vendor extensions
 
