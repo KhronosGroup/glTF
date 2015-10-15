@@ -182,6 +182,8 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
 
 Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
+For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
+
 <a name="scenes"></a>
 ## Scenes
 
