@@ -316,10 +316,10 @@ Table 2. Common Light Shared Properties
 | Property                     | Type         | Description | Default Value | Applies To |
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
-| `constant_attenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
+| `constantAttenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
 | `direction`                   | `FLOAT_VEC4` | Vector defining direction of directional and spot lights. | [0,0,-1] | `directional`, `spot` |
 | `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
-| `linear_attenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
+| `linearAttenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `type`                    | string | Declares the type of the light. Must be one of `ambient`, `directional`, `point` or `spot` | "" | `ambient`, `directional`, `point`, `spot` |
 
 ### Ambient
@@ -332,19 +332,19 @@ Directional lights are light sources that emit from infinitely far away in a spe
 
 ### Point
 
-Point lights emit light in all directions over a given distance. Point lights support the `color`, `constant_attenuation`, `distance` and `linear_attenuation` common light properties described in Table 2. Point lights do not have a direction.
+Point lights emit light in all directions over a given distance. Point lights support the `color`, `constantAttenuation`, `distance` and `linearAttenuation` common light properties described in Table 2. Point lights do not have a direction.
 
 
 ### Spot
 
-Sport lights emit light in a directions over a given distance. Spot lights support the `color`, `constant_attenuation`, `direction`, `distance` and `linear_attenuation` common light properties described in Table 2. Spot lights also define the following properties:
+Sport lights emit light in a directions over a given distance. Spot lights support the `color`, `constantAttenuation`, `direction`, `distance` and `linearAttenuation` common light properties described in Table 2. Spot lights also define the following properties:
 
 Table 3. Spot Light Properties
 
 | Property                     | Type         | Description | Default Value |
 |:----------------------------:|:------------:|:-----------:|:-------------:|
-| `falloff_angle`              | `FLOAT` | Falloff angle for the spot light, in radians.| PI / 2 |
-| `falloff_exponent`           | `FLOAT` | Falloff exponent for the spotlight. *[need to define range and semantics]* | 0 |
+| `falloffAngle`              | `FLOAT` | Falloff angle for the spot light, in radians.| PI / 2 |
+| `falloffExponent`           | `FLOAT` | Falloff exponent for the spotlight. | 0 |
 
 
 <a name="schema"></a>
