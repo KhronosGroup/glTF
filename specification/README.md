@@ -20,7 +20,7 @@ Contributors
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
 * Remi Arnaud, Starbreeze Studios
 * Uli Klumpp, Individual Contributor
-
+* Neil Trevett, NVIDIA
 
 # Contents
 
