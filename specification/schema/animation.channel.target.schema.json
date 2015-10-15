@@ -2,12 +2,12 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "target",
     "type" : "object",
-    "description" : "The id of the node and TRS property that an animation channel targets.",
+    "description" : "The ID of the node and TRS property that an animation channel targets.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "id" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the node to target.",
+            "description" : "The ID of the node to target.",
             "required" : true
         },
         "path" : {

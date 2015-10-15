@@ -23,12 +23,12 @@
         },
         "sampler" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the sampler used by this texture.",
+            "description" : "The ID of the sampler used by this texture.",
             "required" : true
         },
         "source" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the image used by this texture.",
+            "description" : "The ID of the image used by this texture.",
             "required" : true
         },
         "target": {

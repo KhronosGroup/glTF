@@ -7,11 +7,11 @@
     "properties" : {
         "camera" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the camera referenced by this node."
+            "description" : "The ID of the camera referenced by this node."
         },
         "children" : {
             "type" : "array",
-            "description" : "The ids of this node's children.",
+            "description" : "The IDs of this node's children.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
@@ -20,16 +20,16 @@
         },
         "skeletons" : {
             "type" : "array",
-            "description" : "The id of skeleton nodes.",
+            "description" : "The ID of skeleton nodes.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The id of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`."            
+            "gltf_detailedDescription" : "The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`."            
         },
         "skin" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the skin referenced by this node."
+            "description" : "The ID of the skin referenced by this node."
         },
         "jointName" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
@@ -49,16 +49,16 @@
         },
         "meshes" : {
             "type" : "array",
-            "description" : "The ids of the meshes in this node.",
+            "description" : "The IDs of the meshes in this node.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The ids of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
+            "gltf_detailedDescription" : "The IDs of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
         },
         "rotation" : {
             "type" : "array",
-            "description" : "The node's unit quaternion rotation in the order (x, y, z, w) where w is the scalar.",
+            "description" : "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.",
             "items" : {
                 "type": "number"
             },
