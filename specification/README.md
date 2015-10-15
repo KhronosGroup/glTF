@@ -182,6 +182,8 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
 
 Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
+For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
+
 <a name="scenes"></a>
 ## Scenes
 
@@ -582,10 +584,10 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "jointName": "Bone1",
             "name": "root",
             "rotation": [
-                0.888952,
-                0.414921,
-                0.19392,
-                0.0773304
+                0,
+                0,
+                0.7071067811865475,
+                0.7071067811865476
             ],
             "scale": [
                 1,
@@ -603,10 +605,10 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "jointName": "Bone2",
             "name": "head",
             "rotation": [
-                1,
                 0,
                 0,
-                0
+                0,
+                1
             ],
             "scale": [
                 1,
@@ -615,8 +617,8 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ],
             "translation": [
                 8.76635,
-                4.318e-07,
-                -1.778e-07
+                0,
+                0
             ]
         },
 ```
@@ -812,34 +814,35 @@ The following example `states` object indicates to enable all Boolean states (se
 
 ```javascript
 "states": {
-    "enable": [ 3042,  // BLEND
-                    2884,  // CULL_FACE
-                    2929,  // DEPTH_TEST
-                    32823, // POLYGON_OFFSET_FILL
-                    32926, // SAMPLE_ALPHA_TO_COVERAGE
-                    3089   // SCISSOR_TEST
-                    ], // empty by default
+    "enable": [
+        3042,  // BLEND
+        2884,  // CULL_FACE
+        2929,  // DEPTH_TEST
+        32823, // POLYGON_OFFSET_FILL
+        32926, // SAMPLE_ALPHA_TO_COVERAGE
+        3089   // SCISSOR_TEST
+    ], // empty by default
     "functions": {
       "blendColor": [0.0, 0.0, 0.0, 0.0], // (red, green, blue, alpha)
       "blendEquationSeparate": [
-                 32774, // FUNC_ADD (rgb)
-                 32774  // FUNC_ADD (alpha)
-                 ],
+          32774, // FUNC_ADD (rgb)
+          32774  // FUNC_ADD (alpha)
+      ],
       "blendFuncSeparate": [
-                    1,     // ONE (srcRGB)
-                    1,     // ONE (srcAlpha)
-                    0,     // ZERO (dstRGB)
-                    0,     // ZERO (dstAlpha)
-                    ],
-      "colorMask"  : [true, true, true, true], // (red, green, blue, alpha)
-      "cullFace"   : [1029], // BACK
-      "depthFunc"  : [LESS], // 513
-      "depthMask"  : [true],
+          1,     // ONE (srcRGB)
+          1,     // ONE (srcAlpha)
+          0,     // ZERO (dstRGB)
+          0      // ZERO (dstAlpha)
+      ],
+      "colorMask": [true, true, true, true], // (red, green, blue, alpha)
+      "cullFace": [1029], // BACK
+      "depthFunc": [LESS], // 513
+      "depthMask": [true],
       "depthRange": [0.0, 1.0], // (zNear, zFar)
-      "frontFace"  : [2305], // CCW
-      "lineWidth"  : [1.0],
+      "frontFace": [2305], // CCW
+      "lineWidth": [1.0],
       "polygonOffset": [0.0, 0.0], // (factor, units)
-      "scissor"    : [0, 0, 0, 0], // (x, y, width, height)
+      "scissor": [0, 0, 0, 0], // (x, y, width, height)
     }
 }
 ```
