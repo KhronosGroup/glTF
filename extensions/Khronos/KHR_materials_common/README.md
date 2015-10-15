@@ -66,12 +66,12 @@ Table 1. Common Material Shared Properties
 | Property                     | Type         | Description | Default Value | Applies To |
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
-| `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture id for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture ID for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `indexOfRefraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT` |
-| `reflective`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `reflective`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
 | `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture id defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
+| `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 
@@ -79,9 +79,11 @@ Table 1. Common Material Shared Properties
 
 When the value of `technique` is `BLINN`, this defines a material shaded according to the Blinn-Torrance-Sparrow lighting model or a close approximation.
 
-This equation is complex and detailed via the ACM, so it is not detailed here. Refer to “Models of LightReflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
+This equation is complex and detailed via the ACM, so it is not detailed here. Refer to “Models of Light
+Reflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
 
-To maximize application compatibility, it is suggested that developers use the Blinn-Torrance-Sparrow model for`shininess` values in the range of 0 to 1. For `shininess` values greater than 1.0, it is recommended to instead use the Blinn-Phong approximation:
+To maximize application compatibility, it is suggested that developers use the Blinn-Torrance-Sparrow model for
+`shininess` values in the range of 0 to 1. For `shininess` values greater than 1.0, it is recommended to instead use the Blinn-Phong approximation:
 
 ```
 color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * max(H * N, 0)^<shininess>
@@ -89,7 +91,13 @@ color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * m
 
 
 where:
-* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.* `N` – Normal vector* `L` – Light vector* `I` – Eye vector* `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using theequation H= normalize(I+L)
+
+* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
+* `N` – Normal vector
+* `L` – Light vector
+* `I` – Eye vector
+* `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using the
+equation H= normalize(I+L)
 
 
 Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
@@ -126,7 +134,11 @@ color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * m
 
 where:
 
-* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.* `N` – Normal vector* `L` – Light vector* `I` – Eye vector* `R` – Perfect reflection vector (reflect (L around N))
+* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
+* `N` – Normal vector
+* `L` – Light vector
+* `I` – Eye vector
+* `R` – Perfect reflection vector (reflect (L around N))
 
 Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a white diffuse color, environment map texture and high reflectivity.
 
@@ -154,7 +166,8 @@ Phong lighting uses all of the common material properties defined in Table 1. Th
 
 #### Lambert
 
-When the value of `technique` is `LAMBERT`, this defines a material shaded using Lambert shading. The result is based on Lambert’s Law, which states that when light hits a rough surface, the light isreflected in all directions equally. The reflected color is calculated as:
+When the value of `technique` is `LAMBERT`, this defines a material shaded using Lambert shading. The result is based on Lambert’s Law, which states that when light hits a rough surface, the light is
+reflected in all directions equally. The reflected color is calculated as:
 
 ```
 color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0)
@@ -162,7 +175,9 @@ color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0)
 
 where
 
-* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.* `N` – Normal vector* `L` – Light vector
+* `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
+* `N` – Normal vector
+* `L` – Light vector
 
 Lambert shading does not reflect specular highlights; therefore the common material properties `specular` and `shininess` are not used. All other properties from Table 1 apply.
 
@@ -191,8 +206,10 @@ The following example defines a Lambert shaded material with a 50% gray emissive
 
 #### Constant
 
-When the value of `technique` is `CONSTANT`, this defines a material that describes a constantlyshaded surface that is independent of lighting.
-The reflected color is calculated as:
+When the value of `technique` is `CONSTANT`, this defines a material that describes a constantly
+shaded surface that is independent of lighting.
+
+The reflected color is calculated as:
 
 ```
 color = <emission> + <ambient> * al
