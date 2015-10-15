@@ -1,5 +1,5 @@
 <p align="center">
-<img src="figures/glTF.png" />
+<img src="figures/gltf.png" />
 </p>
 
 *Draft, Version 1.0*
