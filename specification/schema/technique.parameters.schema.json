@@ -11,6 +11,11 @@
             "minimum" : 1,
             "gltf_detailedDescription" : "When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`."
         },
+        "node" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the node whose transform is used as the parameter's value.",
+            "gltf_detailedDescription" : "The id of the node whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4)."
+        },
         "type" : {
             "type" : "integer",
             "description" : "The datatype.",
