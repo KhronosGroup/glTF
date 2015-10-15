@@ -2,13 +2,15 @@
 
 ## Draft Khronos extensions
 
-_Draft Khronos extensions are not ratified yet._
-
 * [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+* [EXT_quantized_attributes](MultiVendor/EXT_quantized_attributes/README.md)
+
+_Draft Khronos extensions are not ratified yet._
 
 ## Vendor extensions
 
 * [CESIUM_RTC](Vendor/CESIUM_RTC/README.md)
+* [WEB3D_streaming](Vendor/WEB3D_streaming/README.md)
 
 # About glTF Extensions
 
