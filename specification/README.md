@@ -75,7 +75,7 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
 
 <p align="center">
-<img src="figures/files.png" />
+<img src="figures/files.png" width="50%" />
 </p>
 
 <a name="designgoals"></a>
