@@ -1,0 +1,43 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "sampler",
+    "type" : "object",
+    "description" : "Texture sampler properties for filtering and wrapping modes.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "magFilter": {
+            "type" : "integer",
+            "description" : "Magnification filter.",
+            "enum" : [9728, 9729],
+            "default" : 9729,
+            "gltf_detailedDescription" : "Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).",
+            "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_MAG_FILTER"
+        },
+        "minFilter": {
+            "type" : "integer",
+            "description" : "Minification filter.",
+            "enum" : [9728, 9729, 9984, 9985, 9986, 9987],
+            "default" : 9986,
+            "gltf_detailedDescription" : "Minification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST), `9729` (LINEAR), `9984` (NEAREST_MIPMAP_NEAREST), `9985` (LINEAR_MIPMAP_NEAREST), `9986` (NEAREST_MIPMAP_LINEAR), and `9987` (LINEAR_MIPMAP_LINEAR).",
+            "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER"
+        },
+        "wrapS": {
+            "type" : "integer",
+            "description" : "s wrapping mode.",
+            "enum" : [33071, 33648, 10497],
+            "default" : 10497,
+            "gltf_detailedDescription" : "s wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).",
+            "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_WRAP_S"
+        },
+        "wrapT": {
+            "type" : "integer",
+            "description" : "t wrapping mode.",
+            "enum" : [33071, 33648, 10497],
+            "default" : 10497,
+            "gltf_detailedDescription" : "t wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).",
+            "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_WRAP_T"
+        }
+    },
+    "additionalProperties" : false,
+    "gltf_webgl" : "`texParameterf()`"
+}
