@@ -2,13 +2,16 @@
 <img src="specification/figures/gltf.png" />
 </p>
 
-The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL. glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-glTF is a draft specification; it may change before ratification.  Everyone is encouraged to provide feedback on the specification and contribute to the open-source converter.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback.
+> 
+_This is a draft specification; there may be minor changes before ratification is finalized.  Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues)._
 
 ## Specification  
 
-[glTF Specification 1.0](specification/README.md)
+[Draft glTF Specification 1.0](specification/README.md)
+
+([Guide](https://github.com/KhronosGroup/glTF/wiki/glTF-0.8-to-1.0-Guide) for upgrading from glTF 0.8.)
 
 ## Converter
 
