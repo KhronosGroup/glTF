@@ -582,10 +582,10 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "jointName": "Bone1",
             "name": "root",
             "rotation": [
-                0.888952,
-                0.414921,
-                0.19392,
-                0.0773304
+                0,
+                0,
+                0.7071067811865475,
+                0.7071067811865476
             ],
             "scale": [
                 1,
@@ -603,10 +603,10 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "jointName": "Bone2",
             "name": "head",
             "rotation": [
-                1,
                 0,
                 0,
-                0
+                0,
+                1
             ],
             "scale": [
                 1,
@@ -615,8 +615,8 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ],
             "translation": [
                 8.76635,
-                4.318e-07,
-                -1.778e-07
+                0,
+                0
             ]
         },
 ```
