@@ -119,7 +119,7 @@ glTF uses URIs to reference buffers, shaders, and image resources. These URIs ma
 *This section is non-normative.*
 
 <p align="center">
-<img src="figures/files.png" /><br/>
+<img src="figures/dictionary-objects.png" /><br/>
 The top-level dictionary objects in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
 </p>
 
