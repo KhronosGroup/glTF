@@ -193,6 +193,8 @@ Whereas IDs are used for internal glTF references, _names_ are used for applicat
 
 For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
 
+It is recommended that container formats reference a glTF object by ID by concatenating the asset's path, `#`, and the ID, e.g., `asset.gltf#material_id`.
+
 <a name="scenes"></a>
 ## Scenes
 
