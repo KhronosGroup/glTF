@@ -160,6 +160,9 @@ namespace GLTF
             shared_ptr <GLTF::JSONObject> extensions = this->createObjectIfNeeded("extensions");
             shared_ptr <GLTF::JSONObject> khrMaterialsCommon(new GLTF::JSONObject());
 
+            shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
+            bool doubleSided = techniqueExtras->getBool(kDoubleSided);
+
             std::string lightingModel = techniqueGenerator->getString("lightingModel");
             std::transform(lightingModel.begin(), lightingModel.end(), lightingModel.begin(), toupper);
             khrMaterialsCommon->setString(kTechnique, lightingModel);

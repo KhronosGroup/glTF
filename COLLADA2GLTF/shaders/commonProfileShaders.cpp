@@ -357,10 +357,6 @@ namespace GLTF
         shared_ptr <JSONArray> enableArray(new GLTF::JSONArray());
         shared_ptr <GLTFProfile> profile = asset->profile();
         
-        if (techniqueExtras->getBool(kDoubleSided) == false) {
-            enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
-        }
-        
         enableArray->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("DEPTH_TEST"))));
 
         if (isOpaque(parameters, asset) == false) {
@@ -385,6 +381,13 @@ namespace GLTF
                 blendFuncSeparate->appendValue(shared_ptr<JSONNumber> (new JSONNumber(profile->getGLenumForString("ONE_MINUS_SRC_ALPHA"))));
             }
             functions->setValue("blendFuncSeparate", blendFuncSeparate) ;
+            functions->setBool("depthMask", false);
+        }
+        else
+        {
+            if (techniqueExtras->getBool(kDoubleSided) == false) {
+                enableArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(profile->getGLenumForString("CULL_FACE"))));
+            }
         }
         
         if (enableArray->getCount() > 0) {
