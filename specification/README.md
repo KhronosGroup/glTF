@@ -1,5 +1,5 @@
 <p align="center">
-<img src="figures/glTF_300.jpg" />
+<img src="figures/gltf.png" />
 </p>
 
 *Draft, Version 1.0*
@@ -20,7 +20,7 @@ Contributors
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
 * Remi Arnaud, Starbreeze Studios
 * Uli Klumpp, Individual Contributor
-
+* Neil Trevett, NVIDIA
 
 # Contents
 
