@@ -3,9 +3,13 @@
     "title" : "KHR_materials_common glTF extension",
     "type" : "object",
     "properties" : {
-        "light" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The id of the light referenced by this node."
+        "lights" : {
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "light.schema.json"
+            },
+            "default" : {}
         }
     },
     "additionalProperties" : false

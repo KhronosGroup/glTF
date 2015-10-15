@@ -2967,6 +2967,7 @@ An attribute or uniform input to a [`technique`](#reference-technique), and an o
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**count**|`integer`|When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.|No|
+|**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
 |**semantic**|`string`|Identifies a parameter with a well-known meaning.|No|
 |**value**|`number`, `boolean`, `string`, `number[]`, or `boolean[]`|The value of the parameter.|No|
@@ -2984,6 +2985,14 @@ When defined, the parameter is an array of count elements of the specified type.
 * **Type**: `integer`
 * **Required**: No
 * **Minimum**:` >= 1`
+
+### parameter.node
+
+The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4).
+
+* **Type**: `string`
+* **Required**: No
+* **Minimum Length**`: >= 1`
 
 ### parameter.type :white_check_mark: 
 

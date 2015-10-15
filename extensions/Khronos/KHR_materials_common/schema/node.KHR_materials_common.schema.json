@@ -3,13 +3,9 @@
     "title" : "KHR_materials_common node extension",
     "type" : "object",
     "properties" : {
-        "lights" : {
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "light.schema.json"
-            },
-            "default" : {}
+        "light" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the light referenced by this node."
         }
     },
     "additionalProperties" : false
