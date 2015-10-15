@@ -2423,7 +2423,6 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
-
 Additional properties are not allowed.
 
 * **JSON schema**: [node.schema.json](schema/node.schema.json)
