@@ -2265,7 +2265,7 @@ A dictionary object of parameter values.  Parameters with the same name as the t
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `number`, `boolean`, `string`, `number[]`, or `boolean[]`
+* **Type of each property**: `number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`
 
 ### material.name
 
@@ -2982,7 +2982,7 @@ An attribute or uniform input to a [`technique`](#reference-technique), and an o
 |**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
 |**semantic**|`string`|Identifies a parameter with a well-known meaning.|No|
-|**value**|`number`, `boolean`, `string`, `number[]`, or `boolean[]`|The value of the parameter.|No|
+|**value**|`number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -3025,7 +3025,7 @@ Identifies a parameter with a well-known meaning.  Uniform semantics include `"L
 
 The value of the parameter.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.
 
-* **Type**: `number`, `boolean`, `string`, `number[]`, or `boolean[]`
+* **Type of each property**: `number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`
 * **Required**: No
 
 ### parameter.extensions
