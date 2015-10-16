@@ -68,7 +68,6 @@ Table 1. Common Material Shared Properties
 | `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
 | `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture ID for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
