@@ -126,7 +126,40 @@ The third accessor from the example uses decompression and additionally provides
 
 ### JSON Schema
 
-For full details on the WEB3D_quantized_attributes extension properties, see the schema:
+# WEB3D_quantized_attributes accessor extension
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**decodeMatrix**|`number[1-16]`|A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.| :white_check_mark: Yes|
+|**decodedMax**|`number[1-16]`|Maximum decoded value of each component in this attribute.|No|
+|**decodedMin**|`number[1-16]`|Minimum decoded value of each component in this attribute.|No|
+
+Additional properties are not allowed.
+
+## WEB3D_quantized_attributes accessor extension.decodeMatrix :white_check_mark: 
+
+A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.
+
+* **Type**: `number[1-16]`
+* **Required**: Yes
+
+## WEB3D_quantized_attributes accessor extension.decodedMax
+
+Maximum decoded value of each component in this attribute.
+
+* **Type**: `number[1-16]`
+* **Required**: No
+
+## WEB3D_quantized_attributes accessor extension.decodedMin
+
+Minimum decoded value of each component in this attribute.
+
+* **Type**: `number[1-16]`
+* **Required**: No
+
+Also, see the schema file:
 
 * [accessor](schema/WEB3D_quantized_attributes.accessor.schema.json) `WEB3D_quantized_attributes` extensions object
 
