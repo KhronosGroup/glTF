@@ -125,6 +125,73 @@ since the chunks referred to by the `bufferView` might be interleaved with other
 
 ## JSON Schema
 
+
+### WEB3D_streaming glTF extension
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferChunks**|`array[]`|Chunks that are combined into the binary body of this binary glTF file.| :white_check_mark: Yes|
+
+Additional properties are not allowed.
+
+#### WEB3D_streaming glTF extension.bufferChunks :white_check_mark: 
+
+Chunks that are combined into the binary body of this binary glTF file.
+
+* **Type**: `array[]`
+* **Required**: Yes
+
+
+# WEB3D_streaming bufferChunk extension
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**byteOffset**|`integer`|The offset into the binary body in bytes.| :white_check_mark: Yes|
+|**byteLength**|`integer`|The length of the chunk in bytes.| :white_check_mark: Yes|
+
+Additional properties are not allowed.
+
+## WEB3D_streaming bufferChunk extension.byteOffset :white_check_mark: 
+
+The offset into the binary body in bytes.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+## WEB3D_streaming bufferChunk extension.byteLength :white_check_mark: 
+
+The length of the chunk in bytes.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**:` >= 0`
+
+
+# WEB3D_streaming bufferView extension
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**chunks**|`number[1-*]`|Array of chunk indices, defining the chunks of this bufferView.| :white_check_mark: Yes|
+
+Additional properties are not allowed.
+
+## WEB3D_streaming bufferView extension.chunks :white_check_mark: 
+
+Array of chunk indices, defining the chunks of this bufferView.
+
+* **Type**: `number[1-*]`
+* **Required**: Yes
+
+
+Also see the schema files:
+
 * [glTF](schema/WEB3D_streaming.glTF.schema.json) update to the root `glTF` schema (`bufferChunks` property)
 * [bufferChunk](schema/WEB3D_streaming.bufferChunk.schema.json) `bufferChunk` schema
 * [bufferView](schema/WEB3D_streaming.bufferView.schema.json) update to the `bufferView` schema (`chunks` property)

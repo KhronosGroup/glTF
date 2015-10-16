@@ -14,7 +14,7 @@
             "description" : "The length of the chunk in bytes.",
             "minimum" : 0,
             "required" : true
-        },
+        }
     },
     "additionalProperties" : false
 }
