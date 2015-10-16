@@ -20,7 +20,7 @@ glTF does not define a lighting model, instead relegating shading of visuals to 
 
 Many 3D tools and WebGL runtimes support built-in implementations of common material and light types. Using this extension, tools can export a much more compact representation of materials and lights. In addition, a runtimes with built-in lighting can apply its built-in light values to visuals shaded with common materials found in the glTF file. 
 
-This extension defines four light types: `directional`, `point`, `spot`, and `ambient`; and the material types `blinn`, `phong`, `lambert` and `constant`, for Blinn-Phong, Phong, Lambert and Unlit ("constant" color) materials, respectively.
+This extension defines four light types: `directional`, `point`, `spot`, and `ambient`; and the material types `blinn`, `phong`, `lambert` and `constant`, for Blinn, Phong, Lambert and Unlit ("constant" color) materials, respectively.
 
 The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the materials defined in the base specification.
 
