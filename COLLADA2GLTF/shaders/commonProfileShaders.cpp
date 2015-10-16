@@ -1057,7 +1057,8 @@ namespace GLTF
                             char varyingLightDirection[100];
                             sprintf(varyingLightDirection, "v_%sDirection", lightIndexCStr);
                             _program->addVarying(varyingLightDirection, vec3Type);
-                            if ((vertexShader->hasSymbol("v_position") == false) && ((lightingModel == phong) || (lightType == "spot"))) {
+                            if ((vertexShader->hasSymbol("v_position") == false) &&
+                                ((lightingModel == phong) || (lightingModel == blinn) || (lightType == "spot"))) {
                                 _program->addVarying("v_position", vec3Type);
                                 vertexShader->appendCode("v_position = pos.xyz;\n");
                             }
@@ -1120,16 +1121,16 @@ namespace GLTF
                             
                             //we handle phong, blinn, constant and lambert
                             if (hasSpecular) {
-                                if (lightingModel == phong) {
-                                    fragmentShader->appendCode("vec3 position = v_position;\n");
+                                fragmentShader->appendCode("vec3 viewDir = -normalize(v_position);\n");
+                                if (lightingModel == phong) {                
                                     if (hasNormalMap) {
                                         fragmentShader->appendCode("l *= bumpMatrix;\n");
                                         fragmentShader->appendCode("position *= bumpMatrix;\n");
                                     }
-                                    fragmentShader->appendCode("float phongTerm = max(0.0, dot(reflect(-l,normal), normalize(-position)));\n");
+                                    fragmentShader->appendCode("float phongTerm = max(0.0, dot(reflect(-l,normal), viewDir));\n");
                                     fragmentShader->appendCode("specularIntensity = max(0., pow(phongTerm , u_shininess)) * attenuation;\n");
                                 } else if (lightingModel == blinn) {
-                                    fragmentShader->appendCode("vec3 h = normalize(l+vec3(0.,0.,1.));\n");
+                                    fragmentShader->appendCode("vec3 h = normalize(l+viewDir);\n");
                                     if (hasNormalMap) {
                                         fragmentShader->appendCode("h *= bumpMatrix;\n");
                                         fragmentShader->appendCode("l *= bumpMatrix;\n");
