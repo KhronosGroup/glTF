@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "EXT_quantized_attributes accessor extension",
+    "title" : "WEB3D_quantized_attributes accessor extension",
     "type" : "object",
     "properties" : {
          "decodeMatrix" : {
