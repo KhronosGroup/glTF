@@ -33,26 +33,27 @@ Common materials are defined by adding an `extensions` property to any glTF mate
 For example, the following defines a material with a Lambert shader with 50% gray diffuse color:
 
 ```javascript
-    "materials": {
-            "lambert1": {
-                "extensions": {
-                    "KHR_materials_common" : {
-                        // one of CONSTANT,
-                        // BLINN,
-                        // PHONG,
-                        // LAMBERT
-                        "technique" : "LAMBERT",
-                        "values": {
-                            "diffuse": [
-                            	0.5,
-                            	0.5,
-                            	0.5,
-                            	1]
-                        }
-                    }
+"materials": {
+    "lambert1": {
+        "extensions": {
+            "KHR_materials_common" : {
+                // one of CONSTANT,
+                // BLINN,
+                // PHONG,
+                // LAMBERT
+                "technique" : "LAMBERT",
+                "values": {
+                    "diffuse": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        1
+                    ]
                 }
             }
-        },
+        }
+    }
+}
 ```
 
 ### Material Types
@@ -100,25 +101,25 @@ equation H= normalize(I+L)
 Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
 
 ```javascript
-    "materials": {
-        "blinn1": {
-            "extensions": {
-                "KHR_materials_common" : {
-					   "technique" : "BLINN",
-						"values": {
-						    "diffuse": "texture_1",
-						    "shininess": 10,
-						    "specular": [
-						        1,
-						        0,
-						        0,
-						        1
-						    ]
-						}
-					}
+"materials": {
+    "blinn1": {
+        "extensions": {
+            "KHR_materials_common" : {
+                "technique" : "BLINN",
+                "values": {
+                    "diffuse": "texture_1",
+                    "shininess": 10,
+                    "specular": [
+                        1,
+                        0,
+                        0,
+                        1
+                    ]
+                }
             }
         }
-        },
+    }
+}
 ```
 
 #### Phong
@@ -140,23 +141,23 @@ where:
 Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a yellow diffuse color.
 
 ```javascript
-    "materials": {
-        "blinn1": {
-            "extensions": {
-                "KHR_materials_common" : {
-					   "technique" : "PHONG",
-						"values": {
-						    "diffuse": [
-						    	1,
-						    	1,
-						    	0,
-						    	1
-						    ]
-						}
-					}
+"materials": {
+    "blinn1": {
+        "extensions": {
+            "KHR_materials_common" : {
+                "technique" : "PHONG",
+                "values": {
+                    "diffuse": [
+                        1,
+                        1,
+                        0,
+                        1
+                    ]
+                }
             }
         }
-        },
+    }
+}
 ```
 
 #### Lambert
@@ -179,24 +180,24 @@ Lambert shading does not reflect specular highlights; therefore the common mater
 The following example defines a Lambert shaded material with a 50% gray emissive color and a diffuse texture map.
 
 ```javascript
-    "materials": {
-        "blinn1": {
-            "extensions": {
-                "KHR_materials_common" : {
-					   "technique" : "LAMBERT",
-						"values": {
-							"diffuse": "texture_1",
-						    "emission": [
-						    	0.5,
-						    	0.5,
-						    	0.5,
-						    	1
-						    ],
-						}
-					}
+"materials": {
+    "blinn1": {
+        "extensions": {
+            "KHR_materials_common" : {
+                "technique" : "LAMBERT",
+                "values": {
+                    "diffuse": "texture_1",
+                    "emission": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        1
+                    ]
+                }
             }
         }
-        },
+    }
+}
 ```
 
 #### Constant
@@ -219,19 +220,19 @@ Constant shading does not reflect light sources in the scene; therefore the comm
 The following example defines a Constant lit material with an emissive texture and 50% opacity.
 
 ```javascript
-    "materials": {
-        "blinn1": {
-            "extensions": {
-                "KHR_materials_common" : {
-					   "technique" : "CONSTANT",
-						"values": {
-							"emission": "texture_2",
-							"transparency": 0.5
-						}
-					}
+"materials": {
+    "blinn1": {
+        "extensions": {
+            "KHR_materials_common" : {
+                "technique" : "CONSTANT",
+                "values": {
+                    "emission": "texture_2",
+                    "transparency": 0.5
+                }
             }
         }
-        },
+    }
+}
 ```
 
 ### Interaction Between Attribute Semantics and Common Materials
@@ -258,25 +259,22 @@ Each light defines a `type` property that designates the type of light (`ambient
 
 
 ```javascript
-    "extensions": {
-
-        "KHR_materials_common" : {
-
-            "lights": {
-                "light1": {
-                    "directional": {
-                        "color": [
-                            1,
-                            1,
-                            1
-                        ]
-                    },
-                    "type": "directional"
-                }
-            },
-
+"extensions": {
+    "KHR_materials_common" : {
+        "lights": {
+            "light1": {
+                "directional": {
+                    "color": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "type": "directional"
+            }
         }
-    },
+    }
+}
 ```
 
 IDs of any property within the `lights` extension property are treated like other glTF IDs, i.e. they are added to the global ID space.
@@ -287,17 +285,16 @@ IDs of any property within the `lights` extension property are treated like othe
 Lights are glTF scene objects: they have position and orientation, which can be animated. Lights are placed in the scene by defining an `extensions` property of a node, and within that a `KHR_materials_common` property that identifies a light using its `light` property.
 
 ```javascript
-    "nodes": {
-        "node1" : {
-            "children" : [
-            ],
-            "extensions": {
-                "KHR_materials_common" : {
-                    "light" : "light1",
-                }
-            }            
+"nodes": {
+    "node1" : {
+        "children" : [
+    ],
+    "extensions": {
+        "KHR_materials_common" : {
+            "light" : "light1",
         }
-    }
+    }            
+}
 ```
 
 ### Light Types
