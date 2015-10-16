@@ -144,7 +144,7 @@ Chunks that are combined into the binary body of this binary glTF file.
 * **Required**: Yes
 
 
-# WEB3D_streaming bufferChunk extension
+###  WEB3D_streaming bufferChunk extension
 
 **Properties**
 
@@ -155,7 +155,7 @@ Chunks that are combined into the binary body of this binary glTF file.
 
 Additional properties are not allowed.
 
-## WEB3D_streaming bufferChunk extension.byteOffset :white_check_mark: 
+#### WEB3D_streaming bufferChunk extension.byteOffset :white_check_mark: 
 
 The offset into the binary body in bytes.
 
@@ -163,7 +163,7 @@ The offset into the binary body in bytes.
 * **Required**: Yes
 * **Minimum**:` >= 0`
 
-## WEB3D_streaming bufferChunk extension.byteLength :white_check_mark: 
+#### WEB3D_streaming bufferChunk extension.byteLength :white_check_mark: 
 
 The length of the chunk in bytes.
 
@@ -172,7 +172,7 @@ The length of the chunk in bytes.
 * **Minimum**:` >= 0`
 
 
-# WEB3D_streaming bufferView extension
+###  WEB3D_streaming bufferView extension
 
 **Properties**
 
@@ -182,7 +182,7 @@ The length of the chunk in bytes.
 
 Additional properties are not allowed.
 
-## WEB3D_streaming bufferView extension.chunks :white_check_mark: 
+#### WEB3D_streaming bufferView extension.chunks :white_check_mark: 
 
 Array of chunk indices, defining the chunks of this bufferView.
 
