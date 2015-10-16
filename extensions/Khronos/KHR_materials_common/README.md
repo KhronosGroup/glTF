@@ -68,9 +68,7 @@ Table 1. Common Material Shared Properties
 | `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
 | `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture ID for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
-| `indexOfRefraction`            | `FLOAT` | Declares the index of refraction for perfectly refracted light as a single scalar index between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT` |
-| `reflective`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of a perfect mirror reflection. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
-| `reflectivity`                    | `FLOAT` | Declares the amount of perfect mirror reflection to be added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+added to the reflected light as a value between 0.0 and 1.0. | 0.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
@@ -140,7 +138,7 @@ where:
 * `I` – Eye vector
 * `R` – Perfect reflection vector (reflect (L around N))
 
-Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a white diffuse color, environment map texture and high reflectivity.
+Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a yellow diffuse color.
 
 ```javascript
     "materials": {
@@ -152,11 +150,9 @@ Phong lighting uses all of the common material properties defined in Table 1. Th
 						    "diffuse": [
 						    	1,
 						    	1,
-						    	1,
+						    	0,
 						    	1
-						    ],
-						    "relective": "texture_envmap",
-						    "refectivity": 1
+						    ]
 						}
 					}
             }
@@ -219,7 +215,7 @@ where
 
 * `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
 
-Constant shading does not reflect light sources in the scene; therefore the common material properties `diffuse`, `reflective`, `reflectivity`, `specular` and `shininess` are not used. All other properties from Table 1 apply.
+Constant shading does not reflect light sources in the scene; therefore the common material properties `diffuse`, `specular` and `shininess` are not used. All other properties from Table 1 apply.
 
 The following example defines a Constant lit material with an emissive texture and 50% opacity.
 
