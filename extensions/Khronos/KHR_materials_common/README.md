@@ -312,28 +312,32 @@ Table 2. Common Light Shared Properties
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
 | `constantAttenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
-`directional`, `spot` |
-| `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
 | `linearAttenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `quadraticAttenuation`       | `FLOAT` | Quadratic attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `type`                    | string | Declares the type of the light. Must be one of `ambient`, `directional`, `point` or `spot` | "" | `ambient`, `directional`, `point`, `spot` |
 
 ### Ambient
 
-Ambient lights define constant lighting throughout the scene, as reflected in the `ambient` property of any material. Ambient lights support only the `color` common light property described in Table 2.
+Ambient lights define constant lighting throughout the scene, as reflected in the `ambient` property of any material. Ambient lights are not affected by the node's translation or rotation. Ambient lights support the `color` common light property described in Table 2.
 
 #### Directional
 
-Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the common light properties `color` and `direction` described in Table 2.
+Directional lights are light sources that emit from infinitely far away in a specified direction. The light's direction is calculated by transforming the direction vector (0, 0, -1) by the node's rotation. Directional lights are not affected by the node's translation. 
+
+Directional lights support the common light property `color` described in Table 2.
 
 ### Point
 
-Point lights emit light in all directions over a given distance. Point lights support the `color`, `constantAttenuation`, `distance` and `linearAttenuation` common light properties described in Table 2. Point lights do not have a direction.
+Point lights emit light in all directions over a given distance. The point light's position is calculated based on the node's transformation matrix. Point lights are not affected by the node's rotation.
+
+Point lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in Table 2. Point lights do not have a direction.
 
 
 ### Spot
 
-Sport lights emit light in a directions over a given distance. Spot lights support the `color`, `constantAttenuation`, `direction`, `distance` and `linearAttenuation` common light properties described in Table 2. Spot lights also define the following properties:
+Sport lights emit light in a direction over a given distance. The light's position is calculated based on the node's transformation matrix. The light's direction is calculated by transforming the direction vector (0, 0, -1) by the node's rotation. 
+
+Spot lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in Table 2. Spot lights also define the following properties:
 
 Table 3. Spot Light Properties
 
