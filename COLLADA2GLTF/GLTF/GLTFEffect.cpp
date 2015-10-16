@@ -173,9 +173,6 @@ namespace GLTF
                 materialsCommonValues->setBool("doubleSided", doubleSided);
             }
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "emission");
-            AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "indexOfRefraction");
-            AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "reflective");
-            AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "reflectivity");
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "transparency");
 
             if (lightingModel != "CONSTANT")

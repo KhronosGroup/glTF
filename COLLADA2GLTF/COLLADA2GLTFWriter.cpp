@@ -932,7 +932,7 @@ namespace GLTF
         
         //retrieve the type, parameterName -> symbol -> type
         double red = 1, green = 1, blue = 1, alpha = 1;
-        if (slot.isColor()) {
+        if (slot.isColor() && (slotName != "reflective")) {
             const Color& color = slot.getColor();
             if (slot.getType() != COLLADAFW::ColorOrTexture::UNSPECIFIED) {
                 red = color.getRed();
@@ -945,10 +945,7 @@ namespace GLTF
             slotObject->setValue("value", serializeVec4(red, green, blue, alpha));
             slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
             khrMaterialsCommonValues->setValue(slotName, slotObject);
-            if (slotName != "reflective")
-            {
-                values->setValue(slotName, slotObject);
-            }
+            values->setValue(slotName, slotObject);
         } else if (slot.isTexture()) {
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
@@ -1035,22 +1032,6 @@ namespace GLTF
                 shininessObject->setDouble("value", shininess);
                 values->setValue("shininess", shininessObject);
                 khrMaterialsCommonValues->setValue("shininess", shininessObject);
-            }
-
-            double indexOfRefraction = effectCommon->getIndexOfRefraction().getFloatValue();
-            if (indexOfRefraction >= 0) {
-                shared_ptr <JSONObject> indexOfRefractionObject(new JSONObject());
-                indexOfRefractionObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                indexOfRefractionObject->setDouble("value", indexOfRefraction);
-                khrMaterialsCommonValues->setValue("indexOfRefraction", indexOfRefractionObject);
-            }
-
-            double reflectivity = effectCommon->getReflectivity().getFloatValue();
-            if (reflectivity >= 0) {
-                shared_ptr <JSONObject> reflectivityObject(new JSONObject());
-                reflectivityObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                reflectivityObject->setDouble("value", reflectivity);
-                khrMaterialsCommonValues->setValue("reflectivity", reflectivityObject);
             }
             
             shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
