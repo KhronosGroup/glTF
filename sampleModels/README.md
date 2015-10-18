@@ -6,7 +6,6 @@ Each sample model is provided in the following formats:
 
 See the `README.txt` in each model's directory for usage restrictions.
 
-
 | Model                                | Screenshot | Description|
 |--------------------------------------|------------|------------|
 | [box](box)                           | ![](box/screenshot/screenshot.png)             | One mesh and one material. Start with this. |
@@ -15,12 +14,5 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [CesiumMilkTruck](CesiumMilkTruck)   | ![](CesiumMilkTruck/screenshot/screenshot.png) | Textured. Multiple nodes/meshes. Animations. |
 | [CesiumMan](CesiumMan)               | ![](CesiumMan/screenshot/screenshot.png)       | Textured. Animations. Skins. |
 | [SuperMurdoch](SuperMurdoch)         | ![](SuperMurdoch/screenshot/screenshot.png)    | Multiple materials. Translucency. |
-
-| [monster](monster)                   | ![]() | TODO |
-| [rambler](rambler)                   | ![]() | TODO |
-| [vc](vc)                             | ![]() | TODO |
-| [wine](wine)                         | ![]() | TODO |
-
-
-
-* brainsteam
+| [rambler](rambler)                   | ![]()                                          | Lots of nodes/meshes. |
+| [wine](wine)                         | ![](wine/screenshot/screenshot.png)            | Multiple textures and materials. |
