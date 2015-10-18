@@ -1,0 +1,4352 @@
+{
+    "animations": {
+        "Figure_2chest_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2chest_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2chest_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 32568,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 257716,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2chest_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2head_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2head_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2head_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 48276,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 278660,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2head_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2hip_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2hip_2yrot_translation_sampler",
+                    "target": {
+                        "id": "Figure_2hip_2_node",
+                        "path": "translation"
+                    }
+                },
+                {
+                    "sampler": "Figure_2hip_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2hip_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 1152,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 236772,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                },
+                "translation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 221064,
+                    "count": 1309,
+                    "type": "FLOAT_VEC3"
+                }
+            },
+            "samplers": {
+                "Figure_2hip_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                },
+                "Figure_2hip_2yrot_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        },
+        "Figure_2lFoot_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2lFoot_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lFoot_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 205356,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 488100,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2lFoot_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2lForeArm_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2lForeArm_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lForeArm_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 111108,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 362436,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2lForeArm_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2lShin_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2lShin_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lShin_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 189648,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 467156,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2lShin_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2lShldr_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2lShldr_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lShldr_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 95400,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 341492,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2lShldr_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2lThigh_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2lThigh_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2lThigh_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 173940,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 446212,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2lThigh_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2rFoot_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2rFoot_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rFoot_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 158232,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 425268,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2rFoot_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2rForeArm_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2rForeArm_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rForeArm_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 79692,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 320548,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2rForeArm_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2rShin_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2rShin_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rShin_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 142524,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 404324,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2rShin_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2rShldr_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2rShldr_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rShldr_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 63984,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 299604,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2rShldr_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "Figure_2rThigh_2yrot": {
+            "channels": [
+                {
+                    "sampler": "Figure_2rThigh_2yrot_rotation_sampler",
+                    "target": {
+                        "id": "Figure_2rThigh_2_node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "count": 1309,
+            "parameters": {
+                "TIME": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 126816,
+                    "count": 1309,
+                    "type": "FLOAT"
+                },
+                "rotation": {
+                    "bufferView": "bufferView_1373",
+                    "byteOffset": 383380,
+                    "count": 1309,
+                    "type": "FLOAT_VEC4"
+                }
+            },
+            "samplers": {
+                "Figure_2rThigh_2yrot_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        }
+    },
+    "asset": {
+        "generator": "collada2gltf@e8f7cc618a59874d23b99e7181d9607bb6e29e84"
+    },
+    "attributes": {
+        "attribute_1183": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "count": 32676,
+            "max": [
+                3.81405,
+                6.01823,
+                0.838978
+            ],
+            "min": [
+                -4.10807,
+                -0.0017727,
+                -1.12004
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_1185": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 392112,
+            "byteStride": 12,
+            "count": 32676,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": "FLOAT_VEC3"
+        },
+        "attribute_1187": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 784224,
+            "byteStride": 8,
+            "count": 32676,
+            "max": [
+                0.993203,
+                0.97479
+            ],
+            "min": [
+                0.0172094,
+                0.012533
+            ],
+            "type": "FLOAT_VEC2"
+        },
+        "attribute_1364": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 1045632,
+            "byteStride": 16,
+            "count": 32676,
+            "max": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "min": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "type": "FLOAT_VEC4"
+        },
+        "attribute_1367": {
+            "bufferView": "bufferView_1371",
+            "byteOffset": 1568448,
+            "byteStride": 16,
+            "count": 32676,
+            "max": [
+                17,
+                0,
+                0,
+                0
+            ],
+            "min": [
+                0,
+                0,
+                0,
+                0
+            ],
+            "type": "FLOAT_VEC4"
+        }
+    },
+    "bufferViews": {
+        "bufferView_1371": {
+            "buffer": "brainsteam.bin",
+            "byteLength": 2091264,
+            "byteOffset": 0,
+            "target": "ARRAY_BUFFER"
+        },
+        "bufferView_1372": {
+            "buffer": "brainsteam.bin",
+            "byteLength": 370212,
+            "byteOffset": 2091264,
+            "target": "ELEMENT_ARRAY_BUFFER"
+        },
+        "bufferView_1373": {
+            "buffer": "brainsteam.bin",
+            "byteLength": 509044,
+            "byteOffset": 2461476
+        }
+    },
+    "buffers": {
+        "brainsteam.bin": {
+            "byteLength": 2970520,
+            "path": "brainsteam.bin"
+        }
+    },
+    "indices": {
+        "indices_1007": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 0,
+            "count": 2778,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1010": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 5556,
+            "count": 5928,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1013": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 17412,
+            "count": 1134,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1016": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 19680,
+            "count": 6240,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1019": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 32160,
+            "count": 312,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1022": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 32784,
+            "count": 1512,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1025": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 35808,
+            "count": 4740,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1028": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 45288,
+            "count": 912,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1031": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 47112,
+            "count": 216,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1034": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 47544,
+            "count": 2136,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1037": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 51816,
+            "count": 3696,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1040": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 59208,
+            "count": 2286,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1043": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 63780,
+            "count": 2160,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1046": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 68100,
+            "count": 2400,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1049": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 72900,
+            "count": 192,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1052": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 73284,
+            "count": 2772,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1055": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 78828,
+            "count": 312,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1058": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 79452,
+            "count": 2280,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1061": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 84012,
+            "count": 1680,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1064": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 87372,
+            "count": 1080,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1067": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 89532,
+            "count": 1392,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1070": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 92316,
+            "count": 3456,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1073": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 99228,
+            "count": 6996,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1076": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 113220,
+            "count": 9456,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1079": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 132132,
+            "count": 7080,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1082": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 146292,
+            "count": 19836,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1085": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 185964,
+            "count": 8064,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1088": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 202092,
+            "count": 5736,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1091": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 213564,
+            "count": 3318,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1094": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 220200,
+            "count": 2880,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1097": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 225960,
+            "count": 1536,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1100": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 229032,
+            "count": 7308,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1103": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 243648,
+            "count": 3528,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1106": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 250704,
+            "count": 1344,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1109": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 253392,
+            "count": 5406,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1112": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 264204,
+            "count": 1092,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1115": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 266388,
+            "count": 960,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1118": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 268308,
+            "count": 1842,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1121": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 271992,
+            "count": 1260,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1124": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 274512,
+            "count": 432,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1127": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 275376,
+            "count": 5958,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1130": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 287292,
+            "count": 1488,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1133": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 290268,
+            "count": 8688,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1136": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 307644,
+            "count": 768,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1139": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 309180,
+            "count": 300,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1142": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 309780,
+            "count": 2280,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1145": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 314340,
+            "count": 228,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1148": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 314796,
+            "count": 156,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1151": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 315108,
+            "count": 228,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1154": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 315564,
+            "count": 864,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1157": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 317292,
+            "count": 4536,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1160": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 326364,
+            "count": 480,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1163": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 327324,
+            "count": 432,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1166": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 328188,
+            "count": 3150,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1169": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 334488,
+            "count": 4632,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1172": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 343752,
+            "count": 8922,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1175": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 361596,
+            "count": 3066,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1178": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 367728,
+            "count": 576,
+            "type": "UNSIGNED_SHORT"
+        },
+        "indices_1181": {
+            "bufferView": "bufferView_1372",
+            "byteOffset": 368880,
+            "count": 666,
+            "type": "UNSIGNED_SHORT"
+        }
+    },
+    "materials": {
+        "material.0": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.168627,
+                            0.141176,
+                            0.109804,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.698039,
+                            0.698039,
+                            0.698039,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "frameInStem"
+        },
+        "material.1": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.745098,
+                            0.45098,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699962,
+                            0.699962,
+                            0.699962,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "componentsStem"
+        },
+        "material.10": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.458824,
+                            0.458824,
+                            0.458824,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "plugStem"
+        },
+        "material.11": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.462745,
+                            0.407843,
+                            0.329412,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "discInStem"
+        },
+        "material.12": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0784314,
+                            0.184314,
+                            0.207843,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "TubeStem"
+        },
+        "material.13": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.521569,
+                            0.462745,
+                            0.376471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "componentStem"
+        },
+        "material.14": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.243137,
+                            0.196078,
+                            0.156863,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "hexStem"
+        },
+        "material.15": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.45098,
+                            0.380392,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "kneeGuardStem"
+        },
+        "material.16": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.682353,
+                            0.635294,
+                            0.533333,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "calfStem"
+        },
+        "material.17": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "ankleBracketStem"
+        },
+        "material.18": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "ankleStem"
+        },
+        "material.19": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.356863,
+                            0.32549,
+                            0.278431,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "calfCoverStem"
+        },
+        "material.2": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.541176,
+                            0.541176,
+                            0.541176,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "Stem"
+        },
+        "material.20": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "knee2Stem"
+        },
+        "material.21": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.270588,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699901,
+                            0.699901,
+                            0.699901,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "skeletonStem"
+        },
+        "material.22": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.384314,
+                            0.34902,
+                            0.282353,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bracketStem"
+        },
+        "material.23": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "coverStem"
+        },
+        "material.24": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.192157,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barStem"
+        },
+        "material.25": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.431373,
+                            0.2,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "intestineOutStem"
+        },
+        "material.26": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.917647,
+                            0.686275,
+                            0.270588,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "neckSinkStem"
+        },
+        "material.27": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.266667,
+                            0.337255,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shockOutStem"
+        },
+        "material.28": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0,
+                            0.482353,
+                            0.870588,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shockInStem"
+        },
+        "material.29": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.188235,
+                            0.156863,
+                            0.121569,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "discStem"
+        },
+        "material.3": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0196078,
+                            0.145098,
+                            0.176471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "footStem"
+        },
+        "material.30": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.498039,
+                            0.498039,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canisterInStem"
+        },
+        "material.31": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.537255,
+                            0.537255,
+                            0.537255,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canisterOutStem"
+        },
+        "material.32": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.360784,
+                            0.360784,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "canInnerStem"
+        },
+        "material.33": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.454902,
+                            0.219608,
+                            0.0196078,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "pipeStem"
+        },
+        "material.34": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.670588,
+                            0.407843,
+                            0.0588235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "off"
+        },
+        "material.35": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.290196,
+                            0.290196,
+                            0.290196,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699962,
+                            0.699962,
+                            0.699962,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "boltStem"
+        },
+        "material.36": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.207294,
+                            0.19881,
+                            0.709987,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "intestineInStem"
+        },
+        "material.37": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.509804,
+                            0.458824,
+                            0.376471,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armPlateStem"
+        },
+        "material.38": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shoulderPodStem"
+        },
+        "material.39": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armFilletStem"
+        },
+        "material.4": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.968628,
+                            0.968628,
+                            0.968628,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "footFlangeStem"
+        },
+        "material.40": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0196078,
+                            0.164706,
+                            0.2,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bStem"
+        },
+        "material.41": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.2,
+                            0.2,
+                            0.2,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armBoltStem"
+        },
+        "material.42": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.0235294,
+                            0.117647,
+                            0.141176,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "shoulderBStem"
+        },
+        "material.43": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.513726,
+                            0.454902,
+                            0.372549,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "armTrussStem"
+        },
+        "material.44": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.268193,
+                            0.258503,
+                            0.549996,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "pinStem"
+        },
+        "material.45": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.764706,
+                            0.486275,
+                            0.0784314,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "radiatorStem"
+        },
+        "material.46": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "rpgStem"
+        },
+        "material.47": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "bayonetStem"
+        },
+        "material.48": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.12549,
+                            0.12549,
+                            0.12549,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barrel2Stem"
+        },
+        "material.49": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.352941,
+                            0.352941,
+                            0.352941,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "barrel1Stem"
+        },
+        "material.5": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.482353,
+                            0.435294,
+                            0.360784,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "kneeStem"
+        },
+        "material.50": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.419608,
+                            0.419608,
+                            0.411765,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filterOutStem"
+        },
+        "material.51": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.359991,
+                            0.359991,
+                            0.359991,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filterInStem"
+        },
+        "material.52": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.505882,
+                            0.505882,
+                            0.505882,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "exhaustGunStem"
+        },
+        "material.53": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.254902,
+                            0.254902,
+                            0.254902,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headFilletStem"
+        },
+        "material.54": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.862745,
+                            0.65098,
+                            0.243137,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headCaseStem"
+        },
+        "material.55": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.709804,
+                            0.541176,
+                            0.254902,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headGrillStem"
+        },
+        "material.56": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.827451,
+                            0.517647,
+                            0.0627451,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "headHornStem"
+        },
+        "material.57": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "eyeStem"
+        },
+        "material.58": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "eyeRimStem"
+        },
+        "material.6": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.262745,
+                            0.262745,
+                            0.262745,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "hipSphereStem"
+        },
+        "material.7": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.988235,
+                            0.988235,
+                            0.988235,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "filletStem"
+        },
+        "material.8": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.898039,
+                            0.898039,
+                            0.898039,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699977,
+                            0.699977,
+                            0.699977,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "thighStem"
+        },
+        "material.9": {
+            "instanceTechnique": {
+                "technique": "technique1",
+                "values": [
+                    {
+                        "parameter": "ambient",
+                        "value": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "diffuse",
+                        "value": [
+                            0.498039,
+                            0.45098,
+                            0.380392,
+                            1
+                        ]
+                    },
+                    {
+                        "parameter": "specular",
+                        "value": [
+                            0.699992,
+                            0.699992,
+                            0.699992,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "name": "thighPadStem"
+        }
+    },
+    "meshes": {
+        "Figure_2_geometry": {
+            "name": "Figure_2_geometry",
+            "primitives": [
+                {
+                    "indices": "indices_1007",
+                    "material": "material.0",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1010",
+                    "material": "material.1",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1013",
+                    "material": "material.2",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1016",
+                    "material": "material.3",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1019",
+                    "material": "material.4",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1022",
+                    "material": "material.5",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1025",
+                    "material": "material.6",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1028",
+                    "material": "material.7",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1031",
+                    "material": "material.8",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1034",
+                    "material": "material.9",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1037",
+                    "material": "material.10",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1040",
+                    "material": "material.11",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1043",
+                    "material": "material.12",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1046",
+                    "material": "material.13",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1049",
+                    "material": "material.14",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1052",
+                    "material": "material.15",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1055",
+                    "material": "material.16",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1058",
+                    "material": "material.17",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1061",
+                    "material": "material.18",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1064",
+                    "material": "material.19",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1067",
+                    "material": "material.20",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1070",
+                    "material": "material.21",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1073",
+                    "material": "material.22",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1076",
+                    "material": "material.23",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1079",
+                    "material": "material.24",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1082",
+                    "material": "material.25",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1085",
+                    "material": "material.26",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1088",
+                    "material": "material.27",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1091",
+                    "material": "material.28",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1094",
+                    "material": "material.29",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1097",
+                    "material": "material.30",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1100",
+                    "material": "material.31",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1103",
+                    "material": "material.32",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1106",
+                    "material": "material.33",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1109",
+                    "material": "material.34",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1112",
+                    "material": "material.35",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1115",
+                    "material": "material.36",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1118",
+                    "material": "material.37",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1121",
+                    "material": "material.38",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1124",
+                    "material": "material.39",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1127",
+                    "material": "material.40",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1130",
+                    "material": "material.41",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1133",
+                    "material": "material.42",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1136",
+                    "material": "material.43",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1139",
+                    "material": "material.44",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1142",
+                    "material": "material.45",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1145",
+                    "material": "material.46",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1148",
+                    "material": "material.47",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1151",
+                    "material": "material.48",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1154",
+                    "material": "material.49",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1157",
+                    "material": "material.50",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1160",
+                    "material": "material.51",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1163",
+                    "material": "material.52",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1166",
+                    "material": "material.53",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1169",
+                    "material": "material.54",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1172",
+                    "material": "material.55",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1175",
+                    "material": "material.56",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1178",
+                    "material": "material.57",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                },
+                {
+                    "indices": "indices_1181",
+                    "material": "material.58",
+                    "primitive": "TRIANGLES",
+                    "semantics": {
+                        "JOINT": "attribute_1367",
+                        "NORMAL": "attribute_1185",
+                        "POSITION": "attribute_1183",
+                        "TEXCOORD_0": "attribute_1187",
+                        "WEIGHT": "attribute_1364"
+                    }
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "Figure_2BODY_2_node": {
+            "children": [
+                "Figure_2hip_2_node"
+            ],
+            "jointId": "Figure_2BODY_2_node",
+            "matrix": [
+                0.999999,
+                2.35856e-07,
+                0.00135923,
+                0,
+                0,
+                1,
+                -0.000173522,
+                0,
+                -0.00135923,
+                0.000173522,
+                0.999999,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Body"
+        },
+        "Figure_2_node": {
+            "children": [],
+            "instanceSkin": {
+                "skeletons": [
+                    "Figure_2BODY_2_node"
+                ],
+                "skin": "Figure_2-skin",
+                "sources": [
+                    "Figure_2_geometry"
+                ]
+            },
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Figure_2_node"
+        },
+        "Figure_2chest_2_node": {
+            "children": [
+                "Figure_2head_2_node",
+                "Figure_2rShldr_2_node",
+                "Figure_2lShldr_2_node"
+            ],
+            "jointId": "Figure_2chest_2_node",
+            "name": "Chest",
+            "rotation": [
+                0.576369,
+                0.617805,
+                -0.534899,
+                0.255206
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                0.3526,
+                -0.0774
+            ]
+        },
+        "Figure_2head_2_node": {
+            "children": [],
+            "jointId": "Figure_2head_2_node",
+            "name": "Head",
+            "rotation": [
+                -0.49772,
+                -0.847103,
+                0.186255,
+                1.36768
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                1.72,
+                -0.0516
+            ]
+        },
+        "Figure_2hip_2_node": {
+            "children": [
+                "Figure_2chest_2_node",
+                "Figure_2rThigh_2_node",
+                "Figure_2lThigh_2_node"
+            ],
+            "jointId": "Figure_2hip_2_node",
+            "name": "Hip",
+            "rotation": [
+                0.140172,
+                -0.744836,
+                0.652358,
+                0.20618
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.183008,
+                2.92829,
+                -0.274501
+            ]
+        },
+        "Figure_2lFoot_2_node": {
+            "children": [
+                "Figure_2lToe_2_node"
+            ],
+            "jointId": "Figure_2lFoot_2_node",
+            "name": "Left_Foot",
+            "rotation": [
+                0.469943,
+                0.49224,
+                0.732703,
+                0.220304
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.0172,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "Figure_2lForeArm_2_node": {
+            "children": [
+                "Figure_2lMid1_2_node",
+                "Figure_2lPinky1_2_node",
+                "Figure_2lThumb1_2_node"
+            ],
+            "jointId": "Figure_2lForeArm_2_node",
+            "name": "Left_Forearm",
+            "rotation": [
+                0.0138611,
+                -0.928648,
+                0.370704,
+                1.71657
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.608725,
+                0.0255162,
+                -0.00859999
+            ]
+        },
+        "Figure_2lMid1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lMid1_2_node",
+            "matrix": [
+                0.953127,
+                -0.302003,
+                -0.0185332,
+                0,
+                0.288709,
+                0.926081,
+                -0.242941,
+                0,
+                0.0905321,
+                0.226203,
+                0.969864,
+                0,
+                1.34347,
+                0.00888387,
+                0.0516,
+                1
+            ],
+            "name": "lMid1"
+        },
+        "Figure_2lPinky1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lPinky1_2_node",
+            "matrix": [
+                0.830135,
+                0.556967,
+                -0.025775,
+                0,
+                -0.555408,
+                0.82198,
+                -0.125978,
+                0,
+                -0.0489793,
+                0.118895,
+                0.991698,
+                0,
+                1.3515,
+                0.0708213,
+                0.18912,
+                1
+            ],
+            "name": "lPinky1"
+        },
+        "Figure_2lShin_2_node": {
+            "children": [
+                "Figure_2lFoot_2_node"
+            ],
+            "jointId": "Figure_2lShin_2_node",
+            "name": "Left_Shin",
+            "rotation": [
+                0.0729501,
+                0.775114,
+                -0.627596,
+                0.381078
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.086,
+                -1.1696,
+                -0.0946
+            ]
+        },
+        "Figure_2lShldr_2_node": {
+            "children": [
+                "Figure_2lForeArm_2_node"
+            ],
+            "jointId": "Figure_2lShldr_2_node",
+            "name": "Left_Shoulder",
+            "rotation": [
+                0.925365,
+                0.0841759,
+                -0.369613,
+                1.8727
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                1.376,
+                1.118,
+                -0.043
+            ]
+        },
+        "Figure_2lThigh_2_node": {
+            "children": [
+                "Figure_2lShin_2_node"
+            ],
+            "jointId": "Figure_2lThigh_2_node",
+            "name": "Left_Thigh",
+            "rotation": [
+                -0.692762,
+                -0.71755,
+                -0.0721285,
+                0.30724
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "Figure_2lThumb1_2_node": {
+            "children": [],
+            "jointId": "Figure_2lThumb1_2_node",
+            "matrix": [
+                0.998883,
+                -0.0312525,
+                0.0354337,
+                0,
+                0.0265097,
+                0.991522,
+                0.127208,
+                0,
+                -0.0391088,
+                -0.126126,
+                0.991243,
+                0,
+                1.35358,
+                -0.071113,
+                0.180495,
+                1
+            ],
+            "name": "lThumb1"
+        },
+        "Figure_2lToe_2_node": {
+            "children": [],
+            "jointId": "Figure_2lToe_2_node",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "lToe"
+        },
+        "Figure_2rFoot_2_node": {
+            "children": [
+                "Figure_2rToe_2_node"
+            ],
+            "jointId": "Figure_2rFoot_2_node",
+            "name": "Right_Foot",
+            "rotation": [
+                -0.843241,
+                -0.359252,
+                0.399854,
+                0.320219
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.0172,
+                -1.2986,
+                -0.0946
+            ]
+        },
+        "Figure_2rForeArm_2_node": {
+            "children": [],
+            "jointId": "Figure_2rForeArm_2_node",
+            "name": "Right_Forearm",
+            "rotation": [
+                0.545081,
+                0.73713,
+                -0.399408,
+                1.13379
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.6278,
+                0.043,
+                -0.00859999
+            ]
+        },
+        "Figure_2rShin_2_node": {
+            "children": [
+                "Figure_2rFoot_2_node"
+            ],
+            "jointId": "Figure_2rShin_2_node",
+            "name": "Right_Shin",
+            "rotation": [
+                0.999453,
+                -0.0312705,
+                0.0107159,
+                0.676472
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0.086,
+                -1.1696,
+                -0.0946
+            ]
+        },
+        "Figure_2rShldr_2_node": {
+            "children": [
+                "Figure_2rForeArm_2_node"
+            ],
+            "jointId": "Figure_2rShldr_2_node",
+            "name": "Right_Shoulder",
+            "rotation": [
+                0.820947,
+                0.255344,
+                0.51073,
+                1.69148
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -1.376,
+                1.118,
+                -0.043
+            ]
+        },
+        "Figure_2rThigh_2_node": {
+            "children": [
+                "Figure_2rShin_2_node"
+            ],
+            "jointId": "Figure_2rThigh_2_node",
+            "name": "Right_Thigh",
+            "rotation": [
+                -0.909077,
+                0.0532662,
+                -0.413209,
+                0.782331
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -0.4644,
+                -0.129,
+                0
+            ]
+        },
+        "Figure_2rToe_2_node": {
+            "children": [],
+            "jointId": "Figure_2rToe_2_node",
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                -0.2666,
+                0.3268,
+                1
+            ],
+            "name": "rToe"
+        },
+        "Poser_scene_root": {
+            "children": [
+                "Figure_2BODY_2_node",
+                "Figure_2_node"
+            ],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Poser_scene_root"
+        }
+    },
+    "profile": "WebGL 1.0",
+    "programs": {
+        "program_0": {
+            "fragmentShader": "brainsteam0FS",
+            "vertexShader": "brainsteam0VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "Poser_scene_root"
+            ]
+        }
+    },
+    "shaders": {
+        "brainsteam0FS": {
+            "path": "brainsteam0FS.glsl"
+        },
+        "brainsteam0VS": {
+            "path": "brainsteam0VS.glsl"
+        }
+    },
+    "skins": {
+        "Figure_2-skin": {
+            "bindShapeMatrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "inverseBindMatrices": {
+                "bufferView": "bufferView_1373",
+                "byteOffset": 0,
+                "count": 18,
+                "type": "FLOAT_MAT4"
+            },
+            "joints": [
+                "Figure_2hip_2_node",
+                "Figure_2chest_2_node",
+                "Figure_2head_2_node",
+                "Figure_2rShldr_2_node",
+                "Figure_2rForeArm_2_node",
+                "Figure_2lShldr_2_node",
+                "Figure_2lForeArm_2_node",
+                "Figure_2lMid1_2_node",
+                "Figure_2lPinky1_2_node",
+                "Figure_2lThumb1_2_node",
+                "Figure_2rThigh_2_node",
+                "Figure_2rShin_2_node",
+                "Figure_2rFoot_2_node",
+                "Figure_2rToe_2_node",
+                "Figure_2lThigh_2_node",
+                "Figure_2lShin_2_node",
+                "Figure_2lFoot_2_node",
+                "Figure_2lToe_2_node"
+            ]
+        }
+    },
+    "techniques": {
+        "technique1": {
+            "parameters": {
+                "ambient": {
+                    "type": "FLOAT_VEC4"
+                },
+                "diffuse": {
+                    "type": "FLOAT_VEC4"
+                },
+                "joint": {
+                    "semantic": "JOINT",
+                    "type": "FLOAT_VEC4"
+                },
+                "jointMat": {
+                    "semantic": "JOINT_MATRIX",
+                    "type": "FLOAT_MAT4"
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": "FLOAT_VEC3"
+                },
+                "normalMatrix": {
+                    "semantic": "WORLDVIEWINVERSETRANSPOSE",
+                    "type": "FLOAT_MAT3"
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": "FLOAT_VEC3"
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": "FLOAT_MAT4"
+                },
+                "specular": {
+                    "type": "FLOAT_VEC4"
+                },
+                "weight": {
+                    "semantic": "WEIGHT",
+                    "type": "FLOAT_VEC4"
+                },
+                "worldViewMatrix": {
+                    "semantic": "WORLDVIEW",
+                    "type": "FLOAT_MAT4"
+                }
+            },
+            "pass": "defaultPass",
+            "passes": {
+                "defaultPass": {
+                    "instanceProgram": {
+                        "attributes": {
+                            "a_joint": "joint",
+                            "a_normal": "normal",
+                            "a_position": "position",
+                            "a_weight": "weight"
+                        },
+                        "program": "program_0",
+                        "uniforms": {
+                            "u_ambient": "ambient",
+                            "u_diffuse": "diffuse",
+                            "u_jointMat": "jointMat",
+                            "u_normalMatrix": "normalMatrix",
+                            "u_projectionMatrix": "projectionMatrix",
+                            "u_specular": "specular",
+                            "u_worldViewMatrix": "worldViewMatrix"
+                        }
+                    },
+                    "states": {
+                        "blendEnable": false,
+                        "cullFaceEnable": true,
+                        "depthMask": true,
+                        "depthTestEnable": true
+                    }
+                }
+            }
+        }
+    }
+}

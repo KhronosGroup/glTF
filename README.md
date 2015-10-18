@@ -1,14 +1,17 @@
-﻿<p align="center">
-<img src="specification/figures/glTF_300.jpg" />
+<p align="center">
+<img src="specification/figures/gltf.png" />
 </p>
 
-glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.
+The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-glTF is a draft specification, it may change before ratification.  Everyone is encouraged to provide feedback on the specification and contribute to the open-source converter.  Please create [issues](https://github.com/KhronosGroup/glTF/issues) with your feedback.
+> 
+_This is a draft specification; there may be minor changes before ratification is finalized.  Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues)._
 
 ## Specification  
 
-[glTF Specification 0.8](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md)
+[Draft glTF Specification 1.0](specification/README.md)
+
+([Guide](https://github.com/KhronosGroup/glTF/wiki/glTF-0.8-to-1.0-Guide) for upgrading from glTF 0.8.)
 
 ## Converter
 
@@ -48,6 +51,7 @@ git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
 * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service to convert 3D models from COLLADA to glTF
+* [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to the Binary glTF extension
 
 ## Utilities
 
