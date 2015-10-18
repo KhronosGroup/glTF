@@ -7,6 +7,7 @@ uniform vec4 u_emission;
 uniform vec4 u_specular;
 uniform float u_shininess;
 varying vec3 v_light0Direction;
+varying vec3 v_position;
 uniform vec3 u_light0Color;
 void main(void) {
 vec3 normal = normalize(v_normal);
@@ -25,7 +26,8 @@ vec3 specularLight = vec3(0., 0., 0.);
 float specularIntensity = 0.;
 float attenuation = 1.0;
 vec3 l = normalize(v_light0Direction);
-vec3 h = normalize(l+vec3(0.,0.,1.));
+vec3 viewDir = -normalize(v_position);
+vec3 h = normalize(l+viewDir);
 specularIntensity = max(0., pow(max(dot(normal,h), 0.) , u_shininess)) * attenuation;
 specularLight += u_light0Color * specularIntensity;
 diffuseLight += u_light0Color * max(dot(normal,l), 0.) * attenuation;

@@ -63,10 +63,13 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+        "generator": "collada2gltf@a7a0d66f6de8851d27cdb9392386da8b87eaf897",
         "premultipliedAlpha": true,
-        "profile": "WebGL 1.0.2",
-        "version": 0.8
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": 1
     },
     "bufferViews": {
         "bufferView_29": {
@@ -90,10 +93,11 @@
         }
     },
     "cameras": {
-        "camera_0": {
+        "cameraShape1": {
+            "name": "cameraShape1",
             "perspective": {
                 "aspect_ratio": 1.5,
-                "yfov": 37.8492,
+                "yfov": 0.660593,
                 "zfar": 100,
                 "znear": 0.01
             },
@@ -102,49 +106,36 @@
     },
     "images": {
         "file2": {
+            "name": "file2",
             "uri": "duckCM.png"
-        }
-    },
-    "lights": {
-        "directionalLightShape1-lib": {
-            "directional": {
-                "color": [
-                    1,
-                    1,
-                    1
-                ]
-            },
-            "type": "directional"
         }
     },
     "materials": {
         "blinn3-fx": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": "texture_file2",
-                    "emission": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "shininess": 38.4,
-                    "specular": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                }
-            },
-            "name": "blinn3"
+            "name": "blinn3",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": "texture_file2",
+                "emission": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "shininess": 38.4,
+                "specular": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
         }
     },
     "meshes": {
@@ -159,7 +150,7 @@
                     },
                     "indices": "accessor_21",
                     "material": "blinn3-fx",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         }
@@ -191,7 +182,7 @@
             "name": "LOD3sp"
         },
         "camera1": {
-            "camera": "camera_0",
+            "camera": "cameraShape1",
             "children": [],
             "matrix": [
                 -0.728969,
@@ -215,13 +206,12 @@
         },
         "directionalLight1": {
             "children": [],
-            "light": "directionalLightShape1-lib",
             "matrix": [
                 -0.954692,
                 0.218143,
-                -0.202428,
+                -0.202429,
                 0,
-                0.0146721,
+                0.014672,
                 0.713885,
                 0.700109,
                 0,
@@ -278,7 +268,12 @@
     },
     "skins": {},
     "techniques": {
-        "technique1": {
+        "technique0": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_texcoord0": "texcoord0"
+            },
             "parameters": {
                 "ambient": {
                     "type": 35666
@@ -298,8 +293,8 @@
                     ]
                 },
                 "light0Transform": {
+                    "node": "directionalLight1",
                     "semantic": "MODELVIEW",
-                    "source": "directionalLight1",
                     "type": 35676
                 },
                 "modelViewMatrix": {
@@ -333,60 +328,24 @@
                     "type": 35664
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Blinn",
-                            "parameters": [
-                                "ambient",
-                                "diffuse",
-                                "emission",
-                                "light0Color",
-                                "light0Transform",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix",
-                                "shininess",
-                                "specular"
-                            ],
-                            "texcoordBindings": {
-                                "diffuse": "TEXCOORD_0"
-                            }
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position",
-                            "a_texcoord0": "texcoord0"
-                        },
-                        "program": "program_0",
-                        "uniforms": {
-                            "u_ambient": "ambient",
-                            "u_diffuse": "diffuse",
-                            "u_emission": "emission",
-                            "u_light0Color": "light0Color",
-                            "u_light0Transform": "light0Transform",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix",
-                            "u_shininess": "shininess",
-                            "u_specular": "specular"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_emission": "emission",
+                "u_light0Color": "light0Color",
+                "u_light0Transform": "light0Transform",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_shininess": "shininess",
+                "u_specular": "specular"
             }
         }
     },
