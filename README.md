@@ -4,48 +4,47 @@
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-> 
-_This is a draft specification; there may be minor changes before ratification is finalized.  Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues)._
+## Specification
 
-# Specification  
+> _This is a draft specification; there may be minor changes before ratification is finalized.  Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues)._
 
-* [glTF Specification Draft 1.0](specification/README.md)
+* [glTF Specification, Draft 1.0](specification/README.md)
    * ([Guide](https://github.com/KhronosGroup/glTF/wiki/glTF-0.8-to-1.0-Guide) for upgrading glTF 0.8 to 1.0.)
 * [glTF Extension Registry](extensions/README.md)
 
-# Sample Models
+## Sample Models
 
 [Sample models](sampleModels/README.md) for learning glTF, and testing runtime engines and content pipeline tools.
 
-# glTF Tools
+## glTF Tools
 
 The true usefulness of glTF depends on an ecosystem of tools.  If you develop a tool, especially an open-source tool, we are happy to list it here.  Email a link to Patrick Cozzi, pjcozzi@siggraph.org.
 
-## Converters
+### Converters
 
-* [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - C++ command-line tool to converter COLLADA to glTF (Supports glTF 1.0)
-* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - drag and drop converter and viewer from Cesium (0.8, 1.0 on November 2, 2016)
+* [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to converter COLLADA to glTF (Supports glTF 1.0)
+* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter (0.8, 1.0 on November 2, 2016)
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter (0.8)
-* [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service to convert 3D models from COLLADA to glTF
+* [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
 
-## Loaders and Viewers
+### Loaders and Viewers
 
 * [glTF loader](https://github.com/mrdoob/three.js/tree/master/examples/js/loaders/gltf) in [Three.js](http://threejs.org/) (glTF 1.0 in progress)
 * [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/glTF) in [BabylonJS](http://babylonjs.com/) (0.8/1.0 in progress)
-* [glTF loader](http://cesiumjs.org/2014/03/03/Cesium-3D-Models-Tutorial/) in [Cesium](http://cesiumjs.org/) (0.8, 1.0 on November 2, 2016)
+* [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/) (0.8, 1.0 on November 2, 2016)
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API
 * [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF
 * [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html)
 * [LibreOffice](http://zolnaitamas.blogspot.com/2014/08/3d-models-in-impress-libreoffice-43.html)
 
-## Utilities
+### Utilities
 
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [gltf-statistics](https://github.com/AnalyticalGraphicsInc/gltf-statistics) - JavaScript and Node.js library and command-line tool to display statistics for glTF models (glTF 0.8)
 
-# Presentations and Articles
+## Presentations and Articles
 
 If you write a tutorial or article on glTF, we are happy to list it here.  Email a link to Patrick Cozzi, pjcozzi@siggraph.org.
 
@@ -60,7 +59,7 @@ If you write a tutorial or article on glTF, we are happy to list it here.  Email
 * [glTF update](http://www.slideshare.net/auradeluxe/gltf-update-with-tony-parisi). Tony Parisi. August 2013
 * [How I got involved in glTF and Khronos](http://blog.virtualglobebook.com/2013/03/how-i-got-involved-in-gltf-and-khronos.html). Patrick Cozzi, WebGL Meetup. March 2013
 
-# Cloning this repo
+## Cloning this repo
 
 Since this repo has git submodules, clone with:
 
