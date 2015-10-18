@@ -1,4 +1,3 @@
-|                                      |       |      |
 |--------------------------------------|-------|------|
 | [CesiumMan](CesiumMan)               | ![]() | TODO |
 | [CesiumMilkTruck](CesiumMilkTruck)   | ![]() | TODO |
