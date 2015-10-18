@@ -163,7 +163,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
-
+                case "WEIGHT" :
+                    s = s.replace(r, 'skinWeight');
+                    break;
+                case "JOINT" :
+                    s = s.replace(r, 'skinIndex');
+                    break;
                 default :
                     break;
             }
@@ -249,6 +254,98 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     function LoadTexture(src) {
         if(!src) { return null; }
+
+        var isDataUriRegex = /^data:/;
+
+        var loadImage = function(url, success, error) {
+            var image = new Image();
+
+            image.onload = function() {
+                success(image);
+            };
+
+            if (typeof error !== 'undefined') {
+                image.onerror = error;
+            }
+
+            image.src = url;
+        };
+
+        function loadImageFromTypedArray(uint8Array, format) {
+            //>>includeStart('debug', pragmas.debug);
+            if (!defined(uint8Array)) {
+                throw new DeveloperError('uint8Array is required.');
+            }
+
+            if (!defined(format)) {
+                throw new DeveloperError('format is required.');
+            }
+            //>>includeEnd('debug');
+
+            var blob = new Blob([uint8Array], {
+                type : format
+            });
+
+        };     
+
+        function decodeDataUriText(isBase64, data) {
+            var result = decodeURIComponent(data);
+            if (isBase64) {
+                return atob(result);
+            }
+            return result;
+        }
+
+        function decodeDataUriArrayBuffer(isBase64, data) {
+            var byteString = decodeDataUriText(isBase64, data);
+            var buffer = new ArrayBuffer(byteString.length);
+            var view = new Uint8Array(buffer);
+            for (var i = 0; i < byteString.length; i++) {
+                view[i] = byteString.charCodeAt(i);
+            }
+            return buffer;
+        }
+
+        function decodeDataUri(dataUriRegexResult, responseType) {
+            responseType = typeof responseType !== 'undefined' ? responseType : '';
+            var mimeType = dataUriRegexResult[1];
+            var isBase64 = !!dataUriRegexResult[2];
+            var data = dataUriRegexResult[3];
+
+            switch (responseType) {
+            case '':
+            case 'text':
+                return decodeDataUriText(isBase64, data);
+            case 'ArrayBuffer':
+                return decodeDataUriArrayBuffer(isBase64, data);
+            case 'blob':
+                var buffer = decodeDataUriArrayBuffer(isBase64, data);
+                return new Blob([buffer], {
+                    type : mimeType
+                });
+            case 'document':
+                var parser = new DOMParser();
+                return parser.parseFromString(decodeDataUriText(isBase64, data), mimeType);
+            case 'json':
+                return JSON.parse(decodeDataUriText(isBase64, data));
+            default:
+                throw 'Unhandled responseType: ' + responseType;
+            }
+        }
+
+        var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
+        var dataUriRegexResult = dataUriRegex.exec(src);
+        if (dataUriRegexResult !== null) {
+            var texture = new THREE.Texture;
+            var blob = decodeDataUri(dataUriRegexResult, 'blob');
+            var blobUrl = window.URL.createObjectURL(blob);
+            loadImage(blobUrl, function(img) {
+                texture.image = img;
+                texture.needsUpdate = true;
+            });
+            return texture;
+        }
+   
         return THREE.ImageUtils.loadTexture(src);
     }
 
@@ -586,8 +683,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             threeNode.add(threeMesh);
 
             if (material instanceof THREE.ShaderMaterial) {
-                var glTFShader = new THREE.glTFShader(material, materialParams.parameters, 
-                    materialParams.program, threeMesh, theLoader.rootObj);
+                var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
                 THREE.glTFShaders.add(glTFShader);
 
             }
@@ -878,9 +974,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         var pname = instanceProgram.uniforms[uniform];
                         var shaderParam = shaderParams[pname];
                         var ptype = shaderParam.type;
+                        var pcount = shaderParam.count;
                         var value = values[pname];
                         var utype = "";
                         var uvalue;
+                        var ulength;
 
                         // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
                         //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
@@ -931,16 +1029,35 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 }
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT4 :
-                                utype = "m4";
-                                uvalue = new THREE.Matrix4;
+                                if (pcount !== undefined) {
+                                    utype = "m4v";
+                                    uvalue = new Array(pcount);
+                                    for (var mi = 0; mi < pcount; mi++) {
+                                        uvalue[mi] = new THREE.Matrix4;
+                                    }
+                                    ulength = pcount;
 
-                                if (shaderParam && shaderParam.value) {
-                                    var m4 = shaderParam.value;
-                                    uvalue.fromArray(m4);
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4v = shaderParam.value;
+                                        uvalue.fromArray(m4v);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
-                                if (value) {
-                                    uvalue.fromArray(value);
+                                else {
+                                    utype = "m4";
+                                    uvalue = new THREE.Matrix4;
 
+                                    if (shaderParam && shaderParam.value) {
+                                        var m4 = shaderParam.value;
+                                        uvalue.fromArray(m4);
+                                    }
+                                    if (value) {
+                                        uvalue.fromArray(value);
+
+                                    }                                    
                                 }
 /*                                if (pname == "light0Transform") {
                                     uvalue.set(
@@ -974,7 +1091,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         }
 
 
-                        var udecl = { type : utype, value : uvalue };
+                        var udecl = { type : utype, value : uvalue, length : ulength };
 
                         params.uniforms[uniform] = udecl;
                     }
@@ -1135,6 +1252,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                         mesh.addPrimitive(geometry, materialEntry.object);
 
+                        var allAttributes = Object.keys(primitiveDescription.attributes);
+
+                        // count them first, async issues otherwise
+                        allAttributes.forEach( function(semantic) {
+                            geometry.totalAttributes++;
+                        }, this);
+
                         var indices = this.resources.getEntry(primitiveDescription.indices);
                         var bufferEntry = this.resources.getEntry(indices.description.bufferView);
                         var indicesObject = {
@@ -1153,9 +1277,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         }*/
 
                         // Load Vertex Attributes
-                        var allAttributes = Object.keys(primitiveDescription.attributes);
                         allAttributes.forEach( function(semantic) {
-                            geometry.totalAttributes++;
 
                             var attribute;
                             var attributeID = primitiveDescription.attributes[semantic];
@@ -1213,6 +1335,15 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                     if (!aspect_ratio)
                         aspect_ratio = 1; 
+
+                    if (xfov === undefined) {
+                        if (yfov)
+                        {
+                            // According to COLLADA spec...
+                            // aspect_ratio = xfov / yfov
+                            xfov = yfov * aspect_ratio;
+                        }
+                    }
                     
                     if (yfov === undefined)
                     {
@@ -1225,9 +1356,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         
                     }
                     
-                    if (yfov)
+                    if (xfov)
                     {
-                        camera = new THREE.PerspectiveCamera(yfov, aspect_ratio, znear, zfar);
+                        camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
                     }
                 }
                 else
@@ -1452,6 +1583,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 mesh.primitives.forEach(function(primitive) {
 
                                     var material = primitive.material;
+                                    var materialParams = material.params;
                                     if (!(material instanceof THREE.Material)) {
                                         material = createShaderMaterial(material, primitive.geometry.geometry);
                                     }
@@ -1517,6 +1649,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     if (threeMesh) {
                                         threeMesh.castShadow = true;
                                         node.add(threeMesh);
+
+                                        if (material instanceof THREE.ShaderMaterial) {
+                                            materialParams.joints = joints;
+                                            var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
+                                            THREE.glTFShaders.add(glTFShader);
+
+                                        }
                                     }
                                     
                                 }, this);                               
@@ -1846,7 +1985,6 @@ THREE.glTFLoader.prototype.checkComplete = function() {
             && this.shadersLoaded == this.shadersRequested
             && this.animationsLoaded == this.animationsRequested)
     {
-        
         for (var i = 0; i < this.pendingMeshes.length; i++) {
             var pending = this.pendingMeshes[i];
             pending.mesh.attachToNode(pending.node);

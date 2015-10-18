@@ -1,0 +1,21 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "target",
+    "type" : "object",
+    "description" : "The ID of the node and TRS property that an animation channel targets.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "id" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the node to target.",
+            "required" : true
+        },
+        "path" : {
+            "type" : "string",
+            "description" : "The name of the node's TRS property to modify.",
+            "enum" : ["translation", "rotation", "scale"],
+            "required" : true
+        }
+    },
+    "additionalProperties" : false
+}
