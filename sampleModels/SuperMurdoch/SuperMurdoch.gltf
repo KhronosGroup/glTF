@@ -292,7 +292,7 @@
                 2.16092
             ],
             "min": [
-                2.8422,
+                2.84221,
                 9.34185,
                 1.98319
             ],
@@ -1196,7 +1196,7 @@
                 2.16092
             ],
             "min": [
-                2.8422,
+                2.84221,
                 9.34185,
                 1.98319
             ],
@@ -2951,7 +2951,7 @@
             "max": [
                 0,
                 -0,
-                0.925901
+                0.925902
             ],
             "min": [
                 -0.983932,
@@ -4227,7 +4227,7 @@
             "max": [
                 0.983932,
                 0,
-                0.925901
+                0.925902
             ],
             "min": [
                 -0,
@@ -5061,7 +5061,7 @@
             "componentType": 5126,
             "count": 12,
             "max": [
-                0.837237,
+                0.837238,
                 0.606805,
                 0.622951
             ],
@@ -8454,7 +8454,7 @@
                 0.622951
             ],
             "min": [
-                -0.837237,
+                -0.837238,
                 0.546839,
                 -0.622951
             ],
@@ -11445,10 +11445,13 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+        "generator": "collada2gltf@a7a0d66f6de8851d27cdb9392386da8b87eaf897",
         "premultipliedAlpha": true,
-        "profile": "WebGL 1.0.2",
-        "version": 0.8
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": 1
     },
     "bufferViews": {
         "bufferView_5232": {
@@ -11473,265 +11476,227 @@
     },
     "materials": {
         "ID1005": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "diffuse": [
-                        0,
-                        0.74902,
-                        1,
-                        0.8
-                    ],
-                    "transparency": 0.8
-                }
-            },
-            "name": "__0097_DeepSkyBlue_1"
+            "name": "__0097_DeepSkyBlue_1",
+            "technique": "technique0",
+            "values": {
+                "diffuse": [
+                    0,
+                    0.74902,
+                    1,
+                    0.8
+                ],
+                "transparency": 0.8
+            }
         },
         "ID13": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.137255,
-                        0.137255,
-                        0.137255,
-                        1
-                    ]
-                }
-            },
-            "name": "_0136_Charcoal_"
+            "name": "_0136_Charcoal_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.137255,
+                    0.137255,
+                    0.137255,
+                    1
+                ]
+            }
         },
         "ID134": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.721569,
-                        0.52549,
-                        0.0431373,
-                        1
-                    ]
-                }
-            },
-            "name": "_0044_DarkGoldenrod_"
+            "name": "_0044_DarkGoldenrod_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.721569,
+                    0.52549,
+                    0.0431373,
+                    1
+                ]
+            }
         },
         "ID142": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.141177,
-                        0.184314,
-                        0.258824,
-                        1
-                    ]
-                }
-            },
-            "name": "jean_blue"
+            "name": "jean_blue",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.141177,
+                    0.184314,
+                    0.258824,
+                    1
+                ]
+            }
         },
         "ID156": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.403922,
-                        0.0745098,
-                        0.0745098,
-                        1
-                    ]
-                }
-            },
-            "name": "material_1"
+            "name": "material_1",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.403922,
+                    0.0745098,
+                    0.0745098,
+                    1
+                ]
+            }
         },
         "ID164": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.137255,
-                        0.137255,
-                        0.137255,
-                        1
-                    ]
-                }
-            },
-            "name": "__Charcoal_"
+            "name": "__Charcoal_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.137255,
+                    0.137255,
+                    0.137255,
+                    1
+                ]
+            }
         },
         "ID172": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.698039,
-                        0.133333,
-                        0.133333,
-                        1
-                    ]
-                }
-            },
-            "name": "_0023_FireBrick_"
+            "name": "_0023_FireBrick_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.698039,
+                    0.133333,
+                    0.133333,
+                    1
+                ]
+            }
         },
         "ID21": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                }
-            },
-            "name": "black"
+            "name": "black",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            }
         },
         "ID304": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.2,
-                        0.305882,
-                        0.65098,
-                        1
-                    ]
-                }
-            },
-            "name": "_0101_CornflowerBlue_"
+            "name": "_0101_CornflowerBlue_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.2,
+                    0.305882,
+                    0.65098,
+                    1
+                ]
+            }
         },
         "ID318": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.466667,
-                        0.533333,
-                        0.6,
-                        1
-                    ]
-                }
-            },
-            "name": "_0110_LightSlateGray_"
+            "name": "_0110_LightSlateGray_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.466667,
+                    0.533333,
+                    0.6,
+                    1
+                ]
+            }
         },
         "ID338": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.662745,
-                        0.662745,
-                        0.662745,
-                        1
-                    ]
-                }
-            },
-            "name": "__LightGray_"
+            "name": "__LightGray_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.662745,
+                    0.662745,
+                    0.662745,
+                    1
+                ]
+            }
         },
         "ID346": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.411765,
-                        0.411765,
-                        0.411765,
-                        1
-                    ]
-                }
-            },
-            "name": "_0134_DimGray_"
+            "name": "_0134_DimGray_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.411765,
+                    0.411765,
+                    0.411765,
+                    1
+                ]
+            }
         },
         "ID360": {
-            "instanceTechnique": {
-                "technique": "technique3",
-                "values": {}
-            },
-            "name": "edge_color353535255"
+            "name": "edge_color353535255",
+            "technique": "technique2",
+            "values": {}
         },
         "ID5": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        1,
-                        0.843137,
-                        0,
-                        1
-                    ]
-                }
-            },
-            "name": "_0046_Gold_"
+            "name": "_0046_Gold_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    1,
+                    0.843137,
+                    0,
+                    1
+                ]
+            }
         },
         "ID528": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.317647,
-                        0.317647,
-                        0.317647,
-                        1
-                    ]
-                }
-            },
-            "name": "_0135_DarkGray_"
+            "name": "_0135_DarkGray_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.317647,
+                    0.317647,
+                    0.317647,
+                    1
+                ]
+            }
         },
         "ID591": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "diffuse": [
-                        0.2,
-                        0.458824,
-                        0.956863,
-                        0.8
-                    ],
-                    "transparency": 0.8
-                }
-            },
-            "name": "material_2"
+            "name": "material_2",
+            "technique": "technique0",
+            "values": {
+                "diffuse": [
+                    0.2,
+                    0.458824,
+                    0.956863,
+                    0.8
+                ],
+                "transparency": 0.8
+            }
         },
         "ID707": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0.890196,
-                        0.0431373,
-                        0.180392,
-                        1
-                    ]
-                }
-            },
-            "name": "_0019_Crimson_"
+            "name": "_0019_Crimson_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0.890196,
+                    0.0431373,
+                    0.180392,
+                    1
+                ]
+            }
         },
         "ID87": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            },
-            "name": "material"
+            "name": "material",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
         },
         "ID997": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "diffuse": [
-                        0,
-                        0.74902,
-                        1,
-                        1
-                    ]
-                }
-            },
-            "name": "_0097_DeepSkyBlue_"
+            "name": "_0097_DeepSkyBlue_",
+            "technique": "technique1",
+            "values": {
+                "diffuse": [
+                    0,
+                    0.74902,
+                    1,
+                    1
+                ]
+            }
         }
     },
     "meshes": {
@@ -11745,7 +11710,7 @@
                     },
                     "indices": "accessor_296",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11759,7 +11724,7 @@
                     },
                     "indices": "accessor_3190",
                     "material": "ID1005",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11773,7 +11738,7 @@
                     },
                     "indices": "accessor_3210",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11787,7 +11752,7 @@
                     },
                     "indices": "accessor_3230",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11801,7 +11766,7 @@
                     },
                     "indices": "accessor_3250",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11815,7 +11780,7 @@
                     },
                     "indices": "accessor_3270",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11829,7 +11794,7 @@
                     },
                     "indices": "accessor_3290",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11843,7 +11808,7 @@
                     },
                     "indices": "accessor_3310",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11857,7 +11822,7 @@
                     },
                     "indices": "accessor_3330",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11871,7 +11836,7 @@
                     },
                     "indices": "accessor_3350",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11885,7 +11850,7 @@
                     },
                     "indices": "accessor_3370",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11899,7 +11864,7 @@
                     },
                     "indices": "accessor_3390",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11913,7 +11878,7 @@
                     },
                     "indices": "accessor_316",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11927,7 +11892,7 @@
                     },
                     "indices": "accessor_3410",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11941,7 +11906,7 @@
                     },
                     "indices": "accessor_3430",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11955,7 +11920,7 @@
                     },
                     "indices": "accessor_3450",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11969,7 +11934,7 @@
                     },
                     "indices": "accessor_3470",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11983,7 +11948,7 @@
                     },
                     "indices": "accessor_3490",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -11997,7 +11962,7 @@
                     },
                     "indices": "accessor_36",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12011,7 +11976,7 @@
                     },
                     "indices": "accessor_3510",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12025,7 +11990,7 @@
                     },
                     "indices": "accessor_3530",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12039,7 +12004,7 @@
                     },
                     "indices": "accessor_3550",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12053,7 +12018,7 @@
                     },
                     "indices": "accessor_3570",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12067,7 +12032,7 @@
                     },
                     "indices": "accessor_3590",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12081,7 +12046,7 @@
                     },
                     "indices": "accessor_336",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12095,7 +12060,7 @@
                     },
                     "indices": "accessor_3610",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12109,7 +12074,7 @@
                     },
                     "indices": "accessor_3630",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12123,7 +12088,7 @@
                     },
                     "indices": "accessor_3650",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12137,7 +12102,7 @@
                     },
                     "indices": "accessor_3670",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12151,7 +12116,7 @@
                     },
                     "indices": "accessor_3690",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12165,7 +12130,7 @@
                     },
                     "indices": "accessor_3710",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12179,7 +12144,7 @@
                     },
                     "indices": "accessor_3730",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12193,7 +12158,7 @@
                     },
                     "indices": "accessor_3750",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12207,7 +12172,7 @@
                     },
                     "indices": "accessor_3770",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12221,7 +12186,7 @@
                     },
                     "indices": "accessor_3790",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12235,7 +12200,7 @@
                     },
                     "indices": "accessor_356",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12249,7 +12214,7 @@
                     },
                     "indices": "accessor_3810",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12263,7 +12228,7 @@
                     },
                     "indices": "accessor_3830",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12277,7 +12242,7 @@
                     },
                     "indices": "accessor_3850",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12291,7 +12256,7 @@
                     },
                     "indices": "accessor_3870",
                     "material": "ID707",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12305,7 +12270,7 @@
                     },
                     "indices": "accessor_3890",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12319,7 +12284,7 @@
                     },
                     "indices": "accessor_3910",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12333,7 +12298,7 @@
                     },
                     "indices": "accessor_3930",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12347,7 +12312,7 @@
                     },
                     "indices": "accessor_3950",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12361,7 +12326,7 @@
                     },
                     "indices": "accessor_3970",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12375,7 +12340,7 @@
                     },
                     "indices": "accessor_3990",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12389,7 +12354,7 @@
                     },
                     "indices": "accessor_4010",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12403,7 +12368,7 @@
                     },
                     "indices": "accessor_4030",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12417,7 +12382,7 @@
                     },
                     "indices": "accessor_376",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12431,7 +12396,7 @@
                     },
                     "indices": "accessor_4050",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12445,7 +12410,7 @@
                     },
                     "indices": "accessor_4070",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12459,7 +12424,7 @@
                     },
                     "indices": "accessor_4090",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12473,7 +12438,7 @@
                     },
                     "indices": "accessor_4110",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12487,7 +12452,7 @@
                     },
                     "indices": "accessor_4130",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12501,7 +12466,7 @@
                     },
                     "indices": "accessor_4150",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12515,7 +12480,7 @@
                     },
                     "indices": "accessor_4170",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12529,7 +12494,7 @@
                     },
                     "indices": "accessor_4190",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12543,7 +12508,7 @@
                     },
                     "indices": "accessor_4210",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12557,7 +12522,7 @@
                     },
                     "indices": "accessor_4230",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12571,7 +12536,7 @@
                     },
                     "indices": "accessor_396",
                     "material": "ID134",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12585,7 +12550,7 @@
                     },
                     "indices": "accessor_4250",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12599,7 +12564,7 @@
                     },
                     "indices": "accessor_4270",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12613,7 +12578,7 @@
                     },
                     "indices": "accessor_4290",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12627,7 +12592,7 @@
                     },
                     "indices": "accessor_4310",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12641,7 +12606,7 @@
                     },
                     "indices": "accessor_4330",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12655,7 +12620,7 @@
                     },
                     "indices": "accessor_4350",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12669,7 +12634,7 @@
                     },
                     "indices": "accessor_4370",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12683,7 +12648,7 @@
                     },
                     "indices": "accessor_4390",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12697,7 +12662,7 @@
                     },
                     "indices": "accessor_4410",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12711,7 +12676,7 @@
                     },
                     "indices": "accessor_4430",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12725,7 +12690,7 @@
                     },
                     "indices": "accessor_4450",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12739,7 +12704,7 @@
                     },
                     "indices": "accessor_4470",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12753,7 +12718,7 @@
                     },
                     "indices": "accessor_4490",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12767,7 +12732,7 @@
                     },
                     "indices": "accessor_416",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12781,7 +12746,7 @@
                     },
                     "indices": "accessor_4510",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12795,7 +12760,7 @@
                     },
                     "indices": "accessor_4530",
                     "material": "ID997",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12809,7 +12774,7 @@
                     },
                     "indices": "accessor_4550",
                     "material": "ID1005",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12823,7 +12788,7 @@
                     },
                     "indices": "accessor_4570",
                     "material": "ID346",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12837,7 +12802,7 @@
                     },
                     "indices": "accessor_4590",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12851,7 +12816,7 @@
                     },
                     "indices": "accessor_4610",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12865,7 +12830,7 @@
                     },
                     "indices": "accessor_4630",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12879,7 +12844,7 @@
                     },
                     "indices": "accessor_4650",
                     "material": "ID591",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12893,7 +12858,7 @@
                     },
                     "indices": "accessor_4670",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12907,7 +12872,7 @@
                     },
                     "indices": "accessor_4690",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12921,7 +12886,7 @@
                     },
                     "indices": "accessor_4710",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12935,7 +12900,7 @@
                     },
                     "indices": "accessor_4730",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12949,7 +12914,7 @@
                     },
                     "indices": "accessor_4750",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12963,7 +12928,7 @@
                     },
                     "indices": "accessor_4770",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12977,7 +12942,7 @@
                     },
                     "indices": "accessor_436",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -12991,7 +12956,7 @@
                     },
                     "indices": "accessor_4790",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13005,7 +12970,7 @@
                     },
                     "indices": "accessor_4810",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13019,7 +12984,7 @@
                     },
                     "indices": "accessor_4830",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13033,7 +12998,7 @@
                     },
                     "indices": "accessor_4850",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13047,7 +13012,7 @@
                     },
                     "indices": "accessor_4870",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13061,7 +13026,7 @@
                     },
                     "indices": "accessor_4890",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13075,7 +13040,7 @@
                     },
                     "indices": "accessor_4910",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13089,7 +13054,7 @@
                     },
                     "indices": "accessor_4930",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13103,7 +13068,7 @@
                     },
                     "indices": "accessor_4950",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13116,7 +13081,7 @@
                     },
                     "indices": "accessor_4964",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13130,7 +13095,7 @@
                     },
                     "indices": "accessor_456",
                     "material": "ID156",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13143,7 +13108,7 @@
                     },
                     "indices": "accessor_4976",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13156,7 +13121,7 @@
                     },
                     "indices": "accessor_4988",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13169,7 +13134,7 @@
                     },
                     "indices": "accessor_5000",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13182,7 +13147,7 @@
                     },
                     "indices": "accessor_5012",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13195,7 +13160,7 @@
                     },
                     "indices": "accessor_5024",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13208,7 +13173,7 @@
                     },
                     "indices": "accessor_5036",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13221,7 +13186,7 @@
                     },
                     "indices": "accessor_5048",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13234,7 +13199,7 @@
                     },
                     "indices": "accessor_5060",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13247,7 +13212,7 @@
                     },
                     "indices": "accessor_5072",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13260,7 +13225,7 @@
                     },
                     "indices": "accessor_5084",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13273,7 +13238,7 @@
                     },
                     "indices": "accessor_5096",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13286,7 +13251,7 @@
                     },
                     "indices": "accessor_5108",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13299,7 +13264,7 @@
                     },
                     "indices": "accessor_5120",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13312,7 +13277,7 @@
                     },
                     "indices": "accessor_5132",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13325,7 +13290,7 @@
                     },
                     "indices": "accessor_5144",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13338,7 +13303,7 @@
                     },
                     "indices": "accessor_5156",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13351,7 +13316,7 @@
                     },
                     "indices": "accessor_5168",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13364,7 +13329,7 @@
                     },
                     "indices": "accessor_5180",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13377,7 +13342,7 @@
                     },
                     "indices": "accessor_5192",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13390,7 +13355,7 @@
                     },
                     "indices": "accessor_5204",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13404,7 +13369,7 @@
                     },
                     "indices": "accessor_476",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13417,7 +13382,7 @@
                     },
                     "indices": "accessor_5216",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13430,7 +13395,7 @@
                     },
                     "indices": "accessor_5228",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13444,7 +13409,7 @@
                     },
                     "indices": "accessor_496",
                     "material": "ID172",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13458,7 +13423,7 @@
                     },
                     "indices": "accessor_516",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13472,7 +13437,7 @@
                     },
                     "indices": "accessor_536",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13486,7 +13451,7 @@
                     },
                     "indices": "accessor_56",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13500,7 +13465,7 @@
                     },
                     "indices": "accessor_556",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13514,7 +13479,7 @@
                     },
                     "indices": "accessor_576",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13528,7 +13493,7 @@
                     },
                     "indices": "accessor_596",
                     "material": "ID134",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13542,7 +13507,7 @@
                     },
                     "indices": "accessor_616",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13556,7 +13521,7 @@
                     },
                     "indices": "accessor_636",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13570,7 +13535,7 @@
                     },
                     "indices": "accessor_656",
                     "material": "ID156",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13584,7 +13549,7 @@
                     },
                     "indices": "accessor_676",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13598,7 +13563,7 @@
                     },
                     "indices": "accessor_696",
                     "material": "ID172",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13612,7 +13577,7 @@
                     },
                     "indices": "accessor_716",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13626,7 +13591,7 @@
                     },
                     "indices": "accessor_736",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13640,7 +13605,7 @@
                     },
                     "indices": "accessor_756",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13654,7 +13619,7 @@
                     },
                     "indices": "accessor_776",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13668,7 +13633,7 @@
                     },
                     "indices": "accessor_796",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13682,7 +13647,7 @@
                     },
                     "indices": "accessor_816",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13696,7 +13661,7 @@
                     },
                     "indices": "accessor_836",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13710,7 +13675,7 @@
                     },
                     "indices": "accessor_76",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13724,7 +13689,7 @@
                     },
                     "indices": "accessor_856",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13738,7 +13703,7 @@
                     },
                     "indices": "accessor_876",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13752,7 +13717,7 @@
                     },
                     "indices": "accessor_896",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13766,7 +13731,7 @@
                     },
                     "indices": "accessor_16",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13780,7 +13745,7 @@
                     },
                     "indices": "accessor_916",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13794,7 +13759,7 @@
                     },
                     "indices": "accessor_936",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13808,7 +13773,7 @@
                     },
                     "indices": "accessor_956",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13822,7 +13787,7 @@
                     },
                     "indices": "accessor_976",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13836,7 +13801,7 @@
                     },
                     "indices": "accessor_996",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13850,7 +13815,7 @@
                     },
                     "indices": "accessor_1016",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13864,7 +13829,7 @@
                     },
                     "indices": "accessor_96",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13878,7 +13843,7 @@
                     },
                     "indices": "accessor_1036",
                     "material": "ID346",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13892,7 +13857,7 @@
                     },
                     "indices": "accessor_1056",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13905,7 +13870,7 @@
                     },
                     "indices": "accessor_1070",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13918,7 +13883,7 @@
                     },
                     "indices": "accessor_1082",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13931,7 +13896,7 @@
                     },
                     "indices": "accessor_1094",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13944,7 +13909,7 @@
                     },
                     "indices": "accessor_1106",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13957,7 +13922,7 @@
                     },
                     "indices": "accessor_1118",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13970,7 +13935,7 @@
                     },
                     "indices": "accessor_1130",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -13984,7 +13949,7 @@
                     },
                     "indices": "accessor_1148",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -13998,7 +13963,7 @@
                     },
                     "indices": "accessor_1168",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14012,7 +13977,7 @@
                     },
                     "indices": "accessor_1188",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14026,7 +13991,7 @@
                     },
                     "indices": "accessor_116",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14040,7 +14005,7 @@
                     },
                     "indices": "accessor_1208",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14054,7 +14019,7 @@
                     },
                     "indices": "accessor_1228",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14068,7 +14033,7 @@
                     },
                     "indices": "accessor_1248",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14082,7 +14047,7 @@
                     },
                     "indices": "accessor_1268",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14096,7 +14061,7 @@
                     },
                     "indices": "accessor_1288",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14110,7 +14075,7 @@
                     },
                     "indices": "accessor_1308",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14124,7 +14089,7 @@
                     },
                     "indices": "accessor_1328",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14138,7 +14103,7 @@
                     },
                     "indices": "accessor_1348",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14152,7 +14117,7 @@
                     },
                     "indices": "accessor_1368",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14166,7 +14131,7 @@
                     },
                     "indices": "accessor_1388",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14180,7 +14145,7 @@
                     },
                     "indices": "accessor_1408",
                     "material": "ID346",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14194,7 +14159,7 @@
                     },
                     "indices": "accessor_136",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14208,7 +14173,7 @@
                     },
                     "indices": "accessor_1428",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14221,7 +14186,7 @@
                     },
                     "indices": "accessor_1442",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14234,7 +14199,7 @@
                     },
                     "indices": "accessor_1454",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14247,7 +14212,7 @@
                     },
                     "indices": "accessor_1466",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14260,7 +14225,7 @@
                     },
                     "indices": "accessor_1478",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14273,7 +14238,7 @@
                     },
                     "indices": "accessor_1490",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14286,7 +14251,7 @@
                     },
                     "indices": "accessor_1502",
                     "material": "ID360",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -14300,7 +14265,7 @@
                     },
                     "indices": "accessor_1520",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14314,7 +14279,7 @@
                     },
                     "indices": "accessor_1540",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14328,7 +14293,7 @@
                     },
                     "indices": "accessor_1560",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14342,7 +14307,7 @@
                     },
                     "indices": "accessor_1580",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14356,7 +14321,7 @@
                     },
                     "indices": "accessor_1600",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14370,7 +14335,7 @@
                     },
                     "indices": "accessor_156",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14384,7 +14349,7 @@
                     },
                     "indices": "accessor_1620",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14398,7 +14363,7 @@
                     },
                     "indices": "accessor_1640",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14412,7 +14377,7 @@
                     },
                     "indices": "accessor_1660",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14426,7 +14391,7 @@
                     },
                     "indices": "accessor_1680",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14440,7 +14405,7 @@
                     },
                     "indices": "accessor_1700",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14454,7 +14419,7 @@
                     },
                     "indices": "accessor_1720",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14468,7 +14433,7 @@
                     },
                     "indices": "accessor_1740",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14482,7 +14447,7 @@
                     },
                     "indices": "accessor_1760",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14496,7 +14461,7 @@
                     },
                     "indices": "accessor_1780",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14510,7 +14475,7 @@
                     },
                     "indices": "accessor_1800",
                     "material": "ID591",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14524,7 +14489,7 @@
                     },
                     "indices": "accessor_176",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14538,7 +14503,7 @@
                     },
                     "indices": "accessor_1820",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14552,7 +14517,7 @@
                     },
                     "indices": "accessor_1840",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14566,7 +14531,7 @@
                     },
                     "indices": "accessor_1860",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14580,7 +14545,7 @@
                     },
                     "indices": "accessor_1880",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14594,7 +14559,7 @@
                     },
                     "indices": "accessor_1900",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14608,7 +14573,7 @@
                     },
                     "indices": "accessor_1920",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14622,7 +14587,7 @@
                     },
                     "indices": "accessor_1940",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14636,7 +14601,7 @@
                     },
                     "indices": "accessor_1960",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14650,7 +14615,7 @@
                     },
                     "indices": "accessor_1980",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14664,7 +14629,7 @@
                     },
                     "indices": "accessor_2000",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14678,7 +14643,7 @@
                     },
                     "indices": "accessor_2032",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -14687,7 +14652,7 @@
                     },
                     "indices": "accessor_2035",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14701,7 +14666,7 @@
                     },
                     "indices": "accessor_196",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14715,7 +14680,7 @@
                     },
                     "indices": "accessor_2055",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14729,7 +14694,7 @@
                     },
                     "indices": "accessor_2075",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14743,7 +14708,7 @@
                     },
                     "indices": "accessor_2107",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -14752,7 +14717,7 @@
                     },
                     "indices": "accessor_2110",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14766,7 +14731,7 @@
                     },
                     "indices": "accessor_2130",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14780,7 +14745,7 @@
                     },
                     "indices": "accessor_2150",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14794,7 +14759,7 @@
                     },
                     "indices": "accessor_2170",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14808,7 +14773,7 @@
                     },
                     "indices": "accessor_2190",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14822,7 +14787,7 @@
                     },
                     "indices": "accessor_2210",
                     "material": "ID707",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14836,7 +14801,7 @@
                     },
                     "indices": "accessor_2230",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14850,7 +14815,7 @@
                     },
                     "indices": "accessor_2250",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14864,7 +14829,7 @@
                     },
                     "indices": "accessor_216",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14878,7 +14843,7 @@
                     },
                     "indices": "accessor_2270",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14892,7 +14857,7 @@
                     },
                     "indices": "accessor_2290",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14906,7 +14871,7 @@
                     },
                     "indices": "accessor_2310",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14920,7 +14885,7 @@
                     },
                     "indices": "accessor_2330",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14934,7 +14899,7 @@
                     },
                     "indices": "accessor_2350",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14948,7 +14913,7 @@
                     },
                     "indices": "accessor_2370",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14962,7 +14927,7 @@
                     },
                     "indices": "accessor_2390",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14976,7 +14941,7 @@
                     },
                     "indices": "accessor_2410",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -14990,7 +14955,7 @@
                     },
                     "indices": "accessor_2430",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15004,7 +14969,7 @@
                     },
                     "indices": "accessor_2450",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15018,7 +14983,7 @@
                     },
                     "indices": "accessor_236",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15032,7 +14997,7 @@
                     },
                     "indices": "accessor_2470",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15046,7 +15011,7 @@
                     },
                     "indices": "accessor_2490",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15060,7 +15025,7 @@
                     },
                     "indices": "accessor_2510",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15074,7 +15039,7 @@
                     },
                     "indices": "accessor_2530",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15088,7 +15053,7 @@
                     },
                     "indices": "accessor_2550",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15102,7 +15067,7 @@
                     },
                     "indices": "accessor_2570",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15116,7 +15081,7 @@
                     },
                     "indices": "accessor_2590",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15130,7 +15095,7 @@
                     },
                     "indices": "accessor_2610",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15144,7 +15109,7 @@
                     },
                     "indices": "accessor_2630",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15158,7 +15123,7 @@
                     },
                     "indices": "accessor_2650",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15172,7 +15137,7 @@
                     },
                     "indices": "accessor_2670",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15186,7 +15151,7 @@
                     },
                     "indices": "accessor_2690",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15200,7 +15165,7 @@
                     },
                     "indices": "accessor_2710",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15214,7 +15179,7 @@
                     },
                     "indices": "accessor_256",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15228,7 +15193,7 @@
                     },
                     "indices": "accessor_2730",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15242,7 +15207,7 @@
                     },
                     "indices": "accessor_2750",
                     "material": "ID707",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15256,7 +15221,7 @@
                     },
                     "indices": "accessor_2770",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15270,7 +15235,7 @@
                     },
                     "indices": "accessor_2790",
                     "material": "ID346",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15284,7 +15249,7 @@
                     },
                     "indices": "accessor_2810",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15298,7 +15263,7 @@
                     },
                     "indices": "accessor_2830",
                     "material": "ID13",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15312,7 +15277,7 @@
                     },
                     "indices": "accessor_2850",
                     "material": "ID528",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15326,7 +15291,7 @@
                     },
                     "indices": "accessor_2870",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15340,7 +15305,7 @@
                     },
                     "indices": "accessor_2890",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15354,7 +15319,7 @@
                     },
                     "indices": "accessor_2910",
                     "material": "ID318",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15368,7 +15333,7 @@
                     },
                     "indices": "accessor_2930",
                     "material": "ID304",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15382,7 +15347,7 @@
                     },
                     "indices": "accessor_2950",
                     "material": "ID142",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15396,7 +15361,7 @@
                     },
                     "indices": "accessor_2970",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15410,7 +15375,7 @@
                     },
                     "indices": "accessor_276",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15424,7 +15389,7 @@
                     },
                     "indices": "accessor_2990",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15438,7 +15403,7 @@
                     },
                     "indices": "accessor_3010",
                     "material": "ID591",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15452,7 +15417,7 @@
                     },
                     "indices": "accessor_3030",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15466,7 +15431,7 @@
                     },
                     "indices": "accessor_3050",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15480,7 +15445,7 @@
                     },
                     "indices": "accessor_3070",
                     "material": "ID338",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15494,7 +15459,7 @@
                     },
                     "indices": "accessor_3090",
                     "material": "ID5",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15508,7 +15473,7 @@
                     },
                     "indices": "accessor_3110",
                     "material": "ID164",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15522,7 +15487,7 @@
                     },
                     "indices": "accessor_3130",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15536,7 +15501,7 @@
                     },
                     "indices": "accessor_3150",
                     "material": "ID87",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -15550,7 +15515,7 @@
                     },
                     "indices": "accessor_3170",
                     "material": "ID997",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         }
@@ -16292,10 +16257,10 @@
                 0,
                 0,
                 0,
-                1,
-                0,
-                0,
                 -1,
+                0,
+                0,
+                1,
                 0,
                 0,
                 0,
@@ -16367,7 +16332,11 @@
     },
     "skins": {},
     "techniques": {
-        "technique1": {
+        "technique0": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
             "parameters": {
                 "diffuse": {
                     "type": 35666
@@ -16396,62 +16365,39 @@
                     "type": 5126
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Lambert",
-                            "parameters": [
-                                "diffuse",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix",
-                                "transparency"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position"
-                        },
-                        "program": "program_0",
-                        "uniforms": {
-                            "u_diffuse": "diffuse",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix",
-                            "u_transparency": "transparency"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929,
-                            3042
-                        ],
-                        "functions": {
-                            "blendEquationSeparate": [
-                                32774,
-                                32774
-                            ],
-                            "blendFuncSeparate": [
-                                1,
-                                771,
-                                1,
-                                771
-                            ]
-                        }
-                    }
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    3042
+                ],
+                "functions": {
+                    "blendEquationSeparate": [
+                        32774,
+                        32774
+                    ],
+                    "blendFuncSeparate": [
+                        1,
+                        771,
+                        1,
+                        771
+                    ],
+                    "depthMask": false
                 }
+            },
+            "uniforms": {
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_transparency": "transparency"
             }
         },
-        "technique2": {
+        "technique1": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
             "parameters": {
                 "diffuse": {
                     "type": 35666
@@ -16477,47 +16423,24 @@
                     "type": 35676
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Lambert",
-                            "parameters": [
-                                "diffuse",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position"
-                        },
-                        "program": "program_1",
-                        "uniforms": {
-                            "u_diffuse": "diffuse",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_1",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix"
             }
         },
-        "technique3": {
+        "technique2": {
+            "attributes": {
+                "a_position": "position"
+            },
             "parameters": {
                 "modelViewMatrix": {
                     "semantic": "MODELVIEW",
@@ -16532,39 +16455,16 @@
                     "type": 35676
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Constant",
-                            "parameters": [
-                                "modelViewMatrix",
-                                "projectionMatrix"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_position": "position"
-                        },
-                        "program": "program_2",
-                        "uniforms": {
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_projectionMatrix": "projectionMatrix"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_2",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_projectionMatrix": "projectionMatrix"
             }
         }
     }

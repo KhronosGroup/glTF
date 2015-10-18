@@ -688,7 +688,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_1"
@@ -703,7 +702,6 @@
         },
         "animation_1": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -711,7 +709,6 @@
         },
         "animation_10": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -719,7 +716,6 @@
         },
         "animation_11": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -735,7 +731,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_2"
@@ -750,7 +745,6 @@
         },
         "animation_13": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -758,7 +752,6 @@
         },
         "animation_14": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -774,7 +767,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_3"
@@ -789,7 +781,6 @@
         },
         "animation_16": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -797,7 +788,6 @@
         },
         "animation_17": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -813,7 +803,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_4"
@@ -828,7 +817,6 @@
         },
         "animation_19": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -836,7 +824,6 @@
         },
         "animation_2": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -844,7 +831,6 @@
         },
         "animation_20": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -860,7 +846,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_5"
@@ -875,7 +860,6 @@
         },
         "animation_22": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -883,7 +867,6 @@
         },
         "animation_23": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -899,7 +882,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_6"
@@ -914,7 +896,6 @@
         },
         "animation_25": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -922,7 +903,6 @@
         },
         "animation_26": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -938,7 +918,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_7"
@@ -953,7 +932,6 @@
         },
         "animation_28": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -961,7 +939,6 @@
         },
         "animation_29": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -977,7 +954,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "translation": "animAccessor_8"
@@ -1000,7 +976,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_9"
@@ -1015,7 +990,6 @@
         },
         "animation_31": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1023,7 +997,6 @@
         },
         "animation_32": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1039,7 +1012,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_10"
@@ -1054,7 +1026,6 @@
         },
         "animation_34": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1062,7 +1033,6 @@
         },
         "animation_35": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1078,7 +1048,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_11"
@@ -1093,7 +1062,6 @@
         },
         "animation_37": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1101,7 +1069,6 @@
         },
         "animation_38": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1117,7 +1084,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_12"
@@ -1132,7 +1098,6 @@
         },
         "animation_4": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1140,7 +1105,6 @@
         },
         "animation_40": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1148,7 +1112,6 @@
         },
         "animation_41": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1156,7 +1119,6 @@
         },
         "animation_5": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1172,7 +1134,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_13"
@@ -1187,7 +1148,6 @@
         },
         "animation_7": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1195,7 +1155,6 @@
         },
         "animation_8": {
             "channels": [],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0"
             },
@@ -1211,7 +1170,6 @@
                     }
                 }
             ],
-            "count": 1309,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_14"
@@ -1226,10 +1184,13 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@df4892809111a8c6dbff4fab6c386a24745d344e",
+        "generator": "collada2gltf@26cc85f4444b7db054ce16d32bd9e7f1894ffafb",
         "premultipliedAlpha": true,
-        "profile": "WebGL 1.0.2",
-        "version": 0.8
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": 1
     },
     "bufferViews": {
         "bufferView_1370": {
@@ -1259,1538 +1220,1420 @@
     },
     "materials": {
         "effect-material-Stem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.541176,
-                        0.541176,
-                        0.541176,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "Stem"
+            "name": "Stem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.541176,
+                    0.541176,
+                    0.541176,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-TubeStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.0784314,
-                        0.184314,
-                        0.207843,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "TubeStem"
+            "name": "TubeStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.0784314,
+                    0.184314,
+                    0.207843,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-ankleBracketStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.482353,
-                        0.435294,
-                        0.360784,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "ankleBracketStem"
+            "name": "ankleBracketStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.482353,
+                    0.435294,
+                    0.360784,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-ankleStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "ankleStem"
+            "name": "ankleStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-armBoltStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "armBoltStem"
+            "name": "armBoltStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-armFilletStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "armFilletStem"
+            "name": "armFilletStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-armPlateStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.509804,
-                        0.458824,
-                        0.376471,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "armPlateStem"
+            "name": "armPlateStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.509804,
+                    0.458824,
+                    0.376471,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-armTrussStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.513726,
-                        0.454902,
-                        0.372549,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "armTrussStem"
+            "name": "armTrussStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.513726,
+                    0.454902,
+                    0.372549,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-bStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.0196078,
-                        0.164706,
-                        0.2,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "bStem"
+            "name": "bStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.0196078,
+                    0.164706,
+                    0.2,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-barStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0,
-                        0.192157,
-                        0.243137,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "barStem"
+            "name": "barStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0,
+                    0.192157,
+                    0.243137,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-barrel1Stem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.352941,
-                        0.352941,
-                        0.352941,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "barrel1Stem"
+            "name": "barrel1Stem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.352941,
+                    0.352941,
+                    0.352941,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-barrel2Stem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.12549,
-                        0.12549,
-                        0.12549,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "barrel2Stem"
+            "name": "barrel2Stem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.12549,
+                    0.12549,
+                    0.12549,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-bayonetStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.988235,
-                        0.988235,
-                        0.988235,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "bayonetStem"
+            "name": "bayonetStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.988235,
+                    0.988235,
+                    0.988235,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-boltStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.290196,
-                        0.290196,
-                        0.290196,
-                        1
-                    ],
-                    "specular": [
-                        0.699962,
-                        0.699962,
-                        0.699962,
-                        1
-                    ]
-                }
-            },
-            "name": "boltStem"
+            "name": "boltStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.290196,
+                    0.290196,
+                    0.290196,
+                    1
+                ],
+                "specular": [
+                    0.699962,
+                    0.699962,
+                    0.699962,
+                    1
+                ]
+            }
         },
         "effect-material-bracketStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.384314,
-                        0.34902,
-                        0.282353,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "bracketStem"
+            "name": "bracketStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.384314,
+                    0.34902,
+                    0.282353,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-calfCoverStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.356863,
-                        0.32549,
-                        0.278431,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "calfCoverStem"
+            "name": "calfCoverStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.356863,
+                    0.32549,
+                    0.278431,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-calfStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.682353,
-                        0.635294,
-                        0.533333,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "calfStem"
+            "name": "calfStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.682353,
+                    0.635294,
+                    0.533333,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-canInnerStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.360784,
-                        0.360784,
-                        0.360784,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "canInnerStem"
+            "name": "canInnerStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.360784,
+                    0.360784,
+                    0.360784,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-canisterInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.498039,
-                        0.498039,
-                        0.498039,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "canisterInStem"
+            "name": "canisterInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.498039,
+                    0.498039,
+                    0.498039,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-canisterOutStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.537255,
-                        0.537255,
-                        0.537255,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "canisterOutStem"
+            "name": "canisterOutStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.537255,
+                    0.537255,
+                    0.537255,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-componentStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.521569,
-                        0.462745,
-                        0.376471,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "componentStem"
+            "name": "componentStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.521569,
+                    0.462745,
+                    0.376471,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-componentsStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.745098,
-                        0.45098,
-                        0,
-                        1
-                    ],
-                    "specular": [
-                        0.699962,
-                        0.699962,
-                        0.699962,
-                        1
-                    ]
-                }
-            },
-            "name": "componentsStem"
+            "name": "componentsStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.745098,
+                    0.45098,
+                    0,
+                    1
+                ],
+                "specular": [
+                    0.699962,
+                    0.699962,
+                    0.699962,
+                    1
+                ]
+            }
         },
         "effect-material-coverStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.482353,
-                        0.435294,
-                        0.360784,
-                        1
-                    ],
-                    "specular": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            },
-            "name": "coverStem"
+            "name": "coverStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.482353,
+                    0.435294,
+                    0.360784,
+                    1
+                ],
+                "specular": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
         },
         "effect-material-discInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.462745,
-                        0.407843,
-                        0.329412,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "discInStem"
+            "name": "discInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.462745,
+                    0.407843,
+                    0.329412,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-discStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.188235,
-                        0.156863,
-                        0.121569,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "discStem"
+            "name": "discStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.188235,
+                    0.156863,
+                    0.121569,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-exhaustGunStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.505882,
-                        0.505882,
-                        0.505882,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "exhaustGunStem"
+            "name": "exhaustGunStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.505882,
+                    0.505882,
+                    0.505882,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-eyeRimStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "eyeRimStem"
+            "name": "eyeRimStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-eyeStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.988235,
-                        0.988235,
-                        0.988235,
-                        1
-                    ],
-                    "specular": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            },
-            "name": "eyeStem"
+            "name": "eyeStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.988235,
+                    0.988235,
+                    0.988235,
+                    1
+                ],
+                "specular": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
         },
         "effect-material-filletStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.988235,
-                        0.988235,
-                        0.988235,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "filletStem"
+            "name": "filletStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.988235,
+                    0.988235,
+                    0.988235,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-filterInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.359991,
-                        0.359991,
-                        0.359991,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "filterInStem"
+            "name": "filterInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.359991,
+                    0.359991,
+                    0.359991,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-filterOutStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.419608,
-                        0.419608,
-                        0.411765,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "filterOutStem"
+            "name": "filterOutStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.419608,
+                    0.419608,
+                    0.411765,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-footFlangeStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.968628,
-                        0.968628,
-                        0.968628,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "footFlangeStem"
+            "name": "footFlangeStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.968628,
+                    0.968628,
+                    0.968628,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-footStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.0196078,
-                        0.145098,
-                        0.176471,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "footStem"
+            "name": "footStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.0196078,
+                    0.145098,
+                    0.176471,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-frameInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.168627,
-                        0.141176,
-                        0.109804,
-                        1
-                    ],
-                    "specular": [
-                        0.698039,
-                        0.698039,
-                        0.698039,
-                        1
-                    ]
-                }
-            },
-            "name": "frameInStem"
+            "name": "frameInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.168627,
+                    0.141176,
+                    0.109804,
+                    1
+                ],
+                "specular": [
+                    0.698039,
+                    0.698039,
+                    0.698039,
+                    1
+                ]
+            }
         },
         "effect-material-headCaseStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.862745,
-                        0.65098,
-                        0.243137,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "headCaseStem"
+            "name": "headCaseStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.862745,
+                    0.65098,
+                    0.243137,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-headFilletStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.254902,
-                        0.254902,
-                        0.254902,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "headFilletStem"
+            "name": "headFilletStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.254902,
+                    0.254902,
+                    0.254902,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-headGrillStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.709804,
-                        0.541176,
-                        0.254902,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "headGrillStem"
+            "name": "headGrillStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.709804,
+                    0.541176,
+                    0.254902,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-headHornStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.827451,
-                        0.517647,
-                        0.0627451,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "headHornStem"
+            "name": "headHornStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.827451,
+                    0.517647,
+                    0.0627451,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-hexStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.243137,
-                        0.196078,
-                        0.156863,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "hexStem"
+            "name": "hexStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.243137,
+                    0.196078,
+                    0.156863,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-hipSphereStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.262745,
-                        0.262745,
-                        0.262745,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "hipSphereStem"
+            "name": "hipSphereStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.262745,
+                    0.262745,
+                    0.262745,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-intestineInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.207294,
-                        0.19881,
-                        0.709987,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "intestineInStem"
+            "name": "intestineInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.207294,
+                    0.19881,
+                    0.709987,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-intestineOutStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.431373,
-                        0.2,
-                        0,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "intestineOutStem"
+            "name": "intestineOutStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.431373,
+                    0.2,
+                    0,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-knee2Stem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "knee2Stem"
+            "name": "knee2Stem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-kneeGuardStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.498039,
-                        0.45098,
-                        0.380392,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "kneeGuardStem"
+            "name": "kneeGuardStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.498039,
+                    0.45098,
+                    0.380392,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-kneeStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.482353,
-                        0.435294,
-                        0.360784,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "kneeStem"
+            "name": "kneeStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.482353,
+                    0.435294,
+                    0.360784,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-neckSinkStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.917647,
-                        0.686275,
-                        0.270588,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "neckSinkStem"
+            "name": "neckSinkStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.917647,
+                    0.686275,
+                    0.270588,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-off": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.670588,
-                        0.407843,
-                        0.0588235,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "off"
+            "name": "off",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.670588,
+                    0.407843,
+                    0.0588235,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-pinStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.268193,
-                        0.258503,
-                        0.549996,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "pinStem"
+            "name": "pinStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.268193,
+                    0.258503,
+                    0.549996,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-pipeStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.454902,
-                        0.219608,
-                        0.0196078,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "pipeStem"
+            "name": "pipeStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.454902,
+                    0.219608,
+                    0.0196078,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-plugStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.458824,
-                        0.458824,
-                        0.458824,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "plugStem"
+            "name": "plugStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.458824,
+                    0.458824,
+                    0.458824,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-radiatorStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.764706,
-                        0.486275,
-                        0.0784314,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "radiatorStem"
+            "name": "radiatorStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.764706,
+                    0.486275,
+                    0.0784314,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-rpgStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "rpgStem"
+            "name": "rpgStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-shockInStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0,
-                        0.482353,
-                        0.870588,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "shockInStem"
+            "name": "shockInStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0,
+                    0.482353,
+                    0.870588,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         },
         "effect-material-shockOutStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0,
-                        0.266667,
-                        0.337255,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "shockOutStem"
+            "name": "shockOutStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0,
+                    0.266667,
+                    0.337255,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-shoulderBStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.0235294,
-                        0.117647,
-                        0.141176,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "shoulderBStem"
+            "name": "shoulderBStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.0235294,
+                    0.117647,
+                    0.141176,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-shoulderPodStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "specular": [
-                        0.7,
-                        0.7,
-                        0.7,
-                        1
-                    ]
-                }
-            },
-            "name": "shoulderPodStem"
+            "name": "shoulderPodStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "specular": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    1
+                ]
+            }
         },
         "effect-material-skeletonStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0,
-                        0.270588,
-                        0.243137,
-                        1
-                    ],
-                    "specular": [
-                        0.699901,
-                        0.699901,
-                        0.699901,
-                        1
-                    ]
-                }
-            },
-            "name": "skeletonStem"
+            "name": "skeletonStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0,
+                    0.270588,
+                    0.243137,
+                    1
+                ],
+                "specular": [
+                    0.699901,
+                    0.699901,
+                    0.699901,
+                    1
+                ]
+            }
         },
         "effect-material-thighPadStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.498039,
-                        0.45098,
-                        0.380392,
-                        1
-                    ],
-                    "specular": [
-                        0.699992,
-                        0.699992,
-                        0.699992,
-                        1
-                    ]
-                }
-            },
-            "name": "thighPadStem"
+            "name": "thighPadStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.498039,
+                    0.45098,
+                    0.380392,
+                    1
+                ],
+                "specular": [
+                    0.699992,
+                    0.699992,
+                    0.699992,
+                    1
+                ]
+            }
         },
         "effect-material-thighStem": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "diffuse": [
-                        0.898039,
-                        0.898039,
-                        0.898039,
-                        1
-                    ],
-                    "specular": [
-                        0.699977,
-                        0.699977,
-                        0.699977,
-                        1
-                    ]
-                }
-            },
-            "name": "thighStem"
+            "name": "thighStem",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    0.898039,
+                    0.898039,
+                    0.898039,
+                    1
+                ],
+                "specular": [
+                    0.699977,
+                    0.699977,
+                    0.699977,
+                    1
+                ]
+            }
         }
     },
     "meshes": {
@@ -2807,7 +2650,7 @@
                     },
                     "indices": "accessor_1007",
                     "material": "effect-material-frameInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2819,7 +2662,7 @@
                     },
                     "indices": "accessor_1010",
                     "material": "effect-material-componentsStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2831,7 +2674,7 @@
                     },
                     "indices": "accessor_1013",
                     "material": "effect-material-Stem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2843,7 +2686,7 @@
                     },
                     "indices": "accessor_1016",
                     "material": "effect-material-footStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2855,7 +2698,7 @@
                     },
                     "indices": "accessor_1019",
                     "material": "effect-material-footFlangeStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2867,7 +2710,7 @@
                     },
                     "indices": "accessor_1022",
                     "material": "effect-material-kneeStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2879,7 +2722,7 @@
                     },
                     "indices": "accessor_1025",
                     "material": "effect-material-hipSphereStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2891,7 +2734,7 @@
                     },
                     "indices": "accessor_1028",
                     "material": "effect-material-filletStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2903,7 +2746,7 @@
                     },
                     "indices": "accessor_1031",
                     "material": "effect-material-thighStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2915,7 +2758,7 @@
                     },
                     "indices": "accessor_1034",
                     "material": "effect-material-thighPadStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2927,7 +2770,7 @@
                     },
                     "indices": "accessor_1037",
                     "material": "effect-material-plugStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2939,7 +2782,7 @@
                     },
                     "indices": "accessor_1040",
                     "material": "effect-material-discInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2951,7 +2794,7 @@
                     },
                     "indices": "accessor_1043",
                     "material": "effect-material-TubeStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2963,7 +2806,7 @@
                     },
                     "indices": "accessor_1046",
                     "material": "effect-material-componentStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2975,7 +2818,7 @@
                     },
                     "indices": "accessor_1049",
                     "material": "effect-material-hexStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2987,7 +2830,7 @@
                     },
                     "indices": "accessor_1052",
                     "material": "effect-material-kneeGuardStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -2999,7 +2842,7 @@
                     },
                     "indices": "accessor_1055",
                     "material": "effect-material-calfStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3011,7 +2854,7 @@
                     },
                     "indices": "accessor_1058",
                     "material": "effect-material-ankleBracketStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3023,7 +2866,7 @@
                     },
                     "indices": "accessor_1061",
                     "material": "effect-material-ankleStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3035,7 +2878,7 @@
                     },
                     "indices": "accessor_1064",
                     "material": "effect-material-calfCoverStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3047,7 +2890,7 @@
                     },
                     "indices": "accessor_1067",
                     "material": "effect-material-knee2Stem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3059,7 +2902,7 @@
                     },
                     "indices": "accessor_1070",
                     "material": "effect-material-skeletonStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3071,7 +2914,7 @@
                     },
                     "indices": "accessor_1073",
                     "material": "effect-material-bracketStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3083,7 +2926,7 @@
                     },
                     "indices": "accessor_1076",
                     "material": "effect-material-coverStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3095,7 +2938,7 @@
                     },
                     "indices": "accessor_1079",
                     "material": "effect-material-barStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3107,7 +2950,7 @@
                     },
                     "indices": "accessor_1082",
                     "material": "effect-material-intestineOutStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3119,7 +2962,7 @@
                     },
                     "indices": "accessor_1085",
                     "material": "effect-material-neckSinkStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3131,7 +2974,7 @@
                     },
                     "indices": "accessor_1088",
                     "material": "effect-material-shockOutStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3143,7 +2986,7 @@
                     },
                     "indices": "accessor_1091",
                     "material": "effect-material-shockInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3155,7 +2998,7 @@
                     },
                     "indices": "accessor_1094",
                     "material": "effect-material-discStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3167,7 +3010,7 @@
                     },
                     "indices": "accessor_1097",
                     "material": "effect-material-canisterInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3179,7 +3022,7 @@
                     },
                     "indices": "accessor_1100",
                     "material": "effect-material-canisterOutStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3191,7 +3034,7 @@
                     },
                     "indices": "accessor_1103",
                     "material": "effect-material-canInnerStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3203,7 +3046,7 @@
                     },
                     "indices": "accessor_1106",
                     "material": "effect-material-pipeStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3215,7 +3058,7 @@
                     },
                     "indices": "accessor_1109",
                     "material": "effect-material-off",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3227,7 +3070,7 @@
                     },
                     "indices": "accessor_1112",
                     "material": "effect-material-boltStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3239,7 +3082,7 @@
                     },
                     "indices": "accessor_1115",
                     "material": "effect-material-intestineInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3251,7 +3094,7 @@
                     },
                     "indices": "accessor_1118",
                     "material": "effect-material-armPlateStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3263,7 +3106,7 @@
                     },
                     "indices": "accessor_1121",
                     "material": "effect-material-shoulderPodStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3275,7 +3118,7 @@
                     },
                     "indices": "accessor_1124",
                     "material": "effect-material-armFilletStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3287,7 +3130,7 @@
                     },
                     "indices": "accessor_1127",
                     "material": "effect-material-bStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3299,7 +3142,7 @@
                     },
                     "indices": "accessor_1130",
                     "material": "effect-material-armBoltStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3311,7 +3154,7 @@
                     },
                     "indices": "accessor_1133",
                     "material": "effect-material-shoulderBStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3323,7 +3166,7 @@
                     },
                     "indices": "accessor_1136",
                     "material": "effect-material-armTrussStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3335,7 +3178,7 @@
                     },
                     "indices": "accessor_1139",
                     "material": "effect-material-pinStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3347,7 +3190,7 @@
                     },
                     "indices": "accessor_1142",
                     "material": "effect-material-radiatorStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3359,7 +3202,7 @@
                     },
                     "indices": "accessor_1145",
                     "material": "effect-material-rpgStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3371,7 +3214,7 @@
                     },
                     "indices": "accessor_1148",
                     "material": "effect-material-bayonetStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3383,7 +3226,7 @@
                     },
                     "indices": "accessor_1151",
                     "material": "effect-material-barrel2Stem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3395,7 +3238,7 @@
                     },
                     "indices": "accessor_1154",
                     "material": "effect-material-barrel1Stem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3407,7 +3250,7 @@
                     },
                     "indices": "accessor_1157",
                     "material": "effect-material-filterOutStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3419,7 +3262,7 @@
                     },
                     "indices": "accessor_1160",
                     "material": "effect-material-filterInStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3431,7 +3274,7 @@
                     },
                     "indices": "accessor_1163",
                     "material": "effect-material-exhaustGunStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3443,7 +3286,7 @@
                     },
                     "indices": "accessor_1166",
                     "material": "effect-material-headFilletStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3455,7 +3298,7 @@
                     },
                     "indices": "accessor_1169",
                     "material": "effect-material-headCaseStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3467,7 +3310,7 @@
                     },
                     "indices": "accessor_1172",
                     "material": "effect-material-headGrillStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3479,7 +3322,7 @@
                     },
                     "indices": "accessor_1175",
                     "material": "effect-material-headHornStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3491,7 +3334,7 @@
                     },
                     "indices": "accessor_1178",
                     "material": "effect-material-eyeStem",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -3503,7 +3346,7 @@
                     },
                     "indices": "accessor_1181",
                     "material": "effect-material-eyeRimStem",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         }
@@ -3516,7 +3359,7 @@
             "jointName": "Figure_2BODY_2_node",
             "matrix": [
                 0.999999,
-                2.35856e-07,
+                2.35856e-007,
                 0.00135923,
                 0,
                 0,
@@ -3536,15 +3379,6 @@
         },
         "Figure_2_node": {
             "children": [],
-            "instanceSkin": {
-                "meshes": [
-                    "Figure_2_geometry"
-                ],
-                "skeletons": [
-                    "Figure_2BODY_2_node"
-                ],
-                "skin": "Figure_2-skin"
-            },
             "matrix": [
                 1,
                 0,
@@ -3563,7 +3397,14 @@
                 0,
                 1
             ],
-            "name": "Figure_2_node"
+            "meshes": [
+                "Figure_2_geometry"
+            ],
+            "name": "Figure_2_node",
+            "skeletons": [
+                "Figure_2BODY_2_node"
+            ],
+            "skin": "Figure_2-skin"
         },
         "Figure_2chest_2_node": {
             "children": [
@@ -3574,10 +3415,10 @@
             "jointName": "Figure_2chest_2_node",
             "name": "Chest",
             "rotation": [
-                0.576369,
-                0.617805,
-                -0.534899,
-                0.255206
+                0.0733469,
+                0.0786199,
+                -0.0680695,
+                0.99187
             ],
             "scale": [
                 1,
@@ -3595,10 +3436,10 @@
             "jointName": "Figure_2head_2_node",
             "name": "Head",
             "rotation": [
-                -0.49772,
-                -0.847103,
-                0.186255,
-                1.36768
+                -0.314447,
+                -0.535179,
+                0.117671,
+                0.775152
             ],
             "scale": [
                 1,
@@ -3620,10 +3461,10 @@
             "jointName": "Figure_2hip_2_node",
             "name": "Hip",
             "rotation": [
-                0.140172,
-                -0.744836,
-                0.652358,
-                0.20618
+                0.0144248,
+                -0.0766491,
+                0.0671324,
+                0.994691
             ],
             "scale": [
                 1,
@@ -3643,10 +3484,10 @@
             "jointName": "Figure_2lFoot_2_node",
             "name": "Left_Foot",
             "rotation": [
-                0.469943,
-                0.49224,
-                0.732703,
-                0.220304
+                0.0516604,
+                0.0541116,
+                0.0805455,
+                0.993939
             ],
             "scale": [
                 1,
@@ -3668,10 +3509,10 @@
             "jointName": "Figure_2lForeArm_2_node",
             "name": "Left_Forearm",
             "rotation": [
-                0.0138611,
-                -0.928648,
-                0.370704,
-                1.71657
+                0.010489,
+                -0.702728,
+                0.28052,
+                0.653736
             ],
             "scale": [
                 1,
@@ -3737,10 +3578,10 @@
             "jointName": "Figure_2lShin_2_node",
             "name": "Left_Shin",
             "rotation": [
-                0.0729501,
-                0.775114,
-                -0.627596,
-                0.381078
+                0.0138159,
+                0.146797,
+                -0.118859,
+                0.981902
             ],
             "scale": [
                 1,
@@ -3760,10 +3601,10 @@
             "jointName": "Figure_2lShldr_2_node",
             "name": "Left_Shoulder",
             "rotation": [
-                0.925365,
-                0.0841759,
-                -0.369613,
-                1.8727
+                0.74529,
+                0.0677954,
+                -0.297686,
+                0.592731
             ],
             "scale": [
                 1,
@@ -3783,10 +3624,10 @@
             "jointName": "Figure_2lThigh_2_node",
             "name": "Left_Thigh",
             "rotation": [
-                -0.692762,
-                -0.71755,
-                -0.0721285,
-                0.30724
+                -0.106004,
+                -0.109797,
+                -0.0110369,
+                0.988224
             ],
             "scale": [
                 1,
@@ -3852,10 +3693,10 @@
             "jointName": "Figure_2rFoot_2_node",
             "name": "Right_Foot",
             "rotation": [
-                -0.843241,
-                -0.359252,
-                0.399854,
-                0.320219
+                -0.134435,
+                -0.0572742,
+                0.0637472,
+                0.98721
             ],
             "scale": [
                 1,
@@ -3873,10 +3714,10 @@
             "jointName": "Figure_2rForeArm_2_node",
             "name": "Right_Forearm",
             "rotation": [
-                0.545081,
-                0.73713,
-                -0.399408,
-                1.13379
+                0.292717,
+                0.395851,
+                -0.214489,
+                0.843572
             ],
             "scale": [
                 1,
@@ -3896,10 +3737,10 @@
             "jointName": "Figure_2rShin_2_node",
             "name": "Right_Shin",
             "rotation": [
-                0.999453,
-                -0.0312705,
-                0.0107159,
-                0.676472
+                0.331642,
+                -0.0103763,
+                0.00355579,
+                0.943341
             ],
             "scale": [
                 1,
@@ -3919,10 +3760,10 @@
             "jointName": "Figure_2rShldr_2_node",
             "name": "Right_Shoulder",
             "rotation": [
-                0.820947,
-                0.255344,
-                0.51073,
-                1.69148
+                0.614448,
+                0.191115,
+                0.382263,
+                0.663177
             ],
             "scale": [
                 1,
@@ -3942,10 +3783,10 @@
             "jointName": "Figure_2rThigh_2_node",
             "name": "Right_Thigh",
             "rotation": [
-                -0.909077,
-                0.0532662,
-                -0.413209,
-                0.782331
+                -0.3466,
+                0.0203086,
+                -0.157543,
+                0.924465
             ],
             "scale": [
                 1,
@@ -4077,11 +3918,18 @@
                 "Figure_2lShin_2_node",
                 "Figure_2lFoot_2_node",
                 "Figure_2lToe_2_node"
-            ]
+            ],
+            "name": "Figure_2"
         }
     },
     "techniques": {
-        "technique1": {
+        "technique0": {
+            "attributes": {
+                "a_joint": "joint",
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_weight": "weight"
+            },
             "parameters": {
                 "ambient": {
                     "type": 35666
@@ -4126,52 +3974,21 @@
                     "type": 35666
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Phong",
-                            "parameters": [
-                                "ambient",
-                                "diffuse",
-                                "jointMat",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix",
-                                "specular"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_joint": "joint",
-                            "a_normal": "normal",
-                            "a_position": "position",
-                            "a_weight": "weight"
-                        },
-                        "program": "program_0",
-                        "uniforms": {
-                            "u_ambient": "ambient",
-                            "u_diffuse": "diffuse",
-                            "u_jointMat": "jointMat",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix",
-                            "u_specular": "specular"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_jointMat": "jointMat",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_specular": "specular"
             }
         }
     }

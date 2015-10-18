@@ -178,7 +178,7 @@
             ],
             "min": [
                 2.31603,
-                -0.06428
+                -0.0642799
             ],
             "type": "VEC2"
         },
@@ -452,7 +452,7 @@
             ],
             "min": [
                 2.31603,
-                -0.06428
+                -0.0642799
             ],
             "type": "VEC2"
         },
@@ -873,10 +873,13 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+        "generator": "collada2gltf@a7a0d66f6de8851d27cdb9392386da8b87eaf897",
         "premultipliedAlpha": true,
-        "profile": "WebGL 1.0.2",
-        "version": 0.8
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": 1
     },
     "bufferViews": {
         "bufferView_428": {
@@ -900,9 +903,10 @@
         }
     },
     "cameras": {
-        "camera_0": {
+        "camera1": {
+            "name": "camera1",
             "perspective": {
-                "yfov": 45,
+                "yfov": 0.785398,
                 "zfar": 3162.76,
                 "znear": 12.651
             },
@@ -911,115 +915,104 @@
     },
     "images": {
         "ID140": {
+            "name": "ID140",
             "uri": "artezin_bottle.jpg"
         },
         "ID7": {
+            "name": "ID7",
             "uri": "Wood_Cherry_Original_.jpg"
         },
         "ID78": {
+            "name": "ID78",
             "uri": "_2004_old_vine_zinfandel_btl_xlg.jpg"
         }
     },
     "materials": {
         "ID139": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "diffuse": "texture_ID140"
-                }
-            },
-            "name": "artezin_bottle"
+            "name": "artezin_bottle",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "diffuse": "texture_ID140"
+            }
         },
         "ID21": {
-            "instanceTechnique": {
-                "technique": "technique2",
-                "values": {
-                    "ambient": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "diffuse": [
-                        0.564706,
-                        0.972549,
-                        0.835294,
-                        0.14902
-                    ],
-                    "transparency": 0.14902
-                }
-            },
-            "name": "material_5"
+            "name": "material_5",
+            "technique": "technique1",
+            "values": {
+                "ambient": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "diffuse": [
+                    0.564706,
+                    0.972549,
+                    0.835294,
+                    0.14902
+                ],
+                "transparency": 0.14902
+            }
         },
         "ID217": {
-            "instanceTechnique": {
-                "technique": "technique3",
-                "values": {}
-            },
-            "name": "edge_color683818255"
+            "name": "edge_color683818255",
+            "technique": "technique2",
+            "values": {}
         },
         "ID227": {
-            "instanceTechnique": {
-                "technique": "technique3",
-                "values": {}
-            },
-            "name": "edge_color353535255"
+            "name": "edge_color353535255",
+            "technique": "technique2",
+            "values": {}
         },
         "ID6": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "diffuse": "texture_ID7"
-                }
-            },
-            "name": "Wood_Cherry_Original_"
+            "name": "Wood_Cherry_Original_",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "diffuse": "texture_ID7"
+            }
         },
         "ID77": {
-            "instanceTechnique": {
-                "technique": "technique1",
-                "values": {
-                    "ambient": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "diffuse": "texture_ID78"
-                }
-            },
-            "name": "_2004_old_vine_zinfandel_btl_xlg"
+            "name": "_2004_old_vine_zinfandel_btl_xlg",
+            "technique": "technique0",
+            "values": {
+                "ambient": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "diffuse": "texture_ID78"
+            }
         },
         "ID89": {
-            "instanceTechnique": {
-                "technique": "technique4",
-                "values": {
-                    "ambient": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        1
-                    ],
-                    "diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            },
-            "name": "material"
+            "name": "material",
+            "technique": "technique3",
+            "values": {
+                "ambient": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    1
+                ],
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
         }
     },
     "meshes": {
@@ -1032,7 +1025,7 @@
                     },
                     "indices": "accessor_22",
                     "material": "ID217",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -1045,7 +1038,7 @@
                     },
                     "indices": "accessor_34",
                     "material": "ID227",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -1060,7 +1053,7 @@
                     },
                     "indices": "accessor_57",
                     "material": "ID6",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1074,7 +1067,7 @@
                     },
                     "indices": "accessor_79",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1088,7 +1081,7 @@
                     },
                     "indices": "accessor_99",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1103,7 +1096,7 @@
                     },
                     "indices": "accessor_124",
                     "material": "ID6",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1118,7 +1111,7 @@
                     },
                     "indices": "accessor_151",
                     "material": "ID6",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1133,7 +1126,7 @@
                     },
                     "indices": "accessor_178",
                     "material": "ID6",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1146,7 +1139,7 @@
                     },
                     "indices": "accessor_10",
                     "material": "ID217",
-                    "primitive": 1
+                    "mode": 1
                 }
             ]
         },
@@ -1161,7 +1154,7 @@
                     },
                     "indices": "accessor_205",
                     "material": "ID77",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1176,7 +1169,7 @@
                     },
                     "indices": "accessor_249",
                     "material": "ID89",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -1186,7 +1179,7 @@
                     },
                     "indices": "accessor_252",
                     "material": "ID77",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1201,7 +1194,7 @@
                     },
                     "indices": "accessor_279",
                     "material": "ID6",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1215,7 +1208,7 @@
                     },
                     "indices": "accessor_301",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1230,7 +1223,7 @@
                     },
                     "indices": "accessor_326",
                     "material": "ID139",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1244,7 +1237,7 @@
                     },
                     "indices": "accessor_348",
                     "material": "ID21",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1259,7 +1252,7 @@
                     },
                     "indices": "accessor_373",
                     "material": "ID77",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         },
@@ -1274,7 +1267,7 @@
                     },
                     "indices": "accessor_417",
                     "material": "ID89",
-                    "primitive": 4
+                    "mode": 4
                 },
                 {
                     "attributes": {
@@ -1284,7 +1277,7 @@
                     },
                     "indices": "accessor_420",
                     "material": "ID77",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         }
@@ -3593,7 +3586,7 @@
             "name": "SketchUp"
         },
         "default_camera": {
-            "camera": "camera_0",
+            "camera": "camera1",
             "children": [],
             "matrix": [
                 0.707107,
@@ -11798,10 +11791,10 @@
                 0,
                 0,
                 0,
-                1,
-                0,
-                0,
                 -1,
+                0,
+                0,
+                1,
                 0,
                 0,
                 0,
@@ -11898,7 +11891,12 @@
     },
     "skins": {},
     "techniques": {
-        "technique1": {
+        "technique0": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_texcoord0": "texcoord0"
+            },
             "parameters": {
                 "ambient": {
                     "type": 35666
@@ -11931,53 +11929,26 @@
                     "type": 35664
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Lambert",
-                            "parameters": [
-                                "ambient",
-                                "diffuse",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix"
-                            ],
-                            "texcoordBindings": {
-                                "diffuse": "TEXCOORD_0"
-                            }
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position",
-                            "a_texcoord0": "texcoord0"
-                        },
-                        "program": "program_0",
-                        "uniforms": {
-                            "u_ambient": "ambient",
-                            "u_diffuse": "diffuse",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix"
             }
         },
-        "technique2": {
+        "technique1": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
             "parameters": {
                 "ambient": {
                     "type": 35666
@@ -12009,64 +11980,39 @@
                     "type": 5126
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Lambert",
-                            "parameters": [
-                                "ambient",
-                                "diffuse",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix",
-                                "transparency"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position"
-                        },
-                        "program": "program_1",
-                        "uniforms": {
-                            "u_ambient": "ambient",
-                            "u_diffuse": "diffuse",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix",
-                            "u_transparency": "transparency"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929,
-                            3042
-                        ],
-                        "functions": {
-                            "blendEquationSeparate": [
-                                32774,
-                                32774
-                            ],
-                            "blendFuncSeparate": [
-                                1,
-                                771,
-                                1,
-                                771
-                            ]
-                        }
-                    }
+            "program": "program_1",
+            "states": {
+                "enable": [
+                    2929,
+                    3042
+                ],
+                "functions": {
+                    "blendEquationSeparate": [
+                        32774,
+                        32774
+                    ],
+                    "blendFuncSeparate": [
+                        1,
+                        771,
+                        1,
+                        771
+                    ],
+                    "depthMask": false
                 }
+            },
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_transparency": "transparency"
             }
         },
-        "technique3": {
+        "technique2": {
+            "attributes": {
+                "a_position": "position"
+            },
             "parameters": {
                 "modelViewMatrix": {
                     "semantic": "MODELVIEW",
@@ -12081,42 +12027,23 @@
                     "type": 35676
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Constant",
-                            "parameters": [
-                                "modelViewMatrix",
-                                "projectionMatrix"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_position": "position"
-                        },
-                        "program": "program_2",
-                        "uniforms": {
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_projectionMatrix": "projectionMatrix"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_2",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_projectionMatrix": "projectionMatrix"
             }
         },
-        "technique4": {
+        "technique3": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
             "parameters": {
                 "ambient": {
                     "type": 35666
@@ -12145,46 +12072,19 @@
                     "type": 35676
                 }
             },
-            "pass": "defaultPass",
-            "passes": {
-                "defaultPass": {
-                    "details": {
-                        "commonProfile": {
-                            "extras": {
-                                "doubleSided": false
-                            },
-                            "lightingModel": "Lambert",
-                            "parameters": [
-                                "ambient",
-                                "diffuse",
-                                "modelViewMatrix",
-                                "normalMatrix",
-                                "projectionMatrix"
-                            ]
-                        },
-                        "type": "COLLADA-1.4.1/commonProfile"
-                    },
-                    "instanceProgram": {
-                        "attributes": {
-                            "a_normal": "normal",
-                            "a_position": "position"
-                        },
-                        "program": "program_3",
-                        "uniforms": {
-                            "u_ambient": "ambient",
-                            "u_diffuse": "diffuse",
-                            "u_modelViewMatrix": "modelViewMatrix",
-                            "u_normalMatrix": "normalMatrix",
-                            "u_projectionMatrix": "projectionMatrix"
-                        }
-                    },
-                    "states": {
-                        "enable": [
-                            2884,
-                            2929
-                        ]
-                    }
-                }
+            "program": "program_3",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix"
             }
         }
     },
