@@ -1,4 +1,4 @@
-This license is for the example glTF code, not the [specification](specification/README.md) and [schema](specification).
+This license is for the example glTF code, not the [specification](specification/README.md).
 
 Original work Copyright (c) 2012, Motorola Mobility, Inc.
 All Rights Reserved.
