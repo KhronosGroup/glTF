@@ -13,6 +13,9 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [duck](duck)                         | ![](duck/screenshot/screenshot.png)            | The COLLADA duck. One texture. |
 | [CesiumMilkTruck](CesiumMilkTruck)   | ![](CesiumMilkTruck/screenshot/screenshot.png) | Textured. Multiple nodes/meshes. Animations. |
 | [CesiumMan](CesiumMan)               | ![](CesiumMan/screenshot/screenshot.png)       | Textured. Animations. Skins. |
+
+<!--
 | [SuperMurdoch](SuperMurdoch)         | ![](SuperMurdoch/screenshot/screenshot.png)    | Multiple materials. Translucency. |
-| [rambler](rambler)                   | ![]()                                          | Lots of nodes/meshes. |
+| [rambler](rambler)                   |                                                | Lots of nodes/meshes. |
 | [wine](wine)                         | ![](wine/screenshot/screenshot.png)            | Multiple textures and materials. |
+-->
