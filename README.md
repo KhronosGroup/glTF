@@ -57,4 +57,4 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 ---
 
-We believe the true usefulness of glTF goes beyond the spec itself; it is an ecosystem of tools, documentation, and extensions contributed by the community.  You are encouraged to [get involved!](https://github.com/KhronosGroup/glTF/issues/456).
+We believe the true usefulness of glTF goes beyond the spec itself; it is an ecosystem of tools, documentation, and extensions contributed by the community.  You are encouraged to [get involved](https://github.com/KhronosGroup/glTF/issues/456)!
