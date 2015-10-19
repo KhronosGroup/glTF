@@ -18,8 +18,6 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 ## glTF Tools
 
-The true usefulness of glTF depends on an ecosystem of tools.  If you develop a tool, especially an open-source tool, we are happy to list it here.  Email a link to Patrick Cozzi, pjcozzi@siggraph.org.
-
 ### Converters
 
 * [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to converter COLLADA to glTF (Supports glTF 1.0)
@@ -46,8 +44,6 @@ The true usefulness of glTF depends on an ecosystem of tools.  If you develop a 
 
 ## Presentations and Articles
 
-If you write a tutorial or article on glTF, we are happy to list it here.  Email a link to Patrick Cozzi, pjcozzi@siggraph.org.
-
 * [The state of WebGL and glTF](https://www.khronos.org/assets/uploads/developers/library/2015-graphical-web/WebGL-and-glTF-Graphical-Web_Sep15.pdf). Patrick Cozzi, The Graphical Web. September 2015
 * [glTF ecosystem and mesh compression update](https://www.khronos.org/webgl/wiki_1_15/images/GlTF_Update_SIGGRAPH_Aug15.pdf). Khronos 3D Formats Working Group, SIGGRAPH 2015. August 2015
 * [glTF and the WebGL Art Pipeline](http://www.slideshare.net/auradeluxe/gltf-and-the-webgl-art-pipeline-march-2015). Tony Parisi, WebGL Meetup. March 2015
@@ -59,10 +55,6 @@ If you write a tutorial or article on glTF, we are happy to list it here.  Email
 * [glTF update](http://www.slideshare.net/auradeluxe/gltf-update-with-tony-parisi). Tony Parisi. August 2013
 * [How I got involved in glTF and Khronos](http://blog.virtualglobebook.com/2013/03/how-i-got-involved-in-gltf-and-khronos.html). Patrick Cozzi, WebGL Meetup. March 2013
 
-## Cloning this repo
+---
 
-Since this repo has git submodules, clone with:
-
-```
-git clone --recurse-submodules https://github.com/KhronosGroup/glTF.git
-```
+We believe the true usefulness of glTF goes beyond the spec itself; it is an ecosystem of tools, documentation, and extensions contributed by the community.  You are encouraged to [get involved!](https://github.com/KhronosGroup/glTF/issues/456).
