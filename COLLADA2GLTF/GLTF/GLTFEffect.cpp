@@ -27,6 +27,7 @@
 #include "GLTF.h"
 #include "GLTFAsset.h"
 #include "../shaders/commonProfileShaders.h"
+#include <algorithm>
 
 using namespace rapidjson;
 #if __cplusplus <= 199711L
@@ -164,7 +165,7 @@ namespace GLTF
             bool doubleSided = techniqueExtras->getBool(kDoubleSided);
 
             std::string lightingModel = techniqueGenerator->getString("lightingModel");
-            std::transform(lightingModel.begin(), lightingModel.end(), lightingModel.begin(), toupper);
+            std::transform(lightingModel.begin(), lightingModel.end(), lightingModel.begin(), ::toupper);
             khrMaterialsCommon->setString(kTechnique, lightingModel);
             shared_ptr<JSONObject> materialsCommonValues(new JSONObject());
 
