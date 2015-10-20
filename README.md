@@ -20,8 +20,9 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 ### Converters
 
-* [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to converter COLLADA to glTF (Supports glTF 1.0)
+* [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to convert COLLADA to glTF (Supports glTF 1.0)
 * [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter (0.8, 1.0 on November 2, 2016)
+* [OBJ2GLTF](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF (1.0)
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter (0.8)
 * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
