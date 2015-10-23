@@ -75,13 +75,7 @@ Table 1. Common Material Shared Properties
 
 #### Blinn
 
-When the value of `technique` is `BLINN`, this defines a material shaded according to the Blinn-Torrance-Sparrow lighting model or a close approximation.
-
-This equation is complex and detailed via the ACM, so it is not detailed here. Refer to “Models of Light
-Reflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
-
-To maximize application compatibility, it is suggested that developers use the Blinn-Torrance-Sparrow model for
-`shininess` values in the range of 0 to 1. For `shininess` values greater than 1.0, it is recommended to instead use the Blinn-Phong approximation:
+When the value of `technique` is `BLINN`, this defines a material with Blinn shading. Blinn shading produces a specularly shaded surface that reflects ambient, diffuse, and specular reflection, where the specular reflection is shaded according the Blinn-Phong approximation:
 
 ```
 color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * max(H * N, 0)^<shininess>
