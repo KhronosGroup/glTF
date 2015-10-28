@@ -19,9 +19,7 @@ namespace GLTF
     bool writeMeshIndices(shared_ptr <GLTFMesh> mesh, size_t startOffset, GLTFAsset* asset) {
         GLTFOutputStream* indicesOutputStream = asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
-        IDToBufferDef IDToBuffer;
         
-        shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
         unsigned int indicesCount, allIndicesCount = 0;
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
         unsigned int primitivesCount =  (unsigned int)primitives.size();
@@ -60,7 +58,6 @@ namespace GLTF
         typedef std::map<std::string , shared_ptr<GLTF::GLTFBuffer> > IDToBufferDef;
         IDToBufferDef IDToBuffer;
         shared_ptr <MeshAttributeVector> allMeshAttributes = mesh->meshAttributes();
-        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
         
         shared_ptr<GLTFAccessor> positionAttribute = mesh->getMeshAttribute(GLTF::POSITION, 0);
         size_t vertexCount = positionAttribute->getCount();
@@ -108,7 +105,6 @@ namespace GLTF
              Convert the indices to unsigned short and write the blob
              */
             indicesCount = (unsigned int)uniqueIndices->getCount();
-            shared_ptr <GLTFBufferView> indicesBufferView = uniqueIndices->getBufferView();
             if (indicesCount > 0) {
                 allIndicesCount += indicesCount;                
                 //FIXME: this is assuming triangles
@@ -207,17 +203,15 @@ namespace GLTF
 			shared_ptr<GLTFOutputStream> outputStream;
             if (CONFIG_BOOL(this, "embedResources"))
 			{
-				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream());
+				outputStream = std::make_shared<GLTFOutputStream>();
 			}
 			else
 			{
-				COLLADABU::URI inputURI(this->getInputFilePath().c_str());
 				COLLADABU::URI outputURI(this->getOutputFilePath().c_str());
 
                 std::string folder = getPathDir(outputURI);
-				std::string fileName = inputURI.getPathFileBase();
 
-				outputStream = shared_ptr <GLTFOutputStream>(new GLTFOutputStream(folder, streamName, ""));
+				outputStream = std::make_shared<GLTFOutputStream>(folder, streamName, "");
 			}
             this->_nameToOutputStream[streamName] = outputStream;
         }
@@ -446,13 +440,13 @@ namespace GLTF
         value->evaluate(context);
     }
     
-    void GLTFAsset::evaluationWillStart(GLTFAsset* asset) {
+    void GLTFAsset::evaluationWillStart(GLTFAsset*) {
     }
     
-    void GLTFAsset::evaluate(JSONValue* value, GLTFAsset* asset) {
+    void GLTFAsset::evaluate(JSONValue*, GLTFAsset*) {
     }
     
-    void GLTFAsset::evaluationDidComplete(GLTFAsset* asset) {
+    void GLTFAsset::evaluationDidComplete(GLTFAsset*) {
     }
     
     void GLTFAsset::_performValuesEvaluation() {
@@ -538,14 +532,14 @@ namespace GLTF
             shared_ptr<JSONArray> sets;
 
             if (semantics->contains(semanticString) == false) {
-                sets = shared_ptr<JSONArray> (new JSONArray());
+                sets = std::make_shared<JSONArray>();
                 semantics->setValue(semanticString, sets);
             } else {
                 sets = semantics->getArray(semanticString);
             }
             
             unsigned int indexOfSet = primitive->getIndexOfSetAtIndex((unsigned int)j);
-            sets->appendValue(shared_ptr<JSONNumber> (new JSONNumber(indexOfSet)));
+            sets->appendValue(std::make_shared<JSONNumber>(indexOfSet));
         }
         
         return semantics;
@@ -557,7 +551,7 @@ namespace GLTF
         std::string uniqueId = "__glTF__defaultMaterial";
         uniqueId += hasNormal ? "0" : "1";
         
-        effect = shared_ptr<GLTFEffect> (new GLTFEffect(uniqueId));
+        effect = make_shared<GLTFEffect>(uniqueId, asset->profile());
         shared_ptr <JSONObject> values(new JSONObject());
         
         effect->setValues(values);
@@ -575,8 +569,8 @@ namespace GLTF
         techniqueGenerator->setString("lightingModel", effect->getLightingModel());
         techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
         techniqueGenerator->setValue(kValues, effect->getValues());
-        techniqueGenerator->setValue("techniqueExtras", shared_ptr<JSONObject>(new JSONObject()));
-        techniqueGenerator->setValue("texcoordBindings", shared_ptr<JSONObject>(new JSONObject()));
+        techniqueGenerator->setValue("techniqueExtras", std::make_shared<JSONObject>());
+        techniqueGenerator->setValue("texcoordBindings", std::make_shared<JSONObject>());
         
         effect->setTechniqueGenerator(techniqueGenerator);
         effect->setName(uniqueId);
@@ -622,7 +616,7 @@ namespace GLTF
             } else {
                 shared_ptr<JSONObject> meshesForBindingKey = _meshesForMaterialBindingKey->getObject(meshOriginalID);
                 if (meshesForBindingKey->contains(materialBindingKey)) {
-                    meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(meshOriginalID)));
+                    meshesArray->appendValue(std::make_shared<JSONString>(meshOriginalID));
                     return;
                 } else {
                     mesh = mesh->clone();
@@ -691,7 +685,7 @@ namespace GLTF
                         }
                     }
                 }
-                unsigned int jointsCount = 0;
+                unsigned int jointsCount;
                 shared_ptr<JSONObject> techniqueExtras(new JSONObject());
                 if (meshExtras != nullptr) {
                     if (meshExtras->contains(kDoubleSided)) {
@@ -723,7 +717,7 @@ namespace GLTF
                     //so, we'll have to clone the effect
                     std::string techniqueKey = getTechniqueKey(techniqueGenerator, this);
                     if (getTechniqueKey(effect->getTechniqueGenerator(), this) != techniqueKey) {
-                        shared_ptr<GLTFEffect> effectCopy = shared_ptr <GLTFEffect> (new GLTFEffect(*effect));
+                        shared_ptr<GLTFEffect> effectCopy = std::make_shared<GLTFEffect>(*effect);
                         effectCopy->setID(effect->getID() + "-variant-" + GLTFUtils::toString(materials->getKeysCount()));
                         effect = effectCopy;
                         if (materials->contains(effect->getID()) == false) {
@@ -754,7 +748,7 @@ namespace GLTF
                 }
             }
         }
-        meshesArray->appendValue(shared_ptr<JSONString>(new JSONString(meshOriginalID)));
+        meshesArray->appendValue(std::make_shared<JSONString>(meshOriginalID));
     }
     
     bool GLTFAsset::_applyMaterialBindingsForNode(const std::string &nodeUID) {
@@ -773,7 +767,6 @@ namespace GLTF
         if (node->contains(kSkin)) {
             std::string skinOriginalID = node->getString(kSkin);
             shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
-            std::vector <std::string> skinUIDs = skins->getAllKeys();
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
             jointsCount = skin->getJointsCount();
         }
@@ -813,7 +806,7 @@ namespace GLTF
             
             if (jointsCount > 0) {
                 if (meshExtras == nullptr)
-                    meshExtras = shared_ptr <JSONObject> (new JSONObject());
+                    meshExtras = std::make_shared<JSONObject>();
                 meshExtras->setUnsignedInt32("jointsCount", jointsCount);
             }
             
@@ -840,9 +833,7 @@ namespace GLTF
         }
     }
 
-    void GLTFAsset::write() {
-        ifstream inputCompression;
-        
+    void GLTFAsset::write() {        
         if (this->_converterConfig->boolForKeyPath("verboseLogging")) {
             char cwd[1024];
 #if (WIN32 || WIN64)
@@ -980,13 +971,13 @@ namespace GLTF
             }
         }
         
-        this->assetModifiers().insert(this->assetModifiers().begin(), shared_ptr<GLTFFlipUVModifier>(new GLTFFlipUVModifier()));
+        this->assetModifiers().insert(this->assetModifiers().begin(), std::make_shared<GLTFFlipUVModifier>());
         this->addValueEvaluator(std::make_shared<GLTFCleanupEvaluator>());
 
         this->launchModifiers();
         
-        size_t verticesLength = 0;
-        size_t indicesLength = 0;
+        size_t verticesLength;
+        size_t indicesLength;
         size_t animationLength = rawOutputStream->length();
         size_t previousLength = animationLength;
                 

@@ -959,7 +959,7 @@ namespace GLTF
         
     bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect ) {
         GLTFAsset *asset = this->_asset.get();
-        GLTFProfile* profile = asset->profile().get();
+        shared_ptr<GLTFProfile> profile = asset->profile();
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
         
         if (commonEffects.getCount() > 0) {
@@ -971,7 +971,7 @@ namespace GLTF
 #endif
             uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
             
-            shared_ptr <GLTFEffect> cvtEffect(new GLTFEffect(effect->getOriginalId()));
+            shared_ptr <GLTFEffect> cvtEffect = make_shared<GLTFEffect>(effect->getOriginalId(), profile);
             shared_ptr <JSONObject> values(new JSONObject());
             shared_ptr <JSONObject> khrMaterialsCommonValues(new JSONObject());
             

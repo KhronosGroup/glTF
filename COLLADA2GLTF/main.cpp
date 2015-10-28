@@ -83,7 +83,7 @@ static const OptionDescriptor options[] = {
 	{ "r",              no_argument,        "-r -> verbose logging" },
 	{ "e",				no_argument,		"-e -> embed resources (bin, shaders, available textures) in glTF file" },
     { "n",              no_argument,        "-n -> don't combine animations with the same target" },
-    //{ "k",              no_argument,        "-k -> export materials and lights using KHR_materials_common extension" }
+    { "k",              no_argument,        "-k -> export materials and lights using KHR_materials_common extension" }
 };
 
 static const int OPTIONS_COUNT = sizeof(options) / sizeof(OptionDescriptor);

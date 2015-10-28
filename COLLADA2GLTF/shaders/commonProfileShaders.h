@@ -32,6 +32,7 @@ namespace GLTF
     std::string getReferenceTechniqueID(std::shared_ptr<JSONObject> techniqueGenerator, GLTF::GLTFAsset* asset);
     void clearCommonProfileTechniqueCache();
     std::string getTechniqueKey(std::shared_ptr<JSONObject> techniqueGenerator, GLTFAsset* asset);
+    bool isOpaque(std::shared_ptr <JSONObject> parameters, GLTFAsset* asset);
 };
 
 #endif

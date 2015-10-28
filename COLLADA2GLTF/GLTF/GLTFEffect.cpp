@@ -29,6 +29,9 @@
 #include "../shaders/commonProfileShaders.h"
 #include <algorithm>
 
+#define _GL_STR(X) #X
+#define _GL(X) (this->_profile->getGLenumForString(_GL_STR(X)))
+
 using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -37,8 +40,8 @@ using namespace std;
 
 namespace GLTF
 {
-    GLTFEffect::GLTFEffect(const std::string& ID): JSONObject(),
-    _ID(ID), _techniqueGenerator(nullptr) {
+    GLTFEffect::GLTFEffect(const std::string& ID, shared_ptr<GLTFProfile> profile) : JSONObject(),
+    _ID(ID), _techniqueGenerator(nullptr), _profile(profile) {
     }
     
     GLTFEffect::GLTFEffect(const GLTFEffect &effect) : JSONObject() {
@@ -49,6 +52,7 @@ namespace GLTF
         this->setValues(source->getValues());
         this->setLightingModel(source->getLightingModel());
         this->_texcoordToSemantics = effect._texcoordToSemantics;
+        this->_profile = effect._profile;
     }
 
     GLTFEffect::~GLTFEffect() {
@@ -120,13 +124,38 @@ namespace GLTF
         return this->_texcoordToSemantics[texcoord];
     }
 
-    inline void AddMaterialsCommonValue(const shared_ptr<JSONObject>& materialsCommonValues,
+    inline void GLTFEffect::AddMaterialsCommonValue(const shared_ptr<JSONObject>& materialsCommonValues,
         const shared_ptr<JSONObject>& values, const std::string& name)
     {
         if (values->contains(name))
         {
-            materialsCommonValues->setValue(name,
-                static_pointer_cast<JSONObject>(values->getValue(name))->getValue(kValue));
+            shared_ptr<JSONObject> object = make_shared<JSONObject>();
+            auto value = static_pointer_cast<JSONObject>(values->getValue(name))->getValue(kValue);
+            uint32_t type;
+            uint32_t floatVec2 = _GL(FLOAT_VEC2);
+            JSONType jsonType = value->getJSONType();
+            if (jsonType == kJSONString)
+            {
+                type = _GL(SAMPLER_2D);
+            }
+            else if (jsonType == kJSONNumber)
+            {
+                type = _GL(FLOAT);
+            }
+            else if (jsonType == kJSONArray)
+            {
+                auto array = static_pointer_cast<JSONArray>(value);
+                type = _GL(FLOAT_VEC2) + static_cast<uint32_t>(array->getCount() - 2);
+            }
+            else
+            {
+                return;
+            }
+
+            object->setUnsignedInt32(kType, type);
+            object->setValue(kValue, value);
+
+            materialsCommonValues->setValue(name, object);
         }
     }
     
@@ -155,24 +184,26 @@ namespace GLTF
         }
         else
         {
+            shared_ptr<JSONObject> values = techniqueGenerator->getObject(kValues);
+            bool transparent = !isOpaque(values, asset);
+
             //
             // Export KHR_materials_common extension
             //
             shared_ptr <GLTF::JSONObject> extensions = this->createObjectIfNeeded("extensions");
             shared_ptr <GLTF::JSONObject> khrMaterialsCommon(new GLTF::JSONObject());
 
+            khrMaterialsCommon->setBool("transparent", transparent);
+
             shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
             bool doubleSided = techniqueExtras->getBool(kDoubleSided);
+            khrMaterialsCommon->setBool("doubleSided", doubleSided);
 
             std::string lightingModel = techniqueGenerator->getString("lightingModel");
             std::transform(lightingModel.begin(), lightingModel.end(), lightingModel.begin(), ::toupper);
             khrMaterialsCommon->setString(kTechnique, lightingModel);
             shared_ptr<JSONObject> materialsCommonValues(new JSONObject());
 
-            if (doubleSided)
-            {
-                materialsCommonValues->setBool("doubleSided", doubleSided);
-            }
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "emission");
             AddMaterialsCommonValue(materialsCommonValues, _khrMaterialsCommonValues, "transparency");
 

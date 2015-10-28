@@ -183,12 +183,24 @@ namespace GLTF
         //    return 1;
         //}
         
-        if (!parameters->contains("transparency")) {
-            return 1;
+        double transparency = 1.0;
+        if (parameters->contains("transparency"))
+        {
+            shared_ptr<JSONObject> tr = parameters->getObject("transparency");
+            transparency = tr->getDouble("value");
         }
-        
-        shared_ptr<JSONObject> tr = parameters->getObject("transparency");
-        double transparency = tr->getDouble("value");
+
+        if (parameters->contains("diffuse"))
+        {
+            shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
+
+            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("FLOAT_VEC4"))
+            {
+                auto values = diffuse->getArray(kValue)->values();
+                transparency *= static_pointer_cast<JSONNumber>(values[3])->getDouble();
+            }
+        }
+
         return transparency;
     }
     
@@ -197,7 +209,7 @@ namespace GLTF
         return getTransparency(parameters, asset)  < 1;
     }
     
-    static bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
+    bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
         
         if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
