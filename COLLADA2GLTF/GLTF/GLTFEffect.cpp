@@ -195,8 +195,11 @@ namespace GLTF
             khrMaterialsCommon->setBool("transparent", transparent);
 
             shared_ptr<JSONObject> techniqueExtras = techniqueGenerator->getObject("techniqueExtras");
-            bool doubleSided = techniqueExtras->getBool(kDoubleSided);
-            khrMaterialsCommon->setBool("doubleSided", doubleSided);
+            if (techniqueExtras)
+            {
+                khrMaterialsCommon->setBool("doubleSided", techniqueExtras->getBool(kDoubleSided));
+                khrMaterialsCommon->setUnsignedInt32("jointCount", techniqueExtras->getUnsignedInt32("jointsCount"));
+            }
 
             std::string lightingModel = techniqueGenerator->getString("lightingModel");
             std::transform(lightingModel.begin(), lightingModel.end(), lightingModel.begin(), ::toupper);
