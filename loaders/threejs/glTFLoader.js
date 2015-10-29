@@ -169,7 +169,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 case "JOINT" :
                     s = s.replace(r, 'skinIndex');
                     break;
-
                 default :
                     break;
             }
@@ -1986,7 +1985,6 @@ THREE.glTFLoader.prototype.checkComplete = function() {
             && this.shadersLoaded == this.shadersRequested
             && this.animationsLoaded == this.animationsRequested)
     {
-        
         for (var i = 0; i < this.pendingMeshes.length; i++) {
             var pending = this.pendingMeshes[i];
             pending.mesh.attachToNode(pending.node);

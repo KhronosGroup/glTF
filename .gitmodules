@@ -1,3 +1,3 @@
-[submodule "converter/COLLADA2GLTF/dependencies/OpenCOLLADA"]
-	path = converter/COLLADA2GLTF/dependencies/OpenCOLLADA
+[submodule "COLLADA2GLTF/dependencies/OpenCOLLADA"]
+	path = COLLADA2GLTF/dependencies/OpenCOLLADA
 	url = https://github.com/KhronosGroup/OpenCOLLADA.git
