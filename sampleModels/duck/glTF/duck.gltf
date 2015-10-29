@@ -63,7 +63,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@a7a0d66f6de8851d27cdb9392386da8b87eaf897",
+        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
