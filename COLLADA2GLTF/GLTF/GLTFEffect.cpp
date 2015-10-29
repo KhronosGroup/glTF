@@ -132,7 +132,6 @@ namespace GLTF
             shared_ptr<JSONObject> object = make_shared<JSONObject>();
             auto value = static_pointer_cast<JSONObject>(values->getValue(name))->getValue(kValue);
             uint32_t type;
-            uint32_t floatVec2 = _GL(FLOAT_VEC2);
             JSONType jsonType = value->getJSONType();
             if (jsonType == kJSONString)
             {
