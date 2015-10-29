@@ -36,7 +36,7 @@ namespace GLTF
     class COLLADA2GLTF_EXPORT GLTFEffect : public JSONObject {
         
     public:
-        GLTFEffect(const std::string &ID);
+        GLTFEffect(const std::string &ID, std::shared_ptr<GLTFProfile> profile);
         virtual ~GLTFEffect();
         
         GLTFEffect(const GLTFEffect &effect);
@@ -66,12 +66,16 @@ namespace GLTF
         virtual std::string valueType();
 
     private:
+        inline void AddMaterialsCommonValue(const std::shared_ptr<JSONObject>& materialsCommonValues,
+            const std::shared_ptr<JSONObject>& values, const std::string& name);
+
         std::string _ID;
+        std::shared_ptr<GLTFProfile> _profile;
         std::string _lightingModel;
         std::shared_ptr <JSONObject> _techniqueGenerator;
         std::shared_ptr <JSONObject> _values;
         std::shared_ptr <JSONObject> _khrMaterialsCommonValues;
-        TexCoordToSemanticsArrayPtr _texcoordToSemantics ;
+        TexCoordToSemanticsArrayPtr _texcoordToSemantics;
     };
 }
 
