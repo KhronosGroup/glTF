@@ -1,4 +1,3 @@
-#find . -name '*.dae' -exec collada2gltf -d -f {} \;
 for FILENAME in $(find . -name '*.dae')
 do
     basename=`echo $FILENAME | sed 's/.*\/\([^.]*\)\..*/\1/'`
