@@ -21,7 +21,7 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 ### Converters
 
 * [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to convert COLLADA to glTF (Supports glTF 1.0)
-* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter (0.8, 1.0 on November 2, 2016)
+* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter (1.0)
 * [OBJ2GLTF](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF (1.0)
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter (0.8)
 * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
@@ -32,7 +32,8 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 * [glTF loader](https://github.com/mrdoob/three.js/tree/master/examples/js/loaders/gltf) in [Three.js](http://threejs.org/) (glTF 1.0 in progress)
 * [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/glTF) in [BabylonJS](http://babylonjs.com/) (0.8/1.0 in progress)
-* [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/) (0.8, 1.0 on November 2, 2016)
+* [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/) (1.0)
+   * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API
 * [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF
 * [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html)
