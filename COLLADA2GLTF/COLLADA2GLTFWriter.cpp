@@ -168,7 +168,7 @@ namespace GLTF
         assetObject->setString("generator",version);
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         assetObject->setValue(kProfile, asset->profile()->id());
-        assetObject->setDouble(kVersion, glTFVersion);
+        assetObject->setString(kVersion, glTFVersion);
 
         _metersPerUnit = globalAsset->getUnit().getLinearUnitMeter();
         if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP ||
