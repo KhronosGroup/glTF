@@ -68,14 +68,40 @@ Table 1. Common Material Shared Properties
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `ambient`                    | `FLOAT_VEC4` | RGBA value for ambient light reflected from the surface of the object.|[0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `diffuse`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the amount of light diffusely reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT` |
+| `doubleSided`                    | `boolean` | Declares whether backface culling should be disabled for this visual. Corresponds to disabling the `CULL_FACE` render state. | `false` | |
 | `emission`                   | `FLOAT_VEC4` or string | RGBA value or texture ID for light emitted by the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
 | `specular`                    | `FLOAT_VEC4` or string | RGBA value or texture ID defining the color of light specularly reflected from the surface of the object. | [0,0,0,1] | `BLINN`, `PHONG` |
 | `shininess`                    | `FLOAT` | Defines the specularity or roughness of the specular reflection lobe of the object. | 0.0 |  `BLINN`, `PHONG` |
 | `transparency`                    | `FLOAT` | Declares the amount of transparency as an opacity value between 0.0 and 1.0. | 1.0 | `BLINN`, `PHONG`, `LAMBERT`, `CONSTANT` |
+| `transparent`                    | `boolean` | Declares whether the visual should be rendered using alpha blending. Corresponds to enabling the `BLEND` render state, setting the `depthMask` property to `false`, and defining blend equations and blend functions as described in the implementation note. | `false` | |
+
+> **Implementation Note**: An implementation should render alpha-blended visuals in depth-sorted order. An implementation should define blend equations and blend functions that result in properly blended RGB and alpha values, such as in the following example:
+
+```
+   functions: {
+       blendEquationSeparate: [
+           WebGLConstants.FUNC_ADD,
+           WebGLConstants.FUNC_ADD
+       ],
+       blendFuncSeparate: [
+           WebGLConstants.ONE,
+           WebGLConstants.ONE_MINUS_SRC_ALPHA,
+           WebGLConstants.ONE,
+           WebGLConstants.ONE_MINUS_SRC_ALPHA
+       ]
+   }
+```
+
 
 #### Blinn
 
-When the value of `technique` is `BLINN`, this defines a material with Blinn shading. Blinn shading produces a specularly shaded surface that reflects ambient, diffuse, and specular reflection, where the specular reflection is shaded according the Blinn-Phong approximation:
+When the value of `technique` is `BLINN`, this defines a material shaded according to the Blinn-Torrance-Sparrow lighting model or a close approximation.
+
+This equation is complex and detailed via the ACM, so it is not detailed here. Refer to “Models of Light
+Reflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
+
+To maximize application compatibility, it is suggested that developers use the Blinn-Torrance-Sparrow model for
+`shininess` values in the range of 0 to 1. For `shininess` values greater than 1.0, it is recommended to instead use the Blinn-Phong approximation:
 
 ```
 color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * max(H * N, 0)^<shininess>
@@ -306,32 +332,28 @@ Table 2. Common Light Shared Properties
 |:----------------------------:|:------------:|:-----------:|:-------------:|:----------:|
 | `color`                      | `FLOAT_VEC4` | RGBA value for light's color.|[0,0,0,1] | `ambient`, `directional`, `point`, `spot` |
 | `constantAttenuation`       | `FLOAT` | Constant attenuation of point and spot lights. | 0 | `point`, `spot` |
+`directional`, `spot` |
+| `distance`                   | `FLOAT` | Distance, in world units, over which the light affects objects in the scene. A value of zero indicates infinite distance. | 0 | `point`, `spot` |
 | `linearAttenuation`       | `FLOAT` | Linear (distance-based) attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `quadraticAttenuation`       | `FLOAT` | Quadratic attenuation of point and spot lights. | 1 | `point`, `spot` |
 | `type`                    | string | Declares the type of the light. Must be one of `ambient`, `directional`, `point` or `spot` | "" | `ambient`, `directional`, `point`, `spot` |
 
 ### Ambient
 
-Ambient lights define constant lighting throughout the scene, as reflected in the `ambient` property of any material. Ambient lights are not affected by the node's translation or rotation. Ambient lights support the `color` common light property described in Table 2.
+Ambient lights define constant lighting throughout the scene, as reflected in the `ambient` property of any material. Ambient lights support only the `color` common light property described in Table 2.
 
 #### Directional
 
-Directional lights are light sources that emit from infinitely far away in a specified direction. The light's direction is calculated by transforming the direction vector (0, 0, -1) by the node's rotation. Directional lights are not affected by the node's translation. 
-
-Directional lights support the common light property `color` described in Table 2.
+Directional lights are light sources that emit from infinitely far away in a specified direction. This light type uses the common light properties `color` and `direction` described in Table 2.
 
 ### Point
 
-Point lights emit light in all directions over a given distance. The point light's position is calculated based on the node's transformation matrix. Point lights are not affected by the node's rotation.
-
-Point lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in Table 2. Point lights do not have a direction.
+Point lights emit light in all directions over a given distance. Point lights support the `color`, `constantAttenuation`, `distance` and `linearAttenuation` common light properties described in Table 2. Point lights do not have a direction.
 
 
 ### Spot
 
-Sport lights emit light in a direction over a given distance. The light's position is calculated based on the node's transformation matrix. The light's direction is calculated by transforming the direction vector (0, 0, -1) by the node's rotation. 
-
-Spot lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in Table 2. Spot lights also define the following properties:
+Sport lights emit light in a directions over a given distance. Spot lights support the `color`, `constantAttenuation`, `direction`, `distance` and `linearAttenuation` common light properties described in Table 2. Spot lights also define the following properties:
 
 Table 3. Spot Light Properties
 
