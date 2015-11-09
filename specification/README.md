@@ -1159,6 +1159,9 @@ For more information on glTF extensions, consult the [extensions registry specif
       * [`functions`](#reference-technique.states.functions)
 * [`texture`](#reference-texture)
 
+This property reference applies to the WebGL 1.0.3 profile.  See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).
+
+> In the future, other profiles, such as OpenGL, are expected.
 
 <!-- ======================================================================= -->
 <a name="reference-accessor"></a>
