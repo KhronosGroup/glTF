@@ -3456,7 +3456,7 @@ If `material.technique` is not supplied, and no extension is present that define
 ```
 
 Vertex Shader:
-```c
+```glsl
 precision highp float;
 
 uniform mat4 u_modelViewMatrix;
@@ -3473,7 +3473,7 @@ void main(void)
 ```
 
 Fragment Shader:
-```c
+```glsl
 precision highp float;
 
 uniform vec4 u_emission;
