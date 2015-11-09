@@ -42,6 +42,7 @@ Contributors
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
+* [Appendix A: Default Material](#appendix-a)
 
 <a name="introduction"></a>
 # Introduction
@@ -673,7 +674,7 @@ Materials are stored in the assets `materials` dictionary property, which contai
 },
 ```
 
-The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.
+The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
 **non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
 
@@ -2260,7 +2261,7 @@ Additional properties are not allowed.
 
 ### material.technique
 
-The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.
+The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
 * **Type**: `string`
 * **Required**: No
@@ -3364,3 +3365,121 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Ed Mackey, Analytical Graphics, Inc.
+
+
+<a name="appendix-a"></a>
+# Appendix A: Default Material
+
+If `material.technique` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  The following glTF is an example of the default material.
+
+```javascript
+"materials": {
+    "Effect1": {
+        "values": {
+            "emission": [
+                0.8,
+                0.8,
+                0.8,
+                1
+            ]
+        },
+        "technique": "technique0"
+    }
+},
+"programs": {
+    "program0": {
+        "attributes": [
+            "a_normal",
+            "a_position",
+            "a_texcoord_0"
+        ],
+        "fragmentShader": "fragmentShader0",
+        "vertexShader": "vertexShader0"
+    }
+},
+"shaders": {
+    "vertexShader0": {
+        "type": 35633,
+        "uri": "data:text/plain;base64,..." // see below
+    },
+    "fragmentShader0": {
+        "type": 35632,
+        "uri": "data:text/plain;base64,..." // see blow
+    }
+},
+"techniques": {
+    "technique0": {
+        "attributes": {
+            "a_normal": "normal",
+            "a_position": "position"
+        },
+        "parameters": {
+            "modelViewMatrix": {
+                "semantic": "MODELVIEW",
+                "type": 35676
+            },
+            "normalMatrix": {
+                "semantic": "MODELVIEWINVERSETRANSPOSE",
+                "type": 35675
+            },
+            "projectionMatrix": {
+                "semantic": "PROJECTION",
+                "type": 35676
+            },
+            "emission": {
+                "type": 35666
+            },
+            "normal": {
+                "semantic": "NORMAL",
+                "type": 35665
+            },
+            "position": {
+                "semantic": "POSITION",
+                "type": 35665
+            }
+        },
+        "program": "program0",
+        "states": {
+            "enable": [
+                2884,
+                2929
+            ]
+        },
+        "uniforms": {
+            "u_modelViewMatrix": "modelViewMatrix",
+            "u_normalMatrix": "normalMatrix",
+            "u_projectionMatrix": "projectionMatrix",
+            "u_emission": "emission"
+        }
+    }
+}
+```
+
+Vertex Shader:
+```c
+precision highp float;
+
+uniform mat4 u_modelViewMatrix;
+uniform mat3 u_normalMatrix;
+uniform mat4 u_projectionMatrix;
+
+attribute vec3 a_normal;
+attribute vec3 a_position;
+
+void main(void)
+{
+    gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position,1.0);
+}
+```
+
+Fragment Shader:
+```c
+precision highp float;
+
+uniform vec4 u_emission;
+
+void main(void)
+{
+    gl_FragColor = u_emission;
+}
+```
