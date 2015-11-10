@@ -374,12 +374,12 @@
 
 			var sceneList = 
 				[
-	                 { name : "Duck", url : "../../sampleModels/duck/duck.gltf", 
+	                 { name : "Duck", url : "../../sampleModels/duck/glTF/duck.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, -5),
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
-                     { name : "Box", url : "../../sampleModels/box/box.gltf", 
+                     { name : "Box", url : "../../sampleModels/box/glTF/box.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, -5),
                          addLights:true,
                          },
@@ -566,7 +566,7 @@
 				cameraNames = [];
 				defaultCamera = null;
 				
-				if (!loader || !gltf.animations)
+				if (!loader || !gltf || !gltf.animations)
 					return;
 				
 				var i, len = gltf.animations.length;

@@ -960,19 +960,19 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
         
         createShaderParams : {
-            value: function(materialId, values, params, instanceProgram, shaderParams) {
-                var program = this.resources.getEntry(instanceProgram.program);
+            value: function(materialId, values, params, programID, technique) {
+                var program = this.resources.getEntry(programID);
                 
                 params.uniforms = {};
                 params.attributes = {};
-                params.program = instanceProgram;
-                params.parameters = shaderParams;
+                params.program = program;
+                params.parameters = technique.parameters;
                 if (program) {
                     params.fragmentShader = program.description.fragmentShader;
                     params.vertexShader = program.description.vertexShader;
-                    for (var uniform in instanceProgram.uniforms) {
-                        var pname = instanceProgram.uniforms[uniform];
-                        var shaderParam = shaderParams[pname];
+                    for (var uniform in technique.uniforms) {
+                        var pname = technique.uniforms[uniform];
+                        var shaderParam = technique.parameters[pname];
                         var ptype = shaderParam.type;
                         var pcount = shaderParam.count;
                         var value = values[pname];
@@ -1096,10 +1096,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         params.uniforms[uniform] = udecl;
                     }
 
-                    for (var attribute in instanceProgram.attributes) {
-                        var aname = instanceProgram.attributes[attribute];
-                        var atype = shaderParams[aname].type;
-                        var semantic = shaderParams[aname].semantic;
+                    for (var attribute in technique.attributes) {
+                        var pname = technique.attributes[attribute];
+                        var param = technique.parameters[pname];
+                        var atype = param.type;
+                        var semantic = param.semantic;
                         var adecl = { type : atype, semantic : semantic };
 
                         params.attributes[attribute] = adecl;
@@ -1115,46 +1116,43 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 var materialType = THREE.MeshPhongMaterial;
                 var defaultPass = null;
                 var description = technique ? technique.description : null;
-                if (description && description.passes)
-                    defaultPass = description.passes.defaultPass;
-                
-                if (defaultPass) {
-                    if (!theLoader.useShaders && defaultPass.details && defaultPass.details.commonProfile) {
-                        var profile = description.passes.defaultPass.details.commonProfile;
-                        if (profile)
+                if (!theLoader.useShaders && description.extension && description.extension.KHR_materials_common) {
+                    /*
+                    var profile = description.passes.defaultPass.details.commonProfile;
+                    if (profile)
+                    {
+                        switch (profile.lightingModel)
                         {
-                            switch (profile.lightingModel)
-                            {
-                                case 'Blinn' :
-                                case 'Phong' :
-                                    materialType = THREE.MeshPhongMaterial;
-                                    break;
-    
-                                case 'Lambert' :
-                                    materialType = THREE.MeshLambertMaterial;
-                                    break;
-                                    
-                                default :
-                                    materialType = THREE.MeshBasicMaterial;
-                                    break;
-                            }
-                            
-                            if (profile.extras && profile.extras.doubleSided)
-                            {
-                                params.side = THREE.DoubleSide;
-                            }
+                            case 'Blinn' :
+                            case 'Phong' :
+                                materialType = THREE.MeshPhongMaterial;
+                                break;
+
+                            case 'Lambert' :
+                                materialType = THREE.MeshLambertMaterial;
+                                break;
+                                
+                            default :
+                                materialType = THREE.MeshBasicMaterial;
+                                break;
+                        }
+                        
+                        if (profile.extras && profile.extras.doubleSided)
+                        {
+                            params.side = THREE.DoubleSide;
                         }
                     }
-                    else if (defaultPass.instanceProgram) {
-                        
-                        var instanceProgram = defaultPass.instanceProgram;
-                        this.createShaderParams(materialId, values, params, instanceProgram, technique.description.parameters);
-                        
-                        var loadshaders = true;
-                        
-                        if (loadshaders) {
-                            materialType = Material;
-                        }
+                    */
+                }
+                else {
+                    
+                    var programID = description.program;
+                    this.createShaderParams(materialId, values, params, programID, description);
+                    
+                    var loadshaders = true;
+                    
+                    if (loadshaders) {
+                        materialType = Material;
                     }
                 }
                 
@@ -1217,9 +1215,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             value: function(entryID, description, userInfo) {
                 //this should be rewritten using the meta datas that actually create the shader.
                 //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
-                var technique = this.resources.getEntry(description.instanceTechnique.technique);
+                var technique = this.resources.getEntry(description.technique);
                 var materialParams = {};
-                var values = description.instanceTechnique.values;
+                var values = description.values;
                 
                 var materialType = this.threeJSMaterialType(entryID, technique, values, materialParams);
 
@@ -1245,7 +1243,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 for (var i = 0 ; i < primitivesDescription.length ; i++) {
                     var primitiveDescription = primitivesDescription[i];
                     
-                    if (primitiveDescription.primitive === WebGLRenderingContext.TRIANGLES) {
+                    if (true || primitiveDescription.primitive === WebGLRenderingContext.TRIANGLES) {
 
                         var geometry = new ClassicGeometry();
                         var materialEntry = this.resources.getEntry(primitiveDescription.material);
