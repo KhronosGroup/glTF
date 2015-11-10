@@ -105,11 +105,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return s;*/
 
         var program = material.params.program;
-        var shaderParams = material.params.parameters;
+        var shaderParams = material.params.technique.parameters;
+        var shaderUniforms = material.params.technique.uniforms;
+        var shaderAttributes = material.params.technique.attributes;
         var params = {};
 
-        for (var uniform in program.uniforms) {
-            var pname = program.uniforms[uniform];
+        for (var uniform in material.params.uniforms) {
+            var pname = shaderUniforms[uniform];
             var shaderParam = shaderParams[pname];
             var semantic = shaderParam.semantic;
             if (semantic) {
@@ -117,8 +119,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
         }
 
-        for (var attribute in program.attributes) {
-            var pname = program.attributes[attribute];
+        for (var attribute in material.params.attributes) {
+            var pname = shaderAttributes[attribute];
             var shaderParam = shaderParams[pname];
             var semantic = shaderParam.semantic;
             if (semantic) {
@@ -966,7 +968,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 params.uniforms = {};
                 params.attributes = {};
                 params.program = program;
-                params.parameters = technique.parameters;
+                params.technique = technique;
                 if (program) {
                     params.fragmentShader = program.description.fragmentShader;
                     params.vertexShader = program.description.vertexShader;
