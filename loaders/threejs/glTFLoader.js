@@ -1243,7 +1243,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 for (var i = 0 ; i < primitivesDescription.length ; i++) {
                     var primitiveDescription = primitivesDescription[i];
                     
-                    if (true || primitiveDescription.primitive === WebGLRenderingContext.TRIANGLES) {
+                    if (primitiveDescription.mode === WebGLRenderingContext.TRIANGLES) {
 
                         var geometry = new ClassicGeometry();
                         var materialEntry = this.resources.getEntry(primitiveDescription.material);
