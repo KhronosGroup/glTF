@@ -151,17 +151,17 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     s = s.replace(r, 'uv');
                     break;
                 case "MODELVIEW" :
-                    if (!param.source) {
+                    if (!param.node) {
                         s = s.replace(r, 'modelViewMatrix');
                     }
                     break;
                 case "MODELVIEWINVERSETRANSPOSE" :
-                    if (!param.source) {
+                    if (!param.node) {
                        s = s.replace(r, 'normalMatrix');
                     }
                     break;
                 case "PROJECTION" :
-                    if (!param.source) {
+                    if (!param.node) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
@@ -1118,7 +1118,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 var materialType = THREE.MeshPhongMaterial;
                 var defaultPass = null;
                 var description = technique ? technique.description : null;
-                if (!theLoader.useShaders && description.extension && description.extension.KHR_materials_common) {
+                if (!theLoader.useShaders) { // && description.extension && description.extension.KHR_materials_common) {
+                materialType = THREE.MeshPhongMaterial;
                     /*
                     var profile = description.passes.defaultPass.details.commonProfile;
                     if (profile)
@@ -1158,9 +1159,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     }
                 }
                 
-                params.map = CreateTexture(this.resources, values.diffuse);
-                params.envMap = CreateTexture(this.resources, values.reflective);;
-
+                if (values.diffuse && typeof(values.diffuse) == 'string') {
+                    params.map = CreateTexture(this.resources, values.diffuse);
+                }
+                if (values.reflective && typeof(values.reflective) == 'string') {
+                    params.envMap = CreateTexture(this.resources, values.reflective);
+                }
          
                 var shininess = values.shininesss || values.shininess; // N.B.: typo in converter!
                 if (shininess)
@@ -1358,6 +1362,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     
                     if (xfov)
                     {
+                        xfov = THREE.Math.radToDeg(xfov);
+
                         camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
                     }
                 }
