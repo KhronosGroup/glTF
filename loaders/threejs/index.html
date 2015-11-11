@@ -42,7 +42,7 @@
             	width:25%;
             	left:75%;
             	bottom:0%;
-            	height:134px;
+            	height:166px;
             	background-color:White;
             	opacity:.9;
             	font: 13px/1.231 "Lucida Grande", Lucida, Verdana, sans-serif;
@@ -67,7 +67,7 @@
                         
             .controlValue {
             	position:absolute;
-            	left:50%;
+            	left:40%;
             	top:0%;
             }
             
@@ -89,6 +89,11 @@
             #buffer_geometry_control {
             	position:absolute;
             	top:104px;
+            }
+
+            #materials_extension_control {
+                position:absolute;
+                top:136px;
             }
                         
             #info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
@@ -125,6 +130,12 @@
 				<input type="checkbox" id="buffer_geometry_checkbox" checked onclick="toggleBufferGeometry();">BufferGeometry</input>
 				</div>
 			</div>
+            <div class="control" id="materials_extension_control">
+                Materials
+                <div class="controlValue">
+                <input type="checkbox" id="materials_extension_checkbox" checked onclick="toggleMaterialsExtension();">KHR_materials_common</input>
+                </div>
+            </div>
 		</div>
         <script src="libs/three.js.r71/three.js"></script>
         <script src="libs/three.js.r71/controls/OrbitControls.js"></script>
@@ -239,7 +250,12 @@
                 var loadStartTime = Date.now();
                 var status = document.getElementById("status");
                 status.innerHTML = "Loading...";
-                loader.load( sceneInfo.url, function(data) {
+                var url = sceneInfo.url;
+                var r = eval("/" + '\%s' + "/g");
+                var dir = useMaterialsExtension ? 'glTF-MaterialsCommon' : 'glTF';
+                url = url.replace(r, dir);
+
+                loader.load( url, function(data) {
 
                 	gltf = data;
                 	
@@ -374,38 +390,38 @@
 
 			var sceneList = 
 				[
-	                 { name : "Duck", url : "../../sampleModels/duck/glTF/duck.gltf", 
+	                 { name : "Duck", url : "../../sampleModels/duck/%s/duck.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, -5),
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
-                     { name : "Box", url : "../../sampleModels/box/glTF/box.gltf", 
+                     { name : "Box", url : "../../sampleModels/box/%s/box.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, -5),
                          addLights:true,
                          },
                      { name : "Box - Textured",
-                        url : "../../sampleModels/boxTextured/glTF/CesiumTexturedBoxTest.gltf", 
+                        url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, -5),
                          addLights:true,
                          },
-	                 { name : "Virtual City", url : "../../sampleModels/vc/glTF/vc.gltf", 
+	                 { name : "Virtual City", url : "../../sampleModels/vc/%s/vc.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
 		                 objectRotation: new THREE.Euler(-Math.PI, 0, 0), 
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
-                     { name : "Cesium Man", url : "../../sampleModels/CesiumMan/glTF/Cesium_Man.gltf", 
+                     { name : "Cesium Man", url : "../../sampleModels/CesiumMan/%s/Cesium_Man.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          objectRotation: new THREE.Euler(0, 0, 0),
                          addLights:true,
                          addGround:true,
                          shadows:true },
                      { name : "Cesium Milk Truck",
-                            url : "../../sampleModels/CesiumMilkTruck/glTF/CesiumMilkTruck.gltf", 
+                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          objectRotation: new THREE.Euler(0, 0, 0),
                          addLights:true,
                          addGround:true,
                          shadows:true },
-		             { name : "Monster", url : "../../sampleModels/monster/glTF/monster.gltf", 
+		             { name : "Monster", url : "../../sampleModels/monster/%s/monster.gltf", 
 			                 cameraPos: new THREE.Vector3(30, 20, 133), 
 			                 objectPosition: new THREE.Vector3(0, 23, 0),
 			                 objectRotation: new THREE.Euler(Math.PI / 2, 0, Math.PI / 2),
@@ -413,9 +429,8 @@
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
-		             { name : "BrainSteam", url : "../../sampleModels/brainsteam/glTF/brainsteam.gltf", 
-			                 cameraPos: new THREE.Vector3(0, 6, 13), 
-			                 center: new THREE.Vector3(0, 3, 0), 
+		             { name : "BrainSteam", url : "../../sampleModels/brainsteam/%s/brainsteam.gltf", 
+			                 cameraPos: new THREE.Vector3(0, 1, 10), 
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
@@ -544,6 +559,14 @@
 				useBufferGeometry = !useBufferGeometry;
 				selectScene();
 			}
+
+            var useextmaterials = document.getElementById("materials_extension_checkbox");
+            var useMaterialsExtension = useextmaterials.hasAttribute("checked");
+            function toggleMaterialsExtension()
+            {
+                useMaterialsExtension = !useMaterialsExtension;
+                selectScene();
+            }
 			
 			function cleanup() {
 
