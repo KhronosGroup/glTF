@@ -6,8 +6,6 @@
 THREE.glTFLoader = function (showStatus) {
     this.useBufferGeometry = (THREE.glTFLoader.useBufferGeometry !== undefined ) ?
             THREE.glTFLoader.useBufferGeometry : true;
-    this.useShaders = (THREE.glTFLoader.useShaders !== undefined ) ?
-            THREE.glTFLoader.useShaders : true;
     this.meshesRequested = 0;
     this.meshesLoaded = 0;
     this.pendingMeshes = [];
@@ -1113,42 +1111,56 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         },
         
         threeJSMaterialType : {
-            value: function(materialId, technique, values, params) {
-            
-                var materialType = THREE.MeshPhongMaterial;
-                var defaultPass = null;
-                var description = technique ? technique.description : null;
-                if (!theLoader.useShaders) { // && description.extension && description.extension.KHR_materials_common) {
-                materialType = THREE.MeshPhongMaterial;
-                    /*
-                    var profile = description.passes.defaultPass.details.commonProfile;
-                    if (profile)
-                    {
-                        switch (profile.lightingModel)
-                        {
-                            case 'Blinn' :
-                            case 'Phong' :
-                                materialType = THREE.MeshPhongMaterial;
-                                break;
+            value: function(materialId, material, params) {
 
-                            case 'Lambert' :
-                                materialType = THREE.MeshLambertMaterial;
-                                break;
-                                
-                            default :
-                                materialType = THREE.MeshBasicMaterial;
-                                break;
-                        }
-                        
-                        if (profile.extras && profile.extras.doubleSided)
-                        {
-                            params.side = THREE.DoubleSide;
-                        }
+                var extensions = material.extensions;
+                var khr_material = extensions ? extensions.KHR_materials_common : null;
+
+                var materialType = null;
+                var values;
+
+                if (khr_material) {
+
+                    switch (khr_material.technique)
+                    {
+                        case 'BLINN' :
+                        case 'PHONG' :
+                            materialType = THREE.MeshPhongMaterial;
+                            break;
+
+                        case 'LAMBERT' :
+                            materialType = THREE.MeshLambertMaterial;
+                            break;
+                            
+                        case 'CONSTANT' :
+                        default :
+                            materialType = THREE.MeshBasicMaterial;
+                            break;
                     }
-                    */
+                    
+                    if (khr_material.doubleSided)
+                    {
+                        params.side = THREE.DoubleSide;
+                    }
+
+                    if (khr_material.transparent)
+                    {
+                        params.transparent = true;
+                    }
+
+                    values = {};
+                    for (prop in khr_material.values) {
+                        values[prop] = khr_material.values[prop].value;
+                    }
+
                 }
                 else {
-                    
+                    var technique = material.technique ? 
+                        this.resources.getEntry(material.technique) :
+                        null;
+
+                    values = material.values;
+                    var description = technique.description;
                     var programID = description.program;
                     this.createShaderParams(materialId, values, params, programID, description);
                     
@@ -1219,15 +1231,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         
         handleMaterial: {
             value: function(entryID, description, userInfo) {
-                //this should be rewritten using the meta datas that actually create the shader.
-                //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
-                var technique = this.resources.getEntry(description.technique);
-                var materialParams = {};
-                var values = description.values;
+                var params = {};
                 
-                var materialType = this.threeJSMaterialType(entryID, technique, values, materialParams);
+                var materialType = this.threeJSMaterialType(entryID, description, params);
 
-                var material = new materialType(materialParams);
+                var material = new materialType(params);
                 
                 this.resources.setEntry(entryID, material, description);
 
@@ -1465,9 +1473,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     
                     var position = t ? new THREE.Vector3(t[0], t[1], t[2]) :
                         new THREE.Vector3;
-                    if (r) {
-                        convertAxisAngleToQuaternion(r, 1);
-                    }
+
                     var rotation = r ? new THREE.Quaternion(r[0], r[1], r[2], r[3]) :
                         new THREE.Quaternion;
                     var scale = s ? new THREE.Vector3(s[0], s[1], s[2]) :
@@ -1540,12 +1546,33 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     }
                 }
 
-                if (description.light) {
-                    var lightEntry = this.resources.getEntry(description.light);
+                if (description.extensions && description.extensions.KHR_materials_common 
+                        && description.extensions.KHR_materials_common.light) {
+                    var lightID = description.extensions.KHR_materials_common.light;
+                    var lightEntry = this.resources.getEntry(lightID);
                     if (lightEntry) {
                         threeNode.add(lightEntry.object);
                         this.lights.push(lightEntry.object);
                     }
+                }
+                
+                return true;
+            }
+        },
+
+        handleExtension: {
+            value: function(entryID, description, userInfo) {
+
+                console.log("Extension!", entryID, description);
+
+                switch (entryID) {
+                    case 'KHR_materials_common' :
+                        var lights = description.lights;
+                        for (lightID in lights) {
+                            var light = lights[lightID];
+                            this.handleLight(lightID, light);
+                        }
+                        break;                    
                 }
                 
                 return true;
@@ -1775,12 +1802,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 if (node) {
 
                                     var path = target.path;
-                                    
-                                    if (path == "rotation")
-                                    {
-                                        convertAxisAngleToQuaternion(output.data, output.count);
-                                    }
-                                    
+                                                                        
                                     var interp = {
                                             keys : input.data,
                                             values : output.data,
