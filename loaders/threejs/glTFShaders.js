@@ -45,8 +45,8 @@ THREE.glTFShaders = ( function () {
 // Construction/initialization
 THREE.glTFShader = function(material, params, object, scene) {
 	this.material = material;
-	this.parameters = params.parameters;
-	this.program = params.program;
+	this.parameters = params.technique.parameters;
+	this.uniforms = params.technique.uniforms;
 	this.joints = params.joints;
 	this.object = object;
 	this.semantics = {};
@@ -58,17 +58,17 @@ THREE.glTFShader = function(material, params, object, scene) {
 THREE.glTFShader.prototype.bindParameters = function(scene) {
 
 	function findObject(o, param) { 
-		if (o.glTFID == param.source) {
+		if (o.glTFID == param.node) {
 			param.sourceObject = o;
 		}
 	}
 
-	for (var uniform in this.program.uniforms) {
-		var pname = this.program.uniforms[uniform];
+	for (var uniform in this.uniforms) {
+		var pname = this.uniforms[uniform];
 		var param = this.parameters[pname];
 		if (param.semantic) {
 
-			if (param.source) {
+			if (param.node) {
 				scene.traverse(function(o) { findObject(o, param)});
 			}
 			else {
