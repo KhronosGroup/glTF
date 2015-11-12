@@ -6,8 +6,6 @@
 THREE.glTFLoader = function (showStatus) {
     this.useBufferGeometry = (THREE.glTFLoader.useBufferGeometry !== undefined ) ?
             THREE.glTFLoader.useBufferGeometry : true;
-    this.useShaders = (THREE.glTFLoader.useShaders !== undefined ) ?
-            THREE.glTFLoader.useShaders : true;
     this.meshesRequested = 0;
     this.meshesLoaded = 0;
     this.pendingMeshes = [];
@@ -105,11 +103,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return s;*/
 
         var program = material.params.program;
-        var shaderParams = material.params.parameters;
+        var shaderParams = material.params.technique.parameters;
+        var shaderUniforms = material.params.technique.uniforms;
+        var shaderAttributes = material.params.technique.attributes;
         var params = {};
 
-        for (var uniform in program.uniforms) {
-            var pname = program.uniforms[uniform];
+        for (var uniform in material.params.uniforms) {
+            var pname = shaderUniforms[uniform];
             var shaderParam = shaderParams[pname];
             var semantic = shaderParam.semantic;
             if (semantic) {
@@ -117,8 +117,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
         }
 
-        for (var attribute in program.attributes) {
-            var pname = program.attributes[attribute];
+        for (var attribute in material.params.attributes) {
+            var pname = shaderAttributes[attribute];
             var shaderParam = shaderParams[pname];
             var semantic = shaderParam.semantic;
             if (semantic) {
@@ -149,17 +149,17 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     s = s.replace(r, 'uv');
                     break;
                 case "MODELVIEW" :
-                    if (!param.source) {
+                    if (!param.node) {
                         s = s.replace(r, 'modelViewMatrix');
                     }
                     break;
                 case "MODELVIEWINVERSETRANSPOSE" :
-                    if (!param.source) {
+                    if (!param.node) {
                        s = s.replace(r, 'normalMatrix');
                     }
                     break;
                 case "PROJECTION" :
-                    if (!param.source) {
+                    if (!param.node) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
@@ -960,19 +960,19 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
         
         createShaderParams : {
-            value: function(materialId, values, params, instanceProgram, shaderParams) {
-                var program = this.resources.getEntry(instanceProgram.program);
+            value: function(materialId, values, params, programID, technique) {
+                var program = this.resources.getEntry(programID);
                 
                 params.uniforms = {};
                 params.attributes = {};
-                params.program = instanceProgram;
-                params.parameters = shaderParams;
+                params.program = program;
+                params.technique = technique;
                 if (program) {
                     params.fragmentShader = program.description.fragmentShader;
                     params.vertexShader = program.description.vertexShader;
-                    for (var uniform in instanceProgram.uniforms) {
-                        var pname = instanceProgram.uniforms[uniform];
-                        var shaderParam = shaderParams[pname];
+                    for (var uniform in technique.uniforms) {
+                        var pname = technique.uniforms[uniform];
+                        var shaderParam = technique.parameters[pname];
                         var ptype = shaderParam.type;
                         var pcount = shaderParam.count;
                         var value = values[pname];
@@ -1096,10 +1096,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         params.uniforms[uniform] = udecl;
                     }
 
-                    for (var attribute in instanceProgram.attributes) {
-                        var aname = instanceProgram.attributes[attribute];
-                        var atype = shaderParams[aname].type;
-                        var semantic = shaderParams[aname].semantic;
+                    for (var attribute in technique.attributes) {
+                        var pname = technique.attributes[attribute];
+                        var param = technique.parameters[pname];
+                        var atype = param.type;
+                        var semantic = param.semantic;
                         var adecl = { type : atype, semantic : semantic };
 
                         params.attributes[attribute] = adecl;
@@ -1110,57 +1111,72 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         },
         
         threeJSMaterialType : {
-            value: function(materialId, technique, values, params) {
-            
-                var materialType = THREE.MeshPhongMaterial;
-                var defaultPass = null;
-                var description = technique ? technique.description : null;
-                if (description && description.passes)
-                    defaultPass = description.passes.defaultPass;
-                
-                if (defaultPass) {
-                    if (!theLoader.useShaders && defaultPass.details && defaultPass.details.commonProfile) {
-                        var profile = description.passes.defaultPass.details.commonProfile;
-                        if (profile)
-                        {
-                            switch (profile.lightingModel)
-                            {
-                                case 'Blinn' :
-                                case 'Phong' :
-                                    materialType = THREE.MeshPhongMaterial;
-                                    break;
-    
-                                case 'Lambert' :
-                                    materialType = THREE.MeshLambertMaterial;
-                                    break;
-                                    
-                                default :
-                                    materialType = THREE.MeshBasicMaterial;
-                                    break;
-                            }
+            value: function(materialId, material, params) {
+
+                var extensions = material.extensions;
+                var khr_material = extensions ? extensions.KHR_materials_common : null;
+
+                var materialType = null;
+                var values;
+
+                if (khr_material) {
+
+                    switch (khr_material.technique)
+                    {
+                        case 'BLINN' :
+                        case 'PHONG' :
+                            materialType = THREE.MeshPhongMaterial;
+                            break;
+
+                        case 'LAMBERT' :
+                            materialType = THREE.MeshLambertMaterial;
+                            break;
                             
-                            if (profile.extras && profile.extras.doubleSided)
-                            {
-                                params.side = THREE.DoubleSide;
-                            }
-                        }
+                        case 'CONSTANT' :
+                        default :
+                            materialType = THREE.MeshBasicMaterial;
+                            break;
                     }
-                    else if (defaultPass.instanceProgram) {
-                        
-                        var instanceProgram = defaultPass.instanceProgram;
-                        this.createShaderParams(materialId, values, params, instanceProgram, technique.description.parameters);
-                        
-                        var loadshaders = true;
-                        
-                        if (loadshaders) {
-                            materialType = Material;
-                        }
+                    
+                    if (khr_material.doubleSided)
+                    {
+                        params.side = THREE.DoubleSide;
+                    }
+
+                    if (khr_material.transparent)
+                    {
+                        params.transparent = true;
+                    }
+
+                    values = {};
+                    for (prop in khr_material.values) {
+                        values[prop] = khr_material.values[prop].value;
+                    }
+
+                }
+                else {
+                    var technique = material.technique ? 
+                        this.resources.getEntry(material.technique) :
+                        null;
+
+                    values = material.values;
+                    var description = technique.description;
+                    var programID = description.program;
+                    this.createShaderParams(materialId, values, params, programID, description);
+                    
+                    var loadshaders = true;
+                    
+                    if (loadshaders) {
+                        materialType = Material;
                     }
                 }
                 
-                params.map = CreateTexture(this.resources, values.diffuse);
-                params.envMap = CreateTexture(this.resources, values.reflective);;
-
+                if (values.diffuse && typeof(values.diffuse) == 'string') {
+                    params.map = CreateTexture(this.resources, values.diffuse);
+                }
+                if (values.reflective && typeof(values.reflective) == 'string') {
+                    params.envMap = CreateTexture(this.resources, values.reflective);
+                }
          
                 var shininess = values.shininesss || values.shininess; // N.B.: typo in converter!
                 if (shininess)
@@ -1215,15 +1231,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         
         handleMaterial: {
             value: function(entryID, description, userInfo) {
-                //this should be rewritten using the meta datas that actually create the shader.
-                //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
-                var technique = this.resources.getEntry(description.instanceTechnique.technique);
-                var materialParams = {};
-                var values = description.instanceTechnique.values;
+                var params = {};
                 
-                var materialType = this.threeJSMaterialType(entryID, technique, values, materialParams);
+                var materialType = this.threeJSMaterialType(entryID, description, params);
 
-                var material = new materialType(materialParams);
+                var material = new materialType(params);
                 
                 this.resources.setEntry(entryID, material, description);
 
@@ -1245,7 +1257,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 for (var i = 0 ; i < primitivesDescription.length ; i++) {
                     var primitiveDescription = primitivesDescription[i];
                     
-                    if (primitiveDescription.primitive === WebGLRenderingContext.TRIANGLES) {
+                    if (primitiveDescription.mode === WebGLRenderingContext.TRIANGLES) {
 
                         var geometry = new ClassicGeometry();
                         var materialEntry = this.resources.getEntry(primitiveDescription.material);
@@ -1358,6 +1370,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     
                     if (xfov)
                     {
+                        xfov = THREE.Math.radToDeg(xfov);
+
                         camera = new THREE.PerspectiveCamera(xfov, aspect_ratio, znear, zfar);
                     }
                 }
@@ -1459,9 +1473,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     
                     var position = t ? new THREE.Vector3(t[0], t[1], t[2]) :
                         new THREE.Vector3;
-                    if (r) {
-                        convertAxisAngleToQuaternion(r, 1);
-                    }
+
                     var rotation = r ? new THREE.Quaternion(r[0], r[1], r[2], r[3]) :
                         new THREE.Quaternion;
                     var scale = s ? new THREE.Vector3(s[0], s[1], s[2]) :
@@ -1534,12 +1546,33 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     }
                 }
 
-                if (description.light) {
-                    var lightEntry = this.resources.getEntry(description.light);
+                if (description.extensions && description.extensions.KHR_materials_common 
+                        && description.extensions.KHR_materials_common.light) {
+                    var lightID = description.extensions.KHR_materials_common.light;
+                    var lightEntry = this.resources.getEntry(lightID);
                     if (lightEntry) {
                         threeNode.add(lightEntry.object);
                         this.lights.push(lightEntry.object);
                     }
+                }
+                
+                return true;
+            }
+        },
+
+        handleExtension: {
+            value: function(entryID, description, userInfo) {
+
+                console.log("Extension!", entryID, description);
+
+                switch (entryID) {
+                    case 'KHR_materials_common' :
+                        var lights = description.lights;
+                        for (lightID in lights) {
+                            var light = lights[lightID];
+                            this.handleLight(lightID, light);
+                        }
+                        break;                    
                 }
                 
                 return true;
@@ -1769,12 +1802,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 if (node) {
 
                                     var path = target.path;
-                                    
-                                    if (path == "rotation")
-                                    {
-                                        convertAxisAngleToQuaternion(output.data, output.count);
-                                    }
-                                    
+                                                                        
                                     var interp = {
                                             keys : input.data,
                                             values : output.data,
