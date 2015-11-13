@@ -668,6 +668,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
     Mesh.prototype.attachToNode = function(threeNode) {
         // Assumes that the geometry is complete
+        var that = this;
         this.primitives.forEach(function(primitive) {
             /*if(!primitive.mesh) {
                 primitive.mesh = new THREE.Mesh(primitive.geometry, primitive.material);
@@ -678,14 +679,16 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 material = createShaderMaterial(material, primitive.geometry.geometry);
             }
 
-            var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
-            threeMesh.castShadow = true;
-            threeNode.add(threeMesh);
+            if (!that.skin) {
+                var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
+                threeMesh.castShadow = true;
+                threeNode.add(threeMesh);
 
-            if (material instanceof THREE.ShaderMaterial) {
-                var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
-                THREE.glTFShaders.add(glTFShader);
+                if (material instanceof THREE.ShaderMaterial) {
+                    var glTFShader = new THREE.glTFShader(material, materialParams, threeMesh, theLoader.rootObj);
+                    THREE.glTFShaders.add(glTFShader);
 
+                }                
             }
         });
     };
@@ -1490,29 +1493,28 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                 if (description.meshes) {
                     description.meshInstances = {};
+                    var skinEntry;
+                    if (description.skin) {
+                        skinEntry =  this.resources.getEntry(description.skin);
+                    }
+
                     description.meshes.forEach( function(meshID) {
                         meshEntry = this.resources.getEntry(meshID);
                         theLoader.meshesRequested++;
                         meshEntry.object.onComplete(function(mesh) {
                             self.addPendingMesh(mesh, threeNode);
                             description.meshInstances[meshID] = meshEntry.object;
+                            if (skinEntry) {
+                                mesh.skin = skinEntry;
+                                description.instanceSkin = skinEntry.object;                        
+                            }
+
                             theLoader.meshesLoaded++;
                             theLoader.checkComplete();
                         });
                     }, this);
                 }
                                 
-                if (description.skin) {
-
-                    var skinEntry =  this.resources.getEntry(description.skin);
-                    
-                    if (skinEntry) {
-
-                        var skin = skinEntry.object;
-                        description.instanceSkin = skin;                        
-                    }
-                }
-
                 if (description.camera) {
                     var cameraEntry = this.resources.getEntry(description.camera);
                     if (cameraEntry) {
