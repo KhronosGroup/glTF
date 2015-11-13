@@ -1453,6 +1453,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 
                 threeNode.name = description.name;
                 threeNode.glTFID = entryID;
+                threeNode.glTF = description;
 
                 this.resources.setEntry(entryID, threeNode, description);
 
@@ -1486,58 +1487,32 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 }
 
                 var self = this;
-                
-                // Iterate through all node meshes and attach the appropriate objects
-                //FIXME: decision needs to be made between these 2 ways, probably meshes will be discarded.
-                var meshEntry;
-                if (description.mesh) {
-                    meshEntry = this.resources.getEntry(description.mesh);
-                    theLoader.meshesRequested++;
-                    meshEntry.object.onComplete(function(mesh) {
-                        self.addPendingMesh(mesh, threeNode);
-                        theLoader.meshesLoaded++;
-                        theLoader.checkComplete();
-                    });
-                }
 
                 if (description.meshes) {
+                    description.meshInstances = {};
                     description.meshes.forEach( function(meshID) {
                         meshEntry = this.resources.getEntry(meshID);
                         theLoader.meshesRequested++;
                         meshEntry.object.onComplete(function(mesh) {
                             self.addPendingMesh(mesh, threeNode);
+                            description.meshInstances[meshID] = meshEntry.object;
                             theLoader.meshesLoaded++;
                             theLoader.checkComplete();
                         });
                     }, this);
                 }
+                                
+                if (description.skin) {
 
-                if (description.instanceSkin) {
-
-                    var skinEntry =  this.resources.getEntry(description.instanceSkin.skin);
+                    var skinEntry =  this.resources.getEntry(description.skin);
                     
                     if (skinEntry) {
 
                         var skin = skinEntry.object;
-                        description.instanceSkin.skin = skin;
-                        threeNode.instanceSkin = description.instanceSkin;
-
-                        var meshes = description.instanceSkin.meshes;
-                        skin.meshes = [];
-                        meshes.forEach( function(meshID) {
-                            meshEntry = this.resources.getEntry(meshID);
-                            theLoader.meshesRequested++;
-                            meshEntry.object.onComplete(function(mesh) {
-                                
-                                skin.meshes.push(mesh);
-                                theLoader.meshesLoaded++;
-                                theLoader.checkComplete();
-                            });
-                        }, this);
-                        
+                        description.instanceSkin = skin;                        
                     }
                 }
-                                
+
                 if (description.camera) {
                     var cameraEntry = this.resources.getEntry(description.camera);
                     if (cameraEntry) {
@@ -1599,9 +1574,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         buildSkin: {
             value: function(node) {
             
-                var skin = node.instanceSkin.skin;
+                var glTF = node.glTF;
+                var skin = glTF.instanceSkin;
                 if (skin) {
-                    node.instanceSkin.skeletons.forEach(function(skeleton) {
+                    glTF.skeletons.forEach(function(skeleton) {
                         var nodeEntry = this.resources.getEntry(skeleton);
                         if (nodeEntry) {
 
@@ -1609,9 +1585,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                             var dobones = true;
 
-                            var i, len = skin.meshes.length;
-                            for (i = 0; i < len; i++) {
-                                var mesh = skin.meshes[i];
+                            for (meshID in glTF.meshInstances) {
+                                var mesh = glTF.meshInstances[meshID];
                                 var threeMesh = null;
                                 mesh.primitives.forEach(function(primitive) {
 
@@ -1706,7 +1681,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         buildSkins: {
             value: function(node) {
 
-                if (node.instanceSkin)
+                if (node.glTF && node.glTF.instanceSkin)
                     this.buildSkin(node);
                 
                 var children = node.children;
