@@ -39,7 +39,7 @@ namespace GeneratorUnitTests
                 {
                     var result = JsonConvert.DeserializeObject<Schema>(contents);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     failingFiles.Add(file.Replace(RelativePathToSchemaDir, ""));
                 }
