@@ -49,14 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchemaTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Generator\Generator.csproj">
-      <Project>{ddd005c7-d63d-4707-9464-1bcb9fd00454}</Project>
-      <Name>Generator</Name>
+    <ProjectReference Include="..\GeneratorLib\GeneratorLib.csproj">
+      <Project>{ed3bebd3-a9b9-42d9-a778-43e8cfb3b359}</Project>
+      <Name>GeneratorLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
