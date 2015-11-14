@@ -1,4 +1,6 @@
 *.dir
+*.sln
+!loaders/CSharp/CSharp.sln
 *.suo
 *.vcxproj*
 CMakeFiles
