@@ -1,5 +1,4 @@
 *.dir
-*.sln
 *.suo
 *.vcxproj*
 CMakeFiles
