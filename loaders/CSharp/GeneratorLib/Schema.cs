@@ -10,6 +10,9 @@ namespace GeneratorLib
 {
     public class Schema
     {
+        [JsonProperty("__ref__")]
+        public string ReferenceType { get; set; }
+
         public string Title { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
@@ -17,7 +20,7 @@ namespace GeneratorLib
 
         public string Description { get; set; }
 
-        [JsonConverter(typeof(TypeReferenceConverter))]
+        [JsonConverter(typeof (TypeReferenceConverter))]
         public TypeReference Extends { get; set; }
 
         public Dictionary<string, Schema> Properties { get; set; }

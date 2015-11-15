@@ -16,6 +16,7 @@ COLLADA2GLTF/GitSHA1.cpp
 specification/.project
 .DS_Store
 COLLADA2GLTF/x64/
+loaders/CSharp/.vs/
 loaders/CSharp/Generator/bin/
 loaders/CSharp/Generator/obj/
 loaders/CSharp/GeneratorLib/bin/

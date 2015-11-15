@@ -18,7 +18,7 @@ namespace GeneratorUnitTests
         [Test]
         public void SimpleSchema()
         {
-            var contents = ReadContents(RelativePathToSchemaDir + "extras.schema.json");
+            var contents = ReadContents(RelativePathToSchemaDir + "glTFProperty.schema.json");
             var result = JsonConvert.DeserializeObject<Schema>(contents);
             Assert.IsNotNull(result);
         }
@@ -79,14 +79,14 @@ namespace GeneratorUnitTests
             propertyNames = propertyNames.Select((p) => p.ToLower()).Distinct().ToList();
             var knownPropertyNames = typeof (Schema).GetProperties().Select((p) => p.Name.ToLower());
             propertyNames = propertyNames.Except(knownPropertyNames).Except(excludedNames)
-                .Except(new[] { "$schema", "$ref", "additionalproperties", "gltf_webgl", "gltf_detaileddescription" }).ToList();
+                .Except(new[] { "$schema", "__ref__", "additionalproperties", "gltf_webgl", "gltf_detaileddescription" }).ToList();
             
             CollectionAssert.AreEquivalent(new string[] {}, propertyNames);
         }
 
         private string ReadContents(string path)
         {
-            return File.ReadAllText(Path.GetFullPath(path)).Replace("\"additionalProperties\" : false,", "").Replace("\"additionalProperties\" : false", "");
+            return File.ReadAllText(Path.GetFullPath(path)).Replace("\"additionalProperties\" : false,", "").Replace("\"additionalProperties\" : false", "").Replace("\"$ref\"", "__ref__");
         }
     }
 }

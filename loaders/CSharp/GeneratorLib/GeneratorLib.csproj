@@ -46,8 +46,11 @@
   <ItemGroup>
     <Compile Include="AdditionalPropertiesConverter.cs" />
     <Compile Include="ArrayOfTypeReferencesConverter.cs" />
-    <Compile Include="CodeGenerator.cs" />
+    <Compile Include="CodeGenerator_SchemaLoading.cs" />
+    <Compile Include="CodeGenerator_GenerateCode.cs" />
+    <Compile Include="DictionaryOfTypeReferencesConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property.cs" />
     <Compile Include="Schema.cs" />
     <Compile Include="TypeReferenceConverter.cs" />
   </ItemGroup>
