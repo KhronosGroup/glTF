@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using glTFLoader.Shared;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeneratorLib
 {
@@ -46,20 +47,21 @@ namespace GeneratorLib
 
         private void AddProperty(CodeTypeDeclaration target, string rawName, Schema schema)
         {
-            var name = rawName.Substring(0,1).ToUpper() + rawName.Substring(1);
-            var fieldName = "m_" + name.Substring(0,1).ToLower() + name.Substring(1);
+            var name = rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
+            var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
             CodeAttributeDeclarationCollection attributes;
-            var type = GetCodegenType(schema, name, out attributes);
+            CodeExpression defaultValue;
+            var type = GetCodegenType(schema, name, out attributes, out defaultValue);
 
             var propertyBackingVariable = new CodeMemberField
             {
                 Type = type,
                 Name = fieldName,
-                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement($"Backing field for {name}.", true), new CodeCommentStatement("</summary>", true) }
+                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement($"Backing field for {name}.", true), new CodeCommentStatement("</summary>", true) },
+                InitExpression = defaultValue
             };
 
             target.Members.Add(propertyBackingVariable);
-
             var property = new CodeMemberProperty
             {
                 Type = type,
@@ -76,9 +78,11 @@ namespace GeneratorLib
             target.Members.Add(property);
         }
 
-        CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes)
+        CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue)
         {
             attributes = null;
+            defaultValue = null;
+
             if (schema.ReferenceType != null)
             {
                 throw new InvalidOperationException();
@@ -90,9 +94,115 @@ namespace GeneratorLib
                 {
                     throw new InvalidOperationException();
                 }
-
+                // Single Objects
                 if (schema.Type.Length > 1) return new CodeTypeReference(typeof(object));
-                return GetRuntimeType(schema.Type[0], schema, out attributes);
+                var typeRef = schema.Type[0];
+                attributes = null;
+                if (typeRef.IsReference) throw new NotImplementedException();
+                if (typeRef.Name == "any") return new CodeTypeReference(typeof(object));
+                if (typeRef.Name == "object")
+                {
+                    if (schema == null) return new CodeTypeReference(typeof(object));
+                    if (schema.Title != null) return new CodeTypeReference(ParseTitle(schema.Title));
+                    throw new NotImplementedException();
+                }
+                if (typeRef.Name == "number")
+                {
+                    if (schema.Default != null)
+                    {
+                        defaultValue = new CodePrimitiveExpression((float)schema.Default);
+                    }
+                    return new CodeTypeReference(typeof(float));
+                }
+                if (typeRef.Name == "string")
+                {
+                    if (schema.Default != null)
+                    {
+                        defaultValue = new CodePrimitiveExpression((string)schema.Default);
+                    }
+                    return new CodeTypeReference(typeof(string));
+                }
+                if (typeRef.Name == "integer")
+                {
+                    if (schema.Default != null)
+                    {
+                        defaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
+                    }
+
+                    return new CodeTypeReference(typeof(int));
+                }
+                if (typeRef.Name == "boolean")
+                {
+                    if (schema.Default != null)
+                    {
+                        defaultValue = new CodePrimitiveExpression((bool)schema.Default);
+                    }
+                    return new CodeTypeReference(typeof(bool));
+                }
+
+                // Arrays
+                if (typeRef.Name == "array")
+                {
+                    attributes = new CodeAttributeDeclarationCollection
+                    {
+                        new CodeAttributeDeclaration(
+                            "Newtonsoft.Json.JsonConverterAttribute",
+                            new [] {
+                                new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter))),
+                                new CodeAttributeArgument(
+                                    new CodeArrayCreateExpression(typeof(object), new CodeExpression[]
+                                    {
+                                        new CodePrimitiveExpression(schema.MinItems ?? -1),
+                                        new CodePrimitiveExpression(schema.MaxItems ?? -1),
+                                    })
+                                ),
+                            }
+                        )
+                    };
+
+                    if (schema.Items.Type.Length > 1) return new CodeTypeReference(typeof(object[]));
+                    if (schema.Items.Type[0].Name == "boolean")
+                    {
+                        if (schema.Default != null)
+                        {
+                            var defaultVauleArray = (JArray)schema.Default;
+                            defaultValue = new CodeArrayCreateExpression(typeof (bool), defaultVauleArray.Select(x=>(CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
+                        }
+                        return new CodeTypeReference(typeof(bool[]));
+                    }
+                    if (schema.Items.Type[0].Name == "string")
+                    {
+                        if (schema.Default != null)
+                        {
+                            var defaultVauleArray = (JArray)schema.Default;
+                            defaultValue = new CodeArrayCreateExpression(typeof(string), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((string)x)).ToArray());
+                        }
+                        return new CodeTypeReference(typeof(string[]));
+                    }
+                    if (schema.Items.Type[0].Name == "integer")
+                    {
+                        if (schema.Default != null)
+                        {
+                            var defaultVauleArray = (JArray)schema.Default;
+                            defaultValue = new CodeArrayCreateExpression(typeof(int), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((int)(long)x)).ToArray());
+                        }
+                        return new CodeTypeReference(typeof(int[]));
+                    }
+                    if (schema.Items.Type[0].Name == "number")
+                    {
+                        if (schema.Default != null)
+                        {
+                            var defaultVauleArray = (JArray)schema.Default;
+                            defaultValue = new CodeArrayCreateExpression(typeof(float), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
+                        }
+                        return new CodeTypeReference(typeof(float[]));
+                    }
+                    if (schema.Items.Type[0].Name == "object") return new CodeTypeReference(typeof(object[]));
+
+                    throw new NotImplementedException("Array of " + schema.Items.Type[0].Name);
+                }
+
+                throw new NotImplementedException(typeRef.Name);
             }
 
             if (schema.Type == null || schema.Type[0].Name != "object")
@@ -100,11 +210,15 @@ namespace GeneratorLib
                 throw new InvalidOperationException();
             }
 
+            // Dictionaries
             if (schema.DictionaryValueType.Type.Length > 1)
             {
                 return new CodeTypeReference(typeof(Dictionary<string, object>));
             }
-            
+            if (schema.Default!=null && ((JObject)schema.Default).Count > 0)
+            {
+                throw new NotImplementedException();
+            }
             if (schema.DictionaryValueType.Type[0].Name == "object")
             {
                 if (schema.DictionaryValueType.Title != null)
@@ -123,46 +237,6 @@ namespace GeneratorLib
         [JsonConverter(typeof(ArrayConverter))]
         public object ArrayPropertiesTemplate { get; set; }
 
-        CodeTypeReference GetRuntimeType(TypeReference typeRef, Schema schema, out CodeAttributeDeclarationCollection attributes)
-        {
-            attributes = null;
-            if (typeRef.IsReference) throw new NotImplementedException();
-            if (typeRef.Name == "any") return new CodeTypeReference(typeof(object));
-            if (typeRef.Name == "object")
-            {
-                if (schema == null) return new CodeTypeReference(typeof(object));
-                if (schema.Title != null) return new CodeTypeReference(ParseTitle(schema.Title));
-                throw new NotImplementedException();
-            }
-            if (typeRef.Name == "number") return new CodeTypeReference(typeof(object));
-            if (typeRef.Name == "string") return new CodeTypeReference(typeof(string));
-            if (typeRef.Name == "integer") return new CodeTypeReference(typeof(int));
-            if (typeRef.Name == "boolean") return new CodeTypeReference(typeof(bool));
-            if (typeRef.Name == "array")
-            {
-                attributes = new CodeAttributeDeclarationCollection
-                {
-                    new CodeAttributeDeclaration(
-                        "Newtonsoft.Json.JsonConverterAttribute",
-                        new CodeAttributeArgument(
-                            new CodeTypeOfExpression(typeof(ArrayConverter))
-                        )
-                    )
-                };
-
-                if (schema.Items.Type.Length > 1) return new CodeTypeReference(typeof(object[]));
-                if (schema.Items.Type[0].Name == "boolean") return new CodeTypeReference(typeof(bool[]));
-                if (schema.Items.Type[0].Name == "string") return new CodeTypeReference(typeof(string[]));
-                if (schema.Items.Type[0].Name == "integer") return new CodeTypeReference(typeof(int[]));
-                if (schema.Items.Type[0].Name == "number") return new CodeTypeReference(typeof(object[]));
-                if (schema.Items.Type[0].Name == "object") return new CodeTypeReference(typeof(object[]));
-
-                throw new NotImplementedException("Array of " + schema.Items.Type[0].Name);
-            }
-
-            throw new NotImplementedException(typeRef.Name);
-        }
-        
         public void CSharpCodeGen(string outputDirectory)
         {
             GeneratedClasses = new Dictionary<string, CodeTypeDeclaration>();

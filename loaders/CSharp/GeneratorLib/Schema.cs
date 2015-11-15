@@ -42,9 +42,9 @@ namespace GeneratorLib
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
 
-        public int MinItems { get; set; }
+        public int? MinItems { get; set; }
 
-        public int MaxItems { get; set; }
+        public int? MaxItems { get; set; }
 
         public object Enum { get; set; }
 
