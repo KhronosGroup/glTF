@@ -58,6 +58,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\glTFLoader_Shared\glTFLoader_Shared.csproj">
+      <Project>{976ef0aa-4835-4b60-88b8-bf2fa02b571c}</Project>
+      <Name>glTFLoader_Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

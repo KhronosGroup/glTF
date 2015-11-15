@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoader", "glTFLoader\gl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoaderUnitTests", "glTFLoaderUnitTests\glTFLoaderUnitTests.csproj", "{55C01A0A-61C6-478C-9AAC-874709AEA393}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoader_Shared", "glTFLoader_Shared\glTFLoader_Shared.csproj", "{976EF0AA-4835-4B60-88B8-BF2FA02B571C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{55C01A0A-61C6-478C-9AAC-874709AEA393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55C01A0A-61C6-478C-9AAC-874709AEA393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55C01A0A-61C6-478C-9AAC-874709AEA393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976EF0AA-4835-4B60-88B8-BF2FA02B571C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976EF0AA-4835-4B60-88B8-BF2FA02B571C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976EF0AA-4835-4B60-88B8-BF2FA02B571C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976EF0AA-4835-4B60-88B8-BF2FA02B571C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

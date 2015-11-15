@@ -8,6 +8,10 @@ using System.CodeDom.Compiler;
 using System.ComponentModel.Design.Serialization;
 using Microsoft.CSharp;
 using System.IO;
+using System.Linq.Expressions;
+using System.Reflection;
+using glTFLoader.Shared;
+using Newtonsoft.Json;
 
 namespace GeneratorLib
 {
@@ -44,7 +48,8 @@ namespace GeneratorLib
         {
             var name = rawName.Substring(0,1).ToUpper() + rawName.Substring(1);
             var fieldName = "m_" + name.Substring(0,1).ToLower() + name.Substring(1);
-            var type = GetCodegenType(schema, name);
+            CodeAttributeDeclarationCollection attributes;
+            var type = GetCodegenType(schema, name, out attributes);
 
             var propertyBackingVariable = new CodeMemberField
             {
@@ -64,14 +69,16 @@ namespace GeneratorLib
                 GetStatements = { new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)) },
                 HasSet = true,
                 SetStatements = { new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName), new CodePropertySetValueReferenceExpression()) },
-                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement(schema.Description, true), new CodeCommentStatement("</summary>", true) }
+                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement(schema.Description, true), new CodeCommentStatement("</summary>", true) },
+                CustomAttributes = attributes
             };
 
             target.Members.Add(property);
         }
 
-        CodeTypeReference GetCodegenType(Schema schema, string name)
+        CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes)
         {
+            attributes = null;
             if (schema.ReferenceType != null)
             {
                 throw new InvalidOperationException();
@@ -85,7 +92,7 @@ namespace GeneratorLib
                 }
 
                 if (schema.Type.Length > 1) return new CodeTypeReference(typeof(object));
-                return GetRuntimeType(schema.Type[0], schema);
+                return GetRuntimeType(schema.Type[0], schema, out attributes);
             }
 
             if (schema.Type == null || schema.Type[0].Name != "object")
@@ -113,8 +120,12 @@ namespace GeneratorLib
             throw new NotImplementedException();
         }
 
-        CodeTypeReference GetRuntimeType(TypeReference typeRef, Schema schema)
+        [JsonConverter(typeof(ArrayConverter))]
+        public object ArrayPropertiesTemplate { get; set; }
+
+        CodeTypeReference GetRuntimeType(TypeReference typeRef, Schema schema, out CodeAttributeDeclarationCollection attributes)
         {
+            attributes = null;
             if (typeRef.IsReference) throw new NotImplementedException();
             if (typeRef.Name == "any") return new CodeTypeReference(typeof(object));
             if (typeRef.Name == "object")
@@ -129,6 +140,16 @@ namespace GeneratorLib
             if (typeRef.Name == "boolean") return new CodeTypeReference(typeof(bool));
             if (typeRef.Name == "array")
             {
+                attributes = new CodeAttributeDeclarationCollection
+                {
+                    new CodeAttributeDeclaration(
+                        "Newtonsoft.Json.JsonConverterAttribute",
+                        new CodeAttributeArgument(
+                            new CodeTypeOfExpression(typeof(ArrayConverter))
+                        )
+                    )
+                };
+
                 if (schema.Items.Type.Length > 1) return new CodeTypeReference(typeof(object[]));
                 if (schema.Items.Type[0].Name == "boolean") return new CodeTypeReference(typeof(bool[]));
                 if (schema.Items.Type[0].Name == "string") return new CodeTypeReference(typeof(string[]));
