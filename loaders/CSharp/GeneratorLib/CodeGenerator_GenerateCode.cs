@@ -78,7 +78,7 @@ namespace GeneratorLib
             target.Members.Add(property);
         }
 
-        CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue)
+        public static CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue)
         {
             attributes = null;
             defaultValue = null;
