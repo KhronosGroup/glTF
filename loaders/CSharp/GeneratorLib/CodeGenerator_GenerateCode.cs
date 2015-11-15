@@ -44,7 +44,7 @@ namespace GeneratorLib
         {
             var name = rawName.Substring(0,1).ToUpper() + rawName.Substring(1);
             var fieldName = "m_" + name.Substring(0,1).ToLower() + name.Substring(1);
-            var type = GetCodegenType(schema);
+            var type = GetCodegenType(schema, name);
 
             var propertyBackingVariable = new CodeMemberField
             {
@@ -70,44 +70,74 @@ namespace GeneratorLib
             target.Members.Add(property);
         }
 
-        CodeTypeReference GetCodegenType(Schema schema)
+        CodeTypeReference GetCodegenType(Schema schema, string name)
         {
+            if (schema.ReferenceType != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (schema.DictionaryValueType == null)
             {
-                if (schema.Extends != null)
+                if (schema.Type == null)
                 {
-                    return new CodeTypeReference(ParseTitle(FileSchemas[schema.Extends.Name].Title));
+                    throw new InvalidOperationException();
                 }
 
-                if (schema.Type.Length > 1)
-                {
-                    return new CodeTypeReference(typeof(object));
-                }
-
-                return new CodeTypeReference(GetRuntimeType(schema.Type[0]));
+                if (schema.Type.Length > 1) return new CodeTypeReference(typeof(object));
+                return GetRuntimeType(schema.Type[0], schema);
             }
 
-            if (schema.DictionaryValueType.IsReference)
+            if (schema.Type == null || schema.Type[0].Name != "object")
             {
-                return new CodeTypeReference(new Dictionary<string, object>().GetType());
+                throw new InvalidOperationException();
             }
 
-            if (schema.DictionaryValueType.Name == "any") return new CodeTypeReference(new Dictionary<string, object>().GetType());
-            if (schema.DictionaryValueType.Name == "object") return new CodeTypeReference(new Dictionary<string, object>().GetType());
+            if (schema.DictionaryValueType.Type.Length > 1)
+            {
+                return new CodeTypeReference(typeof(Dictionary<string, object>));
+            }
+            
+            if (schema.DictionaryValueType.Type[0].Name == "object")
+            {
+                if (schema.DictionaryValueType.Title != null)
+                    return new CodeTypeReference($"System.Collections.Generic.Dictionary<string, {ParseTitle(schema.DictionaryValueType.Title)}>");
+                return new CodeTypeReference(typeof(Dictionary<string, object>));
+            }
 
-            throw new NotImplementedException(schema.DictionaryValueType.Name);
+            if (schema.DictionaryValueType.Type[0].Name == "string")
+            {
+                return new CodeTypeReference(typeof(Dictionary<string, string>));
+            }
+
+            throw new NotImplementedException();
         }
 
-        Type GetRuntimeType(TypeReference typeRef)
+        CodeTypeReference GetRuntimeType(TypeReference typeRef, Schema schema)
         {
             if (typeRef.IsReference) throw new NotImplementedException();
-            if (typeRef.Name == "any") return typeof(object);
-            if (typeRef.Name == "object") return typeof(object);
-            if (typeRef.Name == "number") return typeof(object);
-            if (typeRef.Name == "string") return typeof(string);
-            if (typeRef.Name == "integer") return typeof(int);
-            if (typeRef.Name == "boolean") return typeof(bool);
-            if (typeRef.Name == "array") return typeof(object[]);
+            if (typeRef.Name == "any") return new CodeTypeReference(typeof(object));
+            if (typeRef.Name == "object")
+            {
+                if (schema == null) return new CodeTypeReference(typeof(object));
+                if (schema.Title != null) return new CodeTypeReference(ParseTitle(schema.Title));
+                throw new NotImplementedException();
+            }
+            if (typeRef.Name == "number") return new CodeTypeReference(typeof(object));
+            if (typeRef.Name == "string") return new CodeTypeReference(typeof(string));
+            if (typeRef.Name == "integer") return new CodeTypeReference(typeof(int));
+            if (typeRef.Name == "boolean") return new CodeTypeReference(typeof(bool));
+            if (typeRef.Name == "array")
+            {
+                if (schema.Items.Type.Length > 1) return new CodeTypeReference(typeof(object[]));
+                if (schema.Items.Type[0].Name == "boolean") return new CodeTypeReference(typeof(bool[]));
+                if (schema.Items.Type[0].Name == "string") return new CodeTypeReference(typeof(string[]));
+                if (schema.Items.Type[0].Name == "integer") return new CodeTypeReference(typeof(int[]));
+                if (schema.Items.Type[0].Name == "number") return new CodeTypeReference(typeof(object[]));
+                if (schema.Items.Type[0].Name == "object") return new CodeTypeReference(typeof(object[]));
+
+                throw new NotImplementedException("Array of " + schema.Items.Type[0].Name);
+            }
 
             throw new NotImplementedException(typeRef.Name);
         }

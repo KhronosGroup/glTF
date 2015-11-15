@@ -25,16 +25,64 @@ namespace GeneratorLib
 
         public void ParseSchemas()
         {
-            FileSchemas = new Dictionary<string, Schema>();
-            ParseSchema(m_rootSchemaName);
+            FileSchemas = new SchemaParser(m_directory).ParseSchemaTree(m_rootSchemaName);
         }
 
         public void ExpandSchemaReferences()
         {
-            var keys = FileSchemas.Keys.ToArray();
-            foreach (var key in keys)
+            ExpandSchemaReferences(FileSchemas[m_rootSchemaName]);
+        }
+
+        private void ExpandSchemaReferences(Schema schema)
+        {
+            if (schema.Type != null)
             {
-                ExapandSchemaReferences(FileSchemas[key]);
+                foreach (var type in schema.Type)
+                {
+                    if (type.IsReference)
+                    {
+                        ExpandSchemaReferences(FileSchemas[type.Name]);
+                    }
+                }
+            }
+
+            if (schema.Extends != null && schema.Extends.IsReference)
+            {
+                ExpandSchemaReferences(FileSchemas[schema.Extends.Name]);
+            }
+
+            if (schema.Properties != null)
+            {
+                var keys = schema.Properties.Keys.ToArray();
+                foreach (var key in keys)
+                {
+                    if (!string.IsNullOrEmpty(schema.Properties[key].ReferenceType))
+                    {
+                        schema.Properties[key] = FileSchemas[schema.Properties[key].ReferenceType];
+                    }
+
+                    ExpandSchemaReferences(schema.Properties[key]);
+                }
+            }
+
+            if (schema.DictionaryValueType != null)
+            {
+                if (!string.IsNullOrEmpty(schema.DictionaryValueType.ReferenceType))
+                {
+                    schema.DictionaryValueType = FileSchemas[schema.DictionaryValueType.ReferenceType];
+                }
+
+                ExpandSchemaReferences(schema.DictionaryValueType);
+            }
+
+            if (schema.Items != null)
+            {
+                if (!string.IsNullOrEmpty(schema.Items.ReferenceType))
+                {
+                    schema.Items = FileSchemas[schema.Items.ReferenceType];
+                }
+
+                ExpandSchemaReferences(schema.Items);
             }
         }
 
@@ -74,16 +122,16 @@ namespace GeneratorLib
                 EvaluateInheritance(FileSchemas[schema.ReferenceType]);
             }
 
-            if (schema.DictionaryValueType != null && schema.DictionaryValueType.IsReference)
+            if (schema.DictionaryValueType != null)
             {
-                EvaluateInheritance(FileSchemas[schema.DictionaryValueType.Name]);
+                EvaluateInheritance(schema.DictionaryValueType);
             }
 
             if (schema.Extends == null) return;
             EvaluateInheritance(FileSchemas[schema.Extends.Name]);
 
-            var baseSchema = FileSchemas[schema.Extends.Name];
-            if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
+            // var baseSchema = FileSchemas[schema.Extends.Name];
+            // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
 
             var baseType = FileSchemas[schema.Extends.Name];
 
@@ -106,87 +154,6 @@ namespace GeneratorLib
             }
 
             schema.Extends = null;
-        }
-
-        private void ExapandSchemaReferences(Schema schema)
-        {
-            if (schema.Properties != null)
-            {
-                var keys = schema.Properties.Keys.ToArray();
-                foreach (var key in keys)
-                {
-                    if (string.IsNullOrWhiteSpace(schema.Properties[key].ReferenceType))
-                    {
-                        ExapandSchemaReferences(schema.Properties[key]);
-                        continue;
-                    }
-
-                    schema.Properties[key] = FileSchemas[schema.Properties[key].ReferenceType];
-                }
-            }
-        }
-
-        private void ParseSchema(string schemaFile)
-        {
-            if (FileSchemas.ContainsKey(schemaFile))
-            {
-                return;
-            }
-
-            var schema = Deserialize(schemaFile);
-            FileSchemas.Add(schemaFile, schema);
-            ParseSchemasReferencedFromSchema(schema);
-        }
-
-        private void ParseSchemasReferencedFromSchema(Schema schema)
-        {
-            if (schema.Type != null)
-            {
-                foreach (var type in schema.Type)
-                {
-                    if (!type.IsReference) continue;
-
-                    ParseSchema(type.Name);
-                }
-            }
-
-            if (schema.Properties != null)
-            {
-                foreach (var property in schema.Properties)
-                {
-                    if (string.IsNullOrWhiteSpace(property.Value.ReferenceType))
-                    {
-                        ParseSchemasReferencedFromSchema(property.Value);
-                        continue;
-                    }
-
-                    ParseSchema(property.Value.ReferenceType);
-                }
-            }
-
-            if (schema.Extends != null && schema.Extends.IsReference)
-            {
-                ParseSchema(schema.Extends.Name);
-            }
-
-            if (schema.DictionaryValueType != null && schema.DictionaryValueType.IsReference)
-            {
-                ParseSchema(schema.DictionaryValueType.Name);
-            }
-
-            if (schema.Items != null && !string.IsNullOrWhiteSpace(schema.Items.ReferenceType))
-            {
-                ParseSchema(schema.Items.ReferenceType);
-            }
-        }
-        
-        private Schema Deserialize(string fileName)
-        {
-            return JsonConvert.DeserializeObject<Schema>(
-                File.ReadAllText(Path.Combine(m_directory, fileName))
-                    .Replace("\"additionalProperties\" : false,", "")
-                    .Replace("\"additionalProperties\" : false", "")
-                    .Replace("\"$ref\"", "__ref__"));
         }
     }
 }
