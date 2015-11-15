@@ -45,7 +45,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schema\Root.cs" />
+    <Compile Include="Schema\Accessor.cs" />
+    <Compile Include="Schema\Animation.cs" />
+    <Compile Include="Schema\Asset.cs" />
+    <Compile Include="Schema\Buffer.cs" />
+    <Compile Include="Schema\Bufferview.cs" />
+    <Compile Include="Schema\Camera.cs" />
+    <Compile Include="Schema\Channel.cs" />
+    <Compile Include="Schema\ChildOfAGltfRootProperty.cs" />
+    <Compile Include="Schema\Extension.cs" />
+    <Compile Include="Schema\Functions.cs" />
+    <Compile Include="Schema\Gltf.cs" />
+    <Compile Include="Schema\GltfProperty.cs" />
+    <Compile Include="Schema\Image.cs" />
+    <Compile Include="Schema\Material.cs" />
+    <Compile Include="Schema\Mesh.cs" />
+    <Compile Include="Schema\Node.cs" />
+    <Compile Include="Schema\Orthographic.cs" />
+    <Compile Include="Schema\Parameter.cs" />
+    <Compile Include="Schema\Perspective.cs" />
+    <Compile Include="Schema\Primitive.cs" />
+    <Compile Include="Schema\Profile.cs" />
+    <Compile Include="Schema\Program.cs" />
+    <Compile Include="Schema\Sampler.cs" />
+    <Compile Include="Schema\Scene.cs" />
+    <Compile Include="Schema\Shader.cs" />
+    <Compile Include="Schema\Skin.cs" />
+    <Compile Include="Schema\States.cs" />
+    <Compile Include="Schema\Target.cs" />
+    <Compile Include="Schema\Technique.cs" />
+    <Compile Include="Schema\Texture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

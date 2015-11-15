@@ -57,9 +57,10 @@ namespace GeneratorLib
 
             if (schema.Properties != null)
             {
-                foreach (var property in schema.Properties)
+                var values = schema.Properties.Values.ToArray();
+                foreach (var property in values)
                 {
-                    EvaluateInheritance(property.Value);
+                    EvaluateInheritance(property);
                 }
             }
 
@@ -67,17 +68,22 @@ namespace GeneratorLib
             {
                 EvaluateInheritance(schema.Items);
             }
-
-            if (schema.Extends == null) return;
-            var baseSchema = FileSchemas[schema.Extends.Name];
-            if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
+            
+            if (schema.ReferenceType != null)
+            {
+                EvaluateInheritance(FileSchemas[schema.ReferenceType]);
+            }
 
             if (schema.DictionaryValueType != null && schema.DictionaryValueType.IsReference)
             {
                 EvaluateInheritance(FileSchemas[schema.DictionaryValueType.Name]);
             }
 
+            if (schema.Extends == null) return;
             EvaluateInheritance(FileSchemas[schema.Extends.Name]);
+
+            var baseSchema = FileSchemas[schema.Extends.Name];
+            if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
 
             var baseType = FileSchemas[schema.Extends.Name];
 

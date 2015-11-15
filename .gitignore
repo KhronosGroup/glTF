@@ -25,6 +25,7 @@ loaders/CSharp/GeneratorUnitTests/bin/
 loaders/CSharp/GeneratorUnitTests/obj/
 loaders/CSharp/glTFLoader/bin/
 loaders/CSharp/glTFLoader/obj/
+loaders/CSharp/glTFLoader/Schema/
 loaders/CSharp/glTFLoaderUnitTests/bin/
 loaders/CSharp/glTFLoaderUnitTests/obj/
 loaders/CSharp/packages/

@@ -89,7 +89,7 @@ namespace GeneratorLib
 
             if (schema.DictionaryValueType.IsReference)
             {
-                return new CodeTypeReference(ParseTitle(FileSchemas[schema.DictionaryValueType.Name].Title));
+                return new CodeTypeReference(new Dictionary<string, object>().GetType());
             }
 
             if (schema.DictionaryValueType.Name == "any") return new CodeTypeReference(new Dictionary<string, object>().GetType());
@@ -112,24 +112,24 @@ namespace GeneratorLib
             throw new NotImplementedException(typeRef.Name);
         }
         
-        public void CSharpCodeGen()
+        public void CSharpCodeGen(string outputDirectory)
         {
             GeneratedClasses = new Dictionary<string, CodeTypeDeclaration>();
             foreach (var schema in FileSchemas)
             {
                 if (schema.Value.Type != null && schema.Value.Type[0].Name == "object")
                 {
-                    CodeGenClass(schema.Key);
+                    CodeGenClass(schema.Key, outputDirectory);
                 }
             }
         }
 
-        private void CodeGenClass(string fileName)
+        private void CodeGenClass(string fileName, string outputDirectory)
         {
             string className;
             var schemaFile = RawClass(fileName, out className);
             CSharpCodeProvider csharpcodeprovider = new CSharpCodeProvider();
-            var sourceFile = className + "." + csharpcodeprovider.FileExtension;
+            var sourceFile = Path.Combine(outputDirectory, className + "." + csharpcodeprovider.FileExtension);
 
             IndentedTextWriter tw1 = new IndentedTextWriter(new StreamWriter(sourceFile, false), "    ");
             csharpcodeprovider.GenerateCodeFromCompileUnit(schemaFile, tw1, new CodeGeneratorOptions());

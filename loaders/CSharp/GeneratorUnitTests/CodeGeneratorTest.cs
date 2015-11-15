@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,11 +49,11 @@ namespace GeneratorUnitTests
         [Test]
         public void CSharpGenTest()
         {
-            var generator = new CodeGenerator(RelativePathToSchemaDir + "glTF.schema.json");
+            var generator = new CodeGenerator(RelativePathToSchemaDir + "material.schema.json");
             generator.ParseSchemas();
             generator.ExpandSchemaReferences();
             generator.EvaluateInheritance();
-            generator.CSharpCodeGen();
+            generator.CSharpCodeGen(Path.GetFullPath("./"));
         }
     }
 }
