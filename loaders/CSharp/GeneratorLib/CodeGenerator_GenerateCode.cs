@@ -102,7 +102,6 @@ namespace GeneratorLib
                 if (typeRef.Name == "any") return new CodeTypeReference(typeof(object));
                 if (typeRef.Name == "object")
                 {
-                    if (schema == null) return new CodeTypeReference(typeof(object));
                     if (schema.Title != null) return new CodeTypeReference(ParseTitle(schema.Title));
                     throw new NotImplementedException();
                 }
