@@ -23,7 +23,7 @@ namespace GeneratorUnitTests
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             schemaHasReferenceType.ReferenceType = "schema.json";
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(schemaHasReferenceType, "name", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schemaHasReferenceType, "name", out attributes, out defaultValue));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace GeneratorUnitTests
             CodeExpression defaultValue;
             schemaNoType.DictionaryValueType = null;
             schemaNoType.Type = null;
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(schemaNoType, "NoType", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schemaNoType, "NoType", out attributes, out defaultValue));
         }
 
 
@@ -46,12 +46,12 @@ namespace GeneratorUnitTests
             CodeExpression defaultValue;
             schema.DictionaryValueType = new Schema();
             schema.Type = null;
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "NoTypeDictionary", out attributes, out defaultValue));
             var typeRef = new TypeReference();
             schema.Type = new[] {typeRef};
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "NoTypeDictionary", out attributes, out defaultValue));
             typeRef.Name = "string";
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "NoTypeDictionary", out attributes, out defaultValue));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace GeneratorUnitTests
             schema.Type = new[] { typeRef };
             schema.DictionaryValueType = new Schema();
             schema.DictionaryValueType.Type = new[] {new TypeReference(), new TypeReference(), new TypeReference()};
-            var result = CodeGenerator.GetCodegenType(schema, "MultiDictionaryValueTypeType", out attributes,
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "MultiDictionaryValueTypeType", out attributes,
                 out defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
@@ -84,7 +84,7 @@ namespace GeneratorUnitTests
             schema.DictionaryValueType = new Schema();
             schema.DictionaryValueType.Type = new[] { typeRef };
             schema.Default = JObject.Parse(@"{""default"":""defalut""}");
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(schema, "HasDefaultDictionaryValue", out attributes, out defaultValue));
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "HasDefaultDictionaryValue", out attributes, out defaultValue));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace GeneratorUnitTests
             schema.Type = new[] { typeRef };
             schema.DictionaryValueType = new Schema();
             schema.DictionaryValueType.Type = new[] { typeRef };
-            var result = CodeGenerator.GetCodegenType(schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(object).ToString(), result.TypeArguments[1].BaseType);
@@ -116,7 +116,7 @@ namespace GeneratorUnitTests
             schema.DictionaryValueType = new Schema();
             schema.DictionaryValueType.Title = "Asset";
             schema.DictionaryValueType.Type = new[] { typeRef };
-            var result = CodeGenerator.GetCodegenType(schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(object).ToString(), result.TypeArguments[1].BaseType);

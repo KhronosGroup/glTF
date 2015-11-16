@@ -10,6 +10,7 @@ using Microsoft.CSharp;
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using glTFLoader.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,8 +27,12 @@ namespace GeneratorLib
             var schemaFile = new CodeCompileUnit();
             var schemaNamespace = new CodeNamespace("glTFLoader.Schema");
             className = ParseTitle(root.Title);
-            var schemaClass = new CodeTypeDeclaration(className);
-            schemaClass.Attributes = MemberAttributes.Public;
+
+            var schemaClass = new CodeTypeDeclaration(className)
+            {
+                Attributes = MemberAttributes.Public
+            };
+
             if (root.Extends != null && root.Extends.IsReference)
             {
                 schemaClass.BaseTypes.Add(ParseTitle(FileSchemas[root.Extends.Name].Title));
@@ -51,7 +56,7 @@ namespace GeneratorLib
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
-            var type = GetCodegenType(schema, name, out attributes, out defaultValue);
+            var type = GetCodegenType(target, schema, name, out attributes, out defaultValue);
 
             var propertyBackingVariable = new CodeMemberField
             {
@@ -78,7 +83,7 @@ namespace GeneratorLib
             target.Members.Add(property);
         }
 
-        public static CodeTypeReference GetCodegenType(Schema schema, string name, out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue)
+        public static CodeTypeReference GetCodegenType(CodeTypeDeclaration target, Schema schema, string name, out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue)
         {
             attributes = null;
             defaultValue = null;
@@ -115,6 +120,31 @@ namespace GeneratorLib
                 }
                 if (typeRef.Name == "string")
                 {
+                    if (schema.Enum != null)
+                    {
+                        var enumName = $"{name}Enum";
+                        var enumType = new CodeTypeDeclaration()
+                        {
+                            IsEnum = true,
+                            Attributes = MemberAttributes.Public,
+                            Name = enumName
+                        };
+
+                        foreach (var value in (JArray)schema.Enum)
+                        {
+                            enumType.Members.Add(new CodeMemberField(enumName, (string)value));
+                        }
+
+                        target.Members.Add(enumType);
+
+                        if (schema.Default != null)
+                        {
+                            defaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName), (string)schema.Default);
+                        }
+
+                        return new CodeTypeReference(enumName);
+                    }
+
                     if (schema.Default != null)
                     {
                         defaultValue = new CodePrimitiveExpression((string)schema.Default);

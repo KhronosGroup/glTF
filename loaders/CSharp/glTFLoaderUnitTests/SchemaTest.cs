@@ -17,7 +17,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void SchemaLoad()
         {
-            var filePath = Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"boxTextured\glTF\CesiumTexturedBoxTest.gltf"));
+            var filePath = Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF\box.gltf"));
             string contents = File.ReadAllText(filePath);
             Assert.IsNotNull(contents);
             var result = JsonConvert.DeserializeObject<Gltf>(contents);
