@@ -109,7 +109,7 @@ namespace GeneratorLib
                 {
                     if (schema.Default != null)
                     {
-                        defaultValue = new CodePrimitiveExpression((float)schema.Default);
+                        defaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
                     }
                     return new CodeTypeReference(typeof(float));
                 }
