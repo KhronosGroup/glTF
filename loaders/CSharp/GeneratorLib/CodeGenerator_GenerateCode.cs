@@ -139,7 +139,15 @@ namespace GeneratorLib
 
                         if (schema.Default != null)
                         {
-                            defaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName), (string)schema.Default);
+                            for (var i = 0; i < enumType.Members.Count; i++)
+                            {
+                                if (enumType.Members[i].Name == schema.Default.ToString())
+                                {
+                                    defaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName), (string)schema.Default);
+                                    return new CodeTypeReference(enumName);
+                                }
+                            }
+                            throw new InvalidDataException("The default value is not in the enum list");
                         }
 
                         return new CodeTypeReference(enumName);
@@ -155,7 +163,7 @@ namespace GeneratorLib
                 {
                     if (schema.Default != null)
                     {
-                        defaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
+                        defaultValue = new CodePrimitiveExpression((int)schema.Default);
                     }
 
                     return new CodeTypeReference(typeof(int));
@@ -172,6 +180,9 @@ namespace GeneratorLib
                 // Arrays
                 if (typeRef.Name == "array")
                 {
+                    if (schema.Items == null) { throw new InvalidOperationException("schema.Item is null"); }
+                    if (schema.Items.Type == null) { throw new InvalidOperationException("schema.Items.Type is null"); }
+
                     attributes = new CodeAttributeDeclarationCollection
                     {
                         new CodeAttributeDeclaration(
@@ -195,7 +206,7 @@ namespace GeneratorLib
                         if (schema.Default != null)
                         {
                             var defaultVauleArray = (JArray)schema.Default;
-                            defaultValue = new CodeArrayCreateExpression(typeof (bool), defaultVauleArray.Select(x=>(CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
+                            defaultValue = new CodeArrayCreateExpression(typeof(bool), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
                         }
                         return new CodeTypeReference(typeof(bool[]));
                     }
@@ -226,7 +237,14 @@ namespace GeneratorLib
                         }
                         return new CodeTypeReference(typeof(float[]));
                     }
-                    if (schema.Items.Type[0].Name == "object") return new CodeTypeReference(typeof(object[]));
+                    if (schema.Items.Type[0].Name == "object")
+                    {
+                        if (schema.Default != null)
+                        {
+                            throw new NotImplementedException("Array of Objects has default value");
+                        }
+                        return new CodeTypeReference(typeof(object[]));
+                    }
 
                     throw new NotImplementedException("Array of " + schema.Items.Type[0].Name);
                 }
@@ -244,7 +262,7 @@ namespace GeneratorLib
             {
                 return new CodeTypeReference(typeof(Dictionary<string, object>));
             }
-            if (schema.Default!=null && ((JObject)schema.Default).Count > 0)
+            if (schema.Default != null && ((JObject)schema.Default).Count > 0)
             {
                 throw new NotImplementedException();
             }
