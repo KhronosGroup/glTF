@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GeneratorLib;
@@ -328,7 +329,7 @@ namespace GeneratorUnitTests
         public void SingleObjectIntegerTypeHasDefaultTest()
         {
             Schema schema = new Schema();
-            schema.Default = 1;
+            schema.Default = 1L;
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             var typeRef1 = new TypeReference();
@@ -336,7 +337,7 @@ namespace GeneratorUnitTests
             schema.Type = new TypeReference[] { typeRef1 };
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectIntegerType", out attributes, out defaultValue);
             Assert.AreEqual(typeof(int).ToString(), result.BaseType);
-            Assert.AreEqual((int)schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
+            Assert.AreEqual((int)(long)schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
         }
 
         [Test]
@@ -451,23 +452,25 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsBooleanHasDefaultTest()
         {
-            Schema schema = new Schema();
+            var expectedValues = new[] { true, true, false };
+            var schema = new Schema
+            {
+                Default = new JArray(expectedValues),
+                Type = new [] { new TypeReference { Name = "array" } },
+                Items = new Schema
+                {
+                    Type = new[] { new TypeReference { Name = "boolean" } }
+                }
+            };
+
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
-            schema.Default = new JArray(new bool[] { true, true, false });
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            schema.Type = new TypeReference[] { typeRef1 };
-            schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "boolean";
-            schema.Items.Type = new TypeReference[] { typeRef2 };
+
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "BooleanArray", out attributes, out defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(bool).ToString(), result.ArrayElementType.BaseType);
-            Assert.AreEqual(true, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[0])).Value);
-            Assert.AreEqual(true, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[1])).Value);
-            Assert.AreEqual(false, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[2])).Value);
+            var resultValues = (((CodeArrayCreateExpression) defaultValue).Initializers.Cast<CodePrimitiveExpression>()).Select(a => (bool)(a.Value));
+            CollectionAssert.AreEqual(expectedValues, resultValues);
         }
 
         [Test]

@@ -163,7 +163,7 @@ namespace GeneratorLib
                 {
                     if (schema.Default != null)
                     {
-                        defaultValue = new CodePrimitiveExpression((int)schema.Default);
+                        defaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
                     }
 
                     return new CodeTypeReference(typeof(int));
@@ -239,7 +239,7 @@ namespace GeneratorLib
                     }
                     if (schema.Items.Type[0].Name == "object")
                     {
-                        if (schema.Default != null)
+                        if (schema.Default != null && ((JArray)schema.Default).Count !=0)
                         {
                             throw new NotImplementedException("Array of Objects has default value");
                         }
