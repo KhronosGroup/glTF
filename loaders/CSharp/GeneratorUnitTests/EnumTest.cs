@@ -9,7 +9,7 @@ namespace GeneratorUnitTests
     [TestFixture]
     public class EnumTest
     {
-        private Dictionary<long, string> EnumMap = new Dictionary<long, string>();
+        private readonly Dictionary<long, string> m_enumMap = new Dictionary<long, string>();
         
         [Test]
         public void ParseTest()
@@ -17,7 +17,7 @@ namespace GeneratorUnitTests
             var spec = new XmlDocument();
             spec.LoadXml(new WebClient().DownloadString("https://cvs.khronos.org/svn/repos/ogl/trunk/doc/registry/public/api/gl.xml"));
             ExtractEnumValues(spec);
-            Assert.AreEqual(3638, EnumMap.Count);
+            Assert.AreEqual(3638, m_enumMap.Count);
         }
 
         private void ExtractEnumValues(XmlNode parentNode)
@@ -26,7 +26,7 @@ namespace GeneratorUnitTests
             {
                 var node = (XmlNode)nodeObject;
                 ExtractEnumValues(node);
-                if (node.Name == "enum" && node.Attributes.Count >=2)
+                if (node.Name == "enum" && node.Attributes?.Count >=2)
                 {
                     string name = null;
                     long? value = null;
@@ -36,14 +36,7 @@ namespace GeneratorUnitTests
                         if (attribute.Name == "value")
                         {
                             long result;
-                            if (long.TryParse(attribute.Value, out result))
-                            {
-                                value = result;
-                            }
-                            else
-                            {
-                                value = Convert.ToInt64(attribute.Value, 16);
-                            }
+                            value = long.TryParse(attribute.Value, out result) ? result : Convert.ToInt64(attribute.Value, 16);
                         }
 
                         if (attribute.Name == "name")
@@ -54,7 +47,7 @@ namespace GeneratorUnitTests
 
                     if (name != null && value != null)
                     {
-                        EnumMap[value.Value] = name;
+                        m_enumMap[value.Value] = name;
                     }
                 }
             }

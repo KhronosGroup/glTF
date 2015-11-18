@@ -2,7 +2,6 @@
 using System.CodeDom;
 using System.IO;
 using System.Linq;
-using glTFLoader.Schema;
 using GeneratorLib;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
