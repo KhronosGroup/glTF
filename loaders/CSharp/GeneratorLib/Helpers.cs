@@ -14,7 +14,13 @@ namespace GeneratorLib
             return schema.Default != null &&
                    (
                        (schema.Default is JObject && ((JObject) schema.Default).Count > 0) ||
-                       (schema.Default is JArray && ((JArray)schema.Default).Count > 0)
+                       (schema.Default is JArray && ((JArray)schema.Default).Count > 0) ||
+                       (schema.Default is int) ||
+                       (schema.Default is long) ||
+                       (schema.Default is float) ||
+                       (schema.Default is double) ||
+                       (schema.Default is string) ||
+                       (schema.Default is bool)
                    );
         }
 

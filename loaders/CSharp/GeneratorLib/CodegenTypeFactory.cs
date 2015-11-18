@@ -91,12 +91,22 @@ namespace GeneratorLib
 
             if (typeRef.Name == "any")
             {
+                if (schema.Enum != null || schema.Default != null)
+                {
+                    throw new NotImplementedException();
+                }
+
                 returnType.CodeType = new CodeTypeReference(typeof(object));
                 return returnType;
             }
 
             if (typeRef.Name == "object")
             {
+                if (schema.Enum != null || schema.HasDefaultValue())
+                {
+                    throw new NotImplementedException();
+                }
+
                 if (schema.Title != null)
                 {
                     returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(schema.Title));
@@ -107,7 +117,12 @@ namespace GeneratorLib
 
             if (typeRef.Name == "number")
             {
-                if (schema.Default != null)
+                if (schema.Enum != null)
+                {
+                    throw new NotImplementedException();
+                }
+
+                if (schema.HasDefaultValue())
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
                 }
@@ -135,7 +150,7 @@ namespace GeneratorLib
                     returnType.DependentType = enumType;
                     returnType.CodeType = new CodeTypeReference(enumName);
 
-                    if (schema.Default != null)
+                    if (schema.HasDefaultValue())
                     {
                         for (var i = 0; i < enumType.Members.Count; i++)
                         {
@@ -152,7 +167,7 @@ namespace GeneratorLib
                     return returnType;
                 }
 
-                if (schema.Default != null)
+                if (schema.HasDefaultValue())
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((string)schema.Default);
                 }
@@ -184,7 +199,7 @@ namespace GeneratorLib
                             InitExpression = new CodePrimitiveExpression((int)longValue)
                         });
 
-                        if (schema.Default != null && (long)schema.Default == longValue) {
+                        if (schema.HasDefaultValue() && (long)schema.Default == longValue) {
                             defaultItemName = itemName;
                         }
                     }
@@ -192,7 +207,7 @@ namespace GeneratorLib
                     returnType.DependentType = enumType;
                     returnType.CodeType = new CodeTypeReference(enumName);
 
-                    if (schema.Default != null)
+                    if (schema.HasDefaultValue())
                     {
                         if (defaultItemName == null)
                         {
@@ -218,6 +233,11 @@ namespace GeneratorLib
 
             if (typeRef.Name == "boolean")
             {
+                if (schema.Enum != null)
+                {
+                    throw new NotImplementedException();
+                }
+
                 if (schema.Default != null)
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((bool)schema.Default);
