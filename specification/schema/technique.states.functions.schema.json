@@ -21,12 +21,13 @@
             "description" : "Integer values passed to `blendEquationSeparate()`.",
             "items" : {
                 "type" : "integer",
-                "enum" : [32774, 32778, 32779]
+                "enum" : [32774, 32778, 32779],
+                "gltf_enumNames" : ["FUNC_ADD", "FUNC_SUBTRACT", "FUNC_REVERSE_SUBTRACT"]
             },
             "minItems" : 2,
             "maxItems" : 2,
             "default" : [32774, 32774],
-            "gltf_detailedDescription" : "Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. Valid values correspond to WebGL enums: `32774` (FUNC_ADD), `32778` (FUNC_SUBTRACT), and `32779` (FUNC_REVERSE_SUBTRACT).",
+            "gltf_detailedDescription" : "Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`blendEquationSeparate()`"
         },
         "blendFuncSeparate" : {
@@ -34,12 +35,13 @@
             "description" : "Integer values passed to `blendFuncSeparate()`.",
             "items" : {
                 "type" : "integer",
-                "enum" : [0, 1, 768, 769, 774, 775, 770, 771, 772, 773, 32769, 32770, 32771, 32772, 776]
+                "enum" : [0, 1, 768, 769, 774, 775, 770, 771, 772, 773, 32769, 32770, 32771, 32772, 776],
+                "gltf_enumNames" : ["ZERO", "ONE", "SRC_COLOR", "ONE_MINUS_SRC_COLOR", "DST_COLOR", "ONE_MINUS_DST_COLOR", "SRC_ALPHA", "ONE_MINUS_SRC_ALPHA", "DST_ALPHA", "ONE_MINUS_DST_ALPHA", "CONSTANT_COLOR", "ONE_MINUS_CONSTANT_COLOR", "CONSTANT_ALPHA", "ONE_MINUS_CONSTANT_ALPHA", "SRC_ALPHA_SATURATE"]
             },
             "minItems" : 4,
             "maxItems" : 4,
             "default" : [1, 1, 0, 0],
-            "gltf_detailedDescription" : "Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAlpha]. Valid values correspond to WebGL enums: `0` (ZERO), `1` (ONE), `768` (SRC_COLOR), `769` (ONE_MINUS_SRC_COLOR), `774` (DST_COLOR), `775` (ONE_MINUS_DST_COLOR), `770` (SRC_ALPHA), `771` (ONE_MINUS_SRC_ALPHA), `772` (DST_ALPHA), `773` (ONE_MINUS_DST_ALPHA), `32769` (CONSTANT_COLOR), `32770` (ONE_MINUS_CONSTANT_COLOR), `32771` (CONSTANT_ALPHA), `32772` (ONE_MINUS_CONSTANT_ALPHA), and `776` (SRC_ALPHA_SATURATE).",
+            "gltf_detailedDescription" : "Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAlpha]. All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`blendFuncSeparate()`"
         },
         "colorMask" : {
@@ -58,12 +60,13 @@
             "description" : "Integer value passed to `cullFace()`.",
             "items" : {
                 "type" : "integer",
-                "enum" : [1028, 1029, 1032]
+                "enum" : [1028, 1029, 1032],
+                "gltf_enumNames" : ["FRONT", "BACK", "FRONT_AND_BACK"]
             },
             "minItems" : 1,
             "maxItems" : 1,
             "default" : [1029],
-            "gltf_detailedDescription" : "Integer value passed to `cullFace()`. Valid values correspond to WebGL enums: `1028` (FRONT), `1029` (BACK), and `1032` (FRONT_AND_BACK).",
+            "gltf_detailedDescription" : "Integer value passed to `cullFace()`. All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`cullFace()`"
         },
         "depthFunc" : {
@@ -71,12 +74,13 @@
             "description" : "Integer values passed to `depthFunc()`.",
             "items" : {
                 "type" : "integer",
-                "enum" : [512, 513, 515, 514, 516, 517, 518, 519]
+                "enum" : [512, 513, 515, 514, 516, 517, 518, 519],
+                "gltf_enumNames" : ["NEVER", "LESS", "LEQUAL", "EQUAL", "GREATER", "NOTEQUAL", "GEQUAL", "ALWAYS"]
             },
             "minItems" : 1,
             "maxItems" : 1,
             "default" : [513],
-            "gltf_detailedDescription" : "Integer values passed to `depthFunc()`. Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).",
+            "gltf_detailedDescription" : "Integer values passed to `depthFunc()`. All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`depthFunc()`"
         },
         "depthMask" : {
@@ -106,12 +110,13 @@
             "description" : "Integer value passed to `frontFace()`.",
             "items" : {
                 "type" : "integer",
-                "enum" : [2304, 2305]
+                "enum" : [2304, 2305],
+                "gltf_enumNames" : ["CW", "CCW"]
             },
             "minItems" : 1,
             "maxItems" : 1,
             "default" : [2305],
-            "gltf_detailedDescription" : "Integer value passed to `frontFace()`.  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).",
+            "gltf_detailedDescription" : "Integer value passed to `frontFace()`.  All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`frontFace()`"
         },
         "lineWidth" : {
