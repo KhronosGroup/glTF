@@ -20,7 +20,7 @@
             "enum" : [9728, 9729, 9984, 9985, 9986, 9987],
             "gltf_enumNames" : ["NEAREST", "LINEAR", "NEAREST_MIPMAP_NEAREST", "LINEAR_MIPMAP_NEAREST", "NEAREST_MIPMAP_LINEAR", "LINEAR_MIPMAP_LINEAR"],
             "default" : 9986,
-            "gltf_detailedDescription" : "Minification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST), `9729` (LINEAR), `9984` (NEAREST_MIPMAP_NEAREST), `9985` (LINEAR_MIPMAP_NEAREST), `9986` (NEAREST_MIPMAP_LINEAR), and `9987` (LINEAR_MIPMAP_LINEAR).",
+            "gltf_detailedDescription" : "Minification filter.  All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER"
         },
         "wrapS": {
@@ -29,7 +29,7 @@
             "enum" : [33071, 33648, 10497],
             "gltf_enumNames" : ["CLAMP_TO_EDGE", "MIRRORED_REPEAT", "REPEAT"],
             "default" : 10497,
-            "gltf_detailedDescription" : "s wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).",
+            "gltf_detailedDescription" : "s wrapping mode.  All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_WRAP_S"
         },
         "wrapT": {
@@ -38,7 +38,7 @@
             "enum" : [33071, 33648, 10497],
             "gltf_enumNames" : ["CLAMP_TO_EDGE", "MIRRORED_REPEAT", "REPEAT"],
             "default" : 10497,
-            "gltf_detailedDescription" : "t wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).",
+            "gltf_detailedDescription" : "t wrapping mode.  All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`texParameterf()` with pname equal to TEXTURE_WRAP_T"
         }
     },

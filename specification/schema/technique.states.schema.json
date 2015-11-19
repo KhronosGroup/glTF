@@ -15,7 +15,7 @@
             },
             "uniqueItems" : true,
             "default" : [],
-            "gltf_detailedDescription" : "WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), `32926` (SAMPLE_ALPHA_TO_COVERAGE), and `3089` (SCISSOR_TEST).",
+            "gltf_detailedDescription" : "WebGL states to enable.  States not in the array are disabled.  All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`enable()` and `disable()`"
         },
         "functions" : {
