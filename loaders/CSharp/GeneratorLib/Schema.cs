@@ -27,12 +27,26 @@ namespace GeneratorLib
 
         public Dictionary<string, Schema> Properties { get; set; }
 
+        public Dictionary<string, Schema> PatternProperties { get; set; }
+
         [JsonProperty("additionalProperties")]
         public Schema DictionaryValueType { get; set; }
+
+        public Schema Disallowed { get; set; }
+
+        public int DivisibleBy { get; set; }
 
         public Dictionary<string, string> Dependencies { get; set; }
         
         public Schema Items { get; set; }
+
+        public string Id { get; set; }
+
+        public Schema AdditionalItems { get; set; }
+
+        public string Pattern { get; set; } //format regex?
+
+        public string Format { get; set; }
 
         public object Default { get; set; }
 
