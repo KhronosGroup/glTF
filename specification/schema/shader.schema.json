@@ -16,6 +16,7 @@
             "type" : "integer",
             "description" : "The shader stage.",
             "enum" : [35632, 35633],
+            "gltf_enumNames" : ["FRAGMENT_SHADER", "VERTEX_SHADER"],
             "required" : true,
             "gltf_detailedDescription" : "The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VERTEX_SHADER)."
         }

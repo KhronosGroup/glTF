@@ -29,6 +29,7 @@
             "type" : "integer",
             "description" : "The type of primitives to render.",
             "enum" : [0, 1, 2, 3, 4, 5, 6],
+            "gltf_enumNames" : ["POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN"],
             "default" : 4,
             "gltf_detailedDescription" : "The type of primitives to render.  Allowed values are 0 (`POINTS`), 1 (`LINES`), 2 (`LINE_LOOP`), 3 (`LINE_STRIP`), 4 (`TRIANGLES`), 5 (`TRIANGLE_STRIP`), and 6 (`TRIANGLE_FAN`)."
         }

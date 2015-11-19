@@ -26,6 +26,7 @@
             "type" : "integer",
             "description" : "The target that the WebGL buffer should be bound to.",
             "enum" : [34962, 34963],
+            "gltf_enumNames" : ["ARRAY_BUFFER", "ELEMENT_ARRAY_BUFFER"],
             "gltf_detailedDescription" : "The target that the WebGL buffer should be bound to.  Valid values correspond to WebGL enums: `34962` (ARRAY_BUFFER) and `34963` (ELEMENT_ARRAY_BUFFER).  When this is not provided, the bufferView contains animation or skin data.",
             "gltf_webgl" : "`bindBuffer()`"
         }
