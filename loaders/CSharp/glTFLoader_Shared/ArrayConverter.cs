@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,29 +10,43 @@ namespace glTFLoader.Shared
 {
     public class ArrayConverter : JsonConverter
     {
-        private int m_minItems = -1, m_maxItems = -1;
+        private readonly int m_minItems = -1, m_maxItems = -1, m_minStringLength = -1, m_maxStringLength = -1;
         public ArrayConverter()
         {
         }
 
-        public ArrayConverter(int minItems, int maxItems)
+        public ArrayConverter(int minItems, int maxItems, int minStringLength, int maxStringLength)
         {
             m_minItems = minItems;
             m_maxItems = maxItems;
+            m_minStringLength = minStringLength;
+            m_maxStringLength = maxStringLength;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (objectType == typeof(bool[])) return ReadImpl<bool>(reader);
             if (objectType == typeof(int[])) return ((long[])ReadImpl<long>(reader)).Select((v) => (int)v).ToArray();
-            if (objectType == typeof(string[])) return ReadImpl<string>(reader);
+            if (objectType == typeof (string[]))
+            {
+                var stringArray = ReadImpl<string>(reader);
+                if (m_minStringLength != -1 || m_maxStringLength != -1)
+                {
+                    foreach (var s in stringArray)
+                    {
+                        ValidationHelpers.ValidateString(s, m_minStringLength, m_maxStringLength);
+                    }
+                }
+
+                return stringArray;
+            }
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
 
             throw new NotImplementedException();
         }
 
-        private object ReadImpl<t_array>(JsonReader reader)
+        private t_array[] ReadImpl<t_array>(JsonReader reader)
         {
             if (reader.TokenType != JsonToken.StartArray)
             {

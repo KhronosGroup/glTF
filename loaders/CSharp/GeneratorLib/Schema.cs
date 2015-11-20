@@ -10,6 +10,7 @@ namespace GeneratorLib
 {
     public class Schema
     {
+
         public Schema AdditionalItems { get; set; }
 
         public Dictionary<string, string> Dependencies { get; set; }
@@ -33,9 +34,9 @@ namespace GeneratorLib
 
         public object Enum { get; set; }
 
-        public bool ExclusiveMaximum { get; set; }
+        public bool ExclusiveMaximum { get; set; } = false;
 
-        public bool ExclusiveMinimum { get; set; }
+        public bool ExclusiveMinimum { get; set; } = false;
 
         public string Format { get; set; }
 
@@ -45,19 +46,19 @@ namespace GeneratorLib
 
         public int? MaxItems { get; set; }
 
-        public int MaxLength { get; set; }
+        public int MaxLength { get; set; } = -1;
 
         public object Maximum { get; set; }
 
         public int? MinItems { get; set; }
 
-        public int MinLength { get; set; }
+        public int MinLength { get; set; } = -1;
 
         public object Minimum { get; set; }
 
         public Dictionary<string, Schema> PatternProperties { get; set; }
 
-        public string Pattern { get; set; } //format regex?
+        public string Pattern { get; set; }
 
         public Dictionary<string, Schema> Properties { get; set; }
 
@@ -77,17 +78,6 @@ namespace GeneratorLib
 
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 

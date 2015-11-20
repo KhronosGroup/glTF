@@ -72,181 +72,216 @@ namespace GeneratorLib
 
         private static CodegenType MakeSingleValueType(string name, Schema schema)
         {
-            var returnType = new CodegenType()
+            CodegenType returnType;
+            if (schema.Minimum != null || schema.Maximum != null)
             {
-                Attributes = new CodeAttributeDeclarationCollection()
-            };
-
-            if (schema.Type.Length > 1)
-            {
-                returnType.CodeType = new CodeTypeReference(typeof(object));
-                return returnType;
-            }
-
-            var typeRef = schema.Type[0];
-            if (typeRef.IsReference)
-            {
-                throw new NotImplementedException();
-            }
-
-            if (typeRef.Name == "any")
-            {
-                if (schema.Enum != null || schema.Default != null)
+                returnType = new CodegenType()
                 {
-                    throw new NotImplementedException();
-                }
-
-                returnType.CodeType = new CodeTypeReference(typeof(object));
-                return returnType;
-            }
-
-            if (typeRef.Name == "object")
-            {
-                if (schema.Enum != null || schema.HasDefaultValue())
-                {
-                    throw new NotImplementedException();
-                }
-
-                if (schema.Title != null)
-                {
-                    returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(schema.Title));
-                    return returnType;
-                }
-                throw new NotImplementedException();
-            }
-
-            if (typeRef.Name == "number")
-            {
-                if (schema.Enum != null)
-                {
-                    throw new NotImplementedException();
-                }
-
-                if (schema.HasDefaultValue())
-                {
-                    returnType.DefaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
-                }
-                returnType.CodeType = new CodeTypeReference(typeof(float));
-                return returnType;
-            }
-
-            if (typeRef.Name == "string")
-            {
-                if (schema.Enum != null)
-                {
-                    var enumName = $"{name}Enum";
-                    var enumType = new CodeTypeDeclaration()
+                    Attributes = new CodeAttributeDeclarationCollection
                     {
-                        IsEnum = true,
-                        Attributes = MemberAttributes.Public,
-                        Name = enumName
-                    };
-
-                    foreach (var value in (JArray)schema.Enum)
-                    {
-                        enumType.Members.Add(new CodeMemberField(enumName, (string)value));
-                    }
-
-                    returnType.DependentType = enumType;
-                    returnType.CodeType = new CodeTypeReference(enumName);
-
-                    if (schema.HasDefaultValue())
-                    {
-                        for (var i = 0; i < enumType.Members.Count; i++)
-                        {
-                            if (enumType.Members[i].Name == schema.Default.ToString())
+                        new CodeAttributeDeclaration(
+                            "Newtonsoft.Json.JsonConverterAttribute",
+                            new[]
                             {
-                                returnType.DefaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName), (string)schema.Default);
-
-                                return returnType;
+                                new CodeAttributeArgument(new CodeTypeOfExpression(typeof (NumberValidator))),
+                                new CodeAttributeArgument(
+                                    new CodeArrayCreateExpression(typeof (object), new CodeExpression[]
+                                    {
+                                        new CodePrimitiveExpression(schema.Minimum ?? 0),
+                                        new CodePrimitiveExpression(schema.Maximum ?? 0),
+                                        new CodePrimitiveExpression(schema.Minimum != null),
+                                        new CodePrimitiveExpression(schema.Maximum != null),
+                                        new CodePrimitiveExpression(schema.ExclusiveMinimum),
+                                        new CodePrimitiveExpression(schema.ExclusiveMaximum),
+                                    })
+                                ),
                             }
-                        }
-                        throw new InvalidDataException("The default value is not in the enum list");
+                        )
                     }
+                };
+            }
+            else
+            {
+                returnType = new CodegenType();
+            }
+            {
 
+                if (schema.Type.Length > 1)
+                {
+                    returnType.CodeType = new CodeTypeReference(typeof(object));
                     return returnType;
                 }
 
-                if (schema.HasDefaultValue())
+                var typeRef = schema.Type[0];
+                if (typeRef.IsReference)
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((string)schema.Default);
+                    throw new NotImplementedException();
                 }
-                returnType.CodeType = new CodeTypeReference(typeof(string));
-                return returnType;
-            }
 
-            if (typeRef.Name == "integer")
-            {
-                if (schema.Enum != null)
+                if (typeRef.Name == "any")
                 {
-                    var enumName = $"{name}Enum";
-                    var enumType = new CodeTypeDeclaration()
+                    if (schema.Enum != null || schema.Default != null)
                     {
-                        IsEnum = true,
-                        Attributes = MemberAttributes.Public,
-                        Name = enumName
-                    };
-                    
-                    string defaultItemName = null;
-
-                    foreach (var value in (JArray)schema.Enum)
-                    {
-                        var longValue = (long) value;
-                        var itemName = EnumMap[longValue];
-                        
-                        enumType.Members.Add(new CodeMemberField(enumName, itemName)
-                        {
-                            InitExpression = new CodePrimitiveExpression((int)longValue)
-                        });
-
-                        if (schema.HasDefaultValue() && (long)schema.Default == longValue) {
-                            defaultItemName = itemName;
-                        }
+                        throw new NotImplementedException();
                     }
 
-                    returnType.DependentType = enumType;
-                    returnType.CodeType = new CodeTypeReference(enumName);
+                    returnType.CodeType = new CodeTypeReference(typeof(object));
+                    return returnType;
+                }
+
+                if (typeRef.Name == "object")
+                {
+                    if (schema.Enum != null || schema.HasDefaultValue())
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    if (schema.Title != null)
+                    {
+                        returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(schema.Title));
+                        return returnType;
+                    }
+                    throw new NotImplementedException();
+                }
+
+                if (typeRef.Name == "number")
+                {
+                    if (schema.Enum != null)
+                    {
+                        throw new NotImplementedException();
+                    }
 
                     if (schema.HasDefaultValue())
                     {
-                        if (defaultItemName == null)
+                        returnType.DefaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
+                    }
+                    returnType.CodeType = new CodeTypeReference(typeof(float));
+                    return returnType;
+                }
+
+                if (typeRef.Name == "string")
+                {
+                    if (schema.Enum != null)
+                    {
+                        var enumName = $"{name}Enum";
+                        var enumType = new CodeTypeDeclaration()
                         {
+                            IsEnum = true,
+                            Attributes = MemberAttributes.Public,
+                            Name = enumName
+                        };
+
+                        foreach (var value in (JArray)schema.Enum)
+                        {
+                            enumType.Members.Add(new CodeMemberField(enumName, (string)value));
+                        }
+
+                        returnType.DependentType = enumType;
+                        returnType.CodeType = new CodeTypeReference(enumName);
+
+                        if (schema.HasDefaultValue())
+                        {
+                            for (var i = 0; i < enumType.Members.Count; i++)
+                            {
+                                if (enumType.Members[i].Name == schema.Default.ToString())
+                                {
+                                    returnType.DefaultValue =
+                                        new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName),
+                                            (string)schema.Default);
+
+                                    return returnType;
+                                }
+                            }
                             throw new InvalidDataException("The default value is not in the enum list");
                         }
-
-                        returnType.DefaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName), defaultItemName);
 
                         return returnType;
                     }
 
+                    if (schema.HasDefaultValue())
+                    {
+                        returnType.DefaultValue = new CodePrimitiveExpression((string)schema.Default);
+                    }
+                    returnType.CodeType = new CodeTypeReference(typeof(string));
                     return returnType;
                 }
 
-                if (schema.Default != null)
+                if (typeRef.Name == "integer")
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
+                    if (schema.Enum != null)
+                    {
+                        var enumName = $"{name}Enum";
+                        var enumType = new CodeTypeDeclaration()
+                        {
+                            IsEnum = true,
+                            Attributes = MemberAttributes.Public,
+                            Name = enumName
+                        };
+
+                        string defaultItemName = null;
+
+                        foreach (var value in (JArray)schema.Enum)
+                        {
+                            var longValue = (long)value;
+                            var itemName = EnumMap[longValue];
+
+                            enumType.Members.Add(new CodeMemberField(enumName, itemName)
+                            {
+                                InitExpression = new CodePrimitiveExpression((int)longValue)
+                            });
+
+                            if (schema.HasDefaultValue() && (long)schema.Default == longValue)
+                            {
+                                defaultItemName = itemName;
+                            }
+                        }
+
+                        returnType.DependentType = enumType;
+                        returnType.CodeType = new CodeTypeReference(enumName);
+
+                        if (schema.HasDefaultValue())
+                        {
+                            if (defaultItemName == null)
+                            {
+                                throw new InvalidDataException("The default value is not in the enum list");
+                            }
+
+                            returnType.DefaultValue =
+                                new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumName),
+                                    defaultItemName);
+
+                            return returnType;
+                        }
+
+                        return returnType;
+                    }
+
+                    if (schema.Default != null)
+                    {
+                        returnType.DefaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
+                    }
+
+                    returnType.CodeType = new CodeTypeReference(typeof(int));
+                    return returnType;
                 }
 
-                returnType.CodeType = new CodeTypeReference(typeof(int));
-                return returnType;
+                if (typeRef.Name == "boolean")
+                {
+                    if (schema.Enum != null)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    if (schema.Default != null)
+                    {
+                        returnType.DefaultValue = new CodePrimitiveExpression((bool)schema.Default);
+                    }
+                    returnType.CodeType = new CodeTypeReference(typeof(bool));
+                    return returnType;
+                }
+
+                throw new NotImplementedException(typeRef.Name);
             }
-
-            if (typeRef.Name == "boolean")
-            {
-                if (schema.Enum != null)
-                {
-                    throw new NotImplementedException();
-                }
-
-                if (schema.Default != null)
-                {
-                    returnType.DefaultValue = new CodePrimitiveExpression((bool)schema.Default);
-                }
-                returnType.CodeType = new CodeTypeReference(typeof(bool));
-                return returnType;
-            }
-
-            throw new NotImplementedException(typeRef.Name);
         }
 
         private static CodegenType MakeArrayType(string name, Schema schema)
@@ -274,6 +309,8 @@ namespace GeneratorLib
                                     {
                                         new CodePrimitiveExpression(schema.MinItems ?? -1),
                                         new CodePrimitiveExpression(schema.MaxItems ?? -1),
+                                        new CodePrimitiveExpression(schema.Items.MinLength),
+                                        new CodePrimitiveExpression(schema.Items.MaxLength),
                                     })
                                 ),
                             }

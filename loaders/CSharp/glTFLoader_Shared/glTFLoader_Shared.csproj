@@ -45,7 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayConverter.cs" />
+    <Compile Include="NumberValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringValidator.cs" />
+    <Compile Include="ValidationHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
