@@ -47,17 +47,60 @@ namespace GeneratorLib
                     }
             };
 
-            if (schema.Items.Minimum != null || schema.Items.Maximum != null)
-            {
-                // TODO: enforce this
-                // throw new NotImplementedException();
-            }
-
             if (schema.Items.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
                 return returnType;
             }
+            
+            if (schema.Items.Type[0].Name == "integer")
+            {
+                if (schema.Items.Enum != null)
+                {
+                    var enumType = SingleValueCodegenTypeFactory.GenIntEnumType(name, schema.Items);
+                    returnType.DependentType = enumType;
+
+                    if (schema.HasDefaultValue())
+                    {
+                        var defaultValueArray = ((JArray)schema.Default).Select(x => (CodeExpression)SingleValueCodegenTypeFactory.GetEnumField(enumType, (int)(long)x)).ToArray();
+                        returnType.DefaultValue = new CodeArrayCreateExpression(enumType.Name, defaultValueArray);
+                    }
+
+                    returnType.CodeType = new CodeTypeReference(enumType.Name + "[]");
+                    return returnType;
+                }
+
+                if (schema.HasDefaultValue())
+                {
+                    var defaultValueArray = ((JArray)schema.Default).Select(x => (CodeExpression)new CodePrimitiveExpression((int)(long)x)).ToArray();
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(int), defaultValueArray);
+                }
+                returnType.CodeType = new CodeTypeReference(typeof(int[]));
+                return returnType;
+            }
+
+            if (schema.Items.Enum != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (schema.Items.Type[0].Name == "number")
+            {
+                if (schema.HasDefaultValue())
+                {
+                    var defaultVauleArray = (JArray)schema.Default;
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(float), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
+                }
+                returnType.CodeType = new CodeTypeReference(typeof(float[]));
+                return returnType;
+            }
+
+            if (schema.Items.Minimum != null || schema.Items.Maximum != null)
+            {
+                // TODO: implement this for int/number
+                throw new NotImplementedException();
+            }
+
             if (schema.Items.Type[0].Name == "boolean")
             {
                 if (schema.HasDefaultValue())
@@ -77,26 +120,6 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(string[]));
-                return returnType;
-            }
-            if (schema.Items.Type[0].Name == "integer")
-            {
-                if (schema.HasDefaultValue())
-                {
-                    var defaultVauleArray = ((JArray)schema.Default).Select(x => (CodeExpression)new CodePrimitiveExpression((int)(long)x)).ToArray();
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(int), defaultVauleArray);
-                }
-                returnType.CodeType = new CodeTypeReference(typeof(int[]));
-                return returnType;
-            }
-            if (schema.Items.Type[0].Name == "number")
-            {
-                if (schema.HasDefaultValue())
-                {
-                    var defaultVauleArray = (JArray)schema.Default;
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(float), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
-                }
-                returnType.CodeType = new CodeTypeReference(typeof(float[]));
                 return returnType;
             }
             if (schema.Items.Type[0].Name == "object")

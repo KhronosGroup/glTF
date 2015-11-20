@@ -26,7 +26,7 @@ namespace glTFLoader.Shared
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (objectType == typeof(bool[])) return ReadImpl<bool>(reader);
-            if (objectType == typeof(int[])) return ((long[])ReadImpl<long>(reader)).Select((v) => (int)v).ToArray();
+            if (objectType == typeof(int[])) return ReadImpl<long>(reader).Select((v) => (int)v).ToArray();
             if (objectType == typeof (string[]))
             {
                 var stringArray = ReadImpl<string>(reader);
@@ -42,6 +42,26 @@ namespace glTFLoader.Shared
             }
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
+
+            if (objectType.IsArray && objectType.GetElementType().IsEnum)
+            {
+                var elementType = objectType.GetElementType();
+                var rawValues = ReadImpl<long>(reader).Select((v) => (int)v).ToArray();
+
+                var resultArray = Array.CreateInstance(elementType, rawValues.Length);
+
+                for (int i = 0; i < rawValues.Length; ++i)
+                {
+                    var enumerator = elementType.GetEnumValues().GetEnumerator();
+                    do
+                    {
+                        enumerator.MoveNext();
+                    } while ((int)enumerator.Current != rawValues[i]);
+                    resultArray.SetValue(enumerator.Current, i);
+                }
+
+                return resultArray;
+            }
 
             throw new NotImplementedException();
         }
