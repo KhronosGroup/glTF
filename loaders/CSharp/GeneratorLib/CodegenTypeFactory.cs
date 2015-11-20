@@ -18,8 +18,6 @@ namespace GeneratorLib
 {
     public static class CodegenTypeFactory
     {
-        private static readonly object s_enumMapLock = new object();
-
         public static CodegenType MakeCodegenType(string name, Schema schema)
         {
             if (schema.Disallowed != null || schema.Pattern != null)
