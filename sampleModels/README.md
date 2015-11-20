@@ -14,3 +14,4 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [duck](duck)                         | ![](duck/screenshot/screenshot.png)            | The COLLADA duck. One texture. |
 | [CesiumMilkTruck](CesiumMilkTruck)   | ![](CesiumMilkTruck/screenshot/screenshot.png) | Textured. Multiple nodes/meshes. Animations. |
 | [CesiumMan](CesiumMan)               | ![](CesiumMan/screenshot/screenshot.png)       | Textured. Animations. Skins. |
+| [RiggedSimple](RiggedSimple)         | ![](RiggedSimple/screenshot/screenshot.png)    | Animations. Skins. |
