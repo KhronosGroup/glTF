@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AdditionalPropertiesConverter.cs" />
     <Compile Include="ArrayOfTypeReferencesConverter.cs" />
+    <Compile Include="ArrayValueCodegenTypeFactory.cs" />
     <Compile Include="CodeGenerator_SchemaLoading.cs" />
     <Compile Include="CodeGenerator_GenerateCode.cs" />
     <Compile Include="CodegenType.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Schema.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="SchemaParser.cs" />
+    <Compile Include="SingleValueCodegenTypeFactory.cs" />
     <Compile Include="TypeReferenceConverter.cs" />
   </ItemGroup>
   <ItemGroup>
