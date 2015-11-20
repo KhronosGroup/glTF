@@ -25,7 +25,7 @@ namespace GeneratorLib
         [JsonProperty("additionalProperties")]
         public Schema DictionaryValueType { get; set; }
 
-        public Schema Disallowed { get; set; }
+        public object Disallowed { get; set; }
 
         public int DivisibleBy { get; set; }
 
@@ -33,6 +33,9 @@ namespace GeneratorLib
         public TypeReference Extends { get; set; }
 
         public object Enum { get; set; }
+
+        [JsonProperty("gltf_enumNames")]
+        public string[] EnumNames { get; set; }
 
         public bool ExclusiveMaximum { get; set; } = false;
 
