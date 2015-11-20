@@ -13,5 +13,6 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [boxTextured](boxTextured)           | ![](boxTextured/screenshot/screenshot.png)     | Box with one texture. |
 | [duck](duck)                         | ![](duck/screenshot/screenshot.png)            | The COLLADA duck. One texture. |
 | [CesiumMilkTruck](CesiumMilkTruck)   | ![](CesiumMilkTruck/screenshot/screenshot.png) | Textured. Multiple nodes/meshes. Animations. |
+| [RiggedSimple](RiggedSimple)         | ![](RiggedSimple/screenshot/screenshot.png)    | Animations. Skins. Start with this for testing skinning. |
+| [RiggedFigure](RiggedFigure)         | ![](RiggedFigure/screenshot/screenshot.png)    | Animations. Skins. |
 | [CesiumMan](CesiumMan)               | ![](CesiumMan/screenshot/screenshot.png)       | Textured. Animations. Skins. |
-| [RiggedSimple](RiggedSimple)         | ![](RiggedSimple/screenshot/screenshot.png)    | Animations. Skins. |
