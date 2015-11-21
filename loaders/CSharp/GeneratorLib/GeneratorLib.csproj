@@ -47,8 +47,7 @@
     <Compile Include="AdditionalPropertiesConverter.cs" />
     <Compile Include="ArrayOfTypeReferencesConverter.cs" />
     <Compile Include="ArrayValueCodegenTypeFactory.cs" />
-    <Compile Include="CodeGenerator_SchemaLoading.cs" />
-    <Compile Include="CodeGenerator_GenerateCode.cs" />
+    <Compile Include="CodeGenerator.cs" />
     <Compile Include="CodegenType.cs" />
     <Compile Include="CodegenTypeFactory.cs" />
     <Compile Include="DictionaryOfTypeReferencesConverter.cs" />
