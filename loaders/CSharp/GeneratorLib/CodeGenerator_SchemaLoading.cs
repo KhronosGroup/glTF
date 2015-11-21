@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace GeneratorLib
 {
@@ -35,20 +30,12 @@ namespace GeneratorLib
 
         private void ExpandSchemaReferences(Schema schema)
         {
-            if (schema.Type != null)
+            foreach (var typeReference in new TypeReferenceEnumerator(schema))
             {
-                foreach (var type in schema.Type)
+                if (typeReference.IsReference)
                 {
-                    if (type.IsReference)
-                    {
-                        ExpandSchemaReferences(FileSchemas[type.Name]);
-                    }
+                    ExpandSchemaReferences(FileSchemas[typeReference.Name]);
                 }
-            }
-
-            if (schema.Extends != null && schema.Extends.IsReference)
-            {
-                ExpandSchemaReferences(FileSchemas[schema.Extends.Name]);
             }
 
             if (schema.Properties != null)
@@ -93,42 +80,20 @@ namespace GeneratorLib
 
         private void EvaluateInheritance(Schema schema)
         {
-            if (schema.Type != null)
+            foreach (var subSchema in new SchemaEnumerator(schema))
             {
-                foreach (var type in schema.Type)
+                EvaluateInheritance(subSchema);
+            }
+
+            foreach (var typeReference in new TypeReferenceEnumerator(schema))
+            {
+                if (typeReference.IsReference)
                 {
-                    if (!type.IsReference) continue;
-
-                    EvaluateInheritance(FileSchemas[type.Name]);
+                    EvaluateInheritance(FileSchemas[typeReference.Name]);
                 }
-            }
-
-            if (schema.Properties != null)
-            {
-                var values = schema.Properties.Values.ToArray();
-                foreach (var property in values)
-                {
-                    EvaluateInheritance(property);
-                }
-            }
-
-            if (schema.Items != null)
-            {
-                EvaluateInheritance(schema.Items);
-            }
-            
-            if (schema.ReferenceType != null)
-            {
-                EvaluateInheritance(FileSchemas[schema.ReferenceType]);
-            }
-
-            if (schema.DictionaryValueType != null)
-            {
-                EvaluateInheritance(schema.DictionaryValueType);
             }
 
             if (schema.Extends == null) return;
-            EvaluateInheritance(FileSchemas[schema.Extends.Name]);
 
             // var baseSchema = FileSchemas[schema.Extends.Name];
             // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;

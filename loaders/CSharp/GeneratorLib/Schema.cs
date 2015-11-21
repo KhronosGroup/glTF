@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -8,9 +9,56 @@ using Newtonsoft.Json;
 
 namespace GeneratorLib
 {
+    public class SchemaEnumerator : IEnumerable<Schema>
+    {
+        private readonly Schema m_schema;
+
+        public SchemaEnumerator(Schema schema)
+        {
+            m_schema = schema;
+        }
+
+        public IEnumerator<Schema> GetEnumerator()
+        {
+            return (m_schema.Properties != null ? m_schema.Properties.Values : Enumerable.Empty<Schema>())
+                .Concat(m_schema.PatternProperties != null ? m_schema.PatternProperties.Values : Enumerable.Empty<Schema>())
+                .Concat(m_schema.AdditionalItems != null ? new[] { m_schema.AdditionalItems } : Enumerable.Empty<Schema>())
+                .Concat(m_schema.DictionaryValueType != null ? new[] { m_schema.DictionaryValueType } : Enumerable.Empty<Schema>())
+                .Concat(m_schema.Items != null ? new[] { m_schema.Items } : Enumerable.Empty<Schema>())
+                .GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    public class TypeReferenceEnumerator : IEnumerable<TypeReference>
+    {
+        private readonly Schema m_schema;
+
+        public TypeReferenceEnumerator(Schema schema)
+        {
+            m_schema = schema;
+        }
+
+        public IEnumerator<TypeReference> GetEnumerator()
+        {
+            return (m_schema.Type ?? Enumerable.Empty<TypeReference>())
+                .Concat(m_schema.Extends != null ? new[] { m_schema.Extends } : Enumerable.Empty<TypeReference>())
+                .Concat(m_schema.ReferenceType != null ? new[] { new TypeReference() { IsReference = true, Name = m_schema.ReferenceType } } : Enumerable.Empty<TypeReference>())
+                .GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
     public class Schema
     {
-
         public Schema AdditionalItems { get; set; }
 
         public Dictionary<string, string> Dependencies { get; set; }

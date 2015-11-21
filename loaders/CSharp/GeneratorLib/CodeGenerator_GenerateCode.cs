@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.ComponentModel.Design.Serialization;
 using Microsoft.CSharp;
 using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
 using glTFLoader.Shared;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace GeneratorLib
 {

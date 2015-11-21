@@ -20,7 +20,7 @@ namespace GeneratorLib
 
             if (!(schema.Type?.Length >= 1))
             {
-                throw new InvalidOperationException("This schema does not represent a type");
+                throw new InvalidOperationException("This Schema does not represent a type");
             }
 
             if (schema.DictionaryValueType == null)
