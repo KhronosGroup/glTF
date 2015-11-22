@@ -127,6 +127,9 @@ namespace GeneratorLib
 
         public bool UniqueItems { get; set; }
 
+        [JsonProperty("gltf_uriType")]
+        public UriType UriType { get; set; } = UriType.None;
+
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
 
@@ -137,5 +140,13 @@ namespace GeneratorLib
         public bool IsReference { get; set; }
 
         public string Name { get; set; }
+    }
+
+    public enum UriType
+    {
+        None,
+        Application,
+        Text,
+        Image
     }
 }

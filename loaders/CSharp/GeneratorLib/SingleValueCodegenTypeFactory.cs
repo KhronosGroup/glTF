@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using glTFLoader.Shared;
@@ -55,8 +56,21 @@ namespace GeneratorLib
                         }
                         )
                 };
+                switch (schema.UriType)
+                {
+                    case UriType.Application:
+                        returnType.CodeType = new CodeTypeReference(typeof(byte[]));
+                        break;
+                    case UriType.Text:
+                        returnType.CodeType = new CodeTypeReference(typeof(string));
+                        break;
+                    case UriType.Image:
+                        returnType.CodeType = new CodeTypeReference(typeof(Bitmap));
+                        break;
+                    case UriType.None:
+                        throw new InvalidDataException("UriType must be specified in the schema");
+                }
 
-                returnType.CodeType = new CodeTypeReference(typeof(byte[]));
                 return returnType;
             }
 
