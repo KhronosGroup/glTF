@@ -202,9 +202,6 @@ namespace GeneratorLib
             return codegenType.CodeType;
         }
 
-        [JsonConverter(typeof(ArrayConverter))]
-        public object ArrayPropertiesTemplate { get; set; }
-
         public void CSharpCodeGen(string outputDirectory)
         {
             GeneratedClasses = new Dictionary<string, CodeTypeDeclaration>();
