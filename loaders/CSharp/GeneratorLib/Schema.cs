@@ -116,7 +116,7 @@ namespace GeneratorLib
         [JsonProperty("__ref__")]
         public string ReferenceType { get; set; }
 
-        public bool Required { get; set; }
+        public bool Required { get; set; } = false;
 
         public string ResolvedType { get; set; }
 

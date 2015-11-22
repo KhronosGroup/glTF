@@ -37,6 +37,29 @@ namespace GeneratorLib
                 };
             }
 
+            if (schema.Format == "uri")
+            {
+                returnType.Attributes = new CodeAttributeDeclarationCollection
+                {
+                    new CodeAttributeDeclaration(
+                        "Newtonsoft.Json.JsonConverterAttribute",
+                        new[]
+                        {
+                            new CodeAttributeArgument(new CodeTypeOfExpression(typeof (UriConverter))),
+                            new CodeAttributeArgument(
+                                new CodeArrayCreateExpression(typeof (object), new CodeExpression[]
+                                {
+                                    new CodePrimitiveExpression(schema.Required)
+                                })
+                                )
+                        }
+                        )
+                };
+
+                returnType.CodeType = new CodeTypeReference(typeof(byte[]));
+                return returnType;
+            }
+
             if (schema.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object));

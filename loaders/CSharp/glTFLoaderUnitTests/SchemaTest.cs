@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using glTFLoader.Schema;
@@ -17,7 +18,8 @@ namespace glTFLoaderUnitTests
         [Test]
         public void SchemaLoad()
         {
-            var filePath = Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF\box.gltf"));
+            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF - Embedded")));
+            var filePath = Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF-Embedded\box.gltf"));
             string contents = File.ReadAllText(filePath);
             Assert.IsNotNull(contents);
             var result = JsonConvert.DeserializeObject<Gltf>(contents);
@@ -30,6 +32,7 @@ namespace glTFLoaderUnitTests
                     {
                         try
                         {
+                            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.GetDirectoryName(file)));
                             var deserializedFile = JsonConvert.DeserializeObject<Gltf>(File.ReadAllText(file));
                             Assert.IsNotNull(deserializedFile);
                         }
