@@ -187,10 +187,10 @@
                     var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
-                	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
-                	directionalLight.position.set( 0, 0, -1 ).normalize();
+/*                	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
+                	directionalLight.position.set( 0, 0, 1 ).normalize();
                 	scene.add( directionalLight );
-                
+*/                
 	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
 	                spot1.position.set( -100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
@@ -391,17 +391,17 @@
 			var sceneList = 
 				[
 	                 { name : "Duck", url : "../../sampleModels/duck/%s/duck.gltf", 
-		                 cameraPos: new THREE.Vector3(0, 3, -5),
+		                 cameraPos: new THREE.Vector3(0, 3, 5),
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
                      { name : "Box", url : "../../sampleModels/box/%s/box.gltf", 
-                         cameraPos: new THREE.Vector3(0, 3, -5),
+                         cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Box - Textured",
                         url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
-                         cameraPos: new THREE.Vector3(0, 3, -5),
+                         cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
 	                 { name : "Virtual City", url : "../../sampleModels/vc/%s/vc.gltf", 
@@ -431,9 +431,10 @@
                          addGround:true,
                          shadows:true },
 		             { name : "Monster", url : "../../sampleModels/monster/%s/monster.gltf", 
-			                 cameraPos: new THREE.Vector3(30, 20, 133), 
-			                 objectPosition: new THREE.Vector3(0, 23, 0),
-			                 objectRotation: new THREE.Euler(Math.PI / 2, 0, Math.PI / 2),
+			                 cameraPos: new THREE.Vector3(0, 10, 50), 
+			                 objectPosition: new THREE.Vector3(2, 6, 0),
+                             objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
+			                 objectRotation: new THREE.Euler(0, - 3 * Math.PI / 4, 0),
 			                 animationTime: 3,
 			                 addLights:true,
 			                 shadows:true,

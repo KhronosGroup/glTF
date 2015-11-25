@@ -883,7 +883,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 this.lights = [];
                 this.animations = [];
                 this.joints = {};
-                this.skeltons = {};
                 THREE.GLTFLoaderUtils.init();
                 glTFParser.load.call(this, userInfo, options);
             }
@@ -1578,7 +1577,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             
                 var glTF = node.glTF;
                 var skin = glTF.instanceSkin;
-                var skeletons = [glTF.skeletons[0]]
+                var skeletons = [glTF.skeletons[0]];
                 if (skin) {
                     skeletons.forEach(function(skeleton) {
                         var nodeEntry = this.resources.getEntry(skeleton);
@@ -1659,7 +1658,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                                         //threeMesh.bindMode = "detached";
                                         //threeMesh.normalizeSkinWeights();
-                                        threeMesh.pose();
+                                        //threeMesh.pose();
                                     }
                                     
                                     if (threeMesh) {
