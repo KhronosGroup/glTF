@@ -4,7 +4,7 @@ attribute vec3 a_normal;
 varying vec3 v_normal;
 attribute vec4 a_joint;
 attribute vec4 a_weight;
-uniform mat4 u_jointMat[36];
+uniform mat4 u_jointMat[32];
 uniform mat3 u_normalMatrix;
 uniform mat4 u_modelViewMatrix;
 uniform mat4 u_projectionMatrix;
