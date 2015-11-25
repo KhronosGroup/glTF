@@ -1658,7 +1658,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                             boneInverses, false ), skin.bindShapeMatrix );
 
                                         //threeMesh.bindMode = "detached";
-                                        threeMesh.normalizeSkinWeights();
+                                        //threeMesh.normalizeSkinWeights();
                                         threeMesh.pose();
                                     }
                                     
