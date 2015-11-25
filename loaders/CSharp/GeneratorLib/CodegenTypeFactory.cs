@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GeneratorLib
 {
@@ -8,6 +9,23 @@ namespace GeneratorLib
     {
         public static CodegenType MakeCodegenType(string name, Schema schema)
         {
+            var codegenType = InternalMakeCodegenType(name, schema);
+
+            if (schema.Required)
+            {
+                if (codegenType.Attributes == null)
+                {
+                    codegenType.Attributes = new CodeAttributeDeclarationCollection();
+                }
+                codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
+            }
+
+            return codegenType;
+        }
+
+        private static CodegenType InternalMakeCodegenType(string name, Schema schema)
+        {
+
             if (schema.Disallowed != null || schema.Pattern != null)
             {
                 throw new NotImplementedException();

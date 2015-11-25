@@ -3,9 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using glTFLoader.Shared;
 using Microsoft.CSharp;
-using Newtonsoft.Json;
 
 namespace GeneratorLib
 {
@@ -163,7 +161,6 @@ namespace GeneratorLib
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             var type = GetCodegenType(target, schema, name, out attributes, out defaultValue);
-
             var propertyBackingVariable = new CodeMemberField
             {
                 Type = type,
