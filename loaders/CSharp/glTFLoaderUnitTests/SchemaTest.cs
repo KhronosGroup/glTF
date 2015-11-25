@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 using glTFLoader.Schema;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -15,15 +11,10 @@ namespace glTFLoaderUnitTests
     public class SchemaTest
     {
         private const string RelativePathToSamplesDir = @"..\..\..\..\..\sampleModels\";
+
         [Test]
         public void SchemaLoad()
         {
-            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF - Embedded")));
-            var filePath = Path.GetFullPath(Path.Combine(RelativePathToSamplesDir, @"box\glTF-Embedded\box.gltf"));
-            string contents = File.ReadAllText(filePath);
-            Assert.IsNotNull(contents);
-            var result = JsonConvert.DeserializeObject<Gltf>(contents);
-            Assert.IsNotNull(result);
             foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
             {
                 foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
@@ -38,9 +29,32 @@ namespace glTFLoaderUnitTests
                         }
                         catch (Exception e)
                         {
-                            throw new Exception(file,e);
+                            throw new Exception(file, e);
                         }
-                        
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void EmbeddedSchemaLoad()
+        {
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            {
+                foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF-Embedded")))
+                {
+                    if (file.EndsWith("gltf"))
+                    {
+                        try
+                        {
+                            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.GetDirectoryName(file)));
+                            var deserializedFile = JsonConvert.DeserializeObject<Gltf>(File.ReadAllText(file));
+                            Assert.IsNotNull(deserializedFile);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(file, e);
+                        }
                     }
                 }
             }
