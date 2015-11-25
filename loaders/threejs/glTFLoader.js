@@ -1540,7 +1540,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         handleExtension: {
             value: function(entryID, description, userInfo) {
 
-                console.log("Extension!", entryID, description);
+                console.log("Extension", entryID, description);
 
                 switch (entryID) {
                     case 'KHR_materials_common' :
