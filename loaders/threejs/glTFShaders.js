@@ -80,8 +80,9 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 
 			if (param.semantic == "JOINTMATRIX") {
 				var m4v = param.uniform.value;
-				for (var vi = 0; vi < m4v.length; vi++) {
-					m4v[vi] = this.joints[vi].matrix;
+				for (var mi = 0; mi < m4v.length; mi++) {
+					var inverse = this.object.skeleton.boneInverses[mi];
+					m4v[mi].copy(this.joints[mi].matrixWorld).multiply(inverse);
 				}
 			}
 			//console.log("parameter:", pname, param );
@@ -118,9 +119,10 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	            case "JOINTMATRIX" :
 	            
 	            	var m4v = semantic.uniform.value;
-	            	for (var mi = 0; mi < m4v.length; mi++) {
-	            		m4v[mi].copy(this.joints[mi].matrixWorld);
-	            	}
+					for (var mi = 0; mi < m4v.length; mi++) {
+						var inverse = this.object.skeleton.boneInverses[mi];
+						m4v[mi].copy(this.joints[mi].matrixWorld).multiply(inverse);
+					}
 	            
 	                //console.log("Joint:", semantic)
 	                break;
