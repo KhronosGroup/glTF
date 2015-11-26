@@ -1658,7 +1658,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                                         //threeMesh.bindMode = "detached";
                                         //threeMesh.normalizeSkinWeights();
-                                        //threeMesh.pose();
+                                        threeMesh.pose();
                                     }
                                     
                                     if (threeMesh) {
