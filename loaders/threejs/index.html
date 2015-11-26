@@ -187,12 +187,12 @@
                     var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
-/*                	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
+                	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
                 	directionalLight.position.set( 0, 0, 1 ).normalize();
                 	scene.add( directionalLight );
-*/                
+                
 	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
-	                spot1.position.set( -100, 200, 100 );
+	                spot1.position.set( 100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
 	                if (sceneInfo.shadows) {
