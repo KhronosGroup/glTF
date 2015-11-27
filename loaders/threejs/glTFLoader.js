@@ -1577,7 +1577,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             
                 var glTF = node.glTF;
                 var skin = glTF.instanceSkin;
-                var skeletons = [glTF.skeletons[0]];
+                var skeletons = glTF.skeletons;
                 if (skin) {
                     skeletons.forEach(function(skeleton) {
                         var nodeEntry = this.resources.getEntry(skeleton);
