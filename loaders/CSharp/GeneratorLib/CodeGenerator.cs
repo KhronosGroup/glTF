@@ -130,6 +130,8 @@ namespace GeneratorLib
             var root = FileSchemas[fileName];
             var schemaFile = new CodeCompileUnit();
             var schemaNamespace = new CodeNamespace("glTFLoader.Schema");
+            schemaNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
+
             className = Helpers.ParseTitle(root.Title);
 
             var schemaClass = new CodeTypeDeclaration(className)

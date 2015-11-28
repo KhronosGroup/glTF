@@ -66,6 +66,7 @@ namespace GeneratorLib
             if (schema.DictionaryValueType.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, object>));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
@@ -80,15 +81,18 @@ namespace GeneratorLib
                 if (schema.DictionaryValueType.Title != null)
                 {
                     returnType.CodeType = new CodeTypeReference($"System.Collections.Generic.Dictionary<string, {Helpers.ParseTitle(schema.DictionaryValueType.Title)}>");
+                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     return returnType;
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, object>));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
             if (schema.DictionaryValueType.Type[0].Name == "string")
             {
                 returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, string>));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 

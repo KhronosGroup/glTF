@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,65 @@ namespace GeneratorLib
                 retval += word.Substring(1);
             }
             return retval;
+        }
+
+        public static CodeMemberMethod CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(
+           string name, CodeExpression expression)
+        {
+            return new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                            Left = new CodeBinaryOperatorExpression()
+                            {
+                                Left = new CodeFieldReferenceExpression()
+                                {
+                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
+                                },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = expression
+                            },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = "ShouldSerialize" + name
+            };
+        }
+
+        public static CodeMemberMethod CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(
+           string name, CodeExpression expression)
+        {
+            return new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                            Left = new CodeMethodInvokeExpression(
+                                new CodeFieldReferenceExpression() {FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)},
+                                "SequenceEqual",
+                                new CodeExpression[] { expression}
+                                )
+                            ,
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = "ShouldSerialize" + name
+            };
         }
     }
 }
