@@ -13,30 +13,72 @@ namespace GeneratorLib
     {
         public static CodegenType MakeCodegenType(string name, Schema schema)
         {
-            CodegenType returnType = new CodegenType();
-            if (schema.Minimum != null || schema.Maximum != null)
+            CodegenType returnType = new CodegenType()
             {
-                returnType.Attributes = new CodeAttributeDeclarationCollection
+                SetStatements = new CodeStatementCollection()
+            };
+
+            if (schema.Minimum != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
                 {
-                    new CodeAttributeDeclaration(
-                        "Newtonsoft.Json.JsonConverterAttribute",
-                        new[]
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertySetValueReferenceExpression(),
+                        Operator = schema.ExclusiveMinimum ? CodeBinaryOperatorType.LessThanOrEqual : CodeBinaryOperatorType.LessThan,
+                        Right = new CodePrimitiveExpression(schema.Minimum)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
                         {
-                            new CodeAttributeArgument(new CodeTypeOfExpression(typeof (NumberValidator))),
-                            new CodeAttributeArgument(
-                                new CodeArrayCreateExpression(typeof (object), new CodeExpression[]
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
+                                Parameters =
                                 {
-                                    new CodePrimitiveExpression(schema.Minimum ?? 0),
-                                    new CodePrimitiveExpression(schema.Maximum ?? 0),
-                                    new CodePrimitiveExpression(schema.Minimum != null),
-                                    new CodePrimitiveExpression(schema.Maximum != null),
-                                    new CodePrimitiveExpression(schema.ExclusiveMinimum),
-                                    new CodePrimitiveExpression(schema.ExclusiveMaximum),
-                                })
-                                ),
+                                    new CodePrimitiveExpression(name),
+                                    new CodePropertySetValueReferenceExpression(),
+                                    new CodePrimitiveExpression(
+                                        schema.ExclusiveMinimum ?
+                                            $"Expected value to be less than or equal to {schema.Minimum}" :
+                                            $"Expected value to be less than {schema.Minimum}")
+                                }
+                            }
                         }
-                        )
-                };
+                    }
+                });
+            }
+            if (schema.Maximum != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertySetValueReferenceExpression(),
+                        Operator = schema.ExclusiveMaximum ? CodeBinaryOperatorType.GreaterThanOrEqual : CodeBinaryOperatorType.GreaterThan,
+                        Right = new CodePrimitiveExpression(schema.Maximum)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
+                        {
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
+                                Parameters =
+                                {
+                                    new CodePrimitiveExpression(name),
+                                    new CodePropertySetValueReferenceExpression(),
+                                    new CodePrimitiveExpression(
+                                        schema.ExclusiveMaximum ?
+                                        $"Expected value to be greater than or equal to {schema.Maximum}" :
+                                        $"Expected value to be greater than {schema.Maximum}")
+                                }
+                            }
+                        }
+                    }
+                });
             }
 
             if (schema.Format == "uri")
@@ -74,33 +116,6 @@ namespace GeneratorLib
 
                 return returnType;
             }
-
-            var isNotNullShouldSerializeMethod = new CodeMemberMethod
-            {
-                ReturnType = new CodeTypeReference(typeof(bool)),
-                Statements =
-                {
-                    new CodeMethodReturnStatement()
-                    {
-                        Expression = new CodeBinaryOperatorExpression()
-                        {
-                           Left = new CodeBinaryOperatorExpression()
-                           {
-                                Left = new CodeFieldReferenceExpression()
-                                {
-                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
-                                },
-                            Operator = CodeBinaryOperatorType.ValueEquality,
-                            Right = new CodePrimitiveExpression(null)
-                           },
-                           Operator = CodeBinaryOperatorType.ValueEquality,
-                           Right = new CodePrimitiveExpression(false)
-                        }
-                    }
-                },
-                Name = "ShouldSerialize" + name,
-                Attributes = MemberAttributes.Public | MemberAttributes.Final
-            };
 
             if (schema.Type.Length > 1)
             {
