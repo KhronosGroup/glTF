@@ -32,16 +32,7 @@ namespace GeneratorLib
                         new CodeAttributeDeclaration(
                             "Newtonsoft.Json.JsonConverterAttribute",
                             new [] {
-                                new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter))),
-                                new CodeAttributeArgument(
-                                    new CodeArrayCreateExpression(typeof(object), new CodeExpression[]
-                                    {
-                                        new CodePrimitiveExpression(Schema.MinItems ?? -1),
-                                        new CodePrimitiveExpression(Schema.MaxItems ?? -1),
-                                        new CodePrimitiveExpression(Schema.Items.MinLength),
-                                        new CodePrimitiveExpression(Schema.Items.MaxLength),
-                                    })
-                                ),
+                                new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter)))
                             }
                         )
                     }
@@ -53,7 +44,9 @@ namespace GeneratorLib
                 returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
-            
+
+            EnforceRestrictionsOnSetValues(returnType, name, Schema);
+
             if (Schema.Items.Type[0].Name == "integer")
             {
                 if (Schema.Items.Enum != null)
@@ -89,7 +82,8 @@ namespace GeneratorLib
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(int[]));
-                
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+
                 return returnType;
             }
 
@@ -111,13 +105,15 @@ namespace GeneratorLib
                 {
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 }
+
                 returnType.CodeType = new CodeTypeReference(typeof(float[]));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+
                 return returnType;
             }
 
             if (Schema.Items.Minimum != null || Schema.Items.Maximum != null)
             {
-                // TODO: implement this for int/number
                 throw new NotImplementedException();
             }
 
@@ -168,7 +164,7 @@ namespace GeneratorLib
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     returnType.Attributes = null;
 
-                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != -1 || Schema.Items.MaxLength != -1)
+                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != null || Schema.Items.MaxLength != null)
                     {
                         throw new NotImplementedException();
                     }
@@ -188,6 +184,220 @@ namespace GeneratorLib
             throw new NotImplementedException("Array of " + Schema.Items.Type[0].Name);
         }
 
-        
+        private static void EnforceRestrictionsOnSetValues(CodegenType returnType, string name, Schema schema)
+        {
+            if (schema.MinItems != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertyReferenceExpression(new CodePropertySetValueReferenceExpression(), "Length"),
+                        Operator = CodeBinaryOperatorType.LessThan,
+                        Right = new CodePrimitiveExpression(schema.MinItems)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException), new CodeExpression[] { new CodePrimitiveExpression("Array not long enough") } ))
+                    }
+                });
+            }
+
+            if (schema.MaxItems != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertyReferenceExpression(new CodePropertySetValueReferenceExpression(), "Length"),
+                        Operator = CodeBinaryOperatorType.GreaterThan,
+                        Right = new CodePrimitiveExpression(schema.MaxItems)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException), new CodeExpression[] { new CodePrimitiveExpression("Array too long") } ))
+                    }
+                });
+            }
+
+            if (schema.Items.Minimum != null || schema.Items.Maximum != null || schema.Items.MinLength != null || schema.Items.MaxLength != null)
+            {
+                returnType.SetStatements.Add(new CodeVariableDeclarationStatement(typeof(int), "index", new CodePrimitiveExpression(0)));
+            }
+
+            if (schema.Items.Minimum != null)
+            {
+                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
+                {
+                    new CodeConditionStatement
+                    {
+                        Condition = new CodeBinaryOperatorExpression
+                        {
+                            Left = new CodeArrayIndexerExpression
+                            {
+                                TargetObject = new CodePropertySetValueReferenceExpression(),
+                                Indices = { new CodeVariableReferenceExpression("index") },
+                            },
+                            Operator = schema.Items.ExclusiveMinimum ? CodeBinaryOperatorType.LessThanOrEqual : CodeBinaryOperatorType.LessThan,
+                            Right = new CodePrimitiveExpression(schema.Items.Minimum)
+                        },
+                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException))) }
+                    }
+                }));
+            }
+
+            if (schema.Items.Maximum != null)
+            {
+                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
+                {
+                    new CodeConditionStatement
+                    {
+                        Condition = new CodeBinaryOperatorExpression
+                        {
+                            Left = new CodeArrayIndexerExpression
+                            {
+                                TargetObject = new CodePropertySetValueReferenceExpression(),
+                                Indices = { new CodeVariableReferenceExpression("index") },
+                            },
+                            Operator = schema.Items.ExclusiveMaximum ? CodeBinaryOperatorType.GreaterThanOrEqual : CodeBinaryOperatorType.GreaterThan,
+                            Right = new CodePrimitiveExpression(schema.Items.Maximum)
+                        },
+                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException))) }
+                    }
+                }));
+            }
+
+            if (schema.Items.MinLength != null)
+            {
+                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
+                {
+                    new CodeConditionStatement
+                    {
+                        Condition = new CodeBinaryOperatorExpression
+                        {
+                            Left = new CodePropertyReferenceExpression(new CodeArrayIndexerExpression
+                            {
+                                TargetObject = new CodePropertySetValueReferenceExpression(),
+                                Indices = { new CodeVariableReferenceExpression("index") },
+                            }, "Length"),
+                            Operator = CodeBinaryOperatorType.LessThan,
+                            Right = new CodePrimitiveExpression(schema.Items.MinLength)
+                        },
+                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException))) }
+                    }
+                }));
+            }
+
+            if (schema.Items.MaxLength != null)
+            {
+                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
+                {
+                    new CodeConditionStatement
+                    {
+                        Condition = new CodeBinaryOperatorExpression
+                        {
+                            Left = new CodePropertyReferenceExpression(new CodeArrayIndexerExpression
+                            {
+                                TargetObject = new CodePropertySetValueReferenceExpression(),
+                                Indices = { new CodeVariableReferenceExpression("index") },
+                            }, "Length"),
+                            Operator = CodeBinaryOperatorType.GreaterThan,
+                            Right = new CodePrimitiveExpression(schema.Items.MaxLength)
+                        },
+                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException))) }
+                    }
+                }));
+            }
+        }
+
+        public static CodeMemberMethod CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(
+           string name, CodeExpression expression)
+        {
+            return new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                            Left = new CodeBinaryOperatorExpression()
+                            {
+                                Left = new CodeFieldReferenceExpression()
+                                {
+                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
+                                },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = expression
+                            },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = "ShouldSerialize" + name
+            };
+        }
+
+        public static CodeMemberMethod CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(
+           string name, CodeExpression expression)
+        {
+            return new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                            Left = new CodeMethodInvokeExpression(
+                                new CodeFieldReferenceExpression() {FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)},
+                                "SequenceEqual",
+                                new CodeExpression[] { expression}
+                                )
+                            ,
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = "ShouldSerialize" + name
+            };
+        }
+
+        private static CodeStatement LoopThroughArray(CodeExpression array, CodeStatementCollection statements)
+        {
+            var returnValue =  new CodeIterationStatement
+            {
+                InitStatement =
+                    new CodeAssignStatement(new CodeVariableReferenceExpression("index"), new CodePrimitiveExpression(0)),
+                TestExpression = new CodeBinaryOperatorExpression
+                {
+                    Left = new CodeVariableReferenceExpression("index"),
+                    Operator = CodeBinaryOperatorType.LessThan,
+                    Right = new CodePropertyReferenceExpression
+                    {
+                        PropertyName = "Length",
+                        TargetObject = array
+                    }
+                },
+                IncrementStatement = new CodeAssignStatement
+                {
+                    Left = new CodeVariableReferenceExpression("index"),
+                    Right = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodeVariableReferenceExpression("index"),
+                        Operator = CodeBinaryOperatorType.Add,
+                        Right = new CodePrimitiveExpression(1)
+                    }
+                }
+            };
+            returnValue.Statements.AddRange(statements);
+            return returnValue;
+        }
     }
 }

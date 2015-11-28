@@ -97,13 +97,13 @@ namespace GeneratorLib
 
         public int? MaxItems { get; set; }
 
-        public int MaxLength { get; set; } = -1;
+        public int? MaxLength { get; set; }
 
         public object Maximum { get; set; }
 
         public int? MinItems { get; set; }
 
-        public int MinLength { get; set; } = -1;
+        public int? MinLength { get; set; }
 
         public object Minimum { get; set; }
 
