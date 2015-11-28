@@ -98,7 +98,8 @@ namespace GeneratorLib
                         }
                     }
                 },
-                Name = "ShouldSerialize" + name
+                Name = "ShouldSerialize" + name,
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
             };
 
             if (schema.Type.Length > 1)

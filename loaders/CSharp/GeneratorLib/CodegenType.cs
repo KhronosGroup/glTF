@@ -18,5 +18,7 @@ namespace GeneratorLib
         public CodeTypeDeclaration DependentType { get; set; }
 
         public CodeMemberMethod ShouldSerializeMethod { get; set; }
+
+        public CodeStatementCollection SetStatements { get; set; }
     }
 }

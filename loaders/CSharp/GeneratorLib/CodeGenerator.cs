@@ -158,30 +158,50 @@ namespace GeneratorLib
         {
             var name = rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var type = GetCodegenType(target, schema, name, out attributes, out defaultValue);
+            var codegenType = CodegenTypeFactory.MakeCodegenType(name, schema);
+            if (codegenType.DependentType != null)
+            {
+                target.Members.Add(codegenType.DependentType);
+            }
+
+            if (codegenType.ShouldSerializeMethod != null)
+            {
+                target.Members.Add(codegenType.ShouldSerializeMethod);
+            }
+            
             var propertyBackingVariable = new CodeMemberField
             {
-                Type = type,
+                Type = codegenType.CodeType,
                 Name = fieldName,
                 Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement($"Backing field for {name}.", true), new CodeCommentStatement("</summary>", true) },
-                InitExpression = defaultValue
+                InitExpression = codegenType.DefaultValue
             };
 
             target.Members.Add(propertyBackingVariable);
+
+            var setStatements = codegenType.SetStatements ?? new CodeStatementCollection();
+            setStatements.Add(new CodeAssignStatement()
+            {
+                Left = new CodeFieldReferenceExpression
+                {
+                    FieldName = fieldName,
+                    TargetObject = new CodeThisReferenceExpression()
+                },
+                Right = new CodePropertySetValueReferenceExpression()
+            });
+
             var property = new CodeMemberProperty
             {
-                Type = type,
+                Type = codegenType.CodeType,
                 Name = name,
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
                 HasGet = true,
                 GetStatements = { new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)) },
                 HasSet = true,
-                SetStatements = { new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName), new CodePropertySetValueReferenceExpression()) },
                 Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement(schema.Description, true), new CodeCommentStatement("</summary>", true) },
-                CustomAttributes = attributes
+                CustomAttributes = codegenType.Attributes
             };
+            property.SetStatements.AddRange(setStatements);
 
             target.Members.Add(property);
         }
