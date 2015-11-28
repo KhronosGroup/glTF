@@ -120,7 +120,7 @@ namespace GeneratorLib
             if (schema.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
@@ -138,7 +138,7 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
@@ -152,7 +152,7 @@ namespace GeneratorLib
                 if (schema.Title != null)
                 {
                     returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(schema.Title));
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     return returnType;
                 }
                 throw new NotImplementedException();
@@ -168,7 +168,7 @@ namespace GeneratorLib
                 if (schema.HasDefaultValue())
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(float));
                 return returnType;
@@ -179,7 +179,7 @@ namespace GeneratorLib
                 if (schema.Enum != null)
                 {
                     var enumType = GenStringEnumType(name, schema);
-                    returnType.DependentType = enumType;
+                    returnType.AdditionalMembers.Add(enumType);
                     returnType.CodeType = new CodeTypeReference(enumType.Name);
 
                     if (schema.HasDefaultValue())
@@ -189,20 +189,20 @@ namespace GeneratorLib
                             if (enumType.Members[i].Name == schema.Default.ToString())
                             {
                                 returnType.DefaultValue = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(enumType.Name), (string)schema.Default);
-                                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                                 return returnType;
                             }
                         }
                         throw new InvalidDataException("The default value is not in the enum list");
                     }
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     return returnType;
                 }
 
                 if (schema.HasDefaultValue())
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((string)schema.Default);
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(string));
                 return returnType;
@@ -213,13 +213,13 @@ namespace GeneratorLib
                 if (schema.Enum != null)
                 {
                     var enumType = GenIntEnumType(name, schema);
-                    returnType.DependentType = enumType;
+                    returnType.AdditionalMembers.Add(enumType);
                     returnType.CodeType = new CodeTypeReference(enumType.Name);
 
                     if (schema.HasDefaultValue())
                     {
                         returnType.DefaultValue = GetEnumField(enumType, (int)(long)schema.Default);
-                        returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                        returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                     }
 
                     return returnType;
@@ -228,7 +228,7 @@ namespace GeneratorLib
                 if (schema.Default != null)
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(int));
@@ -245,7 +245,7 @@ namespace GeneratorLib
                 if (schema.Default != null)
                 {
                     returnType.DefaultValue = new CodePrimitiveExpression((bool)schema.Default);
-                    returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue);
+                    returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(bool));
                 return returnType;

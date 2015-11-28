@@ -159,15 +159,7 @@ namespace GeneratorLib
             var name = rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
             var codegenType = CodegenTypeFactory.MakeCodegenType(name, schema);
-            if (codegenType.DependentType != null)
-            {
-                target.Members.Add(codegenType.DependentType);
-            }
-
-            if (codegenType.ShouldSerializeMethod != null)
-            {
-                target.Members.Add(codegenType.ShouldSerializeMethod);
-            }
+            target.Members.AddRange(codegenType.AdditionalMembers);
             
             var propertyBackingVariable = new CodeMemberField
             {
@@ -211,15 +203,6 @@ namespace GeneratorLib
             var codegenType = CodegenTypeFactory.MakeCodegenType(name, schema);
             attributes = codegenType.Attributes;
             defaultValue = codegenType.DefaultValue;
-            if (codegenType.DependentType != null)
-            {
-                target.Members.Add(codegenType.DependentType);
-            }
-
-            if (codegenType.ShouldSerializeMethod != null)
-            {
-                target.Members.Add(codegenType.ShouldSerializeMethod);
-            }
 
             return codegenType.CodeType;
         }

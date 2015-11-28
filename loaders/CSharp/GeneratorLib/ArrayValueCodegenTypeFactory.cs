@@ -58,7 +58,7 @@ namespace GeneratorLib
                 if (Schema.Items.Enum != null)
                 {
                     var enumType = SingleValueCodegenTypeFactory.GenIntEnumType(name, Schema.Items);
-                    returnType.DependentType = enumType;
+                    returnType.AdditionalMembers.Add(enumType);
 
                     if (Schema.HasDefaultValue())
                     {
@@ -76,7 +76,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(int), defaultValueArray);
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(int[]));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
@@ -93,7 +93,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(float), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(float[]));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
@@ -111,7 +111,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(bool), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(bool[]));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
             if (Schema.Items.Type[0].Name == "string")
@@ -123,7 +123,7 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(string[]));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
             if (Schema.Items.Type[0].Name == "object")
@@ -151,7 +151,7 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
-                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
+                returnType.AdditionalMembers.Add(CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 

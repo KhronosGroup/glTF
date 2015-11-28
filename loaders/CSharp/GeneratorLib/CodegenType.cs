@@ -15,10 +15,8 @@ namespace GeneratorLib
 
         public CodeExpression DefaultValue { get; set; }
 
-        public CodeTypeDeclaration DependentType { get; set; }
+        public CodeTypeMemberCollection AdditionalMembers { get; set; } = new CodeTypeMemberCollection();
 
-        public CodeMemberMethod ShouldSerializeMethod { get; set; }
-
-        public CodeStatementCollection SetStatements { get; set; }
+        public CodeStatementCollection SetStatements { get; set; } = new CodeStatementCollection();
     }
 }
