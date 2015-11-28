@@ -10,36 +10,11 @@ namespace glTFLoader.Shared
 {
     public class ArrayConverter : JsonConverter
     {
-        private readonly int m_minItems = -1, m_maxItems = -1, m_minStringLength = -1, m_maxStringLength = -1;
-        public ArrayConverter()
-        {
-        }
-
-        public ArrayConverter(int minItems, int maxItems, int minStringLength, int maxStringLength)
-        {
-            m_minItems = minItems;
-            m_maxItems = maxItems;
-            m_minStringLength = minStringLength;
-            m_maxStringLength = maxStringLength;
-        }
-
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (objectType == typeof(bool[])) return ReadImpl<bool>(reader);
             if (objectType == typeof(int[])) return ReadImpl<long>(reader).Select((v) => (int)v).ToArray();
-            if (objectType == typeof (string[]))
-            {
-                var stringArray = ReadImpl<string>(reader);
-                if (m_minStringLength != -1 || m_maxStringLength != -1)
-                {
-                    foreach (var s in stringArray)
-                    {
-                        ValidationHelpers.ValidateString(s, m_minStringLength, m_maxStringLength);
-                    }
-                }
-
-                return stringArray;
-            }
+            if (objectType == typeof (string[])) return ReadImpl<string>(reader);
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
 
@@ -80,10 +55,8 @@ namespace glTFLoader.Shared
                 values.Add((t_array)reader.Value);
                 reader.Read();
             }
-
-            var array = values.ToArray();
-            VerifyArraySize(array);
-            return array;
+            
+            return values.ToArray();
         }
 
         private object ReadFloats(JsonReader reader)
@@ -100,10 +73,8 @@ namespace glTFLoader.Shared
                 values.Add(SingleValueToFloat(reader.TokenType, reader.Value));
                 reader.Read();
             }
-
-            var array = values.ToArray();
-            VerifyArraySize(array);
-            return array;
+            
+            return values.ToArray();
         }
 
         private float SingleValueToFloat(JsonToken tokenType, object value)
@@ -116,19 +87,6 @@ namespace glTFLoader.Shared
                     return (float)(double) value;
                 default:
                     throw new NotImplementedException(tokenType.ToString());
-            }
-        }
-
-        private void VerifyArraySize<t_array>(t_array[] array)
-        {
-            if (m_minItems != -1 && m_minItems > array.Length)
-            {
-                throw new ArgumentException($"{array.Length} items provided for array with minimum length of {m_minItems}");
-            }
-
-            if (m_maxItems != -1 && m_maxItems < array.Length)
-            {
-                throw new ArgumentException($"{array.Length} items provided for array with maximum length of {m_maxItems}");
             }
         }
 
