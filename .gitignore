@@ -3,6 +3,7 @@
 !loaders/CSharp/CSharp.sln
 *.suo
 *.vcxproj*
+*.nupkg
 CMakeFiles
 cmake_install.cmake
 COLLADA2GLTF/CMakeCache.txt
