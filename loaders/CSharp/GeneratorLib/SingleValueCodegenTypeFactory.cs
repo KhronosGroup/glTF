@@ -13,73 +13,8 @@ namespace GeneratorLib
     {
         public static CodegenType MakeCodegenType(string name, Schema schema)
         {
-            CodegenType returnType = new CodegenType()
-            {
-                SetStatements = new CodeStatementCollection()
-            };
-
-            if (schema.Minimum != null)
-            {
-                returnType.SetStatements.Add(new CodeConditionStatement
-                {
-                    Condition = new CodeBinaryOperatorExpression
-                    {
-                        Left = new CodePropertySetValueReferenceExpression(),
-                        Operator = schema.ExclusiveMinimum ? CodeBinaryOperatorType.LessThanOrEqual : CodeBinaryOperatorType.LessThan,
-                        Right = new CodePrimitiveExpression(schema.Minimum)
-                    },
-                    TrueStatements =
-                    {
-                        new CodeThrowExceptionStatement
-                        {
-                            ToThrow = new CodeObjectCreateExpression
-                            {
-                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
-                                Parameters =
-                                {
-                                    new CodePrimitiveExpression(name),
-                                    new CodePropertySetValueReferenceExpression(),
-                                    new CodePrimitiveExpression(
-                                        schema.ExclusiveMinimum ?
-                                            $"Expected value to be less than or equal to {schema.Minimum}" :
-                                            $"Expected value to be less than {schema.Minimum}")
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            if (schema.Maximum != null)
-            {
-                returnType.SetStatements.Add(new CodeConditionStatement
-                {
-                    Condition = new CodeBinaryOperatorExpression
-                    {
-                        Left = new CodePropertySetValueReferenceExpression(),
-                        Operator = schema.ExclusiveMaximum ? CodeBinaryOperatorType.GreaterThanOrEqual : CodeBinaryOperatorType.GreaterThan,
-                        Right = new CodePrimitiveExpression(schema.Maximum)
-                    },
-                    TrueStatements =
-                    {
-                        new CodeThrowExceptionStatement
-                        {
-                            ToThrow = new CodeObjectCreateExpression
-                            {
-                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
-                                Parameters =
-                                {
-                                    new CodePrimitiveExpression(name),
-                                    new CodePropertySetValueReferenceExpression(),
-                                    new CodePrimitiveExpression(
-                                        schema.ExclusiveMaximum ?
-                                        $"Expected value to be greater than or equal to {schema.Maximum}" :
-                                        $"Expected value to be greater than {schema.Maximum}")
-                                }
-                            }
-                        }
-                    }
-                });
-            }
+            CodegenType returnType = new CodegenType();
+            EnforceRestrictionsOnSetValues(returnType, name, schema);
 
             if (schema.Format == "uri")
             {
@@ -252,6 +187,134 @@ namespace GeneratorLib
             }
 
             throw new NotImplementedException(typeRef.Name);
+        }
+
+        private static void EnforceRestrictionsOnSetValues(CodegenType returnType, string name, Schema schema)
+        {
+            if (schema.Minimum != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertySetValueReferenceExpression(),
+                        Operator = schema.ExclusiveMinimum ? CodeBinaryOperatorType.LessThanOrEqual : CodeBinaryOperatorType.LessThan,
+                        Right = new CodePrimitiveExpression(schema.Minimum)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
+                        {
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
+                                Parameters =
+                                {
+                                    new CodePrimitiveExpression(name),
+                                    new CodePropertySetValueReferenceExpression(),
+                                    new CodePrimitiveExpression(
+                                        schema.ExclusiveMinimum ?
+                                            $"Expected value to be less than or equal to {schema.Minimum}" :
+                                            $"Expected value to be less than {schema.Minimum}")
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            if (schema.Maximum != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertySetValueReferenceExpression(),
+                        Operator = schema.ExclusiveMaximum ? CodeBinaryOperatorType.GreaterThanOrEqual : CodeBinaryOperatorType.GreaterThan,
+                        Right = new CodePrimitiveExpression(schema.Maximum)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
+                        {
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentOutOfRangeException)),
+                                Parameters =
+                                {
+                                    new CodePrimitiveExpression(name),
+                                    new CodePropertySetValueReferenceExpression(),
+                                    new CodePrimitiveExpression(
+                                        schema.ExclusiveMaximum ?
+                                        $"Expected value to be greater than or equal to {schema.Maximum}" :
+                                        $"Expected value to be greater than {schema.Maximum}")
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            if (schema.MinLength != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertyReferenceExpression
+                        {
+                            PropertyName = "Length",
+                            TargetObject = new CodePropertySetValueReferenceExpression()
+                        },
+                        Operator = CodeBinaryOperatorType.LessThan,
+                        Right = new CodePrimitiveExpression(schema.MinLength)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
+                        {
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentException)),
+                                Parameters =
+                                {
+                                    new CodePrimitiveExpression($"Expected the string length to be greater than or equal to {schema.MinLength}"),
+                                    new CodePrimitiveExpression(name),
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            if (schema.MaxLength != null)
+            {
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertyReferenceExpression
+                        {
+                            PropertyName = "Length",
+                            TargetObject = new CodePropertySetValueReferenceExpression()
+                        },
+                        Operator = CodeBinaryOperatorType.GreaterThan,
+                        Right = new CodePrimitiveExpression(schema.MaxLength)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeThrowExceptionStatement
+                        {
+                            ToThrow = new CodeObjectCreateExpression
+                            {
+                                CreateType = new CodeTypeReference(typeof(ArgumentException)),
+                                Parameters =
+                                {
+                                    new CodePrimitiveExpression($"Expected the string length to be less than or equal to {schema.MaxLength}"),
+                                    new CodePrimitiveExpression(name),
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         public static CodeTypeDeclaration GenStringEnumType(string name, Schema schema)

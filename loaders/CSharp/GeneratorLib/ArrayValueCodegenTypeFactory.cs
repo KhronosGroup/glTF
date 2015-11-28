@@ -38,8 +38,8 @@ namespace GeneratorLib
                                     {
                                         new CodePrimitiveExpression(Schema.MinItems ?? -1),
                                         new CodePrimitiveExpression(Schema.MaxItems ?? -1),
-                                        new CodePrimitiveExpression(Schema.Items.MinLength),
-                                        new CodePrimitiveExpression(Schema.Items.MaxLength),
+                                        new CodePrimitiveExpression(Schema.Items.MinLength ?? -1),
+                                        new CodePrimitiveExpression(Schema.Items.MaxLength ?? -1),
                                     })
                                 ),
                             }
@@ -138,7 +138,7 @@ namespace GeneratorLib
                     returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(Schema.Items.Title) + "[]");
                     returnType.Attributes = null;
 
-                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != -1 || Schema.Items.MaxLength != -1)
+                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != null || Schema.Items.MaxLength != null)
                     {
                         throw new NotImplementedException();
                     }
