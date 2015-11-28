@@ -16,26 +16,24 @@ namespace GeneratorUnitTests
         public void SchemaReferenceTypeNotNullException()
         {
             Schema SchemaHasReferenceType = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
             SchemaHasReferenceType.ReferenceType = "Schema.json";
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), SchemaHasReferenceType, "name", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("name", SchemaHasReferenceType));
         }
 
         [Test]
         public void SchemaIsNotValidDictionaryException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            Schema.DictionaryValueType = new Schema();
-            Schema.Type = null;
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Schema Schema = new Schema
+            {
+                DictionaryValueType = new Schema(),
+                Type = null
+            };
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
             var typeRef = new TypeReference();
             Schema.Type = new[] { typeRef };
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
             typeRef.Name = "string";
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "NoTypeDictionary", out attributes, out defaultValue));
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
         }
 
         [Test]
