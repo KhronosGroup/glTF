@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ArrayConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringEnumConverter.cs" />
     <Compile Include="UriConverter.cs" />
     <Compile Include="ValidationHelpers.cs" />
   </ItemGroup>
