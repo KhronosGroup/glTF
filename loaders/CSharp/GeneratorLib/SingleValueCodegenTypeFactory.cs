@@ -75,6 +75,33 @@ namespace GeneratorLib
                 return returnType;
             }
 
+            var isNotNullShouldSerializeMethod = new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                           Left = new CodeBinaryOperatorExpression()
+                           {
+                                Left = new CodeFieldReferenceExpression()
+                                {
+                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
+                                },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(null)
+                           },
+                           Operator = CodeBinaryOperatorType.ValueEquality,
+                           Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Name = "ShouldSerialize" + name,
+                Attributes = MemberAttributes.Public | MemberAttributes.Final
+            };
+
             if (schema.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object));

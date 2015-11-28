@@ -133,6 +133,23 @@ namespace GeneratorLib
                     throw new NotImplementedException("Array of Objects has default value");
                 }
 
+                if (Schema.Items.Title != null)
+                {
+                    returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(Schema.Items.Title) + "[]");
+                    returnType.Attributes = null;
+
+                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != -1 || Schema.Items.MaxLength != -1)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    return returnType;
+                }
+
+                if (Schema.Items.DictionaryValueType != null)
+                {
+                    throw new NotImplementedException();
+                }
+
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
                 returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
