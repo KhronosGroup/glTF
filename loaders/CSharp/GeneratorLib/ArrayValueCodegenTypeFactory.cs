@@ -76,6 +76,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(int), defaultValueArray);
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(int[]));
+                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
             }
 
@@ -92,6 +93,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(float), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(float[]));
+                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
             }
 
@@ -109,6 +111,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodeArrayCreateExpression(typeof(bool), defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(bool[]));
+                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
             }
             if (Schema.Items.Type[0].Name == "string")
@@ -120,6 +123,7 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(string[]));
+                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
             }
             if (Schema.Items.Type[0].Name == "object")
@@ -130,10 +134,42 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
+                returnType.ShouldSerializeMethod = CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null));
                 return returnType;
             }
 
             throw new NotImplementedException("Array of " + Schema.Items.Type[0].Name);
+        }
+
+        public static CodeMemberMethod CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(
+           string name, CodeExpression expression)
+        {
+            return new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                            Left = new CodeBinaryOperatorExpression()
+                            {
+                                Left = new CodeFieldReferenceExpression()
+                                {
+                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
+                                },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = expression
+                            },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = "ShouldSerialize" + name
+            };
         }
     }
 }
