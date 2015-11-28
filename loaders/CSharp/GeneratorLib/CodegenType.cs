@@ -16,5 +16,7 @@ namespace GeneratorLib
         public CodeExpression DefaultValue { get; set; }
 
         public CodeTypeDeclaration DependentType { get; set; }
+
+        public CodeMemberMethod ShouldSerializeMethod { get; set; }
     }
 }

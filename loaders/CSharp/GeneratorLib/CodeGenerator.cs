@@ -196,6 +196,11 @@ namespace GeneratorLib
                 target.Members.Add(codegenType.DependentType);
             }
 
+            if (codegenType.ShouldSerializeMethod != null)
+            {
+                target.Members.Add(codegenType.ShouldSerializeMethod);
+            }
+
             return codegenType.CodeType;
         }
 

@@ -38,11 +38,15 @@ namespace glTFLoader.Shared
 
             throw new NotImplementedException();
         }
-
-
+        
         public override bool CanConvert(Type type)
         {
             return true;
+        }
+        
+        public override bool CanWrite
+        {
+            get { return false; }
         }
 
         public override void WriteJson(JsonWriter w, object o, JsonSerializer s)

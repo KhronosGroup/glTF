@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -91,7 +92,31 @@ namespace glTFLoader.Shared
 
         public override void WriteJson(JsonWriter w, object o, JsonSerializer s)
         {
-            throw new NotImplementedException();
+            var result = "";
+            if (o is byte[])
+            {
+                result += "data:application/octet-stream;base64,";
+                result += Convert.ToBase64String((byte[])o);
+            }
+            else if (o is string)
+            {
+                result += "data:text/plain;base64,";
+                result += Convert.ToBase64String(Encoding.UTF8.GetBytes((string)o));
+            }
+            else if (o is Bitmap)
+            {
+                result += "data:image/png;base64,";
+                var bmp = (Bitmap) o;
+                var stream = new MemoryStream();
+                bmp.Save(stream, ImageFormat.Png);
+                result += Convert.ToBase64String(stream.GetBuffer());
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            w.WriteToken(JsonToken.String, result);
         }
     }
 }

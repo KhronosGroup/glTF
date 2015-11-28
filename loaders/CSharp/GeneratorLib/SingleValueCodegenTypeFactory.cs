@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using glTFLoader.Shared;
 using Newtonsoft.Json.Linq;
 
@@ -74,9 +75,36 @@ namespace GeneratorLib
                 return returnType;
             }
 
+            var isNotNullShouldSerializeMethod = new CodeMemberMethod
+            {
+                ReturnType = new CodeTypeReference(typeof(bool)),
+                Statements =
+                {
+                    new CodeMethodReturnStatement()
+                    {
+                        Expression = new CodeBinaryOperatorExpression()
+                        {
+                           Left = new CodeBinaryOperatorExpression()
+                           {
+                                Left = new CodeFieldReferenceExpression()
+                                {
+                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
+                                },
+                            Operator = CodeBinaryOperatorType.ValueEquality,
+                            Right = new CodePrimitiveExpression(null)
+                           },
+                           Operator = CodeBinaryOperatorType.ValueEquality,
+                           Right = new CodePrimitiveExpression(false)
+                        }
+                    }
+                },
+                Name = "ShouldSerialize" + name
+            };
+
             if (schema.Type.Length > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object));
+                returnType.ShouldSerializeMethod = isNotNullShouldSerializeMethod;
                 return returnType;
             }
 
@@ -94,6 +122,7 @@ namespace GeneratorLib
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object));
+                returnType.ShouldSerializeMethod = isNotNullShouldSerializeMethod;
                 return returnType;
             }
 
@@ -172,7 +201,7 @@ namespace GeneratorLib
 
                     if (schema.HasDefaultValue())
                     {
-                        returnType.DefaultValue = GetEnumField(enumType, (int) (long) schema.Default);
+                        returnType.DefaultValue = GetEnumField(enumType, (int)(long)schema.Default);
                     }
 
                     return returnType;

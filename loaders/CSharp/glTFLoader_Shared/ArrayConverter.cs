@@ -137,6 +137,11 @@ namespace glTFLoader.Shared
             return true;
         }
 
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
         public override void WriteJson(JsonWriter w, object o, JsonSerializer s)
         {
             throw new NotImplementedException();
