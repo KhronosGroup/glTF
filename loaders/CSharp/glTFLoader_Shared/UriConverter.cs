@@ -29,7 +29,17 @@ namespace glTFLoader.Shared
             var bytes = GetBytes(reader);
             if (objectType == typeof (byte[]))
             {
+                if (bytes == null)
+                {
+                    return ((ArraySegment<byte>)CallContext.LogicalGetData("KHR_binary_glTF")).ToArray();
+                }
                 return bytes;
+            }
+
+            // KHR_Binary_glTF
+            if (bytes == null)
+            {
+                return null;
             }
 
             if (objectType == typeof(string))
@@ -55,11 +65,7 @@ namespace glTFLoader.Shared
             var rawData = (string)reader.Value;
             if (string.IsNullOrWhiteSpace((string)reader.Value))
             {
-                if (m_required)
-                {
-                    throw new InvalidDataException("The uri is required but is empty");
-                }
-                return null;
+                throw new InvalidDataException("The uri is required but is empty");
             }
             
             // Data URI
@@ -68,7 +74,13 @@ namespace glTFLoader.Shared
                 var endOfHead = rawData.IndexOf("base64,", StringComparison.InvariantCultureIgnoreCase);
                 if (endOfHead == -1)
                 {
-                    throw new NotImplementedException("Only base64 data uris are supported");
+                    if (rawData != "data:,")
+                    {
+                        throw new NotImplementedException("Only base64 data uris are supported");
+                    }
+                    
+                    // KHR_Binary_glTF
+                    return null;
                 }
                 endOfHead += "base64,".Length;
                 rawData = rawData.Substring(endOfHead);
