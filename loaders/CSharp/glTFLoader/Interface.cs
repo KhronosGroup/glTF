@@ -107,10 +107,7 @@ namespace glTFLoader
 
         public static string SerializeModel(Gltf model)
         {
-            var json = JsonConvert.SerializeObject(model, Formatting.Indented, new JsonSerializerSettings
-            {
-                
-            });
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return json;
         }
 

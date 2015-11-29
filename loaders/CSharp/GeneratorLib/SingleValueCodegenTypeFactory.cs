@@ -19,8 +19,7 @@ namespace GeneratorLib
 
             if (schema.Format == "uri")
             {
-                returnType.Attributes = new CodeAttributeDeclarationCollection
-                {
+                returnType.Attributes.Add(
                     new CodeAttributeDeclaration(
                         "Newtonsoft.Json.JsonConverterAttribute",
                         new[]
@@ -33,8 +32,7 @@ namespace GeneratorLib
                                 })
                                 )
                         }
-                        )
-                };
+                        ));
                 switch (schema.UriType)
                 {
                     case UriType.Application:
@@ -121,12 +119,9 @@ namespace GeneratorLib
             {
                 if (schema.Enum != null)
                 {
-                    returnType.Attributes = new CodeAttributeDeclarationCollection
-                    {
-                        new CodeAttributeDeclaration(
-                            "Newtonsoft.Json.JsonConverterAttribute",
-                            new[] {new CodeAttributeArgument(new CodeTypeOfExpression(typeof (StringEnumConverter)))})
-                    };
+                    returnType.Attributes.Add(
+                        new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute",
+                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
                     returnType.CodeType = new CodeTypeReference(enumType.Name);

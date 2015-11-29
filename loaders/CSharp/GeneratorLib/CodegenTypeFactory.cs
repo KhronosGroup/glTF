@@ -9,16 +9,14 @@ namespace GeneratorLib
     {
         public static CodegenType MakeCodegenType(string name, Schema schema)
         {
-            var codegenType = InternalMakeCodegenType(name, schema);
+            var codegenType = InternalMakeCodegenType(Helpers.ParsePropertyName(name), schema);
 
             if (schema.Required)
             {
-                if (codegenType.Attributes == null)
-                {
-                    codegenType.Attributes = new CodeAttributeDeclarationCollection();
-                }
                 codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
             }
+
+            codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonPropertyAttribute)), new []{ new CodeAttributeArgument(new CodePrimitiveExpression(name)) }));
 
             return codegenType;
         }

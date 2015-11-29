@@ -11,12 +11,12 @@ namespace GeneratorLib
     {
         public CodeTypeReference CodeType { get; set; }
 
-        public CodeAttributeDeclarationCollection Attributes { get; set; }
+        public CodeAttributeDeclarationCollection Attributes { get; } = new CodeAttributeDeclarationCollection();
 
         public CodeExpression DefaultValue { get; set; }
 
-        public CodeTypeMemberCollection AdditionalMembers { get; set; } = new CodeTypeMemberCollection();
+        public CodeTypeMemberCollection AdditionalMembers { get; } = new CodeTypeMemberCollection();
 
-        public CodeStatementCollection SetStatements { get; set; } = new CodeStatementCollection();
+        public CodeStatementCollection SetStatements { get; } = new CodeStatementCollection();
     }
 }

@@ -35,6 +35,11 @@ namespace GeneratorLib
             return s.EndsWith(substringToRemove) ? s.Substring(0, s.Length - substringToRemove.Length) : s;
         }
 
+        public static string ParsePropertyName(string rawName)
+        {
+            return rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
+        }
+
         public static string ParseTitle(string rawTilte)
         {
             var words = rawTilte.ToLower().Split(' ');

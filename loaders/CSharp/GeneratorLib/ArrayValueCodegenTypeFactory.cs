@@ -25,18 +25,8 @@ namespace GeneratorLib
                 throw new NotImplementedException();
             }
 
-            var returnType = new CodegenType()
-            {
-                Attributes = new CodeAttributeDeclarationCollection
-                    {
-                        new CodeAttributeDeclaration(
-                            "Newtonsoft.Json.JsonConverterAttribute",
-                            new [] {
-                                new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter)))
-                            }
-                        )
-                    }
-            };
+            var returnType = new CodegenType();
+            returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new [] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (ArrayConverter))) }));
 
             if (Schema.Items.Type.Length > 1)
             {
@@ -160,7 +150,7 @@ namespace GeneratorLib
                 {
                     returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(Schema.Items.Title) + "[]");
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
-                    returnType.Attributes = null;
+                    returnType.Attributes.Clear();
 
                     if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != null || Schema.Items.MaxLength != null)
                     {
