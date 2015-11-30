@@ -54,6 +54,8 @@ namespace glTFLoader
 
             var model = JsonConvert.DeserializeObject<Gltf>(Encoding.UTF8.GetString(bytes, 20, sceneLength));
 
+            var segmentsToRemove = new List<string>();
+
             // KHR_binary_glTF: URIs
             if (model.Images != null)
             {
@@ -63,8 +65,10 @@ namespace glTFLoader
                     {
                         var extension = (JObject)image.Extensions["KHR_binary_glTF"];
                         var bufferViewName = extension["bufferView"].Value<string>();
+                        segmentsToRemove.Add(bufferViewName);
                         var view = model.BufferViews[bufferViewName];
                         image.Uri = new Bitmap(new MemoryStream(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength));
+
                         var width = extension["width"].Value<long>();
                         if (width != image.Uri.Width)
                         {
@@ -96,13 +100,54 @@ namespace glTFLoader
                     {
                         var extension = (JObject)shader.Extensions["KHR_binary_glTF"];
                         var bufferViewName = extension["bufferView"].Value<string>();
+                        segmentsToRemove.Add(bufferViewName);
                         var view = model.BufferViews[bufferViewName];
                         shader.Uri = Encoding.UTF8.GetString(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength);
                     }
                 }
             }
 
+            var arraySegmentsToRemove =
+                segmentsToRemove.Select(s => model.BufferViews[s])
+                    .Select(v => new ArraySegment<byte>(bytes, bufferContents.Offset + v.ByteOffset, v.ByteLength))
+                    .ToList();
+
+            while (arraySegmentsToRemove.Any(subSegment => bufferContents.TryRemoveFromEnd(subSegment, out bufferContents)))
+            {
+            }
+            if (model.Buffers.ContainsKey("KHR_binary_glTF"))
+            {
+                model.Buffers["KHR_binary_glTF"].Uri = bufferContents.ToArray();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            foreach (var viewName in segmentsToRemove)
+            {
+                model.BufferViews.Remove(viewName);
+            }
             return model;
+        }
+
+        private static bool IsAtEnd<T>(this ArraySegment<T> subSegment, ArraySegment<T> longSegment)
+        {
+            if (subSegment.Array != longSegment.Array) return false;
+            if (subSegment.Offset + subSegment.Count == longSegment.Offset + longSegment.Count && longSegment.Offset <= subSegment.Offset) return true;
+            return false;
+        }
+
+        private static bool TryRemoveFromEnd<T>(this ArraySegment<T> longSegment, ArraySegment<T> subSegment, out ArraySegment<T> newSegment)
+        {
+            if (!subSegment.IsAtEnd(longSegment))
+            {
+                newSegment = longSegment;
+                return false;
+            }
+            
+            newSegment = new ArraySegment<T>(longSegment.Array, longSegment.Offset, longSegment.Count - subSegment.Count);
+
+            return true;
         }
 
         public static string SerializeModel(Gltf model)
@@ -115,6 +160,7 @@ namespace glTFLoader
         {
             File.WriteAllText(path, SerializeModel(model));
         }
+
     }
 
 
