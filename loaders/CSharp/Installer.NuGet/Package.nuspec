@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>glTFLoader</id>
+    <version>1.0.0.1</version>
+    <title>glTF Loader</title>
+    <authors>Matthew and Xueru McMullan</authors>
+    <owners>Matthew and Xueru McMullan</owners>
+    <licenseUrl>https://github.com/KhronosGroup/glTF/blob/master/loaders/CSharp/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/KhronosGroup/glTF/blob/master/loaders/CSharp/README.md</projectUrl>
+    <iconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>C# reference loader for glTF</description>
+    <releaseNotes>None.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>glTF loader openGL C#</tags>
+  </metadata>
+</package>

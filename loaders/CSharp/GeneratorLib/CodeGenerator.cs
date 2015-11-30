@@ -158,9 +158,9 @@ namespace GeneratorLib
 
         private void AddProperty(CodeTypeDeclaration target, string rawName, Schema schema)
         {
-            var name = rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
+            var name = Helpers.ParsePropertyName(rawName);
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
-            var codegenType = CodegenTypeFactory.MakeCodegenType(name, schema);
+            var codegenType = CodegenTypeFactory.MakeCodegenType(rawName, schema);
             target.Members.AddRange(codegenType.AdditionalMembers);
             
             var propertyBackingVariable = new CodeMemberField

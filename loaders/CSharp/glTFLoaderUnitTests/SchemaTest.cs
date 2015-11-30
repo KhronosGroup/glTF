@@ -24,8 +24,7 @@ namespace glTFLoaderUnitTests
                     {
                         try
                         {
-                            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.GetDirectoryName(file)));
-                            var deserializedFile = JsonConvert.DeserializeObject<Gltf>(File.ReadAllText(file));
+                            var deserializedFile = Interface.LoadModel(file);
                             Assert.IsNotNull(deserializedFile);
                         }
                         catch (Exception e)
@@ -77,8 +76,30 @@ namespace glTFLoaderUnitTests
                     {
                         try
                         {
-                            CallContext.LogicalSetData("UriRootPath", Path.GetFullPath(Path.GetDirectoryName(file)));
-                            var deserializedFile = JsonConvert.DeserializeObject<Gltf>(File.ReadAllText(file));
+                            var deserializedFile = Interface.LoadModel(file);
+                            Assert.IsNotNull(deserializedFile);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(file, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void BinarySchemaLoad()
+        {
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            {
+                foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF-Binary")))
+                {
+                    if (file.EndsWith("glb"))
+                    {
+                        try
+                        {
+                            var deserializedFile = Interface.LoadModel(file);
                             Assert.IsNotNull(deserializedFile);
                         }
                         catch (Exception e)

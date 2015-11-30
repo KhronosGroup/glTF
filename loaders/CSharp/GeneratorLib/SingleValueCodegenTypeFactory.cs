@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using glTFLoader.Shared;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace GeneratorLib
@@ -18,8 +19,7 @@ namespace GeneratorLib
 
             if (schema.Format == "uri")
             {
-                returnType.Attributes = new CodeAttributeDeclarationCollection
-                {
+                returnType.Attributes.Add(
                     new CodeAttributeDeclaration(
                         "Newtonsoft.Json.JsonConverterAttribute",
                         new[]
@@ -32,8 +32,7 @@ namespace GeneratorLib
                                 })
                                 )
                         }
-                        )
-                };
+                        ));
                 switch (schema.UriType)
                 {
                     case UriType.Application:
@@ -105,10 +104,13 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((float) (double) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else
+                else if (schema.Required == false)
                 {
+                    returnType.CodeType = new CodeTypeReference(typeof(float?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                    return returnType;
                 }
+
                 returnType.CodeType = new CodeTypeReference(typeof(float));
                 return returnType;
             }
@@ -117,6 +119,9 @@ namespace GeneratorLib
             {
                 if (schema.Enum != null)
                 {
+                    returnType.Attributes.Add(
+                        new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute",
+                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
                     returnType.CodeType = new CodeTypeReference(enumType.Name);
@@ -177,10 +182,12 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((int) (long) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else
+                else if (schema.Required == false)
                 {
-                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
-                }
+                    returnType.CodeType = new CodeTypeReference(typeof (int?));
+                    returnType.AdditionalMembers.Add( Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                    return returnType;
+                }    
 
                 returnType.CodeType = new CodeTypeReference(typeof(int));
                 return returnType;
