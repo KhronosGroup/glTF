@@ -78,14 +78,6 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 			param.uniform = this.material.uniforms[uniform];
 			this.semantics[pname] = param;
 
-			if (param.semantic == "JOINTMATRIX") {
-				var m4v = param.uniform.value;
-				for (var mi = 0; mi < m4v.length; mi++) {
-					var inverse = this.object.skeleton.boneInverses[mi];
-					m4v[mi].copy(this.joints[mi].matrixWorld).multiply(inverse);
-				}
-			}
-			//console.log("parameter:", pname, param );
 		}
 	}
 
@@ -100,15 +92,15 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	        switch (semantic.semantic) {
 	            case "MODELVIEW" :
 	            	var m4 = semantic.uniform.value;
-	            	m4.multiplyMatrices( camera.matrixWorldInverse, 
-	            		semantic.sourceObject.matrixWorld );
+	            	m4.multiplyMatrices(camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld);
 	                break;
 
 	            case "MODELVIEWINVERSETRANSPOSE" :
 	            	var m3 = semantic.uniform.value;
-	            	this.m4.multiplyMatrices( camera.matrixWorldInverse, 
-	            		semantic.sourceObject.matrixWorld );
-					m3.getNormalMatrix( this.m4 );
+	            	this.m4.multiplyMatrices(camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld);
+					m3.getNormalMatrix(this.m4);
 	                break;
 
 	            case "PROJECTION" :
@@ -120,8 +112,9 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	            
 	            	var m4v = semantic.uniform.value;
 					for (var mi = 0; mi < m4v.length; mi++) {
-						var inverse = this.object.skeleton.boneInverses[mi];
-						m4v[mi].copy(this.joints[mi].matrixWorld).multiply(inverse);
+						m4v[mi].getInverse(semantic.sourceObject.matrixWorld).
+							multiply(this.joints[mi].matrixWorld).
+							multiply(this.object.skeleton.boneInverses[mi]);
 					}
 	            
 	                //console.log("Joint:", semantic)
