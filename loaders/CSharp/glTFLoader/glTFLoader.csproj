@@ -79,6 +79,9 @@
     <Compile Include="Schema\Texture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Package.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoader_Shared", "glTFLo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer.NuGet", "Installer.NuGet\Installer.NuGet.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerNuget", "InstallerNuget\InstallerNuget.csproj", "{1438AFD1-D3CA-4F00-AFB5-4804AFF5FF00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1438AFD1-D3CA-4F00-AFB5-4804AFF5FF00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1438AFD1-D3CA-4F00-AFB5-4804AFF5FF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1438AFD1-D3CA-4F00-AFB5-4804AFF5FF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1438AFD1-D3CA-4F00-AFB5-4804AFF5FF00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
