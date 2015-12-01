@@ -112,6 +112,10 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	            
 	            	var m4v = semantic.uniform.value;
 					for (var mi = 0; mi < m4v.length; mi++) {
+						// So it goes like this:
+						// SkinnedMesh world matrix is already baked into MODELVIEW;
+						// ransform joints to local space,
+						// then transform using joint's inverse
 						m4v[mi].getInverse(semantic.sourceObject.matrixWorld).
 							multiply(this.joints[mi].matrixWorld).
 							multiply(this.object.skeleton.boneInverses[mi]);
