@@ -153,12 +153,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         s = s.replace(r, 'modelViewMatrix');
                     }
                     break;
-                case "MODELVIEWINVERSETRANSPOSE" :
+/*                case "MODELVIEWINVERSETRANSPOSE" :
                     if (!param.node) {
                        s = s.replace(r, 'normalMatrix');
                     }
                     break;
-                case "PROJECTION" :
+*/                case "PROJECTION" :
                     if (!param.node) {
                         s = s.replace(r, 'projectionMatrix');
                     }
