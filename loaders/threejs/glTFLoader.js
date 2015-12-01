@@ -153,12 +153,12 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         s = s.replace(r, 'modelViewMatrix');
                     }
                     break;
-                case "MODELVIEWINVERSETRANSPOSE" :
+/*                case "MODELVIEWINVERSETRANSPOSE" :
                     if (!param.node) {
                        s = s.replace(r, 'normalMatrix');
                     }
                     break;
-                case "PROJECTION" :
+*/                case "PROJECTION" :
                     if (!param.node) {
                         s = s.replace(r, 'projectionMatrix');
                     }
@@ -883,7 +883,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 this.lights = [];
                 this.animations = [];
                 this.joints = {};
-                this.skeltons = {};
                 THREE.GLTFLoaderUtils.init();
                 glTFParser.load.call(this, userInfo, options);
             }
@@ -1540,7 +1539,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         handleExtension: {
             value: function(entryID, description, userInfo) {
 
-                console.log("Extension!", entryID, description);
+                console.log("Extension", entryID, description);
 
                 switch (entryID) {
                     case 'KHR_materials_common' :
@@ -1578,12 +1577,14 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             
                 var glTF = node.glTF;
                 var skin = glTF.instanceSkin;
+                var skeletons = glTF.skeletons;
                 if (skin) {
-                    glTF.skeletons.forEach(function(skeleton) {
+                    skeletons.forEach(function(skeleton) {
                         var nodeEntry = this.resources.getEntry(skeleton);
                         if (nodeEntry) {
 
                             var rootSkeleton = nodeEntry.object;
+                            node.add(rootSkeleton);
 
                             var dobones = true;
 
@@ -1599,7 +1600,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     }
 
                                     threeMesh = new THREE.SkinnedMesh(primitive.geometry.geometry, material, false);
-                                    threeMesh.add(rootSkeleton);
                                     
                                     var geometry = primitive.geometry.geometry;
                                     var j;
@@ -1626,9 +1626,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                         
                                         var jointNames = skin.jointNames;
                                         var joints = [];
-                                        threeMesh.skeleton.bones = [];
-                                        threeMesh.skeleton.boneInverses = [];
-                                        threeMesh.skeleton.boneMatrices = new Float32Array( 16 * jointNames.length );
+                                        var bones = [];
+                                        var boneInverses = [];
                                         var i, len = jointNames.length;
                                         for (i = 0; i < len; i++) {
                                             var jointName = jointNames[i];
@@ -1638,7 +1637,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                                 
                                                 joint.skin = threeMesh;
                                                 joints.push(joint);
-                                                threeMesh.skeleton.bones.push(joint);
+                                                bones.push(joint);
                                                 
                                                 var m = skin.inverseBindMatrices;
                                                 var mat = new THREE.Matrix4().set(
@@ -1647,13 +1646,19 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                                         m[i * 16 + 2],  m[i * 16 + 6],  m[i * 16 + 10], m[i * 16 + 14],
                                                         m[i * 16 + 3],  m[i * 16 + 7],  m[i * 16 + 11], m[i * 16 + 15]
                                                     );
-                                                threeMesh.skeleton.boneInverses.push(mat);
-                                                threeMesh.skeleton.pose();
+                                                boneInverses.push(mat);
                                                 
                                             } else {
                                                 console.log("WARNING: jointName:"+jointName+" cannot be found in skeleton:"+skeleton);
                                             }
                                         }
+
+                                        threeMesh.bind( new THREE.Skeleton( bones, 
+                                            boneInverses, false ), skin.bindShapeMatrix );
+
+                                        //threeMesh.bindMode = "detached";
+                                        //threeMesh.normalizeSkinWeights();
+                                        threeMesh.pose();
                                     }
                                     
                                     if (threeMesh) {

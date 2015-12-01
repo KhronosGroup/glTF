@@ -78,13 +78,6 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 			param.uniform = this.material.uniforms[uniform];
 			this.semantics[pname] = param;
 
-			if (param.semantic == "JOINTMATRIX") {
-				var m4v = param.uniform.value;
-				for (var vi = 0; vi < m4v.length; vi++) {
-					m4v[vi] = this.joints[vi].matrix;
-				}
-			}
-			//console.log("parameter:", pname, param );
 		}
 	}
 
@@ -99,15 +92,15 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	        switch (semantic.semantic) {
 	            case "MODELVIEW" :
 	            	var m4 = semantic.uniform.value;
-	            	m4.multiplyMatrices( camera.matrixWorldInverse, 
-	            		semantic.sourceObject.matrixWorld );
+	            	m4.multiplyMatrices(camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld);
 	                break;
 
 	            case "MODELVIEWINVERSETRANSPOSE" :
 	            	var m3 = semantic.uniform.value;
-	            	this.m4.multiplyMatrices( camera.matrixWorldInverse, 
-	            		semantic.sourceObject.matrixWorld );
-					m3.getNormalMatrix( this.m4 );
+	            	this.m4.multiplyMatrices(camera.matrixWorldInverse, 
+	            		semantic.sourceObject.matrixWorld);
+					m3.getNormalMatrix(this.m4);
 	                break;
 
 	            case "PROJECTION" :
@@ -118,9 +111,15 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 	            case "JOINTMATRIX" :
 	            
 	            	var m4v = semantic.uniform.value;
-	            	for (var mi = 0; mi < m4v.length; mi++) {
-	            		m4v[mi].copy(this.joints[mi].matrixWorld);
-	            	}
+					for (var mi = 0; mi < m4v.length; mi++) {
+						// So it goes like this:
+						// SkinnedMesh world matrix is already baked into MODELVIEW;
+						// ransform joints to local space,
+						// then transform using joint's inverse
+						m4v[mi].getInverse(semantic.sourceObject.matrixWorld).
+							multiply(this.joints[mi].matrixWorld).
+							multiply(this.object.skeleton.boneInverses[mi]);
+					}
 	            
 	                //console.log("Joint:", semantic)
 	                break;
