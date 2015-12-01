@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C2F2E13B-594F-4592-A2D4-F44BBCE65F90}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>glTFLoader</RootNamespace>
+    <AssemblyName>glTFLoader</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interface.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schema\Accessor.cs" />
+    <Compile Include="Schema\Animation.cs" />
+    <Compile Include="Schema\Asset.cs" />
+    <Compile Include="Schema\Buffer.cs" />
+    <Compile Include="Schema\Bufferview.cs" />
+    <Compile Include="Schema\Camera.cs" />
+    <Compile Include="Schema\Channel.cs" />
+    <Compile Include="Schema\ChildOfAGltfRootProperty.cs" />
+    <Compile Include="Schema\Extension.cs" />
+    <Compile Include="Schema\Functions.cs" />
+    <Compile Include="Schema\Gltf.cs" />
+    <Compile Include="Schema\GltfProperty.cs" />
+    <Compile Include="Schema\Image.cs" />
+    <Compile Include="Schema\Material.cs" />
+    <Compile Include="Schema\Mesh.cs" />
+    <Compile Include="Schema\Node.cs" />
+    <Compile Include="Schema\Orthographic.cs" />
+    <Compile Include="Schema\Parameter.cs" />
+    <Compile Include="Schema\Perspective.cs" />
+    <Compile Include="Schema\Primitive.cs" />
+    <Compile Include="Schema\Profile.cs" />
+    <Compile Include="Schema\Program.cs" />
+    <Compile Include="Schema\Sampler.cs" />
+    <Compile Include="Schema\Scene.cs" />
+    <Compile Include="Schema\Shader.cs" />
+    <Compile Include="Schema\Skin.cs" />
+    <Compile Include="Schema\States.cs" />
+    <Compile Include="Schema\Target.cs" />
+    <Compile Include="Schema\Technique.cs" />
+    <Compile Include="Schema\Texture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\glTFLoader_Shared\glTFLoader_Shared.csproj">
+      <Project>{976ef0aa-4835-4b60-88b8-bf2fa02b571c}</Project>
+      <Name>glTFLoader_Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
