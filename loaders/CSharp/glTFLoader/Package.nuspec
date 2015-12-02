@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>glTFLoader</id>
-    <version>1.0.0.2</version>
+    <version>1.0.0.3</version>
     <title>glTF Loader</title>
     <authors>Matthew and Xueru McMullan</authors>
     <owners>Matthew and Xueru McMullan</owners>
