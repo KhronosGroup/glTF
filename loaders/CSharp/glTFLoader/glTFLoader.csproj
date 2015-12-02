@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C2F2E13B-594F-4592-A2D4-F44BBCE65F90}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -86,6 +86,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Generator\Generator.csproj">
+      <Project>{ddd005c7-d63d-4707-9464-1bcb9fd00454}</Project>
+      <Name>Generator</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\glTFLoader_Shared\glTFLoader_Shared.csproj">
       <Project>{976ef0aa-4835-4b60-88b8-bf2fa02b571c}</Project>
       <Name>glTFLoader_Shared</Name>
