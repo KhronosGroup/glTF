@@ -49,6 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema\Accessor.cs" />
     <Compile Include="Schema\Animation.cs" />
+    <Compile Include="Schema\AnimationSampler.cs" />
     <Compile Include="Schema\Asset.cs" />
     <Compile Include="Schema\Buffer.cs" />
     <Compile Include="Schema\Bufferview.cs" />

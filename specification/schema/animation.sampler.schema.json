@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "sampler",
+    "title" : "animation sampler",
     "type" : "object",
     "description" : "Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
