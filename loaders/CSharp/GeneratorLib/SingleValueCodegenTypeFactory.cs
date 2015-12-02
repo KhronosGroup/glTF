@@ -139,7 +139,7 @@ namespace GeneratorLib
                         }
                         throw new InvalidDataException("The default value is not in the enum list");
                     }
-                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+
                     return returnType;
                 }
 
@@ -168,10 +168,6 @@ namespace GeneratorLib
                     {
                         returnType.DefaultValue = GetEnumField(enumType, (int) (long) schema.Default);
                         returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
-                    }
-                    else
-                    {
-                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     }
 
                     return returnType;
@@ -205,9 +201,11 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((bool) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else
+                else if (!schema.Required)
                 {
+                    returnType.CodeType = new CodeTypeReference(typeof(bool?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                    return returnType;
                 }
                 returnType.CodeType = new CodeTypeReference(typeof(bool));
                 return returnType;

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>glTFLoader</id>
-    <version>1.0.0.1</version>
+    <version>1.0.0.3</version>
     <title>glTF Loader</title>
     <authors>Matthew and Xueru McMullan</authors>
     <owners>Matthew and Xueru McMullan</owners>
@@ -14,5 +14,8 @@
     <releaseNotes>None.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>glTF loader openGL C#</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
+    </dependencies>
   </metadata>
 </package>

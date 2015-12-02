@@ -31,6 +31,6 @@ loaders/CSharp/glTFLoader_Shared/bin/
 loaders/CSharp/glTFLoader_Shared/obj/
 loaders/CSharp/glTFLoaderUnitTests/bin/
 loaders/CSharp/glTFLoaderUnitTests/obj/
-loaders/CSharp/Installer.NuGet/bin/
-loaders/CSharp/Installer.NuGet/obj/
+loaders/CSharp/InstallerNuGet/bin/
+loaders/CSharp/InstallerNuGet/obj/
 loaders/CSharp/packages/
