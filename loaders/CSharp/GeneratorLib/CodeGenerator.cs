@@ -205,6 +205,7 @@ namespace GeneratorLib
             var codegenType = CodegenTypeFactory.MakeCodegenType(name, schema);
             attributes = codegenType.Attributes;
             defaultValue = codegenType.DefaultValue;
+            target.Members.AddRange(codegenType.AdditionalMembers);
 
             return codegenType.CodeType;
         }

@@ -208,7 +208,7 @@ namespace GeneratorUnitTests
             typeRef1.Name = "number";
             Schema.Type = new TypeReference[] { typeRef1 };
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectFloatType", out attributes, out defaultValue);
-            Assert.AreEqual(typeof(float).ToString(), result.BaseType);
+            Assert.AreEqual(typeof(float).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace GeneratorUnitTests
             typeRef1.Name = "integer";
             Schema.Type = new TypeReference[] { typeRef1 };
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectIntegerType", out attributes, out defaultValue);
-            Assert.AreEqual(typeof(int).ToString(), result.BaseType);
+            Assert.AreEqual(typeof(int).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
@@ -348,7 +348,7 @@ namespace GeneratorUnitTests
             typeRef1.Name = "boolean";
             Schema.Type = new TypeReference[] { typeRef1 };
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectBoolType", out attributes, out defaultValue);
-            Assert.AreEqual(typeof(bool).ToString(), result.BaseType);
+            Assert.AreEqual(typeof(bool).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
@@ -389,26 +389,6 @@ namespace GeneratorUnitTests
             Schema.Type = new TypeReference[] { typeRef1 };
             Schema.Items = new Schema();
             Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ArrayItemTypeIsNullException", out attributes, out defaultValue));
-        }
-
-        [Test]
-        public void ArrayItemHasMinHasMaxTest()
-        {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "integer";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            Schema.MinItems = 1;
-            Schema.MaxItems = 16;
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ArrayItemHasMinHasMax", out attributes, out defaultValue);
-            Assert.AreEqual((int)Schema.MinItems, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)(attributes[0].Arguments[1].Value)).Initializers[0])).Value);
-            Assert.AreEqual((int)Schema.MaxItems, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)(attributes[0].Arguments[1].Value)).Initializers[1])).Value);
         }
 
         [Test]
