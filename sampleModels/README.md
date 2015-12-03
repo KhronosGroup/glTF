@@ -12,6 +12,7 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [box](box)                             | ![](box/screenshot/screenshot.png)               | One mesh and one material. Start with this. |
 | [boxWithoutIndices](boxWithoutIndices) | ![](boxWithoutIndices/screenshot/screenshot.png) | Box without indices for testing the `drawArrays` path. |
 | [boxTextured](boxTextured)             | ![](boxTextured/screenshot/screenshot.png)       | Box with one texture. Start with this to test textures. |
+| [boxSemantics](boxSemantics)             | ![](boxSemantics/screenshot/screenshot.png)       | Includes extra uniforms to test all uniform semantics. |
 | [duck](duck)                           | ![](duck/screenshot/screenshot.png)              | The COLLADA duck. One texture. |
 | [boxAnimated](boxAnimated)             | ![](boxAnimated/screenshot/screenshot.png)       | Rotation and Translation Animations. Start with this to test animations. |
 | [CesiumMilkTruck](CesiumMilkTruck)     | ![](CesiumMilkTruck/screenshot/screenshot.png)   | Textured. Multiple nodes/meshes. Animations. |
