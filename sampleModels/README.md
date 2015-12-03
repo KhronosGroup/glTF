@@ -1,9 +1,11 @@
-Each sample model is provided in the following formats:
+Sample models are provided in as many of the following formats as possible:
 * glTF (.gltf) with separate resources: .bin (geometry, animation, skins), .glsl (shaders), and image files
 * glTF (.gltf) with embedded resources
 * Binary glTF (.glb) using the [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/blob/master/extensions/Khronos/KHR_binary_glTF/README.md) extension
 * glTF (.gltf) using the [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/blob/master/extensions/Khronos/KHR_materials_common/README.md) extension
-* Original COLLADA (.dae)
+* Original COLLADA (.dae) or other source format
+
+Sample models help the glTF ecosystem, if you are able to contribute sample models, see the [Contributing Sample Models](#contributing-sample-models) section below.
 
 See the `README.txt` in each model's directory for usage restrictions.
 
@@ -21,3 +23,15 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [CesiumMan](CesiumMan)                 | ![](CesiumMan/screenshot/screenshot.png)         | Textured. Animations. Skins. |
 | [monster](monster)                     | ![](monster/screenshot/screenshot.png)           | Textured. Animations. Skins. |
 | [brainsteam](brainsteam)               | ![](brainsteam/screenshot/screenshot.png)        | Animations. Skins. |
+
+## Contributing Sample Models
+
+We appreciate sample model contributions; they help ensure a consistent glTF ecosystem.
+
+To contribute a model, open a pull request with:
+* A new subdirectory containing
+   * The model in as many glTF variations as possible (using the same directory structure as the others ([example](example))).  Tools for converting to glTF are [here](https://github.com/KhronosGroup/glTF#converters).
+   * A README.txt with any usage restrictions.
+* An update to this README.md to add the new model to the above table.
+
+If you have any questions, submit an [issue](https://github.com/KhronosGroup/glTF/issues).
