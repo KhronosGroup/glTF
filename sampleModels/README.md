@@ -17,4 +17,4 @@ See the `README.txt` in each model's directory for usage restrictions.
 | [RiggedFigure](RiggedFigure)         | ![](RiggedFigure/screenshot/screenshot.png)    | Animations. Skins. |
 | [CesiumMan](CesiumMan)               | ![](CesiumMan/screenshot/screenshot.png)       | Textured. Animations. Skins. |
 | [monster](monster)                   | ![](monster/screenshot/screenshot.png)         | Textured. Animations. Skins. |
-| [brainsteam](brainsteam)             | ![](brainsteam/screenshot/screenshot.png)      | Textured. Animations. Skins. |
+| [brainsteam](brainsteam)             | ![](brainsteam/screenshot/screenshot.png)      | Animations. Skins. |
