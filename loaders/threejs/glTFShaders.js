@@ -86,6 +86,14 @@ THREE.glTFShader.prototype.bindParameters = function(scene) {
 // Update - update all the uniform values
 THREE.glTFShader.prototype.update = function(scene, camera) {
 
+	// update scene graph
+
+	scene.updateMatrixWorld();
+
+	// update camera matrices and frustum
+	camera.updateMatrixWorld();
+	camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+
 	for (var sname in this.semantics) {
 		var semantic = this.semantics[sname];
         if (semantic && semantic.sourceObject) {

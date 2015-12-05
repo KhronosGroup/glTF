@@ -148,22 +148,22 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 case "TEXCOORD_0" :
                     s = s.replace(r, 'uv');
                     break;
-                case "MODELVIEW" :
+/*                case "MODELVIEW" :
                     if (!param.node) {
                         s = s.replace(r, 'modelViewMatrix');
                     }
                     break;
-/*                case "MODELVIEWINVERSETRANSPOSE" :
+                case "MODELVIEWINVERSETRANSPOSE" :
                     if (!param.node) {
                        s = s.replace(r, 'normalMatrix');
                     }
                     break;
-*/                case "PROJECTION" :
+                case "PROJECTION" :
                     if (!param.node) {
                         s = s.replace(r, 'projectionMatrix');
                     }
                     break;
-                case "WEIGHT" :
+ */               case "WEIGHT" :
                     s = s.replace(r, 'skinWeight');
                     break;
                 case "JOINT" :
@@ -176,6 +176,26 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         }
 
         return s;
+    }
+
+
+    function replaceShaderUniforms(material) {
+
+        var shaderParams = material.params.technique.parameters;
+        var shaderUniforms = material.params.technique.uniforms;
+
+        for (var uniform in material.params.uniforms) {
+            var pname = shaderUniforms[uniform];
+            var shaderParam = shaderParams[pname];
+            var semantic = shaderParam.semantic;
+            if (semantic && semantic == "MODELVIEWINVERSETRANSPOSE" &&
+                uniform != "normalMatrix") {
+                material.params.uniforms["normalMatrix"] = 
+                    material.params.uniforms[uniform];
+                delete material.params.uniforms[uniform];
+            }
+        }
+
     }
 
     function replaceShaderSemantics(material) {
@@ -192,6 +212,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             theLoader.shaders[material.params.vertexShader] = vertexShader;
         }
 
+        //replaceShaderUniforms(material);
     }
 
     function createShaderMaterial(material, geometry) {
