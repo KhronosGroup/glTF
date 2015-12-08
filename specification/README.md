@@ -2518,7 +2518,7 @@ The IDs of the meshes in this node.  Multiple meshes are allowed so each can sha
 The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.
 
 * **Type**: `number[4]`
-* **Required**: No, default: `[0,0,0,0.1]`
+* **Required**: No, default: `[0,0,0,1]`
 
 ### node.scale
 
