@@ -100,7 +100,7 @@ THREE.glTFShader.prototype.update = function(scene, camera) {
 
 	for (var sname in this.semantics) {
 		var semantic = this.semantics[sname];
-        if (semantic && semantic.sourceObject) {
+        if (semantic) {
 	        switch (semantic.semantic) {
 	            case "MODELVIEW" :
 	            	var m4 = semantic.uniform.value;

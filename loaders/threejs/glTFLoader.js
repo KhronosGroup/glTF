@@ -171,11 +171,22 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             return new THREE.MeshPhongMaterial;
         }
 
+        // clone most uniforms but then clobber textures, we want them to 
+        // be reused
+        var uniforms = THREE.UniformsUtils.clone(material.params.uniforms);
+        for (uniform in material.params.uniforms) {
+            var src = material.params.uniforms[uniform];
+            var dst = uniforms[uniform];
+            if (dst.type == "t") {
+                dst.value = src.value;
+            }            
+        }
+
         var shaderMaterial = new THREE.RawShaderMaterial( {
 
             fragmentShader: fragmentShader,
             vertexShader: vertexShader,
-            uniforms: material.params.uniforms,
+            uniforms: uniforms,
             transparent: material.params.transparent,
 
         } );
@@ -613,7 +624,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
 
             if (!that.skin) {
-                console.log ("New mesh")
                 var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
                 threeMesh.castShadow = true;
                 threeNode.add(threeMesh);
@@ -1080,7 +1090,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     var description = technique.description;
 
                     if (++description.refCount > 1) {
-                        console.log("refcount", description.refCount);
+                        //console.log("refcount", description.refCount);
                     }
                     
                     var programID = description.program;
@@ -1459,7 +1469,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         handleExtension: {
             value: function(entryID, description, userInfo) {
 
-                console.log("Extension", entryID, description);
+                // console.log("Extension", entryID, description);
 
                 switch (entryID) {
                     case 'KHR_materials_common' :
