@@ -934,7 +934,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                         switch (ptype) {
                             case WebGLRenderingContext.FLOAT :
                                 utype = "f";
-                                uvalue = value;
+                                uvalue = shaderParam.value;
                                 if (pname == "transparency") {
                                     var USE_A_ONE = true; // for now, hack because file format isn't telling us
                                     var opacity =  USE_A_ONE ? value : (1.0 - value);
