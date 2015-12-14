@@ -624,6 +624,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
 
             if (!that.skin) {
+                console.log ("New mesh")
                 var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
                 threeMesh.castShadow = true;
                 threeNode.add(threeMesh);
