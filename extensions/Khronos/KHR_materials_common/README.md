@@ -100,15 +100,13 @@ When the value of `technique` is `BLINN`, this defines a material shaded accordi
 This equation is complex and detailed via the ACM, so it is not detailed here. Refer to “Models of Light
 Reflection for Computer Synthesized Pictures,” SIGGRAPH 77, pp 192-198 [http://portal.acm.org/citation.cfm?id=563893](http://portal.acm.org/citation.cfm?id=563893).
 
-To maximize application compatibility, it is suggested that developers use the Blinn-Torrance-Sparrow model for
-`shininess` values in the range of 0 to 1. For `shininess` values greater than 1.0, it is recommended to instead use the Blinn-Phong approximation:
+The following code illustrates the basic computation:
 
 ```
 color = <emission> + <ambient> * al + <diffuse> * max(N * L, 0) + <specular> * max(H * N, 0)^<shininess>
 ```
 
-
-where:
+where
 
 * `al` – A constant amount of ambient light contribution coming from the scene, i.e. the sum of all ambient light values.
 * `N` – Normal vector
@@ -117,6 +115,8 @@ where:
 * `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using the
 equation H= normalize(I+L)
 
+The `shininess` exponent is typically expected to be in a range of [0, 128], as in the OpenGL fixed function pipeline (larger exponents are still possible, though).
+However, some exporters might want to use a normalized range [0,1]. Therefore, to maximize application compatibility, it is suggested that `shininess` values smaller than 1 get mapped to the range [1,128].
 
 Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
 
@@ -157,6 +157,8 @@ where:
 * `L` – Light vector
 * `I` – Eye vector
 * `R` – Perfect reflection vector (reflect (L around N))
+
+For the handling of the specular exponent parameter, see the section about the [Blinn](#blinn) lighting model.
 
 Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a yellow diffuse color.
 
