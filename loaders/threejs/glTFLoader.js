@@ -93,29 +93,13 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     }
 
     function replaceShaderDefinitions(shader, material) {
-/*        var s = shader;
-        s = s.replace(/a_position/g, 'position');
-        s = s.replace(/a_normal/g, 'normal');
-        s = s.replace(/a_texcoord0/g, 'uv');
-        s = s.replace(/u_normalMatrix/g, 'normalMatrix');
-        s = s.replace(/u_modelViewMatrix/g, 'modelViewMatrix');
-        s = s.replace(/u_projectionMatrix/g, 'projectionMatrix');
-        return s;*/
 
+        // Three.js seems too dependent on attribute names so globally
+        // replace those in the shader code
         var program = material.params.program;
         var shaderParams = material.params.technique.parameters;
-        var shaderUniforms = material.params.technique.uniforms;
         var shaderAttributes = material.params.technique.attributes;
         var params = {};
-
-        for (var uniform in material.params.uniforms) {
-            var pname = shaderUniforms[uniform];
-            var shaderParam = shaderParams[pname];
-            var semantic = shaderParam.semantic;
-            if (semantic) {
-                params[uniform] = shaderParam;
-            }
-        }
 
         for (var attribute in material.params.attributes) {
             var pname = shaderAttributes[attribute];
@@ -133,9 +117,6 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             var param = params[pname];
             var semantic = param.semantic;
 
-            // THIS: for (n in WebGLRenderingContext) { z = WebGLRenderingContext[n]; idx[z] = n; }
-            //console.log("shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
-
             r = eval("/" + pname + "/g");
             
             switch (semantic) {
@@ -148,22 +129,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 case "TEXCOORD_0" :
                     s = s.replace(r, 'uv');
                     break;
-/*                case "MODELVIEW" :
-                    if (!param.node) {
-                        s = s.replace(r, 'modelViewMatrix');
-                    }
-                    break;
-                case "MODELVIEWINVERSETRANSPOSE" :
-                    if (!param.node) {
-                       s = s.replace(r, 'normalMatrix');
-                    }
-                    break;
-                case "PROJECTION" :
-                    if (!param.node) {
-                        s = s.replace(r, 'projectionMatrix');
-                    }
-                    break;
- */               case "WEIGHT" :
+               case "WEIGHT" :
                     s = s.replace(r, 'skinWeight');
                     break;
                 case "JOINT" :
@@ -178,33 +144,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         return s;
     }
 
-
-    function replaceShaderUniforms(material) {
-
-        var shaderParams = material.params.technique.parameters;
-        var shaderUniforms = material.params.technique.uniforms;
-
-        for (var uniform in material.params.uniforms) {
-            var pname = shaderUniforms[uniform];
-            var shaderParam = shaderParams[pname];
-            var semantic = shaderParam.semantic;
-            if (semantic && semantic == "MODELVIEWINVERSETRANSPOSE" &&
-                uniform != "normalMatrix") {
-                material.params.uniforms["normalMatrix"] = 
-                    material.params.uniforms[uniform];
-                delete material.params.uniforms[uniform];
-            }
-        }
-
-    }
-
     function replaceShaderSemantics(material) {
-
-        var fragmentShader = theLoader.shaders[material.params.fragmentShader];
-        if (fragmentShader) {
-            fragmentShader = replaceShaderDefinitions(fragmentShader, material);
-            theLoader.shaders[material.params.fragmentShader] = fragmentShader;
-        }
         
         var vertexShader = theLoader.shaders[material.params.vertexShader];
         if (vertexShader) {
@@ -212,10 +152,9 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             theLoader.shaders[material.params.vertexShader] = vertexShader;
         }
 
-        //replaceShaderUniforms(material);
     }
 
-    function createShaderMaterial(material, geometry) {
+    function createShaderMaterial(material) {
         
         // replace named attributes and uniforms with Three.js built-ins    
         replaceShaderSemantics(material);
@@ -241,35 +180,8 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
         } );
 
-/*        var attributes = material.params.attributes;
-        var idx = 0;
-        for (var aname in attributes) {
-            var attribute = attributes[aname];
-            var semantic = attribute.semantic;
-            if (semantic == "POSITION") {
-                console.log("Position attribute", attribute);
-                var attr = geometry.attributes.position;
-                var array = new Float32Array(attr.array.buffer, 0, attr.array.length);
-                geometry.addAttribute(aname, new THREE.BufferAttribute(array, attr.itemSize));
-//                shaderMaterial.index0AttributeName = aname;
-            }
-            else if (semantic == "NORMAL") {
-                console.log("Normal attribute", attribute);
-                var attr = geometry.attributes.normal;
-                var array = new Float32Array(attr.array.buffer, 0, attr.array.length);
-                geometry.addAttribute(aname, new THREE.BufferAttribute(array, attr.itemSize));
-            }
-            else if (semantic == "TEXCOORD_0") {
-                console.log("Texcoord0 attribute", attribute);
-                var attr = geometry.attributes.uv;
-                var array = new Float32Array(attr.array.buffer, 0, attr.array.length);
-                geometry.addAttribute(aname, new THREE.BufferAttribute(array, attr.itemSize));
-            }
-        }*/
-
+//        console.log("New shader material")
         return shaderMaterial;
-
-        return new THREE.MeshPhongMaterial(material.params);
     }
 
 
@@ -697,10 +609,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             var material = primitive.material;
             var materialParams = material.params;
             if (!(material instanceof THREE.Material)) {
-                material = createShaderMaterial(material, primitive.geometry.geometry);
+                material = createShaderMaterial(material);
             }
 
             if (!that.skin) {
+                console.log ("New mesh")
                 var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
                 threeMesh.castShadow = true;
                 threeNode.add(threeMesh);
@@ -976,6 +889,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
         handleTechnique: {
             value: function(entryID, description, userInfo) {
+                description.refCount = 0;
                 this.resources.setEntry(entryID, null, description);
                 return true;
             }
@@ -1082,34 +996,14 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                                     }                                    
                                 }
-/*                                if (pname == "light0Transform") {
-                                    uvalue.set(
-                                        -0.954692,
-                                        0.218143,
-                                        -0.202428,
-                                        0,
-                                        0.0146721,
-                                        0.713885,
-                                        0.700109,
-                                        0,
-                                        0.297235,
-                                        0.665418,
-                                        -0.684741,
-                                        0,
-                                        1.48654,
-                                        1.83672,
-                                        -2.92179,
-                                        1);
-                                }*/
-
-
                                 break;
                             case WebGLRenderingContext.SAMPLER_2D :
                                 utype = "t";
                                 uvalue = value ? CreateTexture(this.resources, value) : null;
                                 break;
                             default :
-                                console.log("Unknown shader uniform param type: ", ptype, "-", theLoader.idx[ptype])
+                                throw new Error("Unknown shader uniform param type: " + ptype + " - " + theLoader.idx[ptype]);
+
                                 break;
                         }
 
@@ -1184,6 +1078,11 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                     values = material.values;
                     var description = technique.description;
+
+                    if (++description.refCount > 1) {
+                        console.log("refcount", description.refCount);
+                    }
+                    
                     var programID = description.program;
                     this.createShaderParams(materialId, values, params, programID, description);
                     
@@ -1617,7 +1516,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     var material = primitive.material;
                                     var materialParams = material.params;
                                     if (!(material instanceof THREE.Material)) {
-                                        material = createShaderMaterial(material, primitive.geometry.geometry);
+                                        material = createShaderMaterial(material);
                                     }
 
                                     threeMesh = new THREE.SkinnedMesh(primitive.geometry.geometry, material, false);
