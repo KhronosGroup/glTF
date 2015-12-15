@@ -115,8 +115,7 @@ where
 * `H` – Half-angle vector,calculated as halfway between the unit Eye and Light vectors, using the
 equation H= normalize(I+L)
 
-The `shininess` exponent is typically expected to be in a range of [0, 128], as in the OpenGL fixed function pipeline (larger exponents are still possible, though).
-However, some exporters might want to use a normalized range [0,1]. Therefore, to maximize application compatibility, it is suggested that `shininess` values smaller than 1 get mapped to the range [1,128].
+> **Implementation Note**: Writers should be aware about the range of the specular exponent (`shininess`), which is _not_ a normalized range. Concretely speaking, given the above equation, a `shininess` value of 1 corresponds to a very low shininess. For orientation: using the traditional OpenGL fixed function pipeline, the specular exponent was expected to be within [0, 128]. However, using glTF, larger `shininess` values are clearly possible.
 
 Blinn shading uses all of the common material properties defined in Table 1. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
 
@@ -158,7 +157,7 @@ where:
 * `I` – Eye vector
 * `R` – Perfect reflection vector (reflect (L around N))
 
-For the handling of the specular exponent parameter, see the section about the [Blinn](#blinn) lighting model.
+> **Implementation Note**: For the interpretation of the specular exponent parameter (`shininess`), see the section about the [Blinn](#blinn) lighting model.
 
 Phong lighting uses all of the common material properties defined in Table 1. The following example defines a Phong lit material with a yellow diffuse color.
 
