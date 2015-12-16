@@ -1563,7 +1563,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     
                                     var geometry = primitive.geometry.geometry;
                                     var j;
-                                    if (geometry.vertices) {
+/*                                    if (geometry.vertices) {
                                         for ( j = 0; j < geometry.vertices.length; j ++ ) {
                                             geometry.vertices[j].applyMatrix4( skin.bindShapeMatrix );  
                                         }
@@ -1578,7 +1578,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                             a[j * 3 + 1] = v.y;
                                             a[j * 3 + 2] = v.z;
                                         }
-                                    }
+                                    }*/
 
                                     if (threeMesh && dobones) {
 
@@ -1794,7 +1794,14 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 var params = Object.keys(parameters);
                 params.forEach( function(param) {
 
+                    // async help
                     animation.totalParameters++;
+
+                }, this);    
+                            
+                var params = Object.keys(parameters);
+                params.forEach( function(param) {
+
                     var parameter = parameters[param];
                     var accessor = this.resources.getEntry(parameter);
                     if (!accessor)
