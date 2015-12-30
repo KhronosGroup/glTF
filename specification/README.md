@@ -42,6 +42,7 @@ Contributors
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
+* [Appendix A: Default Material](#appendix-a)
 
 <a name="introduction"></a>
 # Introduction
@@ -111,7 +112,9 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 
 ## URIs
 
-glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
+glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be decoded with JavaScript's `atob`.
+
+This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
 <a name="concepts"></a>
 # Concepts
@@ -673,7 +676,7 @@ Materials are stored in the assets `materials` dictionary property, which contai
 },
 ```
 
-The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.
+The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
 **non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
 
@@ -1065,7 +1068,7 @@ The following example defines an animating camera node.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
 
-The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation, rotation, and scale. Each of these inputs is stored in a buffer and accessed via an accessor.
+The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. Each of these inputs is stored in a buffer and accessed via an accessor.
 
 Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
 
@@ -1159,6 +1162,9 @@ For more information on glTF extensions, consult the [extensions registry specif
       * [`functions`](#reference-technique.states.functions)
 * [`texture`](#reference-texture)
 
+This property reference applies to the WebGL 1.0.3 profile.  See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).
+
+> In the future, other profiles, such as OpenGL, are expected.
 
 <!-- ======================================================================= -->
 <a name="reference-accessor"></a>
@@ -2257,7 +2263,7 @@ Additional properties are not allowed.
 
 ### material.technique
 
-The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.
+The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
 * **Type**: `string`
 * **Required**: No
@@ -2512,7 +2518,7 @@ The IDs of the meshes in this node.  Multiple meshes are allowed so each can sha
 The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.
 
 * **Type**: `number[4]`
-* **Required**: No, default: `[0,0,0,0.1]`
+* **Required**: No, default: `[0,0,0,1]`
 
 ### node.scale
 
@@ -3361,3 +3367,121 @@ Application-specific data.
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
 * Ed Mackey, Analytical Graphics, Inc.
+
+
+<a name="appendix-a"></a>
+# Appendix A: Default Material
+
+If `material.technique` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  The following glTF is an example of the default material.
+
+```javascript
+"materials": {
+    "Effect1": {
+        "values": {
+            "emission": [
+                0.8,
+                0.8,
+                0.8,
+                1
+            ]
+        },
+        "technique": "technique0"
+    }
+},
+"programs": {
+    "program0": {
+        "attributes": [
+            "a_normal",
+            "a_position",
+            "a_texcoord_0"
+        ],
+        "fragmentShader": "fragmentShader0",
+        "vertexShader": "vertexShader0"
+    }
+},
+"shaders": {
+    "vertexShader0": {
+        "type": 35633,
+        "uri": "data:text/plain;base64,..." // see below
+    },
+    "fragmentShader0": {
+        "type": 35632,
+        "uri": "data:text/plain;base64,..." // see blow
+    }
+},
+"techniques": {
+    "technique0": {
+        "attributes": {
+            "a_normal": "normal",
+            "a_position": "position"
+        },
+        "parameters": {
+            "modelViewMatrix": {
+                "semantic": "MODELVIEW",
+                "type": 35676
+            },
+            "normalMatrix": {
+                "semantic": "MODELVIEWINVERSETRANSPOSE",
+                "type": 35675
+            },
+            "projectionMatrix": {
+                "semantic": "PROJECTION",
+                "type": 35676
+            },
+            "emission": {
+                "type": 35666
+            },
+            "normal": {
+                "semantic": "NORMAL",
+                "type": 35665
+            },
+            "position": {
+                "semantic": "POSITION",
+                "type": 35665
+            }
+        },
+        "program": "program0",
+        "states": {
+            "enable": [
+                2884,
+                2929
+            ]
+        },
+        "uniforms": {
+            "u_modelViewMatrix": "modelViewMatrix",
+            "u_normalMatrix": "normalMatrix",
+            "u_projectionMatrix": "projectionMatrix",
+            "u_emission": "emission"
+        }
+    }
+}
+```
+
+Vertex Shader:
+```glsl
+precision highp float;
+
+uniform mat4 u_modelViewMatrix;
+uniform mat3 u_normalMatrix;
+uniform mat4 u_projectionMatrix;
+
+attribute vec3 a_normal;
+attribute vec3 a_position;
+
+void main(void)
+{
+    gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position,1.0);
+}
+```
+
+Fragment Shader:
+```glsl
+precision highp float;
+
+uniform vec4 u_emission;
+
+void main(void)
+{
+    gl_FragColor = u_emission;
+}
+```

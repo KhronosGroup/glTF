@@ -269,7 +269,7 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
             value: function(wrappedBufferView, delegate, ctx) {
 
             var savedBuffer = this._getResource(wrappedBufferView.id);
-            if (savedBuffer) {
+            if (false) { // savedBuffer) {
                 return savedBuffer;
             } else {
                 this._handleWrappedBufferViewResourceLoading(wrappedBufferView, delegate, ctx);

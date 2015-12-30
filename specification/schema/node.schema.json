@@ -64,7 +64,7 @@
             },
             "minItems" : 4,
             "maxItems" : 4,
-            "default" : [ 0.0, 0.0, 0.0, 0.1 ]
+            "default" : [ 0.0, 0.0, 0.0, 1.0 ]
         },
         "scale" : {
             "type" : "array",
