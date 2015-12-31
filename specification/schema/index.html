@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!-- Based on https://github.com/garycourt/JSV/blob/master/examples/index.html -->
+<html>
+<head>
+	<title>glTF Validator</title>
+	<style type="text/css">
+
+/* 1140px CSS Fluid Grid System */
+
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,cite,code,del,dfn,em,img,ins,q,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;margin:0;padding:0}
+article,aside,figure,figure img,figcaption,hgroup,footer,header,nav,section,video,object{display:block}
+a img{border:0}
+figure{position:relative}
+figure img{width:100%}
+.container{padding-left:20px;padding-right:20px}
+.row{width:100%;max-width:1140px;min-width:755px;overflow:hidden;margin:0 auto}
+.onecol,.twocol,.threecol,.fourcol,.fivecol,.sixcol,.sevencol,.eightcol,.ninecol,.tencol,.elevencol{margin-right:3.8%;float:left;min-height:1px}
+.row .onecol{width:4.85%}
+.row .twocol{width:13.45%}
+.row .threecol{width:22.05%}
+.row .fourcol{width:30.75%}
+.row .fivecol{width:39.45%}
+.row .sixcol{width:47%}
+.row .sevencol{width:56.75%}
+.row .eightcol{width:65.4%}
+.row .ninecol{width:74.05%}
+.row .tencol{width:82.7%}
+.row .elevencol{width:91.35%}
+.row .twelvecol{width:100%;float:left}
+.last{margin-right:0}
+img,object,embed{max-width:100%}
+img{height:auto}
+@media only screen and (max-width: 1023px) {
+body{font-size:.8em;line-height:1.5em}
+}
+@media handheld, only screen and (max-width: 767px) {
+body{font-size:16px;-webkit-text-size-adjust:none}
+.row,body,.container{width:100%;min-width:0;margin-left:0;margin-right:0;padding-left:0;padding-right:0}
+.row .onecol,.row .twocol,.row .threecol,.row .fourcol,.row .fivecol,.row .sixcol,.row .sevencol,.row .eightcol,.row .ninecol,.row .tencol,.row .elevencol,.row .twelvecol{width:auto;float:none;margin-left:0;margin-right:0;padding-left:20px;padding-right:20px}
+}
+
+/* Styles */
+
+.container { padding-bottom: 20px; font-family: sans-serif; } 
+.row { margin-top: 20px; }
+legend { font-weight: bold; font-size: 125%; }
+label {	display: block; font-weight: bold; }
+.value_label { display: none; }
+.value { height: 360px; font-size: 12px; tab-size: 4; }
+.value, .uri { width: 100%; }
+.value, .uri, .error code { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif; }
+.error { margin: 20px 0; font-size: 12px; }
+.error:first-child { margin-top: 0; }
+.error:last-child { margin-bottom: 0; }
+.error_message { font-weight: bold; }
+.error_schemaUri { margin-left: 15px; }
+.error_attribute { margin-left: 15px; }
+#report { padding: 20px; }
+#report.valid { border: 1px solid #0f0; background-color: #efe; }
+#report.invalid { border: 1px solid #f00; background-color: #fee; }
+
+	</style>
+</head>
+<body class="container">
+	<div class="row">
+		<h1>glTF Validator</h1>
+		<p></p>
+	</div>
+	
+	<form id="jsv" class="row">
+		<div class="row">
+			<div class="sixcol">
+				<fieldset id="schemaUri_properties">
+					<label for="schemaUri">Schemas</label>
+					<select id="schemaUri" name="schemaUri">
+						<option value="glTF.schema.json">glTF.schema.json</option>
+					</select>
+				</fieldset>
+			</div>
+            
+            <!-- Add new glTF examples below -->
+			<div class="sixcol last">
+				<fieldset id="jsonUri_properties">
+					<label for="jsonUri">glTF JSON Examples</label>
+					<select id="jsonUri" name="jsonUri">
+						<option value="---">---</option>
+						<option value="examples/accessors.json">accessors.json</option>
+						<option value="examples/animations.json">animations.json</option>
+						<option value="examples/asset.json">asset.json</option>
+						<option value="examples/buffers.json">buffers.json</option>
+						<option value="examples/bufferViews.json">bufferViews.json</option>
+						<option value="examples/cameras.json">cameras.json</option>
+						<option value="examples/extensions.json">extensions.json</option>
+						<option value="examples/images.json">images.json</option>
+						<option value="examples/materials.json">materials.json</option>
+						<option value="examples/meshes.json">meshes.json</option>
+						<option value="examples/nodes.json">nodes.json</option>
+						<option value="examples/programs.json">programs.json</option>
+						<option value="examples/samplers.json">samplers.json</option>
+						<option value="examples/scenes.json">scenes.json</option>
+						<option value="examples/shaders.json">shaders.json</option>
+						<option value="examples/skins.json">skins.json</option>
+						<option value="examples/techniques.json">techniques.json</option>
+						<option value="examples/textures.json">textures.json</option>
+					</select>
+				</fieldset>
+			</div>
+		</div>
+		
+		<div class="row">
+            <div class="sixcol">
+                <fieldset id="schema_properties">
+                    <legend>JSON for Schema</legend>
+                    <label id="schema_label" class="value_label" for="schema">Value</label>
+                    <textarea id="schemaText" class="value" name="schemaText" wrap="off"></textarea>
+                </fieldset>
+            </div>
+        
+			<div class="sixcol last">
+				<fieldset id="json_properties">
+					<legend>JSON for glTF</legend>
+					<label id="json_label" class="value_label" for="json">Value</label>
+					<textarea id="jsonText" class="value" name="json" wrap="off"></textarea>
+				</fieldset>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="twelvecol last">
+				<fieldset id="controls">
+					<input id="validate" type="submit" value="Validate"/>
+				</fieldset>
+			</div>
+		</div>
+	</form>
+	
+	<div class="row">
+		<div id="report"></div>
+	</div>
+    
+	<div class="row">
+    Links
+    <ul>
+       <li><a href="https://github.com/KhronosGroup/glTF" target="_blank">glTF repo on GitHub</a></li>
+       <li><a href="http://jsonlint.com/" target="_blank">JSONLint</a></li>
+       <li><a href="http://tools.ietf.org/html/draft-zyp-json-schema-03" target="_blank">JSON Schema 03</a></li>
+    </ul>
+    </div>
+	
+    <script src="validator/JSV/lib/uri/uri.js"></script>
+    <script src="validator/JSV/lib/uri/schemes/urn.js"></script>
+    <script src="validator/JSV/lib/jsv.js"></script>
+    <script src="validator/JSV/lib/json-schema-draft-03.js"></script>
+    <script src="validator/utility.js"></script>
+    <script src="validator/main.js"></script>
+</body>
+</html>

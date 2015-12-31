@@ -66,7 +66,7 @@ var global = window;
 }(this, function (root) {
     "use strict";
 
-    var categoriesDepsOrder = ["buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
+    var categoriesDepsOrder = ["extensions", "buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "animations", "scenes"];
 
     var glTFParser = Object.create(Object.prototype, {
 
@@ -98,6 +98,11 @@ var global = window;
                     return path;
                 }
 
+                var isDataUriRegex = /^data:/;
+                if (isDataUriRegex.test(path)) {
+                    return path;
+                }
+                
                 return this.baseURL + path;
             }
         },
@@ -213,7 +218,8 @@ var global = window;
                     "skins" : this.handleSkin,
                     "samplers" : this.handleSampler,
                     "textures" : this.handleTexture,
-                    "videos" : this.handleVideo
+                    "videos" : this.handleVideo,
+                    "extensions" : this.handleExtension,
 
                 };
 

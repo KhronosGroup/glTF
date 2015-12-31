@@ -64,6 +64,62 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
 
     _loadStream: {
         value: function(path, type, delegate) {
+
+
+
+            var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
+
+            function decodeDataUriText(isBase64, data) {
+                var result = decodeURIComponent(data);
+                if (isBase64) {
+                    return atob(result);
+                }
+                return result;
+            }
+
+            function decodeDataUriArrayBuffer(isBase64, data) {
+                var byteString = decodeDataUriText(isBase64, data);
+                var buffer = new ArrayBuffer(byteString.length);
+                var view = new Uint8Array(buffer);
+                for (var i = 0; i < byteString.length; i++) {
+                    view[i] = byteString.charCodeAt(i);
+                }
+                return buffer;
+            }
+
+            function decodeDataUri(dataUriRegexResult, responseType) {
+                responseType = typeof responseType !== 'undefined' ? responseType : '';
+                var mimeType = dataUriRegexResult[1];
+                var isBase64 = !!dataUriRegexResult[2];
+                var data = dataUriRegexResult[3];
+
+                switch (responseType) {
+                case '':
+                case 'text':
+                    return decodeDataUriText(isBase64, data);
+                case 'ArrayBuffer':
+                    return decodeDataUriArrayBuffer(isBase64, data);
+                case 'blob':
+                    var buffer = decodeDataUriArrayBuffer(isBase64, data);
+                    return new Blob([buffer], {
+                        type : mimeType
+                    });
+                case 'document':
+                    var parser = new DOMParser();
+                    return parser.parseFromString(decodeDataUriText(isBase64, data), mimeType);
+                case 'json':
+                    return JSON.parse(decodeDataUriText(isBase64, data));
+                default:
+                    throw 'Unhandled responseType: ' + responseType;
+                }
+            }
+
+            var dataUriRegexResult = dataUriRegex.exec(path);
+            if (dataUriRegexResult !== null) {
+                delegate.streamAvailable(path, decodeDataUri(dataUriRegexResult, type));
+                return;
+            }
+
             var self = this;
 
             if (!type) {
@@ -213,7 +269,7 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
             value: function(wrappedBufferView, delegate, ctx) {
 
             var savedBuffer = this._getResource(wrappedBufferView.id);
-            if (savedBuffer) {
+            if (false) { // savedBuffer) {
                 return savedBuffer;
             } else {
                 this._handleWrappedBufferViewResourceLoading(wrappedBufferView, delegate, ctx);

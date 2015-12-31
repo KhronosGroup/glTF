@@ -1,0 +1,163 @@
+{
+    "extensions": {
+        "KHR_materials_common" : {
+            "lights" : {
+                "ambient_light_id": {
+                    "ambient": {
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "extensions" : {
+                           "extension_name" : {
+                              "extension specific" : "value"
+                           }
+                        },
+                        "extras" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "name": "user-defined name of ambient light",
+                    "type": "ambient",
+                    "extensions" : {
+                       "extension_name" : {
+                          "extension specific" : "value"
+                       }
+                    },
+                    "extras" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                },
+                "directional_light_id": {
+                    "directional": {
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "extensions" : {
+                           "extension_name" : {
+                              "extension specific" : "value"
+                           }
+                        },
+                        "extras" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "name": "user-defined name of directional light",
+                    "type": "directional",
+                    "extensions" : {
+                       "extension_name" : {
+                          "extension specific" : "value"
+                       }
+                    },
+                    "extras" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                },
+                "point_light_id": {
+                    "name": "user-defined name of point light",
+                    "point": {
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "constantAttenuation": 1.0,
+                        "linearAttenuation": 0.5,
+                        "quadraticAttenuation": 0.25,
+                        "extensions" : {
+                           "extension_name" : {
+                              "extension specific" : "value"
+                           }
+                        },
+                        "extras" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "type": "point",
+                    "extensions" : {
+                       "extension_name" : {
+                          "extension specific" : "value"
+                       }
+                    },
+                    "extras" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                },
+                "spot_light_id": {
+                    "name": "user-defined name of spot light",
+                    "spot": {
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "constantAttenuation": 1.0,
+                        "fallOffAngle": 40,
+                        "fallOffExponent": 0.0,
+                        "linearAttenuation": 0.5,
+                        "quadraticAttenuation": 0.25,
+                        "extensions" : {
+                           "extension_name" : {
+                              "extension specific" : "value"
+                           }
+                        },
+                        "extras" : {
+                            "Application specific" : "The extra object can contain any properties."
+                        }     
+                    },
+                    "type": "spot",
+                    "extensions" : {
+                       "extension_name" : {
+                          "extension specific" : "value"
+                       }
+                    },
+                    "extras" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            }
+        }
+    },
+   "nodes" : {
+        "light_node_id": {
+            "children": [],
+            "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+            "name": "user-defined name of light node",
+            "extensions": {
+                "KHR_materials_common" : {
+                    "light": "point_light_id"
+                }
+            }            
+        }
+    },
+    "techniques" : {
+        "technique_id" : {
+            "name": "user-defined technique name",
+            "parameters": {
+                "lightTransform": {
+                    "node": "directional_light_node_id",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+            },
+            "attributes": {
+                "a_position": "position"
+            },
+            "program": "program_id",
+            "uniforms": {
+                "u_lightTransformMatrix": "lightTransform"
+            },
+        }
+    }
+}

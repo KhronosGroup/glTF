@@ -1,0 +1,39 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "parameter",
+    "type" : "object",
+    "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "count" : {
+            "type" : "integer",
+            "description" : "When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.",
+            "minimum" : 1,
+            "gltf_detailedDescription" : "When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`."
+        },
+        "node" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The id of the node whose transform is used as the parameter's value.",
+            "gltf_detailedDescription" : "The id of the node whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4)."
+        },
+        "type" : {
+            "type" : "integer",
+            "description" : "The datatype.",
+            "enum" : [5120, 5121, 5122, 5123, 5124, 5125, 5126, 35664, 35665, 35666, 35667, 35668, 35669, 35670, 35671, 35672, 35673, 35674, 35675, 35676, 35678],
+            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "INT", "UNSIGNED_INT", "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4", "INT_VEC2", "INT_VEC3", "INT_VEC4", "BOOL", "BOOL_VEC2", "BOOL_VEC3", "BOOL_VEC4", "FLOAT_MAT2", "FLOAT_MAT3", "FLOAT_MAT4", "SAMPLER_2D"],
+            "required" : true,
+            "gltf_detailedDescription" : "The datatype.  All valid values correspond to WebGL enums."
+        },
+        "semantic" : {
+            "type" : "string",
+            "description" : "Identifies a parameter with a well-known meaning.",
+            "gltf_detailedDescription" : "Identifies a parameter with a well-known meaning.  Uniform semantics include `\"LOCAL\"` (FLOAT_MAT4), `\"MODEL\"` (FLOAT_MAT4), `\"VIEW\"` (FLOAT_MAT4), `\"PROJECTION\"` (FLOAT_MAT4), `\"MODELVIEW\"` (FLOAT_MAT4), `\"MODELVIEWPROJECTION\"` (FLOAT_MAT4), `\"MODELINVERSE\"` (FLOAT_MAT4), `\"VIEWINVERSE\"` (FLOAT_MAT4), `\"PROJECTIONINVERSE\"` (FLOAT_MAT4), `\"MODELVIEWINVERSE\"` (FLOAT_MAT4), `\"MODELVIEWPROJECTIONINVERSE\"` (FLOAT_MAT4), `\"MODELINVERSETRANSPOSE\"` (FLOAT_MAT3), `\"MODELVIEWINVERSETRANSPOSE\"` (FLOAT_MAT3), `\"VIEWPORT\"` (FLOAT_VEC4).  Attribute semantics include `\"POSITION\"`, `\"NORMAL\"`, `\"TEXCOORD\"`, `\"COLOR\"`, `\"JOINT\"`, `\"JOINTMATRIX\"`, and `\"WEIGHT\"`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g., `\"TEXCOORD_0\"`."
+        },
+        "value" : {
+            "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
+            "description" : "The value of the parameter.",
+            "gltf_detailedDescription" : "The value of the parameter.  A material value with the same name, when specified, overrides this value."
+        }
+    },
+    "additionalProperties" : false
+}

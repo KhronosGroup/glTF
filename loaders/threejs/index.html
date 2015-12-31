@@ -42,7 +42,7 @@
             	width:25%;
             	left:75%;
             	bottom:0%;
-            	height:134px;
+            	height:166px;
             	background-color:White;
             	opacity:.9;
             	font: 13px/1.231 "Lucida Grande", Lucida, Verdana, sans-serif;
@@ -67,7 +67,7 @@
                         
             .controlValue {
             	position:absolute;
-            	left:50%;
+            	left:40%;
             	top:0%;
             }
             
@@ -89,6 +89,11 @@
             #buffer_geometry_control {
             	position:absolute;
             	top:104px;
+            }
+
+            #materials_extension_control {
+                position:absolute;
+                top:136px;
             }
                         
             #info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
@@ -125,13 +130,21 @@
 				<input type="checkbox" id="buffer_geometry_checkbox" checked onclick="toggleBufferGeometry();">BufferGeometry</input>
 				</div>
 			</div>
+            <div class="control" id="materials_extension_control">
+                Shaders
+                <div class="controlValue">
+                <input type="checkbox" id="materials_extension_checkbox" checked onclick="toggleMaterialsExtension();">Use built-in</input>
+                </div>
+            </div>
 		</div>
-        <script src="libs/three.js.r65/three.js"></script>
-        <script src="libs/three.js.r65/controls/OrbitControls.js"></script>
+        <script src="libs/three.js.r71/three.js"></script>
+        <script src="libs/three.js.r71/controls/OrbitControls.js"></script>
         <script src="../glTF-parser.js"></script>
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
         <script src="glTFAnimation.js"></script>
+        <script src="glTFShaders.js"></script>
+        <script src="gltfUtilities.js"></script>
 
         <script>
         	var orbitControls = null;
@@ -175,11 +188,11 @@
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
-                	directionalLight.position.set( 0, 0, -1 ).normalize();
+                	directionalLight.position.set( 0, 0, 1 ).normalize();
                 	scene.add( directionalLight );
                 
 	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
-	                spot1.position.set( -100, 200, 100 );
+	                spot1.position.set( 100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
 	                if (sceneInfo.shadows) {
@@ -215,7 +228,7 @@
 	                        ambient: 0x888888,
 	                        shading: THREE.SmoothShading,
 	                    });
-	                ground = new THREE.Mesh( new THREE.PlaneGeometry(1024, 1024), groundMaterial);
+	                ground = new THREE.Mesh( new THREE.PlaneBufferGeometry(1024, 1024), groundMaterial);
 
 	                if (sceneInfo.shadows) {
 		                ground.receiveShadow = true;
@@ -237,7 +250,12 @@
                 var loadStartTime = Date.now();
                 var status = document.getElementById("status");
                 status.innerHTML = "Loading...";
-                loader.load( sceneInfo.url, function(data) {
+                var url = sceneInfo.url;
+                var r = eval("/" + '\%s' + "/g");
+                var dir = useMaterialsExtension ? 'glTF-MaterialsCommon' : 'glTF';
+                url = url.replace(r, dir);
+
+                loader.load( url, function(data) {
 
                 	gltf = data;
                 	
@@ -312,7 +330,7 @@
     						animation.play();
 	    				}
     				}
-                                       
+
                     scene.add( object );
                     onWindowResize();
 
@@ -340,6 +358,7 @@
             function animate() {
                 requestAnimationFrame( animate );
                 THREE.glTFAnimator.update();
+                THREE.glTFShaders.update(scene, camera);
                 if (cameraIndex == 0)
                     orbitControls.update();
                 render();
@@ -371,61 +390,86 @@
 
 			var sceneList = 
 				[
-	                 { name : "Duck", url : "../../model/duck/duck.gltf", 
-		                 cameraPos: new THREE.Vector3(0, 3, -5),
+	                 { name : "Duck", url : "../../sampleModels/duck/%s/duck.gltf", 
+		                 cameraPos: new THREE.Vector3(0, 3, 5),
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
-	                 { name : "Virtual City", url : "/glTFTests/vc-new/vc/vc.gltf", 
+                     { name : "Box", url : "../../sampleModels/box/%s/box.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Box - Textured",
+                        url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+	                 { name : "Virtual City", url : "../../sampleModels/vc/%s/vc.gltf", 
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
-		                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, 0), 
+                         addLights:false,
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
-		             { name : "Monster", url : "/glTFTests/monster/monster.gltf", 
-			                 cameraPos: new THREE.Vector3(30, 10, 70), 
-			                 objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
-			                 objectPosition: new THREE.Vector3(0, 1, 0),
-			                 objectRotation: new THREE.Euler(-Math.PI / 2, 0, -Math.PI / 2),
+                     { name : "Cesium Man", url : "../../sampleModels/CesiumMan/%s/Cesium_Man.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 10),
+                         objectRotation: new THREE.Euler(0, 0, 0),
+                         addLights:true,
+                         addGround:true,
+                         shadows:true },
+                     { name : "Cesium Milk Truck",
+                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 10),
+                         addLights:true,
+                         addGround:true,
+                         shadows:true },
+                     { name : "Rigged Figure", url : "../../sampleModels/RiggedFigure/%s/rigged-figure.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 10),
+                         addLights:true,
+                         addGround:true,
+                         shadows:true },
+                     { name : "Rigged Simple", url : "../../sampleModels/RiggedSimple/%s/riggedSimple.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 10),
+                         addLights:true,
+                         addGround:true,
+                         shadows:true },
+		             { name : "Monster", url : "../../sampleModels/monster/%s/monster.gltf", 
+			                 cameraPos: new THREE.Vector3(0, 10, 50), 
+			                 objectPosition: new THREE.Vector3(2, 6, 0),
+                             objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
+			                 objectRotation: new THREE.Euler(0, - 3 * Math.PI / 4, 0),
 			                 animationTime: 3,
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
-		             { name : "BrainSteam", url : "/glTFTests/brainsteam/brainsteam.gltf", 
-			                 cameraPos: new THREE.Vector3(0, 6, 13), 
-			                 center: new THREE.Vector3(0, 3, 0), 
+		             { name : "BrainSteam", url : "../../sampleModels/brainsteam/%s/brainsteam.gltf", 
+			                 cameraPos: new THREE.Vector3(0, 1, 10), 
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
-		             { name : "Razer", url : "/glTFTests/razer_tablet_keyboard/razer_tablet_keyboard.json", 
-		                 cameraPos: new THREE.Vector3(0, 1, 10), 
-		                 addLights:false,
-		                 addGround:false },
-	                 { name : "Frigate", url : "/glTFTests/frigate/frigate.json", 
-		                 cameraPos: new THREE.Vector3(0, 10, 50),
-		                 addGround:false },
-	                 { name : "Minebot", url : "/glTFTests/minebot/mine_bot_anim.json", 
-		                 cameraPos: new THREE.Vector3(3754.93, 1647.66 + 2, 10 - 5214.26), 
-		                 center: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
-		                 addLights:true,
-		                 groundPos: new THREE.Vector3(3754.93, 1647.66, -5214.26), 
-		                 addGround:true },
-	                 { name : "Wine Rack", url : "../../model/wine/wine.gltf",
+                    /* 
+
+                        These models are no longer in the repo?
+
+	                 { name : "Wine Rack", url : "../../sampleModels/wine/glTF/wine.gltf",
 		             	 cameraPos: new THREE.Vector3(60, 30, 100), 
 		             	 objectPosition: new THREE.Vector3(-60, 0, -20),
-		             	 addLights:true },
-	                 { name : "Rambler", url : "../../model/rambler/Rambler.gltf", 
+		                 objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+		             	 addLights:true,
+		             	 addGround:true},
+	                 { name : "Rambler", url : "../../sampleModels/rambler/glTF/Rambler.gltf", 
 			      		cameraPos: new THREE.Vector3(0, 10, 50), 
 			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
 			      		objectPosition: new THREE.Vector3(0, .2, 0),
 			      		addLights:true,
 			      		addGround:true,
 			      		shadows:true },
-	                 { name : "Super Murdoch", url : "../../model/SuperMurdoch/SuperMurdoch.gltf", 
+	                 { name : "Super Murdoch", url : "../../sampleModels/SuperMurdoch/glTF/SuperMurdoch.gltf", 
              			cameraPos: new THREE.Vector3(0, 10, 50), 
-	             		objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
+			      		objectRotation: new THREE.Euler(-Math.PI, 0, 0),
+			      		objectPosition: new THREE.Vector3(0, -10, 0),
              			addLights:true,
              			addGround:true,
              			shadows:true },
-		             
+		            */
+
      			];
 
 			function buildSceneList()
@@ -525,6 +569,14 @@
 				useBufferGeometry = !useBufferGeometry;
 				selectScene();
 			}
+
+            var useextmaterials = document.getElementById("materials_extension_checkbox");
+            var useMaterialsExtension = useextmaterials.hasAttribute("checked");
+            function toggleMaterialsExtension()
+            {
+                useMaterialsExtension = !useMaterialsExtension;
+                selectScene();
+            }
 			
 			function cleanup() {
 
@@ -538,7 +590,7 @@
 				cameraNames = [];
 				defaultCamera = null;
 				
-				if (!loader || !gltf.animations)
+				if (!loader || !gltf || !gltf.animations)
 					return;
 				
 				var i, len = gltf.animations.length;
