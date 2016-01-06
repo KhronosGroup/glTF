@@ -143,8 +143,8 @@
                 </div>
             </div>
         </div>
-        <script src="libs/three.js.r71/three.js"></script>
-        <script src="libs/three.js.r71/controls/OrbitControls.js"></script>
+        <script src="libs/three.js.r73/three.js"></script>
+        <script src="libs/three.js.r73/controls/OrbitControls.js"></script>
         <script src="../glTF-parser.js"></script>
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
@@ -220,9 +220,9 @@
                 renderer.setSize( container.offsetWidth, container.offsetHeight );
 
                 if (sceneInfo.shadows) {
-	                renderer.shadowMapEnabled = true;
-	                renderer.shadowMapSoft = true;
-	        		renderer.shadowMapType = THREE.PCFSoftShadowMap;
+	                renderer.shadowMap.enabled = true;
+	                renderer.shadowMap.soft = true;
+	        		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 }
                 				
                 container.appendChild( renderer.domElement );
@@ -231,7 +231,6 @@
 				if (sceneInfo.addGround) {
 	                var groundMaterial = new THREE.MeshPhongMaterial({
 	                        color: 0xFFFFFF,
-	                        ambient: 0x888888,
 	                        shading: THREE.SmoothShading,
 	                    });
 	                ground = new THREE.Mesh( new THREE.PlaneBufferGeometry(1024, 1024), groundMaterial);

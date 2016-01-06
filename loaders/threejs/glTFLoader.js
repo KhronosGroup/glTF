@@ -291,7 +291,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             return texture;
         }
    
-        return THREE.ImageUtils.loadTexture(src);
+        return new THREE.TextureLoader().load(src);
     }
 
     function CreateTexture(resources, resource) {
@@ -399,7 +399,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     ClassicGeometry.prototype.buildBufferGeometry = function() {
         // Build indexed mesh
         var geometry = this.geometry;
-        geometry.addAttribute( 'index', new THREE.BufferAttribute( this.indexArray, 1 ) );
+        geometry.setIndex(new THREE.BufferAttribute( this.indexArray, 1 ) );
 
         var offset = {
                 start: 0,
@@ -407,7 +407,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                 count: this.indexArray.length
             };
 
-        geometry.offsets.push( offset );
+        geometry.groups.push( offset );
 
         geometry.computeBoundingSphere();
     }
@@ -1158,9 +1158,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                     params.shininess = shininess;
                 }
                 
+                delete params.ambient;
                 if (!(values.ambient === undefined) && !(typeof(values.ambient) == 'string'))
                 {
-                    params.ambient = RgbArraytoHex(values.ambient);
+                    //params.ambient = RgbArraytoHex(values.ambient);
                 }
 
                 if (!(values.emission === undefined))
