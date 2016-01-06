@@ -42,9 +42,9 @@
             	width:25%;
             	left:75%;
             	bottom:0%;
-            	height:166px;
+            	height:188px;
             	background-color:White;
-            	opacity:.9;
+            	opacity:.75;
             	font: 13px/1.231 "Lucida Grande", Lucida, Verdana, sans-serif;
             }
 
@@ -95,7 +95,13 @@
                 position:absolute;
                 top:136px;
             }
-                        
+
+
+            #uris_control {
+                position:absolute;
+                top:166px;
+            }
+
             #info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
         </style>
     </head>
@@ -136,7 +142,12 @@
                 <input type="checkbox" id="materials_extension_checkbox" checked onclick="toggleMaterialsExtension();">Use built-in</input>
                 </div>
             </div>
-		</div>
+            <div class="control" id="uris_control">
+                Data URIs
+                <div class="controlValue">
+                <input type="checkbox" id="uris_checkbox" unchecked onclick="toggleDataURIs();">Enable</input>
+                </div>
+            </div>		</div>
         <script src="libs/three.js.r71/three.js"></script>
         <script src="libs/three.js.r71/controls/OrbitControls.js"></script>
         <script src="../glTF-parser.js"></script>
@@ -252,7 +263,8 @@
                 status.innerHTML = "Loading...";
                 var url = sceneInfo.url;
                 var r = eval("/" + '\%s' + "/g");
-                var dir = useMaterialsExtension ? 'glTF-MaterialsCommon' : 'glTF';
+                var dir = useMaterialsExtension ? 'glTF-MaterialsCommon' : 
+                    (useDataURIs ? 'glTF-Embedded' : 'glTF');
                 url = url.replace(r, dir);
 
                 loader.load( url, function(data) {
@@ -395,12 +407,33 @@
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
+                     { name : "2 Cylinder Engine", url : "../../sampleModels/2_cylinder_engine/%s/2_cylinder_engine.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
                      { name : "Box", url : "../../sampleModels/box/%s/box.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Box - Animated", url : "../../sampleModels/boxAnimated/%s/glTF.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Box - Semantics", url : "../../sampleModels/boxSemantics/%s/boxSemantics.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Box - No Indices", url : "../../sampleModels/boxWithoutIndices/%s/boxWithoutIndices.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Box - Textured",
                         url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Buggy",
+                        url : "../../sampleModels/buggy/%s/buggy.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
@@ -420,6 +453,16 @@
                          addLights:true,
                          addGround:true,
                          shadows:true },
+                     { name : "Gearbox Assembly",
+                        url : "../../sampleModels/gearbox_assy/%s/gearbox_assy.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
+                     { name : "Reciprocating Saw",
+                        url : "../../sampleModels/Reciprocating_Saw/%s/Reciprocating_Saw.gltf", 
+                         cameraPos: new THREE.Vector3(0, 3, 5),
+                         addLights:true,
+                         },
                      { name : "Rigged Figure", url : "../../sampleModels/RiggedFigure/%s/rigged-figure.gltf", 
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
@@ -577,7 +620,15 @@
                 useMaterialsExtension = !useMaterialsExtension;
                 selectScene();
             }
-			
+
+            var enabledatauris = document.getElementById("uris_checkbox");
+            var useDataURIs = enabledatauris.hasAttribute("checked");
+            function toggleDataURIs()
+            {
+                useDataURIs = !useDataURIs;
+                selectScene();
+            }
+
 			function cleanup() {
 
 				if (container && renderer)
