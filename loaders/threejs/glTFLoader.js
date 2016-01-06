@@ -625,7 +625,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
             }
 
             if (!that.skin) {
-                console.log ("New mesh")
+                // console.log ("New mesh")
                 var threeMesh = new THREE.Mesh(primitive.geometry.geometry, material);
                 threeMesh.castShadow = true;
                 threeNode.add(threeMesh);
@@ -944,6 +944,17 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                     params.transparent = true;                                    
                                 }
                                 break;
+                            case WebGLRenderingContext.FLOAT_VEC2 :
+                                utype = "v2";
+                                uvalue = new THREE.Vector2;
+                                if (shaderParam && shaderParam.value) {
+                                    var v2 = shaderParam.value;
+                                    uvalue.fromArray(v2);
+                                }
+                                if (value) {
+                                    uvalue.fromArray(value);
+                                }
+                                break;
                             case WebGLRenderingContext.FLOAT_VEC3 :
                                 utype = "v3";
                                 uvalue = new THREE.Vector3;
@@ -965,6 +976,10 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
                                 if (value) {
                                     uvalue.fromArray(value);
                                 }
+                                break;
+                            case WebGLRenderingContext.FLOAT_MAT2 :
+                                // what to do?
+                                console.log("Warning: FLOAT_MAT2");
                                 break;
                             case WebGLRenderingContext.FLOAT_MAT3 :
                                 utype = "m3";
