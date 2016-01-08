@@ -46,7 +46,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
-* [Appendix B: Full Khronos Trademark Statement](appendix-b)
+* [Appendix B: Full Khronos Trademark Statement](#appendix-b)
 
 <a name="introduction"></a>
 # Introduction
