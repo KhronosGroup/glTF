@@ -258,6 +258,26 @@ The following example defines a Constant lit material with an emissive texture a
 ### Interaction Between Attribute Semantics and Common Materials
 
 The base specification defines attribute semantics for mesh primitives. The common materials in this extension shall support the semantics `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, `JOINTMATRIX`, and `WEIGHT`. For array semantics such as texture coordinates, the implemention is only required to support the 0th set of coordinates i.e. `TEXCOORD_0`.
+Since semantics are usually defined via technique parameters, they are not present in the glTF scene description when `KHR_materials_common` is used.
+Therefore, writers using this extension must ensure that the attributes of the mesh are named exactly like the semantics:
+
+```javascript
+"meshes": {
+    "mesh0":{         
+        "primitives" : [
+        {
+           "attributes":{
+              "NORMAL"  :"accessor23",
+              "POSITION":"accessor42"
+           },
+           "indices" : "accessor13",
+           "material": "material7",
+           "mode":4
+        }
+     ]
+    }
+}
+```
 
 If a conforming implementation of this extension supports skinned animations, then the common materials described in this extension must also support hardware skinning in its vertex and fragment shader programs.
 
