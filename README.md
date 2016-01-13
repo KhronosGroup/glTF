@@ -6,11 +6,10 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 ## Specification
 
-> _This is a draft specification; there may be minor changes before ratification is finalized.  Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues)._
-
-* [glTF Specification, Draft 1.0](specification/README.md)
-   * ([Guide](https://github.com/KhronosGroup/glTF/wiki/glTF-0.8-to-1.0-Guide) for upgrading glTF 0.8 to 1.0.)
+* [glTF Specification, 1.0](specification/README.md)
 * [glTF Extension Registry](extensions/README.md)
+
+Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues).
 
 ## Sample Models
 
