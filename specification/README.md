@@ -994,7 +994,7 @@ The following example defines a perspective camera with supplied values for Y fi
 "cameras": {
     "camera_0": {
         "perspective": {
-            "aspect_ratio": 1.5,
+            "aspectRatio": 1.5,
             "yfov": 0.660593,
             "zfar": 100,
             "znear": 0.01
