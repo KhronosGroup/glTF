@@ -129,32 +129,8 @@ namespace GLTF
     {
         if (values->contains(name))
         {
-            shared_ptr<JSONObject> object = make_shared<JSONObject>();
             auto value = static_pointer_cast<JSONObject>(values->getValue(name))->getValue(kValue);
-            uint32_t type;
-            JSONType jsonType = value->getJSONType();
-            if (jsonType == kJSONString)
-            {
-                type = _GL(SAMPLER_2D);
-            }
-            else if (jsonType == kJSONNumber)
-            {
-                type = _GL(FLOAT);
-            }
-            else if (jsonType == kJSONArray)
-            {
-                auto array = static_pointer_cast<JSONArray>(value);
-                type = _GL(FLOAT_VEC2) + static_cast<uint32_t>(array->getCount() - 2);
-            }
-            else
-            {
-                return;
-            }
-
-            object->setUnsignedInt32(kType, type);
-            object->setValue(kValue, value);
-
-            materialsCommonValues->setValue(name, object);
+            materialsCommonValues->setValue(name, value);
         }
     }
     
