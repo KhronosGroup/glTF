@@ -10399,13 +10399,13 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_4387": {
@@ -10700,37 +10700,25 @@
                     "technique": "PHONG",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                0.223529,
-                                0.0313726,
-                                0.533333,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0.223529,
-                                0.0313726,
-                                0.533333,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": [
+                            0.223529,
+                            0.0313726,
+                            0.533333,
+                            1
+                        ],
+                        "diffuse": [
+                            0.223529,
+                            0.0313726,
+                            0.533333,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10744,36 +10732,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_cockpit-map_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_cockpit-map_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 49
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_cockpit-map_jpg",
+                        "diffuse": "texture_cockpit-map_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 49,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10787,36 +10760,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_machine_jpg",
+                        "diffuse": "texture_machine_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10830,36 +10788,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_07_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_07_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_07_jpg",
+                        "diffuse": "texture_s_07_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10873,36 +10816,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_08_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_08_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_08_jpg",
+                        "diffuse": "texture_s_08_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10916,36 +10844,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture__01_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture__01_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture__01_jpg",
+                        "diffuse": "texture__01_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -10959,36 +10872,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture__02_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture__02_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 2.33437
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture__02_jpg",
+                        "diffuse": "texture__02_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 2.33437,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11002,36 +10900,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture__01_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture__01_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 78.4
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture__01_jpg",
+                        "diffuse": "texture__01_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 78.4,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11045,36 +10928,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture__1_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture__1_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 78.4
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture__1_jpg",
+                        "diffuse": "texture__1_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 78.4,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11088,36 +10956,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture___jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture___jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 87.216
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture___jpg",
+                        "diffuse": "texture___jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 87.216,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11131,36 +10984,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_O21_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_O21_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 87.216
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_O21_jpg",
+                        "diffuse": "texture_O21_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 87.216,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11174,36 +11012,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_O21_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_O21_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 87.216
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_O21_jpg",
+                        "diffuse": "texture_O21_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 87.216,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11217,36 +11040,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture__1_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture__1_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 78.4
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture__1_jpg",
+                        "diffuse": "texture__1_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 78.4,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11260,50 +11068,32 @@
                     "technique": "BLINN",
                     "transparent": true,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                0.898039,
-                                0.898039,
-                                0.898039,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0.898039,
-                                0.898039,
-                                0.898039,
-                                1
-                            ]
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "transparency": {
-                            "type": 5126,
-                            "value": 0
-                        }
+                        "ambient": [
+                            0.898039,
+                            0.898039,
+                            0.898039,
+                            1
+                        ],
+                        "diffuse": [
+                            0.898039,
+                            0.898039,
+                            0.898039,
+                            1
+                        ],
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "transparency": 0
                     }
                 }
             },
@@ -11317,36 +11107,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_cockpit-map_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_cockpit-map_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_cockpit-map_jpg",
+                        "diffuse": "texture_cockpit-map_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11360,50 +11135,32 @@
                     "technique": "BLINN",
                     "transparent": true,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "transparency": {
-                            "type": 5126,
-                            "value": 0
-                        }
+                        "ambient": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ],
+                        "diffuse": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ],
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "transparency": 0
                     }
                 }
             },
@@ -11417,36 +11174,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_scrapsurf03-red_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_scrapsurf03-red_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_scrapsurf03-red_jpg",
+                        "diffuse": "texture_scrapsurf03-red_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11460,36 +11202,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_01_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_01_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_01_jpg",
+                        "diffuse": "texture_s_01_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11503,36 +11230,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_02_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_02_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_02_jpg",
+                        "diffuse": "texture_s_02_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11546,36 +11258,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_03_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_03_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_03_jpg",
+                        "diffuse": "texture_s_03_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11589,36 +11286,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_04_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_04_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_04_jpg",
+                        "diffuse": "texture_s_04_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11632,36 +11314,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_05_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_05_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_05_jpg",
+                        "diffuse": "texture_s_05_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11675,36 +11342,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_s_06_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_s_06_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_s_06_jpg",
+                        "diffuse": "texture_s_06_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11718,36 +11370,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_surface01_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_surface01_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_surface01_jpg",
+                        "diffuse": "texture_surface01_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11761,36 +11398,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 47
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_machine_jpg",
+                        "diffuse": "texture_machine_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 47,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11804,36 +11426,21 @@
                     "technique": "BLINN",
                     "transparent": true,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_prop128_tga"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_prop128_tga"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_prop128_tga",
+                        "diffuse": "texture_prop128_tga",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11847,36 +11454,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_f22_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_f22_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 33
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_f22_jpg",
+                        "diffuse": "texture_f22_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 33,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -11890,50 +11482,32 @@
                     "technique": "BLINN",
                     "transparent": true,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 42
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "transparency": {
-                            "type": 5126,
-                            "value": 0.25
-                        }
+                        "ambient": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "diffuse": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 42,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "transparency": 0.25
                     }
                 }
             },
@@ -11947,36 +11521,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_heli_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_heli_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 60
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.572549,
-                                0.572549,
-                                0.572549,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_heli_jpg",
+                        "diffuse": "texture_heli_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 60,
+                        "specular": [
+                            0.572549,
+                            0.572549,
+                            0.572549,
+                            1
+                        ]
                     }
                 }
             },
@@ -11990,36 +11549,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_heli_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_heli_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 37
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.572549,
-                                0.572549,
-                                0.572549,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_heli_jpg",
+                        "diffuse": "texture_heli_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 37,
+                        "specular": [
+                            0.572549,
+                            0.572549,
+                            0.572549,
+                            1
+                        ]
                     }
                 }
             },
@@ -12033,40 +11577,22 @@
                     "technique": "BLINN",
                     "transparent": true,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_machine_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 24
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "transparency": {
-                            "type": 5126,
-                            "value": 0.9
-                        }
+                        "ambient": "texture_machine_jpg",
+                        "diffuse": "texture_machine_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 24,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "transparency": 0.9
                     }
                 }
             },
@@ -12080,36 +11606,21 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35678,
-                            "value": "texture_f22_jpg"
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_f22_jpg"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": "texture_f22_jpg",
+                        "diffuse": "texture_f22_jpg",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },
@@ -12123,46 +11634,31 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                0.588,
-                                0.588,
-                                0.588,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0.588,
-                                0.588,
-                                0.588,
-                                1
-                            ]
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 10
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": [
+                            0.588,
+                            0.588,
+                            0.588,
+                            1
+                        ],
+                        "diffuse": [
+                            0.588,
+                            0.588,
+                            0.588,
+                            1
+                        ],
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 10,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },

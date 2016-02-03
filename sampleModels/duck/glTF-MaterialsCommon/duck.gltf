@@ -63,13 +63,13 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_29": {
@@ -139,41 +139,26 @@
                     "technique": "BLINN",
                     "transparent": false,
                     "values": {
-                        "ambient": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_file2"
-                        },
-                        "emission": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 38.4
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ]
-                        }
+                        "ambient": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "diffuse": "texture_file2",
+                        "emission": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        "shininess": 38.4,
+                        "specular": [
+                            0,
+                            0,
+                            0,
+                            1
+                        ]
                     }
                 }
             },

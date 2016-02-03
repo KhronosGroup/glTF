@@ -11,9 +11,9 @@ do
     [[ -d $dir ]] || mkdir $dir
     collada2gltf -d -e -f $FILENAME -o $dir/$basename.gltf
 
-    #dir="$dirname/../glTF-MaterialsCommon"
-    #[[ -d $dir ]] || mkdir $dir
-    #collada2gltf -d -k -f $FILENAME -o $dir/$basename.gltf
+    dir="$dirname/../glTF-MaterialsCommon"
+    [[ -d $dir ]] || mkdir $dir
+    collada2gltf -d -k -f $FILENAME -o $dir/$basename.gltf
 
     #dir="$dirname/../glTF-Binary"
     #[[ -d $dir ]] || mkdir $dir
