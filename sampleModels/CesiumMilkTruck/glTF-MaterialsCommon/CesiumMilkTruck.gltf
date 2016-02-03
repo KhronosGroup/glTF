@@ -198,13 +198,13 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_103": {
@@ -267,28 +267,19 @@
                     "technique": "PHONG",
                     "transparent": false,
                     "values": {
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0,
-                                0.0405063,
-                                0.0212407,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 256
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.65,
-                                0.65,
-                                0.65,
-                                1
-                            ]
-                        }
+                        "diffuse": [
+                            0,
+                            0.0405063,
+                            0.0212407,
+                            1
+                        ],
+                        "shininess": 256,
+                        "specular": [
+                            0.65,
+                            0.65,
+                            0.65,
+                            1
+                        ]
                     }
                 }
             },
@@ -302,23 +293,14 @@
                     "technique": "PHONG",
                     "transparent": false,
                     "values": {
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_Image0001"
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 256
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.04,
-                                0.04,
-                                0.04,
-                                1
-                            ]
-                        }
+                        "diffuse": "texture_Image0001",
+                        "shininess": 256,
+                        "specular": [
+                            0.04,
+                            0.04,
+                            0.04,
+                            1
+                        ]
                     }
                 }
             },
@@ -332,23 +314,14 @@
                     "technique": "PHONG",
                     "transparent": false,
                     "values": {
-                        "diffuse": {
-                            "type": 35678,
-                            "value": "texture_Image0001"
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 256
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.04,
-                                0.04,
-                                0.04,
-                                1
-                            ]
-                        }
+                        "diffuse": "texture_Image0001",
+                        "shininess": 256,
+                        "specular": [
+                            0.04,
+                            0.04,
+                            0.04,
+                            1
+                        ]
                     }
                 }
             },
@@ -362,28 +335,19 @@
                     "technique": "PHONG",
                     "transparent": false,
                     "values": {
-                        "diffuse": {
-                            "type": 35666,
-                            "value": [
-                                0.064,
-                                0.064,
-                                0.064,
-                                1
-                            ]
-                        },
-                        "shininess": {
-                            "type": 5126,
-                            "value": 256
-                        },
-                        "specular": {
-                            "type": 35666,
-                            "value": [
-                                0.04,
-                                0.04,
-                                0.04,
-                                1
-                            ]
-                        }
+                        "diffuse": [
+                            0.064,
+                            0.064,
+                            0.064,
+                            1
+                        ],
+                        "shininess": 256,
+                        "specular": [
+                            0.04,
+                            0.04,
+                            0.04,
+                            1
+                        ]
                     }
                 }
             },
