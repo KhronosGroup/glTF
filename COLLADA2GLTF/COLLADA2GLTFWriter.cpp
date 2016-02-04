@@ -219,32 +219,29 @@ namespace GLTF
         
         opaqueMode = effectCommon->getOpaqueMode();
 
+        ColorOrTexture transparent = effectCommon->getTransparent();
+        double transparentAlpha = (transparent.getType() == ColorOrTexture::COLOR) ? transparent.getColor().getAlpha() : 1.0;
+
         switch (opaqueMode) {
             
             case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
-            case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO: {
-                ColorOrTexture transparent = effectCommon->getTransparent();
-                transparency = static_cast<float>(1.0 - transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO:
+                transparency = static_cast<float>(1.0 - transparentAlpha * effectCommon->getTransparency().getFloatValue());
                 if (!loggedOnce) {
                     this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
                     loggedOnce = true;
                 }
-            }
                 break;
-            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE: {
-                ColorOrTexture transparent = effectCommon->getTransparent();
-                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
+            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE:
+                transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
                 if (!loggedOnce) {
                     this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
                     loggedOnce = true;
                 }
-            }
                 break;
             
-            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE: {
-                ColorOrTexture transparent = effectCommon->getTransparent();
-                transparency = static_cast<float>(transparent.getColor().getAlpha() * effectCommon->getTransparency().getFloatValue());
-            }
+            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE: 
+                transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
                 break;
             case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
             default:
