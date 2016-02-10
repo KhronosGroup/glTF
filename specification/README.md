@@ -853,13 +853,13 @@ The following example `states` object indicates to enable all Boolean states (se
       ],
       "colorMask": [true, true, true, true], // (red, green, blue, alpha)
       "cullFace": [1029], // BACK
-      "depthFunc": [LESS], // 513
+      "depthFunc": [513], // LESS
       "depthMask": [true],
       "depthRange": [0.0, 1.0], // (zNear, zFar)
       "frontFace": [2305], // CCW
       "lineWidth": [1.0],
       "polygonOffset": [0.0, 0.0], // (factor, units)
-      "scissor": [0, 0, 0, 0], // (x, y, width, height)
+      "scissor": [0, 0, 0, 0]  // (x, y, width, height)
     }
 }
 ```
