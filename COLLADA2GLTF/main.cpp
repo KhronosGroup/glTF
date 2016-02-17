@@ -70,6 +70,7 @@ static const OptionDescriptor options[] = {
 	//{ "a",              required_argument,  "-a -> export animations, argument [bool], default:true" },  // Code for this option is currently commented out.
     { "g",              required_argument,  "-g -> [experimental] GLSL version to output in generated shaders" },
 	{ "i",              no_argument,        "-i -> invert-transparency" },
+    { "I",              no_argument,        "-I -> maximum number of indices [int], default:65535" },
 	{ "d",              no_argument,        "-d -> export pass details to be able to regenerate shaders and states" },
 	{ "p",              no_argument,        "-p -> output progress" },
 	{ "l",              required_argument,  "-l -> enable default lighting (if no lights in scene) [bool], default:true" },
@@ -151,7 +152,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
     
     shared_ptr<GLTF::GLTFConfig> converterConfig = asset->converterConfig();
     
-    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:g:idpl:c:m:vhsrek", opt_options, 0)) != -1) {
+    while ((ch = getopt_long(argc, argv, "z:f:o:b:a:g:I:idpl:c:m:vhsrek", opt_options, 0)) != -1) {
         switch (ch) {
             case 'z':
                 converterConfig->initWithPath(optarg);
@@ -174,6 +175,15 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
             case 'i':
                 converterConfig->config()->setBool("invertTransparency", true);
                 break;
+            case 'I': {
+                int maxIndices = atoi(optarg);
+                if (maxIndices > 0) {
+                    converterConfig->config()->setUnsignedInt32("maximumIndicesCount", maxIndices);
+                } else {
+                    printf("[warning] invalid number of indices:%s\n", optarg);
+                }
+                break;
+            }
             case 'p':
                 converterConfig->config()->setBool("outputProgress", true);
                 break;
