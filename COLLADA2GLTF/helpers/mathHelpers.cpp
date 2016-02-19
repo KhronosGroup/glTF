@@ -172,6 +172,26 @@ namespace GLTF
         //  probably this valid case we are running into.
         if (!unmatrix(tr, tran) && (translation || rotation)) {
             printf("WARNING: matrix can't be decomposed \n");
+
+            // Even if we do fail decomposing the matrix, make sure
+            // we don't return completely invalid values. We can at least get
+            // translations up to when the uniform scale 0 was added
+            // to the transformations. We can also return a rotation 
+            // equivalent to zero degree rotation about the x axis, since we have
+            // no way of getting what the actual rotation was before the 
+            // zero scaling was added.
+            tran[U_TRANSX] = matrix.getElement(0, 3);
+            tran[U_TRANSY] = matrix.getElement(1, 3);
+            tran[U_TRANSZ] = matrix.getElement(2, 3);
+
+            tran[U_ROTATEX] = 1.0;
+            tran[U_ROTATEY] = 0.0;
+            tran[U_ROTATEZ] = 0.0;
+            tran[U_ROTATEW] = 0.0;
+
+            tran[U_SCALEX] = 0.0;
+            tran[U_SCALEY] = 0.0;
+            tran[U_SCALEZ] = 0.0;
         }
         
         if (translation) {
