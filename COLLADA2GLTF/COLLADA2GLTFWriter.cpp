@@ -383,10 +383,6 @@ namespace GLTF
             node->getTransformationMatrix(matrix);
         }
                 
-        float scale[3];
-        float translation[3];
-        float rotation[4];
-
         const TransformationPointerArray& transformations = node->getTransformations();
         size_t transformationsCount = transformations.getCount();
         for (size_t i = 0 ; i < transformationsCount ; i++) {
@@ -431,7 +427,38 @@ namespace GLTF
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
                 
         if (shouldExportTRS) {
+            float scale[3];
+            float translation[3];
+            float rotation[4];
             GLTF::decomposeMatrix(matrix, translation, rotation, scale);
+
+            if (scale[0] == 0.0 && scale[1] == 0.0 && scale[2] == 0.0 && !nodeContainsLookAtTr)
+            {
+                // Matrix decompose failed because of a uniform scaling of 0 in the transformations.
+                // We've lost the rotation information. We'll have to manually extract the rotations.
+                Math::Quaternion rotationQuat = Math::Quaternion::IDENTITY;
+                for (size_t i = 0, count = transformations.getCount(); i < count; ++i)
+                {
+                    const Transformation* transform = transformations[i];
+
+                    if (transform->getTransformationType() == Transformation::ROTATE)
+                    {
+                        Rotate* rotate = (Rotate*)transform;
+                        Math::Vector3 axis = rotate->getRotationAxis();
+                        axis.normalise();
+                        double angle = rotate->getRotationAngle();
+                        rotationQuat = rotationQuat * Math::Quaternion(Math::Utils::degToRad(angle), axis);
+                    }
+                }
+
+                Math::Real angle;
+                Math::Vector3 axis;
+                rotationQuat.toAngleAxis(angle, axis);
+                rotation[0] = axis.x;
+                rotation[1] = axis.y;
+                rotation[2] = axis.z;
+                rotation[3] = angle;
+            }
 
             // Scale distance units if we need to
             translation[0] *= (float)_asset->getDistanceScale();
