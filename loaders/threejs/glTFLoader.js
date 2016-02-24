@@ -1094,7 +1094,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
 
                     values = {};
                     for (prop in khr_material.values) {
-                        values[prop] = khr_material.values[prop].value;
+                        values[prop] = khr_material.values[prop];
                     }
 
                 }
