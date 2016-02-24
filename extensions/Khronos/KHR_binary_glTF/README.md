@@ -146,8 +146,8 @@ See Listings 2 and 3.
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [image](schema/KHR_binary_glTF.image.schema.json) `KHR_binary_glTF` extensions object
-* [shader](schema/KHR_binary_glTF.shader.schema.json) `KHR_binary_glTF` extensions object
+* [image](schema/image.KHR_binary_glTF.schema.json) `KHR_binary_glTF` extensions object
+* [shader](schema/shader.KHR_binary_glTF.schema.json) `KHR_binary_glTF` extensions object
 
 ## File Extension
 
