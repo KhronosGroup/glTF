@@ -37,7 +37,10 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 * [glTF loader](https://github.com/BabylonJS/Babylon.js/tree/master/loaders/glTF) in [BabylonJS](http://babylonjs.com/)
 * [glTF loader](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js) in [Cesium](http://cesiumjs.org/)
    * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
+   * [3D Models](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) tutorial
 * Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
+* Initial [glTF loader](https://github.com/xeolabs/xeoengine/tree/master/src/importing/gltf) in [xeoEngine](http://xeoengine.org/) (geometry and materials)
+   * [Importing glTF](https://github.com/xeolabs/xeoengine/wiki/Importing-glTF) tutorial
 
 #### JavaScript / Node.js
 
