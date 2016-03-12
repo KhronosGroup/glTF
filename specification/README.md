@@ -32,7 +32,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Concepts](#concepts)
   * [IDs and Names](#ids-and-names)
   * [Scenes](#scenes)
-  * [Accessing Binary Data](#binary-data)
+  * [Accessing Binary Data](#accessing-binary-data)
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
   * [Cameras](#cameras)
@@ -495,7 +495,7 @@ The following example defines a mesh containing one triangle set primitive:
             },
             "indices": "accessor_21",
             "material": "blinn3-fx",
-            "primitive": 4
+            "mode": 4
         }
     ]
 ```
@@ -578,7 +578,7 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
                     },
                     "indices": "accessor_161",
                     "material": "material_1",
-                    "primitive": 4
+                    "mode": 4
                 }
             ]
         }
