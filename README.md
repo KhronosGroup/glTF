@@ -23,11 +23,15 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 * [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter
 * [Assimp](http://www.assimp.org/) - General-purpose conversion pipeline with a glTF importer/exporter pipeline. See the [list of supported import formats](https://github.com/assimp/assimp#supported-file-formats).
 * [OBJ2GLTF](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF
-* [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) - Node.js tool to convert glTF to Binary glTF.
-* [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter (glTF 0.8)
+* [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
+* [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) - Node.js tool to convert glTF to Binary glTF
 * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
+
+### Exporters
+
+* [Blender](https://github.com/Kupoman/blendergltf) - work in progress
 
 ### Loaders and Viewers
 
