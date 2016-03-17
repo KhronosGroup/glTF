@@ -262,8 +262,8 @@ In the example below, `node-box` defines non-default rotation and translation.
         "rotation": [
             0,
             0,
-            1,
-            0
+            0,
+            1
         ],
         "scale": [
             1,
@@ -2443,7 +2443,7 @@ A node can have either a `matrix` or any combination of `translation`/`rotation`
 |**jointName**|`string`|Name used when this node is a joint in a skin.|No|
 |**matrix**|`number[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
 |**meshes**|`string[]`|The IDs of the [`mesh`](#reference-mesh) objects in this node.|No|
-|**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,0.1]`|
+|**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,1]`|
 |**scale**|`number[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
 |**translation**|`number[3]`|The node's translation.|No, default: `[0,0,0]`|
 |**name**|`string`|The user-defined name of this object.|No|
