@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include "geometryHelpers.h"
 
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif

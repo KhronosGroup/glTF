@@ -39,7 +39,6 @@
 #define DUMP_O3DGC_OUTPUT 0
 
 using namespace o3dgc;
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif

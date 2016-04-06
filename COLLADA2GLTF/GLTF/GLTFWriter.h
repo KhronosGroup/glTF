@@ -45,26 +45,6 @@ namespace GLTF
         virtual void write(JSONValue* value, void *context) = 0;
     };
 
-    class GLTFDefaultWriter : public GLTFWriter
-    {
-    public:
-        GLTFDefaultWriter();
-        virtual ~GLTFDefaultWriter();
-
-        bool initWithPath(const std::string &path);
-        void writeArray(JSONArray* array, void *context);
-        void writeObject(JSONObject* object, void *context);
-        void writeNumber(JSONNumber* number, void *context);
-        void writeString(JSONString* str, void *context);
-        void write(JSONValue* value, void *context);
-
-    private:
-        FILE* _fd;
-        rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
-        rapidjson::FileStream *_fileStream;
-    };
-
 }
-
 
 #endif

@@ -27,8 +27,8 @@
 #include "GLTF.h"
 #include "../GLTFOpenCOLLADA.h"
 #include "GLTFAsset.h"
+#include "GLTFWriter.h"
 
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif
@@ -56,112 +56,6 @@ namespace GLTF
         vec4->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(w)));
 
         return vec4;
-    }
-
-    //-- Default Writer
-    
-    GLTFDefaultWriter::GLTFDefaultWriter() :
-        _writer(0)
-    {
-        _fd = 0;
-    }
-
-    bool GLTFDefaultWriter::initWithPath(const std::string &path) {
-        this->_fd = fopen(path.c_str(), "w");
-        if (this->_fd) {
-            this->_fileStream = new rapidjson::FileStream(this->_fd);
-            if (this->_fileStream) {
-                this->_writer = new rapidjson::PrettyWriter <rapidjson::FileStream>(*this->_fileStream);
-                return this->_writer != 0;
-            }
-        }
-        
-        return false;
-    }
-        
-    GLTFDefaultWriter::~GLTFDefaultWriter() {
-        if (_fd) {
-            delete this->_fileStream;
-            delete this->_writer;
-            fclose(this->_fd);
-        }
-    }
-        
-    //base
-    void GLTFDefaultWriter::writeArray(JSONArray* array, void *context) {
-        this->_writer->StartArray();
-        
-        vector <shared_ptr <JSONValue> > values = array->values();
-        size_t count = values.size();
-        for (size_t i = 0 ; i < count ; i++) {
-            values[i]->write(this, context);
-        }
-        
-        this->_writer->EndArray();
-    }
-    
-    void GLTFDefaultWriter::writeObject(JSONObject* object, void *context) {
-        this->_writer->StartObject(); 
-
-        vector <std::string> keys = object->getAllKeys();
-        size_t count = keys.size();
-        
-        for (size_t i = 0 ; i < count ; i++) {
-            shared_ptr <JSONValue> value = object->getValue(keys[i]);
-            const std::string& key = keys[i];
-            this->_writer->String(key.c_str());
-            if (value)
-                value->write(this, context);
-        }
-        
-        this->_writer->EndObject(); 
-    }
-    
-    void GLTFDefaultWriter::writeNumber(JSONNumber* number, void *context) {
-        JSONNumber::JSONNumberType type = number->getNumberType();
-        
-        switch (type) {
-            case JSONNumber::UNSIGNED_INT32:
-                this->_writer->Uint(number->getUnsignedInt32());
-                break;
-            case JSONNumber::INT32:
-                this->_writer->Int(number->getInt32());
-                break;
-            case JSONNumber::DOUBLE:
-            {   
-                double value = number->getDouble();
-                this->_writer->Double(value);
-                break;
-            }
-            case JSONNumber::BOOL:
-            {   
-                bool value = number->getBool();
-                this->_writer->Bool(value);
-            }
-                break;
-            default:
-                //FIXME: TODO Handle error
-                break;
-        }
-    }
-        
-    void GLTFDefaultWriter::writeString(JSONString* str, void *context) {
-        this->_writer->String(str->getCString());
-    }
-    
-    void GLTFDefaultWriter::write(JSONValue* value, void* context) {
-        JSONType jsonType = value->getJSONType();
-        
-        if (jsonType == kJSONNumber) {
-            this->writeNumber((JSONNumber*)value, context);
-        } else if (jsonType == kJSONObject) {
-            this->writeObject((JSONObject*)value, context);
-        } else if (jsonType == kJSONArray) {
-            this->writeArray((JSONArray*)value, context);
-        } else if (jsonType == kJSONString) {
-            this->writeString((JSONString*)value, context);
-        } 
-        
     }
         
 }

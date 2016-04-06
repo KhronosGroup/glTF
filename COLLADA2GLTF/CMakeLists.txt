@@ -109,6 +109,7 @@ set(GLTF_SOURCES
     GLTF/GLTFPrimitive.cpp
     GLTF/GLTFUtils.cpp
     GLTF/GLTFWriter.cpp
+    GLTF/GLTFDefaultWriter.cpp
     GLTF/GLTFSkin.cpp
     GLTF/GLTF.h
     GLTF/GLTFTypesAndConstants.h
@@ -122,6 +123,7 @@ set(GLTF_SOURCES
     GLTF/GLTFPrimitive.h
     GLTF/GLTFUtils.h
     GLTF/GLTFWriter.h
+    GLTF/GLTFDefaultWriter.h
     GLTF/GLTFSkin.h
     GLTF/GLTFExtraDataHandler.h
     GLTF/GLTFExtraDataHandler.cpp

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Motorola Mobility, Inc.
+// Copyright (c) 2012, Motorola Mobility, Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -24,54 +24,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __GLTF_H__
-#define __GLTF_H__
+#ifndef __JSON_DEFAULT_WRITER_H__
+#define __JSON_DEFAULT_WRITER_H__
 
-// system & STL headers
-#include <algorithm>
-#include <stack>
-#include <list>
-#include <map>
-#include <set>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <vector>
-#include "assert.h"
-#include <cstddef>
-#include <cstdint>
+#include "GLTFWriter.h"
 
-#if (defined(WIN32) || defined(_LIBCPP_VERSION) || __cplusplus > 199711L)
-#include <memory>
-#include <unordered_map>
-#else 
-#include <tr1/memory>
-#include <tr1/unordered_map>
+#include <prettywriter.h>
+#include <filestream.h>
+
+namespace GLTF
+{
+
+    class GLTFDefaultWriter : public GLTFWriter
+    {
+    public:
+        GLTFDefaultWriter();
+        virtual ~GLTFDefaultWriter();
+
+        bool initWithPath(const std::string &path);
+        void writeArray(JSONArray* array, void *context);
+        void writeObject(JSONObject* object, void *context);
+        void writeNumber(JSONNumber* number, void *context);
+        void writeString(JSONString* str, void *context);
+        void write(JSONValue* value, void *context);
+
+    private:
+        FILE* _fd;
+        rapidjson::PrettyWriter <rapidjson::FileStream> *_writer;
+        rapidjson::FileStream *_fileStream;
+    };
+
+}
+
 #endif
 
-// GLTF headers
-#include "COLLADA2GLTFExport.h"
-#include "GLTFTypesAndConstants.h"
-#include "GLTFProfile.h"
-#include "JSONValue.h"
-#include "JSONNumber.h"
-#include "JSONString.h"
-#include "JSONObject.h"
-#include "JSONArray.h"
-#include "GLTFUtils.h"
-#include "GLTFBuffer.h"
-#include "GLTFAccessor.h"
-#include "GLTFEffect.h"
-#include "GLTFPrimitive.h"
-#include "GLTFMesh.h"
-#include "GLTFSkin.h"
-#include "GLTFAnimation.h"
-#include "GLTFWriter.h"
-#include "GLTFInputStream.h"
-#include "GLTFOutputStream.h"
-#include "GLTFConfig.h"
-#include "GLTFAssetModifier.h"
-#include "GLTFExtras.h"
-
-#endif 
