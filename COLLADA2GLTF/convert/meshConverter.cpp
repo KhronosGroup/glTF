@@ -22,7 +22,6 @@
 #endif
 //--- X3DGC
 
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif

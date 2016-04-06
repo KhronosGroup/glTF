@@ -8,6 +8,7 @@
 #include "geometryHelpers.h"
 #include "../shaders/commonProfileShaders.h"
 #include <GLTFOpenCOLLADAUtils.h>
+#include <GLTFDefaultWriter.h>
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;

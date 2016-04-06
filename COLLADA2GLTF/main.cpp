@@ -41,7 +41,6 @@
 #include "JSONObject.h"
 #include "GLTFOpenCOLLADAUtils.h"
 
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif
@@ -129,8 +128,6 @@ bool fileExists(const char * filename) {
 
 static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
 	int ch;
-    std::string file;
-    std::string output;
     bool hasOutputPath = false;
     bool hasInputPath = false;
     bool shouldShowHelp = false;
@@ -198,7 +195,7 @@ static bool processArgs(int argc, char * const * argv, GLTF::GLTFAsset *asset) {
                     if (strcmp(optarg, "true") == 0) {
                         useDefaultLight = true;
                     }
-                    if (strcmp(optarg, "false") == 0) {
+                    else if (strcmp(optarg, "false") == 0) {
                         useDefaultLight = false;
                     } else {
                         useDefaultLight = atoi(optarg) != 0;

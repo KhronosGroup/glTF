@@ -32,7 +32,6 @@
 #define _GL_STR(X) #X
 #define _GL(X) (this->_profile->getGLenumForString(_GL_STR(X)))
 
-using namespace rapidjson;
 #if __cplusplus <= 199711L
 using namespace std::tr1;
 #endif

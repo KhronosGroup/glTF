@@ -46,7 +46,6 @@ using namespace std;
 using namespace COLLADAFW;
 using namespace COLLADABU;
 using namespace COLLADASaxFWL;
-using namespace rapidjson;
 
 namespace
 {
