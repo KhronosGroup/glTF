@@ -28,6 +28,10 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [monster](monster)                            | ![](monster/screenshot/screenshot.png)           | Textured. Animations. Skins. |
 | [brainsteam](brainsteam)                      | ![](brainsteam/screenshot/screenshot.png)        | Animations. Skins. |
 
+## Flightradar24 Models
+
+For additional glTF models, see Flightradar24's [GitHub repo](https://github.com/kalmykov/fr24-3d-models) of aircrafts.
+
 ## Contributing Sample Models
 
 We appreciate sample model contributions; they help ensure a consistent glTF ecosystem.
