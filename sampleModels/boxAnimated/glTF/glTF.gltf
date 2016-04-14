@@ -202,7 +202,7 @@
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1"
     },
     "bufferViews": {
         "bufferView_63": {
@@ -228,6 +228,17 @@
             "byteLength": 11376,
             "type": "arraybuffer",
             "uri": "glTF.bin"
+        }
+    },
+    "cameras": {
+        "camera_0": {
+          "perspective": {
+              "aspectRatio": 1,
+              "yfov": 0.314347,
+              "zfar": 1e+06,
+              "znear": 0.05
+          },
+          "type": "perspective"
         }
     },
     "materials": {
@@ -304,7 +315,7 @@
     },
     "nodes": {
         "Camera-camera002Node": {
-            "camera": "",
+            "camera": "camera_0",
             "children": [],
             "matrix": [
                 1,

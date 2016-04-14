@@ -1444,7 +1444,7 @@
         "default-camera": {
             "name": "default_3",
             "perspective": {
-                "aspect_ratio": 1,
+                "aspectRatio": 1,
                 "yfov": 0.263245,
                 "zfar": 1e+006,
                 "znear": 0.05

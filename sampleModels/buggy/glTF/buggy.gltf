@@ -5117,7 +5117,7 @@
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1"
     },
     "bufferViews": {
         "bufferView_2767": {
@@ -5144,7 +5144,7 @@
         "default-camera": {
             "name": "default_3",
             "perspective": {
-                "aspect_ratio": 1,
+                "aspectRatio": 1,
                 "yfov": 0.266483,
                 "zfar": 1e+06,
                 "znear": 0.05

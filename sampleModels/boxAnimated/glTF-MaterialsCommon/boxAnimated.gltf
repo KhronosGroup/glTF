@@ -230,6 +230,17 @@
             "uri": "boxAnimated.bin"
         }
     },
+    "cameras": {
+        "camera_0": {
+          "perspective": {
+              "aspectRatio": 1,
+              "yfov": 0.314347,
+              "zfar": 1e+06,
+              "znear": 0.05
+          },
+          "type": "perspective"
+        }
+    },
     "extensions": {
         "KHR_materials_common": {
             "lights": {
@@ -349,7 +360,7 @@
     },
     "nodes": {
         "Camera-camera002Node": {
-            "camera": "",
+            "camera": "camera_0",
             "children": [],
             "matrix": [
                 1,
