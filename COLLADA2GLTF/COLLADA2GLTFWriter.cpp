@@ -1150,7 +1150,7 @@ namespace GLTF
                             double x = camera->getXFov().getValue() * radianPerDegree;
                             double y = camera->getYFov().getValue() * radianPerDegree;
                             projectionObject->setDouble("yfov", y);
-                            projectionObject->setDouble("aspect_ratio", x / y);
+                            projectionObject->setDouble(kAspectRatio, x / y);
                         }
                         break;
                     case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov. Compute yfov.
@@ -1158,12 +1158,12 @@ namespace GLTF
                             double x = camera->getXFov().getValue() * radianPerDegree;
                             double aspect_ratio = camera->getAspectRatio().getValue();
                             projectionObject->setDouble("yfov", x / aspect_ratio);
-                            projectionObject->setDouble("aspect_ratio", aspect_ratio);
+							projectionObject->setDouble(kAspectRatio, aspect_ratio);
                         }
                         break;
                     case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov.
                         projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
-                        projectionObject->setDouble("aspect_ratio", camera->getAspectRatio().getValue());
+						projectionObject->setDouble(kAspectRatio, camera->getAspectRatio().getValue());
                         break;
                 }
                 
