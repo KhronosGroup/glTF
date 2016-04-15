@@ -88,6 +88,7 @@ const std::string kSemantic = "semantic";
 const std::string kJointName = "jointName";
 const std::string kJointNames = "jointNames";
 const std::string kDoubleSided = "doubleSided";
+const std::string kAspectRatio = "aspectRatio";
 
 const std::string MODELVIEW = "MODELVIEW";
 const std::string MODELVIEWINVERSETRANSPOSE = "MODELVIEWINVERSETRANSPOSE";
