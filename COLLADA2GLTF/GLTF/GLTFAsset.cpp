@@ -941,21 +941,47 @@ namespace GLTF
         }
         
         meshesUIDs = meshes->getAllKeys();
+		shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded(kMaterials);
         
         for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshesUIDs[i]));
-            mesh->resolveAttributes();
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
             unsigned int primitivesCount =  (unsigned int)primitives.size();
-            //WORK-AROUND: we don't want meshes without material, which can happen if a mesh is not associated with a node.
-            //In this case, the material binding - isn't resolved.
-            for (unsigned int k = 0 ; k < primitivesCount ; k++) {
-                shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[k]);
+
+            for (unsigned int j = 0 ; j < primitivesCount ; j++) {
+                shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
+				//WORK-AROUND: we don't want meshes without material, which can happen if a mesh is not associated with a node.
+				//In this case, the material binding - isn't resolved.
                 if (primitive->contains(kMaterial) ==  false) {
                     meshes->removeValue(mesh->getID());
                     break;
                 }
+				//WORK-AROUND: TEXCOORD from the Collada model is an unnecessary field if the material doesn't use textures
+				else {
+					GLTF::VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
+					for (unsigned int k = 0; k < vertexAttributes.size(); k++) {
+						shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
+						if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
+							std::string materialId = primitive->getMaterialID();
+							shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
+							shared_ptr <JSONObject> values = material->getValues();
+							bool usesTexture = false;
+							std::vector<std::string> keys = values->getAllKeys();
+							for (unsigned int m = 0; m < values->getKeysCount(); m++) {
+								shared_ptr <JSONValue> value = values->getValue(keys.at(m))->valueForKeyPath("value");
+								if (value->valueType() == kJSONString) {
+									usesTexture = true;
+									break;
+								}
+							}
+							if (!usesTexture) {
+								primitive->removeVertexAttribute(k);
+							}
+						}
+					}
+				}
             }
+			mesh->resolveAttributes();
         }
         
         //Meshes may have changed ids here, get keys again.
@@ -963,7 +989,6 @@ namespace GLTF
 
         // ----
         
-        shared_ptr <GLTF::JSONObject> materials = this->_root->createObjectIfNeeded(kMaterials);
         vector <std::string> materialUIDs = materials->getAllKeys();
         for (size_t i = 0 ; i < materialUIDs.size() ; i++) {
             shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTFEffect>(materials->getObject(materialUIDs[i]));

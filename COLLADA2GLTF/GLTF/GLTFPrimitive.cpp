@@ -87,7 +87,11 @@ namespace GLTF
     void GLTFPrimitive::appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute)
     {
         this->_allVertexAttributes.push_back(VertexAttribute);
-    }    
+    }  
+
+	void GLTFPrimitive::removeVertexAttribute(unsigned int index) {
+		this->_allVertexAttributes.erase(this->_allVertexAttributes.begin() + index);
+	}
         
     unsigned int GLTFPrimitive::getMode() {
         return this->getUnsignedInt32(kMode);

@@ -71,6 +71,7 @@ namespace GLTF
         
         VertexAttributeVector getVertexAttributes();
         void appendVertexAttribute(std::shared_ptr <JSONVertexAttribute> VertexAttribute);
+		void removeVertexAttribute(unsigned int index);
         
         std::shared_ptr <GLTF::GLTFAccessor>  getIndices();
         void setIndices(std::shared_ptr <GLTF::GLTFAccessor> indices);
