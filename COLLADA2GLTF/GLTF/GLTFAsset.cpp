@@ -67,12 +67,6 @@ namespace GLTF
         asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
 
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-
-        bool isCompressed = false;
-        if (mesh->contains(kExtensions)) {
-            isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
-        }
-
         unsigned int primitivesCount = (unsigned int)primitives.size();
         for (unsigned int j = 0; j < primitivesCount; j++) {
             shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
