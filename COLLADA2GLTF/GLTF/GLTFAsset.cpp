@@ -66,21 +66,36 @@ namespace GLTF
         totalVerticesCount += (unsigned int)vertexCount;
         asset->convertionResults()->setUnsignedInt32("verticesCount", totalVerticesCount);
 
-        for (unsigned int j = 0 ; j < allMeshAttributes->size() ; j++) {
-            shared_ptr <GLTFAccessor> meshAttribute = (*allMeshAttributes)[j];
-            shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
-            shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
-            
-            if (!bufferView.get()) {
-                return false;
-            }
-            
-            if (IDToBuffer.count(bufferView->getBuffer()->getID()) == 0) {
-                meshAttribute->exposeMinMax();
-                meshAttribute->setByteOffset(vertexOutputStream->length() - startOffset);
-                vertexOutputStream->write(buffer);
-                IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-                asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
+        GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
+
+        bool isCompressed = false;
+        if (mesh->contains(kExtensions)) {
+            isCompressed = mesh->getExtensions()->contains("Open3DGC-compression");
+        }
+
+        unsigned int primitivesCount = (unsigned int)primitives.size();
+        for (unsigned int j = 0; j < primitivesCount; j++) {
+            shared_ptr<GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
+            GLTF::VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
+            for (unsigned int k = 0; k < vertexAttributes.size(); k++) {
+                shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
+                GLTF::Semantic semantic = vertexAttribute->getSemantic();
+                shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
+
+                shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
+                shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
+
+                if (!bufferView.get()) {
+                    return false;
+                }
+
+                if (IDToBuffer.count(bufferView->getBuffer()->getID()) == 0) {
+                    meshAttribute->exposeMinMax();
+                    meshAttribute->setByteOffset(vertexOutputStream->length() - startOffset);
+                    vertexOutputStream->write(buffer);
+                    IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
+                    asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
+                }
             }
         }
         return true;
