@@ -76,19 +76,21 @@ namespace GLTF
                 GLTF::Semantic semantic = vertexAttribute->getSemantic();
                 shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
 
-                shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
-                shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
+                if (meshAttribute != NULL) {
+                    shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
+                    shared_ptr <GLTFBuffer> buffer = bufferView->getBuffer();
 
-                if (!bufferView.get()) {
-                    return false;
-                }
+                    if (!bufferView.get()) {
+                        return false;
+                    }
 
-                if (IDToBuffer.count(bufferView->getBuffer()->getID()) == 0) {
-                    meshAttribute->exposeMinMax();
-                    meshAttribute->setByteOffset(vertexOutputStream->length() - startOffset);
-                    vertexOutputStream->write(buffer);
-                    IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
-                    asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
+                    if (IDToBuffer.count(bufferView->getBuffer()->getID()) == 0) {
+                        meshAttribute->exposeMinMax();
+                        meshAttribute->setByteOffset(vertexOutputStream->length() - startOffset);
+                        vertexOutputStream->write(buffer);
+                        IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
+                        asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
+                    }
                 }
             }
         }
@@ -977,10 +979,14 @@ namespace GLTF
                             bool usesTexture = false;
                             std::vector<std::string> keys = values->getAllKeys();
                             for (unsigned int m = 0; m < values->getKeysCount(); m++) {
-                                shared_ptr <JSONValue> value = values->getValue(keys.at(m))->valueForKeyPath("value");
-                                if (value->valueType() == kJSONString) {
-                                    usesTexture = true;
-                                    break;
+                                std::string key = keys.at(m);
+                                //As-in commonProfileShaders.cpp, exclude the reflective slot
+                                if (key != "reflective") {
+                                    shared_ptr <JSONValue> value = values->getValue(keys.at(m))->valueForKeyPath("value");
+                                    if (value->valueType() == kJSONString) {
+                                        usesTexture = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (!usesTexture) {
@@ -1093,8 +1099,10 @@ namespace GLTF
                     GLTF::Semantic semantic = vertexAttribute->getSemantic();
                     shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
 
-                    meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
-                    accessors->setValue(meshAttribute->getID(), meshAttribute);
+                    if (meshAttribute != NULL) {
+                        meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
+                        accessors->setValue(meshAttribute->getID(), meshAttribute);
+                    }
                 }
             }
             
