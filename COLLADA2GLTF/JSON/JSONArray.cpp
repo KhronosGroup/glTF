@@ -95,6 +95,10 @@ namespace GLTF
         this->_values.push_back(value);
     }
 
+    void JSONArray::remove(int index) {
+        this->_values.erase(this->_values.begin() + index);
+    }
+
     JSONType JSONArray::getJSONType() {
         return kJSONArray;
     }

@@ -39,6 +39,7 @@ namespace GLTF
         virtual ~JSONArray();
 
         virtual void appendValue(std::shared_ptr <JSONValue>);
+        virtual void remove(int index);
         
         JSONValueVectorRef values();
         
