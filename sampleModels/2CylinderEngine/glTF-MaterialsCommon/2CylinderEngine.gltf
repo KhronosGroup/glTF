@@ -1319,7 +1319,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -1329,23 +1329,23 @@
     },
     "bufferViews": {
         "bufferView_657": {
-            "buffer": "2_cylinder_engine",
+            "buffer": "2CylinderEngine",
             "byteLength": 454380,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_658": {
-            "buffer": "2_cylinder_engine",
+            "buffer": "2CylinderEngine",
             "byteLength": 1340232,
             "byteOffset": 454380,
             "target": 34962
         }
     },
     "buffers": {
-        "2_cylinder_engine": {
+        "2CylinderEngine": {
             "byteLength": 1794612,
             "type": "arraybuffer",
-            "uri": "2_cylinder_engine.bin"
+            "uri": "2CylinderEngine.bin"
         }
     },
     "cameras": {

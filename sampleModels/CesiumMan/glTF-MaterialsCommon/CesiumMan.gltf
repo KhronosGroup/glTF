@@ -9,7 +9,7 @@
         },
         "accessor_112": {
             "bufferView": "bufferView_120",
-            "byteOffset": 448512,
+            "byteOffset": 672768,
             "byteStride": 16,
             "componentType": 5126,
             "count": 14016,
@@ -29,7 +29,7 @@
         },
         "accessor_115": {
             "bufferView": "bufferView_120",
-            "byteOffset": 672768,
+            "byteOffset": 448512,
             "byteStride": 16,
             "componentType": 5126,
             "count": 14016,
@@ -1429,7 +1429,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -1439,28 +1439,28 @@
     },
     "bufferViews": {
         "bufferView_118": {
-            "buffer": "Cesium_Man",
+            "buffer": "CesiumMan",
             "byteLength": 38652,
             "byteOffset": 0
         },
         "bufferView_119": {
-            "buffer": "Cesium_Man",
+            "buffer": "CesiumMan",
             "byteLength": 28032,
             "byteOffset": 38652,
             "target": 34963
         },
         "bufferView_120": {
-            "buffer": "Cesium_Man",
+            "buffer": "CesiumMan",
             "byteLength": 897024,
             "byteOffset": 66684,
             "target": 34962
         }
     },
     "buffers": {
-        "Cesium_Man": {
+        "CesiumMan": {
             "byteLength": 963708,
             "type": "arraybuffer",
-            "uri": "Cesium_Man.bin"
+            "uri": "CesiumMan.bin"
         }
     },
     "extensionsUsed": [
@@ -1469,7 +1469,7 @@
     "images": {
         "Cesium_Man_jpg": {
             "name": "Cesium_Man_jpg",
-            "uri": "Cesium_Man.jpg"
+            "uri": "CesiumMan.jpg"
         }
     },
     "materials": {

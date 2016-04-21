@@ -63,33 +63,33 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": "1"
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "duck",
+            "buffer": "Duck",
             "byteLength": 25272,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "duck",
+            "buffer": "Duck",
             "byteLength": 76768,
             "byteOffset": 25272,
             "target": 34962
         }
     },
     "buffers": {
-        "duck": {
+        "Duck": {
             "byteLength": 102040,
             "type": "arraybuffer",
-            "uri": "duck.bin"
+            "uri": "Duck.bin"
         }
     },
     "cameras": {
@@ -107,7 +107,7 @@
     "images": {
         "file2": {
             "name": "file2",
-            "uri": "duckCM.png"
+            "uri": "DuckCM.png"
         }
     },
     "materials": {
@@ -234,8 +234,8 @@
                 "a_position",
                 "a_texcoord0"
             ],
-            "fragmentShader": "duck0FS",
-            "vertexShader": "duck0VS"
+            "fragmentShader": "Duck0FS",
+            "vertexShader": "Duck0VS"
         }
     },
     "samplers": {
@@ -257,13 +257,13 @@
         }
     },
     "shaders": {
-        "duck0FS": {
+        "Duck0FS": {
             "type": 35632,
-            "uri": "duck0FS.glsl"
+            "uri": "Duck0FS.glsl"
         },
-        "duck0VS": {
+        "Duck0VS": {
             "type": 35633,
-            "uri": "duck0VS.glsl"
+            "uri": "Duck0VS.glsl"
         }
     },
     "skins": {},

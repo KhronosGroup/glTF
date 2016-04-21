@@ -63,39 +63,39 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": "1"
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "CesiumTexturedBoxTest",
+            "buffer": "BoxTextured",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "CesiumTexturedBoxTest",
+            "buffer": "BoxTextured",
             "byteLength": 768,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "CesiumTexturedBoxTest": {
+        "BoxTextured": {
             "byteLength": 840,
             "type": "arraybuffer",
-            "uri": "CesiumTexturedBoxTest.bin"
+            "uri": "BoxTextured.bin"
         }
     },
     "images": {
         "Image0001": {
             "name": "Image0001",
-            "uri": "Cesium_Logo_Flat.png"
+            "uri": "CesiumLogoFlat.png"
         }
     },
     "materials": {
@@ -236,8 +236,8 @@
                 "a_position",
                 "a_texcoord0"
             ],
-            "fragmentShader": "CesiumTexturedBoxTest0FS",
-            "vertexShader": "CesiumTexturedBoxTest0VS"
+            "fragmentShader": "BoxTextured0FS",
+            "vertexShader": "BoxTextured0VS"
         }
     },
     "samplers": {
@@ -257,13 +257,13 @@
         }
     },
     "shaders": {
-        "CesiumTexturedBoxTest0FS": {
+        "BoxTextured0FS": {
             "type": 35632,
-            "uri": "CesiumTexturedBoxTest0FS.glsl"
+            "uri": "BoxTextured0FS.glsl"
         },
-        "CesiumTexturedBoxTest0VS": {
+        "BoxTextured0VS": {
             "type": 35633,
-            "uri": "CesiumTexturedBoxTest0VS.glsl"
+            "uri": "BoxTextured0VS.glsl"
         }
     },
     "skins": {},

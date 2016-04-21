@@ -43,27 +43,11 @@
                 -1
             ],
             "type": "VEC3"
-        },
-        "accessor_27": {
-            "bufferView": "bufferView_30",
-            "byteOffset": 576,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 24,
-            "max": [
-                1,
-                1
-            ],
-            "min": [
-                0,
-                0
-            ],
-            "type": "VEC2"
         }
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -73,23 +57,23 @@
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "box",
+            "buffer": "Box",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "box",
-            "byteLength": 768,
+            "buffer": "Box",
+            "byteLength": 576,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "box": {
-            "byteLength": 840,
+        "Box": {
+            "byteLength": 648,
             "type": "arraybuffer",
-            "uri": "box.bin"
+            "uri": "Box.bin"
         }
     },
     "extensionsUsed": [
@@ -130,8 +114,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_25",
-                        "POSITION": "accessor_23",
-                        "TEXCOORD_0": "accessor_27"
+                        "POSITION": "accessor_23"
                     },
                     "indices": "accessor_21",
                     "material": "Effect-Red",

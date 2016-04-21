@@ -44,22 +44,6 @@
             ],
             "type": "VEC3"
         },
-        "accessor_35": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 5376,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 224,
-            "max": [
-                1.00077,
-                1.00133
-            ],
-            "min": [
-                -0.00075,
-                0.00132602
-            ],
-            "type": "VEC2"
-        },
         "accessor_56": {
             "bufferView": "bufferView_64",
             "byteOffset": 768,
@@ -70,7 +54,7 @@
         },
         "accessor_58": {
             "bufferView": "bufferView_65",
-            "byteOffset": 7168,
+            "byteOffset": 5376,
             "byteStride": 12,
             "componentType": 5126,
             "count": 96,
@@ -88,7 +72,7 @@
         },
         "accessor_60": {
             "bufferView": "bufferView_65",
-            "byteOffset": 8320,
+            "byteOffset": 6528,
             "byteStride": 12,
             "componentType": 5126,
             "count": 96,
@@ -103,22 +87,6 @@
                 -1
             ],
             "type": "VEC3"
-        },
-        "accessor_62": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 9472,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 96,
-            "max": [
-                0.405625,
-                0.905582
-            ],
-            "min": [
-                0.344375,
-                0.094418
-            ],
-            "type": "VEC2"
         },
         "animAccessor_0": {
             "bufferView": "bufferView_63",
@@ -196,7 +164,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -206,39 +174,28 @@
     },
     "bufferViews": {
         "bufferView_63": {
-            "buffer": "boxAnimated",
+            "buffer": "BoxAnimated",
             "byteLength": 104,
             "byteOffset": 0
         },
         "bufferView_64": {
-            "buffer": "boxAnimated",
+            "buffer": "BoxAnimated",
             "byteLength": 1032,
             "byteOffset": 104,
             "target": 34963
         },
         "bufferView_65": {
-            "buffer": "boxAnimated",
-            "byteLength": 10240,
+            "buffer": "BoxAnimated",
+            "byteLength": 7680,
             "byteOffset": 1136,
             "target": 34962
         }
     },
     "buffers": {
-        "boxAnimated": {
-            "byteLength": 11376,
+        "BoxAnimated": {
+            "byteLength": 8816,
             "type": "arraybuffer",
-            "uri": "boxAnimated.bin"
-        }
-    },
-    "cameras": {
-        "camera_0": {
-          "perspective": {
-              "aspectRatio": 1,
-              "yfov": 0.314347,
-              "zfar": 1e+06,
-              "znear": 0.05
-          },
-          "type": "perspective"
+            "uri": "BoxAnimated.bin"
         }
     },
     "extensions": {
@@ -333,8 +290,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_33",
-                        "POSITION": "accessor_31",
-                        "TEXCOORD_0": "accessor_35"
+                        "POSITION": "accessor_31"
                     },
                     "indices": "accessor_29",
                     "material": "Effect-outer",
@@ -348,8 +304,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_60",
-                        "POSITION": "accessor_58",
-                        "TEXCOORD_0": "accessor_62"
+                        "POSITION": "accessor_58"
                     },
                     "indices": "accessor_56",
                     "material": "Effect-inner",
@@ -360,7 +315,7 @@
     },
     "nodes": {
         "Camera-camera002Node": {
-            "camera": "camera_0",
+            "camera": "",
             "children": [],
             "matrix": [
                 1,

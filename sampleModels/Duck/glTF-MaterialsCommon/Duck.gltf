@@ -63,7 +63,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -73,30 +73,30 @@
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "duck",
+            "buffer": "Duck",
             "byteLength": 25272,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "duck",
+            "buffer": "Duck",
             "byteLength": 76768,
             "byteOffset": 25272,
             "target": 34962
         }
     },
     "buffers": {
-        "duck": {
+        "Duck": {
             "byteLength": 102040,
             "type": "arraybuffer",
-            "uri": "duck.bin"
+            "uri": "Duck.bin"
         }
     },
     "cameras": {
         "cameraShape1": {
             "name": "cameraShape1",
             "perspective": {
-                "aspect_ratio": 1.5,
+                "aspectRatio": 1.5,
                 "yfov": 0.660593,
                 "zfar": 100,
                 "znear": 0.01
@@ -127,7 +127,7 @@
     "images": {
         "file2": {
             "name": "file2",
-            "uri": "duckCM.png"
+            "uri": "DuckCM.png"
         }
     },
     "materials": {

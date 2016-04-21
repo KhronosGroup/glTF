@@ -198,7 +198,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -386,8 +386,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_73",
-                        "POSITION": "accessor_71",
-                        "TEXCOORD_0": "accessor_75"
+                        "POSITION": "accessor_71"
                     },
                     "indices": "accessor_66",
                     "material": "Effect-glass",
@@ -396,8 +395,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_73",
-                        "POSITION": "accessor_71",
-                        "TEXCOORD_0": "accessor_75"
+                        "POSITION": "accessor_71"
                     },
                     "indices": "accessor_69",
                     "material": "Effect-window_trim",

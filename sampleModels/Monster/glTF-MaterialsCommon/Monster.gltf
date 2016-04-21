@@ -9,7 +9,7 @@
         },
         "accessor_164": {
             "bufferView": "bufferView_172",
-            "byteOffset": 84864,
+            "byteOffset": 127296,
             "byteStride": 16,
             "componentType": 5126,
             "count": 2652,
@@ -29,7 +29,7 @@
         },
         "accessor_167": {
             "bufferView": "bufferView_172",
-            "byteOffset": 127296,
+            "byteOffset": 84864,
             "byteStride": 16,
             "componentType": 5126,
             "count": 2652,
@@ -2326,7 +2326,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -2336,28 +2336,28 @@
     },
     "bufferViews": {
         "bufferView_170": {
-            "buffer": "monster",
+            "buffer": "Monster",
             "byteLength": 131732,
             "byteOffset": 0
         },
         "bufferView_171": {
-            "buffer": "monster",
+            "buffer": "Monster",
             "byteLength": 5304,
             "byteOffset": 131732,
             "target": 34963
         },
         "bufferView_172": {
-            "buffer": "monster",
+            "buffer": "Monster",
             "byteLength": 169728,
             "byteOffset": 137036,
             "target": 34962
         }
     },
     "buffers": {
-        "monster": {
+        "Monster": {
             "byteLength": 306764,
             "type": "arraybuffer",
-            "uri": "monster.bin"
+            "uri": "Monster.bin"
         }
     },
     "extensionsUsed": [
@@ -2366,7 +2366,7 @@
     "images": {
         "monster_jpg": {
             "name": "monster_jpg",
-            "uri": "monster.jpg"
+            "uri": "Monster.jpg"
         }
     },
     "materials": {

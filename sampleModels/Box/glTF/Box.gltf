@@ -43,53 +43,37 @@
                 -1
             ],
             "type": "VEC3"
-        },
-        "accessor_27": {
-            "bufferView": "bufferView_30",
-            "byteOffset": 576,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 24,
-            "max": [
-                1,
-                1
-            ],
-            "min": [
-                0,
-                0
-            ],
-            "type": "VEC2"
         }
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": "1"
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "box",
+            "buffer": "Box",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "box",
-            "byteLength": 768,
+            "buffer": "Box",
+            "byteLength": 576,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "box": {
-            "byteLength": 840,
+        "Box": {
+            "byteLength": 648,
             "type": "arraybuffer",
-            "uri": "box.bin"
+            "uri": "Box.bin"
         }
     },
     "materials": {
@@ -120,8 +104,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_25",
-                        "POSITION": "accessor_23",
-                        "TEXCOORD_0": "accessor_27"
+                        "POSITION": "accessor_23"
                     },
                     "indices": "accessor_21",
                     "material": "Effect-Red",
@@ -187,8 +170,8 @@
                 "a_normal",
                 "a_position"
             ],
-            "fragmentShader": "box0FS",
-            "vertexShader": "box0VS"
+            "fragmentShader": "Box0FS",
+            "vertexShader": "Box0VS"
         }
     },
     "scene": "defaultScene",
@@ -200,13 +183,13 @@
         }
     },
     "shaders": {
-        "box0FS": {
+        "Box0FS": {
             "type": 35632,
-            "uri": "box0FS.glsl"
+            "uri": "Box0FS.glsl"
         },
-        "box0VS": {
+        "Box0VS": {
             "type": 35633,
-            "uri": "box0VS.glsl"
+            "uri": "Box0VS.glsl"
         }
     },
     "skins": {},

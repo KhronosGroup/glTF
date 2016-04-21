@@ -63,7 +63,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -73,29 +73,29 @@
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "CesiumTexturedBoxTest",
+            "buffer": "BoxSemantics",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "CesiumTexturedBoxTest",
+            "buffer": "BoxSemantics",
             "byteLength": 768,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "CesiumTexturedBoxTest": {
+        "BoxSemantics": {
             "byteLength": 840,
             "type": "arraybuffer",
-            "uri": "CesiumTexturedBoxTest.bin"
+            "uri": "BoxSemantics.bin"
         }
     },
     "images": {
         "Image0001": {
             "name": "Image0001",
-            "uri": "Cesium_Logo_Flat.jpg"
+            "uri": "CesiumLogoFlat.jpg"
         }
     },
     "materials": {
@@ -106,16 +106,11 @@
                 "diffuse": "texture_Image0001",
                 "shininess": 256,
                 "specular": [
-                    0.20000000298023224,
-                    0.20000000298023224,
-                    0.20000000298023224,
+                    0.2,
+                    0.2,
+                    0.2,
                     1
-                ],
-
-                "vec2" : [0, 0],
-                "mat2" : [0, 0, 0, 0],
-                "mat3" : [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                "mat4" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ]
             }
         }
     },
@@ -241,8 +236,8 @@
                 "a_position",
                 "a_texcoord0"
             ],
-            "fragmentShader": "CesiumTexturedBoxTest0FS",
-            "vertexShader": "CesiumTexturedBoxTest0VS"
+            "fragmentShader": "BoxSemantics0FS",
+            "vertexShader": "BoxSemantics0VS"
         }
     },
     "samplers": {
@@ -262,13 +257,13 @@
         }
     },
     "shaders": {
-        "CesiumTexturedBoxTest0FS": {
+        "BoxSemantics0FS": {
             "type": 35632,
-            "uri": "CesiumTexturedBoxTest0FS.glsl"
+            "uri": "BoxSemantics0FS.glsl"
         },
-        "CesiumTexturedBoxTest0VS": {
+        "BoxSemantics0VS": {
             "type": 35633,
-            "uri": "CesiumTexturedBoxTest0VS.glsl"
+            "uri": "BoxSemantics0VS.glsl"
         }
     },
     "skins": {},
@@ -312,124 +307,6 @@
                 "texcoord0": {
                     "semantic": "TEXCOORD_0",
                     "type": 35664
-                },
-
-                "modelMatrix": {
-                    "semantic": "MODEL",
-                    "type": 35676
-                },
-                "viewMatrix": {
-                    "semantic": "VIEW",
-                    "type": 35676
-                },
-                "modelViewProjectionMatrix": {
-                    "semantic": "MODELVIEWPROJECTION",
-                    "type": 35676
-                },
-                "modelInverseMatrix": {
-                    "semantic": "MODELINVERSE",
-                    "type": 35676
-                },
-                "viewInverseMatrix": {
-                    "semantic": "VIEWINVERSE",
-                    "type": 35676
-                },
-                "modelViewInverseMatrix": {
-                    "semantic": "MODELVIEWINVERSE",
-                    "type": 35676
-                },
-                "projectionInverseMatrix" : {
-                    "semantic": "PROJECTIONINVERSE",
-                    "type": 35676
-                },
-                "modelViewProjectionInverseMatrix": {
-                    "semantic": "MODELVIEWPROJECTIONINVERSE",
-                    "type": 35676
-                },
-                "modelInverseTransposeMatrix": {
-                    "semantic": "MODELINVERSETRANSPOSE",
-                    "type": 35676
-                },
-                "viewportMatrix": {
-                    "semantic": "VIEWPORT",
-                    "type": 35666
-                },
-                "nodeModelMatrix": {
-                    "semantic": "MODEL",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeViewMatrix": {
-                    "semantic": "VIEW",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeProjectionMatrix": {
-                    "semantic": "PROJECTION",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelViewMatrix": {
-                    "semantic": "MODELVIEW",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelViewProjectionMatrix": {
-                    "semantic": "MODELVIEWPROJECTION",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelInverseMatrix": {
-                    "semantic": "MODELINVERSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeViewInverseMatrix": {
-                    "semantic": "VIEWINVERSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelViewInverseMatrix": {
-                    "semantic": "MODELVIEWINVERSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeProjectionInverseMatrix" : {
-                    "semantic": "PROJECTIONINVERSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelViewProjectionInverseMatrix": {
-                    "semantic": "MODELVIEWPROJECTIONINVERSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelInverseTransposeMatrix": {
-                    "semantic": "MODELINVERSETRANSPOSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeModelViewInverseTransposeMatrix": {
-                    "semantic": "MODELVIEWINVERSETRANSPOSE",
-                    "type": 35676,
-                    "node" : "node_3"
-                },
-                "nodeViewportMatrix": {
-                    "semantic": "VIEWPORT",
-                    "type": 35666,
-                    "node" : "node_3"
-                },
-                "vec2": {
-                    "type": 35664
-                },
-                "mat2": {
-                    "type": 35674
-                },
-                "mat3": {
-                    "type": 35675
-                },
-                "mat4": {
-                    "type": 35676
                 }
             },
             "program": "program_0",
@@ -445,35 +322,7 @@
                 "u_normalMatrix": "normalMatrix",
                 "u_projectionMatrix": "projectionMatrix",
                 "u_shininess": "shininess",
-                "u_specular": "specular",
-
-                "u_modelMatrix": "modelMatrix",
-                "u_viewMatrix": "viewMatrix",
-                "u_modelViewProjectionMatrix": "modelViewProjectionMatrix",
-                "u_modelInverseMatrix": "modelInverseMatrix",
-                "u_viewInverseMatrix": "viewInverseMatrix",
-                "u_modelViewInverseMatrix": "modelViewInverseMatrix",
-                "u_modelViewProjectionInverseMatrix": "modelViewProjectionInverseMatrix",
-                "u_projectionInverseMatrix": "projectionInverseMatrix",
-                "u_modelInverseTransposeMatrix": "modelInverseTransposeMatrix",
-                "u_viewport": "viewportMatrix",
-                "u_nodeModelMatrix": "nodeModelMatrix",
-                "u_nodeViewMatrix": "nodeViewMatrix",
-                "u_nodeProjectionMatrix": "nodeProjectionMatrix",
-                "u_nodeModelViewMatrix": "nodeModelViewMatrix",
-                "u_nodeModelViewProjectionMatrix": "nodeModelViewProjectionMatrix",
-                "u_nodeModelInverseMatrix": "nodeModelInverseMatrix",
-                "u_nodeViewInverseMatrix": "nodeViewInverseMatrix",
-                "u_nodeModelViewInverseMatrix": "nodeModelViewInverseMatrix",
-                "u_nodeModelViewProjectionInverseMatrix": "nodeModelViewProjectionInverseMatrix",
-                "u_nodeProjectionInverseMatrix": "nodeProjectionInverseMatrix",
-                "u_nodeModelInverseTransposeMatrix": "nodeModelInverseTransposeMatrix",
-                "u_nodeModelViewInverseTransposeMatrix": "nodeModelViewInverseTransposeMatrix",
-                "u_nodeViewport": "nodeViewportMatrix",
-                "u_vec2": "vec2",
-                "u_mat2": "mat2",
-                "u_mat3": "mat3",
-                "u_mat4": "mat4"
+                "u_specular": "specular"
             }
         }
     },

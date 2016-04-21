@@ -57,23 +57,23 @@
     },
     "bufferViews": {
         "bufferView_22": {
-            "buffer": "boxWithoutIndices",
+            "buffer": "BoxWithoutIndices",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_23": {
-            "buffer": "boxWithoutIndices",
+            "buffer": "BoxWithoutIndices",
             "byteLength": 864,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "boxWithoutIndices": {
+        "BoxWithoutIndices": {
             "byteLength": 936,
             "type": "arraybuffer",
-            "uri": "boxWithoutIndices.bin"
+            "uri": "BoxWithoutIndices.bin"
         }
     },
     "materials": {
@@ -170,8 +170,8 @@
                 "a_normal",
                 "a_position"
             ],
-            "fragmentShader": "boxWithoutIndices0FS",
-            "vertexShader": "boxWithoutIndices0VS"
+            "fragmentShader": "BoxWithoutIndices0FS",
+            "vertexShader": "BoxWithoutIndices0VS"
         }
     },
     "scene": "defaultScene",
@@ -183,13 +183,13 @@
         }
     },
     "shaders": {
-        "boxWithoutIndices0FS": {
+        "BoxWithoutIndices0FS": {
             "type": 35632,
-            "uri": "boxWithoutIndices0FS.glsl"
+            "uri": "BoxWithoutIndices0FS.glsl"
         },
-        "boxWithoutIndices0VS": {
+        "BoxWithoutIndices0VS": {
             "type": 35633,
-            "uri": "boxWithoutIndices0VS.glsl"
+            "uri": "BoxWithoutIndices0VS.glsl"
         }
     },
     "skins": {},

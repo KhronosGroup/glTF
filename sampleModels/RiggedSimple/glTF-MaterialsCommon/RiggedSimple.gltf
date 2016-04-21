@@ -53,7 +53,7 @@
         },
         "accessor_37": {
             "bufferView": "bufferView_45",
-            "byteOffset": 2304,
+            "byteOffset": 3840,
             "byteStride": 16,
             "componentType": 5126,
             "count": 96,
@@ -73,7 +73,7 @@
         },
         "accessor_40": {
             "bufferView": "bufferView_45",
-            "byteOffset": 3840,
+            "byteOffset": 2304,
             "byteStride": 16,
             "componentType": 5126,
             "count": 96,
@@ -240,7 +240,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -250,28 +250,28 @@
     },
     "bufferViews": {
         "bufferView_43": {
-            "buffer": "riggedSimple",
+            "buffer": "RiggedSimple",
             "byteLength": 380,
             "byteOffset": 0
         },
         "bufferView_44": {
-            "buffer": "riggedSimple",
+            "buffer": "RiggedSimple",
             "byteLength": 1128,
             "byteOffset": 380,
             "target": 34963
         },
         "bufferView_45": {
-            "buffer": "riggedSimple",
+            "buffer": "RiggedSimple",
             "byteLength": 5376,
             "byteOffset": 1508,
             "target": 34962
         }
     },
     "buffers": {
-        "riggedSimple": {
+        "RiggedSimple": {
             "byteLength": 6884,
             "type": "arraybuffer",
-            "uri": "riggedSimple.bin"
+            "uri": "RiggedSimple.bin"
         }
     },
     "extensionsUsed": [

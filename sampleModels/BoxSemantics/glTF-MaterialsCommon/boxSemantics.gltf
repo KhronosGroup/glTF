@@ -63,7 +63,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -73,23 +73,23 @@
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "boxSemantics",
+            "buffer": "BoxSemantics",
             "byteLength": 72,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "boxSemantics",
+            "buffer": "BoxSemantics",
             "byteLength": 768,
             "byteOffset": 72,
             "target": 34962
         }
     },
     "buffers": {
-        "boxSemantics": {
+        "BoxSemantics": {
             "byteLength": 840,
             "type": "arraybuffer",
-            "uri": "boxSemantics.bin"
+            "uri": "BoxSemantics.bin"
         }
     },
     "extensionsUsed": [
@@ -98,7 +98,7 @@
     "images": {
         "Image0001": {
             "name": "Image0001",
-            "uri": "Cesium_Logo_Flat.jpg"
+            "uri": "CesiumLogoFlat.jpg"
         }
     },
     "materials": {

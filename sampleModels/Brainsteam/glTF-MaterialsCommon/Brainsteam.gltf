@@ -235,25 +235,9 @@
             ],
             "type": "VEC3"
         },
-        "accessor_1356": {
-            "bufferView": "bufferView_2416",
-            "byteOffset": 1572768,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 65532,
-            "max": [
-                0.954459,
-                0.973489
-            ],
-            "min": [
-                0.018902,
-                0.091279
-            ],
-            "type": "VEC2"
-        },
         "accessor_1358": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 2097024,
+            "byteOffset": 2621280,
             "byteStride": 16,
             "componentType": 5126,
             "count": 65532,
@@ -273,7 +257,7 @@
         },
         "accessor_1360": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 3145536,
+            "byteOffset": 1572768,
             "byteStride": 16,
             "componentType": 5126,
             "count": 65532,
@@ -389,7 +373,7 @@
         },
         "accessor_1739": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 4194048,
+            "byteOffset": 3669792,
             "byteStride": 12,
             "componentType": 5126,
             "count": 65532,
@@ -407,7 +391,7 @@
         },
         "accessor_1741": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 4980432,
+            "byteOffset": 4456176,
             "byteStride": 12,
             "componentType": 5126,
             "count": 65532,
@@ -422,22 +406,6 @@
                 -1
             ],
             "type": "VEC3"
-        },
-        "accessor_1743": {
-            "bufferView": "bufferView_2416",
-            "byteOffset": 5766816,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 65532,
-            "max": [
-                0.957228,
-                0.951377
-            ],
-            "min": [
-                0.053132,
-                0.070462
-            ],
-            "type": "VEC2"
         },
         "accessor_1745": {
             "bufferView": "bufferView_2416",
@@ -461,7 +429,7 @@
         },
         "accessor_1747": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 7339584,
+            "byteOffset": 5242560,
             "byteStride": 16,
             "componentType": 5126,
             "count": 65532,
@@ -681,7 +649,7 @@
         },
         "accessor_2405": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 8388096,
+            "byteOffset": 7339584,
             "byteStride": 12,
             "componentType": 5126,
             "count": 53934,
@@ -699,7 +667,7 @@
         },
         "accessor_2407": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 9035304,
+            "byteOffset": 7986792,
             "byteStride": 12,
             "componentType": 5126,
             "count": 53934,
@@ -715,25 +683,9 @@
             ],
             "type": "VEC3"
         },
-        "accessor_2409": {
-            "bufferView": "bufferView_2416",
-            "byteOffset": 9682512,
-            "byteStride": 8,
-            "componentType": 5126,
-            "count": 53934,
-            "max": [
-                0.993203,
-                0.97479
-            ],
-            "min": [
-                0.0172093,
-                0.012533
-            ],
-            "type": "VEC2"
-        },
         "accessor_2411": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 10113984,
+            "byteOffset": 9496944,
             "byteStride": 16,
             "componentType": 5126,
             "count": 53934,
@@ -753,7 +705,7 @@
         },
         "accessor_2413": {
             "bufferView": "bufferView_2416",
-            "byteOffset": 10976928,
+            "byteOffset": 8634000,
             "byteStride": 16,
             "componentType": 5126,
             "count": 53934,
@@ -2093,7 +2045,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -2103,28 +2055,28 @@
     },
     "bufferViews": {
         "bufferView_2414": {
-            "buffer": "brainsteam",
+            "buffer": "Brainsteam",
             "byteLength": 1001228,
             "byteOffset": 0
         },
         "bufferView_2415": {
-            "buffer": "brainsteam",
+            "buffer": "Brainsteam",
             "byteLength": 369996,
             "byteOffset": 1001228,
             "target": 34963
         },
         "bufferView_2416": {
-            "buffer": "brainsteam",
-            "byteLength": 11839872,
+            "buffer": "Brainsteam",
+            "byteLength": 10359888,
             "byteOffset": 1371224,
             "target": 34962
         }
     },
     "buffers": {
-        "brainsteam": {
-            "byteLength": 13211096,
+        "Brainsteam": {
+            "byteLength": 11731112,
             "type": "arraybuffer",
-            "uri": "brainsteam.bin"
+            "uri": "Brainsteam.bin"
         }
     },
     "extensionsUsed": [
@@ -4324,7 +4276,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1281",
@@ -4336,7 +4287,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1284",
@@ -4348,7 +4298,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1287",
@@ -4360,7 +4309,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1290",
@@ -4372,7 +4320,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1293",
@@ -4384,7 +4331,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1296",
@@ -4396,7 +4342,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1299",
@@ -4408,7 +4353,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1302",
@@ -4420,7 +4364,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1305",
@@ -4432,7 +4375,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1308",
@@ -4444,7 +4386,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1311",
@@ -4456,7 +4397,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1314",
@@ -4468,7 +4408,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1317",
@@ -4480,7 +4419,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1320",
@@ -4492,7 +4430,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1323",
@@ -4504,7 +4441,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1326",
@@ -4516,7 +4452,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1329",
@@ -4528,7 +4463,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1332",
@@ -4540,7 +4474,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1335",
@@ -4552,7 +4485,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1338",
@@ -4564,7 +4496,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1341",
@@ -4576,7 +4507,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1344",
@@ -4588,7 +4518,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1347",
@@ -4600,7 +4529,6 @@
                         "JOINT": "accessor_1360",
                         "NORMAL": "accessor_1354",
                         "POSITION": "accessor_1352",
-                        "TEXCOORD_0": "accessor_1356",
                         "WEIGHT": "accessor_1358"
                     },
                     "indices": "accessor_1350",
@@ -4617,7 +4545,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1594",
@@ -4629,7 +4556,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1607",
@@ -4641,7 +4567,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1620",
@@ -4653,7 +4578,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1633",
@@ -4665,7 +4589,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1646",
@@ -4677,7 +4600,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1659",
@@ -4689,7 +4611,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1672",
@@ -4701,7 +4622,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1685",
@@ -4713,7 +4633,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1698",
@@ -4725,7 +4644,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1711",
@@ -4737,7 +4655,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1724",
@@ -4749,7 +4666,6 @@
                         "JOINT": "accessor_1747",
                         "NORMAL": "accessor_1741",
                         "POSITION": "accessor_1739",
-                        "TEXCOORD_0": "accessor_1743",
                         "WEIGHT": "accessor_1745"
                     },
                     "indices": "accessor_1737",
@@ -4766,7 +4682,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2091",
@@ -4778,7 +4693,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2104",
@@ -4790,7 +4704,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2117",
@@ -4802,7 +4715,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2130",
@@ -4814,7 +4726,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2143",
@@ -4826,7 +4737,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2156",
@@ -4838,7 +4748,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2169",
@@ -4850,7 +4759,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2182",
@@ -4862,7 +4770,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2195",
@@ -4874,7 +4781,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2208",
@@ -4886,7 +4792,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2221",
@@ -4898,7 +4803,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2234",
@@ -4910,7 +4814,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2247",
@@ -4922,7 +4825,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2260",
@@ -4934,7 +4836,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2273",
@@ -4946,7 +4847,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2286",
@@ -4958,7 +4858,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2299",
@@ -4970,7 +4869,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2312",
@@ -4982,7 +4880,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2325",
@@ -4994,7 +4891,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2338",
@@ -5006,7 +4902,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2351",
@@ -5018,7 +4913,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2364",
@@ -5030,7 +4924,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2377",
@@ -5042,7 +4935,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2390",
@@ -5054,7 +4946,6 @@
                         "JOINT": "accessor_2413",
                         "NORMAL": "accessor_2407",
                         "POSITION": "accessor_2405",
-                        "TEXCOORD_0": "accessor_2409",
                         "WEIGHT": "accessor_2411"
                     },
                     "indices": "accessor_2403",

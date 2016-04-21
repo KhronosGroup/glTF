@@ -2863,7 +2863,7 @@
     },
     "animations": {},
     "asset": {
-        "generator": "collada2gltf@cf6371beb0bdc18ba603378d5e40c966da53d385",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -2873,23 +2873,23 @@
     },
     "bufferViews": {
         "bufferView_1302": {
-            "buffer": "Reciprocating_Saw",
+            "buffer": "ReciprocatingSaw",
             "byteLength": 837564,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_1303": {
-            "buffer": "Reciprocating_Saw",
+            "buffer": "ReciprocatingSaw",
             "byteLength": 2659200,
             "byteOffset": 837564,
             "target": 34962
         }
     },
     "buffers": {
-        "Reciprocating_Saw": {
+        "ReciprocatingSaw": {
             "byteLength": 3496764,
             "type": "arraybuffer",
-            "uri": "Reciprocating_Saw.bin"
+            "uri": "ReciprocatingSaw.bin"
         }
     },
     "cameras": {
