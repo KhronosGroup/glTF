@@ -12,7 +12,7 @@
   </asset>
   <library_images>
     <image id="Cesium_Man_jpg" name="Cesium_Man_jpg">
-      <init_from>Cesium_Man.jpg</init_from>
+      <init_from>CesiumMan.jpg</init_from>
     </image>
   </library_images>
   <library_effects>

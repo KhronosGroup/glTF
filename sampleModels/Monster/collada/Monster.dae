@@ -12,7 +12,7 @@
   </asset>
   <library_images>
     <image id="monster_jpg" name="monster_jpg">
-      <init_from>monster.jpg</init_from>
+      <init_from>Monster.jpg</init_from>
     </image>
   </library_images>
   <library_effects>

@@ -16,7 +16,7 @@ Copyright 2006 Sony Computer Entertainment Inc.
 Licensed under the SCEA Shared Source License, Version 1.0 (the
 &quot;License&quot;); you may not use this file except in compliance with the
 License. You may obtain a copy of the License at:
-http://research.scea.com/scea_shared_source_license.html 
+http://research.scea.com/scea_shared_source_license.html
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,7 +55,7 @@ limitations under the License.
     </library_lights>
     <library_images>
         <image id="file2" name="file2" depth="1">
-            <init_from>duckCM.png</init_from>
+            <init_from>DuckCM.png</init_from>
         </image>
     </library_images>
     <library_materials>
