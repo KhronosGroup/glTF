@@ -22,7 +22,7 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [Buggy](Buggy)                                | ![](Buggy/screenshot/screenshot.png)             | Medium-sized CAD data set, including hierarchy |
 | [BoxAnimated](BoxAnimated)                    | ![](BoxAnimated/screenshot/screenshot.gif)       | Rotation and Translation Animations. Start with this to test animations. |
 | [CesiumMilkTruck](CesiumMilkTruck)            | ![](CesiumMilkTruck/screenshot/screenshot.gif)   | Textured. Multiple nodes/meshes. Animations. |
-| [RiggedSimple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.png)      | Animations. Skins. Start with this to test skinning. |
+| [RiggedSimple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.gif)      | Animations. Skins. Start with this to test skinning. |
 | [RiggedFigure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.png)      | Animations. Skins. |
 | [CesiumMan](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.gif)         | Textured. Animations. Skins. |
 | [Monster](Monster)                            | ![](Monster/screenshot/screenshot.gif)           | Textured. Animations. Skins. |
