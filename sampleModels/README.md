@@ -25,7 +25,7 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [RiggedSimple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.png)      | Animations. Skins. Start with this to test skinning. |
 | [RiggedFigure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.png)      | Animations. Skins. |
 | [CesiumMan](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.png)         | Textured. Animations. Skins. |
-| [Monster](Monster)                            | ![](Monster/screenshot/screenshot.png)           | Textured. Animations. Skins. |
+| [Monster](Monster)                            | ![](Monster/screenshot/screenshot.gif)           | Textured. Animations. Skins. |
 | [Brainsteam](Brainsteam)                      | ![](Brainsteam/screenshot/screenshot.gif)        | Animations. Skins. |
 | [Virtual City](VC)                            | ![](VC/screenshot/screenshot.gif)                | Animations. Skins. |
 
