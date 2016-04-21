@@ -20,7 +20,7 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [Reciprocating Saw](ReciprocatingSaw)         | ![](ReciprocatingSaw/screenshot/screenshot.png)  | Small CAD data set, including hierarchy. |
 | [Gearbox Assy](GearboxAssy)                   | ![](GearboxAssy/screenshot/screenshot.png)       | Medium-sized CAD data set, including hierarchy. |
 | [Buggy](Buggy)                                | ![](Buggy/screenshot/screenshot.png)             | Medium-sized CAD data set, including hierarchy |
-| [BoxAnimated](BoxAnimated)                    | ![](BoxAnimated/screenshot/screenshot.png)       | Rotation and Translation Animations. Start with this to test animations. |
+| [BoxAnimated](BoxAnimated)                    | ![](BoxAnimated/screenshot/screenshot.gif)       | Rotation and Translation Animations. Start with this to test animations. |
 | [CesiumMilkTruck](CesiumMilkTruck)            | ![](CesiumMilkTruck/screenshot/screenshot.png)   | Textured. Multiple nodes/meshes. Animations. |
 | [RiggedSimple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.png)      | Animations. Skins. Start with this to test skinning. |
 | [RiggedFigure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.png)      | Animations. Skins. |
