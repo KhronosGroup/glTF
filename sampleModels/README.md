@@ -20,11 +20,11 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [Reciprocating Saw](ReciprocatingSaw)         | ![](ReciprocatingSaw/screenshot/screenshot.png)  | Small CAD data set, including hierarchy. |
 | [Gearbox Assy](GearboxAssy)                   | ![](GearboxAssy/screenshot/screenshot.png)       | Medium-sized CAD data set, including hierarchy. |
 | [Buggy](Buggy)                                | ![](Buggy/screenshot/screenshot.png)             | Medium-sized CAD data set, including hierarchy |
-| [BoxAnimated](BoxAnimated)                    | ![](BoxAnimated/screenshot/screenshot.gif)       | Rotation and Translation Animations. Start with this to test animations. |
-| [CesiumMilkTruck](CesiumMilkTruck)            | ![](CesiumMilkTruck/screenshot/screenshot.gif)   | Textured. Multiple nodes/meshes. Animations. |
-| [RiggedSimple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.gif)      | Animations. Skins. Start with this to test skinning. |
-| [RiggedFigure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.png)      | Animations. Skins. |
-| [CesiumMan](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.gif)         | Textured. Animations. Skins. |
+| [Box Animated](BoxAnimated)                    | ![](BoxAnimated/screenshot/screenshot.gif)       | Rotation and Translation Animations. Start with this to test animations. |
+| [Cesium Milk Truck](CesiumMilkTruck)            | ![](CesiumMilkTruck/screenshot/screenshot.gif)   | Textured. Multiple nodes/meshes. Animations. |
+| [Rigged Simple](RiggedSimple)                  | ![](RiggedSimple/screenshot/screenshot.gif)      | Animations. Skins. Start with this to test skinning. |
+| [Rigged Figure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.gif)      | Animations. Skins. |
+| [Cesium Man](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.gif)         | Textured. Animations. Skins. |
 | [Monster](Monster)                            | ![](Monster/screenshot/screenshot.gif)           | Textured. Animations. Skins. |
 | [Brainsteam](Brainsteam)                      | ![](Brainsteam/screenshot/screenshot.gif)        | Animations. Skins. |
 | [Virtual City](VC)                            | ![](VC/screenshot/screenshot.gif)                | Textured. Animations. Skins. |
