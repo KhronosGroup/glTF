@@ -940,21 +940,12 @@ namespace GLTF
             std::string nodeOID = nodesOriginalIds[i];
             std::string nodeUID = this->getUniqueId(nodesOriginalIds[i]);
             shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
-            //WORK-AROUND: If there was a camera node in collada that wasn't associated with a camera, it can be removed
-            //NODE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
+            //WORK-AROUND: If camera is an empty string, it can be removed
+            //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
             if (node->contains(kCamera)) {
                 std::string camera = node->getString(kCamera);
                 if (camera.empty()) {
-                    nodes->removeValue(nodeOID);
-                    shared_ptr <GLTF::JSONObject> scenes = this->_root->createObjectIfNeeded(kScenes);
-                    std::vector <std::string> sceneIDs = scenes->getAllKeys();
-                    for (size_t j = 0; j < sceneIDs.size(); j++) {
-                        shared_ptr <GLTF::JSONObject> scene = scenes->getObject(sceneIDs[j]);
-                        shared_ptr <GLTF::JSONArray> nodeListings = scene->getArray(kNodes);
-                        size_t index = nodeListings->indexOfValue(new JSONString(nodeOID));
-                        nodeListings->remove(index);
-                    }
-                    break;
+                    node->removeValue(kCamera);
                 }
             }
             this->_applyMaterialBindingsForNode(nodeUID);
