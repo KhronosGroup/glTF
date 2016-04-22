@@ -1,93 +1,5 @@
 {
     "accessors": {
-        "accessor_29": {
-            "bufferView": "bufferView_64",
-            "byteOffset": 0,
-            "byteStride": 0,
-            "componentType": 5123,
-            "count": 384,
-            "type": "SCALAR"
-        },
-        "accessor_31": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 0,
-            "byteStride": 12,
-            "componentType": 5126,
-            "count": 224,
-            "max": [
-                0.5,
-                0.5,
-                0.5
-            ],
-            "min": [
-                -0.5,
-                -0.5,
-                -0.5
-            ],
-            "type": "VEC3"
-        },
-        "accessor_33": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 2688,
-            "byteStride": 12,
-            "componentType": 5126,
-            "count": 224,
-            "max": [
-                1,
-                1,
-                1
-            ],
-            "min": [
-                -1,
-                -1,
-                -1
-            ],
-            "type": "VEC3"
-        },
-        "accessor_56": {
-            "bufferView": "bufferView_64",
-            "byteOffset": 768,
-            "byteStride": 0,
-            "componentType": 5123,
-            "count": 132,
-            "type": "SCALAR"
-        },
-        "accessor_58": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 5376,
-            "byteStride": 12,
-            "componentType": 5126,
-            "count": 96,
-            "max": [
-                0.33504,
-                0.5,
-                0.33504
-            ],
-            "min": [
-                -0.33504,
-                -0.5,
-                -0.33504
-            ],
-            "type": "VEC3"
-        },
-        "accessor_60": {
-            "bufferView": "bufferView_65",
-            "byteOffset": 6528,
-            "byteStride": 12,
-            "componentType": 5126,
-            "count": 96,
-            "max": [
-                1,
-                1,
-                1
-            ],
-            "min": [
-                -1,
-                -1,
-                -1
-            ],
-            "type": "VEC3"
-        },
         "animAccessor_0": {
             "bufferView": "bufferView_63",
             "byteOffset": 0,
@@ -164,7 +76,7 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
+        "generator": "collada2gltf@66d70d59cbe5d8c0ee8ed96f18dc62d744942562",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
@@ -180,20 +92,20 @@
         },
         "bufferView_64": {
             "buffer": "BoxAnimated",
-            "byteLength": 1032,
+            "byteLength": 0,
             "byteOffset": 104,
             "target": 34963
         },
         "bufferView_65": {
             "buffer": "BoxAnimated",
-            "byteLength": 7680,
-            "byteOffset": 1136,
+            "byteLength": 0,
+            "byteOffset": 104,
             "target": 34962
         }
     },
     "buffers": {
         "BoxAnimated": {
-            "byteLength": 8816,
+            "byteLength": 104,
             "type": "arraybuffer",
             "uri": "BoxAnimated.bin"
         }
@@ -229,114 +141,9 @@
     "extensionsUsed": [
         "KHR_materials_common"
     ],
-    "materials": {
-        "Effect-inner": {
-            "extensions": {
-                "KHR_materials_common": {
-                    "doubleSided": false,
-                    "jointCount": 0,
-                    "technique": "PHONG",
-                    "transparent": false,
-                    "values": {
-                        "diffuse": [
-                            0.8,
-                            0.415942,
-                            0.795292,
-                            1
-                        ],
-                        "shininess": 256,
-                        "specular": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    }
-                }
-            },
-            "name": "inner"
-        },
-        "Effect-outer": {
-            "extensions": {
-                "KHR_materials_common": {
-                    "doubleSided": false,
-                    "jointCount": 0,
-                    "technique": "PHONG",
-                    "transparent": false,
-                    "values": {
-                        "diffuse": [
-                            0.301604,
-                            0.533542,
-                            0.8,
-                            1
-                        ],
-                        "shininess": 256,
-                        "specular": [
-                            0.2,
-                            0.2,
-                            0.2,
-                            1
-                        ]
-                    }
-                }
-            },
-            "name": "outer"
-        }
-    },
-    "meshes": {
-        "Geometry-mesh019": {
-            "name": "outer_box",
-            "primitives": [
-                {
-                    "attributes": {
-                        "NORMAL": "accessor_33",
-                        "POSITION": "accessor_31"
-                    },
-                    "indices": "accessor_29",
-                    "material": "Effect-outer",
-                    "mode": 4
-                }
-            ]
-        },
-        "Geometry-mesh020": {
-            "name": "inner_box",
-            "primitives": [
-                {
-                    "attributes": {
-                        "NORMAL": "accessor_60",
-                        "POSITION": "accessor_58"
-                    },
-                    "indices": "accessor_56",
-                    "material": "Effect-inner",
-                    "mode": 4
-                }
-            ]
-        }
-    },
+    "materials": {},
+    "meshes": {},
     "nodes": {
-        "Camera-camera002Node": {
-            "camera": "",
-            "children": [],
-            "matrix": [
-                1,
-                0,
-                0,
-                0,
-                0,
-                0.996195,
-                -0.0871557,
-                0,
-                0,
-                0.0871557,
-                0.996195,
-                0,
-                0,
-                0.75,
-                4,
-                1
-            ],
-            "name": "Camera"
-        },
         "Geometry-mesh019Node": {
             "children": [],
             "matrix": [
@@ -357,16 +164,10 @@
                 0,
                 1
             ],
-            "meshes": [
-                "Geometry-mesh019"
-            ],
             "name": "outer_box"
         },
         "Geometry-mesh020Node": {
             "children": [],
-            "meshes": [
-                "Geometry-mesh020"
-            ],
             "name": "inner_box",
             "rotation": [
                 0,
@@ -447,7 +248,6 @@
                 "polyRender005",
                 "Geometry-mesh019Node",
                 "Geometry-mesh020Node",
-                "Camera-camera002Node",
                 "Light-sunLight011Node"
             ]
         }
