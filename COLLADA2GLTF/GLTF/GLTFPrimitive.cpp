@@ -71,7 +71,7 @@ namespace GLTF
     
     unsigned int GLTFPrimitive::getIndexOfSetAtIndex(unsigned int index)
     {
-		return (unsigned int)this->_allVertexAttributes[index]->getIndexOfSet();
+        return (unsigned int)this->_allVertexAttributes[index]->getIndexOfSet();
     }
 
     size_t GLTFPrimitive::getVertexAttributesCount()
@@ -87,7 +87,11 @@ namespace GLTF
     void GLTFPrimitive::appendVertexAttribute(shared_ptr <JSONVertexAttribute> VertexAttribute)
     {
         this->_allVertexAttributes.push_back(VertexAttribute);
-    }    
+    }  
+
+    void GLTFPrimitive::removeVertexAttribute(unsigned int index) {
+        this->_allVertexAttributes.erase(this->_allVertexAttributes.begin() + index);
+    }
         
     unsigned int GLTFPrimitive::getMode() {
         return this->getUnsignedInt32(kMode);
