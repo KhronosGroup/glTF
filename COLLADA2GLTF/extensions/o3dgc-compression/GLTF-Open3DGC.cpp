@@ -265,7 +265,7 @@ namespace GLTF
         O3DGCSC3DMCPredictionMode jointPrediction = _predictionModeForString(config->stringForKeyPath("extensions.Open3DGC.quantization.JOINT"));
         
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
-        size_t bufferOffset = outputStream->length();
+        int bufferOffset = (int)outputStream->length();
         
         O3DGCSC3DMCPredictionMode floatAttributePrediction = O3DGC_SC3DMC_PARALLELOGRAM_PREDICTION;
         
@@ -316,7 +316,7 @@ namespace GLTF
         ifs.SetCoordIndex((unsigned short * const ) allConcatenatedIndices);
         ifs.SetIndexBufferID(primitiveIDs);
         
-        size_t vertexCount = 0;
+        long vertexCount = 0;
         
         std::vector <GLTF::Semantic> semantics = mesh->allSemantics();
         for (unsigned int i = 0 ; i < semantics.size() ; i ++) {
@@ -326,28 +326,28 @@ namespace GLTF
             
             for (size_t j = 0 ; j < attributesCount ; j++) {
                 shared_ptr <GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
-                vertexCount = meshAttribute->getCount();
-                size_t componentsPerElement = meshAttribute->componentsPerElement();
+                vertexCount = (long)meshAttribute->getCount();
+                long componentsPerElement = (long)meshAttribute->componentsPerElement();
                 char *buffer = (char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
                 switch (semantic) {
                     case POSITION:
                         params.SetCoordQuantBits(qcoord);
                         params.SetCoordPredMode(positionPrediction);
                         params.SetCoordPredMode(floatAttributePrediction);
-                        ifs.SetNCoord((long)vertexCount);
+                        ifs.SetNCoord(vertexCount);
                         ifs.SetCoord((Real * const)buffer);
                         break;
                     case NORMAL:
                         params.SetNormalQuantBits(qnormal);
                         params.SetNormalPredMode(normalPrediction);
-                        ifs.SetNNormal((long)vertexCount);
+                        ifs.SetNNormal(vertexCount);
                         ifs.SetNormal((Real * const)buffer);
                         break;
                     case TEXCOORD:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qtexCoord);
                         params.SetFloatAttributePredMode(nFloatAttributes, texcoordPrediction);
-                        ifs.SetNFloatAttribute(nFloatAttributes, (long)vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, (long)componentsPerElement);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_TEXCOORD);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -356,8 +356,8 @@ namespace GLTF
                     case COLOR:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qcolor);
                         params.SetFloatAttributePredMode(nFloatAttributes, colorPrediction);
-                        ifs.SetNFloatAttribute(nFloatAttributes, (long)vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, (long)componentsPerElement);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_COLOR);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -366,8 +366,8 @@ namespace GLTF
                     case WEIGHT:
                         params.SetFloatAttributeQuantBits(nFloatAttributes, qWeights);
                         params.SetFloatAttributePredMode(nFloatAttributes, weightPrediction);
-                        ifs.SetNFloatAttribute(nFloatAttributes, (long)vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, (long)componentsPerElement);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_WEIGHT);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -384,8 +384,8 @@ namespace GLTF
                          */
                         params.SetFloatAttributeQuantBits(nFloatAttributes, 10);
                         params.SetFloatAttributePredMode(nFloatAttributes, jointPrediction);
-                        ifs.SetNFloatAttribute(nFloatAttributes, (long)vertexCount);
-                        ifs.SetFloatAttributeDim(nFloatAttributes, (long)componentsPerElement);
+                        ifs.SetNFloatAttribute(nFloatAttributes, vertexCount);
+                        ifs.SetFloatAttributeDim(nFloatAttributes, componentsPerElement);
                         ifs.SetFloatAttributeType(nFloatAttributes, O3DGC_IFS_FLOAT_ATTRIBUTE_TYPE_UNKOWN);
                         ifs.SetFloatAttribute(nFloatAttributes, (Real * const)buffer);
                         floatAttributeIndexMapping->setUnsignedInt32(meshAttribute->getID(), nFloatAttributes);
@@ -402,7 +402,7 @@ namespace GLTF
         shared_ptr<JSONObject> compressionObject = static_pointer_cast<JSONObject>(mesh->getExtensions()->createObjectIfNeeded("Open3DGC-compression"));
         
         ifs.ComputeMinMax(O3DGC_SC3DMC_MAX_ALL_DIMS);
-        BinaryStream bstream((long)vertexCount * 8);
+        BinaryStream bstream(vertexCount * 8);
         SC3DMCEncoder <unsigned short> encoder;
         shared_ptr<JSONObject> compressedData(new JSONObject());
         compressedData->setInt32("verticesCount", (int)vertexCount);
@@ -422,7 +422,7 @@ namespace GLTF
         compressedData->setUnsignedInt32("count", bstream.GetSize());
         compressedData->setString(kType, "SCALAR");
         compressedData->setUnsignedInt32(kComponentType, asset->profile()->getGLenumForString("UNSIGNED_BYTE"));
-        compressedData->setUnsignedInt32("byteOffset", (int)bufferOffset);
+        compressedData->setUnsignedInt32("byteOffset", bufferOffset);
         compressedData->setValue("floatAttributesIndexes", floatAttributeIndexMapping);
         
         compressionObject->setValue("compressedData", compressedData);
@@ -440,7 +440,7 @@ namespace GLTF
         }
     }
     
-    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset* asset) {
+    void encodeDynamicVector(float *buffer, const std::string &path, long componentsCount, long count, GLTFAsset* asset) {
         GLTFOutputStream *outputStream = asset->createOutputStreamIfNeeded(kCompressionOutputStream).get();
         Real max[32];
         Real min[32];
@@ -450,11 +450,11 @@ namespace GLTF
         
         DynamicVector dynamicVector;
         dynamicVector.SetVectors(buffer);
-        dynamicVector.SetDimVector((long)componentsCount);
+        dynamicVector.SetDimVector(componentsCount);
         dynamicVector.SetMax(max);
         dynamicVector.SetMin(min);
-        dynamicVector.SetNVector((long)count);
-        dynamicVector.SetStride((long)componentsCount);
+        dynamicVector.SetNVector(count);
+        dynamicVector.SetStride(componentsCount);
         dynamicVector.ComputeMinMax(O3DGC_SC3DMC_MAX_SEP_DIM);//O3DGC_SC3DMC_MAX_ALL_DIMS        
         DVEncodeParams params;
         
@@ -476,7 +476,7 @@ namespace GLTF
         encoder.SetStreamType(streamType);
         Timer timer;
         timer.Tic();
-        BinaryStream bstream((long)(componentsCount * count) * 16);
+        BinaryStream bstream(componentsCount * count * 16);
         encoder.Encode(params, dynamicVector, bstream);
         timer.Toc();
         outputStream->write((const char*)bstream.GetBuffer(), bstream.GetSize());
@@ -548,24 +548,24 @@ namespace GLTF
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
         
         //write
-        size_t byteOffset = 0;
+        int byteOffset = 0;
         bool shouldEncodeOpen3DGC = CONFIG_STRING(asset, "compressionType")  == "Open3DGC";
         GLTFOutputStream *outputStream = shouldEncodeOpen3DGC ? asset->createOutputStreamIfNeeded(kCompressionOutputStream).get() : asset->createOutputStreamIfNeeded(asset->getSharedBufferId()).get();;
-        byteOffset = outputStream->length();
-        parameter->setUnsignedInt32("byteOffset", (int)byteOffset);
+        byteOffset = (int)outputStream->length();
+        parameter->setUnsignedInt32("byteOffset", byteOffset);
         
         if (shouldEncodeOpen3DGC) {
-            size_t componentsCount = profile->getComponentsCountForType(parameter->getString(kType));
+            long componentsCount = (long)profile->getComponentsCountForType(parameter->getString(kType));
             if (componentsCount) {
-                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, cvtAnimation->getCount(), asset);
+                encodeDynamicVector((float*)buffer, parameterSID, componentsCount, (long)cvtAnimation->getCount(), asset);
                 
-                byteLength = outputStream->length() - byteOffset;
+                byteLength = (int)outputStream->length() - byteOffset;
                 
                 shared_ptr<JSONObject> extensionsObject = parameter->createObjectIfNeeded(kExtensions);
                 shared_ptr<JSONObject> compressionObject = extensionsObject->createObjectIfNeeded("Open3DGC-compression");
                 shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
                 
-                compressionDataObject->setUnsignedInt32("byteOffset", (int)byteOffset);
+                compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
                 compressionDataObject->setUnsignedInt32("count", (int)byteLength);
                 compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
                 compressionDataObject->setString(kType, "SCALAR");

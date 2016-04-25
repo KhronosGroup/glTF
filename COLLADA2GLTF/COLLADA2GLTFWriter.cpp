@@ -150,7 +150,7 @@ namespace GLTF
                             size_t minor = version.find(".", major + 1);
                             if (minor != string::npos) {
                                 version = version.substr(0, minor);
-                                float sketchUpVersion = (float)atof(version.c_str());
+                                double sketchUpVersion = atof(version.c_str());
                                 if (sketchUpVersion < 7.1) {
                                     asset->converterConfig()->config()->setBool("invertTransparency", true);
                                     this->_asset->log("WARNING: Fixing transparency - by inverting it - as we convert an asset generated from SketchUp version:%s \n", version.c_str());
@@ -1402,7 +1402,7 @@ namespace GLTF
         }
         
         size_t index = 0;
-        size_t bucketSize = 4;
+        int bucketSize = 4;
         size_t componentSize = sizeof(float);
         size_t skinAttributeSize = componentSize * vertexCount * bucketSize;
         float *weightsPtr = (float*)malloc(skinAttributeSize);
@@ -1463,7 +1463,7 @@ namespace GLTF
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize((int)bucketSize)));
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
@@ -1472,7 +1472,7 @@ namespace GLTF
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize((int)bucketSize)));
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
         
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
