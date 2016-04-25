@@ -95,7 +95,7 @@ namespace GLTF
         else
         {
             // We have the data in memory so use it
-            if (!root.loadDocument(asset->getInputFilePath(), fileData.data(), fileData.size())) {
+            if (!root.loadDocument(asset->getInputFilePath(), fileData.data(), (int)fileData.size())) {
                 delete _extraDataHandler;
                 return false;
             }
@@ -150,7 +150,7 @@ namespace GLTF
                             size_t minor = version.find(".", major + 1);
                             if (minor != string::npos) {
                                 version = version.substr(0, minor);
-                                float sketchUpVersion = atof(version.c_str());
+                                float sketchUpVersion = (float)atof(version.c_str());
                                 if (sketchUpVersion < 7.1) {
                                     asset->converterConfig()->config()->setBool("invertTransparency", true);
                                     this->_asset->log("WARNING: Fixing transparency - by inverting it - as we convert an asset generated from SketchUp version:%s \n", version.c_str());
@@ -453,10 +453,10 @@ namespace GLTF
                 Math::Real angle;
                 Math::Vector3 axis;
                 rotationQuat.toAngleAxis(angle, axis);
-                rotation[0] = axis.x;
-                rotation[1] = axis.y;
-                rotation[2] = axis.z;
-                rotation[3] = angle;
+                rotation[0] = (float)axis.x;
+                rotation[1] = (float)axis.y;
+                rotation[2] = (float)axis.z;
+                rotation[3] = (float)angle;
             }
 
             // Scale distance units if we need to
@@ -1286,7 +1286,7 @@ namespace GLTF
             case COLLADAFW::Light::SPOT_LIGHT: {
                 glTFLight->setString(kType, "spot");
 
-                float fallOffAngle =  (float)light->getFallOffAngle().getValue() * radianPerDegree;
+                float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
                 float fallOffExponent = (float)light->getFallOffExponent().getValue();
                 
                 description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
@@ -1463,7 +1463,7 @@ namespace GLTF
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
+        shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize((int)bucketSize)));
         
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
@@ -1472,7 +1472,7 @@ namespace GLTF
         glTFSkin->setWeights(weightsAttribute);
         
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
-        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
+        shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize((int)bucketSize)));
         
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);

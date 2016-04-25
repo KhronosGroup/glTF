@@ -261,7 +261,7 @@ namespace GLTF
             
             // FIXME: the source could be shared, store / retrieve it here
             shared_ptr <GLTFBufferView> cvtBufferView = createBufferViewWithAllocatedBuffer(id, sourceData, 0, sourceSize, meshAttributeOwnsBuffer);
-            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor(profile, componentType, GLTFUtils::getTypeForVectorSize(componentsPerElement)));
+            shared_ptr <GLTFAccessor> cvtMeshAttribute(new GLTFAccessor(profile, componentType, GLTFUtils::getTypeForVectorSize((int)componentsPerElement)));
             
             cvtMeshAttribute->setBufferView(cvtBufferView);
             cvtMeshAttribute->setByteStride(stride);

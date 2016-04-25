@@ -373,7 +373,7 @@ namespace GLTF
             size_t attributesCount = sourceMesh->getMeshAttributesCountForSemantic(semantic);
             for (size_t j = 0 ; j < attributesCount ; j ++) {
                 shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = sourceMesh->getMeshAttribute(semantic, j);
-                unsigned int indexSet = j;
+                unsigned int indexSet = (int)j;
                 std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
                 unsigned int size = (unsigned int)originalMeshAttributes.size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;

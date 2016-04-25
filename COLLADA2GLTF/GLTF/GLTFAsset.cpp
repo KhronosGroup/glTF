@@ -819,7 +819,7 @@ namespace GLTF
             if (jointsCount > 0) {
                 if (meshExtras == nullptr)
                     meshExtras = std::make_shared<JSONObject>();
-                meshExtras->setUnsignedInt32("jointsCount", jointsCount);
+                meshExtras->setUnsignedInt32("jointsCount", (int)jointsCount);
             }
             
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
