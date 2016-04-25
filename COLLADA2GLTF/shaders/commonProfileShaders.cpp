@@ -613,7 +613,7 @@ namespace GLTF
         bool addSemantic(std::string vertexOrFragment, std::string uniformOrAttribute,
                          std::string semantic,
                          std::string parameterID,
-                         size_t count,
+                         int count,
                          bool includesVarying,
                          bool forcesAsAnArray = false) {
             
@@ -646,7 +646,7 @@ namespace GLTF
             } else {
                 shader->addUniform(symbol, type, count, forcesAsAnArray);
                 if ((count > 1) || forcesAsAnArray) {
-                    parameter->setUnsignedInt32(kCount, (int)count);
+                    parameter->setUnsignedInt32(kCount, count);
                 }
             }
             
