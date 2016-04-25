@@ -862,14 +862,14 @@ namespace GLTF
             shared_ptr<GLTF::JSONArray> extensionsUsed = this->_root->createArrayIfNeeded(kExtensionsUsed);
             extensionsUsed->appendValue(std::make_shared<JSONString>("KHR_materials_common"));
         }
-        
+
         shared_ptr<GLTFOutputStream> rawOutputStream = this->createOutputStreamIfNeeded(this->getSharedBufferId());
         shared_ptr<GLTFOutputStream> compressionOutputStream = this->createOutputStreamIfNeeded(kCompressionOutputStream);
 
         shared_ptr <GLTF::JSONObject> animations = this->_root->createObjectIfNeeded("animations");
         std::vector <std::string> animationsUIDs = animations->getAllKeys();
-        
-        for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
+
+        for (size_t animationIndex = 0; animationIndex < animationsUIDs.size(); animationIndex++) {
             std::string inputParameterName = "TIME";
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
 
@@ -902,14 +902,14 @@ namespace GLTF
             }
             animations->removeValue(animationsUIDs[animationIndex]);
         }
-        
+
         shared_ptr <GLTF::JSONObject> meshes = this->_root->createObjectIfNeeded(kMeshes);
         shared_ptr <GLTF::JSONObject> accessors = this->_root->createObjectIfNeeded(kAccessors);
-        
+
         std::vector <std::string> meshesUIDs = meshes->getAllKeys();
-        
+
         //here we will split meshes as needed or just pass through
-        for (size_t i = 0 ; i < meshesUIDs.size() ; i++) {
+        for (size_t i = 0; i < meshesUIDs.size(); i++) {
             const std::string &meshUID = meshesUIDs[i];
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshUID));
             if (mesh) {
@@ -920,7 +920,7 @@ namespace GLTF
                     JSONValueVectorRef meshesVector = targetMesh->subMeshes()->values();
                     size_t meshesCount = meshesVector.size();
                     if (meshesCount > 0) {
-                        for (size_t j = 0 ; j < meshesCount ; j++) {
+                        for (size_t j = 0; j < meshesCount; j++) {
                             mesh = static_pointer_cast<GLTFMesh>(meshesVector[j]);
                             meshes->setValue(mesh->getID(), mesh);
                         }
@@ -928,26 +928,37 @@ namespace GLTF
                 }
             }
         }
-        
+
         // ----
         shared_ptr <GLTF::JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
         std::vector <std::string> skinsUIDs = skins->getAllKeys();
-        for (size_t skinIndex = 0 ; skinIndex < skinsUIDs.size() ; skinIndex++) {
+        for (size_t skinIndex = 0; skinIndex < skinsUIDs.size(); skinIndex++) {
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinsUIDs[skinIndex]));
             skins->setValue(skin->getId(), skin);
             skins->removeValue(skinsUIDs[skinIndex]);
         }
         //we change the keys...
         skinsUIDs = skins->getAllKeys();
-        
+
         //Handle late binding of material in node
         //So we go through all nodes and if a mesh got different bindings than the ones needed we clone the "reference" mesh and assign the binding
         //we delay this operation to now, so that we get the reference mesh splitted.
         shared_ptr <GLTF::JSONObject> nodes = this->root()->createObjectIfNeeded(kNodes);
-        
+
+
         std::vector <std::string> nodesOriginalIds = nodes->getAllKeys();
-        for (size_t i = 0 ; i < nodesOriginalIds.size() ; i++) {
+        for (size_t i = 0; i < nodesOriginalIds.size(); i++) {
+            std::string nodeOID = nodesOriginalIds[i];
             std::string nodeUID = this->getUniqueId(nodesOriginalIds[i]);
+            shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
+            //WORK-AROUND: If camera is an empty string, it can be removed
+            //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
+            if (node->contains(kCamera)) {
+                std::string camera = node->getString(kCamera);
+                if (camera.empty()) {
+                    node->removeValue(kCamera);
+                }
+            }
             this->_applyMaterialBindingsForNode(nodeUID);
         }
         
