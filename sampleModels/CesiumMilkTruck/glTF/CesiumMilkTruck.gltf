@@ -198,13 +198,13 @@
         }
     },
     "asset": {
-        "generator": "collada2gltf@ceec062e3d5793f2f249f53cbd843aee382ad40b",
+        "generator": "collada2gltf@027f74366341d569dea42e9a68b7104cc3892054",
         "premultipliedAlpha": true,
         "profile": {
             "api": "WebGL",
             "version": "1.0.2"
         },
-        "version": 1
+        "version": "1.0"
     },
     "bufferViews": {
         "bufferView_103": {
@@ -338,8 +338,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_73",
-                        "POSITION": "accessor_71",
-                        "TEXCOORD_0": "accessor_75"
+                        "POSITION": "accessor_71"
                     },
                     "indices": "accessor_66",
                     "material": "Effect-glass",
@@ -348,8 +347,7 @@
                 {
                     "attributes": {
                         "NORMAL": "accessor_73",
-                        "POSITION": "accessor_71",
-                        "TEXCOORD_0": "accessor_75"
+                        "POSITION": "accessor_71"
                     },
                     "indices": "accessor_69",
                     "material": "Effect-window_trim",
