@@ -532,7 +532,7 @@ namespace GLTF
                                                              const std::string& parameterSID,
                                                              const std::string& accessorUID,
                                                              const std::string& parameterType,
-                                                             unsigned char* buffer, size_t byteLength,
+                                                             unsigned char* buffer, int byteLength,
                                                              bool isInputParameter,
                                                              GLTFAsset *asset) {
         //setup
@@ -566,7 +566,7 @@ namespace GLTF
                 shared_ptr<JSONObject> compressionDataObject = compressionObject->createObjectIfNeeded("compressedData");
                 
                 compressionDataObject->setUnsignedInt32("byteOffset", byteOffset);
-                compressionDataObject->setUnsignedInt32("count", (int)byteLength);
+                compressionDataObject->setUnsignedInt32("count", byteLength);
                 compressionDataObject->setString("mode", CONFIG_STRING(asset, "compressionMode"));
                 compressionDataObject->setString(kType, "SCALAR");
                 compressionDataObject->setUnsignedInt32(kComponentType, profile->getGLenumForString("UNSIGNED_BYTE"));
@@ -589,7 +589,7 @@ namespace GLTF
     void setupAndWriteAnimationParameter(GLTFAnimation *cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
-                                         unsigned char* buffer, size_t byteLength,
+                                         unsigned char* buffer, int byteLength,
                                          bool isInputParameter,
                                          GLTFAsset *asset) {
         

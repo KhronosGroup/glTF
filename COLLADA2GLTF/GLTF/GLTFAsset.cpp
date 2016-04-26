@@ -775,12 +775,12 @@ namespace GLTF
         if (materialBindings == nullptr)
             return false;
         
-        size_t jointsCount = 0;
+        int jointsCount = 0;
         if (node->contains(kSkin)) {
             std::string skinOriginalID = node->getString(kSkin);
             shared_ptr <JSONObject> skins = this->_root->createObjectIfNeeded(kSkins);
             shared_ptr <GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinOriginalID) );
-            jointsCount = skin->getJointsCount();
+            jointsCount = (int)skin->getJointsCount();
         }
         shared_ptr <JSONArray> meshesArray = nullptr;
 
@@ -819,7 +819,7 @@ namespace GLTF
             if (jointsCount > 0) {
                 if (meshExtras == nullptr)
                     meshExtras = std::make_shared<JSONObject>();
-                meshExtras->setUnsignedInt32("jointsCount", (int)jointsCount);
+                meshExtras->setUnsignedInt32("jointsCount", jointsCount);
             }
             
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->getValueForUniqueId(meshUID));
@@ -883,7 +883,7 @@ namespace GLTF
                         inputParameterName,
                         "FLOAT",
                         (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
-                        timeBufferView->getByteLength(), true,
+                        (int)timeBufferView->getByteLength(), true,
                         this);
                 }
 
