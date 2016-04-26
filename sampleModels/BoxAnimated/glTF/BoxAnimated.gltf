@@ -1,0 +1,498 @@
+{
+    "accessors": {
+        "accessor_29": {
+            "bufferView": "bufferView_64",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 384,
+            "type": "SCALAR"
+        },
+        "accessor_31": {
+            "bufferView": "bufferView_65",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 224,
+            "max": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "min": [
+                -0.5,
+                -0.5,
+                -0.5
+            ],
+            "type": "VEC3"
+        },
+        "accessor_33": {
+            "bufferView": "bufferView_65",
+            "byteOffset": 2688,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 224,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": "VEC3"
+        },
+        "accessor_56": {
+            "bufferView": "bufferView_64",
+            "byteOffset": 768,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 132,
+            "type": "SCALAR"
+        },
+        "accessor_58": {
+            "bufferView": "bufferView_65",
+            "byteOffset": 5376,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 96,
+            "max": [
+                0.33504000306129456,
+                0.5,
+                0.33504000306129456
+            ],
+            "min": [
+                -0.33504000306129456,
+                -0.5,
+                -0.33504000306129456
+            ],
+            "type": "VEC3"
+        },
+        "accessor_60": {
+            "bufferView": "bufferView_65",
+            "byteOffset": 6528,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 96,
+            "max": [
+                1,
+                1,
+                1
+            ],
+            "min": [
+                -1,
+                -1,
+                -1
+            ],
+            "type": "VEC3"
+        },
+        "animAccessor_0": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2,
+            "type": "SCALAR"
+        },
+        "animAccessor_1": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 8,
+            "componentType": 5126,
+            "count": 2,
+            "type": "VEC4"
+        },
+        "animAccessor_2": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 40,
+            "componentType": 5126,
+            "count": 4,
+            "type": "SCALAR"
+        },
+        "animAccessor_3": {
+            "bufferView": "bufferView_63",
+            "byteOffset": 56,
+            "componentType": 5126,
+            "count": 4,
+            "type": "VEC3"
+        }
+    },
+    "animations": {
+        "animation_0": {
+            "channels": [
+                {
+                    "sampler": "animation_0_rotation_sampler",
+                    "target": {
+                        "id": "Geometry-mesh020Node",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "parameters": {
+                "TIME": "animAccessor_0",
+                "rotation": "animAccessor_1"
+            },
+            "samplers": {
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
+                }
+            }
+        },
+        "animation_1": {
+            "channels": [
+                {
+                    "sampler": "animation_1_translation_sampler",
+                    "target": {
+                        "id": "Geometry-mesh020Node",
+                        "path": "translation"
+                    }
+                }
+            ],
+            "parameters": {
+                "TIME": "animAccessor_2",
+                "translation": "animAccessor_3"
+            },
+            "samplers": {
+                "animation_1_translation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "translation"
+                }
+            }
+        }
+    },
+    "asset": {
+        "generator": "collada2gltf@774bd4fe67703fbf60f9c02f3ba79632f246e9b6",
+        "premultipliedAlpha": true,
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": "1.0"
+    },
+    "bufferViews": {
+        "bufferView_63": {
+            "buffer": "BoxAnimated",
+            "byteLength": 104,
+            "byteOffset": 0
+        },
+        "bufferView_64": {
+            "buffer": "BoxAnimated",
+            "byteLength": 1032,
+            "byteOffset": 104,
+            "target": 34963
+        },
+        "bufferView_65": {
+            "buffer": "BoxAnimated",
+            "byteLength": 7680,
+            "byteOffset": 1136,
+            "target": 34962
+        }
+    },
+    "buffers": {
+        "BoxAnimated": {
+            "byteLength": 8816,
+            "type": "arraybuffer",
+            "uri": "BoxAnimated.bin"
+        }
+    },
+    "materials": {
+        "Effect-inner": {
+            "name": "inner",
+            "technique": "technique0",
+            "values": {
+                "diffuse": [
+                    0.800000011920929,
+                    0.4159420132637024,
+                    0.7952920198440552,
+                    1
+                ],
+                "shininess": 256,
+                "specular": [
+                    0.20000000298023224,
+                    0.20000000298023224,
+                    0.20000000298023224,
+                    1
+                ]
+            }
+        },
+        "Effect-outer": {
+            "name": "outer",
+            "technique": "technique0",
+            "values": {
+                "diffuse": [
+                    0.3016040027141571,
+                    0.5335419774055481,
+                    0.800000011920929,
+                    1
+                ],
+                "shininess": 256,
+                "specular": [
+                    0.20000000298023224,
+                    0.20000000298023224,
+                    0.20000000298023224,
+                    1
+                ]
+            }
+        }
+    },
+    "meshes": {
+        "Geometry-mesh019": {
+            "name": "outer_box",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_33",
+                        "POSITION": "accessor_31"
+                    },
+                    "indices": "accessor_29",
+                    "material": "Effect-outer",
+                    "mode": 4
+                }
+            ]
+        },
+        "Geometry-mesh020": {
+            "name": "inner_box",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_60",
+                        "POSITION": "accessor_58"
+                    },
+                    "indices": "accessor_56",
+                    "material": "Effect-inner",
+                    "mode": 4
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "Camera-camera002Node": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0.9961947202682495,
+                -0.08715574443340302,
+                0,
+                0,
+                0.08715574443340302,
+                0.9961947202682495,
+                0,
+                0,
+                0.75,
+                4,
+                1
+            ],
+            "name": "Camera"
+        },
+        "Geometry-mesh019Node": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "meshes": [
+                "Geometry-mesh019"
+            ],
+            "name": "outer_box"
+        },
+        "Geometry-mesh020Node": {
+            "children": [],
+            "meshes": [
+                "Geometry-mesh020"
+            ],
+            "name": "inner_box",
+            "rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                0,
+                0,
+                0
+            ]
+        },
+        "Light-sunLight011Node": {
+            "children": [],
+            "matrix": [
+                0.7071067690849304,
+                0,
+                0.7071067690849304,
+                0,
+                0.3535533845424652,
+                0.8660253882408142,
+                -0.3535533845424652,
+                0,
+                -0.6123724579811096,
+                0.5,
+                0.6123724579811096,
+                0,
+                -2,
+                2,
+                2,
+                1
+            ],
+            "name": "Directional_Light"
+        },
+        "polyRender005": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "Render"
+        }
+    },
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_normal",
+                "a_position"
+            ],
+            "fragmentShader": "BoxAnimated0FS",
+            "vertexShader": "BoxAnimated0VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "polyRender005",
+                "Geometry-mesh019Node",
+                "Geometry-mesh020Node",
+                "Camera-camera002Node",
+                "Light-sunLight011Node"
+            ]
+        }
+    },
+    "shaders": {
+        "BoxAnimated0FS": {
+            "type": 35632,
+            "uri": "BoxAnimated0FS.glsl"
+        },
+        "BoxAnimated0VS": {
+            "type": 35633,
+            "uri": "BoxAnimated0VS.glsl"
+        }
+    },
+    "skins": {},
+    "techniques": {
+        "technique0": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
+            "parameters": {
+                "diffuse": {
+                    "type": 35666
+                },
+                "light0Color": {
+                    "type": 35665,
+                    "value": [
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "light1Color": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "light1Transform": {
+                    "node": "Light-sunLight011Node",
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35666
+                }
+            },
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_diffuse": "diffuse",
+                "u_light0Color": "light0Color",
+                "u_light1Color": "light1Color",
+                "u_light1Transform": "light1Transform",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_shininess": "shininess",
+                "u_specular": "specular"
+            }
+        }
+    }
+}
