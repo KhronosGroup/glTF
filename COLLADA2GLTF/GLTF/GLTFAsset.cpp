@@ -980,9 +980,8 @@ namespace GLTF
                 }
                 //WORK-AROUND: TEXCOORD from the Collada model is an unnecessary field if the material doesn't use textures
                 else {
-                    GLTF::VertexAttributeVector vertexAttributes = primitive->getVertexAttributes();
-                    for (unsigned int k = 0; k < vertexAttributes.size(); k++) {
-                        shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
+                    for (unsigned int k = 0; k < primitive->getVertexAttributes().size(); k++) {
+                        shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(primitive->getVertexAttributes()[k]);
                         if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
                             std::string materialId = primitive->getMaterialID();
                             shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
@@ -1002,6 +1001,7 @@ namespace GLTF
                             }
                             if (!usesTexture) {
                                 primitive->removeVertexAttribute(k);
+                                k--;
                             }
                         }
                     }
