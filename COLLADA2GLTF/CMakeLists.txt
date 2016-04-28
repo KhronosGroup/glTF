@@ -80,6 +80,7 @@ link_directories(${COLLADA2GLTF_BINARY_DIR}/lib)
 
 if (WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     add_definitions(-DWIN32)
     add_definitions(-EHsc)
 endif()
