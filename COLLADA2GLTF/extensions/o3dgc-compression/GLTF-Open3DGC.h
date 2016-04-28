@@ -32,12 +32,12 @@ namespace GLTF
                             std::shared_ptr<JSONObject> floatAttributeIndexMapping,
                             GLTFAsset* asset);
     
-    void encodeDynamicVector(float *buffer, const std::string &path, size_t componentsCount, size_t count, GLTFAsset& asset);
+    void encodeDynamicVector(float *buffer, const std::string &path, long componentsCount, long count, GLTFAsset& asset);
     
     void setupAndWriteAnimationParameter(GLTFAnimation *cvtAnimation,
                                          const std::string& parameterSID,
                                          const std::string& parameterType,
-                                         unsigned char* buffer, size_t length, bool isInputParameter,
+                                         unsigned char* buffer, int length, bool isInputParameter,
                                          GLTFAsset *asset);
 }
 

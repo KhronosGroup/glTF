@@ -138,7 +138,7 @@ namespace GLTF
         shared_ptr <JSONObject> target =  this->targets()->getObject(targetID);
         shared_ptr<GLTFAnimationFlattener> animationFlattener = this->animationFlattenerForTargetUID(targetID);
         
-        size_t count = 0;
+        int count = 0;
         float* rotations = 0;
         float* positions = 0;
         float* scales = 0;

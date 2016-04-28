@@ -81,10 +81,9 @@ namespace GLTF
         for (unsigned int i = 0 ; i < allSemantics.size() ; i++) {
             GLTF::Semantic semantic = allSemantics[i];
             size_t attributesCount = this->getMeshAttributesCountForSemantic(semantic);
-            for (size_t j = 0 ; j < attributesCount ; j++) {
+            for (unsigned int j = 0 ; j < attributesCount ; j++) {
                 shared_ptr <GLTF::GLTFAccessor> selectedMeshAttribute = this->getMeshAttribute(semantic, j);
-                unsigned int indexSet = j;
-                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, indexSet);
+                std::string semanticIndexSetKey = keyWithSemanticAndSet(semantic, j);
                 unsigned int size = (unsigned int)meshAttributes->size();
                 semanticAndSetToIndex[semanticIndexSetKey] = size;
                 

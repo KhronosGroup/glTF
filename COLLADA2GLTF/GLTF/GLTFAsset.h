@@ -55,7 +55,7 @@ namespace GLTF
     typedef std::map<std::string, std::shared_ptr<GLTFOutputStream> > NameToOutputStream;
 
     //types for late binding of material
-    typedef std::map<unsigned int, std::shared_ptr <COLLADAFW::MaterialBinding> > MaterialBindingsPrimitiveMap;
+    class MaterialBindingsPrimitiveMap : public std::map<unsigned int, std::shared_ptr <COLLADAFW::MaterialBinding>> {};
     typedef std::map<std::string, std::shared_ptr <MaterialBindingsPrimitiveMap> > MaterialBindingsForMeshUID;
     typedef std::map<std::string, std::shared_ptr <MaterialBindingsForMeshUID> > MaterialBindingsForNodeUID;
 

@@ -169,14 +169,14 @@ namespace GLTF
             return this->_hasAnimatedRotation;
         }
         
-        void allocAndFillAffineTransformsBuffers(float **translationsPtr, float **rotationsPtr, float **scalePtr, size_t &count) {
+        void allocAndFillAffineTransformsBuffers(float **translationsPtr, float **rotationsPtr, float **scalePtr, int &count) {
             
             COLLADABU::Math::Matrix4 transformationMatrix;
             float *translations = 0;
             float *rotations = 0;
             float *scales = 0;
             
-            count = _transforms.size();
+            count = (int)_transforms.size();
             
             if (this->_hasAnimatedTranslation && translationsPtr) {
                 *translationsPtr = (float*)malloc(sizeof(float) * count * 3);

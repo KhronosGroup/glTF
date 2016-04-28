@@ -613,7 +613,7 @@ namespace GLTF
         bool addSemantic(std::string vertexOrFragment, std::string uniformOrAttribute,
                          std::string semantic,
                          std::string parameterID,
-                         size_t count,
+                         int count,
                          bool includesVarying,
                          bool forcesAsAnArray = false) {
             
