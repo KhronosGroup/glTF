@@ -978,28 +978,29 @@ namespace GLTF
                     meshes->removeValue(mesh->getID());
                     break;
                 }
-                //WORK-AROUND: TEXCOORD from the Collada model is an unnecessary field if the material doesn't use textures
+                //WORK-AROUND: TEXCOORD from the Collada model can be removed if it isn't bound to a technique
                 else {
+                    std::string materialId = primitive->getMaterialID();
+                    shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
+                    shared_ptr <JSONObject> technique = material->getTechniqueGenerator();
+                    shared_ptr <JSONObject> texcoordBindings = technique->getObject("texcoordBindings");
+
                     for (unsigned int k = 0; k < primitive->getVertexAttributes().size(); k++) {
                         shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(primitive->getVertexAttributes()[k]);
                         if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
-                            std::string materialId = primitive->getMaterialID();
-                            shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
-                            shared_ptr <JSONObject> values = material->getValues();
-                            bool usesTexture = false;
-                            std::vector<std::string> keys = values->getAllKeys();
-                            for (unsigned int m = 0; m < values->getKeysCount(); m++) {
-                                std::string key = keys.at(m);
-                                //As-in commonProfileShaders.cpp, exclude the reflective slot
-                                if (key != "reflective") {
-                                    shared_ptr <JSONValue> value = values->getValue(keys.at(m))->valueForKeyPath("value");
-                                    if (value->valueType() == kJSONString) {
-                                        usesTexture = true;
-                                        break;
-                                    }
+                            std::string attribute = "TEXCOORD_" + std::to_string(vertexAttribute->getIndexOfSet());
+                            bool bound = false;
+                            for (unsigned int m = 0; m < texcoordBindings->getKeysCount(); m++) {
+                                std::string key = texcoordBindings->getAllKeys()[m];
+                                std::string binding = texcoordBindings->getString(key);
+
+                                if (attribute == binding) {
+                                    bound = true;
+                                    break;
                                 }
                             }
-                            if (!usesTexture) {
+
+                            if (!bound) {
                                 primitive->removeVertexAttribute(k);
                                 k--;
                             }
