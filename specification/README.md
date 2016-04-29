@@ -36,7 +36,6 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
   * [Cameras](#cameras)
-  * [Lights](#lights)
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
@@ -847,8 +846,8 @@ The following example `states` object indicates to enable all Boolean states (se
       ],
       "blendFuncSeparate": [
           1,     // ONE (srcRGB)
-          1,     // ONE (srcAlpha)
           0,     // ZERO (dstRGB)
+          1,     // ONE (srcAlpha)
           0      // ZERO (dstAlpha)
       ],
       "colorMask": [true, true, true, true], // (red, green, blue, alpha)
@@ -3123,7 +3122,7 @@ Arguments for fixed-function rendering state functions other than `enable()`/`di
 |---|----|-----------|--------|
 |**blendColor**|`number[4]`|Floating-point values passed to `blendColor()`. [red, green, blue, alpha]|No, default: `[0,0,0,0]`|
 |**blendEquationSeparate**|`integer[2]`|Integer values passed to `blendEquationSeparate()`.|No, default: `[32774,32774]`|
-|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,1,0,0]`|
+|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,0,1,0]`|
 |**colorMask**|`boolean[4]`|Boolean values passed to `colorMask()`. [red, green, blue, alpha].|No, default: `[true,true,true,true]`|
 |**cullFace**|`integer[1]`|Integer value passed to `cullFace()`.|No, default: `[1029]`|
 |**depthFunc**|`integer[1]`|Integer values passed to `depthFunc()`.|No, default: `[513]`|
@@ -3163,7 +3162,7 @@ Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAl
 
 * **Type**: `integer[4]`
    * Each element in the array must be one of the following values: `0`, `1`, `768`, `769`, `774`, `775`, `770`, `771`, `772`, `773`, `32769`, `32770`, `32771`, `32772`, `776`.
-* **Required**: No, default: `[1,1,0,0]`
+* **Required**: No, default: `[1,0,1,0]`
 * **Related WebGL functions**: `blendFuncSeparate()`
 
 ### functions.colorMask
