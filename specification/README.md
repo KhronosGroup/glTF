@@ -36,7 +36,6 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
   * [Cameras](#cameras)
-  * [Lights](#lights)
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
@@ -1223,7 +1222,7 @@ The stride, in bytes, between attributes referenced by this accessor.  When this
 
 ### accessor.componentType :white_check_mark: 
 
-The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
+The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -3123,7 +3122,7 @@ Arguments for fixed-function rendering state functions other than `enable()`/`di
 |---|----|-----------|--------|
 |**blendColor**|`number[4]`|Floating-point values passed to `blendColor()`. [red, green, blue, alpha]|No, default: `[0,0,0,0]`|
 |**blendEquationSeparate**|`integer[2]`|Integer values passed to `blendEquationSeparate()`.|No, default: `[32774,32774]`|
-|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,1,0,0]`|
+|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,0,1,0]`|
 |**colorMask**|`boolean[4]`|Boolean values passed to `colorMask()`. [red, green, blue, alpha].|No, default: `[true,true,true,true]`|
 |**cullFace**|`integer[1]`|Integer value passed to `cullFace()`.|No, default: `[1029]`|
 |**depthFunc**|`integer[1]`|Integer values passed to `depthFunc()`.|No, default: `[513]`|
@@ -3163,7 +3162,7 @@ Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAl
 
 * **Type**: `integer[4]`
    * Each element in the array must be one of the following values: `0`, `1`, `768`, `769`, `774`, `775`, `770`, `771`, `772`, `773`, `32769`, `32770`, `32771`, `32772`, `776`.
-* **Required**: No, default: `[1,1,0,0]`
+* **Required**: No, default: `[1,0,1,0]`
 * **Related WebGL functions**: `blendFuncSeparate()`
 
 ### functions.colorMask
