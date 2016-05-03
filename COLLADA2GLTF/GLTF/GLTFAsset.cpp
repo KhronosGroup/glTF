@@ -1109,7 +1109,7 @@ namespace GLTF
                 for (unsigned int k = 0; k < vertexAttributes.size(); k++) {
                     shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
                     GLTF::Semantic semantic = vertexAttribute->getSemantic();
-                    shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, j);
+                    shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, 0);
 
                     if (meshAttribute != NULL) {
                         meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
