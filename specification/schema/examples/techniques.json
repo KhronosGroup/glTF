@@ -12,7 +12,7 @@
 		            },
                     "extras" : {
                         "Application specific" : "The extra object can contain any properties."
-                    }     
+                    }
                 },
                 "diffuse": {
                     "type": 35678
@@ -73,7 +73,6 @@
                 "a_normal": "normal",
                 "a_texcoord0": "texcoord0",
                 "a_joint": "joint",
-                "a_jointMatrix": "jointMatrix",
                 "a_weight": "weight"
             },
             "program": "program_id",
@@ -84,7 +83,8 @@
                 "u_lightTransformMatrix": "lightTransform",
                 "u_modelViewMatrix": "modelViewMatrix",
                 "u_projectionMatrix": "projectionMatrix",
-                "u_normalMatrix": "normalMatrix"
+                "u_normalMatrix": "normalMatrix",
+                "u_jointMatrix": "jointMatrix"
             },
             "states" : {
                 "enable" : [3042, 2884, 2929, 32823, 32926, 3089],
@@ -126,7 +126,7 @@
             },
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
-            }     
+            }
         }
     }
 }
