@@ -781,7 +781,7 @@ Table 1. Uniform Semantics
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
-| `JOINTMATRIX`                | `FLOAT_VEC4` | Transforms mesh coordinates for a particular joint for skinning and animation. |
+| `JOINTMATRIX`                | `FLOAT_MAT4` | Transforms mesh coordinates for a particular joint for skinning and animation. |
 
 #### Program Instances
 
