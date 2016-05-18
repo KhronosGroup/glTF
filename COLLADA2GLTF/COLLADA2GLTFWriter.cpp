@@ -526,9 +526,26 @@ namespace GLTF
                 InstanceGeometry* instanceGeometry = instanceGeometries[i];
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceGeometry->getInstanciatedObjectId();
+                shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(uniqueId.toAscii()));
+
+                COLLADAFW::UniqueId meshUID = COLLADAFW::UniqueId(uniqueId.toAscii());
+                // Create a unique instance of the mesh so that it can bind to different materials
+                while (asset->containsValueForUniqueId(meshUID.toAscii())) {
+                    meshUID = COLLADAFW::UniqueId(meshUID.getClassId(), meshUID.getObjectId() + 1, meshUID.getFileId());
+                }
+
+                std::string meshID = mesh->getID() + "-" + std::to_string(meshUID.getObjectId());
+
+                shared_ptr<GLTFMesh> meshInstance = mesh->clone();
+                meshInstance->setID(meshID);
+                meshInstance->setName(meshID);
+
+                asset->root()->createObjectIfNeeded(kMeshes)->setValue(meshID, meshInstance);
+                asset->setValueForUniqueId(meshUID.toAscii(), meshInstance);
+
                 _storeMaterialBindingArray("meshes-",
                                            node->getUniqueId().toAscii(),
-                                           uniqueId.toAscii(),
+                                           meshUID.toAscii(),
                                            materialBindings);
             }
         }
