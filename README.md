@@ -15,6 +15,13 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 
 [Sample models](sampleModels/README.md) for learning glTF, and testing runtime engines and content pipeline tools.
 
+## Overview
+
+<p align="center">
+<a href="https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/figures/gltfOverview-0.1.3.png"><img src="specification/figures/gltfOverview-0.1.3-small.png" /></a>a>
+</p>
+Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
+
 ## glTF Tools
 
 ### Converters
