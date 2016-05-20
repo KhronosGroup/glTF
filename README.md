@@ -52,6 +52,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
 * Initial [glTF loader](https://github.com/xeolabs/xeoengine/tree/master/src/importing/gltf) in [xeoEngine](http://xeoengine.org/) (geometry and materials)
    * [Importing glTF](https://github.com/xeolabs/xeoengine/wiki/Importing-glTF) tutorial
+* [aframe-gltf](https://github.com/aframevr/aframe) - loader for A-Frame, a framework for creating virtual reality web experiences
 
 #### JavaScript / Node.js
 
