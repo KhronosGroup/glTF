@@ -10,11 +10,11 @@
 
 ## Status
 
-Draft (not ratified yet)
+Complete
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec.
+Written against the glTF 1.0 spec.
 
 ## Overview
 
