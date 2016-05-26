@@ -530,6 +530,11 @@ namespace GLTF
             if (animationListID.isValid()) {
                 shouldExportTRS = true;
                 shared_ptr<AnimatedTargets> animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()];
+                
+                if (this->_asset->_targetIdsForNodeIds.count(uniqueUID) == 0) {
+                    this->_asset->_targetIdsForNodeIds[uniqueUID] = vector<string>();
+                }
+                this->_asset->_targetIdsForNodeIds[uniqueUID].push_back(animationListID.toAscii());
                 if (animatedTargets == NULL) {                
                     animatedTargets = shared_ptr<AnimatedTargets>(new AnimatedTargets());
                     this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
@@ -542,38 +547,6 @@ namespace GLTF
                 animatedTargets->push_back(animatedTarget);
             }
         }
-
-          /*  shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
-            
-            this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
-            shared_ptr <JSONObject> animatedTarget(new JSONObject());
-            std::string animationID = animationListID.toAscii();
-            animatedTarget->setString(kTarget, uniqueUID);
-            animatedTarget->setString("transformId", animationID);
-
-            if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
-                animatedTarget->setString("path", "matrix");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-            
-            if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
-                animatedTarget->setString("path", "translation");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-            
-            if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
-                animatedTarget->setString("path", "rotation");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-          
-            if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
-                animatedTarget->setString("path", "scale");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }*/
                     
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
                 
@@ -1489,46 +1462,47 @@ namespace GLTF
 
     bool COLLADA2GLTFWriter::writeAnimationBindings() {
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
-        for (auto animationBinding : this->_asset->_animationBindingsForTargetId) {
-            std::string targetId = animationBinding.first;
-            std::vector<COLLADAFW::AnimationList::AnimationBinding> animationBindings = animationBinding.second;
-            AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[targetId];
-
-            map<COLLADAFW::Node*, map<int, vector<shared_ptr<GLTFAnimation>>>> animatedIndices;
-            map<shared_ptr<GLTFAnimation>, COLLADAFW::AnimationList::AnimationBinding> animationBindingMap;
+        for (auto animationTargetsForNode : this->_asset->_targetIdsForNodeIds) {
+            string nodeId = animationTargetsForNode.first;
+            COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[nodeId].get();
+            vector<string> targetIds = animationTargetsForNode.second;
             shared_ptr<GLTFAnimation> globalAnimation = NULL;
-            if (animatedTargets != NULL) {
-                for (int i = 0; i < animationBindings.size(); i++) {
-                    COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
-                    shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
-                    if (animation != NULL) {
-                        if (globalAnimation == NULL) {
-                            globalAnimation = animation;
-                        }
-                        else {
-                            // Merge this animation's keyframes into the global animation
-                            for (int j = 0; j < animation->getCount(); j++) {
-                                double keyFrame = animation->getKeyFrameAtIndex(j);
-                                if (!globalAnimation->hasKeyFrame(keyFrame)) {
-                                    globalAnimation->addInterpolatedKeyFrame(keyFrame);
+            map<shared_ptr<GLTFAnimation>, COLLADAFW::AnimationList::AnimationBinding> animationBindingMap;
+            map<int, vector<shared_ptr<GLTFAnimation>>> animatedIndices;
+
+            for (auto targetId : targetIds) {
+                std::vector<COLLADAFW::AnimationList::AnimationBinding> animationBindings = this->_asset->_animationBindingsForTargetId[targetId];
+                AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[targetId];
+
+                if (animatedTargets != NULL) {
+                    for (int i = 0; i < animationBindings.size(); i++) {
+                        COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
+                        shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
+                        if (animation != NULL) {
+                            if (globalAnimation == NULL) {
+                                globalAnimation = animation;
+                            }
+                            else {
+                                // Merge this animation's keyframes into the global animation
+                                for (int j = 0; j < animation->getCount(); j++) {
+                                    double keyFrame = animation->getKeyFrameAtIndex(j);
+                                    if (!globalAnimation->hasKeyFrame(keyFrame)) {
+                                        globalAnimation->addInterpolatedKeyFrame(keyFrame);
+                                    }
                                 }
                             }
-                        }
-                        animationBindingMap[animation] = animationBinding;
-                        for (int j = 0; j < animatedTargets->size(); j++) {
-                            shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
-                            std::string targetUID = animatedTarget->getString(kTarget);
-                            COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-                            animation->setTargetNodeId(targetUID);
-                            int nodeTransformIndex = animatedTarget->getInt32("nodeTransformIndex");
+                            animationBindingMap[animation] = animationBinding;
+                            for (int j = 0; j < animatedTargets->size(); j++) {
+                                shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
+                                std::string targetUID = animatedTarget->getString(kTarget);
+                                animation->setTargetNodeId(targetUID);
+                                int nodeTransformIndex = animatedTarget->getInt32("nodeTransformIndex");
 
-                            if (!animatedIndices.count(node)) {
-                                animatedIndices[node] = map<int, vector<shared_ptr<GLTFAnimation>>>();
+                                if (!animatedIndices.count(nodeTransformIndex)) {
+                                    animatedIndices[nodeTransformIndex] = vector<shared_ptr<GLTFAnimation>>();
+                                }
+                                animatedIndices[nodeTransformIndex].push_back(animation);
                             }
-                            if (!animatedIndices[node].count(nodeTransformIndex)) {
-                                animatedIndices[node][nodeTransformIndex] = vector<shared_ptr<GLTFAnimation>>();
-                            }
-                            animatedIndices[node][nodeTransformIndex].push_back(animation);
                         }
                     }
                 }
@@ -1537,17 +1511,14 @@ namespace GLTF
             // Double the keyframes to catch half-rotations
             globalAnimation->doubleKeyFrames();
             globalAnimation->doubleKeyFrames();
+            globalAnimation->doubleKeyFrames();
             int keyFrames = globalAnimation->getCount();
 
-            // Realistically, there should only be one node here with one or more animations
-            for (auto nodeMap : animatedIndices) {
-                COLLADAFW::Node* node = nodeMap.first;
-                COLLADABU::Math::Matrix4 nodeMatrix;
-                node->getTransformationMatrix(nodeMatrix);
-                map<int, vector<shared_ptr<GLTFAnimation>>> indexMap = nodeMap.second;
-                TransformationPointerArray transformations = node->getTransformations();
+            COLLADABU::Math::Matrix4 nodeMatrix;
+            node->getTransformationMatrix(nodeMatrix);
+            TransformationPointerArray transformations = node->getTransformations();
 
-                map<COLLADAFW::Transformation::TransformationType, float*> nodeDecomposition = decomposeTransformationMatrix(nodeMatrix, transformations);
+            map<COLLADAFW::Transformation::TransformationType, float*> nodeDecomposition = decomposeTransformationMatrix(nodeMatrix, transformations);
 
                 float* animatedKeyFrames = new float[keyFrames];
                 float* animatedTranslation = NULL;
@@ -1565,8 +1536,8 @@ namespace GLTF
                     COLLADABU::Math::Matrix4 keyFrameMatrix = COLLADABU::Math::Matrix4::IDENTITY;
                     for (int j = 0; j < transformations.getCount(); j++) {
                         Transformation* transformation = transformations[j];
-                        if (indexMap.count(j)) {
-                            vector<shared_ptr<GLTFAnimation>> animationsAtIndex = indexMap[j];
+                        if (animatedIndices.count(j)) {
+                            vector<shared_ptr<GLTFAnimation>> animationsAtIndex = animatedIndices[j];
                             for (int k = 0; k < animationsAtIndex.size(); k++) {
                                 shared_ptr<GLTFAnimation> animation = animationsAtIndex[k];
                                 double time = globalAnimation->getKeyFrameAtIndex(i);
@@ -1633,7 +1604,7 @@ namespace GLTF
 
                 // Bind to the first animation and remove any others
                 bool first = true;
-                for (auto mapEntry : indexMap) {
+                for (auto mapEntry : animatedIndices) {
                     vector<shared_ptr<GLTFAnimation>> animationsAtIndex = mapEntry.second;
                     for (int i = 0; i < animationsAtIndex.size(); i++) {
                         shared_ptr<GLTFAnimation> animation = animationsAtIndex[i];
@@ -1660,7 +1631,6 @@ namespace GLTF
                             animations->removeValue(animation->getID());
                         }
                     }
-                }
             }
         }
 		return true;

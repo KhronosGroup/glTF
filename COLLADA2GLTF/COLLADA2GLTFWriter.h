@@ -40,6 +40,8 @@
 #pragma warning(disable: 4275)
 #endif
 
+using namespace std;
+
 namespace GLTF
 {
     class GLTFObject;
@@ -64,7 +66,7 @@ namespace GLTF
     };
     
     
-    typedef std::vector < std::shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
+    typedef vector<shared_ptr<MeshFlatteningInfo>> MeshFlatteningInfoVector;
     
     typedef struct 
     {
@@ -195,13 +197,13 @@ namespace GLTF
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        std::shared_ptr<GLTF::GLTFAsset> _asset;
+        shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-        std::ofstream _compressedDataOutputStream;
+        ofstream _compressedDataOutputStream;
         double _metersPerUnit;
-        std::shared_ptr<GLTF::JSONObject> _rootTransform;
+        shared_ptr<GLTF::JSONObject> _rootTransform;
 	};
 } 
 

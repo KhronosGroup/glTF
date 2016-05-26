@@ -157,7 +157,9 @@ namespace GLTF
         UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
         UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
         UniqueIDToAccessor              _uniqueIDToAccessorObject;
+
         std::map<std::string, std::vector<COLLADAFW::AnimationList::AnimationBinding>> _animationBindingsForTargetId;
+        std::map<std::string, std::vector<std::string>> _targetIdsForNodeIds;
 
 
     private:
