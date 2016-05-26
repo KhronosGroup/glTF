@@ -1,5 +1,9 @@
 # glTF Extension Registry
 
+## Khronos extensions
+
+* [KHR_binary_glTF](Khronos/KHR_binary_glTF/README.md)
+
 ## Draft Khronos extensions
 
 _Draft Khronos extensions are not ratified yet._
