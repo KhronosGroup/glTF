@@ -26,6 +26,9 @@
 
 namespace GLTF
 {
+    class GLTFBuffer;
+    class GLTFBufferView;
+
     class GLTFOutputStream {
 	public:
         GLTFOutputStream();

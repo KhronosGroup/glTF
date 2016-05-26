@@ -38,6 +38,7 @@
 #include "helpers/encodingHelpers.h"
 #include "COLLADAFWFileInfo.h"
 #include "Math/COLLADABUMathPrerequisites.h"
+#include "COLLADAFWAnimationList.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -101,6 +102,7 @@ namespace GLTF
             }
         }
         
+        this->writeAnimationBindings();
         asset->write();
 
         // Cleanup IDs and Technique cache in case we have another conversion
@@ -317,6 +319,144 @@ namespace GLTF
         return;
     }
 
+    bool bufferEquals(float* first, float* second, int size, double epsilon) {
+        for (int i = 0; i < size; i++) {
+            if (fabs(first[i] - second[i]) > epsilon) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrix(Transformation* transform) {
+        switch (transform->getTransformationType()) {
+        case Transformation::ROTATE: {
+            Rotate* rotate = (Rotate*)transform;
+            COLLADABU::Math::Vector3 axis = rotate->getRotationAxis();
+            axis.normalise();
+            double angle = rotate->getRotationAngle();
+            return COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
+            break;
+        }
+        case Transformation::TRANSLATE: {
+            Translate* translate = (Translate*)transform;
+            const COLLADABU::Math::Vector3& translation = translate->getTranslation();
+            COLLADABU::Math::Matrix4 translationMatrix;
+            translationMatrix.makeTrans(translation);
+            return translationMatrix;
+            break;
+        }
+        case Transformation::SCALE: {
+            Scale* scale = (Scale*)transform;
+            const COLLADABU::Math::Vector3& scaleVector = scale->getScale();
+            COLLADABU::Math::Matrix4 scaleMatrix;
+            scaleMatrix.makeScale(scaleVector);
+            return scaleMatrix;
+            break;
+        }
+        case Transformation::MATRIX: {
+            return ((Matrix*)transform)->getMatrix();
+            break;
+        }
+        }
+        return COLLADABU::Math::Matrix4::IDENTITY;
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrix(COLLADAFW::AnimationList::AnimationClass animationClass, Transformation* originalTransform, vector<double> data) {
+        switch (animationClass) {
+        case COLLADAFW::AnimationList::MATRIX4X4: {
+            return COLLADABU::Math::Matrix4(
+                data[0], data[1], data[2], data[3],
+                data[4], data[5], data[6], data[7], 
+                data[8], data[9], data[10], data[11], 
+                data[12], data[13], data[14], data[15]);
+        }
+        case COLLADAFW::AnimationList::AXISANGLE: {
+            COLLADAFW::Rotate* rotate = new COLLADAFW::Rotate(data[0], data[1], data[2], data[3]);
+            return getTransformationMatrix(rotate);
+        }
+        case COLLADAFW::AnimationList::ANGLE: {
+            if (originalTransform->getTransformationType() == COLLADAFW::Transformation::TransformationType::ROTATE) {
+                COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)originalTransform;
+                COLLADAFW::Rotate* newRotate = new COLLADAFW::Rotate(rotate->getRotationAxis(), data[0]);
+                return getTransformationMatrix(newRotate);
+            }
+            break;
+        }
+        case COLLADAFW::AnimationList::POSITION_XYZ: {
+            COLLADAFW::Translate* translate = new COLLADAFW::Translate(data[0], data[1], data[2]);
+            return getTransformationMatrix(translate);
+        }
+        case COLLADAFW::AnimationList::POSITION_X: {
+            COLLADAFW::Translate* translate = new COLLADAFW::Translate(data[0], 0, 0);
+            return getTransformationMatrix(translate);
+        }
+        case COLLADAFW::AnimationList::POSITION_Y: {
+            COLLADAFW::Translate* translate = new COLLADAFW::Translate(0, data[0], 0);
+            return getTransformationMatrix(translate);
+        }
+        case COLLADAFW::AnimationList::POSITION_Z: {
+            COLLADAFW::Translate* translate = new COLLADAFW::Translate(0, 0, data[0]);
+            return getTransformationMatrix(translate);
+        }}
+        return COLLADABU::Math::Matrix4::IDENTITY;
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex, int endIndex) {
+        COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
+        for (int i = startIndex; i <= endIndex; i++) {
+            matrix = matrix * getTransformationMatrix(transformations[i]);
+        }
+        return matrix;
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex) {
+        return getTransformationMatrix(transformations, startIndex, transformations.getCount() - 1);
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrixAtIndex(const TransformationPointerArray& transformations, int index) {
+        return getTransformationMatrix(transformations, index, index);
+    }
+
+    map<COLLADAFW::Transformation::TransformationType, float*> decomposeTransformationMatrix(COLLADABU::Math::Matrix4 matrix, const TransformationPointerArray& transformations) {
+        map<COLLADAFW::Transformation::TransformationType, float*> decomposition;
+        float* scale = new float[3];
+        float* translation = new float[3];
+        float* rotation = new float[4];
+        GLTF::decomposeMatrix(matrix, translation, rotation, scale);
+
+        if (scale[0] == 0.0 && scale[1] == 0.0 && scale[2] == 0.0)
+        {
+            // Matrix decompose failed because of a uniform scaling of 0 in the transformations.
+            // We've lost the rotation information. We'll have to manually extract the rotations.
+            Math::Quaternion rotationQuat = Math::Quaternion::IDENTITY;
+            for (size_t i = 0, count = transformations.getCount(); i < count; ++i)
+            {
+                const Transformation* transform = transformations[i];
+
+                if (transform->getTransformationType() == Transformation::ROTATE)
+                {
+                    Rotate* rotate = (Rotate*)transform;
+                    Math::Vector3 axis = rotate->getRotationAxis();
+                    axis.normalise();
+                    double angle = rotate->getRotationAngle();
+                    rotationQuat = rotationQuat * Math::Quaternion(Math::Utils::degToRad(angle), axis);
+                }
+            }
+
+            Math::Real angle;
+            Math::Vector3 axis;
+            rotationQuat.toAngleAxis(angle, axis);
+            rotation[0] = (float)axis.x;
+            rotation[1] = (float)axis.y;
+            rotation[2] = (float)axis.z;
+            rotation[3] = (float)angle;
+        }
+        decomposition[COLLADAFW::Transformation::TransformationType::SCALE] = scale;
+        decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE] = translation;
+        decomposition[COLLADAFW::Transformation::TransformationType::ROTATE] = rotation;
+        return decomposition;
+    }
     
     bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node,
                                        shared_ptr <GLTF::JSONObject> nodesObject,
@@ -359,7 +499,7 @@ namespace GLTF
             //FIXME: just handle the first camera within a node now
             //for (size_t i = 0 ; i < camerasCount ; i++) {
             //}
-            //Checks if we have a "look at" transformm because it is not handled by getTransformationMatrix when baking the matrix. (TODO: file a OpenCOLLADA issue for that).
+            //Checks if we have a "look at" transform because it is not handled by getTransformationMatrix when baking the matrix. (TODO: file a OpenCOLLADA issue for that).
             const TransformationPointerArray& transformations = node->getTransformations();
             size_t transformationsCount = transformations.getCount();
             for (size_t i = 0 ; i < transformationsCount ; i++) {
@@ -382,15 +522,28 @@ namespace GLTF
             node->getTransformationMatrix(matrix);
         }
                 
-        const TransformationPointerArray& transformations = node->getTransformations();
-        size_t transformationsCount = transformations.getCount();
-        for (size_t i = 0 ; i < transformationsCount ; i++) {
-            const Transformation* tr = transformations[i];
-            const UniqueId& animationListID = tr->getAnimationList();
-            if (!animationListID.isValid())
-                continue;
-            
-            shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
+        TransformationPointerArray transformations = node->getTransformations();
+        // Find which transforms are animated
+        for (int i = 0; i < transformations.getCount(); i++) {
+            Transformation* tr = transformations[i];
+            UniqueId animationListID = tr->getAnimationList();
+            if (animationListID.isValid()) {
+                shouldExportTRS = true;
+                shared_ptr<AnimatedTargets> animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()];
+                if (animatedTargets == NULL) {                
+                    animatedTargets = shared_ptr<AnimatedTargets>(new AnimatedTargets());
+                    this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
+                }
+                shared_ptr <JSONObject> animatedTarget(new JSONObject());
+                std::string animationID = animationListID.toAscii();
+                animatedTarget->setString(kTarget, uniqueUID);
+                animatedTarget->setString("transformId", animationID);
+                animatedTarget->setInt32("nodeTransformIndex", i);
+                animatedTargets->push_back(animatedTarget);
+            }
+        }
+
+          /*  shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
             
             this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
             shared_ptr <JSONObject> animatedTarget(new JSONObject());
@@ -399,7 +552,7 @@ namespace GLTF
             animatedTarget->setString("transformId", animationID);
 
             if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
-                animatedTarget->setString("path", "MATRIX");
+                animatedTarget->setString("path", "matrix");
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
             }
@@ -420,44 +573,15 @@ namespace GLTF
                 animatedTarget->setString("path", "scale");
                 animatedTargets->push_back(animatedTarget);
                 shouldExportTRS = true;
-            }
-        }
+            }*/
                     
         const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
                 
         if (shouldExportTRS) {
-            float scale[3];
-            float translation[3];
-            float rotation[4];
-            GLTF::decomposeMatrix(matrix, translation, rotation, scale);
-
-            if (scale[0] == 0.0 && scale[1] == 0.0 && scale[2] == 0.0 && !nodeContainsLookAtTr)
-            {
-                // Matrix decompose failed because of a uniform scaling of 0 in the transformations.
-                // We've lost the rotation information. We'll have to manually extract the rotations.
-                Math::Quaternion rotationQuat = Math::Quaternion::IDENTITY;
-                for (size_t i = 0, count = transformations.getCount(); i < count; ++i)
-                {
-                    const Transformation* transform = transformations[i];
-
-                    if (transform->getTransformationType() == Transformation::ROTATE)
-                    {
-                        Rotate* rotate = (Rotate*)transform;
-                        Math::Vector3 axis = rotate->getRotationAxis();
-                        axis.normalise();
-                        double angle = rotate->getRotationAngle();
-                        rotationQuat = rotationQuat * Math::Quaternion(Math::Utils::degToRad(angle), axis);
-                    }
-                }
-
-                Math::Real angle;
-                Math::Vector3 axis;
-                rotationQuat.toAngleAxis(angle, axis);
-                rotation[0] = (float)axis.x;
-                rotation[1] = (float)axis.y;
-                rotation[2] = (float)axis.z;
-                rotation[3] = (float)angle;
-            }
+            map<COLLADAFW::Transformation::TransformationType, float*> decomposition = decomposeTransformationMatrix(matrix, transformations);
+            float* translation = decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE];
+            float* rotation = decomposition[COLLADAFW::Transformation::TransformationType::ROTATE];
+            float* scale = decomposition[COLLADAFW::Transformation::TransformationType::SCALE];
 
             // Scale distance units if we need to
             translation[0] *= (float)_asset->getDistanceScale();
@@ -477,11 +601,11 @@ namespace GLTF
             if (exportScale)
                 nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
             
-        } else {
-            //FIXME: OpenCOLLADA typo
+        }
+        else {
             matrix.scaleTrans(_asset->getDistanceScale());
-            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
-            if (exportMatrix) {   
+            bool exportMatrix = !((matrix == COLLADABU::Math::Matrix4::IDENTITY && (CONFIG_BOOL(asset, "exportDefaultValues") == false)));
+            if (exportMatrix) {
                 nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
             }
         }
@@ -1336,62 +1460,209 @@ namespace GLTF
 		return true;
 	}
     
-	//--------------------------------------------------------------------
+    /**
+     * This just initializes the animation and makes a placeholder in the glTF tree
+     */
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation) {
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get());
-        
+        shared_ptr<GLTFAnimation> cvtAnimation = shared_ptr<GLTFAnimation>(new GLTFAnimation(animation, this->_asset.get()));
         cvtAnimation->setOriginalID(animation->getOriginalId());
-        
-        if (this->_asset->_flattenerMapsForAnimationID.count(animation->getOriginalId()) == 0) {
-            this->_asset->_flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
-        }
-        
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         animations->setValue(animation->getUniqueId().toAscii(), cvtAnimation);
-        
 		return true;
 	}
     
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList ) {
+    /**
+     * By this point, nodes have been created, identifying which animations correspond to which transforms
+     * Cache the animation bindings for each target node
+     */
+    bool COLLADA2GLTFWriter::writeAnimationList(const COLLADAFW::AnimationList* animationList) {
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
-        
+        std::string targetId = animationList->getUniqueId().toAscii();
+        if (this->_asset->_animationBindingsForTargetId.count(targetId) == 0) {
+            this->_asset->_animationBindingsForTargetId[targetId] = std::vector<COLLADAFW::AnimationList::AnimationBinding>();
+        }
+        for (int i = 0; i < animationBindings.getCount(); i++) {
+            this->_asset->_animationBindingsForTargetId[targetId].push_back(animationBindings[i]);
+        }
+        return true;
+    }
+
+    bool COLLADA2GLTFWriter::writeAnimationBindings() {
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
-        AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
-        
-        if (animatedTargets)
-        {
-            for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
-                const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+        for (auto animationBinding : this->_asset->_animationBindingsForTargetId) {
+            std::string targetId = animationBinding.first;
+            std::vector<COLLADAFW::AnimationList::AnimationBinding> animationBindings = animationBinding.second;
+            AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[targetId];
 
-                shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
-
-                // Can be null if there are no keyframes
-                if (cvtAnimation)
-                {
-                    AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
-                    for (size_t j = 0; j < animatedTargets->size(); j++) {
-                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
-                        shared_ptr<GLTFAnimationFlattener> animationFlattener;
-                        std::string targetUID = animatedTarget->getString(kTarget);
-                        if (animationFlattenerMap->count(targetUID) == 0) {
-                            //FIXME: assuming node here is wrong
+            map<COLLADAFW::Node*, map<int, vector<shared_ptr<GLTFAnimation>>>> animatedIndices;
+            map<shared_ptr<GLTFAnimation>, COLLADAFW::AnimationList::AnimationBinding> animationBindingMap;
+            shared_ptr<GLTFAnimation> globalAnimation = NULL;
+            if (animatedTargets != NULL) {
+                for (int i = 0; i < animationBindings.size(); i++) {
+                    COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
+                    shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
+                    if (animation != NULL) {
+                        if (globalAnimation == NULL) {
+                            globalAnimation = animation;
+                        }
+                        else {
+                            // Merge this animation's keyframes into the global animation
+                            for (int j = 0; j < animation->getCount(); j++) {
+                                double keyFrame = animation->getKeyFrameAtIndex(j);
+                                if (!globalAnimation->hasKeyFrame(keyFrame)) {
+                                    globalAnimation->addInterpolatedKeyFrame(keyFrame);
+                                }
+                            }
+                        }
+                        animationBindingMap[animation] = animationBinding;
+                        for (int j = 0; j < animatedTargets->size(); j++) {
+                            shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
+                            std::string targetUID = animatedTarget->getString(kTarget);
                             COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-                            animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
-                            (*animationFlattenerMap)[targetUID] = animationFlattener;
+                            animation->setTargetNodeId(targetUID);
+                            int nodeTransformIndex = animatedTarget->getInt32("nodeTransformIndex");
+
+                            if (!animatedIndices.count(node)) {
+                                animatedIndices[node] = map<int, vector<shared_ptr<GLTFAnimation>>>();
+                            }
+                            if (!animatedIndices[node].count(nodeTransformIndex)) {
+                                animatedIndices[node][nodeTransformIndex] = vector<shared_ptr<GLTFAnimation>>();
+                            }
+                            animatedIndices[node][nodeTransformIndex].push_back(animation);
                         }
                     }
+                }
+            }
 
-                    cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
+            // Double the keyframes to catch half-rotations
+            globalAnimation->doubleKeyFrames();
+            globalAnimation->doubleKeyFrames();
+            int keyFrames = globalAnimation->getCount();
 
-                    if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
-                        //if an animation failed to convert, we don't want to keep track of it.
-                        animations->removeValue(animationBindings[i].animation.toAscii());
+            // Realistically, there should only be one node here with one or more animations
+            for (auto nodeMap : animatedIndices) {
+                COLLADAFW::Node* node = nodeMap.first;
+                COLLADABU::Math::Matrix4 nodeMatrix;
+                node->getTransformationMatrix(nodeMatrix);
+                map<int, vector<shared_ptr<GLTFAnimation>>> indexMap = nodeMap.second;
+                TransformationPointerArray transformations = node->getTransformations();
+
+                map<COLLADAFW::Transformation::TransformationType, float*> nodeDecomposition = decomposeTransformationMatrix(nodeMatrix, transformations);
+
+                float* animatedKeyFrames = new float[keyFrames];
+                float* animatedTranslation = NULL;
+                float* animatedRotation = NULL;
+                float* animatedScale = NULL;
+
+                float* nodeTranslation = nodeDecomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE];
+                float* nodeRotation = nodeDecomposition[COLLADAFW::Transformation::TransformationType::ROTATE];
+                float* nodeScale = nodeDecomposition[COLLADAFW::Transformation::TransformationType::SCALE];
+                double EPSILON = 1e-6;
+
+                map<COLLADAFW::Transformation::TransformationType, float*>* decompositions = new map<COLLADAFW::Transformation::TransformationType, float*>[keyFrames];
+                for (int i = 0; i < globalAnimation->getCount(); i++) {
+                    // Calculate the matrix for this keyFrame
+                    COLLADABU::Math::Matrix4 keyFrameMatrix = COLLADABU::Math::Matrix4::IDENTITY;
+                    for (int j = 0; j < transformations.getCount(); j++) {
+                        Transformation* transformation = transformations[j];
+                        if (indexMap.count(j)) {
+                            vector<shared_ptr<GLTFAnimation>> animationsAtIndex = indexMap[j];
+                            for (int k = 0; k < animationsAtIndex.size(); k++) {
+                                shared_ptr<GLTFAnimation> animation = animationsAtIndex[k];
+                                double time = globalAnimation->getKeyFrameAtIndex(i);
+                                if (!animation->hasKeyFrame(time)) {
+                                    animation->addInterpolatedKeyFrame(time);
+                                }
+                                vector<double> output = animation->getValuesAtKeyFrame(time);
+                                keyFrameMatrix = keyFrameMatrix * getTransformationMatrix(animationBindingMap[animation].animationClass, transformation, output);
+                            }
+                        }
+                        else {
+                            keyFrameMatrix = keyFrameMatrix * getTransformationMatrixAtIndex(transformations, j);
+                        }
+                    }
+                    // Separate the keyframe matrix back into TRS
+                    map<COLLADAFW::Transformation::TransformationType, float*> decomposition = decomposeTransformationMatrix(keyFrameMatrix, transformations);
+                    decompositions[i] = decomposition;
+
+                    // Initialize global buffers if animation detected
+                    if (animatedTranslation == NULL) {
+                        float* translation = decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE];
+                        if (!bufferEquals(nodeTranslation, translation, 3, EPSILON)) {
+                            animatedTranslation = new float[keyFrames * 3];
+                        }
+                    }
+                    if (animatedRotation == NULL) {
+                        float* rotation = decomposition[COLLADAFW::Transformation::TransformationType::ROTATE];
+                        if (!bufferEquals(nodeRotation, rotation, 4, EPSILON)) {
+                            animatedRotation = new float[keyFrames * 4];
+                        }
+                    }
+                    if (animatedScale == NULL) {
+                        float* scale = decomposition[COLLADAFW::Transformation::TransformationType::SCALE];
+                        if (!bufferEquals(nodeScale, scale, 3, EPSILON)) {
+                            animatedScale = new float[keyFrames * 3];
+                        }
+                    }
+                    animatedKeyFrames[i] = (float)globalAnimation->getKeyFrameAtIndex(i);
+                }
+
+                // Copy the animation data into the global buffer for detected animations
+                for (int i = 0; i < keyFrames; i++) {
+                    map<COLLADAFW::Transformation::TransformationType, float*> decomposition = decompositions[i];
+                    if (animatedTranslation != NULL) {
+                        float* translation = decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE];
+                        animatedTranslation[3 * i] = translation[0];
+                        animatedTranslation[3 * i + 1] = translation[1];
+                        animatedTranslation[3 * i + 2] = translation[2];
+                    }
+                    if (animatedRotation != NULL) {
+                        float* rotation = decomposition[COLLADAFW::Transformation::TransformationType::ROTATE];
+                        animatedRotation[4 * i] = rotation[0];
+                        animatedRotation[4 * i + 1] = rotation[1];
+                        animatedRotation[4 * i + 2] = rotation[2];
+                        animatedRotation[4 * i + 3] = rotation[3];
+                    }
+                    if (animatedScale != NULL) {
+                        float* scale = decomposition[COLLADAFW::Transformation::TransformationType::SCALE];
+                        animatedScale[3 * i] = scale[0];
+                        animatedScale[3 * i + 1] = scale[1];
+                        animatedScale[3 * i + 2] = scale[2];
+                    }
+                }
+
+                // Bind to the first animation and remove any others
+                bool first = true;
+                for (auto mapEntry : indexMap) {
+                    vector<shared_ptr<GLTFAnimation>> animationsAtIndex = mapEntry.second;
+                    for (int i = 0; i < animationsAtIndex.size(); i++) {
+                        shared_ptr<GLTFAnimation> animation = animationsAtIndex[i];
+                        if (first) {
+                            if (animatedTranslation != NULL || animatedRotation != NULL || animatedScale != NULL) {
+                                shared_ptr<GLTF::GLTFBufferView> keyFrameBufferView = createBufferViewWithAllocatedBuffer(animatedKeyFrames, 0, keyFrames, true);
+                                animation->registerBufferView(GLTFAnimation::AnimationType::TIME, keyFrameBufferView);
+                            }
+                            if (animatedTranslation != NULL) {
+                                shared_ptr<GLTF::GLTFBufferView> translateBufferView = createBufferViewWithAllocatedBuffer(animatedTranslation, 0, 3 * keyFrames, true);
+                                animation->registerBufferView(GLTFAnimation::AnimationType::TRANSLATE, translateBufferView);
+                            }
+                            if (animatedRotation != NULL) {
+                                shared_ptr<GLTF::GLTFBufferView> rotateBufferView = createBufferViewWithAllocatedBuffer(animatedRotation, 0, 4 * keyFrames, true);
+                                animation->registerBufferView(GLTFAnimation::AnimationType::ROTATE, rotateBufferView);
+                            }
+                            if (animatedScale != NULL) {
+                                shared_ptr<GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(animatedScale, 0, 3 * keyFrames, true);
+                                animation->registerBufferView(GLTFAnimation::AnimationType::SCALE, scaleBufferView);
+                            }
+                            first = false;
+                        }
+                        else {
+                            animations->removeValue(animation->getID());
+                        }
                     }
                 }
             }
         }
-        
 		return true;
 	}
     

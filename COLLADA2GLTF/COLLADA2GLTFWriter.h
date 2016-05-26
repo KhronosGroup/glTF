@@ -34,7 +34,6 @@
 
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
-#include "convert/animationConverter.h"
 #include "convert/meshConverter.h"
 
 #ifdef WIN32
@@ -152,6 +151,10 @@ namespace GLTF
 		/** Writes the animation.
          @return True on succeeded, false otherwise.*/
 		virtual bool writeAnimationList( const COLLADAFW::AnimationList* animationList );
+
+        /** Writes the bound animation lists. 
+         @return True on succeeded, false otherwise.*/
+        bool COLLADA2GLTFWriter::writeAnimationBindings();
         
 		/** Writes the skin controller data.
          @return True on succeeded, false otherwise.*/
