@@ -1,0 +1,39 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "primitive",
+    "type" : "object",
+    "description" : "Geometry to be rendered with the given material.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "attributes" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings, where each string is the ID of the accessor containing an attribute.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "mesh.primitive.attribute.schema.json"
+            },
+            "default" : {}
+        },
+        "indices" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the accessor that contains the indices.",
+            "gltf_detailedDescription" : "The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`."            
+        },
+        "material" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the material to apply to this primitive when rendering.",
+            "required" : true
+        },
+        "mode" : {
+            "type" : "integer",
+            "description" : "The type of primitives to render.",
+            "enum" : [0, 1, 2, 3, 4, 5, 6],
+            "gltf_enumNames" : ["POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN"],
+            "default" : 4,
+            "gltf_detailedDescription" : "The type of primitives to render. All valid values correspond to WebGL enums."
+        }
+    },
+    "additionalProperties" : false,
+    "gltf_webgl" : "`drawElements()` and `drawArrays()`"
+}

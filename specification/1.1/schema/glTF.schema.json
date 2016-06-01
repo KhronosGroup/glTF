@@ -1,0 +1,208 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "glTF",
+    "type" : "object",
+    "description" : "The root object for a glTF asset.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "extensionsUsed" : {
+            "type" : "array",
+            "description" : "Names of extensions used somewhere in this asset.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "default" : [],
+            "gltf_webgl" : "`getSupportedExtensions()` and `getExtension()`"
+        },
+        "accessors" : {
+            "type" : "object",
+            "description" : "A dictionary object of accessors.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "accessor.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of accessors.  The name of each accessor is an ID in the global glTF namespace that is used to reference the accessor.  An accessor is a typed view into a bufferView."
+        },
+        "animations" : {
+            "type" : "object",
+            "description" : "A dictionary object of keyframe animations.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of keyframe animations.  The name of each animation is an ID in the global glTF namespace that is used to reference the animation."
+        },
+        "asset" : {
+            "extends" : { "$ref" : "asset.schema.json" },
+            "description" : "Metadata about the glTF asset.",
+            "default" : {}
+        },
+        "buffers" : {
+            "type" : "object",
+            "description" : "A dictionary object of buffers.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "buffer.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of buffers.  The name of each buffer is an ID in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins."
+        },
+        "bufferViews" : {
+            "type" : "object",
+            "description" : "A dictionary object of bufferViews.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "bufferView.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of bufferViews.  The name of each bufferView is an ID in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer."
+        },
+        "cameras" : {
+            "type" : "object",
+            "description" : "A dictionary object of cameras.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "camera.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of cameras.  The name of each camera is an ID in the global glTF namespace that is used to reference the camera.  A camera defines a projection matrix."
+        },
+        "images" : {
+            "type" : "object",
+            "description" : "A dictionary object of images.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "image.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of images.  The name of each image is an ID in the global glTF namespace that is used to reference the image.  An image defines data used to create a texture."
+        },
+        "materials" : {
+            "type" : "object",
+            "description" : "A dictionary object of materials.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "material.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of materials.  The name of each material is an ID in the global glTF namespace that is used to reference the material.  A material defines the appearance of a primitive."
+        },
+        "meshes" : {
+            "type" : "object",
+            "description" : "A dictionary object of meshes.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "mesh.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of meshes.  The name of each mesh is an ID in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered."
+        },
+        "nodes" : {
+            "type" : "object",
+            "description" : "A dictionary object of nodes.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "node.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of nodes in the node hierarchy.  The name of each node is an ID in the global glTF namespace that is used to reference the node."
+        },
+        "programs" : {
+            "type" : "object",
+            "description" : "A dictionary object of programs.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "program.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of shader programs.  The name of each program is an ID in the global glTF namespace that is used to reference the program."
+        },
+        "samplers" : {
+            "type" : "object",
+            "description" : "A dictionary object of samplers.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "sampler.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of samplers.  The name of each sampler is an ID in the global glTF namespace that is used to reference the sampler.  A sampler contains properties for texture filtering and wrapping modes."
+        },
+        "scene" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the default scene."
+        },
+        "scenes" : {
+            "type" : "object",
+            "description" : "A dictionary object of scenes.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "scene.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of scenes.  The name of each scene is an ID in the global glTF namespace that is used to reference the scene."
+        },
+        "shaders" : {
+            "type" : "object",
+            "description" : "A dictionary object of shaders.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "shader.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of shaders.  The name of each shader is an ID in the global glTF namespace that is used to reference the shader."
+        },
+        "skins" : {
+            "type" : "object",
+            "description" : "A dictionary object of skins.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "skin.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of skins.  The name of each skin is an ID in the global glTF namespace that is used to reference the skin.  A skin is defined by joints and matrices."
+        },
+        "techniques" : {
+            "type" : "object",
+            "description" : "A dictionary object of techniques.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "technique.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of techniques.  The name of each technique is an ID in the global glTF namespace that is used to reference the technique.  A technique is a template for a material appearance."
+        },
+        "textures" : {
+            "type" : "object",
+            "description" : "A dictionary object of textures.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "texture.schema.json"
+            },
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of textures.  The name of each texture is an ID in the global glTF namespace that is used to reference the texture."
+        }
+    },
+    "dependencies" : {
+        "scene" : "scenes"
+    },
+    "additionalProperties" : false
+}
