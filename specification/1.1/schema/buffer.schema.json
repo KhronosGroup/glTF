@@ -17,7 +17,7 @@
             "type" : "integer",
             "description" : "The length of the buffer in bytes.",
             "minimum" : 0,
-            "default" : 0
+            "required" : true
         },
         "type" : {
             "type" : "string",

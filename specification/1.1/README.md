@@ -1647,7 +1647,7 @@ A buffer points to binary geometry, animation, or skins.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.| :white_check_mark: Yes|
-|**byteLength**|`integer`|The length of the buffer in bytes.|No, default: `0`|
+|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
 |**type**|`string`|XMLHttpRequest `responseType`.|No, default: `"arraybuffer"`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -1666,12 +1666,12 @@ The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead 
 * **Required**: Yes
 * **Format**: uri
 
-### buffer.byteLength
+### buffer.byteLength :white_check_mark:
 
 The length of the buffer in bytes.
 
 * **Type**: `integer`
-* **Required**: No, default: `0`
+* **Required**: Yes
 * **Minimum**:` >= 0`
 
 ### buffer.type
@@ -1717,7 +1717,7 @@ A view into a [`buffer`](#reference-buffer) generally representing a subset of t
 |---|----|-----------|--------|
 |**buffer**|`string`|The ID of the [`buffer`](#reference-buffer).| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset into the [`buffer`](#reference-buffer) in bytes.| :white_check_mark: Yes|
-|**byteLength**|`integer`|The length of the bufferView in bytes.|No, default: `0`|
+|**byteLength**|`integer`|The length of the bufferView in bytes.| :white_check_mark: Yes|
 |**target**|`integer`|The target that the WebGL buffer should be bound to.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -1744,12 +1744,12 @@ The offset into the [`buffer`](#reference-buffer) in bytes.
 * **Required**: Yes
 * **Minimum**:` >= 0`
 
-### bufferView.byteLength
+### bufferView.byteLength :white_check_mark:
 
 The length of the bufferView in bytes.
 
 * **Type**: `integer`
-* **Required**: No, default: `0`
+* **Required**: Yes
 * **Minimum**:` >= 0`
 
 ### bufferView.target
