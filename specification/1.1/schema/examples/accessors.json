@@ -1,0 +1,23 @@
+{
+    "accessors" : {
+        "accessor_id" : {
+            "bufferView" : "bufferViewWithVertices_id",
+            "byteOffset" : 0,
+            "byteStride" : 3,
+            "componentType" : 5126,
+            "count" : 1024,
+            "type" : "SCALAR",
+            "name": "user-defined accessor name",
+            "max" : [-1.0, -1.0, -1.0],
+            "min" : [1.0, 1.0, 1.0],
+            "extensions" : {
+               "extension_name" : {
+                  "extension specific" : "value"
+               }
+            },
+            "extras" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}

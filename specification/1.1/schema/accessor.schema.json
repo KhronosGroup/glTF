@@ -1,0 +1,74 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "accessor",
+    "type" : "object",
+    "description" : "A typed view into a bufferView.  A bufferView contains raw binary data.  An accessor provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "bufferView" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the bufferView.",
+            "required" : true
+        },
+        "byteOffset" : {
+            "type" : "integer",
+            "description" : "The offset relative to the start of the bufferView in bytes.",
+            "minimum" : 0,
+            "required" : true,
+            "gltf_detailedDescription" : "The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the data type.",
+            "gltf_webgl" : "`vertexAttribPointer()` offset parameter"
+        },
+        "byteStride" : {
+            "type" : "integer",
+            "description" : "The stride, in bytes, between attributes referenced by this accessor.",
+            "minimum" : 0,
+            "maximum" : 255,
+            "default" : 0,
+            "gltf_detailedDescription" : "The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.",
+            "gltf_webgl" : "`vertexAttribPointer()` stride parameter"
+        },
+        "componentType" : {
+            "type" : "integer",
+            "description" : "The datatype of components in the attribute.",
+            "enum" : [5120, 5121, 5122, 5123, 5126],
+            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "FLOAT"],
+            "required" : true,
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively."
+        },
+        "count" : {
+            "type" : "integer",
+            "description" : "The number of attributes referenced by this accessor.",
+            "minimum" : 1,
+            "required" : true,
+            "gltf_detailedDescription" : "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components."
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
+            "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
+            "required" : true,
+            "gltf_detailedDescription" : "Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix."
+        },        
+        "max" : {
+            "type" : "array",
+            "description" : "Maximum value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 16,
+            "gltf_detailedDescription" : "Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property."
+        },
+        "min" : {
+            "type" : "array",
+            "description" : "Minimum value of each component in this attribute.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 1,
+            "maxItems" : 16,
+            "gltf_detailedDescription" : "Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property."
+        }
+    },
+    "additionalProperties" : false
+}
