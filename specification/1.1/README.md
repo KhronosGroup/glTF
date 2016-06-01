@@ -2841,7 +2841,7 @@ Joints and matrices defining a skin.
 |---|----|-----------|--------|
 |**bindShapeMatrix**|`number[16]`|Floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
 |**inverseBindMatrices**|`string`|The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.| :white_check_mark: Yes|
-|**jointNames**|`string[]`|Joint names of the joints (nodes with a `jointName` property) in this skin.| :white_check_mark: Yes|
+|**jointNames**|`string[]`|Joint names of the joints (nodes with a `jointName` property) in this skin.|No|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2858,17 +2858,17 @@ Floating-point 4x4 transformation matrix stored in column-major order.
 * **Type**: `number[16]`
 * **Required**: No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`
 
-### skin.inverseBindMatrices :white_check_mark:
+### skin.inverseBindMatrices
 
 The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 * **Type**: `string`
-* **Required**: Yes
+* **Required**: No, The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.
 * **Minimum Length**`: >= 1`
 
 ### skin.jointNames :white_check_mark:
 
-Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the length of any skeleton array referencing the skin.
+Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the length of any skeleton array referencing the skin.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
