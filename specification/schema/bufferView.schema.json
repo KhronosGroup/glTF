@@ -20,7 +20,7 @@
             "type" : "integer",
             "description" : "The length of the bufferView in bytes.",
             "minimum" : 0,
-            "default" : 0
+            "required" : true
         },
         "target" : {
             "type" : "integer",
