@@ -1,0 +1,35 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "skin",
+    "type" : "object",
+    "description" : "Joints and matrices defining a skin.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "bindShapeMatrix" : {
+            "type" : "array",
+            "description" : "Floating-point 4x4 transformation matrix stored in column-major order.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "inverseBindMatrices" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.",
+            "required" : true        
+        },
+        "jointNames" : {
+            "type" : "array",
+            "description" : "Joint names of the joints (nodes with a `jointName` property) in this skin.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "required" : true,
+            "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the length of any skeleton array referencing the skin."
+        }
+    },
+    "additionalProperties" : false
+}
