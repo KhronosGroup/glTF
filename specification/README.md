@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: January 13, 2016
+Last Updated: June 1, 2016
 
 Editors
 
@@ -3014,7 +3014,7 @@ When defined, the parameter is an array of count elements of the specified type.
 
 ### parameter.node
 
-The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4).
+The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
 
 * **Type**: `string`
 * **Required**: No
