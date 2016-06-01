@@ -57,6 +57,7 @@
             },
             "minItems" : 1,
             "maxItems" : 16,
+            "required" : true,
             "gltf_detailedDescription" : "Maximum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property."
         },
         "min" : {
@@ -67,6 +68,7 @@
             },
             "minItems" : 1,
             "maxItems" : 16,
+            "required" : true,
             "gltf_detailedDescription" : "Minimum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property."
         }
     },
