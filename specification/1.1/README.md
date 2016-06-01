@@ -2924,7 +2924,7 @@ Additional properties are not allowed.
 
 ### technique.parameters
 
-A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.
+A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.  Each parameter must be referenced by the attributes or uniforms dictionary properties.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2932,7 +2932,7 @@ A dictionary object of [`technique.parameters`](#reference-technique.parameters)
 
 ### technique.attributes
 
-A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.
+A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2948,7 +2948,7 @@ The ID of the program.
 
 ### technique.uniforms
 
-A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.
+A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
