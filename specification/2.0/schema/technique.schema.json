@@ -14,7 +14,7 @@
                 "$ref" : "technique.parameters.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value."
+            "gltf_detailedDescription" : "A dictionary object of technique.parameters objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.  Each parameter must be referenced by the attributes or uniforms dictionary properties."
         },
         "attributes" : {
             "type" : "object",
@@ -24,7 +24,8 @@
             "additionalProperties" : {
                 "$ref" : "technique.attribute.schema.json"
             },
-            "default" : {}
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.",
         },
         "program" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
@@ -39,7 +40,8 @@
             "additionalProperties" : {
                 "$ref" : "technique.uniform.schema.json"
             },
-            "default" : {}
+            "default" : {},
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.",
         },
         "states" : {
             "extends" : { "$ref" : "technique.states.schema.json" },
