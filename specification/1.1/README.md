@@ -307,11 +307,13 @@ The next example defines the transformation for a camera node using the `matrix`
 
 ### Coordinate System and Units
 
-glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z. glTF defines the y axis as up.
+glTF uses a right-handed coordinate system, as is used by OpenGL.  glTF defines the y axis as up.
 
 The units for all linear distances are meters.
 
 All angles are in radians.
+
+Positive rotation is counterclockwise.
 
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
