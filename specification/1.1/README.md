@@ -1246,14 +1246,14 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 * **Required**: Yes
 * **Allowed values**: `"SCALAR"`, `"VEC2"`, `"VEC3"`, `"VEC4"`, `"MAT2"`, `"MAT3"`, `"MAT4"`
 
-### accessor.max
+### accessor.max :white_check_mark:
 
 Maximum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
 
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
-### accessor.min
+### accessor.min :white_check_mark:
 
 Minimum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
 
