@@ -14,7 +14,7 @@
         "node" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The id of the node whose transform is used as the parameter's value.",
-            "gltf_detailedDescription" : "The id of the node whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4)."
+            "gltf_detailedDescription" : "The id of the node whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is \"MODELINVERSETRANSPOSE\", \"MODELVIEWINVERSETRANSPOSE\", or \"VIEWPORT\", the node property can't be defined."
         },
         "type" : {
             "type" : "integer",
