@@ -1182,8 +1182,8 @@ A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contain
 |**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
 |**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
 |**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
-|**max**|`number[1-16]`|Maximum value of each component in this attribute.|No|
-|**min**|`number[1-16]`|Minimum value of each component in this attribute.|No|
+|**max**|`number[1-16]`|Maximum value of each component in this attribute.| :white_check_mark: Yes|
+|**min**|`number[1-16]`|Minimum value of each component in this attribute.| :white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1246,17 +1246,17 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 
 ### accessor.max
 
-Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Maximum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
 
 * **Type**: `number[1-16]`
-* **Required**: No
+* **Required**: Yes
 
 ### accessor.min
 
-Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Minimum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
 
 * **Type**: `number[1-16]`
-* **Required**: No
+* **Required**: Yes
 
 ### accessor.name
 
