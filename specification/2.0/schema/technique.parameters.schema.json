@@ -32,7 +32,7 @@
         "value" : {
             "type" : ["number", "boolean", "string", { "$ref" : "arrayValues.schema.json" }],
             "description" : "The value of the parameter.",
-            "gltf_detailedDescription" : "The value of the parameter.  A material value with the same name, when specified, overrides this value."
+            "gltf_detailedDescription" : "The value of the parameter.  A material value with the same name, when specified, overrides this value.  This must be undefined when the parameter is an attribute, i.e., it is in technique.attributes."
         }
     },
     "additionalProperties" : false

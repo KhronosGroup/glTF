@@ -2273,7 +2273,7 @@ The ID of the technique.  If this is not supplied, and no extension is present t
 
 ### material.values
 
-A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value.
+A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value.  This may not contain attribute parameters, i.e., parameters listed in [technique.attributes](#reference-technique.attributes).
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -3039,7 +3039,7 @@ Identifies a parameter with a well-known meaning.  Uniform semantics include `"L
 
 ### parameter.value
 
-The value of the parameter.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.
+The value of the parameter.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in [technique.attributes](#reference-technique.attributes).
 
 * **Type of each property**: `number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`
 * **Required**: No
