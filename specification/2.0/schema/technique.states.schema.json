@@ -1,0 +1,26 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "states",
+    "type" : "object",
+    "description" : "Fixed-function rendering states.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "enable" : {
+            "type" : "array",
+            "description" : "WebGL states to enable.",
+            "items" : {
+                "type" : "integer",
+                "enum" : [3042, 2884, 2929, 32823, 32926, 3089],
+                "gltf_enumNames" : ["BLEND", "CULL_FACE", "DEPTH_TEST", "POLYGON_OFFSET_FILL", "SAMPLE_ALPHA_TO_COVERAGE", "SCISSOR_TEST"]
+            },
+            "uniqueItems" : true,
+            "default" : [],
+            "gltf_detailedDescription" : "WebGL states to enable.  States not in the array are disabled.  All valid values correspond to WebGL enums.",
+            "gltf_webgl" : "`enable()` and `disable()`"
+        },
+        "functions" : {
+            "$ref" : "technique.states.functions.schema.json"
+        }
+    },
+    "additionalProperties" : false
+}
