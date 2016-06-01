@@ -1,0 +1,97 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "node",
+    "type" : "object",
+    "description" : "A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.  In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced `material`/`technique` from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties.  If none are provided, the transform is the identity.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "camera" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the camera referenced by this node."
+        },
+        "children" : {
+            "type" : "array",
+            "description" : "The IDs of this node's children.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "default" : []
+        },
+        "skeletons" : {
+            "type" : "array",
+            "description" : "The ID of skeleton nodes.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "gltf_detailedDescription" : "The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`."            
+        },
+        "skin" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the skin referenced by this node."
+        },
+        "jointName" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "Name used when this node is a joint in a skin."
+        },
+        "matrix" : {
+            "type" : "array",
+            "description" : "A floating-point 4x4 transformation matrix stored in column-major order.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 16,
+            "maxItems" : 16,
+            "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
+            "gltf_detailedDescription" : "A floating-point 4x4 transformation matrix stored in column-major order.",
+            "gltf_webgl" : "`uniformMatrix4fv()` with the transpose parameter equal to false"
+        },
+        "meshes" : {
+            "type" : "array",
+            "description" : "The IDs of the meshes in this node.",
+            "items" : {
+                "$ref" : "glTFid.schema.json"
+            },
+            "uniqueItems" : true,
+            "gltf_detailedDescription" : "The IDs of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
+        },
+        "rotation" : {
+            "type" : "array",
+            "description" : "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [ 0.0, 0.0, 0.0, 1.0 ]
+        },
+        "scale" : {
+            "type" : "array",
+            "description" : "The node's non-uniform scale.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 1.0, 1.0, 1.0 ]
+        },
+        "translation" : {
+            "type" : "array",
+            "description" : "The node's translation.",
+            "items" : {
+                "type": "number"
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [ 0.0, 0.0, 0.0 ]
+        }
+    },
+    "dependencies" : {
+        "skeletons" : "skin",
+        "skeletons" : "meshes",
+        "skin" : "skeletons",
+        "skin" : "meshes"
+    },
+    "additionalProperties" : false
+}
