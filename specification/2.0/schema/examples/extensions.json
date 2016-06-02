@@ -1,5 +1,5 @@
 {
-    "extensionsUsed" : ["EXT_texture_filter_anisotropic", "Example root-level extension"],
+    "extensionsUsed" : ["Example EXT_texture_filter_anisotropic", "Example root-level extension"],
     "extensions" : {
         "Example root-level extension" : {
             "extension specific" : "value"
@@ -13,8 +13,8 @@
             "wrapS": 10497,
             "wrapT": 10497,
             "extensions" : {
-                "EXT_texture_filter_anisotropic" : {
-                    "maximumAnisotropy" : 8
+                "Example EXT_texture_filter_anisotropic" : {
+                    "textureMaxAnisotropy" : 8
                 }
             },
             "extras" : {
