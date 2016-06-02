@@ -2385,6 +2385,8 @@ A dictionary object of strings, where each string is the ID of the accessor cont
 
 The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
 
+When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE) or `5123` (UNSIGNED_SHORT); and `type` must be `"SCALAR"`.
+
 * **Type**: `string`
 * **Required**: No
 * **Minimum Length**`: >= 1`
