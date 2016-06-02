@@ -9,13 +9,15 @@
             "type" : "number",
             "description" : "The floating-point aspect ratio of the field of view.",
             "minimum" : 0.0,
+            "exclusiveMinimum" : true,
             "gltf_detailedDescription" : "The floating-point aspect ratio of the field of view.  When this is undefined, the aspect ratio of the canvas is used."
         },
         "yfov" : {
             "type" : "number",
             "description" : "The floating-point vertical field of view in radians.",
             "required" : true,
-            "minimum" : 0.0
+            "minimum" : 0.0,
+            "exclusiveMinimum" : true
         },
         "zfar" : {
             "type" : "number",
