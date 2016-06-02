@@ -1124,7 +1124,7 @@ All extensions used in a model are listed in the top-level `extensionsUsed` dict
 
 ```javascript
 "extensionsUsed": [
-   "EXT_binary_glTF"
+   "KHR_binary_glTF"
 ]
 ```
 
