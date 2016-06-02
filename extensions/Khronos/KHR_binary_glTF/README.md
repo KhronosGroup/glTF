@@ -55,7 +55,7 @@ The 20-byte header consists of the following five 4-byte entries:
 
 * `length` is the total length of the Binary glTF, including `header`, `scene`, and `body`, in bytes.
 
-* `sceneLength` is the length, in bytes, of the glTF `scene`.
+* `sceneLength` is the length, in bytes, of the glTF `scene`. It must be greater than zero.
 
 * `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is in Table 2.
 
