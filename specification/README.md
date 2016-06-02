@@ -1945,7 +1945,7 @@ The floating-point aspect ratio of the field of view.  When this is undefined, t
 
 * **Type**: `number`
 * **Required**: No
-* **Minimum**:` >= 0`
+* **Minimum**:` > 0`
 
 ### perspective.yfov :white_check_mark:
 
@@ -1953,7 +1953,7 @@ The floating-point vertical field of view in radians.
 
 * **Type**: `number`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**:` > 0`
 
 ### perspective.zfar :white_check_mark:
 
