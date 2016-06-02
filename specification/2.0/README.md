@@ -3394,9 +3394,7 @@ If `material.technique` is not supplied, and no extension is present that define
 "programs": {
     "program0": {
         "attributes": [
-            "a_normal",
-            "a_position",
-            "a_texcoord_0"
+            "a_position"
         ],
         "fragmentShader": "fragmentShader0",
         "vertexShader": "vertexShader0"
@@ -3415,7 +3413,6 @@ If `material.technique` is not supplied, and no extension is present that define
 "techniques": {
     "technique0": {
         "attributes": {
-            "a_normal": "normal",
             "a_position": "position"
         },
         "parameters": {
@@ -3423,20 +3420,12 @@ If `material.technique` is not supplied, and no extension is present that define
                 "semantic": "MODELVIEW",
                 "type": 35676
             },
-            "normalMatrix": {
-                "semantic": "MODELVIEWINVERSETRANSPOSE",
-                "type": 35675
-            },
             "projectionMatrix": {
                 "semantic": "PROJECTION",
                 "type": 35676
             },
             "emission": {
                 "type": 35666
-            },
-            "normal": {
-                "semantic": "NORMAL",
-                "type": 35665
             },
             "position": {
                 "semantic": "POSITION",
@@ -3452,7 +3441,6 @@ If `material.technique` is not supplied, and no extension is present that define
         },
         "uniforms": {
             "u_modelViewMatrix": "modelViewMatrix",
-            "u_normalMatrix": "normalMatrix",
             "u_projectionMatrix": "projectionMatrix",
             "u_emission": "emission"
         }
@@ -3465,10 +3453,8 @@ Vertex Shader:
 precision highp float;
 
 uniform mat4 u_modelViewMatrix;
-uniform mat3 u_normalMatrix;
 uniform mat4 u_projectionMatrix;
 
-attribute vec3 a_normal;
 attribute vec3 a_position;
 
 void main(void)
