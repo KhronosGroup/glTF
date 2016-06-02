@@ -3008,6 +3008,8 @@ Additional properties are not allowed.
 
 When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`.
 
+An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
+
 * **Type**: `integer`
 * **Required**: No
 * **Minimum**:` >= 1`
