@@ -1246,14 +1246,14 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 
 ### accessor.max
 
-Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: No
 
 ### accessor.min
 
-Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: No
