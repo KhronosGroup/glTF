@@ -179,3 +179,6 @@ Note, however, that SRC uses two attributes for decoding (`decodeOffset` and `de
 * <a name="lee-10-compression"></a>Lee, J., Choe, S., and Lee, S. 2010. _Mesh geometry compression for mobile graphics._ In _Proc. CCNC_, 301–305 [paper](http://cg.postech.ac.kr/research/mesh_comp_mobile/mesh_comp_mobile_conference.pdf)
 * [SRC project](http://x3dom.org/src/) (paper, background, basic writer)
 * SRC writer ([code](http://x3dom.org/src/files/src_writer_source.zip))
+
+# Acknowledgments
+* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
