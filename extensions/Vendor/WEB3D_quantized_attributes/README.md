@@ -90,8 +90,8 @@ As already discussed in section [Choosing a Range for Normalization](#choosing-a
 To obtain information such as bounding boxes, glTF accessors already contain the optional `min` and `max` values.
 However, this values might not have been provided, and even if they are provided, they apply to the encoded, compressed data.
 One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it might desirable to save the overhead of matrix multiplication.
-Therefore, this extension introduces two new, optional properties,`decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor. These properties are required
-if the quantized attribute uses the POSITION semantic. This simplifies the client implementation where `min` and `max` are used to compute bounding volumes.
+Therefore, this extension introduces two new, optional properties,`decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
+These properties are required if the quantized attribute uses the POSITION semantic. This simplifies the client implementation where `min` and `max` are used to compute bounding volumes.
 
 The following example illustrates three different, valid accessors:
 
