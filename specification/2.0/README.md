@@ -1250,14 +1250,14 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 
 ### accessor.max :white_check_mark:
 
-Maximum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
+Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
 ### accessor.min :white_check_mark:
 
-Minimum value of each component in this attribute.  min and max arrays have the same length, which is determined by the value of the type property.
+Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: Yes
@@ -2388,6 +2388,8 @@ A dictionary object of strings, where each string is the ID of the accessor cont
 ### primitive.indices
 
 The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
+
+When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE) or `5123` (UNSIGNED_SHORT); and `type` must be `"SCALAR"`.
 
 * **Type**: `string`
 * **Required**: No
