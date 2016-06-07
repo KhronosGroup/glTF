@@ -199,7 +199,7 @@
             "default" : {},
             "gltf_detailedDescription" : "A dictionary object of textures.  The name of each texture is an ID in the global glTF namespace that is used to reference the texture."
         },
-        "webglExtensionsUsed" : {
+        "glExtensionsUsed" : {
             "type" : "array",
             "description" : "Names of WebGL extensions required to render this asset.",
             "items" : {
