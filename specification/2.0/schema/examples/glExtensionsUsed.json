@@ -1,5 +1,5 @@
 {
-    "webglExtensionsUsed " : ["OES_element_index_uint"],
+    "glExtensionsUsed " : ["OES_element_index_uint"],
     "accessor_id": {
         "bufferView": "bufferView_id",
         "byteOffset": 0,
