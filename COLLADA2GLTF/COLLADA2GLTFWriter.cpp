@@ -529,7 +529,34 @@ namespace GLTF
                 if (materialBindings.getCount() > 0) {
                     MaterialBinding materialBinding = materialBindings[0];
                     COLLADAFW::UniqueId materialId = materialBinding.getReferencedMaterial();
-                    if (materialId.getObjectId() > 0) {
+                    // Check if this geometry has already been bound to another node with a different material
+                    bool alreadyBound = false;
+                    MaterialBindingsForNodeUID nodeBindings = this->_asset->materialBindingsForNodeUID();
+                    for (auto nodeBinding : nodeBindings) {
+                        shared_ptr<MaterialBindingsForMeshUID> meshBindings = nodeBinding.second;
+                        for (auto meshBinding : *(meshBindings.get())) {
+                            string meshId = meshBinding.first;
+                            if ("meshes-" + uniqueId.toAscii() == meshId) {
+                                shared_ptr<MaterialBindingsPrimitiveMap> materialBindings = meshBinding.second;
+                                bool materialUsed = false;
+                                for (auto materialBinding : *(materialBindings.get())) {
+                                    shared_ptr<MaterialBinding> primitiveBindings = materialBinding.second;
+                                    if (primitiveBindings->getReferencedMaterial() == materialId) {
+                                        materialUsed = true;
+                                        break;
+                                    }
+                                }
+                                if (!materialUsed) {
+                                    alreadyBound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (alreadyBound) {
+                            break;
+                        }
+                    }
+                    if (alreadyBound) {
                         // This is an instance of a material
                         shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(uniqueId.toAscii()));
 
