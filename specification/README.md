@@ -3001,7 +3001,7 @@ An attribute or uniform input to a [`technique`](#reference-technique), and an o
 |**count**|`integer`|When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.|No|
 |**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
-|**semantic**|`string`|Identifies a parameter with a well-known meaning.|No|
+|**semantic**|`string`|Identifies a parameter with a well-known meaning.|Depends (see below)|
 |**value**|`number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -3041,7 +3041,7 @@ The datatype.  Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` 
 Identifies a parameter with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names can be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"` etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
 * **Type**: `string`
-* **Required**: No
+* **Required**: No, except this property is required when the parameter is an attribute, i.e., when the parameter is referenced from [`technique.attributes`](#reference-technique.attributes).
 
 ### parameter.value
 
