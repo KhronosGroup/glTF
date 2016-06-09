@@ -20,7 +20,8 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 4
+            "maxItems" : 4,
+            "required" : true
         },
         "decodedMin" : {
             "type" : "array",
@@ -29,7 +30,8 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 4
+            "maxItems" : 4,
+            "required" : true
         }    
     },
     "additionalProperties" : false

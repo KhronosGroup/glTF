@@ -89,9 +89,9 @@ The new `decodeMatrix` property introduced by this extension belongs to the acce
 As already discussed in section [Choosing a Range for Normalization](#choosing-a-range-for-normalization), the range chosen for normalization and de-normalization of vertex positions, for example, must not be identical with their bounding box.
 To obtain information such as bounding boxes, glTF accessors already contain the optional `min` and `max` values.
 However, this values might not have been provided, and even if they are provided, they apply to the encoded, compressed data.
-One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it might desirable to save the overhead of matrix multiplication.
-Therefore, this extension introduces two new, optional properties,`decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
-These properties are required if the quantized attribute uses the POSITION semantic. This simplifies the client implementation where `min` and `max` are used to compute bounding volumes.
+One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it is desirable to save the overhead of matrix multiplication.
+Therefore, this extension introduces two properties, `decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
+This can help simplify the client implementation where `min` and `max` are used to compute bounding volumes.
 
 The following example illustrates three different, valid accessors:
 
@@ -104,28 +104,19 @@ The following example illustrates three different, valid accessors:
     // ... standard glTF properties
     "extensions" : {
         "WEB3D_quantized_attributes" : {
-            decodeMatrix : [1, 0, 0, 0, ...]
+            decodeMatrix : [1, 0, 0, 0, ...],
+            decodedMin : [1,2,3],
+            decodedMax : [3,4,5]
         }
     }
 },
 "another_accessor" : {
     // ... standard glTF properties
-},
-"a_last_accessor" : {
-    // ... standard glTF properties
-    "extensions" : {
-        "WEB3D_quantized_attributes" : {
-            decodeMatrix : [1, 0, 0, 0, /* ... */],
-            decodedMin : [1,2,3],
-            decodedMax : [3,4,5]            
-        }
-    }
 }
 ```
 
-The first accessor from the example makes use of the extension, having the mandatory `decodeMatrix` property, which can be used to decompress the quantized data.
+The first accessor from the example makes use of the extension, having the mandatory `decodeMatrix`, `decodeMin`, and `decodeMax` properties, which can be used to decompress the quantized data.
 The second one does not make use of the extension, meaning that it uses its data directly from the `bufferView`, as usual, without decompressing it.
-The third accessor from the example uses decompression and additionally provides the `decodedMin` and `decodedMax` properties.
 
 
 ## JSON Schema
@@ -137,8 +128,8 @@ The third accessor from the example uses decompression and additionally provides
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**decodeMatrix**|`number[4,9,16,25]`|A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.| :white_check_mark: Yes|
-|**decodedMax**|`number[1-4]`|Maximum decoded value of each component in this attribute.|No|
-|**decodedMin**|`number[1-4]`|Minimum decoded value of each component in this attribute.|No|
+|**decodedMax**|`number[1-4]`|Maximum decoded value of each component in this attribute.|Yes|
+|**decodedMin**|`number[1-4]`|Minimum decoded value of each component in this attribute.|Yes|
 
 Additional properties are not allowed.
 
@@ -154,19 +145,18 @@ A homogenous floating-point transformation matrix stored in column-major order. 
 Maximum decoded value of each component in this attribute.
 
 * **Type**: `number[1-4]`
-* **Required**: If the attribute uses the POSITION semantic
+* **Required**: Yes
 
 #### WEB3D_quantized_attributes accessor extension.decodedMin
 
 Minimum decoded value of each component in this attribute.
 
 * **Type**: `number[1-4]`
-* **Required**: If the attribute uses the POSITION semantic
+* **Required**: Yes
 
 Also, see the schema file:
 
 * [accessor](schema/WEB3D_quantized_attributes.accessor.schema.json) `WEB3D_quantized_attributes` extensions object
-
 
 ## Known Implementations
 
