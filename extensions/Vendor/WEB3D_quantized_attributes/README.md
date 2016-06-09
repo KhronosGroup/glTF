@@ -162,7 +162,7 @@ Also, see the schema file:
 
 * The [SRC](http://x3dom.org/src/) implementation by Fraunhofer IGD features a similar technology, which has served as a basis for this proposal.
 Note, however, that SRC uses two attributes for decoding (`decodeOffset` and `decodeScale`), instead of using a matrix.
-* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/Source/Scene/Model.js))
+* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
 
 
 ## Resources
