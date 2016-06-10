@@ -93,7 +93,7 @@ One could obtain original values by multiplying the decode matrix with given `mi
 Therefore, this extension introduces two properties, `decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
 This can help simplify the client implementation where `min` and `max` are used to compute bounding volumes.
 
-The following example illustrates three different, valid accessors:
+The following example illustrates two different, valid accessors:
 
 ```javascript
 "extensionsUsed" : [
