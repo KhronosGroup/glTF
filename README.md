@@ -18,7 +18,7 @@ Please provide feedback by submitting [issues](https://github.com/KhronosGroup/g
 ## Overview
 
 <p align="center">
-<a href="https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/figures/gltfOverview-0.1.3.png"><img src="specification/figures/gltfOverview-0.1.3-small.png" /></a>a>
+<a href="https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/figures/gltfOverview-0.2.0.png"><img src="specification/figures/gltfOverview-0.2.0-small.png" /></a>
 </p>
 Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
 
@@ -57,7 +57,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 #### JavaScript / Node.js
 
-* [gltf-walker](https://github.com/ksons/gltf-walker) - onvenience library for processing glTF
+* [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
 * [rest3d](https://github.com/amd/rest3d) - serves glTF and other 3D assets via a REST API (glTF 0.8)
 * [gltf-viewer-element](https://www.npmjs.com/package/gltf-viewer-element) - Node.js package for loading and rendering glTF (0.8)
 * [Amobee 3D](http://amobee3d.s3.amazonaws.com/ads/Amobee3D_AdList.html) (0.8)
