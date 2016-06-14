@@ -19,7 +19,7 @@
                 z-index: 100;
                 display:block;
             }
-            
+
             #container {
             	position: absolute;
             	top: 0px;
@@ -27,7 +27,7 @@
             	height:100%;
             	z-index: -1;
             }
-            
+
             #rendercontainer {
             	position: absolute;
             	top: 0px;
@@ -36,7 +36,7 @@
             	z-index: -1;
             	background-color:Red;
             }
-                        
+
             #controls {
             	position:absolute;
             	width:25%;
@@ -57,20 +57,20 @@
             	opacity:.9;
             	font: 13px/1.231 "Lucida Grande", Lucida, Verdana, sans-serif;
             }
-            
+
             .control {
             	position:absolute;
             	margin-left:12px;
             	width:100%;
             	font-weight:bold;
             }
-                        
+
             .controlValue {
             	position:absolute;
             	left:40%;
             	top:0%;
             }
-            
+
             #scenes_control {
             	position:absolute;
             	top:8px;
@@ -85,7 +85,7 @@
             	position:absolute;
             	top:72px;
             }
-            
+
             #buffer_geometry_control {
             	position:absolute;
             	top:104px;
@@ -120,7 +120,7 @@
 				<select class="controlValue" id="scenes_list" size="1" onchange="selectScene();" ondblclick="selectScene();">
 				</select>
 			</div>
-			
+
 			<div class="control" id="cameras_control">
 				Camera
 				<select class="controlValue" id="cameras_list" size="1" onchange="selectCamera();" ondblclick="selectCamera();">
@@ -144,7 +144,7 @@
             </div>
         </div>
         <script src="libs/three.js.r73/three.js"></script>
-        <script src="libs/three.js.r73/controls/OrbitControls.js"></script>
+        <script src="libs/three.js.r73/Controls/OrbitControls.js"></script>
         <script src="../glTF-parser.js"></script>
         <script src="glTFLoader.js"></script>
         <script src="glTFLoaderUtils.js"></script>
@@ -161,11 +161,11 @@
 			var cameraNames = [];
 			var defaultCamera = null;
 			var gltf = null;
-			
+
 			function onload() {
 
 				window.addEventListener( 'resize', onWindowResize, false );
-            	document.addEventListener( 'keypress', 
+            			document.addEventListener( 'keypress',
             			function(e) { onKeyPress(e); }, false );
 
                 buildSceneList();
@@ -180,7 +180,7 @@
                 scene = new THREE.Scene();
 
                 defaultCamera = new THREE.PerspectiveCamera( 45, container.offsetWidth / container.offsetHeight, 1, 20000 );
-                
+
                 //defaultCamera.up = new THREE.Vector3( 0, 1, 0 );
                 scene.add( defaultCamera );
                 camera = defaultCamera;
@@ -189,20 +189,20 @@
 
                 var spot1 = null;
                 if (sceneInfo.addLights) {
-                    
+
                     var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
                 	directionalLight.position.set( 0, 0, 1 ).normalize();
                 	scene.add( directionalLight );
-                
+
 	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
 	                spot1.position.set( 100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
 	                if (sceneInfo.shadows) {
-		                
+
 		                spot1.shadowCameraNear      = 1;
 		                spot1.shadowCameraFar      = 1024;
 		                spot1.castShadow            = true;
@@ -213,7 +213,7 @@
 	                }
 	                scene.add( spot1 );
                 }
-				
+
                 // RENDERER
 
                 renderer = new THREE.WebGLRenderer({antialias:true});
@@ -224,7 +224,7 @@
 	                renderer.shadowMap.soft = true;
 	        		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 }
-                				
+
                 container.appendChild( renderer.domElement );
 
                 var ground = null;
@@ -246,10 +246,10 @@
 		                ground.position.z = -70;
 	                }
 	                ground.rotation.x = -Math.PI / 2;
-	                
+
 	                scene.add(ground);
 				}
-				
+
                 loader = new THREE.glTFLoader;
                 loader.useBufferGeometry = useBufferGeometry;
                 var loadStartTime = Date.now();
@@ -265,22 +265,22 @@
                 loader.load( url, function(data) {
 
                 	gltf = data;
-                	
+
                 	var object = gltf.scene;
-                	
+
                     var loadEndTime = Date.now();
 
                     var loadTime = (loadEndTime - loadStartTime) / 1000;
 
                     status.innerHTML = "Load time: " + loadTime.toFixed(2) + " seconds.";
-                    
+
                 	if (sceneInfo.cameraPos)
                         defaultCamera.position.copy(sceneInfo.cameraPos);
 
                 	if (sceneInfo.center) {
                         orbitControls.center.copy(sceneInfo.center);
                 	}
-                    
+
                     if (sceneInfo.objectPosition) {
                         object.position.copy(sceneInfo.objectPosition);
 
@@ -289,7 +289,7 @@
     	                	spot1.target.position.copy(sceneInfo.objectPosition);
                         }
                     }
-                    
+
                     if (sceneInfo.objectRotation)
                         object.rotation.copy(sceneInfo.objectRotation);
 
@@ -350,14 +350,14 @@
 
 				defaultCamera.aspect = container.offsetWidth / container.offsetHeight;
 				defaultCamera.updateProjectionMatrix();
-				
+
 				var i, len = cameras.length;
 				for (i = 0; i < len; i++) // just do it for default
 				{
 					cameras[i].aspect = container.offsetWidth / container.offsetHeight;
 					cameras[i].updateProjectionMatrix();
 				}
-				
+
 				renderer.setSize( container.offsetWidth, container.offsetHeight );
 
 			}
@@ -376,8 +376,8 @@
                 renderer.render( scene, camera );
             }
 
-            
-			
+
+
 			function onKeyPress(event) {
 				var chr = String.fromCharCode(event.keyCode);
 				if (chr == ' ')
@@ -395,50 +395,50 @@
 				}
 			}
 
-			var sceneList = 
+			var sceneList =
 				[
-	                 { name : "Duck", url : "../../sampleModels/duck/%s/duck.gltf", 
+	                 { name : "Duck", url : "../../sampleModels/Duck/%s/Duck.gltf",
 		                 cameraPos: new THREE.Vector3(0, 3, 5),
 		                 addLights:true,
 		                 addGround:true,
 		                 shadows:true },
-                     { name : "Box", url : "../../sampleModels/box/%s/box.gltf", 
+                     { name : "Box", url : "../../sampleModels/Box/%s/Box.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Box - Textured",
-                        url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
+                        url : "../../sampleModels/BoxTextured/%s/BoxTextured.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
-	                 { name : "Virtual City", url : "../../sampleModels/vc/%s/vc.gltf", 
+	                 { name : "Virtual City", url : "../../sampleModels/VC/%s/VC.gltf",
 		                 cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:false,
 		                 cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""}},
-                     { name : "Cesium Man", url : "../../sampleModels/CesiumMan/%s/Cesium_Man.gltf", 
+                     { name : "Cesium Man", url : "../../sampleModels/CesiumMan/%s/CesiumMan.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          objectRotation: new THREE.Euler(0, 0, 0),
                          addLights:true,
                          addGround:true,
                          shadows:true },
                      { name : "Cesium Milk Truck",
-                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf", 
+                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
                          shadows:true },
-                     { name : "Rigged Figure", url : "../../sampleModels/RiggedFigure/%s/rigged-figure.gltf", 
+                     { name : "Rigged Figure", url : "../../sampleModels/RiggedFigure/%s/RiggedFigure.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
                          shadows:true },
-                     { name : "Rigged Simple", url : "../../sampleModels/RiggedSimple/%s/riggedSimple.gltf", 
+                     { name : "Rigged Simple", url : "../../sampleModels/RiggedSimple/%s/RiggedSimple.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
                          shadows:true },
-		             { name : "Monster", url : "../../sampleModels/monster/%s/monster.gltf", 
-			                 cameraPos: new THREE.Vector3(0, 10, 50), 
+		             { name : "Monster", url : "../../sampleModels/Monster/%s/Monster.gltf",
+			                 cameraPos: new THREE.Vector3(0, 10, 50),
 			                 objectPosition: new THREE.Vector3(2, 6, 0),
                              objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
 			                 objectRotation: new THREE.Euler(0, - 3 * Math.PI / 4, 0),
@@ -446,29 +446,29 @@
 			                 addLights:true,
 			                 shadows:true,
 			                 addGround:true },
-                     { name : "Duck - data:", url : "../../sampleModels/duck/%s/duck.gltf", 
+                     { name : "Duck - data:", url : "../../sampleModels/Duck/%s/Duck.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          addGround:true,
                          shadows:true,
                          dataURIs: true},
-                     { name : "Box - data:", url : "../../sampleModels/box/%s/box.gltf", 
+                     { name : "Box - data:", url : "../../sampleModels/Box/%s/Box.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          dataURIs: true
                          },
                      { name : "Box - Textured - data:",
-                        url : "../../sampleModels/boxTextured/%s/CesiumTexturedBoxTest.gltf", 
+                        url : "../../sampleModels/BoxTextured/%s/BoxTextured.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          dataURIs: true
                          },
-                     { name : "Virtual City - data:", url : "../../sampleModels/vc/%s/vc.gltf", 
+                     { name : "Virtual City - data:", url : "../../sampleModels/VC/%s/VC.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:false,
                          cameras: {"Camera02" : "", "Camera05" : "", "Camera11" : "", "Camera15" : ""},
                          dataURIs: true},
-                     { name : "Cesium Man - data:", url : "../../sampleModels/CesiumMan/%s/Cesium_Man.gltf", 
+                     { name : "Cesium Man - data:", url : "../../sampleModels/CesiumMan/%s/CesiumMan.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          objectRotation: new THREE.Euler(0, 0, 0),
                          addLights:true,
@@ -476,26 +476,26 @@
                          shadows:true,
                          dataURIs: true },
                      { name : "Cesium Milk Truck - data:",
-                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf", 
+                            url : "../../sampleModels/CesiumMilkTruck/%s/CesiumMilkTruck.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
-                         shadows:true, 
+                         shadows:true,
                          dataURIs: true},
-                     { name : "Rigged Figure - data:", url : "../../sampleModels/RiggedFigure/%s/rigged-figure.gltf", 
+                     { name : "Rigged Figure - data:", url : "../../sampleModels/RiggedFigure/%s/RiggedFigure.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
-                         shadows:true, 
+                         shadows:true,
                          dataURIs: true},
-                     { name : "Rigged Simple - data:", url : "../../sampleModels/RiggedSimple/%s/riggedSimple.gltf", 
+                     { name : "Rigged Simple - data:", url : "../../sampleModels/RiggedSimple/%s/RiggedSimple.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 10),
                          addLights:true,
                          addGround:true,
-                         shadows:true, 
+                         shadows:true,
                          dataURIs: true },
-                     { name : "Monster - data:", url : "../../sampleModels/monster/%s/monster.gltf", 
-                             cameraPos: new THREE.Vector3(0, 10, 50), 
+                     { name : "Monster - data:", url : "../../sampleModels/Monster/%s/Monster.gltf",
+                             cameraPos: new THREE.Vector3(0, 10, 50),
                              objectPosition: new THREE.Vector3(2, 6, 0),
                              objectScale: new THREE.Vector3(0.01, 0.01, 0.01),
                              objectRotation: new THREE.Euler(0, - 3 * Math.PI / 4, 0),
@@ -505,42 +505,42 @@
                              addGround:true,
                              dataURIs: true },
 
-                    /* 
+                    /*
                     // Comment/uncomment these for additional tests...
-                         
-                     { name : "BrainSteam", url : "../../sampleModels/brainsteam/%s/brainsteam.gltf", 
-                             cameraPos: new THREE.Vector3(0, 1, 10), 
+
+                     { name : "BrainSteam", url : "../../sampleModels/brainsteam/%s/brainsteam.gltf",
+                             cameraPos: new THREE.Vector3(0, 1, 10),
                              addLights:true,
                              shadows:true,
                              addGround:true },
-                     { name : "Box - Animated", url : "../../sampleModels/boxAnimated/%s/glTF.gltf", 
+                     { name : "Box - Animated", url : "../../sampleModels/boxAnimated/%s/glTF.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
-                     { name : "2 Cylinder Engine", url : "../../sampleModels/2_cylinder_engine/%s/2_cylinder_engine.gltf", 
+                     { name : "2 Cylinder Engine", url : "../../sampleModels/2_cylinder_engine/%s/2_cylinder_engine.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
-                     { name : "Box - Semantics", url : "../../sampleModels/boxSemantics/%s/boxSemantics.gltf", 
+                     { name : "Box - Semantics", url : "../../sampleModels/boxSemantics/%s/boxSemantics.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
-                     { name : "Box - No Indices", url : "../../sampleModels/boxWithoutIndices/%s/boxWithoutIndices.gltf", 
+                     { name : "Box - No Indices", url : "../../sampleModels/boxWithoutIndices/%s/boxWithoutIndices.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Buggy",
-                        url : "../../sampleModels/buggy/%s/buggy.gltf", 
+                        url : "../../sampleModels/buggy/%s/buggy.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Gearbox Assembly",
-                        url : "../../sampleModels/gearbox_assy/%s/gearbox_assy.gltf", 
+                        url : "../../sampleModels/gearbox_assy/%s/gearbox_assy.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
                      { name : "Reciprocating Saw",
-                        url : "../../sampleModels/Reciprocating_Saw/%s/Reciprocating_Saw.gltf", 
+                        url : "../../sampleModels/Reciprocating_Saw/%s/Reciprocating_Saw.gltf",
                          cameraPos: new THREE.Vector3(0, 3, 5),
                          addLights:true,
                          },
@@ -561,9 +561,9 @@
 					option = document.createElement("option");
 					option.text=sceneList[i].name;
 					elt.add(option);
-				}		
+				}
 			}
-			
+
 			function switchScene(index)
 			{
 				cleanup();
@@ -581,11 +581,11 @@
 					switchScene(index);
 				}
 			}
-			
+
 			function switchCamera(index)
 			{
 				cameraIndex = index;
-				
+
 				if (cameraIndex == 0) {
 					camera = defaultCamera;
 				}
@@ -594,9 +594,9 @@
 				}
 
 				var elt = document.getElementById('cameras_list');
-				elt.selectedIndex = cameraIndex;				
+				elt.selectedIndex = cameraIndex;
 			}
-					
+
 			function updateCamerasList() {
 				var elt = document.getElementById('cameras_list');
 				while( elt.hasChildNodes() ){
@@ -606,16 +606,16 @@
 				option = document.createElement("option");
 				option.text="[default]";
 				elt.add(option);
-				
+
 				var i, len = cameraNames.length;
 				for (i = 0; i < len; i++)
 				{
 					option = document.createElement("option");
 					option.text=cameraNames[i];
 					elt.add(option);
-				}		
+				}
 			}
-			
+
 			function selectCamera() {
 			    var select = document.getElementById("cameras_list");
 			    var index = select.selectedIndex;
@@ -665,10 +665,10 @@
 				cameras = [];
 				cameraNames = [];
 				defaultCamera = null;
-				
+
 				if (!loader || !gltf || !gltf.animations)
 					return;
-				
+
 				var i, len = gltf.animations.length;
 				for (i = 0; i < len; i++) {
 					var animation = gltf.animations[i];
@@ -677,7 +677,7 @@
 					}
 				}
 			}
-			
+
             onload();
         </script>
 
