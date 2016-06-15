@@ -1,0 +1,11 @@
+{
+    "glExtensionsUsed " : ["OES_element_index_uint"],
+    "accessor_id": {
+        "bufferView": "bufferView_id",
+        "byteOffset": 0,
+        "byteStride": 0,
+        "componentType": 5125,
+        "count": 36,
+        "type": "SCALAR"
+    }
+}
