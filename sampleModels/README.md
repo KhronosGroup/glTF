@@ -1,4 +1,4 @@
-bSample models are provided in as many of the following formats as possible:
+Sample models are provided in as many of the following formats as possible:
 * glTF (.gltf) with separate resources: .bin (geometry, animation, skins), .glsl (shaders), and image files
 * glTF (.gltf) with embedded resources
 * Binary glTF (.glb) using the [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/blob/master/extensions/Khronos/KHR_binary_glTF/README.md) extension
