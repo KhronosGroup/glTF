@@ -26,7 +26,7 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [Rigged Figure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.gif)      | Animations. Skins. |
 | [Cesium Man](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.gif)         | Textured. Animations. Skins. |
 | [Monster](Monster)                            | ![](Monster/screenshot/screenshot.gif)           | Textured. Animations. Skins. |
-| [Brainsteam](Brainsteam)                      | ![](Brainsteam/screenshot/screenshot.gif)        | Animations. Skins. |
+| [BrainStem](BrainStem)                      | ![](BrainStem/screenshot/screenshot.gif)        | Animations. Skins. |
 | [Virtual City](VC)                            | ![](VC/screenshot/screenshot.gif)                | Textured. Animations. Skins. |
 
 ## Flightradar24 Models
