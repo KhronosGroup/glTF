@@ -1132,6 +1132,8 @@ All extensions used in a model are listed in the top-level `extensionsUsed` dict
 ]
 ```
 
+_TODO: add note on how this is different than `glExtensionsUsed` property._
+
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
 
 <a name="properties"></a>
@@ -1226,11 +1228,13 @@ The stride, in bytes, between attributes referenced by this accessor.  When this
 
 ### accessor.componentType :white_check_mark:
 
-The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
+The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT) and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.
+
+`5125` (UNSIGNED_INT) is only allowed when the accessor contains indices and the OES_element_index_uint extension is used, i.e., the accessor is only referenced by [`primitive.indices`](#reference-primitive.indices) and [`glExtensionsUsed`](#reference-glExtensionsUsed) contains `"OES_element_index_uint"`.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5126`
+* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5125`, `5126`
 
 ### accessor.count :white_check_mark:
 
@@ -2017,7 +2021,8 @@ The root object for a glTF asset.
 |**skins**|`object`|A dictionary object of [`skin`](#reference-skin) objects.|No, default: `{}`|
 |**techniques**|`object`|A dictionary object of [`technique`](#reference-technique) objects.|No, default: `{}`|
 |**textures**|`object`|A dictionary object of [`texture`](#reference-texture) objects.|No, default: `{}`|
-|**extensionsUsed**|`string[]`|Names of extensions used somewhere in this asset.|No, default: `[]`|
+|**extensionsUsed**|`string[]`|Names of glTF extensions used somewhere in this asset.|No, default: `[]`|
+|**glExtensionsUsed**|`string[]`|Names of WebGL extensions required to render this asset.|No, default: `[]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -2175,7 +2180,6 @@ Names of extensions used somewhere in this asset.
 * **Type**: `string[]`
    * Each element in the array must be unique.
 * **Required**: No, default: `[]`
-* **Related WebGL functions**: `getSupportedExtensions()` and `getExtension()`
 
 ### glTF.extensions
 
@@ -2184,6 +2188,17 @@ Dictionary object with extension-specific objects.
 * **Type**: `object`
 * **Required**: No
 * **Type of each property**: `object`
+
+### glTF.glExtensionsUsed
+
+Names of WebGL extensions required to render this asset.  WebGL extensions must be enabled by calling `getExtension()` for each extension.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+* **Required**: No, default: `[]`
+* **Allowed values**: `"OES_element_index_uint"`
+* **Related WebGL functions**: `getSupportedExtensions()` and `getExtension()`
+
 
 ### glTF.extras
 
