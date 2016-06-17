@@ -1256,12 +1256,16 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 
 Maximum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
+When `componentType` is `5126` (FLOAT) each array value must be precise enough, so its binary representation equals to the maximum stored value of a corresponding component.
+
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
 ### accessor.min :white_check_mark:
 
 Minimum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
+
+When `componentType` is `5126` (FLOAT) each array value must be precise enough, so its binary representation equals to the minimum stored value of a corresponding component.
 
 * **Type**: `number[1-16]`
 * **Required**: Yes
