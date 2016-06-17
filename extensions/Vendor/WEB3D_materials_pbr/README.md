@@ -1,4 +1,4 @@
-# PBR_physically_based
+# WEB3D_materials_pbr
 
 ## Contributors
 
