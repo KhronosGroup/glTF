@@ -330,7 +330,7 @@ Buffer data is little endian.
 
 All buffers are stored in the asset's `buffers` dictionary property.
 
-The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
+The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored; its value can be used as the `responseType` when retrieving data over [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest). The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
 
 ```javascript
     "buffers": {
