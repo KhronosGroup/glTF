@@ -1690,7 +1690,7 @@ XMLHttpRequest `responseType`.
 
 * **Type**: `string`
 * **Required**: No, default: `"arraybuffer"`
-* **Allowed values**: `"arraybuffer"`, `"text"`
+* **Allowed values**: `"arraybuffer"`
 
 ### buffer.name
 
