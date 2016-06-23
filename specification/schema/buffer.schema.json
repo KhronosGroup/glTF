@@ -22,7 +22,7 @@
         "type" : {
             "type" : "string",
             "description" : "XMLHttpRequest `responseType`.",
-            "enum" : ["arraybuffer", "text"],
+            "enum" : ["arraybuffer"],
             "default" : "arraybuffer"
         }
     },
