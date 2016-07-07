@@ -30,7 +30,7 @@ This extension provides two new `techniques` consisting of a well defined set of
 ### Specular - Glossiness
 
 <p>
-<img src="figures/specular_glossiness.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
+<img src="figures/specular_glossiness_2.png" align="middle" height="220" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 <br>
 <b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 3:</strong> Illustration of the Specular-Glossiness model.</b>
 </p>
@@ -81,7 +81,7 @@ Then, the result would be `(1.0 * 0.1, 0.5 * 1.0, 0.5 * 0.1, 1.0 * 1.0) = (0.1, 
 ### Metal - Roughness
 
 <p>
-<img src="figures/metal_roughness.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
+<img src="figures/metal_roughness_2.png" align="middle" height="220" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 <br>
 <b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 4:</strong>Illustration of the Metal-Roughness model.</b>
 </p>

@@ -111,13 +111,11 @@ which can be solved in real-time directly on the GPU [3].
 
 <p style="text-align:justify;">The first sum is pre-calculated for different roughness values by convolving the environment map with the GGX distribution using importance sampling and storing the results in individual mipmap levels of an environment map texture.</p>
 
-<img src="figures/prefiltered_env_map.png" align="middle" height="250" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 1:</strong> Pre-calculated environment map, with varying roughness levels stored in different mipmap levels.</b>
+<img src="figures/prefilteredEnv.png" align="middle" height="100" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 
 <p style="text-align:justify;">The second sum in (11) includes the remainder and is equivalent to integrating the specular BRDF with a solid-white environment. By substituting in Schlick's Fresnel approximation (3) into the left hand side of (10) F0 can be factored out of the integral. This leaves two inputs (roughness and cos &theta;v) and two outputs (a scale and bias to F0), which can also be pre-calculated and stored in a 2D Look-Up Texture (LUT).</p>
 
-<img src="figures/brdf_luts.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 2:</strong> LUT of the second sum. Left Schlick and right Smith.</b>
+<img src="figures/brdf_lut.png" align="middle" height="200" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 
 <p style="text-align:justify;">The main advantage of the pre-calculated LUT is that it is constant for white light and it does not depend on a specific environment. So it has to be pre-calculated only once for a particular shading model and can be reused in every shader.</p>
 
