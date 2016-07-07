@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "material",
+    "type" : "object",
+    "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+    	"baseColorFactor" : {
+    		"type" : { "$ref" : "arrayValues.schema.json" },
+    		"description" : "The material's base color factor.",
+            "default" : [1,1,1,1]
+    	},
+        "metallicFactor" : {
+            "type" : "number",
+            "description" : "The metallic-ness factor of the material.",
+            "default" : 1
+        },
+        "roughnessFactor" : {
+            "type" : "number",
+            "description" : "The material's roughness factor.",
+            "default" : 1
+        },
+         "baseColorTexture" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the base color texture."
+        },
+        "metallicRoughnessTexture" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the metallic-roughness texture."
+        }
+    },
+    "additionalProperties" : false
+}

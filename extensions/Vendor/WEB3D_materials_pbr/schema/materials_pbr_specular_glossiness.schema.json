@@ -1,0 +1,33 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "material",
+    "type" : "object",
+    "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+    	"diffuseFactor" : {
+    		"type" : { "$ref" : "arrayValues.schema.json" },
+    		"description" : "The material's diffuse factor.",
+            "default" : [1,1,1,1]
+    	},
+        "specularFactor" : {
+            "type" : { "$ref" : "arrayValues.schema.json" },
+            "description" : "The material's specular factor.",
+            "default" : [1,1,1]
+        },
+        "glossinessFactor" : {
+            "type" : "number",
+            "description" : "The material's glossiness factor.",
+            "default" : 1
+        },
+        "diffuseTexture" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the diffuse color texture."
+        },
+        "specularGlossinessTexture" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of the specular-glossiness texture."
+        }
+    },
+    "additionalProperties" : false
+}

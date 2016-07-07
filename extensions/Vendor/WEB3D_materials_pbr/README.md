@@ -13,188 +13,60 @@ Draft
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec.
+Written against the glTF 1.0 spec.
 
 ## Overview
 
-<p style="text-align:justify;">Some text</p>
+The glTF 1.0 allows the definition of materials by instancing `techniques`. A `technique`, as defined in glTF 1.0, is a verbose description of shader parameters combined with actual shader code. Typically, shader code is engine specific and, as such, may not be used across systems which do not share the same rendering pipeline.
 
-### Physically-based rendering
+This extension provides two new `techniques` consisting of a well defined set of parameters which are sufficient for representing a wide range of materials. These techniques are based on widely used material representations for Physically-Based Rendering (PBR) content creation pipelines.
 
-<p style="text-align:justify;">Physically-based rendering (PBR) refers to the concept of using realistic shading/lighting models along with measured surface values to accurately represent real-world materials. PBR is more of a concept than a strict set of rules, and as such, the exact implementations of PBR systems tend to vary. Still, as they are based on the same principal idea (improve realism by approximating physical laws), they are similar across implementations.</p>
 
-Some of the main goals behind PBR are:
 
-**Simplicity**
+## Material models
 
-<p style="text-align:justify;">PBR uses an easy to understand material description defined by a small set of intuitive parameters instead of a large array of parameters, which results in decision paralysis, trial and error, or inter connected properties that require many values to be changed for a single intended effect.</p>
-
-**Extensiveness**
-
-<p style="text-align:justify;">PBR can cover up most of the materials that occur in the real world with a single shading model. As deferred shading limits the number of shading models that can be used, this is highly beneficial. On forward renderers it improves performance by reducing shader switching.</p>
-
-**Consistency**
-
-<p style="text-align:justify;">By using physically-based shading models, which follow real physical laws, materials will look accurate and consistent in all lighting conditions without changing an immense list of parameters and settings.</p>
-
-## Shading model
-
-### Specular BRDF
-
-<p style="text-align:justify;">The most common choice for a physically-based specular BRDF is the Cook-Torrance reflectance model [4]. It is based on the microfacet theory in which surfaces are composed of small-scale planar detail surfaces of varying orientation. Each of these small planes, so called microfacets, reflects light in a single direction based on its normal.</p>
-
-The Cook-Torrance specular BRDF is defined as follows:
-
-<img src="figures/_equation01.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-<p style="text-align:justify;">Where l is the light direction, v is the view direction, h is the half vector, n is the normal, F is the Fresnel term, G is the geometry term, and D is the normal distribution function (NDF).</p>
-
-**Specular D**
-
-<p style="text-align:justify;">Specular D is represented by the normal distribution function which is used to describe the statistical orientation of the micro facets at a given point. The first PBR implementations used distributions such as Phong or Beckmann, but recently the GGX distribution [Walter et al. 2007] has become a popular choice. </p>
-
-It is defined by:
-
-<img src="figures/_equation02.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-Where h is the half-vector(microfacet normal), n is the normal and &alpha; is the roughness of the material.
-
-**Specular F**
-
-<p style="text-align:justify;">The specular F term represents the Fresnel function. The Fresnel function is used to simulate the way light interacts with a surface at different viewing angles. We adopt Schlicks Approximation [7] for the Fresnel term which is the most commonly used in 3D graphics.</p>
-
-<img src="figures/_equation03.png" align="middle" height="25" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-Where F0 is the specular reflectance at normal incidence.
-
-#### Specular G
-
-<p style="text-align:justify;">Specular G represents the geometry shadowing function used to describe the attenuation of the light due to microfacets shadowing each other. This is once again a statistical approximation which models the probability of energy loss. This may occur due to microfacets being occluded by each other or light bouncing between multiple microfacets, before reaching the observer's eye. The geometry attenuation is derived from the normal distribution function. Most implementations use Smith's shadowing function [9] or Schlick's model [7].</p>
-
-The complete geometry shadowing function is composed of the two partial functions G_1(n,l) and G_1(n,v) as follows:
-
-<img src="figures/_equation04.png" align="middle" height="25" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-The partial Smith shadowing function is defined as:
-
-<img src="figures/_equation05.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-and the partial Schlick shadowing function is defined by:
-
-<img src="figures/_equation06.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-where k is defined by:
-
-<img src="figures/_equation07.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-### Diffuse BRDF
-
-<p style="text-align:justify;">The Lambertian diffuse BRDF is still the first choice. Even though other models (e.g. [2]) are more accurate, the visual improvements are arguably insufficient for justifying the extra computation in real-time applications.</p>
-
-The Lambertian diffuse is defined as:
-
-<img src="figures/_equation08.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-<p style="text-align:justify;">Where cdiff is the diffuse reflected color of the material. In order to ensure energy conservation, the diffuse term should be balanced using the inverse of the Fresnel term from the specular component [8]:</p>
-
-<img src="figures/_equation09.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-### Imaged-based Lighting
-
-<p style="text-align:justify;">Image-based lighting (IBL) is the most common technique to simulate indirect lighting in the current PBR engines. It uses environment maps from real-world light probes or rendered scenes to illuminate objects.</p>
-
-#### Importance Sampling
-
-<p style="text-align:justify;">To use the presented shading model with imaged-based lighting, the radiance integral needs to be solved, which can be achieved by using importance sampling. Importance sampling substantially improves the Monte Carlo algorithm by introducing a guided approach to the sampling. The idea is that we can define a Probability Distribution Function (PDF) that describes where we want to sample more and where we want to sample less.</p>
-
-The following equation describes the numerical integration:
-
-<img src="figures/_equation10.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-which can be solved in real-time directly on the GPU [3].
-
-<p style="text-align:justify;">But even with importance sampling, many samples are still needed to produce acceptable results. In simple scenes with only a few objects and a single environment map this is not a problem. But in more complex scenes with many different objects and multiple environmental light sources the pure importance sampling approach is not suitable anymore for real-time rendering.</p>
-
-<p style="text-align:justify;">This problem can be solved using a split sum approximation [6]. This new technique is employed in the Unreal Engine 4 for real-time PBR of complex scenes.</p>
-
-#### Split Sum Approximation
-
-<p style="text-align:justify;">The split sum approximation splits the sum from (10) into a product of two sums, both of which can be pre-calculated, see (11). This approximation is exact for a constant Li(l) and fairly accurate for common environments.</p>
-
-<img src="figures/_equation11.png" align="middle" height="55" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-
-<p style="text-align:justify;">The first sum is pre-calculated for different roughness values by convolving the environment map with the GGX distribution using importance sampling and storing the results in individual mipmap levels of an environment map texture.</p>
-
-<img src="figures/prefiltered_env_map.png" align="middle" height="250" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 1:</strong> Pre-calculated environment map, with varying roughness levels stored in different mipmap levels.</b>
-
-<p style="text-align:justify;">The second sum in (11) includes the remainder and is equivalent to integrating the specular BRDF with a solid-white environment. By substituting in Schlick's Fresnel approximation (3) into the left hand side of (10) F0 can be factored out of the integral. This leaves two inputs (roughness and cos &theta;v) and two outputs (a scale and bias to F0), which can also be pre-calculated and stored in a 2D Look-Up Texture (LUT).</p>
-
-<img src="figures/brdf_luts.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 2:</strong> LUT of the second sum. Left Schlick and right Smith.</b>
-
-<p style="text-align:justify;">The main advantage of the pre-calculated LUT is that it is constant for white light and it does not depend on a specific environment. So it has to be pre-calculated only once for a particular shading model and can be reused in every shader.</p>
-
-<p style="text-align:justify;">Thus the split sum approximation only two texture fetches per pixel are needed to get the corresponding specular color. This is a significant improvement over the importance sample method, which requires multiple samples per pixel.</p>
-
-## Material model
-
-<p style="text-align:justify;">In order to transport material specific data that can be fed into the rendering pipeline, a material model is needed. We already mentioned that PBR is a methodology and, although principles and guidelines exist, there is no true standard. Therefore, there is also no single standardized material model for PBR at this time. Nevertheless, two models became commonplace [1], namely the <b>specular-glossiness</b> and the <b>metal-roughness</b> model. Both models represent the same data, but they transport it in different ways.</p>
+<p style="text-align:justify;">A material model defines a set of parameters used to describe a material. This extension supports two material models commonly used in PBR, namely the specular-glossiness and the metal-roughness models. An implementation of this extension should support both models.</p>
 
 ### Specular - Glossiness
 
-The base of the specular-glossiness material model consists of the following three parameters:
+<img src="figures/specular_glossiness_2.png" align="middle" height="220" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 
-* Diffuse
-* Specular
-* Glossiness
+The specular-glossiness material model is defined by the following properties:
+* Diffuse:    Reflected diffuse color of the material
+* Specular:   Specular color of the material
+* Glossiness: Glossiniess of the material
 
-<p style="text-align:justify;">In the specular-glossiness model the diffuse value represents, similar to its traditional counterpart, the reflected diffuse color of the material expected for pure black (0.0). In the specular-glossiness model pure black (0.0) indicates raw metal, since metal doesn't have a diffuse component. In some implementations the diffuse value is also called albedo. The specular value defines the F0 value for dielectrics and the reflectance values for metals. The F0 for dielectrics will be a grayscale value and the metal reflectance can be colored as some metals absorb light at different wavelengths. The Glossiness value is a factor between (0.0 - 1.0) and describes the surface irregularities that cause light diffusion. Rougher surfaces will have wider and dimmer looking highlights. Smoother surfaces will keep specular reflections focused. A value of 0.0 (black) represents a rough surface and a value of 1.0 (white) represents a smooth surface. Figure 3 shows the three single components of the metal-roughness model and the rendered result.</p>
+<p style="text-align:justify;">The diffuse value represents the reflected diffuse color of the material. Raw metals have a diffuse value of (0, 0, 0). The specular value defines specular reflectance at normal incidence (F0). The Glossiness value is a factor between 0.0 (rough surface) and 1.0 (perfectly smooth surface) and represents the surface irregularities that cause light diffusion. Figure 1 shows the three components of the specular-glossiness model and the rendered result.</p>
 
-<img src="figures/specular_glossiness.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 3:</strong> Illustration of the Specular-Glossiness model.</b>
+The following table lists the allowed types and ranges for the specular-glossiness model:
 
-### Metal - Roughness
+| Property | Type | Range | Default Value | Description |
+|:------------:|:----:|:-----:|:-:|:-----:|:-----------:|
+| `diffuseFactor`   | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | The RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). The fourth component (A) is the `opacity` of the material. |
+| `specularFactor`  | `FLOAT_VEC3` | [0, 1] for all components | [1,1,1]   | The specular RGB color of the material. |
+| `glossinessFactor`| `FLOAT`      | [0, 1]                    | 1         | The glossiness of the material surface (0 is glossiness, 1 is full glossiness). |
+| `diffuseTexture`  | string       | valid texture identifier  |           | Texture with RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
+| `specularGlossinessTexture` | string       | valid texture identifier  | | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
 
-The base of the metal-roughness material model consists of the following three parameters:
+The factors (diffuseFactor, specularFactor, glossinessFactor) scale the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
+If a texture is not given, all respective texture components are assumed to have a value of 1.
 
-* BaseColor
-* Metallic
-* Roughness
-
-<p style="text-align:justify;">In the metal-roughness model the base color is used to transport two different forms of data depending on the material type. For metallic materials the base color transports the specific measured reflectance value F0, for dielectrics it transports the reflected diffuse color of the material. In this model it is not possible to specify a reflectance value for non-metals. For those a constant reflectance value of 4% (0.04) is usually used and covers most common dielectric materials. The Metallic value is a factor between (0.0 - 1.0) and it acts similarly to a mask which tells the shader how it should interpret data found in the basecolor. While it is possible to specify values between 0 and 1, it is often used as a binary parameter with a value of either 0 or 1. The Roughness value in the metal-roughness model is simply theinverted glossiness value in the specular-glossiness and also describes the surface irregularities that cause light diffusion. Figure 4 shows the three single components of the metal-roughness model and the rendered result.</p>
-
-<img src="figures/metal_roughness.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
-<b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 4:</strong>Illustration of the Metal-Roughness model.</b>
-
-### Reflectance Values
-
-<p style="text-align:justify;">Since PBR is based on physical laws one cannot use arbitrary inputs for the reflectance values. Especially for the specular-glossiness model where the parameters allow full control over the reflectance of both metals and non-metals. The values must be correct and measured from real world data. Fortunately, several reference charts exist such as the one from [5] which provides sets of values for specific materials.</p>
-
-### Material Model Comparison
-
-<p style="text-align:justify;">Both models presented have advantages and disadvantages. Nonetheless, we consider the metal-roughness model more appropriate for a new PBR material standard. In our opinion, the only significant advantage of the specular-glossiness model is the full control of the F0 value for dielectric materials. But this is also a drawback since it does not guarantee energy conservation for all values. For example, a white (1.0) diffuse and a white (1.0) specular value can be combined reflecting/refracting more light than was initially received if the underlying implementation (the shader in particular) does not compensate for these situations. In contrast the constant F0 value of the metal-roughness model is less error prone and it is nonetheless possible to cover the most common dielectric materials with a F0 value of 4%.</p>
-
-<p style="text-align:justify;">In addition, the parameter names of the specular-glossiness can be more confusing as it uses a terminology similar to traditional models like Blinn-Phong but requires different data, whereas the parameter names of the metal-roughness model are easy to understand and very clear in their meaning. Moreover, the metal-roughness model is more memory friendly, as metallic and roughness are both single floating point values.</p>
-
-<p style="text-align:justify;">Overall the difference in the two models is narrow and applies only to certain edge cases. Therefore, in favor of simplicity we propose to use the metal-roughness model as described in the next section.</p>
+For example, assume a value of `(1.0, 0.5, 0.5)` is read from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.1, 1.0, 0.1, 1.0)`.
+Then, the result would be `(1.0 * 0.1, 0.5 * 1.0, 0.5 * 0.1, 1.0 * 1.0) = (0.1, 0.5, 0.05, 1.0)`;
 
 
-
-## glTF Schema Updates
-
-TODO
+<strong>Usage Example:</strong>
 
 ```javascript
-"materials": {
-    "rough_gold": {
+"materials": {    
+    "rough_gold2": {
         "extensions": {
             "KHR_materials_pbr" : {
-                "technique" : "PBR",
+                "technique" : "PBR_specular_glossiness",
                 "values": {
-                    "albedo": [ 0.5, 0.5, 0.5, 1 ],
-                    "metallic": 0.0,
-                    "roughness": 0.2
+                    "diffuseFactor": [ 0.5, 0.5, 0.5, 1 ],
+                    "specularFactor": [ 0.0, 0.0, 0.0 ],
+                    "glossinessFactor": 0.8
                 }
             }
         }
@@ -202,23 +74,68 @@ TODO
 }
 ```
 
+### Metal - Roughness
+
+<img src="figures/metal_roughness_2.png" align="middle" height="220" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
+
+The metal-roughness material model is defined by the following properties:
+* Base Color: The base color of the material
+* Metallic-ness: A value between 0 and 1, indicating if the material is metallic (1) or not (0)
+* Roughness: Roughness of the material surface
+
+
+The `base` color has two different interpretations depending on the value of `metallic`, which is defined as `0` for dielectrics and `1` for metals.
+For `metallic = 1`, `base` is the specific measured reflectance value (F0).
+For `metallic = 0`, `base` represents the reflected diffuse color of the material.
+
+In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used.
+The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. Figure 2 shows the three components of the metal-roughness model and the rendered result.
+
+The following table lists the allowed types and ranges for the metal-roughness model:
+
+| Property | Type | Range | Default Value | Description |
+|:------------:|:----:|:-----:|:-:|:-----:|:-----------:|
+| `baseColorFactor`           | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material. |
+| `metallicFactor`            | `FLOAT`      | [0, 1]                    | 1         | The metallic-ness the material (1 for metals, 0 for non-metals). |
+| `roughnessFactor`           | `FLOAT`      | [0, 1]                    | 1         |The roughness of the material surface. |
+| `baseColorTexture`          | string       | valid texture identifier  |           |Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
+| `metallicRoughnessTexture`  | string       | valid texture identifier  |           |Texture with two (or more) components, containing the metallic-ness of the material (first component) and its roughness (second component). |
+
+The factors (baseColorFactor, metallicFactor, roughnessFactor) scale the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
+If a texture is not given, all respective texture components are assumed to have a value of 1. This is similar to the handling of factors and texture within the specular-glossiness model.
+
+
+<strong>Usage Example:</strong>
+
 ```javascript
-"extensions": {
-    "KHR_materials_pbr" : {
-        "lights": {
-            "env_light": {
-                "diffuse": "env_diffuse_texture"
-                "specular": "env_specular_texture"
-                "type": "environment"
+"materials": {
+    "rough_gold": {
+        "extensions": {
+            "KHR_materials_pbr" : {
+                "technique" : "PBR_metal_roughness",
+                "values": {
+                    "baseColorFactor": [ 0.5, 0.5, 0.5, 1 ],
+                    "metallicFactor": 0.0,
+                    "roughnessFactor": 0.2
+                }
             }
         }
     }
 }
 ```
 
-### JSON Schema
 
-TODO: Links to the JSON schema for the new extension properties.
+## glTF Schema
+
+
+* [specular-glossiness](materials_pbr_specular_glossiness.schema.json)
+* [metal-roughness](schema/materials_pbr_metal_roughness.schema.json)
+
+
+## Appendix
+
+An introduction to PBR concepts is provided in the [appendix](Appendix.md).
+
 
 ## Known Implementations
 
@@ -226,12 +143,4 @@ TODO: Links to the JSON schema for the new extension properties.
 
 ## Resources
 
-* [1] ALLEGORITHMIC, 2015. The comprehensive pbr guide vol. 2. [https://www.allegorithmic.com/pbr-guide](https://www.allegorithmic.com/pbr-guide).
-* [2] BURLEY, B. 2012. Physically-based shading at disney, part of ractical physically based shading in film and game production. In ACM SIGGRAPH 2012 Courses, SIGGRAPH '12.
-* [3] COLBERT, M., AND KIVNEK, J. 2008. Gpu-based importance sampling. In GPU Gems 3, H. Nguyen, Ed. Addison-Wesley, 459-475.
-* [4] COOK, R. L., AND TORRANCE, K. E. 1982. A reflectance model for computer graphics. ACM Trans. Graph. 1, 1 (Jan.), 7-24.
-* [5] DONTNOD. 2014, [https://seblagarde.files.wordpress.com/2014/04/dontnodgraphicchartforunrealengine4.png](https://seblagarde.files.wordpress.com/2014/04/dontnodgraphicchartforunrealengine4.png).
-* [6] KARIS, B. 2013. Real shading in unreal engine 4. In ACM SIGGRAPH 2013 Courses, SIGGRAPH '13. [http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf](http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf)
-* [7] SCHLICK, C. 1994. An inexpensive brdf model for physically based rendering. Computer Graphics Forum 13, 233-246.
-* [8] SHIRLEY, P., SMITS, B. E., HU, H. H., AND LAFORTUNE, E. P. 1997. A practitioners' assessment of light reflection models. In 5th Pacific Conference on Computer Graphics and Applications(PG '97), IEEE Computer Society, 40.
-* [9] WALTER, B., MARSCHNER, S. R., LI, H., AND TORRANCE, K. E. 2007. Microfacet models for refraction through rough surfaces. In Proceedings of the 18th Eurographics Conference on Rendering Techniques, Eurographics Association, Aire-la-Ville, Switzerland, Switzerland, EGSR'07, 195-206.
+TODO: check what should go here
