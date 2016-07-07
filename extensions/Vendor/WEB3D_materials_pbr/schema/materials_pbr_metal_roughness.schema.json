@@ -1,0 +1,25 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "material",
+    "type" : "object",
+    "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+    	"color" : {
+    		"type" : [{ "$ref" : "arrayValues.schema.json" }, "string"],
+    		"description" : "The material's base color.",
+    		"gltf_detailedDescription" : "The material's base color, defined as an array of RGB or RGBA numbers or a texture identifier."
+    	}
+        "metallic" : {
+            "type" : ["number", "string"],
+            "description" : "The metallic-ness of the material.",
+            "gltf_detailedDescription" : "The metallic-ness of the material. Typically 0 for dielectric or 1 for metallic materials."
+        },
+        "roughness" : {
+            "type" : ["number", "string"],
+            "description" : "The material's surface roughness.",
+            "gltf_detailedDescription" : "The material's surface roughness."
+        }
+    },
+    "additionalProperties" : false
+}
