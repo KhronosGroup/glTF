@@ -33,9 +33,9 @@ The specular-glossiness material model is defined by the following properties:
 
 | Property | Type | Range | Description |
 |:------------:|:----:|:-----:|:-----------:|
-| `diffuse`| `FLOAT_VEC4` | [0, 1] for all components | The RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). The fourth component is the `opacity` of the material. |
-| `specular`| `FLOAT_VEC3` | [0, 1] for all components | The Specular color of the material. |
-| `glossiness`| `FLOAT` | [0, 1] | The glossiness of the material surface. |
+| `diffuse`| `FLOAT_VEC4` or string | [0, 1] for all components | The RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). The fourth component is the `opacity` of the material. |
+| `specular`| `FLOAT_VEC3` or string | [0, 1] for all components | The Specular color of the material. |
+| `glossiness`| `FLOAT` or string | [0, 1] | The glossiness of the material surface. |
 
 
 <p style="text-align:justify;">The diffuse value represents the reflected diffuse color of the material. Raw metals have a diffuse value of (0, 0, 0). The specular value defines specular reflectance at normal incidence (F0). The Glossiness value is a factor between 0.0 (rough surface) and 1.0 (perfectly smooth surface) and represents the surface irregularities that cause light diffusion. Figure 3 shows the three components of the specular-glossiness model and the rendered result.</p>
@@ -49,16 +49,31 @@ The metal-roughness material model is defined by the following properties:
 
 | Property | Type | Range | Description |
 |:------------:|:----:|:-----:|:-----------:|
-| `base`| `FLOAT_VEC4` | [0, 1] for all components | The RGB components of the base color of the material (described below). The fourth component is the `opacity` of the material. |
-| `metallic`| `FLOAT` | [0, 1] | The metallic-ness the material. 1 for metals, 0 for non-metals. |
-| `roughness`| `FLOAT` | [0, 1] | The roughness of the material surface. |
+| `base`| `FLOAT_VEC4` or string | [0, 1] for all components | The RGB components of the base color of the material (described below). The fourth component is the `opacity` of the material. |
+| `metallic`| `FLOAT` or string | [0, 1] | The metallic-ness the material. 1 for metals, 0 for non-metals. |
+| `roughness`| `FLOAT` or string | [0, 1] | The roughness of the material surface. |
 
 The `base` color has two different interpretations depending on the value of `metallic`, which is defined as `0` for dielectrics and `1` for metals. For `metallic = 1`, `base` is the specific measured reflectance value F0. For `metallic = 0`, `base` represents the reflected diffuse color of the material. In this model it is not possible to specify a reflectance value for non-metals and a reflectance value of 4% (0.04) is often used. The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. Figure 4 shows the three components of the metal-roughness model and the rendered result.
 
 <img src="figures/metal_roughness.png" align="middle" height="150" style="display: block; margin: 0 auto; padding: 20px 0 10px 0;">
 <b style="display: block; margin: 0 auto; text-align: center; font-size: 10px;"><strong>Figure 4:</strong>Illustration of the Metal-Roughness model.</b>
 
-
+```javascript
+"materials": {
+    "rough_gold": {
+        "extensions": {
+            "KHR_materials_pbr" : {
+                "technique" : "PBR_metal_roughness",
+                "values": {
+                    "base": [ 0.5, 0.5, 0.5, 1 ],
+                    "metallic": 0.0,
+                    "roughness": 0.2
+                }
+            }
+        }
+    }
+}
+```
 
 ## glTF Schema Updates
 
