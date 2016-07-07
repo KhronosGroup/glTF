@@ -2007,15 +2007,15 @@ The root object for a glTF asset.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**accessors**|`object`|A dictionary object of [`accessor`](#reference-accessor) objects.|No, default: `{}`|
+|**accessors**|`object`|A dictionary object of [`accessor`](#reference-accessor) objects.| :white_check_mark: Yes|
 |**animations**|`object`|A dictionary object of keyframe [`animation`](#reference-animation) objects.|No, default: `{}`|
-|**asset**|[`asset`](#reference-asset)|Metadata about the glTF asset.|No, default: `{}`|
-|**buffers**|`object`|A dictionary object of [`buffer`](#reference-buffer) objects.|No, default: `{}`|
-|**bufferViews**|`object`|A dictionary object of [`bufferView`](#reference-bufferView) objects.|No, default: `{}`|
+|**asset**|[`asset`](#reference-asset)|Metadata about the glTF asset.| :white_check_mark: Yes|
+|**buffers**|`object`|A dictionary object of [`buffer`](#reference-buffer) objects.| :white_check_mark: Yes|
+|**bufferViews**|`object`|A dictionary object of [`bufferView`](#reference-bufferView) objects.| :white_check_mark: Yes|
 |**cameras**|`object`|A dictionary object of [`camera`](#reference-camera) objects.|No, default: `{}`|
 |**images**|`object`|A dictionary object of [`image`](#reference-image) objects.|No, default: `{}`|
 |**materials**|`object`|A dictionary object of [`material`](#reference-material) objects.|No, default: `{}`|
-|**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh) objects.|No, default: `{}`|
+|**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh) objects.| :white_check_mark: Yes|
 |**nodes**|`object`|A dictionary object of [`node`](#reference-node) objects.|No, default: `{}`|
 |**programs**|`object`|A dictionary object of [`program`](#reference-program) objects.|No, default: `{}`|
 |**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler) objects.|No, default: `{}`|
@@ -2034,12 +2034,12 @@ Additional properties are not allowed.
 
 **JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
 
-### glTF.accessors
+### glTF.accessors :white_check_mark:
 
 A dictionary object of [`accessor`](#reference-accessor) objects.  The name of each accessor is an ID in the global glTF namespace that is used to reference the accessor.  An accessor is a typed view into a bufferView.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
+* **Required**: Yes
 * **Type of each property**: `object`
 
 ### glTF.animations
@@ -2050,27 +2050,27 @@ A dictionary object of keyframe [`animation`](#reference-animation) objects.  Th
 * **Required**: No, default: `{}`
 * **Type of each property**: `object`
 
-### glTF.asset
+### glTF.asset :white_check_mark:
 
 Metadata about the glTF asset.
 
 * **Type**: [`asset`](#reference-asset)
-* **Required**: No, default: `{}`
+* **Required**: Yes
 
-### glTF.buffers
+### glTF.buffers :white_check_mark:
 
 A dictionary object of [`buffer`](#reference-buffer) objects.  The name of each buffer is an ID in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
+* **Required**: Yes
 * **Type of each property**: `object`
 
-### glTF.bufferViews
+### glTF.bufferViews :white_check_mark:
 
 A dictionary object of [`bufferView`](#reference-bufferView) objects.  The name of each bufferView is an ID in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
+* **Required**: Yes
 * **Type of each property**: `object`
 
 ### glTF.cameras
@@ -2097,12 +2097,12 @@ A dictionary object of [`material`](#reference-material) objects.  The name of e
 * **Required**: No, default: `{}`
 * **Type of each property**: `object`
 
-### glTF.meshes
+### glTF.meshes :white_check_mark:
 
 A dictionary object of [`mesh`](#reference-mesh) objects.  The name of each mesh is an ID in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
+* **Required**: Yes
 * **Type of each property**: `object`
 
 ### glTF.nodes
@@ -2333,7 +2333,7 @@ A set of primitives to be rendered.  A node can contain one or more meshes.  A n
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**primitives**|[`mesh.primitive[]`](#reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|No, default: `[]`|
+|**primitives**|[`mesh.primitive[]`](#reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|:white_check_mark: Yes|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2343,12 +2343,12 @@ Additional properties are not allowed.
 * **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
 * **Example**: [meshes.json](schema/examples/meshes.json)
 
-### mesh.primitives
+### mesh.primitives :white_check_mark:
 
 An array of primitives, each defining geometry to be rendered with a material.
 
 * **Type**: [`mesh.primitive[]`](#reference-mesh.primitive)
-* **Required**: No, default: `[]`
+* **Required**: Yes
 
 ### mesh.name
 
@@ -2385,9 +2385,9 @@ Geometry to be rendered with the given material.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**attributes**|`object`|A dictionary object of strings, where each string is the ID of the [`accessor`](#reference-accessor) containing an attribute.|No, default: `{}`|
+|**attributes**|`object`|A dictionary object of strings, where each string is the ID of the [`accessor`](#reference-accessor) containing an attribute.| :white_check_mark: Yes|
 |**indices**|`string`|The ID of the accessor that contains the indices.|No|
-|**material**|`string`|The ID of the material to apply to this primitive when rendering.| :white_check_mark: Yes|
+|**material**|`string`|The ID of the material to apply to this primitive when rendering.|No|
 |**mode**|`integer`|The type of primitives to render.|No, default: `4`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2396,30 +2396,30 @@ Additional properties are not allowed.
 
 **JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
 
-### primitive.attributes
+### primitive.attributes :white_check_mark:
 
 A dictionary object of strings, where each string is the ID of the accessor containing an attribute.
 
 * **Type**: `object`
-* **Required**: No, default: `{}`
+* **Required**: Yes
 * **Type of each property**: `string`
 
 ### primitive.indices
 
 The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
 
-When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE) or `5123` (UNSIGNED_SHORT); and `type` must be `"SCALAR"`.
+When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter is only allowed when `OES_element_index_uint` extension is used; `type` must be `"SCALAR"`.
 
 * **Type**: `string`
 * **Required**: No
 * **Minimum Length**`: >= 1`
 
-### primitive.material :white_check_mark:
+### primitive.material
 
 The ID of the material to apply to this primitive when rendering.
 
 * **Type**: `string`
-* **Required**: Yes
+* **Required**: No
 * **Minimum Length**`: >= 1`
 
 ### primitive.mode
