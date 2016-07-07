@@ -36,7 +36,7 @@ The specular-glossiness material model is defined by the following properties:
 * Specular:   Specular color of the material
 * Glossiness: Glossiniess of the material
 
-<p style="text-align:justify;">The diffuse value represents the reflected diffuse color of the material. Raw metals have a diffuse value of (0, 0, 0). The specular value defines specular reflectance at normal incidence (F0). The Glossiness value is a factor between 0.0 (rough surface) and 1.0 (perfectly smooth surface) and represents the surface irregularities that cause light diffusion. Figure 3 shows the three components of the specular-glossiness model and the rendered result.</p>
+<p style="text-align:justify;">The diffuse value represents the reflected diffuse color of the material. Raw metals have a diffuse value of (0, 0, 0). The specular value defines specular reflectance at normal incidence (F0). The Glossiness value is a factor between 0.0 (rough surface) and 1.0 (perfectly smooth surface) and represents the surface irregularities that cause light diffusion. Figure 1 shows the three components of the specular-glossiness model and the rendered result.</p>
 
 The following table lists the allowed types and ranges for the specular-glossiness model:
 
@@ -89,7 +89,7 @@ For `metallic = 1`, `base` is the specific measured reflectance value (F0).
 For `metallic = 0`, `base` represents the reflected diffuse color of the material.
 
 In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used.
-The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. Figure 4 shows the three components of the metal-roughness model and the rendered result.
+The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. Figure 2 shows the three components of the metal-roughness model and the rendered result.
 
 The following table lists the allowed types and ranges for the metal-roughness model:
 
