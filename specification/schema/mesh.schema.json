@@ -12,7 +12,7 @@
                 "$ref" : "mesh.primitive.schema.json"
             },
             "required" : true,
-            "minItems": 1
+            "minItems" : 1
         }
     },
     "additionalProperties" : false
