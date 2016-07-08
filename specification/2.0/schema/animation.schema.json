@@ -1,0 +1,42 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "animation",
+    "type" : "object",
+    "description" : "A keyframe animation.",
+    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "properties" : {
+        "channels" : {
+            "type" : "array",
+            "description" : "An array of channels, each of which targets an animation's sampler at a node's property.",
+            "items" : {
+                "$ref" : "animation.channel.schema.json"
+            },
+            "default" : []
+        },
+        "parameters" : {
+            "type" : "object",
+            "description" : "A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.parameter.schema.json"
+            },
+            "default" : {}
+        },
+        "samplers" : {
+            "type" : "object",
+            "description" : "A dictionary object of samplers that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
+            "properties" : {
+            },
+            "additionalProperties" : {
+                "$ref" : "animation.sampler.schema.json"
+            },
+            "default" : {}
+        }
+    },
+    "dependencies" : {
+        "channels" : "samplers",
+        "samplers" : "parameters"
+    },
+    "additionalProperties" : false
+}
