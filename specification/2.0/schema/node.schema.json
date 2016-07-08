@@ -25,7 +25,7 @@
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`."            
+            "gltf_detailedDescription" : "The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`."
         },
         "skin" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
