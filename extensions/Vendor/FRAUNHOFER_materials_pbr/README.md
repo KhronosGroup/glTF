@@ -1,4 +1,4 @@
-# WEB3D_materials_pbr
+# FRAUNHOFER_materials_pbr
 
 ## Contributors
 
@@ -128,7 +128,7 @@ If a texture is not given, all respective texture components are assumed to have
 ## glTF Schema
 
 
-* [specular-glossiness](materials_pbr_specular_glossiness.schema.json)
+* [specular-glossiness](schema/materials_pbr_specular_glossiness.schema.json)
 * [metal-roughness](schema/materials_pbr_metal_roughness.schema.json)
 
 

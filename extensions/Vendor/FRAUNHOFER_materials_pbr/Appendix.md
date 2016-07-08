@@ -1,5 +1,3 @@
-
-
 ## Physically-based rendering
 
 <p style="text-align:justify;">Physically-based rendering attempts to produce realistic images by accurately modeling light-matter interaction. Material definitions for PBR usually consist of compact sets of parameters suitable to represent a large range of real-world materials.
