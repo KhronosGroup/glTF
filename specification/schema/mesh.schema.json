@@ -11,7 +11,8 @@
             "items" : {
                 "$ref" : "mesh.primitive.schema.json"
             },
-            "default" : []
+            "required" : true,
+            "minItems" : 1
         }
     },
     "additionalProperties" : false
