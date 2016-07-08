@@ -75,6 +75,8 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
 
+Valid glTF asset must specify its version and contain at least one [mesh primitive](#meshes).
+
 <p align="center">
 <img src="figures/files.png" width="50%" />
 </p>
@@ -484,6 +486,8 @@ Any node can contain one or more meshes, defined in its `meshes` property. Any n
 
 In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that corresponds to the GL primitive type (e.g., triangle set).
 
+> **Implementation note:** If `material` is undefined, engines can opt to render such primitive with [default material](#appendix-a).
+
 The following example defines a mesh containing one triangle set primitive:
 
 ```javascript
@@ -679,6 +683,8 @@ Materials are stored in the assets `materials` dictionary property, which contai
 ```
 
 The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
+
+If `technique` property is undefined, `values` property must be undefined too.
 
 **non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
 
