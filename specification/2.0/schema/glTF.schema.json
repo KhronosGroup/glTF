@@ -22,7 +22,7 @@
             "additionalProperties" : {
                 "$ref" : "accessor.schema.json"
             },
-            "default" : {},
+            "required" : true,
             "gltf_detailedDescription" : "A dictionary object of accessors.  The name of each accessor is an ID in the global glTF namespace that is used to reference the accessor.  An accessor is a typed view into a bufferView."
         },
         "animations" : {
@@ -39,7 +39,7 @@
         "asset" : {
             "extends" : { "$ref" : "asset.schema.json" },
             "description" : "Metadata about the glTF asset.",
-            "default" : {}
+            "required" : true
         },
         "buffers" : {
             "type" : "object",
@@ -49,7 +49,7 @@
             "additionalProperties" : {
                 "$ref" : "buffer.schema.json"
             },
-            "default" : {},
+            "required" : true,
             "gltf_detailedDescription" : "A dictionary object of buffers.  The name of each buffer is an ID in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins."
         },
         "bufferViews" : {
@@ -60,7 +60,7 @@
             "additionalProperties" : {
                 "$ref" : "bufferView.schema.json"
             },
-            "default" : {},
+            "required" : true,
             "gltf_detailedDescription" : "A dictionary object of bufferViews.  The name of each bufferView is an ID in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer."
         },
         "cameras" : {
@@ -104,7 +104,7 @@
             "additionalProperties" : {
                 "$ref" : "mesh.schema.json"
             },
-            "default" : {},
+            "required" : true,
             "gltf_detailedDescription" : "A dictionary object of meshes.  The name of each mesh is an ID in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered."
         },
         "nodes" : {

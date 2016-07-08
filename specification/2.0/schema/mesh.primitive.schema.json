@@ -13,17 +13,16 @@
             "additionalProperties" : {
                 "$ref" : "mesh.primitive.attribute.schema.json"
             },
-            "default" : {}
+            "required" : true
         },
         "indices" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The ID of the accessor that contains the indices.",
-            "gltf_detailedDescription" : "The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the bufferView referenced by the accessor must have a target equal to 34963 (ELEMENT_ARRAY_BUFFER); a byteStride that is tightly packed, i.e., 0 or the byte size of componentType in bytes; componentType must be 5121 (UNSIGNED_BYTE) or 5123 (UNSIGNED_SHORT); and type must be \"SCALAR\"."
+            "gltf_detailedDescription" : "The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the `bufferView` referenced by the accessor must have a `target` equal to 34963 (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., 0 or the byte size of `componentType` in bytes; `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter is only allowed when `OES_element_index_uint` extension is used; `type` must be `\"SCALAR\"`."
         },
         "material" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of the material to apply to this primitive when rendering.",
-            "required" : true
+            "description" : "The ID of the material to apply to this primitive when rendering."
         },
         "mode" : {
             "type" : "integer",
