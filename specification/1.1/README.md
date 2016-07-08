@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: January 13, 2016
+Last Updated: June 2, 2016
 
 Editors
 
@@ -501,7 +501,7 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
 
-Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  Attribute semantics can be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, etc.
+Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  Attribute semantic property names can be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
@@ -509,7 +509,7 @@ Valid attribute semantics include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JO
 
 ### Skins
 
-All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
 
 
 ```javascript
@@ -560,7 +560,7 @@ A skin is instanced within a node using a combination of the node's `meshes`, `s
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
 
 ```javascript
     "meshes": {
@@ -583,6 +583,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
         }
     },
 ```
+
+> **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
 
 
 #### Joint Hierarchy
@@ -636,6 +638,8 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ]
         },
 ```
+
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
 
 <a name="materials-and-shading"></a>
@@ -1124,7 +1128,7 @@ All extensions used in a model are listed in the top-level `extensionsUsed` dict
 
 ```javascript
 "extensionsUsed": [
-   "EXT_binary_glTF"
+   "KHR_binary_glTF"
 ]
 ```
 
@@ -1246,14 +1250,14 @@ Specifies if the attribute is a scalar, vector, or matrix, and the number of ele
 
 ### accessor.max
 
-Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Maximum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: No
 
 ### accessor.min
 
-Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property.
+Minimum value of each component in this attribute.  When both min and max arrays are defined, they have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 * **Type**: `number[1-16]`
 * **Required**: No
@@ -2385,6 +2389,8 @@ A dictionary object of strings, where each string is the ID of the accessor cont
 
 The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
 
+When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE) or `5123` (UNSIGNED_SHORT); and `type` must be `"SCALAR"`.
+
 * **Type**: `string`
 * **Required**: No
 * **Minimum Length**`: >= 1`
@@ -2473,7 +2479,7 @@ The IDs of this node's children.
 
 ### node.skeletons
 
-The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`.
+The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
@@ -2866,7 +2872,7 @@ The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 ### skin.jointNames :white_check_mark:
 
-Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the length of any skeleton array referencing the skin.
+Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
@@ -3008,13 +3014,15 @@ Additional properties are not allowed.
 
 When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`.
 
+An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
+
 * **Type**: `integer`
 * **Required**: No
 * **Minimum**:` >= 1`
 
 ### parameter.node
 
-The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4).
+The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
 
 * **Type**: `string`
 * **Required**: No
@@ -3391,9 +3399,7 @@ If `material.technique` is not supplied, and no extension is present that define
 "programs": {
     "program0": {
         "attributes": [
-            "a_normal",
-            "a_position",
-            "a_texcoord_0"
+            "a_position"
         ],
         "fragmentShader": "fragmentShader0",
         "vertexShader": "vertexShader0"
@@ -3412,7 +3418,6 @@ If `material.technique` is not supplied, and no extension is present that define
 "techniques": {
     "technique0": {
         "attributes": {
-            "a_normal": "normal",
             "a_position": "position"
         },
         "parameters": {
@@ -3420,20 +3425,12 @@ If `material.technique` is not supplied, and no extension is present that define
                 "semantic": "MODELVIEW",
                 "type": 35676
             },
-            "normalMatrix": {
-                "semantic": "MODELVIEWINVERSETRANSPOSE",
-                "type": 35675
-            },
             "projectionMatrix": {
                 "semantic": "PROJECTION",
                 "type": 35676
             },
             "emission": {
                 "type": 35666
-            },
-            "normal": {
-                "semantic": "NORMAL",
-                "type": 35665
             },
             "position": {
                 "semantic": "POSITION",
@@ -3449,7 +3446,6 @@ If `material.technique` is not supplied, and no extension is present that define
         },
         "uniforms": {
             "u_modelViewMatrix": "modelViewMatrix",
-            "u_normalMatrix": "normalMatrix",
             "u_projectionMatrix": "projectionMatrix",
             "u_emission": "emission"
         }
@@ -3462,10 +3458,8 @@ Vertex Shader:
 precision highp float;
 
 uniform mat4 u_modelViewMatrix;
-uniform mat3 u_normalMatrix;
 uniform mat4 u_projectionMatrix;
 
-attribute vec3 a_normal;
 attribute vec3 a_position;
 
 void main(void)

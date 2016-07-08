@@ -1,0 +1,23 @@
+{
+    "asset" : {
+        "copyright" : "(C) Copyright Khronos Group",
+        "generator" : "collada2gltf@042d7d2a3782aaf6d86961d052fc53bea8b3e424",
+        "premultipliedAlpha" : true,
+        "profile" : {
+            "api" : "WebGL",
+            "version" : "1.0.3",
+            "extras" : {
+                "Application specific" : "The extra object can contain any properties."
+            }  
+        },
+        "version" : "1.0",
+        "extensions" : {
+           "extension_name" : {
+              "extension specific" : "value"
+           }
+        },
+        "extras" : {
+            "Application specific" : "The extra object can contain any properties."
+        }  
+    }
+}
