@@ -2902,7 +2902,9 @@ The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 ### skin.jointNames :white_check_mark:
 
-Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array.
+Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is
+* the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and 
+* the same as the total quantity of all skeleton nodes from node hierarchy referenced by the skinned mesh instance node's `skeletons` array.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
