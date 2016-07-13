@@ -246,6 +246,7 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 >For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
 
+The node hierarchy is considered as a skeleton hierarchy if any of its nodes contains a `jointName` property. No node from the skeleton hierarchy can contain `camera`, `skeletons`, `skin`, or `meshes` properties.
 
 ### Transforms
 
@@ -515,7 +516,7 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 ### Skins
 
-All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
 
 
 ```javascript
@@ -566,7 +567,7 @@ A skin is instanced within a node using a combination of the node's `meshes`, `s
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
 
 ```javascript
     "meshes": {
@@ -589,6 +590,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
         }
     },
 ```
+
+> **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
 
 
 #### Joint Hierarchy
@@ -642,6 +645,8 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ]
         },
 ```
+
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
 
 <a name="materials-and-shading"></a>
@@ -789,7 +794,7 @@ Table 1. Uniform Semantics
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
 | `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
-| `JOINTMATRIX`                | `FLOAT_MAT4` | Transforms mesh coordinates for a particular joint for skinning and animation. |
+| `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`parameter.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
 
 For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
 
@@ -2504,7 +2509,7 @@ The IDs of this node's children.
 
 ### node.skeletons
 
-The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.joints`.
+The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
@@ -2897,7 +2902,7 @@ The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 ### skin.jointNames :white_check_mark:
 
-Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the length of any skeleton array referencing the skin.
+Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
