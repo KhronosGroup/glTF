@@ -27,7 +27,7 @@
             },
             "uniqueItems" : true,
             "required" : true,
-            "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array."
+            "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and the same as the total quantity of all skeleton nodes from node hierarchies referenced by the skinned mesh instance node's `skeletons` array."
         }
     },
     "additionalProperties" : false
