@@ -24,6 +24,7 @@
 #include "GLTF.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
 #include "geometryHelpers.h"
 
 #if __cplusplus <= 199711L
