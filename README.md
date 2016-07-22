@@ -38,6 +38,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
 
+### Validators
+
+* [glTF Validator](https://github.com/KhronosGroup/glTF-Validator) - open-source command-line and drag-and-top tool to validate glTF assets against the spec
+
 ### Exporters
 
 * [Blender](https://github.com/Kupoman/blendergltf) - work in progress
