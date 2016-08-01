@@ -75,6 +75,7 @@ namespace GLTF
                 shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
                 GLTF::Semantic semantic = vertexAttribute->getSemantic();
                 shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, vertexAttribute->getIndexOfSet());
+                shared_ptr <GLTF::GLTFAccessor> indicesAccessor = primitive->getIndices();
 
                 if (meshAttribute != NULL) {
                     shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
@@ -91,6 +92,10 @@ namespace GLTF
                         IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
                         asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
                     }
+                }
+                if (indicesAccessor != NULL) {
+                    indicesAccessor->setByteStride(2);
+                    indicesAccessor->exposeMinMax();
                 }
             }
         }
@@ -1115,6 +1120,10 @@ namespace GLTF
                     if (meshAttribute != NULL) {
                         meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
                         accessors->setValue(meshAttribute->getID(), meshAttribute);
+                    }
+                    if (uniqueIndices != NULL) {
+                        uniqueIndices->setByteStride(2);
+                        uniqueIndices->exposeMinMax();
                     }
                 }
             }

@@ -449,6 +449,8 @@ namespace GLTF
                     return GL::FLOAT_VEC3;
                 case 4:
                     return GL::FLOAT_VEC4;
+                case 16:
+                    return GL::FLOAT_MAT4;
             }
         }
         return 0;
