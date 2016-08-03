@@ -1506,11 +1506,11 @@ namespace GLTF
         shared_ptr <GLTFBufferView> inverseBindMatricesView = createBufferViewWithAllocatedBuffer(matricesPtr, 0, matricesSize, true);
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
-        shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setString(kType, "MAT4");
-        inverseBindMatrices->setUnsignedInt32(kComponentType, profile->getGLenumForString("FLOAT"));
-		inverseBindMatrices->setUnsignedInt32(kCount, (unsigned int)skinControllerData->getJointsCount());
-        inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
+        shared_ptr<GLTFAccessor> inverseBindMatrices(new GLTFAccessor(profile, "FLOAT", "MAT4"));
+        inverseBindMatrices->setByteStride(64);
+        inverseBindMatrices->setCount((unsigned int)skinControllerData->getJointsCount());
+        inverseBindMatrices->setBufferView(inverseBindMatricesView);
+        inverseBindMatrices->exposeMinMax();
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
         
         shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset->createOutputStreamIfNeeded(this->_asset->getSharedBufferId());
@@ -1525,6 +1525,7 @@ namespace GLTF
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
         weightsAttribute->setCount(vertexCount);
+        weightsAttribute->exposeMinMax();
 
         glTFSkin->setWeights(weightsAttribute);
         
@@ -1534,6 +1535,7 @@ namespace GLTF
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
         jointsAttribute->setCount(vertexCount);
+        jointsAttribute->exposeMinMax();
 
         glTFSkin->setJoints(jointsAttribute);
         glTFSkin->setJointsCount(skinControllerData->getJointsCount());

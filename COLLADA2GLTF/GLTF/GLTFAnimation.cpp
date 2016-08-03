@@ -147,37 +147,37 @@ namespace GLTF
         
         if (animationFlattener->hasAnimatedScale()) {
             //Scale
+            __AddChannel(this, targetID, "scale");
             setupAndWriteAnimationParameter(this,
                                             "scale",
                                             "FLOAT_VEC3",
                                             (unsigned char*)scales,
                                             count * sizeof(float) * 3, false,
                                             asset);
-            __AddChannel(this, targetID, "scale");
             free(scales);
         }
         
         if (animationFlattener->hasAnimatedTranslation()) {
             //Translation
+            __AddChannel(this, targetID, "translation");
             setupAndWriteAnimationParameter(this,
                                             "translation",
                                             "FLOAT_VEC3",
                                             (unsigned char*)positions,
                                             count * sizeof(float) * 3, false,
                                             asset);
-            __AddChannel(this, targetID, "translation");
             free(positions);
         }
         
         if (animationFlattener->hasAnimatedRotation()) {
             //Rotation
+            __AddChannel(this, targetID, "rotation");
             setupAndWriteAnimationParameter(this,
                                             "rotation",
                                             "FLOAT_VEC4",
                                             (unsigned char*)rotations,
                                             count * sizeof(float) * 4, false,
                                             asset);
-            __AddChannel(this, targetID, "rotation");
             free(rotations);
         }
     }

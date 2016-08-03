@@ -142,6 +142,30 @@ namespace GLTF
     typedef struct {
         double *min, *max;
     } __MinMaxApplierInfo;
+
+    static float _getComponent(char* bufferData, const std::string& componentType, size_t component) {
+        if (componentType == "FLOAT") {
+            float* vector = (float*)bufferData;
+            return vector[component];
+        }
+        else if (componentType == "UNSIGNED_SHORT") {
+            uint16_t* vector = (uint16_t*)bufferData;
+            return (float)vector[component];
+        }
+        else if (componentType == "SHORT") {
+            int16_t* vector = (int16_t*)bufferData;
+            return (float)vector[component];
+        }
+        else if (componentType == "UNSIGNED_BYTE") {
+            uint8_t* vector = (uint8_t*)bufferData;
+            return (float)vector[component];
+        }
+        else if (componentType == "BYTE") {
+            int8_t* vector = (int8_t*)bufferData;
+            return (float)vector[component];
+        }
+        return 0;
+    }
     
     static void __ComputeMinMax(void *value,
                                 const std::string& componentType /* componentType */,
@@ -153,22 +177,24 @@ namespace GLTF
         __MinMaxApplierInfo *applierInfo = (__MinMaxApplierInfo*)context;
         char* bufferData = (char*)value;
         
-        if (componentType == "FLOAT") {
-            float* vector = (float*)bufferData;
-            for (size_t j = 0 ; j < componentsPerElement ; j++) {
-                float value = vector[j];
-                if (value < applierInfo->min[j]) {
-                    applierInfo->min[j] = value;
-                }
-                if (value > applierInfo->max[j]) {
-                    applierInfo->max[j] = value;
-                }
+        for (size_t j = 0; j < componentsPerElement; j++) {
+            float value = _getComponent(bufferData, componentType, j);
+            if (value < applierInfo->min[j]) {
+                applierInfo->min[j] = value;
+            }
+            if (value > applierInfo->max[j]) {
+                applierInfo->max[j] = value;
             }
         }
     }
+
+    void GLTFAccessor::_computeMinMaxIfNeeded() {
+        shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
+        _computeMinMaxIfNeeded((unsigned char*)bufferView->getBufferDataByApplyingOffset());
+    }
     
-    void GLTFAccessor::_computeMinMaxIfNeeded()  {
-        if (this->_minMaxDirty == true) {
+    void GLTFAccessor::_computeMinMaxIfNeeded(unsigned char* buffer)  {
+        if (this->_minMaxDirty) {
             double min[32];
             double max[32];
 
@@ -184,7 +210,7 @@ namespace GLTF
                 max[i] = -DBL_MAX;
             }
             
-            applyOnAccessor(__ComputeMinMax, &minMaxApplierInfo);
+            applyOnAccessor(__ComputeMinMax, &minMaxApplierInfo, buffer);
             
             for (size_t i = 0 ; i < this->_componentsPerElement ; i++) {
                 minObject->appendValue(shared_ptr <GLTF::JSONNumber> (new GLTF::JSONNumber(min[i])));
@@ -195,15 +221,23 @@ namespace GLTF
     }
     
     void GLTFAccessor::exposeMinMax() {
-        this->_computeMinMaxIfNeeded();
+        shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
+        this->_computeMinMaxIfNeeded((unsigned char*)bufferView->getBufferDataByApplyingOffset());
+    }
+
+    void GLTFAccessor::exposeMinMax(unsigned char* buffer) {
+        this->_computeMinMaxIfNeeded(buffer);
     }
 
     void GLTFAccessor::applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context) {
+        shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
+        applyOnAccessor(applierFunc, context, (unsigned char*)bufferView->getBufferDataByApplyingOffset());
+    }
+
+    void GLTFAccessor::applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context, unsigned char* bufferData) {
         size_t byteStride = this->getByteStride();
         size_t componentsPerElement = this->_componentsPerElement;
         size_t vertexAttributeByteSize = this->_elementByteLength;
-        shared_ptr <GLTF::GLTFBufferView> bufferView = this->getBufferView();
-        unsigned char* bufferData = (unsigned char*)bufferView->getBufferDataByApplyingOffset();
 
         size_t count = this->getCount();
         for (size_t i = 0 ; i < count ; i++) {
