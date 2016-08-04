@@ -415,6 +415,7 @@ The following tables can be used to compute the size of an accessor's attribute 
 | `5121`(UNSIGNED_BYTE) | 1 |
 | `5122` (SHORT) | 2 |
 | `5123` (UNSIGNED_SHORT) | 2 |
+| `5125` (UNSIGNED_INT) | 4 |
 | `5126` (FLOAT) | 4 |
 
 | `type` | Number of components |
@@ -1226,7 +1227,7 @@ The stride, in bytes, between attributes referenced by this accessor.  When this
 
 ### accessor.componentType :white_check_mark:
 
-The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
+The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT), and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, and `Float32Array`, respectively.
 
 * **Type**: `integer`
 * **Required**: Yes
