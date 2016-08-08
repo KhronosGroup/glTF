@@ -169,7 +169,8 @@ Note, however, that SRC uses two attributes for decoding (`decodeOffset` and `de
 * <a name="lee-10-compression"></a>Lee, J., Choe, S., and Lee, S. 2010. _Mesh geometry compression for mobile graphics._ In _Proc. CCNC_, 301–305 [paper](http://cg.postech.ac.kr/research/mesh_comp_mobile/mesh_comp_mobile_conference.pdf)
 * [SRC project](http://x3dom.org/src/) (paper, background, basic writer)
 * SRC writer ([code](http://x3dom.org/src/files/src_writer_source.zip))
-* [mesh-quantization-example](https://github.com/tsherif/mesh-quantization-example) - a minimal example of vertex quantization
+* [Using Quantization with 3D Models](http://cesiumjs.org/2016/08/08/Cesium-web3d-quantized-attributes/) by Rob Taglang. August 2016
+* [mesh-quantization-example](https://github.com/tsherif/mesh-quantization-example) by Tarek Sherif. A minimal example of vertex quantization.
 
 # Acknowledgments
 * Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
