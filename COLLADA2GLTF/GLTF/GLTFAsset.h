@@ -143,6 +143,8 @@ namespace GLTF
             std::shared_ptr <MaterialBindingsPrimitiveMap> materialBindingPrimitiveMap,
             std::shared_ptr <JSONArray> meshesArray,
             std::shared_ptr<JSONObject> meshExtras);
+		void _applyDefaultMaterial(std::shared_ptr<GLTFMesh>& mesh, std::shared_ptr <GLTF::GLTFPrimitive>& primitive, std::shared_ptr<JSONObject>& materials, int j);
+
         void _writeJSONResource(const std::string &resourcePath, std::shared_ptr<JSONObject> obj);
     public:
         MaterialUIDToEffectUID          _materialUIDToEffectUID;
