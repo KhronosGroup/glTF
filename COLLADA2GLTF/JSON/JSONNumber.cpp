@@ -25,6 +25,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "GLTF.h"
+#include <cstring>
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
