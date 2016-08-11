@@ -87,7 +87,7 @@
                 "u_jointMatrix": "jointMatrix"
             },
             "states" : {
-                "enable" : [3042, 2884, 2929, 32823, 32926, 3089],
+                "enable" : [3042, 2884, 2929, 32823, 32926],
                 "functions" : {
                     "blendColor": [0.0, 0.0, 0.0, 0.0],
                     "blendEquationSeparate" : [32774, 32774],
@@ -100,7 +100,6 @@
                     "frontFace" : [2305],
                     "lineWidth" : [1.0],
                     "polygonOffset" : [0.0, 0.0],
-                    "scissor" : [0, 0, 0, 0],
                     "extensions" : {
                        "extension_name" : {
                           "extension specific" : "value"
