@@ -142,18 +142,6 @@
             "maxItems" : 2,
             "default" : [0.0, 0.0],
             "gltf_webgl" : "`polygonOffset()`"
-        },
-        "scissor" : {
-            "type" : "array",
-            "description" : "Floating-point value passed to `scissor()`.  [x, y, width, height].",
-            "items" : {
-                "type" : "number"
-            },
-            "minItems" : 4,
-            "maxItems" : 4,
-            "default" : [0.0, 0.0, 0.0, 0.0],
-            "gltf_detailedDescription" : "Floating-point value passed to `scissor()`.  [x, y, width, height].  The default is the dimensions of the canvas when the WebGL context is created.  width and height must be greater than zero.",
-            "gltf_webgl" : "`scissor()`"
         }
     },
     "additionalProperties" : false
