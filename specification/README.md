@@ -837,9 +837,9 @@ Render states define the fixed-function GL state when a primitive is rendered. T
 * `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
 * `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
 
-Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `pass`, all of these Boolean GL states are disabled.
+Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), and `32926` (`SAMPLE_ALPHA_TO_COVERAGE`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `pass`, all of these Boolean GL states are disabled.
 
-Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
+Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, and `"polygonOffset"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
 
 The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
 
@@ -850,8 +850,7 @@ The following example `states` object indicates to enable all Boolean states (se
         2884,  // CULL_FACE
         2929,  // DEPTH_TEST
         32823, // POLYGON_OFFSET_FILL
-        32926, // SAMPLE_ALPHA_TO_COVERAGE
-        3089   // SCISSOR_TEST
+        32926 // SAMPLE_ALPHA_TO_COVERAGE
     ], // empty by default
     "functions": {
       "blendColor": [0.0, 0.0, 0.0, 0.0], // (red, green, blue, alpha)
@@ -872,8 +871,7 @@ The following example `states` object indicates to enable all Boolean states (se
       "depthRange": [0.0, 1.0], // (zNear, zFar)
       "frontFace": [2305], // CCW
       "lineWidth": [1.0],
-      "polygonOffset": [0.0, 0.0], // (factor, units)
-      "scissor": [0, 0, 0, 0]  // (x, y, width, height)
+      "polygonOffset": [0.0, 0.0] // (factor, units)
     }
 }
 ```
@@ -3119,7 +3117,7 @@ Additional properties are not allowed.
 
 ### states.enable
 
-WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), `32926` (SAMPLE_ALPHA_TO_COVERAGE), and `3089` (SCISSOR_TEST).
+WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), and `32926` (SAMPLE_ALPHA_TO_COVERAGE).
 
 * **Type**: `integer[]`
    * Each element in the array must be unique.
@@ -3171,7 +3169,6 @@ Arguments for fixed-function rendering state functions other than `enable()`/`di
 |**frontFace**|`integer[1]`|Integer value passed to `frontFace()`.|No, default: `[2305]`|
 |**lineWidth**|`number[1]`|Floating-point value passed to `lineWidth()`.|No, default: `[1]`|
 |**polygonOffset**|`number[2]`|Floating-point value passed to `polygonOffset()`.  [factor, units]|No, default: `[0,0]`|
-|**scissor**|`number[4]`|Floating-point value passed to `scissor()`.  [x, y, width, height].|No, default: `[0,0,0,0]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -3272,14 +3269,6 @@ Floating-point value passed to `polygonOffset()`.  [factor, units]
 * **Type**: `number[2]`
 * **Required**: No, default: `[0,0]`
 * **Related WebGL functions**: `polygonOffset()`
-
-### functions.scissor
-
-Floating-point value passed to `scissor()`.  [x, y, width, height].  The default is the dimensions of the canvas when the WebGL context is created.  width and height must be greater than zero.
-
-* **Type**: `number[4]`
-* **Required**: No, default: `[0,0,0,0]`
-* **Related WebGL functions**: `scissor()`
 
 ### functions.extensions
 
