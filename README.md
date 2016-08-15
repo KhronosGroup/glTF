@@ -27,7 +27,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 ### Converters
 
 * [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to convert COLLADA to glTF
-* [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter
+* [COLLADA|OBJ to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter for COLLADA and OBJ
 * [Assimp](http://www.assimp.org/) - General-purpose conversion pipeline with a glTF importer/exporter pipeline. See the [list of supported import formats](https://github.com/assimp/assimp#supported-file-formats).
 * [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF
 * [FBX-glTF](https://github.com/cyrillef/FBX-glTF) - FBX glTF importer/exporter plug-in and converter
