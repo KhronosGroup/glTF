@@ -958,28 +958,30 @@ namespace GLTF
                 //WORK-AROUND: TEXCOORD from the Collada model can be removed if it isn't bound to a technique
                 else {
                     std::string materialId = primitive->getMaterialID();
-                    shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
-                    shared_ptr <JSONObject> technique = material->getTechniqueGenerator();
-                    shared_ptr <JSONObject> texcoordBindings = technique->getObject("texcoordBindings");
+                    if (materialId != "") {
+                        shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
+                        shared_ptr <JSONObject> technique = material->getTechniqueGenerator();
+                        shared_ptr <JSONObject> texcoordBindings = technique->getObject("texcoordBindings");
 
-                    for (unsigned int k = 0; k < primitive->getVertexAttributes().size(); k++) {
-                        shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(primitive->getVertexAttributes()[k]);
-                        if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
-                            std::string attribute = "TEXCOORD_" + std::to_string(vertexAttribute->getIndexOfSet());
-                            bool bound = false;
-                            for (unsigned int m = 0; m < texcoordBindings->getKeysCount(); m++) {
-                                std::string key = texcoordBindings->getAllKeys()[m];
-                                std::string binding = texcoordBindings->getString(key);
+                        for (unsigned int k = 0; k < primitive->getVertexAttributes().size(); k++) {
+                            shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(primitive->getVertexAttributes()[k]);
+                            if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
+                                std::string attribute = "TEXCOORD_" + std::to_string(vertexAttribute->getIndexOfSet());
+                                bool bound = false;
+                                for (unsigned int m = 0; m < texcoordBindings->getKeysCount(); m++) {
+                                    std::string key = texcoordBindings->getAllKeys()[m];
+                                    std::string binding = texcoordBindings->getString(key);
 
-                                if (attribute == binding) {
-                                    bound = true;
-                                    break;
+                                    if (attribute == binding) {
+                                        bound = true;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if (!bound) {
-                                primitive->removeVertexAttribute(k);
-                                k--;
+                                if (!bound) {
+                                    primitive->removeVertexAttribute(k);
+                                    k--;
+                                }
                             }
                         }
                     }
@@ -1132,15 +1134,6 @@ namespace GLTF
         for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
             shared_ptr<JSONObject> parameters = animation->parameters();
-            
-            //Replace OpenCOLLADA uniqueID by Original IDs
-            shared_ptr <JSONArray> channels = animation->channels();
-            for (size_t i = 0 ; i < channels->values().size() ; i++) {
-                shared_ptr<JSONObject> channel = static_pointer_cast<JSONObject>(channels->values()[i]);
-                shared_ptr<JSONObject> target = channel->getObject(kTarget);
-                std::string originalID = this->_uniqueIDToOriginalID[target->getString("id")];
-                target->setString("id", originalID);
-            }
             
             std::vector <std::string> parameterKeys = parameters->getAllKeys();
             for (size_t i = 0 ; i <parameterKeys.size() ; i++) {

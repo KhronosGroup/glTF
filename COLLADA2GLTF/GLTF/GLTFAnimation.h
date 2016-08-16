@@ -59,6 +59,7 @@ namespace GLTF
         virtual ~GLTFAnimation();
 
         int getCount() { return _keyFrames.size(); }
+        double* getKeyFrames() { return &_keyFrames[0]; }
         
         void setID(string animationID);
         string getID();

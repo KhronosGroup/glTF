@@ -158,7 +158,10 @@ namespace GLTF
         UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
         UniqueIDToAccessor              _uniqueIDToAccessorObject;
 
-        std::map<std::string, std::vector<COLLADAFW::AnimationList::AnimationBinding>> _animationBindingsForTargetId;
+        std::map<std::string, vector<COLLADAFW::AnimationList::AnimationBinding>> _animationBindingsForTargetId;
+        std::map<std::string, COLLADAFW::UniqueId> _animationListIdForNodeId;
+        std::map<COLLADAFW::UniqueId, const COLLADAFW::Transformation*> _transformationForAnimationListId;
+        std::map<COLLADAFW::UniqueId, std::string> _nodeIdForAnimationListId;
         std::map<std::string, std::vector<std::string>> _targetIdsForNodeIds;
 
 

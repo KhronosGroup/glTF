@@ -246,6 +246,7 @@ namespace GLTF
             }
             double start = _keyFrames[left];
             double end = _keyFrames[right];
+
             vector<double> startValues = _outputValues[start];
             vector<double> endValues = _outputValues[end];
             double range = end - start;
@@ -258,18 +259,6 @@ namespace GLTF
             }
 
             this->addValuesAtKeyFrame(frame, interpolatedValues);
-        }
-    }
-
-    /**
-     * Doubles the number of samples in this animation
-     */
-    void GLTFAnimation::doubleKeyFrames() {
-        vector<double> copy = _keyFrames;
-        for (int i = 0; i < copy.size() - 1; i++) {
-            double left = copy[i];
-            double right = copy[i + 1];
-            this->addInterpolatedKeyFrame((left + right) / 2.0);
         }
     }
 
