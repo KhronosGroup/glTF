@@ -717,9 +717,22 @@ namespace GLTF
         vector<const COLLADAFW::Node*> nodes;
         const NodePointerArray& nodeArray = libraryNodes->getNodes();
         for (size_t i = 0; i < nodeArray.getCount(); i++) {
-            nodes.push_back(nodeArray[i]);
+            const COLLADAFW::Node* node = nodeArray[i];
+            std::string id = node->getUniqueId().toAscii();
+            if (this->_asset->_uniqueIDToParentsOfInstanceNode.count(id) > 0) {
+                shared_ptr<JSONArray> parents = this->_asset->_uniqueIDToParentsOfInstanceNode[id];
+                std::vector <shared_ptr <JSONValue> > values = parents->values();
+                for (size_t k = 0; k < values.size(); k++) {
+                    shared_ptr<JSONString> value = static_pointer_cast<JSONString>(values[k]);
+                    shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(value->getString()));
+                    if (parentNode) {
+                        shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded(kChildren);
+                        children->appendValue(shared_ptr <JSONString>(new JSONString(node->getOriginalId())));
+                    }
+                }
+            }
+            nodes.push_back(node);
         }
-        // TODO: handle instanced nodes
         return writeNodes(nodes);
     }
 
