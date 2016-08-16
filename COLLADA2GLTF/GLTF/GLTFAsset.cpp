@@ -75,6 +75,7 @@ namespace GLTF
                 shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(vertexAttributes[k]);
                 GLTF::Semantic semantic = vertexAttribute->getSemantic();
                 shared_ptr <GLTF::GLTFAccessor> meshAttribute = mesh->getMeshAttribute(semantic, vertexAttribute->getIndexOfSet());
+                shared_ptr <GLTF::GLTFAccessor> indicesAccessor = primitive->getIndices();
 
                 if (meshAttribute != NULL) {
                     shared_ptr <GLTFBufferView> bufferView = meshAttribute->getBufferView();
@@ -91,6 +92,10 @@ namespace GLTF
                         IDToBuffer[bufferView->getBuffer()->getID()] = buffer;
                         asset->setGeometryByteLength(asset->getGeometryByteLength() + buffer->getByteLength());
                     }
+                }
+                if (indicesAccessor != NULL) {
+                    indicesAccessor->setByteStride(2);
+                    indicesAccessor->exposeMinMax();
                 }
             }
         }
@@ -958,11 +963,12 @@ namespace GLTF
                 //WORK-AROUND: TEXCOORD from the Collada model can be removed if it isn't bound to a technique
                 else {
                     std::string materialId = primitive->getMaterialID();
-                    if (materialId != "") {
-                        shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
-                        shared_ptr <JSONObject> technique = material->getTechniqueGenerator();
-                        shared_ptr <JSONObject> texcoordBindings = technique->getObject("texcoordBindings");
-
+                    shared_ptr <GLTF::GLTFEffect> material = static_pointer_cast<GLTF::GLTFEffect>(materials->getObject(materialId));
+                    shared_ptr <JSONObject> technique = material->getTechniqueGenerator();
+                    shared_ptr <JSONObject> texcoordBindings = technique->getObject("texcoordBindings");
+                    SemanticArrayPtr unboundTextures = material->getSemanticsForTexcoordName("");
+                    // If there are unbound textures in the model, it is impossible to determine which TEXCOORD semantics are unused
+                    if (unboundTextures == NULL || unboundTextures->size() == 0) {
                         for (unsigned int k = 0; k < primitive->getVertexAttributes().size(); k++) {
                             shared_ptr <JSONVertexAttribute> vertexAttribute = static_pointer_cast<JSONVertexAttribute>(primitive->getVertexAttributes()[k]);
                             if (vertexAttribute->getSemantic() == GLTF::TEXCOORD) {
@@ -977,7 +983,6 @@ namespace GLTF
                                         break;
                                     }
                                 }
-
                                 if (!bound) {
                                     primitive->removeVertexAttribute(k);
                                     k--;
@@ -1093,6 +1098,10 @@ namespace GLTF
                     if (meshAttribute != NULL) {
                         meshAttribute->setBufferView(isCompressed ? compressionBufferView : verticesBufferView);
                         accessors->setValue(meshAttribute->getID(), meshAttribute);
+                    }
+                    if (uniqueIndices != NULL) {
+                        uniqueIndices->setByteStride(2);
+                        uniqueIndices->exposeMinMax();
                     }
                 }
             }

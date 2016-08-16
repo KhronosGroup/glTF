@@ -551,29 +551,69 @@ namespace GLTF
         if (count > 0) {
             for (unsigned int i = 0 ; i < count; i++) {
                 InstanceGeometry* instanceGeometry = instanceGeometries[i];
-                MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceGeometry->getInstanciatedObjectId();
-                shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(uniqueId.toAscii()));
+                MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
+                if (materialBindings.getCount() > 0) {
+                    MaterialBinding materialBinding = materialBindings[0];
+                    COLLADAFW::UniqueId materialId = materialBinding.getReferencedMaterial();
+                    // Check if this geometry has already been bound to another node with a different material
+                    bool alreadyBound = false;
+                    MaterialBindingsForNodeUID nodeBindings = this->_asset->materialBindingsForNodeUID();
+                    for (auto nodeBinding : nodeBindings) {
+                        shared_ptr<MaterialBindingsForMeshUID> meshBindings = nodeBinding.second;
+                        for (auto meshBinding : *(meshBindings.get())) {
+                            string meshId = meshBinding.first;
+                            if ("meshes-" + uniqueId.toAscii() == meshId) {
+                                shared_ptr<MaterialBindingsPrimitiveMap> materialBindings = meshBinding.second;
+                                bool materialUsed = false;
+                                for (auto materialBinding : *(materialBindings.get())) {
+                                    shared_ptr<MaterialBinding> primitiveBindings = materialBinding.second;
+                                    if (primitiveBindings->getReferencedMaterial() == materialId) {
+                                        materialUsed = true;
+                                        break;
+                                    }
+                                }
+                                if (!materialUsed) {
+                                    alreadyBound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (alreadyBound) {
+                            break;
+                        }
+                    }
+                    if (alreadyBound) {
+                        // This is an instance of a material
+                        shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(uniqueId.toAscii()));
 
-                COLLADAFW::UniqueId meshUID = COLLADAFW::UniqueId(uniqueId.toAscii());
-                // Create a unique instance of the mesh so that it can bind to different materials
-                while (asset->containsValueForUniqueId(meshUID.toAscii())) {
-                    meshUID = COLLADAFW::UniqueId(meshUID.getClassId(), meshUID.getObjectId() + 1, meshUID.getFileId());
+                        COLLADAFW::UniqueId meshUID = COLLADAFW::UniqueId(uniqueId.toAscii());
+                        // Create a unique instance of the mesh so that it can bind to different materials
+                        while (asset->containsValueForUniqueId(meshUID.toAscii())) {
+                            meshUID = COLLADAFW::UniqueId(meshUID.getClassId(), meshUID.getObjectId() + 1, meshUID.getFileId());
+                        }
+
+                        std::string meshID = mesh->getID() + "-" + std::to_string(meshUID.getObjectId() + 1);
+
+                        shared_ptr<GLTFMesh> meshInstance = mesh->clone();
+                        meshInstance->setID(meshID);
+                        meshInstance->setName(meshID);
+
+                        asset->root()->createObjectIfNeeded(kMeshes)->setValue(meshID, meshInstance);
+                        asset->setValueForUniqueId(meshUID.toAscii(), meshInstance);
+
+                        _storeMaterialBindingArray("meshes-",
+                            node->getUniqueId().toAscii(),
+                            meshUID.toAscii(),
+                            materialBindings);
+                    }
+                    else {
+                        _storeMaterialBindingArray("meshes-",
+                            node->getUniqueId().toAscii(),
+                            uniqueId.toAscii(),
+                            materialBindings);
+                    }
                 }
-
-                std::string meshID = mesh->getID() + "-" + std::to_string(meshUID.getObjectId());
-
-                shared_ptr<GLTFMesh> meshInstance = mesh->clone();
-                meshInstance->setID(meshID);
-                meshInstance->setName(meshID);
-
-                asset->root()->createObjectIfNeeded(kMeshes)->setValue(meshID, meshInstance);
-                asset->setValueForUniqueId(meshUID.toAscii(), meshInstance);
-
-                _storeMaterialBindingArray("meshes-",
-                                           node->getUniqueId().toAscii(),
-                                           meshUID.toAscii(),
-                                           materialBindings);
             }
         }
         
@@ -1672,11 +1712,11 @@ namespace GLTF
         shared_ptr <GLTFBufferView> inverseBindMatricesView = createBufferViewWithAllocatedBuffer(matricesPtr, 0, matricesSize, true);
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
         
-        shared_ptr<JSONObject> inverseBindMatrices(new JSONObject());
-        inverseBindMatrices->setString(kType, "MAT4");
-        inverseBindMatrices->setUnsignedInt32(kComponentType, profile->getGLenumForString("FLOAT"));
-		inverseBindMatrices->setUnsignedInt32(kCount, (unsigned int)skinControllerData->getJointsCount());
-        inverseBindMatrices->setUnsignedInt32(kByteOffset, 0);
+        shared_ptr<GLTFAccessor> inverseBindMatrices(new GLTFAccessor(profile, "FLOAT", "MAT4"));
+        inverseBindMatrices->setByteStride(64);
+        inverseBindMatrices->setCount((unsigned int)skinControllerData->getJointsCount());
+        inverseBindMatrices->setBufferView(inverseBindMatricesView);
+        inverseBindMatrices->exposeMinMax();
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
         
         shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset->createOutputStreamIfNeeded(this->_asset->getSharedBufferId());
@@ -1691,6 +1731,7 @@ namespace GLTF
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
         weightsAttribute->setCount(vertexCount);
+        weightsAttribute->exposeMinMax();
 
         glTFSkin->setWeights(weightsAttribute);
         
@@ -1700,6 +1741,7 @@ namespace GLTF
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
         jointsAttribute->setCount(vertexCount);
+        jointsAttribute->exposeMinMax();
 
         glTFSkin->setJoints(jointsAttribute);
         glTFSkin->setJointsCount(skinControllerData->getJointsCount());

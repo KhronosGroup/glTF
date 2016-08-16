@@ -29,7 +29,7 @@
 
 #define EXPORT_MATERIALS_AS_EFFECTS 1
 
-const std::string glTFVersion = "1.0";
+const std::string glTFVersion = "1.0.1";
 
 const std::string kCount = "count";
 const std::string kByteOffset = "byteOffset";

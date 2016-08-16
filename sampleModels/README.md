@@ -1,4 +1,4 @@
-bSample models are provided in as many of the following formats as possible:
+Sample models are provided in as many of the following formats as possible:
 * glTF (.gltf) with separate resources: .bin (geometry, animation, skins), .glsl (shaders), and image files
 * glTF (.gltf) with embedded resources
 * Binary glTF (.glb) using the [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/blob/master/extensions/Khronos/KHR_binary_glTF/README.md) extension
@@ -26,7 +26,7 @@ Sample models help the glTF ecosystem, if you are able to contribute a model, se
 | [Rigged Figure](RiggedFigure)                  | ![](RiggedFigure/screenshot/screenshot.gif)      | Animations. Skins. |
 | [Cesium Man](CesiumMan)                        | ![](CesiumMan/screenshot/screenshot.gif)         | Textured. Animations. Skins. |
 | [Monster](Monster)                            | ![](Monster/screenshot/screenshot.gif)           | Textured. Animations. Skins. |
-| [Brainsteam](Brainsteam)                      | ![](Brainsteam/screenshot/screenshot.gif)        | Animations. Skins. |
+| [BrainStem](BrainStem)                      | ![](BrainStem/screenshot/screenshot.gif)        | Animations. Skins. |
 | [Virtual City](VC)                            | ![](VC/screenshot/screenshot.gif)                | Textured. Animations. Skins. |
 
 ## Flightradar24 Models
