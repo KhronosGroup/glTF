@@ -1433,21 +1433,30 @@ namespace GLTF
 		return true;
 	}
 
-    void writeMatrixAnimation(COLLADABU::Math::Matrix4 matrix, size_t index, float* translation, float* rotation, float* scale) {
+    COLLADABU::Math::Quaternion writeMatrixAnimation(COLLADABU::Math::Matrix4 matrix, size_t index, float* translation, float* rotation, float* scale, COLLADABU::Math::Quaternion lastQuat) {
         map<COLLADAFW::Transformation::TransformationType, float*> trs = decomposeTransformationMatrix(matrix, vector<const COLLADAFW::Transformation*>());
         float* trsTranslation = trs[COLLADAFW::Transformation::TRANSLATE];
         translation[index * 3] = (float)trsTranslation[0];
         translation[index * 3 + 1] = (float)trsTranslation[1];
         translation[index * 3 + 2] = (float)trsTranslation[2];
         float* trsRotation = trs[COLLADAFW::Transformation::ROTATE];
-        rotation[index * 4] = (float)trsRotation[0];
-        rotation[index * 4 + 1] = (float)trsRotation[1];
-        rotation[index * 4 + 2] = (float)trsRotation[2];
-        rotation[index * 4 + 3] = (float)trsRotation[3];
+        // There are two decompositions for every quaternion, we want the one that is closest to the last one so that interpolation works correctly
+        COLLADABU::Math::Quaternion quat = COLLADABU::Math::Quaternion(trsRotation[3], trsRotation[0], trsRotation[1], trsRotation[2]);
+        double diff = fabs(quat.w - lastQuat.w) + fabs(quat.x - lastQuat.x) + fabs(quat.y - lastQuat.y) + fabs(quat.z - lastQuat.z);
+        COLLADABU::Math::Quaternion negQuat = quat * -1.0;
+        double negDiff = fabs(negQuat.w - lastQuat.w) + fabs(negQuat.x - lastQuat.x) + fabs(negQuat.y - lastQuat.y) + fabs(negQuat.z - lastQuat.z);
+        if (negDiff < diff) {
+            quat = negQuat;
+        }
+        rotation[index * 4] = (float)quat.x;
+        rotation[index * 4 + 1] = (float)quat.y;
+        rotation[index * 4 + 2] = (float)quat.z;
+        rotation[index * 4 + 3] = (float)quat.w;
         float* trsScale = trs[COLLADAFW::Transformation::SCALE];
         scale[index * 3] = (float)trsScale[0];
         scale[index * 3 + 1] = (float)trsScale[1];
         scale[index * 3 + 2] = (float)trsScale[2];
+        return quat;
     }
     
     /**
@@ -1490,6 +1499,7 @@ namespace GLTF
         float* translation = new float[numKeyFrames * 3];
         rootAnimation->setTargetNodeId(nodeId); 
 
+        COLLADABU::Math::Quaternion lastQuat = COLLADABU::Math::Quaternion::IDENTITY;
         for (size_t i = 0; i < animationBindingsLength; i++) {
             COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
@@ -1515,7 +1525,7 @@ namespace GLTF
                         values[8], values[9], values[10], values[11],
                         values[12], values[13], values[14], values[15]
                     );
-                    writeMatrixAnimation(matrix, j, translation, rotation, scale);
+                    lastQuat = writeMatrixAnimation(matrix, j, translation, rotation, scale, lastQuat);
                     hasTranslation = true;
                     hasRotation = true;
                     hasScale = true;
