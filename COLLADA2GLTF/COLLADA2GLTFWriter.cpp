@@ -361,47 +361,7 @@ namespace GLTF
         return COLLADABU::Math::Matrix4::IDENTITY;
     }
 
-    COLLADABU::Math::Matrix4 getTransformationMatrix(COLLADAFW::AnimationList::AnimationClass animationClass, Transformation* originalTransform, vector<double> data) {
-        switch (animationClass) {
-        case COLLADAFW::AnimationList::MATRIX4X4: {
-            return COLLADABU::Math::Matrix4(
-                data[0], data[1], data[2], data[3],
-                data[4], data[5], data[6], data[7], 
-                data[8], data[9], data[10], data[11], 
-                data[12], data[13], data[14], data[15]);
-        }
-        case COLLADAFW::AnimationList::AXISANGLE: {
-            COLLADAFW::Rotate* rotate = new COLLADAFW::Rotate(data[0], data[1], data[2], data[3]);
-            return getTransformationMatrix(rotate);
-        }
-        case COLLADAFW::AnimationList::ANGLE: {
-            if (originalTransform->getTransformationType() == COLLADAFW::Transformation::TransformationType::ROTATE) {
-                COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)originalTransform;
-                COLLADAFW::Rotate* newRotate = new COLLADAFW::Rotate(rotate->getRotationAxis(), data[0]);
-                return getTransformationMatrix(newRotate);
-            }
-            break;
-        }
-        case COLLADAFW::AnimationList::POSITION_XYZ: {
-            COLLADAFW::Translate* translate = new COLLADAFW::Translate(data[0], data[1], data[2]);
-            return getTransformationMatrix(translate);
-        }
-        case COLLADAFW::AnimationList::POSITION_X: {
-            COLLADAFW::Translate* translate = new COLLADAFW::Translate(data[0], 0, 0);
-            return getTransformationMatrix(translate);
-        }
-        case COLLADAFW::AnimationList::POSITION_Y: {
-            COLLADAFW::Translate* translate = new COLLADAFW::Translate(0, data[0], 0);
-            return getTransformationMatrix(translate);
-        }
-        case COLLADAFW::AnimationList::POSITION_Z: {
-            COLLADAFW::Translate* translate = new COLLADAFW::Translate(0, 0, data[0]);
-            return getTransformationMatrix(translate);
-        }}
-        return COLLADABU::Math::Matrix4::IDENTITY;
-    }
-
-    COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex, int endIndex) {
+    /*COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex, int endIndex) {
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
         for (int i = startIndex; i <= endIndex; i++) {
             matrix = matrix * getTransformationMatrix(transformations[i]);
@@ -415,7 +375,7 @@ namespace GLTF
 
     COLLADABU::Math::Matrix4 getTransformationMatrixAtIndex(const TransformationPointerArray& transformations, int index) {
         return getTransformationMatrix(transformations, index, index);
-    }
+    }*/
 
     COLLADABU::Math::Matrix4 getFlattenedTransform(vector<const Transformation*> transforms) {
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
@@ -1582,7 +1542,6 @@ namespace GLTF
                         COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
                         COLLADAFW::Rotate* newRotate = new COLLADAFW::Rotate(rotate->getRotationAxis(), values[0]);
                         writeMatrixAnimation(getTransformationMatrix(newRotate), j, translation, rotation, scale);
-                        hasTranslation = true;
                         hasRotation = true;
                     }
                     break;
