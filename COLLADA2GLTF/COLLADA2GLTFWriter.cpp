@@ -492,21 +492,15 @@ namespace GLTF
         return decomposition;
     }
     
-    bool COLLADA2GLTFWriter::writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject) {
+    bool COLLADA2GLTFWriter::writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject, string nodeOriginalId) {
         GLTFAsset *asset = this->_asset.get();
-        bool shouldExportTRS = CONFIG_BOOL(asset, "alwaysExportTRS");
         const NodePointerArray& nodes = node->getChildNodes();
-        std::string nodeOriginalID = node->getOriginalId();
-        if (nodeOriginalID.length() == 0) {
-            nodeOriginalID = uniqueIdWithType(kNode, node->getUniqueId());
-        }
         
         std::string uniqueUID = node->getUniqueId().toAscii();
-                
         nodeObject->setString(kName,node->getName());
         
         this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
-        this->_asset->setOriginalId(uniqueUID, nodeOriginalID);
+        this->_asset->setOriginalId(uniqueUID, nodeOriginalId);
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
@@ -601,19 +595,12 @@ namespace GLTF
 
                         asset->root()->createObjectIfNeeded(kMeshes)->setValue(meshID, meshInstance);
                         asset->setValueForUniqueId(meshUID.toAscii(), meshInstance);
-
-                        _storeMaterialBindingArray("meshes-",
-                            node->getUniqueId().toAscii(),
-                            meshUID.toAscii(),
-                            materialBindings);
-                    }
-                    else {
-                        _storeMaterialBindingArray("meshes-",
-                            node->getUniqueId().toAscii(),
-                            uniqueId.toAscii(),
-                            materialBindings);
                     }
                 }
+                _storeMaterialBindingArray("meshes-",
+                    node->getUniqueId().toAscii(),
+                    instanceGeometry->getInstanciatedObjectId().toAscii(),
+                    materialBindings);
             }
         }
         
@@ -676,7 +663,7 @@ namespace GLTF
                         listOfNodesPerLight = this->_asset->_uniqueIDOfLightToNodes[lightUID];
                     }
                     
-                    listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
+                    listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalId));
                     lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
                     lights->setValue(lightUID, light);
                 }
@@ -893,7 +880,7 @@ namespace GLTF
                 nodeTransforms.clear();
                 nodesObject->setValue(id, nodeObject);
             }
-            writeNode(node, nodeObject);
+            writeNode(node, nodeObject, id);
 
             vector<const COLLADAFW::Node*> children;
             NodePointerArray childNodes = node->getChildNodes();

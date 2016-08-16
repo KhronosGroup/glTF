@@ -878,7 +878,7 @@ namespace GLTF
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
 
             // Can be null if there are no keyframes
-            if (animation) {
+            if (animation && animation->getTargetNodeId() != "") {
                 animation->writeAnimation(this);
                 animations->setValue(animation->getID(), animation);
             }
@@ -932,16 +932,18 @@ namespace GLTF
         for (size_t i = 0; i < nodesOriginalIds.size(); i++) {
             std::string nodeOID = nodesOriginalIds[i];
             std::string nodeUID = this->getUniqueId(nodesOriginalIds[i]);
-            shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
-            //WORK-AROUND: If camera is an empty string, it can be removed
-            //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
-            if (node->contains(kCamera)) {
-                std::string camera = node->getString(kCamera);
-                if (camera.empty()) {
-                    node->removeValue(kCamera);
+            if (nodeUID != "") {
+                shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
+                //WORK-AROUND: If camera is an empty string, it can be removed
+                //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
+                if (node->contains(kCamera)) {
+                    std::string camera = node->getString(kCamera);
+                    if (camera.empty()) {
+                        node->removeValue(kCamera);
+                    }
                 }
+                this->_applyMaterialBindingsForNode(nodeUID);
             }
-            this->_applyMaterialBindingsForNode(nodeUID);
         }
         
         meshesUIDs = meshes->getAllKeys();

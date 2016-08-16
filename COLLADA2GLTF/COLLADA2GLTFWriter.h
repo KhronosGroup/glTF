@@ -83,7 +83,7 @@ namespace GLTF
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
-        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject);
+        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject, std::string nodeOriginalId);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);

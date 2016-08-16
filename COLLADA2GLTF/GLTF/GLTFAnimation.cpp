@@ -278,7 +278,6 @@ namespace GLTF
         cvtAnimation->channels()->appendValue(trChannel);
     }
 
-<<<<<<< HEAD
     void GLTFAnimation::writeAnimation(GLTFAsset* asset) {
         for (const std::string animationType : ANIMATION_TYPES) {
             std::shared_ptr<GLTFBufferView> bufferView = this->getBufferViewForParameter(animationType);
@@ -300,53 +299,6 @@ namespace GLTF
                     inputParameter,
                     asset);
             }
-=======
-    void GLTFAnimation::writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset) {
-        shared_ptr <JSONObject> target =  this->targets()->getObject(targetID);
-        shared_ptr<GLTFAnimationFlattener> animationFlattener = this->animationFlattenerForTargetUID(targetID);
-        
-        int count = 0;
-        float* rotations = 0;
-        float* positions = 0;
-        float* scales = 0;
-        
-        animationFlattener->allocAndFillAffineTransformsBuffers(&positions, &rotations, &scales, count);
-        
-        if (animationFlattener->hasAnimatedScale()) {
-            //Scale
-            __AddChannel(this, targetID, "scale");
-            setupAndWriteAnimationParameter(this,
-                                            "scale",
-                                            "FLOAT_VEC3",
-                                            (unsigned char*)scales,
-                                            count * sizeof(float) * 3, false,
-                                            asset);
-            free(scales);
-        }
-        
-        if (animationFlattener->hasAnimatedTranslation()) {
-            //Translation
-            __AddChannel(this, targetID, "translation");
-            setupAndWriteAnimationParameter(this,
-                                            "translation",
-                                            "FLOAT_VEC3",
-                                            (unsigned char*)positions,
-                                            count * sizeof(float) * 3, false,
-                                            asset);
-            free(positions);
-        }
-        
-        if (animationFlattener->hasAnimatedRotation()) {
-            //Rotation
-            __AddChannel(this, targetID, "rotation");
-            setupAndWriteAnimationParameter(this,
-                                            "rotation",
-                                            "FLOAT_VEC4",
-                                            (unsigned char*)rotations,
-                                            count * sizeof(float) * 4, false,
-                                            asset);
-            free(rotations);
->>>>>>> 899c59356a1a49e6edba131d46600ee69a10824f
         }
     }
     
