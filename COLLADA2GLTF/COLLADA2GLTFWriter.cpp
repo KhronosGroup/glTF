@@ -335,7 +335,6 @@ namespace GLTF
             axis.normalise();
             double angle = rotate->getRotationAngle();
             return COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
-            break;
         }
         case Transformation::TRANSLATE: {
             Translate* translate = (Translate*)transform;
@@ -343,7 +342,6 @@ namespace GLTF
             COLLADABU::Math::Matrix4 translationMatrix;
             translationMatrix.makeTrans(translation);
             return translationMatrix;
-            break;
         }
         case Transformation::SCALE: {
             Scale* scale = (Scale*)transform;
@@ -351,31 +349,12 @@ namespace GLTF
             COLLADABU::Math::Matrix4 scaleMatrix;
             scaleMatrix.makeScale(scaleVector);
             return scaleMatrix;
-            break;
         }
         case Transformation::MATRIX: {
             return ((Matrix*)transform)->getMatrix();
-            break;
-        }
-        }
+        }}
         return COLLADABU::Math::Matrix4::IDENTITY;
     }
-
-    /*COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex, int endIndex) {
-        COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
-        for (int i = startIndex; i <= endIndex; i++) {
-            matrix = matrix * getTransformationMatrix(transformations[i]);
-        }
-        return matrix;
-    }
-
-    COLLADABU::Math::Matrix4 getTransformationMatrix(const TransformationPointerArray& transformations, int startIndex) {
-        return getTransformationMatrix(transformations, startIndex, transformations.getCount() - 1);
-    }
-
-    COLLADABU::Math::Matrix4 getTransformationMatrixAtIndex(const TransformationPointerArray& transformations, int index) {
-        return getTransformationMatrix(transformations, index, index);
-    }*/
 
     COLLADABU::Math::Matrix4 getFlattenedTransform(vector<const Transformation*> transforms) {
         COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
@@ -1540,8 +1519,11 @@ namespace GLTF
                 case COLLADAFW::AnimationList::ANGLE: {       
                     if (transform->getTransformationType() == COLLADAFW::Transformation::TransformationType::ROTATE) {
                         COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
-                        COLLADAFW::Rotate* newRotate = new COLLADAFW::Rotate(rotate->getRotationAxis(), values[0]);
-                        writeMatrixAnimation(getTransformationMatrix(newRotate), j, translation, rotation, scale);
+                        COLLADABU::Math::Quaternion quat = COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(values[0]), rotate->getRotationAxis());
+                        rotation[j * 4] = (float)quat.x;
+                        rotation[j * 4 + 1] = (float)quat.y;
+                        rotation[j * 4 + 2] = (float)quat.z;
+                        rotation[j * 4 + 3] = (float)quat.w;
                         hasRotation = true;
                     }
                     break;
