@@ -388,6 +388,11 @@ namespace GLTF
                 Matrix* transformMatrix = (Matrix*)transform;
                 matrix = matrix * transformMatrix->getMatrix();
                 break;
+            }
+            case Transformation::LOOKAT : {
+                Lookat* lookAt = (Lookat*)transform;
+                buildLookAtMatrix(lookAt, matrix);
+                break;
             }}
         }
         return matrix;
@@ -444,6 +449,16 @@ namespace GLTF
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
             nodeObject->setString(kJointName,sid);
+        }
+
+        const InstanceCameraPointerArray& instanceCameras = node->getInstanceCameras();
+        size_t camerasCount = instanceCameras.getCount();
+        if (camerasCount > 0) {
+            InstanceCamera* instanceCamera = instanceCameras[0];
+            shared_ptr<GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
+            std::string id = instanceCamera->getInstanciatedObjectId().toAscii();
+            std::string cameraId = this->_asset->getOriginalId(id);
+            nodeObject->setString(kCamera, cameraId);
         }
                 
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
