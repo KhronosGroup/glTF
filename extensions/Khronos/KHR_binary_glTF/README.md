@@ -10,11 +10,11 @@
 
 ## Status
 
-Draft (not ratified yet)
+Complete
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec.
+Written against the glTF 1.0 spec.
 
 ## Overview
 
@@ -55,7 +55,7 @@ The 20-byte header consists of the following five 4-byte entries:
 
 * `length` is the total length of the Binary glTF, including `header`, `scene`, and `body`, in bytes.
 
-* `sceneLength` is the length, in bytes, of the glTF `scene`.
+* `sceneLength` is the length, in bytes, of the glTF `scene`. It must be greater than zero.
 
 * `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is in Table 2.
 
@@ -156,7 +156,7 @@ The file extension to be used with Binary glTF is `.glb`.
 
 ## MIME Type
 
-Use `model/gltf+binary`.
+Use `model/gltf.binary`.
 
 
 ## Known Implementations
