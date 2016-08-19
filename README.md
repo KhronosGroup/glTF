@@ -59,6 +59,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * Initial [glTF loader](https://github.com/xeolabs/xeoengine/tree/master/src/importing/gltf) in [xeoEngine](http://xeoengine.org/) (geometry and materials)
    * [Importing glTF](https://github.com/xeolabs/xeoengine/wiki/Importing-glTF) tutorial
 * [aframe-gltf](https://github.com/aframevr/aframe) - loader for A-Frame, a framework for creating virtual reality web experiences
+* [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
 
 #### JavaScript / Node.js
 
