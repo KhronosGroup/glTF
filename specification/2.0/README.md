@@ -3044,6 +3044,8 @@ Additional properties are not allowed.
 
 When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`.
 
+An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
+
 When a parameter is an attribute, `count` can not be defined since GLSL does not support arrays of attributes.  When a parameter is a uniform and a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific semantics can be arrays and, therefore, define `count`.
 
 * **Type**: `integer`
