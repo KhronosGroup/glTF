@@ -6,6 +6,7 @@
 * Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Miguel Sousa, Fraunhofer IGD, [@mfportela](https://twitter.com/mfportela)
 * Maik Thöner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
+* Robert Taglang, Cesium, [@lasalvavida](https://github.com/lasalvavida)
 
 
 ## Dependencies
@@ -67,11 +68,13 @@ Second, the resulting values are multiplied by the range used for normalization.
 Finally, the minimum normalization value is added to the result, in order to achieve the correct offset.
 
 Since this whole decode operation consists of a division, a multiplication and an addition, it can be expressed as a multiplication with a homogeneous matrix.
-For example, when decoding 3D vertex positions, a 4x4 matrix can be multiplied with a quantized 3D vector to obtain the reconstructed, uncompressed vertex position.
+For example, when decoding 3D vertex positions, a `4x4` matrix can be multiplied with a quantized 3D vector to obtain the reconstructed, uncompressed vertex position.
+In glTF, attributes can be `SCALAR`, `VEC2`, `VEC3`, or `VEC4`, making the possible matrix sizes `2x2`, `3x3`, `4x4`, and `5x5`.
 
 To represent the decode matrix, this extension introduces one additional property of the `accessor`, which is entitled `decodeMatrix`.
-This property must be an array of 1 to 16 values, with a size matching the homogeneous decode matrix for the respective accessor.
-For example, quantized 3D vertex positions will require a 4x4 matrix with 16 entries, while quantized 2D texture coordinates will require a 3x3 matrix with 9 entries.
+This property must be an array of `4`, `9`, `16`, or `25` values, with a size matching the homogeneous decode matrix for the respective accessor.
+For example, quantized 3D vertex positions will require a `4x4` matrix with `16 `entries, while quantized 2D texture coordinates will require a `3x3` matrix with `9` entries.
+(Note that for `VEC4` attributes there is no `mat5` data type in GLSL, requiring the implementation to split it up into a `mat4` scale and `vec4` translate.)
 
 A great advantage of this method is that runtime engines can use the GPU to efficiently perform decoding of each vertex during rendering.
 One way to do this would be to pass the matrix to a vertex shader and perform the decoding before multiplying with a model-view matrix.
@@ -86,10 +89,11 @@ The new `decodeMatrix` property introduced by this extension belongs to the acce
 As already discussed in section [Choosing a Range for Normalization](#choosing-a-range-for-normalization), the range chosen for normalization and de-normalization of vertex positions, for example, must not be identical with their bounding box.
 To obtain information such as bounding boxes, glTF accessors already contain the optional `min` and `max` values.
 However, this values might not have been provided, and even if they are provided, they apply to the encoded, compressed data.
-One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it might desirable to save the overhead of matrix multiplication.
-Therefore, this extension introduces two new, optional properties,`decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
+One could obtain original values by multiplying the decode matrix with given `min` and `max` values, but it is desirable to save the overhead of matrix multiplication.
+Therefore, this extension introduces two properties, `decodedMin` and `decodedMax`, which contain the extreme values for the decoded accessor.
+This can help simplify the client implementation where `min` and `max` are used to compute bounding volumes.
 
-The following example illustrates three different, valid accessors:
+The following example illustrates two different, valid accessors:
 
 ```javascript
 "extensionsUsed" : [
@@ -100,28 +104,19 @@ The following example illustrates three different, valid accessors:
     // ... standard glTF properties
     "extensions" : {
         "WEB3D_quantized_attributes" : {
-            decodeMatrix : [1, 0, 0, 0, ...]
+            decodeMatrix : [1, 0, 0, 0, ...],
+            decodedMin : [1,2,3],
+            decodedMax : [3,4,5]
         }
     }
 },
 "another_accessor" : {
     // ... standard glTF properties
-},
-"a_last_accessor" : {
-    // ... standard glTF properties
-    "extensions" : {
-        "WEB3D_quantized_attributes" : {
-            decodeMatrix : [1, 0, 0, 0, /* ... */],
-            decodedMin : [1,2,3],
-            decodedMax : [3,4,5]            
-        }
-    }
 }
 ```
 
-The first accessor from the example makes use of the extension, having the mandatory `decodeMatrix` property, which can be used to decompress the quantized data.
+The first accessor from the example makes use of the extension, having the mandatory `decodeMatrix`, `decodeMin`, and `decodeMax` properties, which can be used to decompress the quantized data.
 The second one does not make use of the extension, meaning that it uses its data directly from the `bufferView`, as usual, without decompressing it.
-The third accessor from the example uses decompression and additionally provides the `decodedMin` and `decodedMax` properties.
 
 
 ## JSON Schema
@@ -132,9 +127,9 @@ The third accessor from the example uses decompression and additionally provides
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**decodeMatrix**|`number[1-16]`|A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.| :white_check_mark: Yes|
-|**decodedMax**|`number[1-16]`|Maximum decoded value of each component in this attribute.|No|
-|**decodedMin**|`number[1-16]`|Minimum decoded value of each component in this attribute.|No|
+|**decodeMatrix**|`number[4,9,16,25]`|A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.| :white_check_mark: Yes|
+|**decodedMax**|`number[1-4]`|Maximum decoded value of each component in this attribute.|Yes|
+|**decodedMin**|`number[1-4]`|Minimum decoded value of each component in this attribute.|Yes|
 
 Additional properties are not allowed.
 
@@ -142,35 +137,40 @@ Additional properties are not allowed.
 
 A homogenous floating-point transformation matrix stored in column-major order. This matrix is used to decode the compressed, quantized data of this accessor.
 
-* **Type**: `number[1-16]`
+* **Type**: `number[4,9,16,25]`
 * **Required**: Yes
 
 #### WEB3D_quantized_attributes accessor extension.decodedMax
 
 Maximum decoded value of each component in this attribute.
 
-* **Type**: `number[1-16]`
-* **Required**: No
+* **Type**: `number[1-4]`
+* **Required**: Yes
 
 #### WEB3D_quantized_attributes accessor extension.decodedMin
 
 Minimum decoded value of each component in this attribute.
 
-* **Type**: `number[1-16]`
-* **Required**: No
+* **Type**: `number[1-4]`
+* **Required**: Yes
 
 Also, see the schema file:
 
 * [accessor](schema/WEB3D_quantized_attributes.accessor.schema.json) `WEB3D_quantized_attributes` extensions object
 
-
 ## Known Implementations
 
-The [SRC](http://x3dom.org/src/) implementation by Fraunhofer IGD features a similar technology, which has served as a basis for this proposal.
+* The [SRC](http://x3dom.org/src/) implementation by Fraunhofer IGD features a similar technology, which has served as a basis for this proposal.
 Note, however, that SRC uses two attributes for decoding (`decodeOffset` and `decodeScale`), instead of using a matrix.
-
+* Cesium ([code](https://github.com/AnalyticalGraphicsInc/cesium/blob/master/Source/Scene/Model.js))
+* gltf-pipeline ([code](https://github.com/AnalyticalGraphicsInc/gltf-pipeline/blob/master/lib/quantizeAttributes.js))
 
 ## Resources
 * <a name="lee-10-compression"></a>Lee, J., Choe, S., and Lee, S. 2010. _Mesh geometry compression for mobile graphics._ In _Proc. CCNC_, 301–305 [paper](http://cg.postech.ac.kr/research/mesh_comp_mobile/mesh_comp_mobile_conference.pdf)
 * [SRC project](http://x3dom.org/src/) (paper, background, basic writer)
 * SRC writer ([code](http://x3dom.org/src/files/src_writer_source.zip))
+* [Using Quantization with 3D Models](http://cesiumjs.org/2016/08/08/Cesium-web3d-quantized-attributes/) by Rob Taglang. August 2016
+* [mesh-quantization-example](https://github.com/tsherif/mesh-quantization-example) by Tarek Sherif. A minimal example of vertex quantization.
+
+# Acknowledgments
+* Alexey Knyazev, [@lexaknyazev](https://github.com/lexaknyazev)
