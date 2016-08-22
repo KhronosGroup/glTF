@@ -85,6 +85,7 @@ namespace GLTF
         size_t getCount();
         
         virtual void applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context);
+        void applyOnAccessor(GLTFAccessorApplierFunc applierFunc, void* context, unsigned char* buffer);
         
         const std::string& getID();
         
@@ -95,11 +96,13 @@ namespace GLTF
         
         bool matchesLayout(GLTFAccessor* meshAttribute);
         void exposeMinMax();
+        void exposeMinMax(unsigned char* buffer);
         
         virtual std::string valueType();
 
     private:
         void _computeMinMaxIfNeeded();
+        void _computeMinMaxIfNeeded(unsigned char* buffer);
         
     private:
         std::shared_ptr <GLTFBufferView> _bufferView;

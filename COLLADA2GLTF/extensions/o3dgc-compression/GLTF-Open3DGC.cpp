@@ -538,11 +538,10 @@ namespace GLTF
         //setup
         shared_ptr <GLTFProfile> profile = asset->profile();
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
-        shared_ptr<JSONObject> parameter(new JSONObject());
         unsigned int glType = profile->getGLenumForString(parameterType);
-        parameter->setUnsignedInt32("count", (int)cvtAnimation->getCount());
-        parameter->setString(kType, profile->getTypeForGLType(glType));
-        parameter->setUnsignedInt32(kComponentType, profile->getGLComponentTypeForGLType(glType));
+        shared_ptr<GLTFAccessor> parameter(new GLTFAccessor(profile, "FLOAT", profile->getTypeForGLType(glType)));
+        parameter->setByteStride(profile->sizeOfGLType(glType));
+        parameter->setCount((int)cvtAnimation->getCount());
 
         accessors->setValue(accessorUID, parameter);
         cvtAnimation->parameters()->setString(parameterSID, accessorUID);
@@ -595,6 +594,7 @@ namespace GLTF
         
         shared_ptr <JSONObject> parameter;
         shared_ptr <GLTF::JSONObject> accessors = asset->root()->createObjectIfNeeded(kAccessors);
+        std::string accessorUID = "";
         if (CONFIG_BOOL(asset, "shareAnimationAccessors")) {
             GLTFAccessorCache accessorCache(buffer, byteLength);
             UniqueIDToAccessor::iterator it = asset->_uniqueIDToAccessorObject.find(accessorCache);
@@ -603,17 +603,23 @@ namespace GLTF
                 parameter = accessors->getObject(it->second);
             } else {
                 //build an id based on number of accessors
-                std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
+                accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
                 parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
                 asset->_uniqueIDToAccessorObject.insert(std::make_pair(accessorCache, accessorUID));
             }
         } else {
-            std::string accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
+            accessorUID = "animAccessor_" + GLTFUtils::toString(accessors->getKeysCount());
             parameter = __WriteAnimationParameter(cvtAnimation, parameterSID, accessorUID, parameterType, buffer, byteLength, isInputParameter, asset);
-        }        
-        if (!isInputParameter)
+        }       
+
+        if (!isInputParameter) {
             __SetupSamplerForParameter(cvtAnimation, parameter, parameterSID);
-        
+        }
+
+        if (accessorUID != "") {
+            shared_ptr <GLTFAccessor> accessor = static_pointer_cast<GLTFAccessor>(accessors->getObject(accessorUID));
+            accessor->exposeMinMax(buffer);
+        }
     }
 }
 
