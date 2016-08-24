@@ -1195,6 +1195,7 @@ A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contain
 |**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
 |**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
 |**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
+|**normalized**|`boolean`|Specifies whether integer data values should be normalized.| No, default: `false`|
 |**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
 |**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
 |**max**|`number[1-16]`|Maximum value of each component in this attribute.| :white_check_mark: Yes|
@@ -1244,6 +1245,15 @@ The datatype of components in the attribute.  Valid values correspond to WebGL e
 * **Type**: `integer`
 * **Required**: Yes
 * **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5125`, `5126`
+* **Related WebGL functions**: `vertexAttribPointer()` type parameter
+
+### accessor.normalized
+
+Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed.
+
+* **Type**: `boolean`
+* **Required**: No, default: `false`
+* **Related WebGL functions**: `vertexAttribPointer()` normalized parameter
 
 ### accessor.count :white_check_mark:
 
