@@ -3,5 +3,6 @@
     "type" : "array",
     "items" : {
         "type" : ["number", "boolean", "string"]
-    }
+    },
+    "minItems" : 1
 }

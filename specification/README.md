@@ -667,14 +667,14 @@ Materials are stored in the assets `materials` dictionary property, which contai
                 0,
                 1
             ],
-            "diffuse": "texture_file2",
+            "diffuse": ["texture_file2"],
             "emission": [
                 0,
                 0,
                 0,
                 1
             ],
-            "shininess": 38.4,
+            "shininess": [38.4],
             "specular": [
                 0,
                 0,
@@ -935,7 +935,7 @@ Textures can be used as uniform inputs to shaders. The following material defini
     "material-1": {
         "technique": "technique1",
         "values": {
-            "diffuse": "texture_file2",
+            "diffuse": ["texture_file2"],
         }
         "name": "material_1"
     }
@@ -2307,7 +2307,7 @@ A dictionary object of parameter values.  Parameters with the same name as the t
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`
+* **Type of each property**: `number[]`, `boolean[]`, or `string[]`
 
 ### material.name
 
@@ -3032,7 +3032,7 @@ An attribute or uniform input to a [`technique`](#reference-technique), and an o
 |**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
 |**type**|`integer`|The datatype.| :white_check_mark: Yes|
 |**semantic**|`string`|Identifies a parameter with a well-known meaning.|Depends (see below)|
-|**value**|`number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
+|**value**|`number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -3042,11 +3042,11 @@ Additional properties are not allowed.
 
 ### parameter.count
 
-When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value` is an array with length equal to count, times the number of components in the type, e.g., `3` for `FLOAT_VEC3`.
+When defined, the parameter is an array of `count` elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value`'s length equals to `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.
 
 An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
 
-When a parameter is an attribute, `count` can not be defined since GLSL does not support arrays of attributes.  When a parameter is a uniform and a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific semantics can be arrays and, therefore, define `count`.
+When a parameter is an attribute, `count` can not be defined since GLSL does not support arrays of attributes.  When a parameter is a uniform and a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific parameters can be arrays and, therefore, define `count`.
 
 * **Type**: `integer`
 * **Required**: No
@@ -3077,9 +3077,9 @@ Identifies a parameter with a well-known meaning.  Uniform semantics include `"L
 
 ### parameter.value
 
-The value of the parameter.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in [technique.attributes](#reference-technique.attributes).
+The value of the parameter. The length is determined by the values of the `type` and `count` (if present) properties.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in [technique.attributes](#reference-technique.attributes).
 
-* **Type of each property**: `number`, `boolean`, `string`, `number[]`, `boolean[]`, or `string[]`
+* **Type of each property**: `number[]`, `boolean[]`, or `string[]`
 * **Required**: No
 
 ### parameter.extensions
