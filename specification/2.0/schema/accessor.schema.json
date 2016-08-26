@@ -33,7 +33,16 @@
             "enum" : [5120, 5121, 5122, 5123, 5125, 5126],
             "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "UNSIGNED_INT", "FLOAT"],
             "required" : true,
-            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices and the OES_element_index_uint extension is used, i.e., the accessor is only referenced by `primitive.indices` and `glExtensionsUsed` contains `\"OES_element_index_uint\"`."
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices and the OES_element_index_uint extension is used, i.e., the accessor is only referenced by `primitive.indices` and `glExtensionsUsed` contains `\"OES_element_index_uint\"`.",
+            "gltf_webgl" : "`vertexAttribPointer()` type parameter"
+        },
+        "normalized" : {
+            "type" : "boolean",
+            "description" : "Specifies whether integer data values should be normalized.",
+            "required" : false,
+            "default" : false,
+            "gltf_detailedDescription" : "Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed.",
+            "gltf_webgl" : "`vertexAttribPointer()` normalized parameter"
         },
         "count" : {
             "type" : "integer",
