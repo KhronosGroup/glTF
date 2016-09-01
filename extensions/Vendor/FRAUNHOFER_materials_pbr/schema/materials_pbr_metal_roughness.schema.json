@@ -1,15 +1,15 @@
 {
     "$schema" : "http://json-schema.org/draft-03/schema",
-    "title" : "material",
+    "title" : "FRAUNHOFER_materials_pbr metal-roughness material model",
     "type" : "object",
-    "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
+    "description" : "PBR material definition according to the metal-roughness material model.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
-    	"baseColorFactor" : {
-    		"type" : { "$ref" : "arrayValues.schema.json" },
-    		"description" : "The material's base color factor.",
+        "baseColorFactor" : {
+            "type" : { "$ref" : "arrayValues.schema.json" },
+            "description" : "The material's base color factor.",
             "default" : [1,1,1,1]
-    	},
+        },
         "metallicFactor" : {
             "type" : "number",
             "description" : "The metallic-ness factor of the material.",
@@ -18,7 +18,9 @@
         "roughnessFactor" : {
             "type" : "number",
             "description" : "The material's roughness factor.",
-            "default" : 1
+            "default" : 1,
+            "minimum" : 0,
+            "maximum" : 1
         },
          "baseColorTexture" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
