@@ -845,8 +845,8 @@ namespace GLTF
                 }
                 writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
                 nodeTransforms.clear();
-                nodesObject->setValue(id, nodeObject);
             }
+            nodesObject->setValue(id, nodeObject);
             writeNode(node, nodeObject, id);
 
             vector<const COLLADAFW::Node*> children;
