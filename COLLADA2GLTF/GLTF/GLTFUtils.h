@@ -28,6 +28,7 @@
 #define __JSON_UTILS_H__
 
 #include <float.h>
+#include <string.h>
 
 namespace GLTF 
 {    
@@ -60,7 +61,7 @@ namespace GLTF
         {   
             char separator = '_';
             
-            std::string type(typeCStr);
+            std::string type = typeCStr;
             type +=  separator; // FIXME: should probably not generate a "-" for a JSON output
             type += GLTFUtils::toString(s_generatedIDCount++);
             if (suffix) {

@@ -155,8 +155,6 @@ set(GLTF_SOURCES
 
     convert/meshConverter.cpp
     convert/meshConverter.h
-    convert/animationConverter.cpp
-    convert/animationConverter.h
 
     JSON/JSONArray.cpp
     JSON/JSONNumber.cpp

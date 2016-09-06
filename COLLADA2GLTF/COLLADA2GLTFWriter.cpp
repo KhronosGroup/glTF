@@ -38,6 +38,7 @@
 #include "helpers/encodingHelpers.h"
 #include "COLLADAFWFileInfo.h"
 #include "Math/COLLADABUMathPrerequisites.h"
+#include "COLLADAFWAnimationList.h"
 
 #if __cplusplus <= 199711L
 using namespace std::tr1;
@@ -317,175 +318,149 @@ namespace GLTF
         return;
     }
 
-    
-    bool COLLADA2GLTFWriter::writeNode( const COLLADAFW::Node* node,
-                                       shared_ptr <GLTF::JSONObject> nodesObject,
-                                       COLLADABU::Math::Matrix4 parentMatrix,
-                                       SceneFlatteningInfo* sceneFlatteningInfo) {
-        GLTFAsset *asset = this->_asset.get();
-        bool shouldExportTRS = CONFIG_BOOL(asset, "alwaysExportTRS");
-        const NodePointerArray& nodes = node->getChildNodes();
-        std::string nodeOriginalID = node->getOriginalId();
-        if (nodeOriginalID.length() == 0) {
-            nodeOriginalID = uniqueIdWithType(kNode, node->getUniqueId());
+    bool bufferEquals(float* first, float* second, int size, double epsilon) {
+        for (int i = 0; i < size; i++) {
+            if (fabs(first[i] - second[i]) > epsilon) {
+                return false;
+            }
         }
+        return true;
+    }
+
+    COLLADABU::Math::Matrix4 getTransformationMatrix(const Transformation* transform) {
+        switch (transform->getTransformationType()) {
+        case Transformation::ROTATE: {
+            Rotate* rotate = (Rotate*)transform;
+            COLLADABU::Math::Vector3 axis = rotate->getRotationAxis();
+            axis.normalise();
+            double angle = rotate->getRotationAngle();
+            return COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
+        }
+        case Transformation::TRANSLATE: {
+            Translate* translate = (Translate*)transform;
+            const COLLADABU::Math::Vector3& translation = translate->getTranslation();
+            COLLADABU::Math::Matrix4 translationMatrix;
+            translationMatrix.makeTrans(translation);
+            return translationMatrix;
+        }
+        case Transformation::SCALE: {
+            Scale* scale = (Scale*)transform;
+            const COLLADABU::Math::Vector3& scaleVector = scale->getScale();
+            COLLADABU::Math::Matrix4 scaleMatrix;
+            scaleMatrix.makeScale(scaleVector);
+            return scaleMatrix;
+        }
+        case Transformation::MATRIX: {
+            return ((Matrix*)transform)->getMatrix();
+        }}
+        return COLLADABU::Math::Matrix4::IDENTITY;
+    }
+
+    COLLADABU::Math::Matrix4 getFlattenedTransform(vector<const Transformation*> transforms) {
+        COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
+        for (const Transformation* transform : transforms) {
+            switch (transform->getTransformationType())  {
+            case Transformation::ROTATE: {
+                Rotate* rotate = (Rotate*)transform;
+                COLLADABU::Math::Vector3 axis = rotate->getRotationAxis();
+                axis.normalise();
+                double angle = rotate->getRotationAngle();
+                matrix = matrix * COLLADABU::Math::Matrix4(COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(angle), axis));
+                break;
+            }
+            case Transformation::TRANSLATE: {
+                Translate* translate = (Translate*)transform;
+                const COLLADABU::Math::Vector3& translation = translate->getTranslation();
+                COLLADABU::Math::Matrix4 translationMatrix;
+                translationMatrix.makeTrans(translation);
+                matrix = matrix * translationMatrix;
+                break;
+            }
+            case Transformation::SCALE: {
+                Scale* scale = (Scale*)transform;
+                const COLLADABU::Math::Vector3& scaleVector = scale->getScale();
+                COLLADABU::Math::Matrix4 scaleMatrix;
+                scaleMatrix.makeScale(scaleVector);
+                matrix = matrix * scaleMatrix;
+                break;
+            }
+            case Transformation::MATRIX: {
+                Matrix* transformMatrix = (Matrix*)transform;
+                matrix = matrix * transformMatrix->getMatrix();
+                break;
+            }
+            case Transformation::LOOKAT : {
+                Lookat* lookAt = (Lookat*)transform;
+                buildLookAtMatrix(lookAt, matrix);
+                break;
+            }}
+        }
+        return matrix;
+    }
+
+    map<COLLADAFW::Transformation::TransformationType, float*> decomposeTransformationMatrix(COLLADABU::Math::Matrix4 matrix, vector<const Transformation*> transforms) {
+        map<COLLADAFW::Transformation::TransformationType, float*> decomposition;
+        float* scale = new float[3];
+        float* translation = new float[3];
+        float* rotation = new float[4];
+        GLTF::decomposeMatrix(matrix, translation, rotation, scale);
+
+        if (scale[0] == 0.0 && scale[1] == 0.0 && scale[2] == 0.0)
+        {
+            // Matrix decompose failed because of a uniform scaling of 0 in the transformations.
+            // We've lost the rotation information. We'll have to manually extract the rotations.
+            Math::Quaternion rotationQuat = Math::Quaternion::IDENTITY;
+            for (const Transformation* transform : transforms)
+            {
+                if (transform->getTransformationType() == Transformation::ROTATE)
+                {
+                    Rotate* rotate = (Rotate*)transform;
+                    Math::Vector3 axis = rotate->getRotationAxis();
+                    axis.normalise();
+                    double angle = rotate->getRotationAngle();
+                    rotationQuat = rotationQuat * Math::Quaternion(Math::Utils::degToRad(angle), axis);
+                }
+            }
+
+            Math::Real angle;
+            Math::Vector3 axis;
+            rotationQuat.toAngleAxis(angle, axis);
+            rotation[0] = (float)axis.x;
+            rotation[1] = (float)axis.y;
+            rotation[2] = (float)axis.z;
+            rotation[3] = (float)angle;
+        }
+        decomposition[COLLADAFW::Transformation::TransformationType::SCALE] = scale;
+        decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE] = translation;
+        decomposition[COLLADAFW::Transformation::TransformationType::ROTATE] = rotation;
+        return decomposition;
+    }
+    
+    bool COLLADA2GLTFWriter::writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject, string nodeOriginalId) {
+        GLTFAsset *asset = this->_asset.get();
+        const NodePointerArray& nodes = node->getChildNodes();
         
         std::string uniqueUID = node->getUniqueId().toAscii();
-        
-        COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4::IDENTITY;
-        
-        shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
         nodeObject->setString(kName,node->getName());
         
         this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
-        this->_asset->setOriginalId(uniqueUID, nodeOriginalID);
+        this->_asset->setOriginalId(uniqueUID, nodeOriginalId);
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
             nodeObject->setString(kJointName,sid);
         }
-        
-        bool nodeContainsLookAtTr = false;
+
         const InstanceCameraPointerArray& instanceCameras = node->getInstanceCameras();
         size_t camerasCount = instanceCameras.getCount();
         if (camerasCount > 0) {
             InstanceCamera* instanceCamera = instanceCameras[0];
-            shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
-            
+            shared_ptr<GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
             std::string id = instanceCamera->getInstanciatedObjectId().toAscii();
             std::string cameraId = this->_asset->getOriginalId(id);
             nodeObject->setString(kCamera, cameraId);
-            
-            //FIXME: just handle the first camera within a node now
-            //for (size_t i = 0 ; i < camerasCount ; i++) {
-            //}
-            //Checks if we have a "look at" transformm because it is not handled by getTransformationMatrix when baking the matrix. (TODO: file a OpenCOLLADA issue for that).
-            const TransformationPointerArray& transformations = node->getTransformations();
-            size_t transformationsCount = transformations.getCount();
-            for (size_t i = 0 ; i < transformationsCount ; i++) {
-                const Transformation* tr = transformations[i];
-                if (tr->getTransformationType() == Transformation::LOOKAT) {
-                    Lookat* lookAt = (Lookat*)tr;
-                    buildLookAtMatrix(lookAt, matrix);
-                    nodeContainsLookAtTr = true;
-                    break;
-                }
-            }
-            
-            if (nodeContainsLookAtTr && (transformationsCount > 1)) {
-                //FIXME: handle warning/error
-                this->_asset->log("WARNING: node contains a look at transform combined with other transforms\n");
-            }
-        }
-        
-        if (!nodeContainsLookAtTr) {
-            node->getTransformationMatrix(matrix);
         }
                 
-        const TransformationPointerArray& transformations = node->getTransformations();
-        size_t transformationsCount = transformations.getCount();
-        for (size_t i = 0 ; i < transformationsCount ; i++) {
-            const Transformation* tr = transformations[i];
-            const UniqueId& animationListID = tr->getAnimationList();
-            if (!animationListID.isValid())
-                continue;
-            
-            shared_ptr<AnimatedTargets> animatedTargets(new AnimatedTargets());
-            
-            this->_asset->_uniqueIDToAnimatedTargets[animationListID.toAscii()] = animatedTargets;
-            shared_ptr <JSONObject> animatedTarget(new JSONObject());
-            std::string animationID = animationListID.toAscii();
-            animatedTarget->setString(kTarget, uniqueUID);
-            animatedTarget->setString("transformId", animationID);
-
-            if (tr->getTransformationType() == COLLADAFW::Transformation::MATRIX)  {
-                animatedTarget->setString("path", "MATRIX");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-            
-            if (tr->getTransformationType() == COLLADAFW::Transformation::TRANSLATE)  {
-                animatedTarget->setString("path", "translation");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-            
-            if (tr->getTransformationType() == COLLADAFW::Transformation::ROTATE)  {
-                animatedTarget->setString("path", "rotation");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-          
-            if (tr->getTransformationType() == COLLADAFW::Transformation::SCALE)  {
-                animatedTarget->setString("path", "scale");
-                animatedTargets->push_back(animatedTarget);
-                shouldExportTRS = true;
-            }
-        }
-                    
-        const COLLADABU::Math::Matrix4 worldMatrix = parentMatrix * matrix;
-                
-        if (shouldExportTRS) {
-            float scale[3];
-            float translation[3];
-            float rotation[4];
-            GLTF::decomposeMatrix(matrix, translation, rotation, scale);
-
-            if (scale[0] == 0.0 && scale[1] == 0.0 && scale[2] == 0.0 && !nodeContainsLookAtTr)
-            {
-                // Matrix decompose failed because of a uniform scaling of 0 in the transformations.
-                // We've lost the rotation information. We'll have to manually extract the rotations.
-                Math::Quaternion rotationQuat = Math::Quaternion::IDENTITY;
-                for (size_t i = 0, count = transformations.getCount(); i < count; ++i)
-                {
-                    const Transformation* transform = transformations[i];
-
-                    if (transform->getTransformationType() == Transformation::ROTATE)
-                    {
-                        Rotate* rotate = (Rotate*)transform;
-                        Math::Vector3 axis = rotate->getRotationAxis();
-                        axis.normalise();
-                        double angle = rotate->getRotationAngle();
-                        rotationQuat = rotationQuat * Math::Quaternion(Math::Utils::degToRad(angle), axis);
-                    }
-                }
-
-                Math::Real angle;
-                Math::Vector3 axis;
-                rotationQuat.toAngleAxis(angle, axis);
-                rotation[0] = (float)axis.x;
-                rotation[1] = (float)axis.y;
-                rotation[2] = (float)axis.z;
-                rotation[3] = (float)angle;
-            }
-
-            // Scale distance units if we need to
-            translation[0] *= (float)_asset->getDistanceScale();
-            translation[1] *= (float)_asset->getDistanceScale();
-            translation[2] *= (float)_asset->getDistanceScale();
-            
-            bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
-            bool exportTranslation = !(!exportDefaultValues &&
-                                       ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
-            if (exportTranslation)
-                nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
-            
-            // Rotation is a quaternion [V, s]
-            nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
-
-            bool exportScale = !(!exportDefaultValues && ((scale[0] == 1) && (scale[1] == 1) && (scale[2] == 1)));
-            if (exportScale)
-                nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
-            
-        } else {
-            //FIXME: OpenCOLLADA typo
-            matrix.scaleTrans(_asset->getDistanceScale());
-            bool exportMatrix = !((matrix.isIdentiy() && (CONFIG_BOOL(asset, "exportDefaultValues") == false) ));
-            if (exportMatrix) {   
-                nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
-            }
-        }
-        
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
 		unsigned int count = (unsigned int)instanceControllers.getCount();
         if (count > 0) {
@@ -574,19 +549,12 @@ namespace GLTF
 
                         asset->root()->createObjectIfNeeded(kMeshes)->setValue(meshID, meshInstance);
                         asset->setValueForUniqueId(meshUID.toAscii(), meshInstance);
-
-                        _storeMaterialBindingArray("meshes-",
-                            node->getUniqueId().toAscii(),
-                            meshUID.toAscii(),
-                            materialBindings);
-                    }
-                    else {
-                        _storeMaterialBindingArray("meshes-",
-                            node->getUniqueId().toAscii(),
-                            uniqueId.toAscii(),
-                            materialBindings);
                     }
                 }
+                _storeMaterialBindingArray("meshes-",
+                    node->getUniqueId().toAscii(),
+                    instanceGeometry->getInstanciatedObjectId().toAscii(),
+                    materialBindings);
             }
         }
         
@@ -600,12 +568,6 @@ namespace GLTF
                 childOriginalID = uniqueIdWithType(kNode, nodes[i]->getUniqueId());
             }
             childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
-        }
-        
-        registerObjectWithOriginalUID(nodeOriginalID, nodeObject, nodesObject);
-        
-        for (unsigned int i = 0 ; i < count ; i++)  {
-            this->writeNode(nodes[i], nodesObject, worldMatrix, sceneFlatteningInfo);
         }
         
         const InstanceNodePointerArray& instanceNodes = node->getInstanceNodes();
@@ -655,7 +617,7 @@ namespace GLTF
                         listOfNodesPerLight = this->_asset->_uniqueIDOfLightToNodes[lightUID];
                     }
                     
-                    listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalID));
+                    listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalId));
                     lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
                     lights->setValue(lightUID, light);
                 }
@@ -723,8 +685,7 @@ namespace GLTF
         
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray;
-        if (_rootTransform)
-        {
+        if (_rootTransform) {
             // Add the root transform to the nodes
             std::string yUpNodeID = uniqueIdWithType(kNode, this->_loader.getUniqueId(COLLADAFW::COLLADA_TYPE::NODE));
             nodesObject->setValue(yUpNodeID, _rootTransform);
@@ -738,8 +699,7 @@ namespace GLTF
             // Set childrenArray to the root transform's children array so all root nodes will become its children
             childrenArray = std::static_pointer_cast<GLTF::JSONArray>(_rootTransform->getValue(kChildren));
         }
-        else
-        {
+        else {
             // No root transform so just add all root nodes to the scene's children array
             childrenArray = std::shared_ptr<GLTF::JSONArray>(new GLTF::JSONArray());
             sceneObject->setValue(kNodes, childrenArray);
@@ -754,13 +714,12 @@ namespace GLTF
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
             childrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (nodeIDValue));
         }
-                
+
+        vector<const COLLADAFW::Node*> nodes;
         for (size_t i = 0 ; i < nodeCount ; i++) {
-            //FIXME: &this->_sceneFlatteningInfo
-            this->writeNode(nodePointerArray[i], nodesObject, COLLADABU::Math::Matrix4::IDENTITY, NULL);
+            nodes.push_back(nodePointerArray[i]);
         }
-        
-		return true;
+        return writeNodes(nodes);
 	}
     
 	//--------------------------------------------------------------------
@@ -769,22 +728,17 @@ namespace GLTF
 	}
     
 	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeLibraryNodes( const COLLADAFW::LibraryNodes* libraryNodes ) {
-        const NodePointerArray& nodes = libraryNodes->getNodes();
-        
-        shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
-                
-        size_t count = nodes.getCount();
-        for (size_t i = 0 ; i < count ; i++) {
-            const COLLADAFW::Node *node = nodes[i];
-            
+    bool COLLADA2GLTFWriter::writeLibraryNodes(const COLLADAFW::LibraryNodes* libraryNodes) {
+        vector<const COLLADAFW::Node*> nodes;
+        const NodePointerArray& nodeArray = libraryNodes->getNodes();
+        for (size_t i = 0; i < nodeArray.getCount(); i++) {
+            const COLLADAFW::Node* node = nodeArray[i];
             std::string id = node->getUniqueId().toAscii();
             if (this->_asset->_uniqueIDToParentsOfInstanceNode.count(id) > 0) {
                 shared_ptr<JSONArray> parents = this->_asset->_uniqueIDToParentsOfInstanceNode[id];
                 std::vector <shared_ptr <JSONValue> > values = parents->values();
-                for (size_t k = 0 ; k < values.size() ; k++) {
+                for (size_t k = 0; k < values.size(); k++) {
                     shared_ptr<JSONString> value = static_pointer_cast<JSONString>(values[k]);
-
                     shared_ptr<JSONObject> parentNode = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(value->getString()));
                     if (parentNode) {
                         shared_ptr <JSONArray> children = parentNode->createArrayIfNeeded(kChildren);
@@ -792,11 +746,118 @@ namespace GLTF
                     }
                 }
             }
-            
-            if (!this->writeNode(node,  nodesObject, COLLADABU::Math::Matrix4::IDENTITY, 0))
-                return false;
+            nodes.push_back(node);
         }
-        
+        return writeNodes(nodes);
+    }
+
+    void writeTransform(shared_ptr<GLTF::GLTFAsset> asset, shared_ptr<GLTF::JSONObject> nodeObject, COLLADABU::Math::Matrix4 matrix, vector<const Transformation*> transformations, bool useTRS) {
+        if (useTRS) {
+            map<COLLADAFW::Transformation::TransformationType, float*> decomposition = decomposeTransformationMatrix(matrix, transformations);
+            float* translation = decomposition[COLLADAFW::Transformation::TransformationType::TRANSLATE];
+            float* rotation = decomposition[COLLADAFW::Transformation::TransformationType::ROTATE];
+            float* scale = decomposition[COLLADAFW::Transformation::TransformationType::SCALE];
+
+            // Scale distance units if we need to
+            translation[0] *= (float)asset->getDistanceScale();
+            translation[1] *= (float)asset->getDistanceScale();
+            translation[2] *= (float)asset->getDistanceScale();
+
+            bool exportDefaultValues = CONFIG_BOOL(asset, "exportDefaultValues");
+            bool exportTranslation = !(!exportDefaultValues &&
+                ((translation[0] == 0) && (translation[1] == 0) && (translation[2] == 0)));
+            if (exportTranslation)
+                nodeObject->setValue("translation", serializeVec3(translation[0], translation[1], translation[2]));
+
+            // Rotation is a quaternion [V, s]
+            nodeObject->setValue("rotation", serializeVec4(rotation[0], rotation[1], rotation[2], rotation[3]));
+
+            bool exportScale = !(!exportDefaultValues && ((scale[0] == 1) && (scale[1] == 1) && (scale[2] == 1)));
+            if (exportScale)
+                nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
+        } else {
+            matrix.scaleTrans(asset->getDistanceScale());
+            bool exportMatrix = !((matrix == COLLADABU::Math::Matrix4::IDENTITY && (CONFIG_BOOL(asset, "exportDefaultValues") == false)));
+            if (exportMatrix) {
+                nodeObject->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
+            }
+        }
+    }
+
+    bool COLLADA2GLTFWriter::writeNodes(vector<const COLLADAFW::Node*> nodes) {
+        shared_ptr<GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
+        vector<const Transformation*> nodeTransforms;
+        COLLADABU::Math::Matrix4 matrix;
+        for (const COLLADAFW::Node* node : nodes) {
+            std::string baseId = node->getOriginalId();
+            std::string id = baseId;
+            
+            shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
+            TransformationPointerArray transformations = node->getTransformations();
+            bool needsRoot = true;
+
+            for (size_t i = 0; i < transformations.getCount(); i++) {
+                const Transformation* transformation = transformations[i];
+                UniqueId animationListId = transformation->getAnimationList();
+                if (animationListId.isValid()) {
+                    this->_asset->_transformationForAnimationListId[animationListId] = transformation->clone();
+                    // Split off any pre-existing transforms
+                    if (nodeTransforms.size() > 0) {
+                        if (!needsRoot) {
+                            id = "_" + baseId + "_split_" + to_string((int)animationListId.getObjectId());
+                        }
+                        matrix = getFlattenedTransform(nodeTransforms);
+                        writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
+                        nodesObject->setValue(id, nodeObject);
+                        needsRoot = false;
+                    }
+
+                    // Make a new node to target for the animation
+                    shared_ptr<JSONArray> children = nodeObject->createArrayIfNeeded(kChildren);
+                    nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+                    if (!needsRoot) {
+                        id = "_" + baseId + "_target_" + to_string((int)animationListId.getObjectId());
+                    } else {
+                        needsRoot = false;
+                    }
+                    this->_asset->_animationListIdForNodeId[id] = animationListId;
+                    this->_asset->_nodeIdForAnimationListId[animationListId] = id;
+                    children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
+                    matrix = getTransformationMatrix(transformation);
+                    writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, true);
+                    nodesObject->setValue(id, nodeObject);
+
+                    nodeTransforms.clear();
+                } else {
+                    // Flatten this transform into the node.
+                    nodeTransforms.push_back(transformation);
+                }
+            }
+            // Write out any remaining transforms 
+            matrix = COLLADABU::Math::Matrix4::IDENTITY;
+            if (nodeTransforms.size() > 0) {
+                matrix = getFlattenedTransform(nodeTransforms);
+                if (!needsRoot) {
+                    shared_ptr<JSONArray> children = nodeObject->createArrayIfNeeded(kChildren);
+                    nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+                    id = "_" + baseId + "_split";
+                    children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
+                }
+                writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
+                nodeTransforms.clear();
+            }
+            nodesObject->setValue(id, nodeObject);
+            writeNode(node, nodeObject, id);
+
+            vector<const COLLADAFW::Node*> children;
+            NodePointerArray childNodes = node->getChildNodes();
+            if (childNodes.getCount() > 0) {
+                for (size_t j = 0; j < childNodes.getCount(); j++) {
+                    children.push_back(childNodes[j]);
+                }
+                writeNodes(children);
+            }
+        }
         return true;
 	}
         
@@ -1376,64 +1437,175 @@ namespace GLTF
 		return true;
 	}
     
-	//--------------------------------------------------------------------
+    /**
+     * This just initializes the animation and makes a placeholder in the glTF tree
+     */
 	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation) {
-        shared_ptr <GLTFAnimation> cvtAnimation = convertOpenCOLLADAAnimationToGLTFAnimation(animation, this->_asset.get());
-        
+        shared_ptr<GLTFAnimation> cvtAnimation = shared_ptr<GLTFAnimation>(new GLTFAnimation(animation, this->_asset.get()));
         cvtAnimation->setOriginalID(animation->getOriginalId());
-        
-        if (this->_asset->_flattenerMapsForAnimationID.count(animation->getOriginalId()) == 0) {
-            this->_asset->_flattenerMapsForAnimationID[animation->getOriginalId()] = shared_ptr <AnimationFlattenerForTargetUID> (new AnimationFlattenerForTargetUID());
-        }
-        
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         animations->setValue(animation->getUniqueId().toAscii(), cvtAnimation);
-        
 		return true;
 	}
+
+    COLLADABU::Math::Quaternion writeMatrixAnimation(COLLADABU::Math::Matrix4 matrix, size_t index, float* translation, float* rotation, float* scale, COLLADABU::Math::Quaternion lastQuat) {
+        map<COLLADAFW::Transformation::TransformationType, float*> trs = decomposeTransformationMatrix(matrix, vector<const COLLADAFW::Transformation*>());
+        float* trsTranslation = trs[COLLADAFW::Transformation::TRANSLATE];
+        translation[index * 3] = (float)trsTranslation[0];
+        translation[index * 3 + 1] = (float)trsTranslation[1];
+        translation[index * 3 + 2] = (float)trsTranslation[2];
+        float* trsRotation = trs[COLLADAFW::Transformation::ROTATE];
+        // There are two decompositions for every quaternion, we want the one that is closest to the last one so that interpolation works correctly
+        COLLADABU::Math::Quaternion quat = COLLADABU::Math::Quaternion(trsRotation[3], trsRotation[0], trsRotation[1], trsRotation[2]);
+        double diff = fabs(quat.w - lastQuat.w) + fabs(quat.x - lastQuat.x) + fabs(quat.y - lastQuat.y) + fabs(quat.z - lastQuat.z);
+        COLLADABU::Math::Quaternion negQuat = quat * -1.0;
+        double negDiff = fabs(negQuat.w - lastQuat.w) + fabs(negQuat.x - lastQuat.x) + fabs(negQuat.y - lastQuat.y) + fabs(negQuat.z - lastQuat.z);
+        if (negDiff < diff) {
+            quat = negQuat;
+        }
+        rotation[index * 4] = (float)quat.x;
+        rotation[index * 4 + 1] = (float)quat.y;
+        rotation[index * 4 + 2] = (float)quat.z;
+        rotation[index * 4 + 3] = (float)quat.w;
+        float* trsScale = trs[COLLADAFW::Transformation::SCALE];
+        scale[index * 3] = (float)trsScale[0];
+        scale[index * 3 + 1] = (float)trsScale[1];
+        scale[index * 3 + 2] = (float)trsScale[2];
+        return quat;
+    }
     
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeAnimationList( const COLLADAFW::AnimationList* animationList ) {
-        const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
-        
+    /**
+     * Combine animations where necessary and write out animation data
+     */
+    bool COLLADA2GLTFWriter::writeAnimationList(const COLLADAFW::AnimationList* animationList) {
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
-        AnimatedTargetsSharedPtr animatedTargets = this->_asset->_uniqueIDToAnimatedTargets[animationList->getUniqueId().toAscii()];
+        const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
+        string nodeId = this->_asset->_nodeIdForAnimationListId[animationList->getUniqueId()];
         
-        if (animatedTargets)
-        {
-            for (size_t i = 0 ; i < animationBindings.getCount() ; i++) {
-                const COLLADAFW::AnimationList::AnimationClass animationClass = animationBindings[i].animationClass;
+        size_t animationBindingsLength = animationBindings.getCount();
 
-                shared_ptr <GLTFAnimation> cvtAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[i].animation.toAscii()));
-
-                // Can be null if there are no keyframes
-                if (cvtAnimation)
-                {
-                    AnimationFlattenerForTargetUIDSharedPtr animationFlattenerMap = this->_asset->_flattenerMapsForAnimationID[cvtAnimation->getOriginalID()];
-                    for (size_t j = 0; j < animatedTargets->size(); j++) {
-                        shared_ptr<JSONObject> animatedTarget = (*animatedTargets)[j];
-                        shared_ptr<GLTFAnimationFlattener> animationFlattener;
-                        std::string targetUID = animatedTarget->getString(kTarget);
-                        if (animationFlattenerMap->count(targetUID) == 0) {
-                            //FIXME: assuming node here is wrong
-                            COLLADAFW::Node *node = (COLLADAFW::Node*)this->_asset->_uniqueIDToOpenCOLLADAObject[targetUID].get();
-                            animationFlattener = shared_ptr<GLTFAnimationFlattener>(new GLTFAnimationFlattener(node));
-                            (*animationFlattenerMap)[targetUID] = animationFlattener;
-                        }
-                    }
-
-                    cvtAnimation->registerAnimationFlatteners(animationFlattenerMap);
-
-                    if (!GLTF::writeAnimation(cvtAnimation, animationClass, animatedTargets, this->_asset.get())) {
-                        //if an animation failed to convert, we don't want to keep track of it.
-                        animations->removeValue(animationBindings[i].animation.toAscii());
-                    }
-                }
+        // Normalize the number of keyframes across animations that need to be combined
+        shared_ptr<GLTFAnimation> rootAnimation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBindings[0].animation.toAscii()));
+        for (size_t i = 1; i < animationBindingsLength; i++) {
+            COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
+            shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
+            for (size_t j = 0; j < animation->getCount(); j++) {
+                double keyFrame = animation->getKeyFrameAtIndex(j);
+                rootAnimation->addInterpolatedKeyFrame(keyFrame);
             }
         }
-        
-		return true;
-	}
+
+        for (size_t i = 1; i < animationBindingsLength; i++) {
+            COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
+            shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
+            for (size_t j = 0; j < rootAnimation->getCount(); j++) {
+                double keyFrame = rootAnimation->getKeyFrameAtIndex(j);
+                animation->addInterpolatedKeyFrame(keyFrame);
+            }
+        }
+
+        const int numKeyFrames = rootAnimation->getCount();
+        bool hasTranslation = false;
+        bool hasRotation = false;
+        bool hasScale = false;
+        float* keyFrames = new float[numKeyFrames];
+        float* rotation = new float[numKeyFrames * 4];
+        float* scale = new float[numKeyFrames * 3];
+        float* translation = new float[numKeyFrames * 3];
+        rootAnimation->setTargetNodeId(nodeId); 
+
+        COLLADABU::Math::Quaternion lastQuat = COLLADABU::Math::Quaternion::IDENTITY;
+        for (size_t i = 0; i < animationBindingsLength; i++) {
+            COLLADAFW::AnimationList::AnimationBinding animationBinding = animationBindings[i];
+            shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationBinding.animation.toAscii()));
+            COLLADAFW::AnimationList::AnimationClass animationClass = animationBinding.animationClass;
+            GLTFAnimation::AnimationType animationType;
+            const Transformation* transform = this->_asset->_transformationForAnimationListId[animationList->getUniqueId()];
+
+            for (size_t j = 0; j < animation->getCount(); j++) {
+                double keyFrame = animation->getKeyFrameAtIndex(j);
+                keyFrames[j] = (float)keyFrame;
+                vector<double> values = animation->getValuesAtKeyFrame(keyFrame);
+                if (i == 0) {
+                    translation[j * 3] = 0;
+                    translation[j * 3 + 1] = 0;
+                    translation[j * 3 + 2] = 0;
+                }
+
+                switch (animationClass) {
+                case COLLADAFW::AnimationList::MATRIX4X4: {
+                    COLLADABU::Math::Matrix4 matrix = COLLADABU::Math::Matrix4(
+                        values[0], values[1], values[2], values[3],
+                        values[4], values[5], values[6], values[7],
+                        values[8], values[9], values[10], values[11],
+                        values[12], values[13], values[14], values[15]
+                    );
+                    lastQuat = writeMatrixAnimation(matrix, j, translation, rotation, scale, lastQuat);
+                    hasTranslation = true;
+                    hasRotation = true;
+                    hasScale = true;
+                    break;
+                }
+                case COLLADAFW::AnimationList::AXISANGLE: {
+                    rotation[j * 4] = (float)values[0];
+                    rotation[j * 4 + 1] = (float)values[1];
+                    rotation[j * 4 + 2] = (float)values[2];
+                    rotation[j * 4 + 3] = (float)values[3];
+                    hasRotation = true;
+                    break;
+                }
+                case COLLADAFW::AnimationList::ANGLE: {       
+                    if (transform->getTransformationType() == COLLADAFW::Transformation::TransformationType::ROTATE) {
+                        COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
+                        COLLADABU::Math::Quaternion quat = COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(values[0]), rotate->getRotationAxis());
+                        rotation[j * 4] = (float)quat.x;
+                        rotation[j * 4 + 1] = (float)quat.y;
+                        rotation[j * 4 + 2] = (float)quat.z;
+                        rotation[j * 4 + 3] = (float)quat.w;
+                        hasRotation = true;
+                    }
+                    break;
+                }
+                case COLLADAFW::AnimationList::POSITION_XYZ: {
+                    translation[j * 3] += (float)values[0];
+                    translation[j * 3 + 1] += (float)values[1];
+                    translation[j * 3 + 2] += (float)values[2];
+                    hasTranslation = true; 
+                    break;
+                }
+                case COLLADAFW::AnimationList::POSITION_X: {
+                    translation[j * 3] += (float)values[0];
+                    hasTranslation = true;
+                    break;
+                }
+                case COLLADAFW::AnimationList::POSITION_Y: {
+                    translation[j * 3 + 1] += (float)values[0];
+                    hasTranslation = true;
+                    break;
+                }
+                case COLLADAFW::AnimationList::POSITION_Z: {
+                    translation[j * 3 + 2] += (float)values[0];
+                    hasTranslation = true;
+                    break;
+                }}
+            }
+        }
+        shared_ptr<GLTF::GLTFBufferView> keyFrameBufferView = createBufferViewWithAllocatedBuffer(keyFrames, 0, rootAnimation->getCount(), true);
+        rootAnimation->registerBufferView(GLTFAnimation::AnimationType::TIME, keyFrameBufferView);
+        if (hasTranslation) {
+            shared_ptr<GLTF::GLTFBufferView> translateBufferView = createBufferViewWithAllocatedBuffer(translation, 0, rootAnimation->getCount() * 3, true);
+            rootAnimation->registerBufferView(GLTFAnimation::AnimationType::TRANSLATE, translateBufferView);
+        }
+        if (hasRotation) {
+            shared_ptr<GLTF::GLTFBufferView> rotateBufferView = createBufferViewWithAllocatedBuffer(rotation, 0, rootAnimation->getCount() * 4, true);
+            rootAnimation->registerBufferView(GLTFAnimation::AnimationType::ROTATE, rotateBufferView);
+        }
+        if (hasScale) {
+            shared_ptr<GLTF::GLTFBufferView> scaleBufferView = createBufferViewWithAllocatedBuffer(scale, 0, rootAnimation->getCount() * 3, true);
+            rootAnimation->registerBufferView(GLTFAnimation::AnimationType::SCALE, scaleBufferView);
+        }
+        return true;
+    }
     
 	//--------------------------------------------------------------------
 	bool COLLADA2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData ) {
