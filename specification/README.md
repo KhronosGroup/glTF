@@ -1044,7 +1044,6 @@ The following example defines an animating camera node.
                     }
                 }
             ],
-            "count": 901,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_3",
