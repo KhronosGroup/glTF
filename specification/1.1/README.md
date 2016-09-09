@@ -1109,7 +1109,7 @@ Only the `version` property is required. For example,
     "premultipliedAlpha": true,
     "profile" : {
         "api" : "WebGL",
-        "version" : "1.0.3",
+        "version" : "1.0",
         "extras" : {
             "Application specific" : "The extra object can contain any properties."
         }  
@@ -1177,7 +1177,7 @@ For more information on glTF extensions, consult the [extensions registry specif
       * [`functions`](#reference-technique.states.functions)
 * [`texture`](#reference-texture)
 
-This property reference applies to the WebGL 1.0.3 profile.  See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).
+This property reference applies to the WebGL 1.0 profile. See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).
 
 > In the future, other profiles, such as OpenGL, are expected.
 
@@ -1554,7 +1554,7 @@ Metadata about the glTF asset.
 |**copyright**|`string`|A copyright message suitable for display to credit the content creator.|No|
 |**generator**|`string`|Tool that generated this glTF model.  Useful for debugging.|No|
 |**premultipliedAlpha**|`boolean`|Specifies if the shaders were generated with premultiplied alpha.|No, default: `false`|
-|**profile**|[`asset.profile`](#reference-asset.profile)|Specifies the target rendering API and version, e.g., WebGL 1.0.3.|No, default: `{}`|
+|**profile**|[`asset.profile`](#reference-asset.profile)|Specifies the target rendering API and version, e.g., WebGL 1.0.|No, default: `{}`|
 |**version**|`string`|The glTF version.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1588,7 +1588,7 @@ Specifies if the shaders were generated with premultiplied alpha.
 
 ### asset.profile
 
-Specifies the target rendering API and version, e.g., WebGL 1.0.3.
+Specifies the target rendering API and version, e.g., WebGL 1.0.
 
 * **Type**: [`asset.profile`](#reference-asset.profile)
 * **Required**: No, default: `{}`
@@ -1620,14 +1620,14 @@ Application-specific data.
 <a name="reference-asset.profile"></a>
 ## asset.profile
 
-Specifies the target rendering API and version, e.g., WebGL 1.0.3.
+Specifies the target rendering API and version, e.g., WebGL 1.0.
 
 **Properties**
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**api**|`string`|Specifies the target rendering API.|No, default: `"WebGL"`|
-|**version**|`string`|The API version.|No, default: `"1.0.3"`|
+|**version**|`string`|The API version.|No, default: `"1.0"`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -1644,10 +1644,10 @@ Specifies the target rendering API.
 
 ### profile.version
 
-The API version.
+The API version. Must be of the form `major_number.minor_number`, where the numbers have one or more digits.
 
 * **Type**: `string`
-* **Required**: No, default: `"1.0.3"`
+* **Required**: No, default: `"1.0"`
 
 ### profile.extensions
 
