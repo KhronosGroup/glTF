@@ -9,7 +9,9 @@
             "type" : "array",
             "description" : "Floating-point values passed to `blendColor()`. [red, green, blue, alpha]",
             "items" : {
-                "type" : "number"
+                "type" : "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
             },
             "minItems" : 4,
             "maxItems" : 4,
@@ -98,11 +100,14 @@
             "type" : "array",
             "description" : "Floating-point values passed to `depthRange()`. [zNear, zFar]",
             "items" : {
-                "type" : "number"
+                "type" : "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
             },
             "minItems" : 2,
             "maxItems" : 2,
             "default" : [0.0, 1.0],
+            "gltf_detailedDescription" : "Floating-point values passed to `depthRange()`. zNear must be less than or equal to zFar. [zNear, zFar]",
             "gltf_webgl" : "`depthRange()`"
         },
         "frontFace" : {
