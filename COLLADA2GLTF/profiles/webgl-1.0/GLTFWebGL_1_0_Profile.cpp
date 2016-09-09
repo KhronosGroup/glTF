@@ -628,7 +628,7 @@ namespace GLTF
     {
         auto id = std::make_shared<JSONObject>();
         id->setString("api", "WebGL");
-        id->setString("version", "1.0.2");
+        id->setString("version", "1.0");
 
         return id;
     }
