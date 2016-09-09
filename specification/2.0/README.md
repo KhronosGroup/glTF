@@ -1249,7 +1249,7 @@ The datatype of components in the attribute.  Valid values correspond to WebGL e
 
 ### accessor.normalized
 
-Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed.
+Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed. Must be `false` when accessor is used for animation data.
 
 * **Type**: `boolean`
 * **Required**: No, default: `false`
@@ -1277,6 +1277,8 @@ Maximum value of each component in this attribute.  Both min and max arrays have
 
 When `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.
 
+`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer.    
+
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
@@ -1285,6 +1287,8 @@ When `componentType` is `5126` (FLOAT) each array value must be stored as double
 Minimum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
 
 When `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.
+
+`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer.
 
 * **Type**: `number[1-16]`
 * **Required**: Yes
