@@ -3197,6 +3197,7 @@ Additional properties are not allowed.
 Floating-point values passed to `blendColor()`. [red, green, blue, alpha]
 
 * **Type**: `number[4]`
+   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
 * **Required**: No, default: `[0,0,0,0]`
 * **Related WebGL functions**: `blendColor()`
 
@@ -3254,9 +3255,10 @@ Boolean value passed to `depthMask()`.
 
 ### functions.depthRange
 
-Floating-point values passed to `depthRange()`. [zNear, zFar]
+Floating-point values passed to `depthRange()`. zNear must be less than or equal to zFar. [zNear, zFar]
 
 * **Type**: `number[2]`
+   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
 * **Required**: No, default: `[0,1]`
 * **Related WebGL functions**: `depthRange()`
 
