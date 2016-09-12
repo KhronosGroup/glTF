@@ -2,14 +2,14 @@
     "$schema" : "http://json-schema.org/draft-03/schema",
     "title" : "animation sampler",
     "type" : "object",
-    "description" : "Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
+    "description" : "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
         "input" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of a parameter in this animation to use as keyframe input, e.g., time.",
+            "description" : "The ID of an accessor containing keyframe input values, e.g., time.",
             "required" : true,
-            "gltf_detailedDescription" : "The ID of a parameter in this animation to use as keyframe input.  This parameter must have type `FLOAT`.  The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e., `time[n + 1] >= time[n]`."
+            "gltf_detailedDescription" : "The ID of an accessor containing keyframe input data, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e., `time[n + 1] >= time[n]`."
         },
         "interpolation" : {
             "type" : "string",
@@ -20,8 +20,9 @@
         },
         "output" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of a parameter in this animation to use as keyframe output.",
-            "required" : true
+            "description" : "The ID of an accessor, containing keyframe output values.",
+            "required" : true,
+            "gltf_detailedDescription" : "The ID of an accessor, containing keyframe output data. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
         }
     },
     "additionalProperties" : false
