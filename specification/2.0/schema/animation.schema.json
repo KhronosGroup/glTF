@@ -7,25 +7,15 @@
     "properties" : {
         "channels" : {
             "type" : "array",
-            "description" : "An array of channels, each of which targets an animation's sampler at a node's property.",
+            "description" : "An array of channels, each of which targets an animation's sampler at a node's property. Different channels can't have equal targets.",
             "items" : {
                 "$ref" : "animation.channel.schema.json"
             },
-            "default" : []
-        },
-        "parameters" : {
-            "type" : "object",
-            "description" : "A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.",
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "animation.parameter.schema.json"
-            },
-            "default" : {}
+            "minItems" : 1
         },
         "samplers" : {
             "type" : "object",
-            "description" : "A dictionary object of samplers that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
+            "description" : "A dictionary object of samplers that combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
             "properties" : {
             },
             "additionalProperties" : {
@@ -35,8 +25,7 @@
         }
     },
     "dependencies" : {
-        "channels" : "samplers",
-        "samplers" : "parameters"
+        "channels" : "samplers"
     },
     "additionalProperties" : false
 }
