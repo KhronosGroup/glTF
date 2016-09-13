@@ -30,10 +30,10 @@ In Binary glTF, a glTF asset (JSON, .bin, images, and shaders) can be stored in 
 This binary blob (which can be a file, for example) is divided into three subsequent parts:
 
 * A 20-byte preamble, entitled the `header`
-* The structured glTF scene description, entitled the `scene`
+* The structured glTF content, entitled the `content`
 * The binary `body`
 
-The `scene` part can refer to external resources as usual, and can also reference resources stored within the binary `body`.
+The `content` part can refer to external resources as usual, and can also reference resources stored within the binary `body`.
 
 ## Binary glTF Layout
 
@@ -53,11 +53,11 @@ The 20-byte header consists of the following five 4-byte entries:
 
 * `version` is an `uint32` that indicates the version of the Binary glTF container format. Currently available versions are shown in Table 1.
 
-* `length` is the total length of the Binary glTF, including `header`, `scene`, and `body`, in bytes.
+* `length` is the total length of the Binary glTF, including `header`, `content`, and `body`, in bytes.
 
-* `sceneLength` is the length, in bytes, of the glTF `scene`. It must be greater than zero.
+* `contentLength` is the length, in bytes, of the glTF `content`. It must be greater than zero.
 
-* `sceneFormat` specifies the format of the glTF `scene`. A list of all valid  values currently available is in Table 2.
+* `contentFormat` specifies the format of the glTF `content`. A list of all valid  values currently available is in Table 2.
 
 **Table 1**: Valid values for `version`
 
@@ -66,22 +66,22 @@ The 20-byte header consists of the following five 4-byte entries:
 | 1       | 0x00000001 | Version 1   |
 
 
-**Table 2**: Valid values for `sceneFormat`
+**Table 2**: Valid values for `contentFormat`
 
 | Decimal | Hex        | Description |
 |--------:|-----------:|------------:|
 | 0       | 0x00000000 | JSON        |
 
 
-### Scene
+### Content
 
-The `scene` part holds the structured glTF scene description, as it would be provided within a .gltf file in glTF without this extension.
-In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF scene from the arraybuffer, and then the JSON can be parsed with `JSON.parse` as usual.
+The `content` part holds the structured glTF content description, as it would be provided within a .gltf file in glTF without this extension.
+In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the arraybuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 
-By reading the `scene` first, an implementation is able to progressively retrieve resources from the binary body.
+By reading the `content` first, an implementation is able to progressively retrieve resources from the binary body.
 This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
 
-Elements of the `scene` can refer to binary data within the `body`, using a special buffer with an id equal to `"binary_glTF"`.
+Elements of the `content` can refer to binary data within the `body`, using a special buffer with an id equal to `"binary_glTF"`.
 For more details, see [glTF Schema Updates](#gltf-schema-updates) below.
 
 Binary glTF still supports external resources.
@@ -93,7 +93,7 @@ An advantage of Binary glTF over glTF is that resources can be embedded without 
 
 The binary `body` is the binary payload for geometry, animation key frames, skins, images, and shaders.
 
-The start of `body` is 4-byte aligned to ease its use with JavaScript Typed Arrays.  This implies that trailing spaces may be added to the JSON in the `scene` part such that `(20 + sceneLength)` is divisible by `4`.
+The start of `body` is 4-byte aligned to ease its use with JavaScript Typed Arrays.  This implies that trailing spaces may be added to the JSON in the `content` part such that `(20 + contentLength)` is divisible by `4`.
 
 The buffer with id equal to `"binary_glTF"` is used to address the content of the binary `body`.
 An offset of zero addresses the first byte of the binary `body`.

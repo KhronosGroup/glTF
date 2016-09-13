@@ -875,34 +875,11 @@ namespace GLTF
         std::vector <std::string> animationsUIDs = animations->getAllKeys();
 
         for (size_t animationIndex = 0; animationIndex < animationsUIDs.size(); animationIndex++) {
-            std::string inputParameterName = "TIME";
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
 
             // Can be null if there are no keyframes
-            if (animation)
-            {
-                shared_ptr<GLTFBufferView> timeBufferView = animation->getBufferViewForParameter(inputParameterName);
-
-                if (animation->parameters()->contains(inputParameterName) == false) {
-                    setupAndWriteAnimationParameter(animation.get(),
-                        inputParameterName,
-                        "FLOAT",
-                        (unsigned char*)timeBufferView->getBufferDataByApplyingOffset(),
-                        (int)timeBufferView->getByteLength(), true,
-                        this);
-                }
-
-                std::vector<std::string> allTargets = animation->targets()->getAllKeys();
-                std::vector<GLTFAnimationFlattener*> flatteners;
-                for (size_t i = 0; i < allTargets.size(); i++) {
-                    std::string targetID = allTargets[i];
-                    shared_ptr<GLTFAnimationFlattener> animationFlattener = animation->animationFlattenerForTargetUID(targetID);
-                    if (std::find(flatteners.begin(), flatteners.end(), animationFlattener.get()) != flatteners.end()) {
-                        continue;
-                    }
-                    flatteners.push_back(animationFlattener.get());
-                    animation->writeAnimationForTargetID(targetID, this);
-                }
+            if (animation && animation->getTargetNodeId() != "") {
+                animation->writeAnimation(this);
                 animations->setValue(animation->getID(), animation);
             }
             animations->removeValue(animationsUIDs[animationIndex]);
@@ -955,16 +932,18 @@ namespace GLTF
         for (size_t i = 0; i < nodesOriginalIds.size(); i++) {
             std::string nodeOID = nodesOriginalIds[i];
             std::string nodeUID = this->getUniqueId(nodesOriginalIds[i]);
-            shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
-            //WORK-AROUND: If camera is an empty string, it can be removed
-            //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
-            if (node->contains(kCamera)) {
-                std::string camera = node->getString(kCamera);
-                if (camera.empty()) {
-                    node->removeValue(kCamera);
+            if (nodeUID != "") {
+                shared_ptr <GLTF::JSONObject> node = nodes->getObject(nodeOID);
+                //WORK-AROUND: If camera is an empty string, it can be removed
+                //NOTE: This shouldn't happen, but it's here because one of the sample COLLADA models had this issue
+                if (node->contains(kCamera)) {
+                    std::string camera = node->getString(kCamera);
+                    if (camera.empty()) {
+                        node->removeValue(kCamera);
+                    }
                 }
+                this->_applyMaterialBindingsForNode(nodeUID);
             }
-            this->_applyMaterialBindingsForNode(nodeUID);
         }
         
         meshesUIDs = meshes->getAllKeys();
@@ -1000,6 +979,7 @@ namespace GLTF
                                 for (unsigned int m = 0; m < texcoordBindings->getKeysCount(); m++) {
                                     std::string key = texcoordBindings->getAllKeys()[m];
                                     std::string binding = texcoordBindings->getString(key);
+
                                     if (attribute == binding) {
                                         bound = true;
                                         break;
@@ -1165,15 +1145,6 @@ namespace GLTF
         for (size_t animationIndex = 0 ; animationIndex < animationsUIDs.size() ; animationIndex++) {
             shared_ptr<GLTFAnimation> animation = static_pointer_cast<GLTFAnimation>(animations->getObject(animationsUIDs[animationIndex]));
             shared_ptr<JSONObject> parameters = animation->parameters();
-            
-            //Replace OpenCOLLADA uniqueID by Original IDs
-            shared_ptr <JSONArray> channels = animation->channels();
-            for (size_t i = 0 ; i < channels->values().size() ; i++) {
-                shared_ptr<JSONObject> channel = static_pointer_cast<JSONObject>(channels->values()[i]);
-                shared_ptr<JSONObject> target = channel->getObject(kTarget);
-                std::string originalID = this->_uniqueIDToOriginalID[target->getString("id")];
-                target->setString("id", originalID);
-            }
             
             std::vector <std::string> parameterKeys = parameters->getAllKeys();
             for (size_t i = 0 ; i <parameterKeys.size() ; i++) {

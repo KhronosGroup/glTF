@@ -4,10 +4,15 @@
 #include <stdarg.h>
 #include "../GLTFOpenCOLLADA.h"
 #include "GLTFAccessorCache.h"
+#include "GLTFOutputStream.h"
+#include "GLTFAnimation.h"
 
 namespace GLTF
 {
     class GLTFAsset;
+    class GLTFAssetModifier;
+    class GLTFConfig;
+    class GLTFAnimation;
     
     class GLTFAssetValueEvaluator {
     public:
@@ -28,8 +33,6 @@ namespace GLTF
     const std::string kRawOutputStream = "rawOutputStream";
     const std::string kCompressionOutputStream = "compression";
 
-    class GLTFAnimationFlattener;
-
     typedef std::vector <std::shared_ptr<JSONObject> > AnimatedTargets;
     typedef std::shared_ptr <AnimatedTargets> AnimatedTargetsSharedPtr;
 
@@ -41,7 +44,6 @@ namespace GLTF
     typedef std::map<std::string /* openCOLLADA uniqueID from AnimationList*/, AnimatedTargetsSharedPtr > UniqueIDToAnimatedTargets;
     typedef std::map<std::string, std::string > ImageIdToImagePath;
     typedef std::map<std::string, std::shared_ptr<JSONArray> > UniqueIDToParentsOfInstanceNode;
-    typedef std::map<std::string, std::shared_ptr<GLTFAnimationFlattener> > UniqueIDToAnimationFlattener;
     typedef std::map<std::string, std::shared_ptr<JSONArray> > UniqueIDTOfLightToNodes;
 
     typedef std::map<std::string, std::shared_ptr<JSONObject> > OriginalIDToTrackedObject;
@@ -149,14 +151,19 @@ namespace GLTF
         MaterialUIDToName               _materialUIDToName;
         OriginalIDToTrackedObject       _originalIDToTrackedObject;
         SamplerHashtoSamplerIndex       _samplerHashtoSamplerIndex;
-        FlattenerMapsForAnimationID     _flattenerMapsForAnimationID;
 
         UniqueIDToAnimatedTargets       _uniqueIDToAnimatedTargets;
         UniqueIDToParentsOfInstanceNode _uniqueIDToParentsOfInstanceNode;
         UniqueIDTOfLightToNodes         _uniqueIDOfLightToNodes;
         UniqueIDToOpenCOLLADAObject     _uniqueIDToOpenCOLLADAObject;
         UniqueIDToAccessor              _uniqueIDToAccessorObject;
-        UniqueIDToAnimationFlattener    _targetUIDWithPathToAnimationFlattener;
+
+        std::map<std::string, vector<COLLADAFW::AnimationList::AnimationBinding>> _animationBindingsForTargetId;
+        std::map<std::string, COLLADAFW::UniqueId> _animationListIdForNodeId;
+        std::map<COLLADAFW::UniqueId, const COLLADAFW::Transformation*> _transformationForAnimationListId;
+        std::map<COLLADAFW::UniqueId, std::string> _nodeIdForAnimationListId;
+        std::map<std::string, std::vector<std::string>> _targetIdsForNodeIds;
+
 
     private:
         std::shared_ptr <GLTFProfile>        _profile;
@@ -195,6 +202,7 @@ namespace GLTF
         MaterialBindingsForNodeUID _materialBindingsForNodeUID;
         
         std::vector <std::shared_ptr<GLTFAssetValueEvaluator>> _evaluators;
+
     };
 
     std::string uniqueIdWithType(std::string type, const COLLADAFW::UniqueId& uniqueId);
