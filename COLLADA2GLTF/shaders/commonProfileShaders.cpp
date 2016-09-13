@@ -212,17 +212,20 @@ namespace GLTF
     bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
         
         if (parameters->contains("diffuse")) {
-            shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
+            shared_ptr<JSONObject> diffuse = parameters->getObject("diffuse");
             
             if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("SAMPLER_2D")) {
                 shared_ptr<JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
                 }
-                shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
+                shared_ptr<JSONArray> textureArray = diffuse->getArray("value");
+                shared_ptr<JSONString> textureId = static_pointer_cast<JSONString>(textureArray->values()[0]);
+                shared_ptr<JSONObject> texture = textures->getObject(textureId->getCString());
+
                 std::string sourceUID = texture->getString(kSource);
                 shared_ptr<JSONObject> images = asset->root()->createObjectIfNeeded(kImages);
-                
+
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     // If the user adds an <has_alpha> extra tag to the image then we override
@@ -240,7 +243,8 @@ namespace GLTF
 
                     if (imageHasAlpha(imagePath.c_str()))
                         return false;
-                } else {
+                }
+                else {
                     static bool printedOnce = false;
                     if (!printedOnce) {
                         printedOnce = true;

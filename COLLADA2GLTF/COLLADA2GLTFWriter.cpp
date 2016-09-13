@@ -1014,7 +1014,9 @@ namespace GLTF
             textures->setValue(textureUID, textureObject);
         }
         
-        slotObject->setString("value", textureUID);
+        shared_ptr<JSONArray> slotArray(new JSONArray());
+        slotArray->appendValue(shared_ptr<JSONString>(new JSONString(textureUID)));
+        slotObject->setValue("value", slotArray);
         values->setValue(slotName, slotObject);
         khrMaterialsCommonValues->setValue(slotName, slotObject);
     }
@@ -1168,9 +1170,11 @@ namespace GLTF
                 if (shininess < 1) {
                     shininess *= 128.0;
                 }
-                shared_ptr <JSONObject> shininessObject(new JSONObject());
+                shared_ptr<JSONObject> shininessObject(new JSONObject());
+                shared_ptr<JSONArray> shininessArray(new JSONArray());
                 shininessObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                shininessObject->setDouble("value", shininess);
+                shininessArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(shininess)));
+                shininessObject->setValue("value", shininessArray);
                 values->setValue("shininess", shininessObject);
                 khrMaterialsCommonValues->setValue("shininess", shininessObject);
             }
