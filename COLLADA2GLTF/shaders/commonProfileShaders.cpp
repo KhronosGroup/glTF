@@ -184,18 +184,14 @@ namespace GLTF
         //}
         
         double transparency = 1.0;
-        if (parameters->contains("transparency"))
-        {
+        if (parameters->contains("transparency")) {
             shared_ptr<JSONObject> tr = parameters->getObject("transparency");
             transparency = tr->getDouble("value");
         }
 
-        if (parameters->contains("diffuse"))
-        {
+        if (parameters->contains("diffuse")) {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
-
-            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("FLOAT_VEC4"))
-            {
+            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("FLOAT_VEC4")) {
                 auto values = diffuse->getArray(kValue)->values();
                 transparency *= static_pointer_cast<JSONNumber>(values[3])->getDouble();
             }
@@ -206,7 +202,7 @@ namespace GLTF
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
                                 GLTFAsset* asset) {
-        return getTransparency(parameters, asset)  < 1;
+        return getTransparency(parameters, asset) < 1;
     }
     
     bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
@@ -230,21 +226,18 @@ namespace GLTF
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     // If the user adds an <has_alpha> extra tag to the image then we override
                     //  what the image actually contain as far as weather there is alpha or not.
-                    if (image->contains("has_alpha"))
-                    {
+                    if (image->contains("has_alpha")) {
                         return !image->getBool("has_alpha");
                     }
                     std::string imagePath = image->getString(kURI);
-                    if (!is_dataUri(imagePath))
-                    {
+                    if (!is_dataUri(imagePath)) {
                         COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
                         imagePath = getPathDir(inputURI) + imagePath;
                     }
-
-                    if (imageHasAlpha(imagePath.c_str()))
+                    if (imageHasAlpha(imagePath.c_str())) {
                         return false;
-                }
-                else {
+                    }
+                } else {
                     static bool printedOnce = false;
                     if (!printedOnce) {
                         printedOnce = true;
