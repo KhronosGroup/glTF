@@ -7,7 +7,7 @@
     "properties" : {
         "channels" : {
             "type" : "array",
-            "description" : "An array of channels, each of which targets an animation's sampler at a node's property. Different channels can't have equal targets.",
+            "description" : "An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets.",
             "items" : {
                 "$ref" : "animation.channel.schema.json"
             },
