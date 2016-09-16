@@ -24,55 +24,86 @@
 #ifndef __GLTF_ANIMATION_H__
 #define __GLTF_ANIMATION_H__
 
+#include "GLTF.h"
+#include "../GLTFOpenCOLLADA.h"
+
+using namespace std;
+
 namespace GLTF 
 {
-    class GLTFAnimationFlattener;
     class GLTFAsset;
         
     class COLLADA2GLTF_EXPORT GLTFAnimation : public JSONObject {
     public:
+        class AnimationType {
+        public:
+            const static string ROTATE;
+            const static string TRANSLATE;
+            const static string SCALE;
+            const static string TIME;
+        };
+
+        class AnimationDataType {
+        public:
+            const static string VEC4;
+            const static string VEC3;
+            const static string SCALAR;
+        };
+
+        const static map<string, string> ANIMATION_DATA_TYPES;
+        const static map<string, int> ANIMATION_DATA_TYPE_SIZE;
+        const static vector<string> ANIMATION_TYPES;
+
         GLTFAnimation();
+        GLTFAnimation(const COLLADAFW::Animation* animation, GLTFAsset* asset);
         virtual ~GLTFAnimation();
-        
-        size_t getCount();
-        void setCount(size_t count);
-        
-        void setID(std::string animationID);
-        std::string getID();
-        
-        void setOriginalID(std::string originalID);
-        std::string getOriginalID();
-        
-        std::shared_ptr <JSONObject> getParameterNamed(std::string parameter);
-        void removeParameterNamed(std::string parameter);
-        
-        std::shared_ptr <JSONObject> samplers();
-        std::shared_ptr <JSONArray> channels();
-        std::shared_ptr <JSONObject> targets();
-        std::shared_ptr <JSONObject> parameters();
 
-        std::string getSamplerIDForName(std::string name);
+        int getCount() { return _keyFrames.size(); }
+        double* getKeyFrames() { return &_keyFrames[0]; }
         
-        void registerAnimationFlatteners(AnimationFlattenerForTargetUIDSharedPtr);
+        void setID(string animationID);
+        string getID();
         
-        std::shared_ptr<GLTFAnimationFlattener> animationFlattenerForTargetUID(std::string);
+        void setOriginalID(string originalID);
+        string getOriginalID();
+        
+        shared_ptr<JSONObject> getParameterNamed(string parameter);
+        void removeParameterNamed(string parameter);
 
-        void registerBufferView(std::string parameterName, std::shared_ptr <GLTFBufferView>);
-        void unregisterBufferView(std::string parameterName);
+        string getTargetNodeId() { return _nodeId; }
+        void setTargetNodeId(string nodeId) { _nodeId = nodeId; }
 
-        std::shared_ptr<GLTFBufferView> getBufferViewForParameter(std::string);
+        void addValuesAtKeyFrame(double frame, vector<double> values);
+        void addInterpolatedKeyFrame(double frame);
+        void doubleKeyFrames();
+        bool hasKeyFrame(double frame) { return _outputValues.count(frame) != 0; }
+        double getKeyFrameAtIndex(int index) { return _keyFrames[index]; }
+        vector<double> getValuesAtKeyFrame(double frame) { return _outputValues[frame]; }
         
-        void writeAnimationForTargetID(const std::string &targetID, GLTFAsset* asset);
+        shared_ptr <JSONObject> samplers();
+        shared_ptr <JSONArray> channels();
+        shared_ptr <JSONObject> targets();
+        shared_ptr <JSONObject> parameters();
+
+        string getSamplerIDForName(std::string name);
+                
+        void registerBufferView(string parameterName, shared_ptr<GLTFBufferView>);
+        void unregisterBufferView(string parameterName);
+
+        shared_ptr<GLTFBufferView> getBufferViewForParameter(string);
         
-        virtual std::string valueType();
+        void writeAnimation(GLTFAsset* asset);
+        
+        virtual string valueType();
 
     private:
-        std::string _id;
-        std::string _originalID;
-        std::shared_ptr <JSONObject> _targets;
-        AnimationFlattenerForTargetUIDSharedPtr _animationFlattenerForTargetUID;
-        std::map<std::string , std::shared_ptr<GLTFBufferView> > _bufferViews;
-        size_t _count;
+        string _id;
+        string _originalID;
+        shared_ptr <JSONObject> _targets;
+        string _nodeId;
+        vector<double> _keyFrames;
+        map<double, vector<double>> _outputValues;
+        map<string, shared_ptr<GLTFBufferView>> _bufferViews;
     };
     
 }

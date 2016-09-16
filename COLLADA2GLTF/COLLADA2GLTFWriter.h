@@ -34,12 +34,13 @@
 
 #include "helpers/geometryHelpers.h"
 #include "helpers/mathHelpers.h"
-#include "convert/animationConverter.h"
 #include "convert/meshConverter.h"
 
 #ifdef WIN32
 #pragma warning(disable: 4275)
 #endif
+
+using namespace std;
 
 namespace GLTF
 {
@@ -65,7 +66,7 @@ namespace GLTF
     };
     
     
-    typedef std::vector < std::shared_ptr <MeshFlatteningInfo> > MeshFlatteningInfoVector;
+    typedef vector<shared_ptr<MeshFlatteningInfo>> MeshFlatteningInfoVector;
     
     typedef struct 
     {
@@ -82,13 +83,15 @@ namespace GLTF
 		virtual ~COLLADA2GLTFWriter();
     private:
 		static void reportError(const std::string& method, const std::string& message);
-        bool writeNode(const COLLADAFW::Node* node, std::shared_ptr <GLTF::JSONObject> nodesObject, COLLADABU::Math::Matrix4, SceneFlatteningInfo*);
+        bool writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject, std::string nodeOriginalId);
         bool processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo);
         float getTransparency(const COLLADAFW::EffectCommon* effectCommon);
         float isOpaque(const COLLADAFW::EffectCommon* effectCommon);
         bool writeMeshFromUIDWithMaterialBindings(COLLADAFW::UniqueId uniqueId,
                                                   COLLADAFW::MaterialBindingArray &materialBindings,
                                                   std::shared_ptr <GLTF::JSONArray> &meshesArray);
+
+        bool writeNodes(vector<const COLLADAFW::Node*> nodes);
         
 	public:        
         
@@ -192,13 +195,13 @@ namespace GLTF
         
 	private:
         COLLADASaxFWL::Loader _loader;
-        std::shared_ptr<GLTF::GLTFAsset> _asset;
+        shared_ptr<GLTF::GLTFAsset> _asset;
         const COLLADAFW::VisualScene *_visualScene;
         SceneFlatteningInfo _sceneFlatteningInfo;
         GLTF::ExtraDataHandler *_extraDataHandler;
-        std::ofstream _compressedDataOutputStream;
+        ofstream _compressedDataOutputStream;
         double _metersPerUnit;
-        std::shared_ptr<GLTF::JSONObject> _rootTransform;
+        shared_ptr<GLTF::JSONObject> _rootTransform;
 	};
 } 
 
