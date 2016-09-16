@@ -969,6 +969,7 @@ Images referred to by textures are stored in the `images` dictionary property of
     }
 },
 ```
+> **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
 #### Samplers
 
@@ -1052,7 +1053,6 @@ The following example defines an animating camera node.
                     }
                 }
             ],
-            "count": 901,
             "parameters": {
                 "TIME": "animAccessor_0",
                 "rotation": "animAccessor_3",
@@ -2477,7 +2477,7 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 
 In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material)/[`technique`](#reference-technique) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
 
-A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties.  If none are provided, the transform is the identity.
+A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix. If none are provided, the transform is the identity.
 
 **Properties**
 
