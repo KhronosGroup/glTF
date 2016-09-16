@@ -457,14 +457,12 @@ namespace GLTF
             return this->_profile->getGLSLTypeForGLType(glType);
         }
         
-        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
+        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count) {
             if (this->hasSymbol(symbol) == false) {
                 std::string declaration = qualifier + " ";
                 declaration += GLSLTypeForGLType(type);
                 declaration += " " + symbol;
-                if ((count > 1) || forcesAsAnArray) {
-                    declaration += "["+GLTFUtils::toString(count)+"]";
-                }
+                declaration += "["+GLTFUtils::toString(count)+"]";
                 declaration += ";\n";
                 _declarations += declaration;
                 
@@ -476,8 +474,8 @@ namespace GLTF
             _addDeclaration("attribute", symbol, type, 1);
         }
         
-        void addUniform(std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
-            _addDeclaration("uniform", symbol, type, count, forcesAsAnArray);
+        void addUniform(std::string symbol, unsigned int type, size_t count) {
+            _addDeclaration("uniform", symbol, type, count);
         }
         
         void addVarying(std::string symbol, unsigned int type) {
@@ -611,8 +609,7 @@ namespace GLTF
                          std::string semantic,
                          std::string parameterID,
                          int count,
-                         bool includesVarying,
-                         bool forcesAsAnArray = false) {
+                         bool includesVarying) {
             
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
             
@@ -641,10 +638,8 @@ namespace GLTF
                     _program->addVarying("v_" + parameterID, type);
                 }
             } else {
-                shader->addUniform(symbol, type, count, forcesAsAnArray);
-                if ((count > 1) || forcesAsAnArray) {
-                    parameter->setUnsignedInt32(kCount, count);
-                }
+                shader->addUniform(symbol, type, count);
+                parameter->setUnsignedInt32(kCount, count);
             }
             
             return true;
@@ -653,7 +648,7 @@ namespace GLTF
         //FIXME: refactor with addSemantic
         shared_ptr <JSONObject> addParameter(std::string parameterID, unsigned int type) {
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
-            parameter->setUnsignedInt32(kType,  type);
+            parameter->setUnsignedInt32(kType, type);
             _parameters->setValue(parameterID, parameter);
             
             return parameter;
@@ -766,7 +761,7 @@ namespace GLTF
                 
                 assert(techniqueExtras != nullptr);
                 addSemantic("vs", "uniform",
-                            JOINTMATRIX, "jointMat", jointsCount, false, true /* force as an array */);
+                            JOINTMATRIX, "jointMat", jointsCount, false);
             }
             
             if (hasNormals) {

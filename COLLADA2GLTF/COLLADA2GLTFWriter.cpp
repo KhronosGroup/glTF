@@ -1385,8 +1385,14 @@ namespace GLTF
 		Color color = light->getColor();
 
         float constantAttenuation = (float)light->getConstantAttenuation().getValue();
+        shared_ptr<JSONArray> constantAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        constantAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(constantAttenuation)));
         float linearAttenuation = (float)light->getLinearAttenuation().getValue();
+        shared_ptr<JSONArray> linearAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        linearAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(linearAttenuation)));
         float quadraticAttenuation = (float)light->getQuadraticAttenuation().getValue();
+        shared_ptr<JSONArray> quadraticAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        quadraticAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(quadraticAttenuation)));
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
         
@@ -1400,23 +1406,28 @@ namespace GLTF
             case COLLADAFW::Light::POINT_LIGHT: {
                 glTFLight->setString(kType, "point");
 
-                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
-                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
-                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
+                description->setValue("constantAttenuation", constantAttenuationArray);             
+                description->setValue("linearAttenuation", linearAttenuationArray);
+                description->setValue("quadraticAttenuation", quadraticAttenuationArray);
             }
                 break;
             case COLLADAFW::Light::SPOT_LIGHT: {
                 glTFLight->setString(kType, "spot");
 
                 float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
+                shared_ptr<JSONArray> fallOffAngleArray = shared_ptr<JSONArray>(new JSONArray());
+                fallOffAngleArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffAngle)));
+
                 float fallOffExponent = (float)light->getFallOffExponent().getValue();
+                shared_ptr<JSONArray> fallOffExponentArray = shared_ptr<JSONArray>(new JSONArray());
+                fallOffExponentArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffExponent)));
                 
-                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
-                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
-                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
+                description->setValue("constantAttenuation", constantAttenuationArray);
+                description->setValue("linearAttenuation", linearAttenuationArray);
+                description->setValue("quadraticAttenuation", quadraticAttenuationArray);
                 
-                description->setValue("fallOffAngle", shared_ptr <JSONNumber> (new JSONNumber(fallOffAngle)));
-                description->setValue("fallOffExponent", shared_ptr <JSONNumber> (new JSONNumber(fallOffExponent)));
+                description->setValue("fallOffAngle", fallOffAngleArray);
+                description->setValue("fallOffExponent", fallOffExponentArray);
             }
                 break;
             default:
