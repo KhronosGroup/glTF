@@ -1327,7 +1327,6 @@ A keyframe animation.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**channels**|[`animation.channel[]`](#reference-animation.channel)|An array of channels, each of which targets an animation's sampler at a node's property.|No, default: `[]`|
-|**parameters**|`object`|A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.|No, default: `{}`|
 |**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -1340,18 +1339,10 @@ Additional properties are not allowed.
 
 ### animation.channels
 
-An array of channels, each of which targets an animation's sampler at a node's property.
+An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets.
 
 * **Type**: [`animation.channel[]`](#reference-animation.channel)
 * **Required**: No, default: `[]`
-
-### animation.parameters
-
-A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `string`
 
 ### animation.samplers
 
@@ -1359,7 +1350,7 @@ A dictionary object of [`animation.sampler`](#reference-animation.sampler) objec
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `object`
+* **Type of each property**: [`animation.sampler`](#reference-animation.sampler)
 
 ### animation.name
 
@@ -1495,9 +1486,9 @@ Combines input and output parameters with an interpolation algorithm to define a
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**input**|`string`|The ID of a parameter in this animation to use as keyframe input, e.g., time.| :white_check_mark: Yes|
+|**input**|`string`|The ID of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
 |**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
-|**output**|`string`|The ID of a parameter in this animation to use as keyframe output.| :white_check_mark: Yes|
+|**output**|`string`|The ID of an accessor, containing keyframe output values.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -1507,7 +1498,7 @@ Additional properties are not allowed.
 
 ### sampler.input :white_check_mark:
 
-The ID of a parameter in this animation to use as keyframe input.  This parameter must have type `FLOAT`.  The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e., `time[n + 1] >= time[n]`.
+The ID of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
 
 * **Type**: `string`
 * **Required**: Yes
@@ -1515,15 +1506,15 @@ The ID of a parameter in this animation to use as keyframe input.  This paramete
 
 ### sampler.interpolation
 
-Interpolation algorithm.  When an animation targets a node's rotation, and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions.
+Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `"STEP"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe.
 
 * **Type**: `string`
 * **Required**: No, default: `"LINEAR"`
-* **Allowed values**: `"LINEAR"`
+* **Allowed values**: `"LINEAR"`, `"STEP"`
 
 ### sampler.output :white_check_mark:
 
-The ID of a parameter in this animation to use as keyframe output.
+The ID of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`.
 
 * **Type**: `string`
 * **Required**: Yes
