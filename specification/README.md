@@ -39,6 +39,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
+    * [Specifying GL Extensions](#specifying-gl-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
@@ -1177,25 +1178,50 @@ Only the `version` property is required. For example,
 
 glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example:
 
-```javascript
-"a_shader": {
+```json
+{
+  "a_shader": {
     "extensions": {
-        "binary_glTF": {
-            "bufferView": // ...
-        }
+      "KHR_binary_glTF": {
+        "bufferView": "a_shader_bufferView"
+      }
     }
+  }
 }
 ```
 
-All extensions used in a model are listed in the top-level `extensionsUsed` dictionary object, e.g.,
+All extensions used in a glTF asset are listed in the top-level `extensionsUsed` dictionary object, e.g.,
 
-```javascript
-"extensionsUsed": [
-   "KHR_binary_glTF"
-]
+```json
+{
+  "extensionsUsed": [
+    "KHR_binary_glTF", "VENDOR_physics"
+  ]
+}
 ```
 
-_TODO: add note on how this is different than `glExtensionsUsed` property._
+All glTF extensions required to load and/or render an asset must be listed in the top-level `extensionsRequired` dictionary object, e.g.,
+
+```json
+{
+  "extensionsRequired": [
+    "KHR_binary_glTF"
+  ]
+}
+```
+
+<a name="specifying-gl-extensions"></a>
+### Specifying GL extensions
+
+If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` dictionary object, e.g.,
+
+```json
+{
+  "glExtensionsUsed": [
+    "OES_element_index_uint"
+  ]
+}
+```
 
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
 
@@ -2094,6 +2120,7 @@ The root object for a glTF asset.
 |**techniques**|`object`|A dictionary object of [`technique`](#reference-technique) objects.|No, default: `{}`|
 |**textures**|`object`|A dictionary object of [`texture`](#reference-texture) objects.|No, default: `{}`|
 |**extensionsUsed**|`string[]`|Names of glTF extensions used somewhere in this asset.|No, default: `[]`|
+|**extensionsRequired**|`string[]`|Names of glTF extensions required to properly load this asset.|No, default: `[]`|
 |**glExtensionsUsed**|`string[]`|Names of WebGL extensions required to render this asset.|No, default: `[]`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2248,6 +2275,14 @@ A dictionary object of [`texture`](#reference-texture) objects.  The name of eac
 ### glTF.extensionsUsed
 
 Names of extensions used somewhere in this asset.
+
+* **Type**: `string[]`
+   * Each element in the array must be unique.
+* **Required**: No, default: `[]`
+
+### glTF.extensionsRequired
+
+Names of glTF extensions required to properly load this asset.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
