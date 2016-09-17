@@ -1159,7 +1159,7 @@ All glTF extensions required to load and/or render an asset must be listed in th
 <a name="specifying-gl-extensions"></a>
 ### Specifying GL extensions
 
-If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g. WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` dictionary object, e.g.,
+If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` dictionary object, e.g.,
 
 ```json
 {
