@@ -14,6 +14,15 @@
             "uniqueItems" : true,
             "default" : []
         },
+        "extensionsRequired" : {
+            "type" : "array",
+            "description" : "Names of glTF extensions required to properly load this asset.",
+            "items" : {
+                "type" : "string"
+            },
+            "uniqueItems" : true,
+            "default" : []
+        },
         "accessors" : {
             "type" : "object",
             "description" : "A dictionary object of accessors.",
