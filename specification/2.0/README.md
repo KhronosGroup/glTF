@@ -1022,70 +1022,124 @@ The following example defines a perspective camera with supplied values for Y fi
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-> Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+> **Note:** glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
 
-The following example defines an animating camera node.
+> **Note:** glTF 1.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
-```javascript
-        "animation_0": {
-            "channels": [
-                {
-                    "sampler": "animation_0_scale_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "scale"
-                    }
-                },
-                {
-                    "sampler": "animation_0_translation_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "translation"
-                    }
-                },
-                {
-                    "sampler": "animation_0_rotation_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "rotation"
-                    }
-                }
-            ],
-            "parameters": {
-                "TIME": "animAccessor_0",
-                "rotation": "animAccessor_3",
-                "scale": "animAccessor_1",
-                "translation": "animAccessor_2"
-            },
-            "samplers": {
-                "animation_0_rotation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "rotation"
-                },
-                "animation_0_scale_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "scale"
-                },
-                "animation_0_translation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "translation"
-                }
-            }
+All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
+
+The following examples show expected animations usage.
+
+```json
+{
+  "animations": {
+    "one_node_all_props_animation": {
+      "channels": [
+        {
+          "sampler": "rotation_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "rotation"
+          }
         },
+        {
+          "sampler": "scale_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "scale"
+          }
+        },
+        {
+          "sampler": "translation_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "translation"
+          }
+        }
+      ],
+      "samplers": {
+        "rotation_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor"
+        },
+        "scale_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "scale_accessor"
+        },
+        "translation_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "translation_accessor"
+        }
+      }
+    },
+    "two_nodes_different_samplers": {
+      "channels": [
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_A",
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": "b_sampler",
+          "target": {
+            "id": "node_B",
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": {
+        "a_sampler": {
+          "input": "time_accessor_a",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_A"
+        },
+        "b_sampler": {
+          "input": "time_accessor_b",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_B"
+        }
+      }
+    },
+    "two_nodes_same_sampler": {
+      "channels": [
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_A",
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_B",
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": {
+        "a_sampler": {
+          "input": "time_accessor_a",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_A"
+        }
+      }
+    }
+  }
+}
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
-The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. Each of these inputs is stored in a buffer and accessed via an accessor.
+Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
-Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
-
-> Note: glTF 1.0 animation samplers support only linear interpolation.
+> Note: glTF 1.0 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
 
@@ -1327,7 +1381,6 @@ A keyframe animation.
 |   |Type|Description|Required|
 |---|----|-----------|--------|
 |**channels**|[`animation.channel[]`](#reference-animation.channel)|An array of channels, each of which targets an animation's sampler at a node's property.|No, default: `[]`|
-|**parameters**|`object`|A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.|No, default: `{}`|
 |**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
@@ -1340,18 +1393,10 @@ Additional properties are not allowed.
 
 ### animation.channels
 
-An array of channels, each of which targets an animation's sampler at a node's property.
+An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets.
 
 * **Type**: [`animation.channel[]`](#reference-animation.channel)
 * **Required**: No, default: `[]`
-
-### animation.parameters
-
-A dictionary object of strings whose values are IDs of accessors with keyframe data, e.g., time, translation, rotation, etc.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `string`
 
 ### animation.samplers
 
@@ -1359,7 +1404,7 @@ A dictionary object of [`animation.sampler`](#reference-animation.sampler) objec
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
-* **Type of each property**: `object`
+* **Type of each property**: [`animation.sampler`](#reference-animation.sampler)
 
 ### animation.name
 
@@ -1495,9 +1540,9 @@ Combines input and output parameters with an interpolation algorithm to define a
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**input**|`string`|The ID of a parameter in this animation to use as keyframe input, e.g., time.| :white_check_mark: Yes|
+|**input**|`string`|The ID of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
 |**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
-|**output**|`string`|The ID of a parameter in this animation to use as keyframe output.| :white_check_mark: Yes|
+|**output**|`string`|The ID of an accessor, containing keyframe output values.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -1507,7 +1552,7 @@ Additional properties are not allowed.
 
 ### sampler.input :white_check_mark:
 
-The ID of a parameter in this animation to use as keyframe input.  This parameter must have type `FLOAT`.  The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e., `time[n + 1] >= time[n]`.
+The ID of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
 
 * **Type**: `string`
 * **Required**: Yes
@@ -1515,15 +1560,15 @@ The ID of a parameter in this animation to use as keyframe input.  This paramete
 
 ### sampler.interpolation
 
-Interpolation algorithm.  When an animation targets a node's rotation, and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions.
+Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `"STEP"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe.
 
 * **Type**: `string`
 * **Required**: No, default: `"LINEAR"`
-* **Allowed values**: `"LINEAR"`
+* **Allowed values**: `"LINEAR"`, `"STEP"`
 
 ### sampler.output :white_check_mark:
 
-The ID of a parameter in this animation to use as keyframe output.
+The ID of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`.
 
 * **Type**: `string`
 * **Required**: Yes
