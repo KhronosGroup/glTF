@@ -1024,68 +1024,121 @@ glTF supports articulated and skinned animation via key frame animations of node
 
 > Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
+> Note: glTF 1.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
-The following example defines an animating camera node.
+All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
-```javascript
-        "animation_0": {
-            "channels": [
-                {
-                    "sampler": "animation_0_scale_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "scale"
-                    }
-                },
-                {
-                    "sampler": "animation_0_translation_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "translation"
-                    }
-                },
-                {
-                    "sampler": "animation_0_rotation_sampler",
-                    "target": {
-                        "id": "node-cam01-box",
-                        "path": "rotation"
-                    }
-                }
-            ],
-            "parameters": {
-                "TIME": "animAccessor_0",
-                "rotation": "animAccessor_3",
-                "scale": "animAccessor_1",
-                "translation": "animAccessor_2"
-            },
-            "samplers": {
-                "animation_0_rotation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "rotation"
-                },
-                "animation_0_scale_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "scale"
-                },
-                "animation_0_translation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "translation"
-                }
-            }
+The following examples show expected animations usage.
+
+```json
+{
+  "animations": {
+    "one_node_all_props_animation": {
+      "channels": [
+        {
+          "sampler": "scale_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "scale"
+          }
         },
+        {
+          "sampler": "translation_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": "rotation_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": {
+        "rotation_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor"
+        },
+        "scale_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "scale_accessor"
+        },
+        "translation_sampler": {
+          "input": "time_accessor",
+          "interpolation": "LINEAR",
+          "output": "translation_accessor"
+        }
+      }
+    },
+    "two_nodes_different_samplers": {
+      "channels": [
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_A",
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": "b_sampler",
+          "target": {
+            "id": "node_B",
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": {
+        "a_sampler": {
+          "input": "time_accessor_a",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_A"
+        },
+        "b_sampler": {
+          "input": "time_accessor_b",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_B"
+        }
+      }
+    },
+    "two_nodes_same_sampler": {
+      "channels": [
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_A",
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": "a_sampler",
+          "target": {
+            "id": "node_B",
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": {
+        "a_sampler": {
+          "input": "time_accessor_a",
+          "interpolation": "LINEAR",
+          "output": "rotation_accessor_for_node_A"
+        }
+      }
+    }
+  }
+}
 ```
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
 
-The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. Each of these inputs is stored in a buffer and accessed via an accessor.
+Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
-Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
-
-> Note: glTF 1.0 animation samplers support only linear interpolation.
+> Note: glTF 1.0 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
 
