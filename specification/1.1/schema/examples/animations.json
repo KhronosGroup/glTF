@@ -27,15 +27,11 @@
                 }
             ],
             "name": "user-defined animation name",
-            "parameters": {
-                "TIME": "time_accessor",
-                "rotation": "rotation_accessor"
-            },
             "samplers": {
                 "a_sampler": {
-                    "input": "TIME",
+                    "input": "time_accessor",
                     "interpolation": "LINEAR",
-                    "output": "rotation",
+                    "output": "rotation_accessor",
 		            "extensions" : {
 		               "extension_name" : {
 		                  "extension specific" : "value"
