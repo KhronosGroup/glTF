@@ -1022,9 +1022,10 @@ The following example defines a perspective camera with supplied values for Y fi
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-> Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+> **Note:** glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
-> Note: glTF 1.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
+
+> **Note:** glTF 1.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
 All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
@@ -1035,6 +1036,13 @@ The following examples show expected animations usage.
   "animations": {
     "one_node_all_props_animation": {
       "channels": [
+        {
+          "sampler": "rotation_sampler",
+          "target": {
+            "id": "node-cam01-box",
+            "path": "rotation"
+          }
+        },
         {
           "sampler": "scale_sampler",
           "target": {
@@ -1047,13 +1055,6 @@ The following examples show expected animations usage.
           "target": {
             "id": "node-cam01-box",
             "path": "translation"
-          }
-        },
-        {
-          "sampler": "rotation_sampler",
-          "target": {
-            "id": "node-cam01-box",
-            "path": "rotation"
           }
         }
       ],
@@ -1134,7 +1135,7 @@ The following examples show expected animations usage.
 }
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
