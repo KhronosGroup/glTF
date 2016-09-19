@@ -706,9 +706,11 @@ namespace GLTF
         }
         
         for (size_t i = 0 ; i < nodeCount ; i++) {
-            std::string nodeUID = nodePointerArray[i]->getOriginalId();
+            COLLADAFW::Node* childNode = nodePointerArray[i];
+            std::string nodeUID = childNode->getOriginalId();
             if (nodeUID.length() == 0) {
                 nodeUID = uniqueIdWithType(kNode, nodePointerArray[i]->getUniqueId());
+                childNode->setOriginalId(nodeUID);
             }
                         
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
