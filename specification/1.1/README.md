@@ -1180,10 +1180,12 @@ glTF defines an extension mechanism that allows the base format to be extended w
 
 ```json
 {
-  "a_shader": {
-    "extensions": {
-      "KHR_binary_glTF": {
-        "bufferView": "a_shader_bufferView"
+  "shaders": {
+    "a_shader": {
+      "extensions": {
+        "KHR_binary_glTF": {
+          "bufferView": "a_shader_bufferView"
+        }
       }
     }
   }
