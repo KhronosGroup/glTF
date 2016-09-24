@@ -36,6 +36,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
   * [Cameras](#cameras)
+    * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
@@ -1029,7 +1030,8 @@ The following example defines two perspective cameras with supplied values for Y
   }
 }
 ```
-### Projection matrices
+<a name="projection-matrices"></a>
+### Projection Matrices
 
 Runtimes are expected to use the following projection matrices.
 
