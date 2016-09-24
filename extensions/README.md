@@ -17,40 +17,51 @@ _Draft Khronos extensions are not ratified yet._
 
 # About glTF Extensions
 
-glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved ids, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
+glTF extensions extend the base glTF model format.  Extensions can introduce new properties (including properties that reference external data, and the extension can define the format of those data), new parameter semantics, reserved IDs, and new container formats.  Extensions are written against a specific version of glTF and may be promoted to core glTF in a later glTF version. 
 
 ## Extension Mechanics
 
-All glTF object properties (see [glTFProperty.schema.json](https://github.com/KhronosGroup/glTF/blob/master/specification/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved ids, and new formats containing glTF.
+All glTF object properties (see [glTFProperty.schema.json](https://github.com/KhronosGroup/glTF/blob/master/specification/schema/glTFProperty.schema.json)) have an optional `extensions` object property that can contain new extension-specific properties.  This allows extensions to extend any part of glTF, including geometry, materials, animations, etc.  Extensions can also introduce new parameter semantics, reserved IDs, and new formats containing glTF.
 
 Extensions can't remove existing glTF properties or redefine existing glTF properties to mean something else.
 
 Examples include:
 * **New properties**: `KHR_binary_glTF` introduces a `bufferView` property for shaders, e.g.,
-```javascript
-"a_shader" : {
-    "extensions" : {
-        "binary_glTF" : {
-            "bufferView" : // ...
+```json
+{
+  "shaders": {
+    "a_shader": {
+      "extensions": {
+        "KHR_binary_glTF": {
+          "bufferView": "a_shader_bufferView"
         }
+      }
     }
+  }
 }
 ```
 * **New parameter semantics**: `CESIUM_RTC` introduces the `CESIUM_RTC_MODELVIEW` semantic.
-* **Reserved ids**: `KHR_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
+* **Reserved IDs**: `KHR_binary_glTF` introduces an explicitly named `buffer` called `binary_glTF`.
 * **New container formats**: `KHR_binary_glTF` introduces a binary format that contains the glTF JSON and geometry, textures, etc.
 
-All extensions used in a model are listed as strings in the top-level `extensionsUsed` array, e.g.,
-```javascript
-"extensionsUsed" : [
-   "KHR_binary_glTF"
-]
+All extensions used in a model are listed as strings in the top-level `extensionsUsed` array; all _required_ extensions are listed as strings in the top-level `extensionsRequired` array, e.g.,
+```json
+{
+  "extensionsUsed": [
+    "KHR_binary_glTF", "VENDOR_physics"
+  ],
+  "extensionsRequired": [
+    "KHR_binary_glTF"
+  ]
+}
 ```
 This allows an engine to quickly determine if it supports the extensions needed to render the model without inspecting the the `extensions` property of all objects.
 
 ## Creating Extensions
 
 To create a new extension, use the [extension template](Template.md) and open a pull request into this repo.  Make sure to add the extension to the glTF Extension Registry (top of this file).
+
+If lack of extension support prevents proper geometry loading, extension specification _must_ state that (and such extension must be mentioned in `extensionsRequired` top-level glTF property).  
 
 Extensions start as a vendor extension, then can become a multi-vendor extensions if there are multiple implementations, and can become a ratified Khronos extension (the multi-vendor extension is an optional step).
 
@@ -83,13 +94,17 @@ In addition to extensions, the `extras` object can also be used to extend glTF. 
 
 All glTF object properties allow adding new properties to an `extras` object sub-property, e.g.,
 ```json
-"a-vertex-shader-id" : {
-    "name": "user-defined-name",
-    "uri" : "vertex-shader.glsl",
-    "type": 35633,
-    "extras" : {
-        "Application specific" : "The extra object can contain any properties."
+{
+  "shaders": {
+    "a-vertex-shader-id": {
+      "name": "user-defined-name",
+      "uri" : "vertex-shader.glsl",
+      "type": 35633,
+      "extras" : {
+        "precompiled_binary" : "path_to_precompiled_shader"
+      }
     }
+  }
 }
 ```
 This enables glTF models to contain application-specific properties without creating a full glTF extension.  This may be preferred for niche use cases where an extension would not be widely adopted.
