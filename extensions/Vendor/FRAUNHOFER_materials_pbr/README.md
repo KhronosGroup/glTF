@@ -19,7 +19,7 @@ Written against the glTF 1.0.1 spec.
 
 The glTF 1.0 allows the definition of materials by instancing `techniques`. A `technique`, as defined in glTF 1.0, is a verbose description of shader parameters combined with actual shader code. Typically, shader code is engine specific and, as such, may not be used across systems which do not share the same rendering pipeline.
 
-The extension [KHR_materials_common](../Khronos/KHR_materials_common) facilitates the definition of simple standard materials, using pre-defined techniques.
+The extension [KHR_materials_common](../../Khronos/KHR_materials_common) facilitates the definition of simple standard materials, using pre-defined techniques.
 However, it can not represent materials for physically-based rendering.
 
 This extension provides two new `techniques` consisting of a well defined set of parameters which are sufficient for representing a wide range of real-world materials. These pre-defined techniques, entitled 'materialModel's, are based on widely used material representations for Physically-Based Rendering (PBR) content creation pipelines.
