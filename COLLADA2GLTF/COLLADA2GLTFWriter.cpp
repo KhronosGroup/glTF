@@ -847,7 +847,7 @@ namespace GLTF
                 }
                 else {
                     // Flatten this transform into the node.
-                    nodeTransforms.push_back(transformation);
+                    nodeTransforms.push_back(transformation->clone());
                 }
             }
             // Write out any remaining transforms 
@@ -862,8 +862,8 @@ namespace GLTF
                         children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
                     }
                     writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
-                    nodeTransforms.clear();
                 }
+				nodeTransforms.clear();
             }
             nodesObject->setValue(id, nodeObject);
             writeNode(node, nodeObject, id);
