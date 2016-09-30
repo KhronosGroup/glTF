@@ -34,6 +34,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * [osm2cesium](https://github.com/stirringhalo/osm2cesium) - Extracts buildings in OpenStreetMap and converts them to glTF
 * [Docker collada2gltf](https://hub.docker.com/r/winsent/collada2gltf/) - Docker container of Python web service to convert COLLADA to glTF
 * [binary-gltf-utils](https://github.com/Qantas94Heavy/binary-gltf-utils) - Node.js tool to convert glTF to Binary glTF
+* [gltf2glb](https://github.com/Geopipe/gltf2glb) - Python tool to convert glTF to Binary glTF
 * [collada2gltf-web-service](https://github.com/AnalyticalGraphicsInc/collada2gltf-web-service) - Simple Node.js web service built on COLLADA2GLTF
 * [collada2gltf](https://www.npmjs.com/package/collada2gltf) - Node.js wrapper around COLLADA2GLTF
 * [colladaToBglTFConverter](https://github.com/virtualcitySYSTEMS/colladaToBglTFConverter) - Groovy/JavaScript tool to convert COLLADA to Binary glTF (0.8 / CESIUM_binary_glTF)
@@ -100,6 +101,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [gltf-statistics](https://github.com/AnalyticalGraphicsInc/gltf-statistics) - JavaScript and Node.js library and command-line tool to display statistics for glTF models (glTF 0.8)
+
+## Stack Overflow
+
+* [glTF tagged](http://stackoverflow.com/questions/tagged/gltf) questions
 
 ## Presentations and Articles
 
