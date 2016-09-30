@@ -720,7 +720,6 @@ namespace GLTF
                 nodeUID = uniqueIdWithType(kNode, nodePointerArray[i]->getUniqueId());
                 childNode->setOriginalId(nodeUID);
             }
-
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
             childrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (nodeIDValue));
         }
@@ -872,8 +871,14 @@ namespace GLTF
             vector<const COLLADAFW::Node*> children;
             NodePointerArray childNodes = node->getChildNodes();
             if (childNodes.getCount() > 0) {
-                for (size_t j = 0; j < childNodes.getCount(); j++) {
-                    children.push_back(childNodes[j]);
+                for (size_t i = 0; i < childNodes.getCount(); i++) {
+					COLLADAFW::Node* childNode = childNodes[i];
+					std::string nodeUID = childNode->getOriginalId();
+					if (nodeUID.length() == 0) {
+						nodeUID = uniqueIdWithType(kNode, childNode->getUniqueId());
+						childNode->setOriginalId(nodeUID);
+					}
+                    children.push_back(childNode);
                 }
                 writeNodes(children);
             }
