@@ -56,32 +56,32 @@ namespace
 namespace GLTF
 {
     /*
-     */
-    COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset):
-    _asset(asset),
-    _visualScene(0){
-	}
-    
-    /*
-     */
-	COLLADA2GLTFWriter::~COLLADA2GLTFWriter() {
-	}
-    
-    /*
-     */
-	void COLLADA2GLTFWriter::reportError( const std::string& method, const std::string& message) {
-        printf("ERROR: method:%s message:%s\n", method.c_str(), message.c_str());
-	}
+    */
+    COLLADA2GLTFWriter::COLLADA2GLTFWriter(shared_ptr<GLTFAsset> asset) :
+        _asset(asset),
+        _visualScene(0){
+    }
 
     /*
-     */
+    */
+    COLLADA2GLTFWriter::~COLLADA2GLTFWriter() {
+    }
+
+    /*
+    */
+    void COLLADA2GLTFWriter::reportError(const std::string& method, const std::string& message) {
+        printf("ERROR: method:%s message:%s\n", method.c_str(), message.c_str());
+    }
+
+    /*
+    */
     bool COLLADA2GLTFWriter::write() {
         this->_extraDataHandler = new ExtraDataHandler();
         //To comply with macro to access config
         GLTFAsset *asset = this->_asset.get();
         asset->setExtras(this->_extraDataHandler->allExtras());
-        asset->prepareForProfile(shared_ptr <GLTFWebGL_1_0_Profile> (new GLTFWebGL_1_0_Profile()));
-                
+        asset->prepareForProfile(shared_ptr <GLTFWebGL_1_0_Profile>(new GLTFWebGL_1_0_Profile()));
+
         COLLADAFW::Root root(&this->_loader, this);
         this->_loader.registerExtraDataCallbackHandler(this->_extraDataHandler);
         const std::string& fileData = asset->getInputFileData();
@@ -101,50 +101,50 @@ namespace GLTF
                 return false;
             }
         }
-        
+
         asset->write();
 
         // Cleanup IDs and Technique cache in case we have another conversion
         GLTFUtils::resetIDCount();
         clearCommonProfileTechniqueCache();
-                
+
         delete _extraDataHandler;
         return true;
-	}
-    
-	//--------------------------------------------------------------------
-	void COLLADA2GLTFWriter::cancel( const std::string& errorMessage ) {
+    }
+
+    //--------------------------------------------------------------------
+    void COLLADA2GLTFWriter::cancel(const std::string& errorMessage) {
         printf("CONVERTION ABORTED: message:%s\n", errorMessage.c_str());
-	}
-    
-	//--------------------------------------------------------------------
-	void COLLADA2GLTFWriter::start() {
-	}
-    
-	//--------------------------------------------------------------------
-	void COLLADA2GLTFWriter::finish() {
-	}
-    
-    
-	//--------------------------------------------------------------------
-    bool COLLADA2GLTFWriter::writeGlobalAsset( const COLLADAFW::FileInfo* globalAsset ) {
+    }
+
+    //--------------------------------------------------------------------
+    void COLLADA2GLTFWriter::start() {
+    }
+
+    //--------------------------------------------------------------------
+    void COLLADA2GLTFWriter::finish() {
+    }
+
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeGlobalAsset(const COLLADAFW::FileInfo* globalAsset) {
         GLTFAsset* asset = this->_asset.get();
         shared_ptr<JSONObject> assetObject = asset->root()->createObjectIfNeeded(kAsset);
-        std::string version = "collada2gltf@"+std::string(g_GIT_SHA1);
-        
+        std::string version = "collada2gltf@" + std::string(g_GIT_SHA1);
+
         const COLLADAFW::FileInfo::ValuePairPointerArray& valuePairs = globalAsset->getValuePairArray();
-        for ( size_t i = 0, count = valuePairs.getCount(); i < count; ++i)
+        for (size_t i = 0, count = valuePairs.getCount(); i < count; ++i)
         {
             const COLLADAFW::FileInfo::ValuePair* valuePair = valuePairs[i];
-			const COLLADAFW::String& key = valuePair->first;
-			const COLLADAFW::String& value = valuePair->second;
+            const COLLADAFW::String& key = valuePair->first;
+            const COLLADAFW::String& value = valuePair->second;
             const char *sketchUp = "Google SketchUp";
-            
+
             if ((key == "authoring_tool") && value.length() > 0) {
                 if (value.find(sketchUp) != string::npos) {
                     //isolate x.y (version) that is the latest token from a string that is possibily x.y.z
                     size_t end = value.find_last_of(" ", value.length() - 1);
-                    if ( end != string::npos) {
+                    if (end != string::npos) {
                         std::string version = value.substr(end);
                         size_t major = version.find(".", 0);
                         if (major != string::npos) {
@@ -158,14 +158,14 @@ namespace GLTF
                                 }
                             }
                         }
-                        
+
                     }
-                    
+
                 }
             }
         }
-        
-        assetObject->setString("generator",version);
+
+        assetObject->setString("generator", version);
         assetObject->setBool(kPremultipliedAlpha, CONFIG_BOOL(asset, kPremultipliedAlpha));
         assetObject->setValue(kProfile, asset->profile()->id());
         assetObject->setString(kVersion, glTFVersion);
@@ -178,20 +178,20 @@ namespace GLTF
             if (globalAsset->getUpAxisType() == COLLADAFW::FileInfo::X_UP)
             {
                 // Rotate -90 deg around Z
-                matrix.setElement(0, 0,  0.0f);
+                matrix.setElement(0, 0, 0.0f);
                 matrix.setElement(0, 1, -1.0f);
-                matrix.setElement(1, 0,  1.0f);
-                matrix.setElement(1, 1,  0.0f);
+                matrix.setElement(1, 0, 1.0f);
+                matrix.setElement(1, 1, 0.0f);
             }
             else // Z_UP
             {
                 // Rotate 90 deg around X
-                matrix.setElement(1, 1,  0.0f);
-                matrix.setElement(1, 2,  1.0f);
+                matrix.setElement(1, 1, 0.0f);
+                matrix.setElement(1, 2, 1.0f);
                 matrix.setElement(2, 1, -1.0f);
-                matrix.setElement(2, 2,  0.0f);
+                matrix.setElement(2, 2, 0.0f);
             }
-                                
+
             _rootTransform = std::shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
             _rootTransform->setString(kName, "Y_UP_Transform");
             _rootTransform->setValue("matrix", serializeOpenCOLLADAMatrix4(matrix));
@@ -202,10 +202,10 @@ namespace GLTF
         asset->setDistanceScale(globalAsset->getUnit().getLinearUnitMeter());
 
         return true;
-	}
-    
-	//--------------------------------------------------------------------
-            
+    }
+
+    //--------------------------------------------------------------------
+
     float COLLADA2GLTFWriter::getTransparency(const COLLADAFW::EffectCommon* effectCommon) {
         static bool loggedOnce = false;
         GLTFAsset* asset = this->_asset.get();
@@ -213,99 +213,103 @@ namespace GLTF
         if (effectCommon->getOpacity().isTexture()) {
             return 1;
         }
-        
+
         COLLADAFW::EffectCommon::OpaqueMode opaqueMode;
         float transparency = 1.0;
-        
+
         opaqueMode = effectCommon->getOpaqueMode();
 
         ColorOrTexture transparent = effectCommon->getTransparent();
         double transparentAlpha = (transparent.getType() == ColorOrTexture::COLOR) ? transparent.getColor().getAlpha() : 1.0;
 
         switch (opaqueMode) {
-            
-            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
-            case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO:
-                transparency = static_cast<float>(1.0 - transparentAlpha * effectCommon->getTransparency().getFloatValue());
-                if (!loggedOnce) {
-                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
-                    loggedOnce = true;
-                }
-                break;
-            case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE:
-                transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
-                if (!loggedOnce) {
-                    this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str() );
-                    loggedOnce = true;
-                }
-                break;
-            
-            case COLLADAFW::EffectCommon::OpaqueMode::A_ONE: 
-                transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
-                break;
-            case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
-            default:
-                transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
-                break;
+
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ZERO:
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ZERO:
+            transparency = static_cast<float>(1.0 - transparentAlpha * effectCommon->getTransparency().getFloatValue());
+            if (!loggedOnce) {
+                this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str());
+                loggedOnce = true;
+            }
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::RGB_ONE:
+            transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
+            if (!loggedOnce) {
+                this->_asset->log("WARNING: unsupported opaque mode:%s fallback to A_ONE\n", opaqueModeToString(opaqueMode).c_str());
+                loggedOnce = true;
+            }
+            break;
+
+        case COLLADAFW::EffectCommon::OpaqueMode::A_ONE:
+            transparency = static_cast<float>(transparentAlpha * effectCommon->getTransparency().getFloatValue());
+            break;
+        case COLLADAFW::EffectCommon::OpaqueMode::UNSPECIFIED_OPAQUE:
+        default:
+            transparency = static_cast<float>(effectCommon->getOpacity().getColor().getAlpha());
+            break;
         }
-        
+
         return CONFIG_BOOL(asset, "invertTransparency") ? 1 - transparency : transparency;
     }
-    
+
     float COLLADA2GLTFWriter::isOpaque(const COLLADAFW::EffectCommon* effectCommon) {
-        return getTransparency(effectCommon)  >= 1;
+        return getTransparency(effectCommon) >= 1;
     }
-    
+
     void COLLADA2GLTFWriter::registerObjectWithOriginalUID(std::string originalId, shared_ptr <JSONObject> obj, shared_ptr <JSONObject> objLib) {
         if (this->_asset->_originalIDToTrackedObject.count(originalId) == 0) {
             if (!objLib->contains(originalId)) {
                 objLib->setValue(originalId, obj);
                 this->_asset->_originalIDToTrackedObject[originalId] = obj;
-            } else {
+            }
+            else {
                 this->_asset->log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", originalId.c_str());
             }
-        } else {
+        }
+        else {
             this->_asset->log("WARNING:Object with id:%s is already tracked, failed attempt to add object\n", originalId.c_str());
         }
     }
-            
+
     void COLLADA2GLTFWriter::_storeMaterialBindingArray(const std::string& prefix,
-                                                        const std::string& nodeUID,
-                                                        const std::string& meshUID,
-                                                        MaterialBindingArray &materialBindings) {
-        
+        const std::string& nodeUID,
+        const std::string& meshUID,
+        MaterialBindingArray &materialBindings) {
+
         if (this->_asset->containsValueForUniqueId(meshUID) == false) {
             return;
         }
-        
+
         shared_ptr <GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(meshUID));
         this->_asset->setOriginalId(meshUID, mesh->getID());
-        
+
         MaterialBindingsForNodeUID& mb = this->_asset->materialBindingsForNodeUID();
         shared_ptr <MaterialBindingsForMeshUID> materialBindingsMap;
         if (mb.count(nodeUID) == 0) {
             materialBindingsMap = shared_ptr<MaterialBindingsForMeshUID>(new MaterialBindingsForMeshUID());
             mb[nodeUID] = materialBindingsMap;
-        } else {
+        }
+        else {
             materialBindingsMap = mb[nodeUID];
         }
-        
+
         //apply prefix on MeshUID
         std::string prefixedMeshUID = prefix + meshUID;
         shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap;
         if (materialBindingsMap->count(prefixedMeshUID) == 0) {
-            materialBindingsPrimitiveMap = shared_ptr<MaterialBindingsPrimitiveMap> (new MaterialBindingsPrimitiveMap());
+            materialBindingsPrimitiveMap = shared_ptr<MaterialBindingsPrimitiveMap>(new MaterialBindingsPrimitiveMap());
             (*materialBindingsMap)[prefixedMeshUID] = materialBindingsPrimitiveMap;
-        } else {
+        }
+        else {
             materialBindingsPrimitiveMap = (*materialBindingsMap)[prefixedMeshUID];
         }
-        
+
         GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-        for (size_t j = 0 ; j < primitives.size() ; j++) {
+        for (size_t j = 0; j < primitives.size(); j++) {
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             //FIXME: consider optimizing this with a hashtable, would be better if it was coming that way from OpenCOLLADA
             int materialBindingIndex = -1;
-            for (size_t k = 0; k < materialBindings.getCount() ; k++) {
+            for (size_t k = 0; k < materialBindings.getCount(); k++) {
                 if (materialBindings[k].getMaterialId() == primitive->getMaterialObjectID()) {
                     materialBindingIndex = (int)k;
                 }
@@ -313,7 +317,7 @@ namespace GLTF
             if (materialBindingIndex != -1) {
                 shared_ptr <COLLADAFW::MaterialBinding> materialBinding(new COLLADAFW::MaterialBinding(materialBindings[materialBindingIndex]));
                 (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()] = materialBinding;
-            }            
+            }
         }
         return;
     }
@@ -352,7 +356,8 @@ namespace GLTF
         }
         case Transformation::MATRIX: {
             return ((Matrix*)transform)->getMatrix();
-        }}
+        }
+        }
         return COLLADABU::Math::Matrix4::IDENTITY;
     }
 
@@ -389,11 +394,12 @@ namespace GLTF
                 matrix = matrix * transformMatrix->getMatrix();
                 break;
             }
-            case Transformation::LOOKAT : {
+            case Transformation::LOOKAT: {
                 Lookat* lookAt = (Lookat*)transform;
                 buildLookAtMatrix(lookAt, matrix);
                 break;
-            }}
+            }
+            }
         }
         return matrix;
     }
@@ -435,20 +441,20 @@ namespace GLTF
         decomposition[COLLADAFW::Transformation::TransformationType::ROTATE] = rotation;
         return decomposition;
     }
-    
+
     bool COLLADA2GLTFWriter::writeNode(const COLLADAFW::Node* node, shared_ptr <GLTF::JSONObject> nodeObject, string nodeOriginalId) {
         GLTFAsset *asset = this->_asset.get();
         const NodePointerArray& nodes = node->getChildNodes();
-        
+
         std::string uniqueUID = node->getUniqueId().toAscii();
-        nodeObject->setString(kName,node->getName());
-        
-        this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object> (node->clone());
+        nodeObject->setString(kName, node->getName());
+
+        this->_asset->_uniqueIDToOpenCOLLADAObject[uniqueUID] = shared_ptr <COLLADAFW::Object>(node->clone());
         this->_asset->setOriginalId(uniqueUID, nodeOriginalId);
         this->_asset->setValueForUniqueId(uniqueUID, nodeObject);
         if (node->getType() == COLLADAFW::Node::JOINT) {
             const string& sid = node->getSid();
-            nodeObject->setString(kJointName,sid);
+            nodeObject->setString(kJointName, sid);
         }
 
         const InstanceCameraPointerArray& instanceCameras = node->getInstanceCameras();
@@ -460,44 +466,44 @@ namespace GLTF
             std::string cameraId = this->_asset->getOriginalId(id);
             nodeObject->setString(kCamera, cameraId);
         }
-                
+
         const InstanceControllerPointerArray& instanceControllers = node->getInstanceControllers();
-		unsigned int count = (unsigned int)instanceControllers.getCount();
+        unsigned int count = (unsigned int)instanceControllers.getCount();
         if (count > 0) {
             shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
-            for (unsigned int i = 0 ; i < count; i++) {
+            for (unsigned int i = 0; i < count; i++) {
                 InstanceController* instanceController = instanceControllers[i];
                 MaterialBindingArray &materialBindings = instanceController->getMaterialBindings();
                 COLLADAFW::UniqueId uniqueId = instanceController->getInstanciatedObjectId();
                 if (asset->containsValueForUniqueId(uniqueId.toAscii())) {
                     shared_ptr<JSONString> skinControllerDataUID = static_pointer_cast<JSONString>(asset->getValueForUniqueId(uniqueId.toAscii()));
                     shared_ptr<GLTFSkin> skin = static_pointer_cast<GLTFSkin>(skins->getObject(skinControllerDataUID->getString()));
-                    
+
                     UniqueId meshUniqueId(skin->getSourceUID());
                     _storeMaterialBindingArray("skin-meshes-",
-                                               node->getUniqueId().toAscii(),
-                                               meshUniqueId.toAscii(),
-                                               materialBindings);
-                    
+                        node->getUniqueId().toAscii(),
+                        meshUniqueId.toAscii(),
+                        materialBindings);
+
                     shared_ptr<JSONArray> skeletons(new JSONArray());
-                    
-                    for (size_t k = 0 ; k < instanceController->skeletons().size() ; k++) {
+
+                    for (size_t k = 0; k < instanceController->skeletons().size(); k++) {
                         std::string skeleton = instanceController->skeletons()[k].getFragment();
                         skeletons->appendValue(shared_ptr<JSONString>(new JSONString(skeleton)));
                     }
-                    
+
                     nodeObject->setValue("skeletons", skeletons);
                     nodeObject->setString(kSkin, skin->getId());
                 }
             }
         }
-        
+
         // save mesh
-		const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();
-        
+        const InstanceGeometryPointerArray& instanceGeometries = node->getInstanceGeometries();
+
         count = (unsigned int)instanceGeometries.getCount();
         if (count > 0) {
-            for (unsigned int i = 0 ; i < count; i++) {
+            for (unsigned int i = 0; i < count; i++) {
                 InstanceGeometry* instanceGeometry = instanceGeometries[i];
                 COLLADAFW::UniqueId uniqueId = instanceGeometry->getInstanciatedObjectId();
                 MaterialBindingArray& materialBindings = instanceGeometry->getMaterialBindings();
@@ -557,68 +563,70 @@ namespace GLTF
                     materialBindings);
             }
         }
-        
+
         shared_ptr <GLTF::JSONArray> childrenArray(new GLTF::JSONArray());
         nodeObject->setValue(kChildren, childrenArray);
-        
+
         count = (unsigned int)nodes.getCount();
-        for (unsigned int i = 0 ; i < count ; i++)  {
+        for (unsigned int i = 0; i < count; i++)  {
             std::string childOriginalID = nodes[i]->getOriginalId();
             if (childOriginalID.length() == 0) {
                 childOriginalID = uniqueIdWithType(kNode, nodes[i]->getUniqueId());
             }
-            childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(childOriginalID)));
+            childrenArray->appendValue(shared_ptr <GLTF::JSONString>(new GLTF::JSONString(childOriginalID)));
         }
-        
+
         const InstanceNodePointerArray& instanceNodes = node->getInstanceNodes();
         count = (unsigned int)instanceNodes.getCount();
-        for (unsigned int i = 0 ; i < count ; i++) {
-            InstanceNode* instanceNode  = instanceNodes[i];
+        for (unsigned int i = 0; i < count; i++) {
+            InstanceNode* instanceNode = instanceNodes[i];
             std::string id = instanceNode->getInstanciatedObjectId().toAscii();
             shared_ptr<JSONArray> parents;
             if (this->_asset->_uniqueIDToParentsOfInstanceNode.count(id) == 0) {
-                parents =  shared_ptr<JSONArray> (new JSONArray());
+                parents = shared_ptr<JSONArray>(new JSONArray());
                 this->_asset->_uniqueIDToParentsOfInstanceNode[id] = parents;
-            } else {
+            }
+            else {
                 parents = this->_asset->_uniqueIDToParentsOfInstanceNode[id];
             }
-            
-            parents->appendValue(shared_ptr<JSONString> (new JSONString(node->getUniqueId().toAscii())));
+
+            parents->appendValue(shared_ptr<JSONString>(new JSONString(node->getUniqueId().toAscii())));
 
             if (this->_asset->containsValueForUniqueId(id)) {
                 std::string instanceNodeOriginalId = this->_asset->getOriginalId(id);
-                childrenArray->appendValue(shared_ptr <GLTF::JSONString> (new GLTF::JSONString(instanceNodeOriginalId)));
+                childrenArray->appendValue(shared_ptr <GLTF::JSONString>(new GLTF::JSONString(instanceNodeOriginalId)));
             }
         }
-        
+
         shared_ptr <GLTF::JSONArray> lightsInNode(new GLTF::JSONArray());
 
         const InstanceLightPointerArray& instanceLights = node->getInstanceLights();
         count = (unsigned int)instanceLights.getCount();
-        
+
         //For a given light, keep track of all the nodes holding it
         if (count) {
             shared_ptr<JSONObject> extension = this->_asset->root()->createObjectIfNeeded(kExtensions);
             shared_ptr<JSONObject> khrMaterialsCommon = extension->createObjectIfNeeded("KHR_materials_common");
             shared_ptr<JSONObject> lights = khrMaterialsCommon->createObjectIfNeeded(kLights);
-            for (unsigned int i = 0 ; i < count ; i++) {
-                InstanceLight* instanceLight  = instanceLights[i];
+            for (unsigned int i = 0; i < count; i++) {
+                InstanceLight* instanceLight = instanceLights[i];
                 std::string id = instanceLight->getInstanciatedObjectId().toAscii();
-                
+
                 shared_ptr<JSONObject> light = static_pointer_cast<JSONObject>(this->_asset->getValueForUniqueId(id));
                 if (light) {
                     std::string lightUID = this->_asset->getOriginalId(id);
-                    
+
                     shared_ptr<JSONArray> listOfNodesPerLight;
                     if (this->_asset->_uniqueIDOfLightToNodes.count(id) == 0) {
-                        listOfNodesPerLight =  shared_ptr<JSONArray> (new JSONArray());
+                        listOfNodesPerLight = shared_ptr<JSONArray>(new JSONArray());
                         this->_asset->_uniqueIDOfLightToNodes[lightUID] = listOfNodesPerLight;
-                    } else {
+                    }
+                    else {
                         listOfNodesPerLight = this->_asset->_uniqueIDOfLightToNodes[lightUID];
                     }
-                    
+
                     listOfNodesPerLight->appendValue(JSONSTRING(nodeOriginalId));
-                    lightsInNode->appendValue(shared_ptr <JSONString> (new JSONString(lightUID)));
+                    lightsInNode->appendValue(shared_ptr <JSONString>(new JSONString(lightUID)));
                     lights->setValue(lightUID, light);
                 }
             }
@@ -640,10 +648,10 @@ namespace GLTF
                 }
             }
         }
-        
+
         return true;
     }
-    
+
     // Flattening   [UNFINISHED CODE]
     //conditions for flattening
     // -> same material
@@ -657,32 +665,32 @@ namespace GLTF
     //   -> transforms & write vtx attributes
     bool COLLADA2GLTFWriter::processSceneFlatteningInfo(SceneFlatteningInfo* sceneFlatteningInfo) {
         /*
-         MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
-         //First collect all kind of meshAttributes available
-         size_t count = allMeshes.size();
-         for (size_t i = 0 ; i < count ; i++) {
-         shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
-         MeshVectorSharedPtr *meshes = this->_uniqueIDToMeshes[meshInfo->getUID()];
-         // shared_ptr <MeshAttributeVector> meshAttributes = mesh->meshAttributes();
-         }
-         */
+        MeshFlatteningInfoVector allMeshes = sceneFlatteningInfo->allMeshes;
+        //First collect all kind of meshAttributes available
+        size_t count = allMeshes.size();
+        for (size_t i = 0 ; i < count ; i++) {
+        shared_ptr <MeshFlatteningInfo> meshInfo = allMeshes[i];
+        MeshVectorSharedPtr *meshes = this->_uniqueIDToMeshes[meshInfo->getUID()];
+        // shared_ptr <MeshAttributeVector> meshAttributes = mesh->meshAttributes();
+        }
+        */
         return true;
     }
-    
-    bool COLLADA2GLTFWriter::writeVisualScene( const COLLADAFW::VisualScene* visualScene ) {
+
+    bool COLLADA2GLTFWriter::writeVisualScene(const COLLADAFW::VisualScene* visualScene) {
         //FIXME: only one visual scene assumed/handled
         shared_ptr <GLTF::JSONObject> scenesObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> sceneObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> nodesObject = this->_asset->root()->createObjectIfNeeded(kNodes);
-        
-		const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
+
+        const NodePointerArray& nodePointerArray = visualScene->getRootNodes();
         size_t nodeCount = nodePointerArray.getCount();
-        
+
         this->_asset->root()->setValue(kScenes, scenesObject);
         this->_asset->root()->setString(kScene, "defaultScene");
-        
+
         scenesObject->setValue("defaultScene", sceneObject); //FIXME: should use this id -> visualScene->getOriginalId()
-        
+
         //first pass to output children name of our root node
         shared_ptr <GLTF::JSONArray> childrenArray;
         if (_rootTransform) {
@@ -704,32 +712,31 @@ namespace GLTF
             childrenArray = std::shared_ptr<GLTF::JSONArray>(new GLTF::JSONArray());
             sceneObject->setValue(kNodes, childrenArray);
         }
-        
-        for (size_t i = 0 ; i < nodeCount ; i++) {
+
+        for (size_t i = 0; i < nodeCount; i++) {
             COLLADAFW::Node* childNode = nodePointerArray[i];
             std::string nodeUID = childNode->getOriginalId();
             if (nodeUID.length() == 0) {
                 nodeUID = uniqueIdWithType(kNode, nodePointerArray[i]->getUniqueId());
                 childNode->setOriginalId(nodeUID);
             }
-                        
             shared_ptr <GLTF::JSONString> nodeIDValue(new GLTF::JSONString(nodeUID));
             childrenArray->appendValue(static_pointer_cast <GLTF::JSONValue> (nodeIDValue));
         }
 
         vector<const COLLADAFW::Node*> nodes;
-        for (size_t i = 0 ; i < nodeCount ; i++) {
+        for (size_t i = 0; i < nodeCount; i++) {
             nodes.push_back(nodePointerArray[i]);
         }
         return writeNodes(nodes);
-	}
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeScene( const COLLADAFW::Scene* scene ) {
-		return true;
-	}
-    
-	//--------------------------------------------------------------------
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeScene(const COLLADAFW::Scene* scene) {
+        return true;
+    }
+
+    //--------------------------------------------------------------------
     bool COLLADA2GLTFWriter::writeLibraryNodes(const COLLADAFW::LibraryNodes* libraryNodes) {
         vector<const COLLADAFW::Node*> nodes;
         const NodePointerArray& nodeArray = libraryNodes->getNodes();
@@ -777,7 +784,8 @@ namespace GLTF
             bool exportScale = !(!exportDefaultValues && ((scale[0] == 1) && (scale[1] == 1) && (scale[2] == 1)));
             if (exportScale)
                 nodeObject->setValue("scale", serializeVec3(scale[0], scale[1], scale[2]));
-        } else {
+        }
+        else {
             matrix.scaleTrans(asset->getDistanceScale());
             bool exportMatrix = !((matrix == COLLADABU::Math::Matrix4::IDENTITY && (CONFIG_BOOL(asset, "exportDefaultValues") == false)));
             if (exportMatrix) {
@@ -793,7 +801,7 @@ namespace GLTF
         for (const COLLADAFW::Node* node : nodes) {
             std::string baseId = node->getOriginalId();
             std::string id = baseId;
-            
+
             shared_ptr <GLTF::JSONObject> nodeObject(new GLTF::JSONObject());
             TransformationPointerArray transformations = node->getTransformations();
             bool needsRoot = true;
@@ -805,13 +813,18 @@ namespace GLTF
                     this->_asset->_transformationForAnimationListId[animationListId] = transformation->clone();
                     // Split off any pre-existing transforms
                     if (nodeTransforms.size() > 0) {
-                        if (!needsRoot) {
-                            id = "_" + baseId + "_split_" + to_string((int)animationListId.getObjectId());
-                        }
                         matrix = getFlattenedTransform(nodeTransforms);
-                        writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
-                        nodesObject->setValue(id, nodeObject);
-                        needsRoot = false;
+                        if (matrix != COLLADABU::Math::Matrix4::IDENTITY) {
+                            shared_ptr<JSONArray> children = nodeObject->createArrayIfNeeded(kChildren);
+                            nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+                            if (!needsRoot) {
+                                id = "_" + baseId + "_split_" + to_string((int)animationListId.getObjectId());
+                            }
+                            children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
+                            writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
+                            nodesObject->setValue(id, nodeObject);
+                            needsRoot = false;
+                        }
                     }
 
                     // Make a new node to target for the animation
@@ -819,7 +832,8 @@ namespace GLTF
                     nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
                     if (!needsRoot) {
                         id = "_" + baseId + "_target_" + to_string((int)animationListId.getObjectId());
-                    } else {
+                    }
+                    else {
                         needsRoot = false;
                     }
                     this->_asset->_animationListIdForNodeId[id] = animationListId;
@@ -830,7 +844,8 @@ namespace GLTF
                     nodesObject->setValue(id, nodeObject);
 
                     nodeTransforms.clear();
-                } else {
+                }
+                else {
                     // Flatten this transform into the node.
                     nodeTransforms.push_back(transformation);
                 }
@@ -839,14 +854,16 @@ namespace GLTF
             matrix = COLLADABU::Math::Matrix4::IDENTITY;
             if (nodeTransforms.size() > 0) {
                 matrix = getFlattenedTransform(nodeTransforms);
-                if (!needsRoot) {
-                    shared_ptr<JSONArray> children = nodeObject->createArrayIfNeeded(kChildren);
-                    nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
-                    id = "_" + baseId + "_split";
-                    children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
+                if (matrix != COLLADABU::Math::Matrix4::IDENTITY) {
+                    if (!needsRoot) {
+                        shared_ptr<JSONArray> children = nodeObject->createArrayIfNeeded(kChildren);
+                        nodeObject = shared_ptr<GLTF::JSONObject>(new GLTF::JSONObject());
+                        id = "_" + baseId + "_split";
+                        children->appendValue(shared_ptr<JSONString>(new JSONString(id)));
+                    }
+                    writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
+                    nodeTransforms.clear();
                 }
-                writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
-                nodeTransforms.clear();
             }
             nodesObject->setValue(id, nodeObject);
             writeNode(node, nodeObject, id);
@@ -854,112 +871,119 @@ namespace GLTF
             vector<const COLLADAFW::Node*> children;
             NodePointerArray childNodes = node->getChildNodes();
             if (childNodes.getCount() > 0) {
-                for (size_t j = 0; j < childNodes.getCount(); j++) {
-                    children.push_back(childNodes[j]);
+                for (size_t i = 0; i < childNodes.getCount(); i++) {
+					COLLADAFW::Node* childNode = childNodes[i];
+					std::string nodeUID = childNode->getOriginalId();
+					if (nodeUID.length() == 0) {
+						nodeUID = uniqueIdWithType(kNode, childNode->getUniqueId());
+						childNode->setOriginalId(nodeUID);
+					}
+                    children.push_back(childNode);
                 }
                 writeNodes(children);
             }
         }
         return true;
-	}
-        
-	//--------------------------------------------------------------------
-    bool COLLADA2GLTFWriter::writeGeometry( const COLLADAFW::Geometry* geometry ) {
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeGeometry(const COLLADAFW::Geometry* geometry) {
         switch (geometry->getType()) {
-            case Geometry::GEO_TYPE_MESH:
-            {
-                const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
-                std::string meshUID = geometry->getUniqueId().toAscii();
-                if (this->_asset->containsValueForUniqueId(meshUID) == false) {
-                    shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
-                    if (cvtMesh != nullptr) {
-                        this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
-                        this->_asset->setValueForUniqueId(meshUID, cvtMesh);
-                    }
+        case Geometry::GEO_TYPE_MESH:
+        {
+            const COLLADAFW::Mesh* mesh = (COLLADAFW::Mesh*)geometry;
+            std::string meshUID = geometry->getUniqueId().toAscii();
+            if (this->_asset->containsValueForUniqueId(meshUID) == false) {
+                shared_ptr<GLTFMesh> cvtMesh = convertOpenCOLLADAMesh((COLLADAFW::Mesh*)mesh, this->_asset.get());
+                if (cvtMesh != nullptr) {
+                    this->_asset->root()->createObjectIfNeeded(kMeshes)->setValue(cvtMesh->getID(), cvtMesh);
+                    this->_asset->setValueForUniqueId(meshUID, cvtMesh);
                 }
             }
-                break;
-            case Geometry::GEO_TYPE_SPLINE:
-            case Geometry::GEO_TYPE_CONVEX_MESH:
-                // FIXME: handle convertion to mesh
-            case Geometry::GEO_TYPE_UNKNOWN:
-                //FIXME: handle error
-            default:
-                return false;
         }
-        
+        break;
+        case Geometry::GEO_TYPE_SPLINE:
+        case Geometry::GEO_TYPE_CONVEX_MESH:
+            // FIXME: handle convertion to mesh
+        case Geometry::GEO_TYPE_UNKNOWN:
+            //FIXME: handle error
+        default:
+            return false;
+        }
+
         return true;
-	}
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeMaterial( const COLLADAFW::Material* material ) {
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeMaterial(const COLLADAFW::Material* material) {
         const UniqueId& effectUID = material->getInstantiatedEffect();
         std::string materialID = material->getUniqueId().toAscii();
         this->_asset->_materialUIDToName[materialID] = material->getName();
         this->_asset->_materialUIDToEffectUID[materialID] = effectUID;
-		return true;
-	}
-    
-    
-	//--------------------------------------------------------------------
-	unsigned int __GetGLWrapMode(COLLADAFW::Sampler::WrapMode wrapMode, GLTFProfile *profile) {
+        return true;
+    }
+
+
+    //--------------------------------------------------------------------
+    unsigned int __GetGLWrapMode(COLLADAFW::Sampler::WrapMode wrapMode, GLTFProfile *profile) {
         switch (wrapMode) {
-            case COLLADAFW::Sampler::WRAP_MODE_UNSPECIFIED:
-            case COLLADAFW::Sampler::WRAP_MODE_NONE:
-            case COLLADAFW::Sampler::WRAP_MODE_WRAP:
-                return profile->getGLenumForString("REPEAT");
-            case COLLADAFW::Sampler::WRAP_MODE_MIRROR:
-                return profile->getGLenumForString("MIRRORED_REPEAT");
-            case COLLADAFW::Sampler::WRAP_MODE_CLAMP:
-                return profile->getGLenumForString("CLAMP_TO_EDGE");
-            default:
-                break;
+        case COLLADAFW::Sampler::WRAP_MODE_UNSPECIFIED:
+        case COLLADAFW::Sampler::WRAP_MODE_NONE:
+        case COLLADAFW::Sampler::WRAP_MODE_WRAP:
+            return profile->getGLenumForString("REPEAT");
+        case COLLADAFW::Sampler::WRAP_MODE_MIRROR:
+            return profile->getGLenumForString("MIRRORED_REPEAT");
+        case COLLADAFW::Sampler::WRAP_MODE_CLAMP:
+            return profile->getGLenumForString("CLAMP_TO_EDGE");
+        default:
+            break;
         }
         return profile->getGLenumForString("REPEAT");
     }
-    
+
     static unsigned int __GetFilterMode(COLLADAFW::Sampler::SamplerFilter wrapMode, GLTFProfile *profile) {
         switch (wrapMode) {
-            case COLLADAFW::Sampler::SAMPLER_FILTER_UNSPECIFIED:
-            case COLLADAFW::Sampler::SAMPLER_FILTER_NONE:
-            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR:
-                return profile->getGLenumForString("LINEAR");
-            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST:
-                return profile->getGLenumForString("NEAREST");
-            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_NEAREST:
-                return profile->getGLenumForString("NEAREST_MIPMAP_NEAREST");
-            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_NEAREST:
-                return profile->getGLenumForString("LINEAR_MIPMAP_NEAREST");
-            case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_LINEAR:
-                return profile->getGLenumForString("NEAREST_MIPMAP_LINEAR");
-            case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_LINEAR:
-                return profile->getGLenumForString("LINEAR_MIPMAP_LINEAR");
-            default:
-                break;
+        case COLLADAFW::Sampler::SAMPLER_FILTER_UNSPECIFIED:
+        case COLLADAFW::Sampler::SAMPLER_FILTER_NONE:
+        case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR:
+            return profile->getGLenumForString("LINEAR");
+        case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST:
+            return profile->getGLenumForString("NEAREST");
+        case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_NEAREST:
+            return profile->getGLenumForString("NEAREST_MIPMAP_NEAREST");
+        case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_NEAREST:
+            return profile->getGLenumForString("LINEAR_MIPMAP_NEAREST");
+        case COLLADAFW::Sampler::SAMPLER_FILTER_NEAREST_MIPMAP_LINEAR:
+            return profile->getGLenumForString("NEAREST_MIPMAP_LINEAR");
+        case COLLADAFW::Sampler::SAMPLER_FILTER_LINEAR_MIPMAP_LINEAR:
+            return profile->getGLenumForString("LINEAR_MIPMAP_LINEAR");
+        default:
+            break;
         }
         return profile->getGLenumForString("LINEAR");
     }
-    
+
     std::string COLLADA2GLTFWriter::getSamplerUIDForParameters(unsigned int wrapS,
-                                                               unsigned int wrapT,
-                                                               unsigned int minFilter,
-                                                               unsigned int maxFilter) {
-        std::string samplerHash = GLTFUtils::toString(wrapS)+GLTFUtils::toString(wrapT)+GLTFUtils::toString(minFilter)+GLTFUtils::toString(maxFilter);
+        unsigned int wrapT,
+        unsigned int minFilter,
+        unsigned int maxFilter) {
+        std::string samplerHash = GLTFUtils::toString(wrapS) + GLTFUtils::toString(wrapT) + GLTFUtils::toString(minFilter) + GLTFUtils::toString(maxFilter);
         bool addSampler = false;
         size_t index = 0;
-        
+
         if (this->_asset->_samplerHashtoSamplerIndex.count(samplerHash) == 0) {
             index = this->_asset->_samplerHashtoSamplerIndex.size();
-			this->_asset->_samplerHashtoSamplerIndex[samplerHash] = (unsigned int)index;
+            this->_asset->_samplerHashtoSamplerIndex[samplerHash] = (unsigned int)index;
             addSampler = true;
-        } else {
+        }
+        else {
             index = this->_asset->_samplerHashtoSamplerIndex[samplerHash];
         }
-        
-        std::string samplerUID = "sampler_"+GLTFUtils::toString(index);
+
+        std::string samplerUID = "sampler_" + GLTFUtils::toString(index);
         if (addSampler) {
             shared_ptr <JSONObject> sampler2D(new JSONObject());
-            
+
             sampler2D->setUnsignedInt32("wrapS", wrapS);
             sampler2D->setUnsignedInt32("wrapT", wrapT);
             sampler2D->setUnsignedInt32("minFilter", minFilter);
@@ -968,16 +992,16 @@ namespace GLTF
             shared_ptr <GLTF::JSONObject> samplers = this->_asset->root()->createObjectIfNeeded("samplers");
             samplers->setValue(samplerUID, sampler2D);
         }
-        
+
         return samplerUID;
     }
-    
-    
+
+
     void COLLADA2GLTFWriter::_installTextureSlot(Sampler* sampler,
-                                                const std::string& slotName,
-                                                const std::string& texcoord,
-                                                shared_ptr <GLTFAsset> asset,
-                                                shared_ptr<GLTFEffect> cvtEffect)
+        const std::string& slotName,
+        const std::string& texcoord,
+        shared_ptr <GLTFAsset> asset,
+        shared_ptr<GLTFEffect> cvtEffect)
     {
         assert(sampler);
         assert(asset);
@@ -989,16 +1013,16 @@ namespace GLTF
 
         cvtEffect->addSemanticForTexcoordName(texcoord, slotName);
         shared_ptr <JSONObject> slotObject(new JSONObject());
-        
+
         //do we need to export a new texture ? if yes compose a new unique ID
         slotObject->setUnsignedInt32(kType, profile->getGLenumForString("SAMPLER_2D"));
-        
+
         //do we need a new sampler ?
         std::string samplerUID = this->getSamplerUIDForParameters(__GetGLWrapMode(sampler->getWrapS(), profile),
-                                                                  __GetGLWrapMode(sampler->getWrapT(), profile),
-                                                                  __GetFilterMode(sampler->getMinFilter(), profile),
-                                                                  __GetFilterMode(sampler->getMagFilter(), profile));
-        
+            __GetGLWrapMode(sampler->getWrapT(), profile),
+            __GetFilterMode(sampler->getMinFilter(), profile),
+            __GetFilterMode(sampler->getMagFilter(), profile));
+
         std::string textureUID = "texture_" + originalImageUID;
         shared_ptr <GLTF::JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
         if (textures->contains(textureUID) == false) {
@@ -1006,7 +1030,7 @@ namespace GLTF
             textureObject->setString(kSource, originalImageUID);
             textureObject->setString("sampler", samplerUID);
             textureObject->setUnsignedInt32("format", profile->getGLenumForString("RGBA"));
-            
+
             if (CONFIG_BOOL(asset, "exportDefaultValues")) {
                 textureObject->setUnsignedInt32("internalFormat", profile->getGLenumForString("RGBA"));
                 //UNSIGNED_BYTE is default https://github.com/KhronosGroup/glTF/issues/195
@@ -1015,23 +1039,23 @@ namespace GLTF
             textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
             textures->setValue(textureUID, textureObject);
         }
-        
+
         slotObject->setString("value", textureUID);
         values->setValue(slotName, slotObject);
         khrMaterialsCommonValues->setValue(slotName, slotObject);
     }
-    
+
     void COLLADA2GLTFWriter::handleEffectSlot(const COLLADAFW::EffectCommon* commonProfile,
-                                              std::string slotName,
-                                              shared_ptr <GLTFEffect> cvtEffect,
-                                              shared_ptr <JSONObject> extras) {
+        std::string slotName,
+        shared_ptr <GLTFEffect> cvtEffect,
+        shared_ptr <JSONObject> extras) {
         shared_ptr <JSONObject> values = cvtEffect->getValues();
         shared_ptr <JSONObject> khrMaterialsCommonValues = cvtEffect->getKhrMaterialsCommonValues();
         GLTFAsset *asset = this->_asset.get();
         GLTFProfile* profile = asset->profile().get();
 
         ColorOrTexture slot;
-        
+
         if (slotName == "diffuse")
             slot = commonProfile->getDiffuse();
         else if (slotName == "ambient") {
@@ -1041,7 +1065,8 @@ namespace GLTF
             }
             if (lockAmbientWithDiffuse) {
                 slot = commonProfile->getDiffuse();
-            } else {
+            }
+            else {
                 slot = commonProfile->getAmbient();
             }
         }
@@ -1058,11 +1083,11 @@ namespace GLTF
                 shared_ptr <JSONObject> textures = extras->getObject("textures");
                 if (textures->contains("bump")) {
                     shared_ptr <JSONObject> bump = textures->getObject("bump");
-                    
+
                     std::string texture = bump->getString("texture");
                     std::string texcoord = bump->getString("texcoord");
                     const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
-                    for (size_t i = 0 ; i < samplers.getCount() ; i++) {
+                    for (size_t i = 0; i < samplers.getCount(); i++) {
                         if (samplers[i]->getSid() == texture) {
                             Sampler* sampler = (Sampler*)samplers[i];
                             _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
@@ -1070,9 +1095,10 @@ namespace GLTF
                     }
                 }
             }
-        } else
+        }
+        else
             return;
-        
+
         //retrieve the type, parameterName -> symbol -> type
         double red = 1, green = 1, blue = 1, alpha = 1;
         if (slot.isColor() && (slotName != "reflective")) {
@@ -1089,22 +1115,24 @@ namespace GLTF
             slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
             khrMaterialsCommonValues->setValue(slotName, slotObject);
             values->setValue(slotName, slotObject);
-        } else if (slot.isTexture()) {
+        }
+        else if (slot.isTexture()) {
             const Texture&  texture = slot.getTexture();
             const SamplerPointerArray& samplers = commonProfile->getSamplerPointerArray();
             Sampler* sampler = (Sampler*)samplers[texture.getSamplerId()];
             std::string texcoord = texture.getTexcoord();
             _installTextureSlot(sampler, slotName, texcoord, this->_asset, cvtEffect);
-        } else {
+        }
+        else {
             // nothing to do, no texture or color
         }
     }
-        
-    bool COLLADA2GLTFWriter::writeEffect( const COLLADAFW::Effect* effect ) {
+
+    bool COLLADA2GLTFWriter::writeEffect(const COLLADAFW::Effect* effect) {
         GLTFAsset *asset = this->_asset.get();
         shared_ptr<GLTFProfile> profile = asset->profile();
         const COLLADAFW::CommonEffectPointerArray& commonEffects = effect->getCommonEffects();
-        
+
         if (commonEffects.getCount() > 0) {
             std::string uniqueId = "";
 #if EXPORT_MATERIALS_AS_EFFECTS
@@ -1113,49 +1141,49 @@ namespace GLTF
             uniqueId += "effect.";
 #endif
             uniqueId += GLTF::GLTFUtils::toString(effect->getUniqueId().getObjectId());;
-            
+
             shared_ptr <GLTFEffect> cvtEffect = make_shared<GLTFEffect>(effect->getOriginalId(), profile);
             shared_ptr <JSONObject> values(new JSONObject());
             shared_ptr <JSONObject> khrMaterialsCommonValues(new JSONObject());
-            
+
             cvtEffect->setValues(values);
             cvtEffect->setKhrMaterialsCommonValues(khrMaterialsCommonValues);
-            
+
             const COLLADAFW::EffectCommon* effectCommon = commonEffects[0];
-            
+
             switch (effectCommon->getShaderType()) {
-                case COLLADAFW::EffectCommon::SHADER_BLINN:
-                    cvtEffect->setLightingModel("Blinn");
-                    break;
-                case COLLADAFW::EffectCommon::SHADER_CONSTANT:
-                    cvtEffect->setLightingModel("Constant");
-                    break;
-                case COLLADAFW::EffectCommon::SHADER_PHONG:
-                    cvtEffect->setLightingModel("Phong");
-                    break;
-                case COLLADAFW::EffectCommon::SHADER_LAMBERT:
-                    cvtEffect->setLightingModel("Lambert");
-                    break;
-                default:
-                    break;
+            case COLLADAFW::EffectCommon::SHADER_BLINN:
+                cvtEffect->setLightingModel("Blinn");
+                break;
+            case COLLADAFW::EffectCommon::SHADER_CONSTANT:
+                cvtEffect->setLightingModel("Constant");
+                break;
+            case COLLADAFW::EffectCommon::SHADER_PHONG:
+                cvtEffect->setLightingModel("Phong");
+                break;
+            case COLLADAFW::EffectCommon::SHADER_LAMBERT:
+                cvtEffect->setLightingModel("Lambert");
+                break;
+            default:
+                break;
             }
-            
+
             shared_ptr<JSONObject> extras = this->_extraDataHandler->getExtras(effect->getUniqueId());
-            
-            handleEffectSlot(effectCommon,"diffuse" , cvtEffect, extras);
-            handleEffectSlot(effectCommon,"ambient" , cvtEffect, extras);
-            handleEffectSlot(effectCommon,"emission" , cvtEffect, extras);
-            handleEffectSlot(effectCommon,"specular" , cvtEffect, extras);
-            handleEffectSlot(effectCommon,"reflective" , cvtEffect, extras);
-            handleEffectSlot(effectCommon,"bump" , cvtEffect, extras);
-            
+
+            handleEffectSlot(effectCommon, "diffuse", cvtEffect, extras);
+            handleEffectSlot(effectCommon, "ambient", cvtEffect, extras);
+            handleEffectSlot(effectCommon, "emission", cvtEffect, extras);
+            handleEffectSlot(effectCommon, "specular", cvtEffect, extras);
+            handleEffectSlot(effectCommon, "reflective", cvtEffect, extras);
+            handleEffectSlot(effectCommon, "bump", cvtEffect, extras);
+
             if (CONFIG_BOOL(asset, "alwaysExportFilterColor")) {
                 shared_ptr <JSONObject> slotObject(new JSONObject());
                 slotObject->setValue("value", serializeVec4(1, 1, 1, 1));
                 slotObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT_VEC4"));
                 values->setValue("filterColor", slotObject);
             }
-            
+
             if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
                 shared_ptr <JSONObject> transparency(new JSONObject());
                 transparency->setDouble("value", this->getTransparency(effectCommon));
@@ -1163,7 +1191,7 @@ namespace GLTF
                 values->setValue("transparency", transparency);
                 khrMaterialsCommonValues->setValue("transparency", transparency);
             }
-            
+
             //should check if has specular first and the lighting model (if not lambert)
             double shininess = effectCommon->getShininess().getFloatValue();
             if (shininess >= 0) {
@@ -1176,23 +1204,23 @@ namespace GLTF
                 values->setValue("shininess", shininessObject);
                 khrMaterialsCommonValues->setValue("shininess", shininessObject);
             }
-            
+
             shared_ptr<JSONObject> materials = this->_asset->root()->createObjectIfNeeded(kMaterials);
             materials->setValue(cvtEffect->getID(), cvtEffect);
             this->_asset->setValueForUniqueId(effect->getUniqueId().toAscii(), cvtEffect);
-            
+
         }
-		return true;
-	}
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeCamera( const COLLADAFW::Camera* camera ) {
+        return true;
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeCamera(const COLLADAFW::Camera* camera) {
         shared_ptr <GLTF::JSONObject> camerasObject = static_pointer_cast <GLTF::JSONObject> (this->_asset->root()->getValue("cameras"));
         if (!camerasObject) {
-            camerasObject = shared_ptr <GLTF::JSONObject> (new GLTF::JSONObject());
+            camerasObject = shared_ptr <GLTF::JSONObject>(new GLTF::JSONObject());
             this->_asset->root()->setValue("cameras", camerasObject);
         }
-        
+
         shared_ptr <GLTF::JSONObject> cameraObject(new GLTF::JSONObject());
         shared_ptr <GLTF::JSONObject> projectionObject(new GLTF::JSONObject());
 
@@ -1205,103 +1233,103 @@ namespace GLTF
         {
             cameraObject->setString(kName, camera->getName());
         }
-        
+
         switch (camera->getCameraType()) {
-            case Camera::UNDEFINED_CAMERATYPE:
-                this->_asset->log("WARNING: unknown camera type: using perspective\n");
+        case Camera::UNDEFINED_CAMERATYPE:
+            this->_asset->log("WARNING: unknown camera type: using perspective\n");
+            break;
+        case Camera::ORTHOGRAPHIC:
+        {
+            cameraObject->setString(kType, "orthographic");
+            cameraObject->setValue("orthographic", projectionObject);
+            switch (camera->getDescriptionType()) {
+            case Camera::UNDEFINED: //!< The orthographic camera object is invalid
+                this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting to 1.\n");
+                projectionObject->setDouble("xmag", 1.0);
+                projectionObject->setDouble("ymag", 1.0);
                 break;
-            case Camera::ORTHOGRAPHIC:
+            case Camera::SINGLE_X: //!< Only xmag. ymag default to 1.
+                this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting ymag to 1.\n");
+                projectionObject->setDouble("xmag", camera->getXMag().getValue());
+                projectionObject->setDouble("ymag", 1.0);
+                break;
+            case Camera::SINGLE_Y: //!< Only ymag. xmag defaults to 1.
+                this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting xmag to 1.\n");
+                projectionObject->setDouble("xmag", 1.0);
+                projectionObject->setDouble("ymag", camera->getYMag().getValue());
+                break;
+            case Camera::X_AND_Y: //!< xmag and ymag.
+                projectionObject->setDouble("xmag", camera->getXMag().getValue());
+                projectionObject->setDouble("ymag", camera->getYMag().getValue());
+                break;
+            case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xmag. Compute ymag.
             {
-                cameraObject->setString(kType, "orthographic");
-                cameraObject->setValue("orthographic", projectionObject);
-                switch (camera->getDescriptionType()) {
-                    case Camera::UNDEFINED: //!< The orthographic camera object is invalid
-                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting to 1.\n");
-                        projectionObject->setDouble("xmag", 1.0);
-                        projectionObject->setDouble("ymag", 1.0);
-                        break;
-                    case Camera::SINGLE_X: //!< Only xmag. ymag default to 1.
-                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting ymag to 1.\n");
-                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
-                        projectionObject->setDouble("ymag", 1.0);
-                        break;
-                    case Camera::SINGLE_Y: //!< Only ymag. xmag defaults to 1.
-                        this->_asset->log("WARNING: Invalid orthographic camera. At least 2 of xmag, ymag & aspect ratio must be provided. Defaulting xmag to 1.\n");
-                        projectionObject->setDouble("xmag", 1.0);
-                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
-                        break;
-                    case Camera::X_AND_Y: //!< xmag and ymag.
-                        projectionObject->setDouble("xmag", camera->getXMag().getValue());
-                        projectionObject->setDouble("ymag", camera->getYMag().getValue());
-                        break;
-                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xmag. Compute ymag.
-                        {
-                            double x = camera->getXMag().getValue();
-                            projectionObject->setDouble("xmag", x);
-                            projectionObject->setDouble("ymag", x / camera->getAspectRatio().getValue());
-                        }
-                        break;
-                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio ymag. Compute xmag.
-                        {
-                            double y = camera->getYMag().getValue();
-                            projectionObject->setDouble("xmag", y * camera->getAspectRatio().getValue());
-                            projectionObject->setDouble("ymag", y);
-                        }
-                        break;
-                }
-                
+                double x = camera->getXMag().getValue();
+                projectionObject->setDouble("xmag", x);
+                projectionObject->setDouble("ymag", x / camera->getAspectRatio().getValue());
             }
-                break;
-            case Camera::PERSPECTIVE:
+            break;
+            case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio ymag. Compute xmag.
             {
-                cameraObject->setString(kType, "perspective");
-                cameraObject->setValue("perspective", projectionObject);
-                switch (camera->getDescriptionType()) {
-                    case Camera::UNDEFINED: //!< The perspective camera object is invalid
-                    case Camera::SINGLE_X: //!< Only xfov. Default yfov to 1.0.
-                        this->_asset->log("WARNING: Invalid perspective camera. At least yfov must be provided. Defaulting yfov to 1.\n");
-                        projectionObject->setDouble("yfov", 1.0);
-                        break;
-                    case Camera::SINGLE_Y: //!< Only yfov. Use aspect ratio of the canvas.
-                        projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
-                        break;
-                    case Camera::X_AND_Y: //!< xfov and yfov. Compute aspect ratio.
-                        {
-                            double x = camera->getXFov().getValue() * radianPerDegree;
-                            double y = camera->getYFov().getValue() * radianPerDegree;
-                            projectionObject->setDouble("yfov", y);
-                            projectionObject->setDouble(kAspectRatio, x / y);
-                        }
-                        break;
-                    case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov. Compute yfov.
-                        {
-                            double x = camera->getXFov().getValue() * radianPerDegree;
-                            double aspect_ratio = camera->getAspectRatio().getValue();
-                            projectionObject->setDouble("yfov", x / aspect_ratio);
-							projectionObject->setDouble(kAspectRatio, aspect_ratio);
-                        }
-                        break;
-                    case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov.
-                        projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
-						projectionObject->setDouble(kAspectRatio, camera->getAspectRatio().getValue());
-                        break;
-                }
-                
+                double y = camera->getYMag().getValue();
+                projectionObject->setDouble("xmag", y * camera->getAspectRatio().getValue());
+                projectionObject->setDouble("ymag", y);
             }
-                break;
+            break;
+            }
+
         }
-        
+        break;
+        case Camera::PERSPECTIVE:
+        {
+            cameraObject->setString(kType, "perspective");
+            cameraObject->setValue("perspective", projectionObject);
+            switch (camera->getDescriptionType()) {
+            case Camera::UNDEFINED: //!< The perspective camera object is invalid
+            case Camera::SINGLE_X: //!< Only xfov. Default yfov to 1.0.
+                this->_asset->log("WARNING: Invalid perspective camera. At least yfov must be provided. Defaulting yfov to 1.\n");
+                projectionObject->setDouble("yfov", 1.0);
+                break;
+            case Camera::SINGLE_Y: //!< Only yfov. Use aspect ratio of the canvas.
+                projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
+                break;
+            case Camera::X_AND_Y: //!< xfov and yfov. Compute aspect ratio.
+            {
+                double x = camera->getXFov().getValue() * radianPerDegree;
+                double y = camera->getYFov().getValue() * radianPerDegree;
+                projectionObject->setDouble("yfov", y);
+                projectionObject->setDouble(kAspectRatio, x / y);
+            }
+            break;
+            case Camera::ASPECTRATIO_AND_X: //!< aspect ratio and xfov. Compute yfov.
+            {
+                double x = camera->getXFov().getValue() * radianPerDegree;
+                double aspect_ratio = camera->getAspectRatio().getValue();
+                projectionObject->setDouble("yfov", x / aspect_ratio);
+                projectionObject->setDouble(kAspectRatio, aspect_ratio);
+            }
+            break;
+            case Camera::ASPECTRATIO_AND_Y: //!< aspect ratio and yfov.
+                projectionObject->setDouble("yfov", camera->getYFov().getValue() * radianPerDegree);
+                projectionObject->setDouble(kAspectRatio, camera->getAspectRatio().getValue());
+                break;
+            }
+
+        }
+        break;
+        }
+
         projectionObject->setDouble("znear", camera->getNearClippingPlane().getValue() * _asset->getDistanceScale());
         projectionObject->setDouble("zfar", camera->getFarClippingPlane().getValue() * _asset->getDistanceScale());
-        
-		return true;
-	}
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeImage( const COLLADAFW::Image* openCOLLADAImage ) {
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeImage(const COLLADAFW::Image* openCOLLADAImage) {
         shared_ptr <GLTF::JSONObject> images = this->_asset->root()->createObjectIfNeeded(kImages);
         shared_ptr <GLTF::JSONObject> image(new GLTF::JSONObject());
-        
+
         std::string imageUID = openCOLLADAImage->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(imageUID, image);
         this->_asset->setOriginalId(imageUID, openCOLLADAImage->getOriginalId());
@@ -1317,7 +1345,7 @@ namespace GLTF
         {
             image->setBool("has_alpha", extras->getBool("has_alpha"));
         }
-        
+
         const COLLADABU::URI &imageURI = openCOLLADAImage->getImageURI();
         if (is_dataUri(imageURI.originalStr()))
         {
@@ -1330,11 +1358,11 @@ namespace GLTF
         std::string pathDir = getPathDir(imageURI);
         if (pathDir.substr(0, 2) != "./") {
             relPathFile = pathDir + imageURI.getPathFile();
-		}
-		else {
+        }
+        else {
             relPathFile = pathDir.substr(2) + imageURI.getPathFile();
-		}
-        
+        }
+
         if (CONFIG_BOOL(_asset, "embedResources"))
         {
             COLLADABU::URI inputURI(_asset->getInputFilePath().c_str());
@@ -1351,15 +1379,15 @@ namespace GLTF
                 std::string contentType = "application/octet-stream";
                 if (ext == "png")
                 {
-	                contentType = "image/png";
+                    contentType = "image/png";
                 }
                 else if (ext == "gif")
                 {
-	                contentType = "image/gif";
+                    contentType = "image/gif";
                 }
                 else if (ext == "jpg" || ext == "jpeg")
                 {
-	                contentType = "image/jpeg";
+                    contentType = "image/jpeg";
                 }
 
                 image->setString(kURI, create_dataUri(ss.str(), contentType));
@@ -1367,60 +1395,60 @@ namespace GLTF
                 return true;
             }
         }
-		
+
         image->setString(kURI, COLLADABU::URI::uriEncode(this->_asset->resourceOuputPathForPath(relPathFile)));
-        
+
         return true;
-	}
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeLight( const COLLADAFW::Light* light ) {
+    }
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeLight(const COLLADAFW::Light* light) {
         //FIXME: add projection
         shared_ptr <JSONObject> glTFLight(new JSONObject());
         shared_ptr <JSONObject> description(new JSONObject());
 
         COLLADAFW::Light::LightType lightType = light->getLightType();
-		Color color = light->getColor();
+        Color color = light->getColor();
 
         float constantAttenuation = (float)light->getConstantAttenuation().getValue();
         float linearAttenuation = (float)light->getLinearAttenuation().getValue();
         float quadraticAttenuation = (float)light->getQuadraticAttenuation().getValue();
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
-        
+
         switch (lightType) {
-            case COLLADAFW::Light::AMBIENT_LIGHT:
-                glTFLight->setString(kType, "ambient");
-                break;
-            case COLLADAFW::Light::DIRECTIONAL_LIGHT:
-                glTFLight->setString(kType, "directional");
-                break;
-            case COLLADAFW::Light::POINT_LIGHT: {
-                glTFLight->setString(kType, "point");
+        case COLLADAFW::Light::AMBIENT_LIGHT:
+            glTFLight->setString(kType, "ambient");
+            break;
+        case COLLADAFW::Light::DIRECTIONAL_LIGHT:
+            glTFLight->setString(kType, "directional");
+            break;
+        case COLLADAFW::Light::POINT_LIGHT: {
+            glTFLight->setString(kType, "point");
 
-                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
-                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
-                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
-            }
-                break;
-            case COLLADAFW::Light::SPOT_LIGHT: {
-                glTFLight->setString(kType, "spot");
-
-                float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
-                float fallOffExponent = (float)light->getFallOffExponent().getValue();
-                
-                description->setValue("constantAttenuation", shared_ptr <JSONNumber> (new JSONNumber(constantAttenuation)));
-                description->setValue("linearAttenuation", shared_ptr <JSONNumber> (new JSONNumber(linearAttenuation)));
-                description->setValue("quadraticAttenuation", shared_ptr <JSONNumber> (new JSONNumber(quadraticAttenuation)));
-                
-                description->setValue("fallOffAngle", shared_ptr <JSONNumber> (new JSONNumber(fallOffAngle)));
-                description->setValue("fallOffExponent", shared_ptr <JSONNumber> (new JSONNumber(fallOffExponent)));
-            }
-                break;
-            default:
-                return false;
+            description->setValue("constantAttenuation", shared_ptr <JSONNumber>(new JSONNumber(constantAttenuation)));
+            description->setValue("linearAttenuation", shared_ptr <JSONNumber>(new JSONNumber(linearAttenuation)));
+            description->setValue("quadraticAttenuation", shared_ptr <JSONNumber>(new JSONNumber(quadraticAttenuation)));
         }
-        
+                                            break;
+        case COLLADAFW::Light::SPOT_LIGHT: {
+            glTFLight->setString(kType, "spot");
+
+            float fallOffAngle = (float)(light->getFallOffAngle().getValue() * radianPerDegree);
+            float fallOffExponent = (float)light->getFallOffExponent().getValue();
+
+            description->setValue("constantAttenuation", shared_ptr <JSONNumber>(new JSONNumber(constantAttenuation)));
+            description->setValue("linearAttenuation", shared_ptr <JSONNumber>(new JSONNumber(linearAttenuation)));
+            description->setValue("quadraticAttenuation", shared_ptr <JSONNumber>(new JSONNumber(quadraticAttenuation)));
+
+            description->setValue("fallOffAngle", shared_ptr <JSONNumber>(new JSONNumber(fallOffAngle)));
+            description->setValue("fallOffExponent", shared_ptr <JSONNumber>(new JSONNumber(fallOffExponent)));
+        }
+                                           break;
+        default:
+            return false;
+        }
+
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString(kType), description);
 
@@ -1428,27 +1456,27 @@ namespace GLTF
         {
             glTFLight->setString(kName, light->getName());
         }
-        
+
         const std::string &lightId = light->getUniqueId().toAscii();
         this->_asset->setValueForUniqueId(lightId, glTFLight);
         this->_asset->setOriginalId(lightId, light->getOriginalId());
 
         shared_ptr<JSONArray> lightsIds = this->_asset->root()->createArrayIfNeeded("lightsIds");
         lightsIds->appendValue(std::make_shared<JSONString>(light->getOriginalId()));
-        
-		return true;
-	}
-    
+
+        return true;
+    }
+
     /**
-     * This just initializes the animation and makes a placeholder in the glTF tree
-     */
-	bool COLLADA2GLTFWriter::writeAnimation( const COLLADAFW::Animation* animation) {
+    * This just initializes the animation and makes a placeholder in the glTF tree
+    */
+    bool COLLADA2GLTFWriter::writeAnimation(const COLLADAFW::Animation* animation) {
         shared_ptr<GLTFAnimation> cvtAnimation = shared_ptr<GLTFAnimation>(new GLTFAnimation(animation, this->_asset.get()));
         cvtAnimation->setOriginalID(animation->getOriginalId());
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         animations->setValue(animation->getUniqueId().toAscii(), cvtAnimation);
-		return true;
-	}
+        return true;
+    }
 
     COLLADABU::Math::Quaternion writeMatrixAnimation(COLLADABU::Math::Matrix4 matrix, size_t index, float* translation, float* rotation, float* scale, COLLADABU::Math::Quaternion lastQuat) {
         map<COLLADAFW::Transformation::TransformationType, float*> trs = decomposeTransformationMatrix(matrix, vector<const COLLADAFW::Transformation*>());
@@ -1475,15 +1503,17 @@ namespace GLTF
         scale[index * 3 + 2] = (float)trsScale[2];
         return quat;
     }
-    
+
     /**
-     * Combine animations where necessary and write out animation data
-     */
+    * Combine animations where necessary and write out animation data
+    */
     bool COLLADA2GLTFWriter::writeAnimationList(const COLLADAFW::AnimationList* animationList) {
         shared_ptr<JSONObject> animations = this->_asset->root()->createObjectIfNeeded("animations");
         const COLLADAFW::AnimationList::AnimationBindings &animationBindings = animationList->getAnimationBindings();
         string nodeId = this->_asset->_nodeIdForAnimationListId[animationList->getUniqueId()];
-        
+        shared_ptr<JSONObject> nodes = this->_asset->root()->getObject("nodes");
+        shared_ptr<JSONObject> node = nodes->getObject(nodeId);
+
         size_t animationBindingsLength = animationBindings.getCount();
 
         // Normalize the number of keyframes across animations that need to be combined
@@ -1514,7 +1544,12 @@ namespace GLTF
         float* rotation = new float[numKeyFrames * 4];
         float* scale = new float[numKeyFrames * 3];
         float* translation = new float[numKeyFrames * 3];
-        rootAnimation->setTargetNodeId(nodeId); 
+        shared_ptr<JSONArray> translationArray = node->getArray("translation");
+        float translateX = static_pointer_cast<JSONNumber>(translationArray->values()[0])->getDouble();
+        float translateY = static_pointer_cast<JSONNumber>(translationArray->values()[1])->getDouble();
+        float translateZ = static_pointer_cast<JSONNumber>(translationArray->values()[2])->getDouble();
+        bool* writeTranslation = new bool[numKeyFrames * 3];
+        rootAnimation->setTargetNodeId(nodeId);
 
         COLLADABU::Math::Quaternion lastQuat = COLLADABU::Math::Quaternion::IDENTITY;
         for (size_t i = 0; i < animationBindingsLength; i++) {
@@ -1529,9 +1564,9 @@ namespace GLTF
                 keyFrames[j] = (float)keyFrame;
                 vector<double> values = animation->getValuesAtKeyFrame(keyFrame);
                 if (i == 0) {
-                    translation[j * 3] = 0;
-                    translation[j * 3 + 1] = 0;
-                    translation[j * 3 + 2] = 0;
+                    writeTranslation[j * 3] = false;
+                    writeTranslation[j * 3 + 1] = false;
+                    writeTranslation[j * 3 + 2] = false;
                 }
 
                 switch (animationClass) {
@@ -1541,7 +1576,7 @@ namespace GLTF
                         values[4], values[5], values[6], values[7],
                         values[8], values[9], values[10], values[11],
                         values[12], values[13], values[14], values[15]
-                    );
+                        );
                     lastQuat = writeMatrixAnimation(matrix, j, translation, rotation, scale, lastQuat);
                     hasTranslation = true;
                     hasRotation = true;
@@ -1556,7 +1591,7 @@ namespace GLTF
                     hasRotation = true;
                     break;
                 }
-                case COLLADAFW::AnimationList::ANGLE: {       
+                case COLLADAFW::AnimationList::ANGLE: {
                     if (transform->getTransformationType() == COLLADAFW::Transformation::TransformationType::ROTATE) {
                         COLLADAFW::Rotate* rotate = (COLLADAFW::Rotate*)transform;
                         COLLADABU::Math::Quaternion quat = COLLADABU::Math::Quaternion(COLLADABU::Math::Utils::degToRad(values[0]), rotate->getRotationAxis());
@@ -1569,32 +1604,68 @@ namespace GLTF
                     break;
                 }
                 case COLLADAFW::AnimationList::POSITION_XYZ: {
+                    if (!writeTranslation[j * 3]) {
+                        translation[j * 3] = 0;
+                        writeTranslation[j * 3] = true;
+                    }
+                    if (!writeTranslation[j * 3 + 1]) {
+                        translation[j * 3 + 1] = 0;
+                        writeTranslation[j * 3 + 1] = true;
+                    }
+                    if (!writeTranslation[j * 3 + 2]) {
+                        translation[j * 3 + 2] = 0;
+                        writeTranslation[j * 3 + 2] = true;
+                    }
                     translation[j * 3] += (float)values[0];
                     translation[j * 3 + 1] += (float)values[1];
                     translation[j * 3 + 2] += (float)values[2];
-                    hasTranslation = true; 
+                    hasTranslation = true;
                     break;
                 }
                 case COLLADAFW::AnimationList::POSITION_X: {
+                    if (!writeTranslation[j * 3]) {
+                        translation[j * 3] = 0;
+                        writeTranslation[j * 3] = true;
+                    }
                     translation[j * 3] += (float)values[0];
                     hasTranslation = true;
                     break;
                 }
                 case COLLADAFW::AnimationList::POSITION_Y: {
+                    if (!writeTranslation[j * 3 + 1]) {
+                        translation[j * 3 + 1] = 0;
+                        writeTranslation[j * 3 + 1] = true;
+                    }
                     translation[j * 3 + 1] += (float)values[0];
                     hasTranslation = true;
                     break;
                 }
                 case COLLADAFW::AnimationList::POSITION_Z: {
+                    if (!writeTranslation[j * 3 + 2]) {
+                        translation[j * 3 + 2] = 0;
+                        writeTranslation[j * 3 + 2] = true;
+                    }
                     translation[j * 3 + 2] += (float)values[0];
                     hasTranslation = true;
                     break;
-                }}
+                }
+                }
             }
         }
         shared_ptr<GLTF::GLTFBufferView> keyFrameBufferView = createBufferViewWithAllocatedBuffer(keyFrames, 0, rootAnimation->getCount(), true);
         rootAnimation->registerBufferView(GLTFAnimation::AnimationType::TIME, keyFrameBufferView);
         if (hasTranslation) {
+            for (size_t i = 0; i < numKeyFrames; i++) {
+                if (!writeTranslation[i * 3]) {
+                    translation[i * 3] = translateX;
+                }
+                if (!writeTranslation[i * 3 + 1]) {
+                    translation[i * 3 + 1] = translateY;
+                }
+                if (!writeTranslation[i * 3 + 2]) {
+                    translation[i * 3 + 2] = translateZ;
+                }
+            }
             shared_ptr<GLTF::GLTFBufferView> translateBufferView = createBufferViewWithAllocatedBuffer(translation, 0, rootAnimation->getCount() * 3, true);
             rootAnimation->registerBufferView(GLTFAnimation::AnimationType::TRANSLATE, translateBufferView);
         }
@@ -1608,30 +1679,30 @@ namespace GLTF
         }
         return true;
     }
-    
-	//--------------------------------------------------------------------
-	bool COLLADA2GLTFWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData ) {
+
+    //--------------------------------------------------------------------
+    bool COLLADA2GLTFWriter::writeSkinControllerData(const COLLADAFW::SkinControllerData* skinControllerData) {
         shared_ptr <GLTFSkin> glTFSkin(new GLTFSkin(skinControllerData->getOriginalId()));
         shared_ptr <GLTFProfile> profile = this->_asset->profile();
 
         glTFSkin->setString(kName, skinControllerData->getName());
-        
+
         glTFSkin->setBindShapeMatrix(serializeOpenCOLLADAMatrix4(skinControllerData->getBindShapeMatrix()));
-        
-		const COLLADAFW::UIntValuesArray& jointsPerVertex = skinControllerData->getJointsPerVertex();
-		const COLLADAFW::IntValuesArray& jointIndices = skinControllerData->getJointIndices();
-		const COLLADAFW::UIntValuesArray& weightIndices = skinControllerData->getWeightIndices();
-		const COLLADAFW::FloatOrDoubleArray& weights = skinControllerData->getWeights();
+
+        const COLLADAFW::UIntValuesArray& jointsPerVertex = skinControllerData->getJointsPerVertex();
+        const COLLADAFW::IntValuesArray& jointIndices = skinControllerData->getJointIndices();
+        const COLLADAFW::UIntValuesArray& weightIndices = skinControllerData->getWeightIndices();
+        const COLLADAFW::FloatOrDoubleArray& weights = skinControllerData->getWeights();
 
         size_t vertexCount = skinControllerData->getVertexCount();
         size_t maxNumberOfInfluencesPerVertex = 0;
         //Pre-pass to figure out what's the maxium number of influences we are dealing with
-        for (size_t i = 0 ; i < vertexCount ; i++) {
+        for (size_t i = 0; i < vertexCount; i++) {
             if (jointsPerVertex[i] > maxNumberOfInfluencesPerVertex) {
                 maxNumberOfInfluencesPerVertex = jointsPerVertex[i];
             }
         }
-        
+
         size_t index = 0;
         int bucketSize = 4;
         size_t componentSize = sizeof(float);
@@ -1641,71 +1712,71 @@ namespace GLTF
 
         memset(weightsPtr, 0, skinAttributeSize);
         memset(bonesIndices, 0, skinAttributeSize);
-        
-        for (size_t i = 0 ; i < vertexCount ; i++) {
+
+        for (size_t i = 0; i < vertexCount; i++) {
             size_t pairCount = jointsPerVertex[i];
-			if ( pairCount == 0 )
-				continue;
-            
-			if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT ) {
-				const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
-				
-                
+            if (pairCount == 0)
+                continue;
+
+            if (weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_FLOAT) {
+                const COLLADAFW::FloatArray* floatWeights = weights.getFloatValues();
+
+
                 for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
                         bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
                         weightsPtr[(i * bucketSize) + j] = (*floatWeights)[weightIndices[index]];
                     }
-				}
-			}
-			else if ( weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE ) {
-				//in this case, cast the double to float
+                }
+            }
+            else if (weights.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE) {
+                //in this case, cast the double to float
                 const COLLADAFW::DoubleArray* doubleWeights = weights.getDoubleValues();
-				for (size_t j = 0; j < pairCount; ++j, ++index) {
+                for (size_t j = 0; j < pairCount; ++j, ++index) {
                     if (j < bucketSize) {
                         bonesIndices[(i * bucketSize) + j] = (float)jointIndices[index];
-                        weightsPtr[(i * bucketSize) + j]  = (float)(*doubleWeights)[weightIndices[index]];
+                        weightsPtr[(i * bucketSize) + j] = (float)(*doubleWeights)[weightIndices[index]];
                     }
-				}
-			}
+                }
+            }
         }
 
         //inverse bind matrice
         const Matrix4Array& matrices = skinControllerData->getInverseBindMatrices();
         size_t matricesSize = sizeof(float) * 16 * skinControllerData->getJointsCount();
         float *matricesPtr = (float*)malloc(matricesSize);
-        for (size_t i = 0 ; i < skinControllerData->getJointsCount() ; i++) {
-            fillFloatPtrFromOpenCOLLADAMatrix4(matrices[i], matricesPtr + (i*16));
+        for (size_t i = 0; i < skinControllerData->getJointsCount(); i++) {
+            fillFloatPtrFromOpenCOLLADAMatrix4(matrices[i], matricesPtr + (i * 16));
         }
         shared_ptr <GLTFBufferView> inverseBindMatricesView = createBufferViewWithAllocatedBuffer(matricesPtr, 0, matricesSize, true);
         glTFSkin->setInverseBindMatrices(inverseBindMatricesView);
-        
+
         shared_ptr<GLTFAccessor> inverseBindMatrices(new GLTFAccessor(profile, "FLOAT", "MAT4"));
         inverseBindMatrices->setByteStride(64);
         inverseBindMatrices->setCount((unsigned int)skinControllerData->getJointsCount());
         inverseBindMatrices->setBufferView(inverseBindMatricesView);
         inverseBindMatrices->exposeMinMax();
         glTFSkin->extras()->setValue(kInverseBindMatrices, inverseBindMatrices);
-        
+
         shared_ptr<GLTFOutputStream> animationOutputStream = this->_asset->createOutputStreamIfNeeded(this->_asset->getSharedBufferId());
-		inverseBindMatrices->setUnsignedInt32(kByteOffset, (unsigned int)animationOutputStream->length());
+        inverseBindMatrices->setUnsignedInt32(kByteOffset, (unsigned int)animationOutputStream->length());
         shared_ptr<GLTFBuffer> buffer = glTFSkin->getInverseBindMatrices()->getBuffer();
         animationOutputStream->write(buffer);
 
         //
         shared_ptr <GLTFBufferView> weightsView = createBufferViewWithAllocatedBuffer(weightsPtr, 0, skinAttributeSize, true);
         shared_ptr <GLTFAccessor> weightsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
-        
+
         weightsAttribute->setBufferView(weightsView);
         weightsAttribute->setByteStride(componentSize * bucketSize);
         weightsAttribute->setCount(vertexCount);
         weightsAttribute->exposeMinMax();
 
         glTFSkin->setWeights(weightsAttribute);
-        
+
         shared_ptr <GLTFBufferView> jointsView = createBufferViewWithAllocatedBuffer(bonesIndices, 0, skinAttributeSize, true);
         shared_ptr <GLTFAccessor> jointsAttribute(new GLTFAccessor(profile, "FLOAT", GLTFUtils::getTypeForVectorSize(bucketSize)));
-        
+
         jointsAttribute->setBufferView(jointsView);
         jointsAttribute->setByteStride(componentSize * bucketSize);
         jointsAttribute->setCount(vertexCount);
@@ -1713,20 +1784,20 @@ namespace GLTF
 
         glTFSkin->setJoints(jointsAttribute);
         glTFSkin->setJointsCount(skinControllerData->getJointsCount());
-        
+
         shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
-         
+
         //Also we work around here what looks to be a bug in OpenCOLLADA with a fileId == 0
         COLLADAFW::UniqueId uniqueId = skinControllerData->getUniqueId();
-        
+
         std::string skinUID = uniqueId.toAscii();
-        skins->setValue(skinUID , glTFSkin);
-        
-		return true;
-	}
-    
-	//--------------------------------------------------------------------
-    
+        skins->setValue(skinUID, glTFSkin);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------
+
     static shared_ptr<GLTFAccessor> __CreateAttributeByApplyingRemapTable(shared_ptr<GLTFAccessor> meshAttribute, size_t vertexCount, unsigned int* remapTableForPositions, shared_ptr<GLTFProfile> profile) {
         unsigned char* sourcePtr = (unsigned char*)meshAttribute->getBufferView()->getBufferDataByApplyingOffset();
         size_t bufferSize = meshAttribute->elementByteLength() * vertexCount;
@@ -1736,64 +1807,64 @@ namespace GLTF
         targetAttribute->setByteStride(meshAttribute->getByteStride());
         targetAttribute->setCount(vertexCount);
 
-        for (size_t i = 0 ; i < vertexCount  ; i++) {
+        for (size_t i = 0; i < vertexCount; i++) {
             unsigned int rindex = remapTableForPositions[i];
-            
+
             void *ptrSrc = sourcePtr + (rindex * meshAttribute->getByteStride());
             void *ptrDst = destinationPtr + (i * targetAttribute->getByteStride());
-            memcpy(ptrDst, ptrSrc , meshAttribute->elementByteLength());
+            memcpy(ptrDst, ptrSrc, meshAttribute->elementByteLength());
         }
-        
+
         shared_ptr<GLTFBufferView> targetView = createBufferViewWithAllocatedBuffer(destinationPtr, 0, bufferSize, true);
         targetAttribute->setBufferView(targetView);
-        
+
         return targetAttribute;
     }
-    
-	bool COLLADA2GLTFWriter::writeController( const COLLADAFW::Controller* controller ) {
+
+    bool COLLADA2GLTFWriter::writeController(const COLLADAFW::Controller* controller) {
         if (controller->getControllerType() == COLLADAFW::Controller::CONTROLLER_TYPE_SKIN) {
             COLLADAFW::SkinController* skinController = (COLLADAFW::SkinController*)controller;
-            
+
             //Now we get the skin and the mesh, and
             shared_ptr<JSONObject> skins = this->_asset->root()->createObjectIfNeeded(kSkins);
-            
+
             COLLADAFW::UniqueId uniqueId = skinController->getSkinControllerData().toAscii();
 
             shared_ptr <GLTFSkin> glTFSkin = static_pointer_cast<GLTFSkin>(skins->getValue(uniqueId.toAscii()));
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(this->_asset->getValueForUniqueId(skinController->getSource().toAscii()));
             this->_asset->setValueForUniqueId(controller->getUniqueId().toAscii(),
-                                              shared_ptr<JSONString> (new JSONString(uniqueId.toAscii())));
+                shared_ptr<JSONString>(new JSONString(uniqueId.toAscii())));
             glTFSkin->setSourceUID(skinController->getSource().toAscii());
-            
+
             unsigned int *remapTableForPositions = mesh->getRemapTableForPositions();
             size_t vertexCount = mesh->getMeshAttribute(GLTF::POSITION, 0)->getCount();
             //Now we remap the bone indices and weight attribute in respect of deindexing we have
-            
+
             shared_ptr<GLTFAccessor> weightsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getWeights(), vertexCount, remapTableForPositions, this->_asset->profile());
-            
+
             mesh->setMeshAttribute(GLTF::WEIGHT, 0, weightsAttribute);
-            
+
             shared_ptr<GLTFAccessor> jointsAttribute = __CreateAttributeByApplyingRemapTable(glTFSkin->getJoints(), vertexCount, remapTableForPositions, this->_asset->profile());
-            
+
             mesh->setMeshAttribute(GLTF::JOINT, 0, jointsAttribute);
-            
+
             GLTF::JSONValueVector primitives = mesh->getPrimitives()->values();
-            for (size_t i = 0 ; i < primitives.size() ; i++) {
+            for (size_t i = 0; i < primitives.size(); i++) {
                 shared_ptr<GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[i]);
-                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::JOINT,0)));
-                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>( new GLTF::JSONVertexAttribute(GLTF::WEIGHT,0)));
+                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>(new GLTF::JSONVertexAttribute(GLTF::JOINT, 0)));
+                primitive->appendVertexAttribute(shared_ptr <GLTF::JSONVertexAttribute>(new GLTF::JSONVertexAttribute(GLTF::WEIGHT, 0)));
             }
-            
+
             //save the list of joints, first as uniqueIds, and then we will replace with sid's
             shared_ptr <JSONArray> joints(new JSONArray());
             UniqueIdArray& jointsUID = skinController->getJoints();
-            for (size_t i = 0 ; i < jointsUID.getCount() ; i++) {
+            for (size_t i = 0; i < jointsUID.getCount(); i++) {
                 shared_ptr<JSONString> jointId(new JSONString(jointsUID[i].toAscii()));
                 joints->appendValue(jointId);
             }
             glTFSkin->setJointNames(joints);
         }
-		return true;
-	}
-    
+        return true;
+    }
+
 } // namespace COLLADA2JSON
