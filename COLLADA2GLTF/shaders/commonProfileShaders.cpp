@@ -184,14 +184,18 @@ namespace GLTF
         //}
         
         double transparency = 1.0;
-        if (parameters->contains("transparency")) {
+        if (parameters->contains("transparency"))
+        {
             shared_ptr<JSONObject> tr = parameters->getObject("transparency");
             transparency = tr->getDouble("value");
         }
 
-        if (parameters->contains("diffuse")) {
+        if (parameters->contains("diffuse"))
+        {
             shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
-            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("FLOAT_VEC4")) {
+
+            if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("FLOAT_VEC4"))
+            {
                 auto values = diffuse->getArray(kValue)->values();
                 transparency *= static_pointer_cast<JSONNumber>(values[3])->getDouble();
             }
@@ -202,41 +206,42 @@ namespace GLTF
     
     static bool hasTransparency(shared_ptr<JSONObject> parameters,
                                 GLTFAsset* asset) {
-        return getTransparency(parameters, asset) < 1;
+        return getTransparency(parameters, asset)  < 1;
     }
     
     bool isOpaque(shared_ptr <JSONObject> parameters, GLTFAsset* asset) {
         
         if (parameters->contains("diffuse")) {
-            shared_ptr<JSONObject> diffuse = parameters->getObject("diffuse");
+            shared_ptr <JSONObject> diffuse = parameters->getObject("diffuse");
             
             if (diffuse->getUnsignedInt32(kType) == asset->profile()->getGLenumForString("SAMPLER_2D")) {
                 shared_ptr<JSONObject> textures = asset->root()->createObjectIfNeeded("textures");
                 if (textures->getKeysCount() == 0) {
                     return false;
                 }
-                shared_ptr<JSONArray> textureArray = diffuse->getArray("value");
-                shared_ptr<JSONString> textureId = static_pointer_cast<JSONString>(textureArray->values()[0]);
-                shared_ptr<JSONObject> texture = textures->getObject(textureId->getCString());
-
-                std::string sourceUID = texture->getString(kSource);
+                shared_ptr<JSONArray> diffuseArray = diffuse->getArray("value");
+				shared_ptr<JSONString> diffuseString = static_pointer_cast<JSONString>(diffuseArray->values()[0]);
+				shared_ptr<JSONObject> texture = textures->getObject(diffuseString->getString());
+				std::string sourceUID = texture->getString(kSource);
                 shared_ptr<JSONObject> images = asset->root()->createObjectIfNeeded(kImages);
-
+                
                 if (images->contains(sourceUID)) {
                     shared_ptr<JSONObject> image = images->getObject(sourceUID);
                     // If the user adds an <has_alpha> extra tag to the image then we override
                     //  what the image actually contain as far as weather there is alpha or not.
-                    if (image->contains("has_alpha")) {
+                    if (image->contains("has_alpha"))
+                    {
                         return !image->getBool("has_alpha");
                     }
                     std::string imagePath = image->getString(kURI);
-                    if (!is_dataUri(imagePath)) {
+                    if (!is_dataUri(imagePath))
+                    {
                         COLLADABU::URI inputURI(asset->getInputFilePath().c_str());
                         imagePath = getPathDir(inputURI) + imagePath;
                     }
-                    if (imageHasAlpha(imagePath.c_str())) {
+
+                    if (imageHasAlpha(imagePath.c_str()))
                         return false;
-                    }
                 } else {
                     static bool printedOnce = false;
                     if (!printedOnce) {
@@ -457,12 +462,14 @@ namespace GLTF
             return this->_profile->getGLSLTypeForGLType(glType);
         }
         
-        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count) {
+        void _addDeclaration(std::string qualifier, std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
             if (this->hasSymbol(symbol) == false) {
                 std::string declaration = qualifier + " ";
                 declaration += GLSLTypeForGLType(type);
                 declaration += " " + symbol;
-                declaration += "["+GLTFUtils::toString(count)+"]";
+                if ((count > 1) || forcesAsAnArray) {
+                    declaration += "["+GLTFUtils::toString(count)+"]";
+                }
                 declaration += ";\n";
                 _declarations += declaration;
                 
@@ -474,8 +481,8 @@ namespace GLTF
             _addDeclaration("attribute", symbol, type, 1);
         }
         
-        void addUniform(std::string symbol, unsigned int type, size_t count) {
-            _addDeclaration("uniform", symbol, type, count);
+        void addUniform(std::string symbol, unsigned int type, size_t count, bool forcesAsAnArray = false) {
+            _addDeclaration("uniform", symbol, type, count, forcesAsAnArray);
         }
         
         void addVarying(std::string symbol, unsigned int type) {
@@ -609,7 +616,8 @@ namespace GLTF
                          std::string semantic,
                          std::string parameterID,
                          int count,
-                         bool includesVarying) {
+                         bool includesVarying,
+                         bool forcesAsAnArray = false) {
             
             std::string symbol = (uniformOrAttribute == "attribute") ? "a_" + parameterID : "u_" + parameterID;
             
@@ -638,8 +646,10 @@ namespace GLTF
                     _program->addVarying("v_" + parameterID, type);
                 }
             } else {
-                shader->addUniform(symbol, type, count);
-                parameter->setUnsignedInt32(kCount, count);
+                shader->addUniform(symbol, type, count, forcesAsAnArray);
+                if ((count > 1) || forcesAsAnArray) {
+                    parameter->setUnsignedInt32(kCount, count);
+                }
             }
             
             return true;
@@ -648,7 +658,7 @@ namespace GLTF
         //FIXME: refactor with addSemantic
         shared_ptr <JSONObject> addParameter(std::string parameterID, unsigned int type) {
             shared_ptr <JSONObject> parameter(new GLTF::JSONObject());
-            parameter->setUnsignedInt32(kType, type);
+            parameter->setUnsignedInt32(kType,  type);
             _parameters->setValue(parameterID, parameter);
             
             return parameter;
@@ -761,7 +771,7 @@ namespace GLTF
                 
                 assert(techniqueExtras != nullptr);
                 addSemantic("vs", "uniform",
-                            JOINTMATRIX, "jointMat", jointsCount, false);
+                            JOINTMATRIX, "jointMat", jointsCount, false, true /* force as an array */);
             }
             
             if (hasNormals) {

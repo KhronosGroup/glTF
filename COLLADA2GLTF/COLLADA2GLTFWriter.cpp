@@ -1157,11 +1157,13 @@ namespace GLTF
             }
             
             if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
-                shared_ptr <JSONObject> transparency(new JSONObject());
-                transparency->setDouble("value", this->getTransparency(effectCommon));
-                transparency->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                values->setValue("transparency", transparency);
-                khrMaterialsCommonValues->setValue("transparency", transparency);
+                shared_ptr <JSONObject> transparencyObject(new JSONObject());
+				shared_ptr <JSONArray> transparencyArray(new JSONArray());
+				transparencyObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
+				transparencyArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(this->getTransparency(effectCommon))));
+				transparencyObject->setValue("value", transparencyArray);
+                values->setValue("transparency", transparencyObject);
+                khrMaterialsCommonValues->setValue("transparency", transparencyObject);
             }
             
             //should check if has specular first and the lighting model (if not lambert)
