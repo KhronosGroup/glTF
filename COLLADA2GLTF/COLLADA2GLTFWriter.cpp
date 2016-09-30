@@ -1398,43 +1398,45 @@ namespace GLTF
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
         
-        switch (lightType) {
-            case COLLADAFW::Light::AMBIENT_LIGHT:
-                glTFLight->setString(kType, "ambient");
-                break;
-            case COLLADAFW::Light::DIRECTIONAL_LIGHT:
-                glTFLight->setString(kType, "directional");
-                break;
-            case COLLADAFW::Light::POINT_LIGHT: {
-                glTFLight->setString(kType, "point");
+		switch (lightType) {
+		case COLLADAFW::Light::AMBIENT_LIGHT: {
+			glTFLight->setString(kType, "ambient");
+			break;
+		}
+		case COLLADAFW::Light::DIRECTIONAL_LIGHT: {
+			glTFLight->setString(kType, "directional");
+			break;
+		}
+        case COLLADAFW::Light::POINT_LIGHT: {
+            glTFLight->setString(kType, "point");
 
-                description->setValue("constantAttenuation", constantAttenuationArray);             
-                description->setValue("linearAttenuation", linearAttenuationArray);
-                description->setValue("quadraticAttenuation", quadraticAttenuationArray);
-            }
-                break;
-            case COLLADAFW::Light::SPOT_LIGHT: {
-                glTFLight->setString(kType, "spot");
-
-                float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
-                shared_ptr<JSONArray> fallOffAngleArray = shared_ptr<JSONArray>(new JSONArray());
-                fallOffAngleArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffAngle)));
-
-                float fallOffExponent = (float)light->getFallOffExponent().getValue();
-                shared_ptr<JSONArray> fallOffExponentArray = shared_ptr<JSONArray>(new JSONArray());
-                fallOffExponentArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffExponent)));
-                
-                description->setValue("constantAttenuation", constantAttenuationArray);
-                description->setValue("linearAttenuation", linearAttenuationArray);
-                description->setValue("quadraticAttenuation", quadraticAttenuationArray);
-                
-                description->setValue("fallOffAngle", fallOffAngleArray);
-                description->setValue("fallOffExponent", fallOffExponentArray);
-            }
-                break;
-            default:
-                return false;
+            description->setValue("constantAttenuation", constantAttenuationArray);             
+            description->setValue("linearAttenuation", linearAttenuationArray);
+            description->setValue("quadraticAttenuation", quadraticAttenuationArray);
+			break;
         }
+        case COLLADAFW::Light::SPOT_LIGHT: {
+            glTFLight->setString(kType, "spot");
+
+            float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
+            shared_ptr<JSONArray> fallOffAngleArray = shared_ptr<JSONArray>(new JSONArray());
+            fallOffAngleArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffAngle)));
+
+            float fallOffExponent = (float)light->getFallOffExponent().getValue();
+            shared_ptr<JSONArray> fallOffExponentArray = shared_ptr<JSONArray>(new JSONArray());
+            fallOffExponentArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffExponent)));
+                
+            description->setValue("constantAttenuation", constantAttenuationArray);
+            description->setValue("linearAttenuation", linearAttenuationArray);
+            description->setValue("quadraticAttenuation", quadraticAttenuationArray);
+                
+            description->setValue("fallOffAngle", fallOffAngleArray);
+            description->setValue("fallOffExponent", fallOffExponentArray);
+			break;
+        }
+        default: {
+            return false;
+        }}
         
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString(kType), description);
