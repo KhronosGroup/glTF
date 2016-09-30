@@ -863,7 +863,7 @@ namespace GLTF
                     }
                     writeTransform(this->_asset, nodeObject, matrix, nodeTransforms, false);
                 }
-				nodeTransforms.clear();
+                nodeTransforms.clear();
             }
             nodesObject->setValue(id, nodeObject);
             writeNode(node, nodeObject, id);
