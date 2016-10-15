@@ -91,7 +91,7 @@
                 "functions" : {
                     "blendColor": [0.0, 0.0, 0.0, 0.0],
                     "blendEquationSeparate" : [32774, 32774],
-                    "blendFuncSeparate" : [1, 1, 0, 0],
+                    "blendFuncSeparate" : [1, 0, 1, 0],
                     "colorMask" : [true, true, true, true],
                     "cullFace" : [1029],
                     "depthFunc" : [513],
