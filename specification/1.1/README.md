@@ -36,6 +36,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Geometry and Meshes](#geometry-and-meshes)
   * [Materials and Shading](#materials-and-shading)
   * [Cameras](#cameras)
+    * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
@@ -1002,21 +1003,60 @@ A camera defines the projection matrix that transforms from view to clip coordin
 
 Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
+Depending on the presense of `zfar` property, perspective cameras could use finite or infinite projection.
 
-```javascript
-"cameras": {
-    "camera_0": {
-        "perspective": {
-            "aspectRatio": 1.5,
-            "yfov": 0.660593,
-            "zfar": 100,
-            "znear": 0.01
-        },
-        "type": "perspective"
+The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
+
+```json
+{
+  "cameras": {
+    "camera_finite": {
+      "type": "perspective",
+      "perspective": {
+        "aspectRatio": 1.5,
+        "yfov": 0.660593,
+        "zfar": 100,
+        "znear": 0.01
+      }      
+    },
+    "camera_infinite": {
+      "type": "perspective",
+      "perspective": {
+        "aspectRatio": 1.5,
+        "yfov": 0.660593,
+        "znear": 0.01
+      }
     }
+  }
 }
 ```
+<a name="projection-matrices"></a>
+### Projection Matrices
+
+Runtimes are expected to use the following projection matrices.
+
+#### Infinite perspective projection
+<p><img src="figures/infinite-perspective.png" /></p>
+where
+- `a` equals `camera.perspective.aspectRatio`;
+- `y` equals `camera.perspective.yfov`;
+- `n` equals `camera.perspective.znear`.
+
+#### Finite perspective projection
+<p><img src="figures/finite-perspective.png" /></p>
+where
+- `a` equals `camera.perspective.aspectRatio`;
+- `y` equals `camera.perspective.yfov`;
+- `f` equals `camera.perspective.zfar`;
+- `n` equals `camera.perspective.znear`.
+
+#### Orthographic projection
+<p><img src="figures/ortho.png" /></p>
+where
+- `r` equals `camera.orhographic.xmag`;
+- `t` equals `camera.orhographic.ymag`;
+- `f` equals `camera.orhographic.zfar`;
+- `n` equals `camera.orhographic.znear`.
 
 <a name="animations"></a>
 ## Animations
@@ -2036,7 +2076,7 @@ A perspective camera containing properties to create a perspective projection ma
 |---|----|-----------|--------|
 |**aspectRatio**|`number`|The floating-point aspect ratio of the field of view.|No|
 |**yfov**|`number`|The floating-point vertical field of view in radians.| :white_check_mark: Yes|
-|**zfar**|`number`|The floating-point distance to the far clipping plane.| :white_check_mark: Yes|
+|**zfar**|`number`|The floating-point distance to the far clipping plane.|No|
 |**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -2047,7 +2087,7 @@ Additional properties are not allowed.
 
 ### perspective.aspectRatio
 
-The floating-point aspect ratio of the field of view.  When this is undefined, the aspect ratio of the canvas is used.
+The floating-point aspect ratio of the field of view. When this is undefined, the aspect ratio of the canvas is used.
 
 * **Type**: `number`
 * **Required**: No
@@ -2061,17 +2101,17 @@ The floating-point vertical field of view in radians.
 * **Required**: Yes
 * **Minimum**:` > 0`
 
-### perspective.zfar :white_check_mark:
+### perspective.zfar
 
-The floating-point distance to the far clipping plane.  zfar must be greater than znear.
+The floating-point distance to the far clipping plane. When defined, `zfar` must be greater than `znear`. If `zfar` is undefined, runtime must use infinite projection matrix.
 
 * **Type**: `number`
-* **Required**: Yes
+* **Required**: No
 * **Minimum**:` > 0`
 
 ### perspective.znear :white_check_mark:
 
-The floating-point distance to the near clipping plane.  zfar must be greater than znear.
+The floating-point distance to the near clipping plane.
 
 * **Type**: `number`
 * **Required**: Yes
