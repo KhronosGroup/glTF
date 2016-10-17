@@ -260,15 +260,15 @@ In the example below, `node-box` defines non-default rotation and translation.
             "node-camera_1"
         ],
         "name": "Box",
+        "scale": [
+            1,
+            1,
+            1
+        ],
         "rotation": [
             0,
             0,
             0,
-            1
-        ],
-        "scale": [
-            1,
-            1,
             1
         ],
         "translation": [
@@ -601,16 +601,16 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ],
             "jointName": "Bone1",
             "name": "root",
+            "scale": [
+                1,
+                1,
+                1
+            ],
             "rotation": [
                 0,
                 0,
                 0.7071067811865475,
                 0.7071067811865476
-            ],
-            "scale": [
-                1,
-                1,
-                1
             ],
             "translation": [
                 4.61599,
@@ -622,15 +622,15 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "children": [],
             "jointName": "Bone2",
             "name": "head",
+            "scale": [
+                1,
+                1,
+                1
+            ],
             "rotation": [
                 0,
                 0,
                 0,
-                1
-            ],
-            "scale": [
-                1,
-                1,
                 1
             ],
             "translation": [
@@ -1048,20 +1048,20 @@ The following example defines an animating camera node.
             ],
             "parameters": {
                 "TIME": "animAccessor_0",
-                "rotation": "animAccessor_3",
                 "scale": "animAccessor_1",
+                "rotation": "animAccessor_3",
                 "translation": "animAccessor_2"
             },
             "samplers": {
-                "animation_0_rotation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "rotation"
-                },
                 "animation_0_scale_sampler": {
                     "input": "TIME",
                     "interpolation": "LINEAR",
                     "output": "scale"
+                },
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
                 },
                 "animation_0_translation_sampler": {
                     "input": "TIME",
