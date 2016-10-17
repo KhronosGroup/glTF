@@ -249,6 +249,8 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
+When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
+
 In the example below, `node-box` defines non-default rotation and translation.
 
 ```javascript
@@ -2435,7 +2437,7 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 
 In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material)/[`technique`](#reference-technique) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
 
-A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix. If none are provided, the transform is the identity.
+A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix. If none are provided, the transform is the identity.
 
 **Properties**
 
