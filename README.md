@@ -64,6 +64,8 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
 * [glTF plug-in](https://github.com/xml3d/xml3d-gltf-plugin) for [xml3d.js](http://xml3d.org)  (geometry and materials)
 
+[Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
+
 #### JavaScript / Node.js
 
 * [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
@@ -101,6 +103,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [gltf-utilities](https://github.com/AnalyticalGraphicsInc/gltf-utilities) - JavaScript utility library to help load glTF
 * [gltf-statistics](https://github.com/AnalyticalGraphicsInc/gltf-statistics) - JavaScript and Node.js library and command-line tool to display statistics for glTF models (glTF 0.8)
+
+## Stack Overflow
+
+* [glTF tagged](http://stackoverflow.com/questions/tagged/gltf) questions
 
 ## Presentations and Articles
 

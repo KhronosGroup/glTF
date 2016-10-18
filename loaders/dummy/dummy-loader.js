@@ -24,64 +24,74 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-var DummyLoader = Object.create(WebGLTFLoader, {
+var DummyLoader = Object.create(glTFParser, {
 
     handleBuffer: {
         value: function(entryID, description, userInfo) {
+            console.log('Found buffer: ' + entryID);
             return true;
         }
     },
 
     handleImage: {
         value: function(entryID, description, userInfo) {
+            console.log('Found image: ' + entryID);
             return true;
         }
     },
 	
     handleShader: {
         value: function(entryID, description, userInfo) {
+            console.log('Found shader: ' + entryID);
             return true;
         }
     },
 
     handleTechnique: {
         value: function(entryID, description, userInfo) {
+            console.log('Found technique: ' + entryID);
             return true;
         }
     },
 
     handleMaterial: {
         value: function(entryID, description, userInfo) {
+            console.log('Found material: ' + entryID);
             return true;
         }
     },
 
     handleLight: {
         value: function(entryID, description, userInfo) {
+            console.log('Found light: ' + entryID);
             return true;
         }
     },
 
     handleMesh: {
         value: function(entryID, description, userInfo) {
+            console.log('Found mesh: ' + entryID);
             return true;
         }
     },
 
     handleCamera: {
         value: function(entryID, description, userInfo) {
+            console.log('Found camera: ' + entryID);
             return true;
         }
     },
 
     handleScene: {
         value: function(entryID, description, userInfo) {
+            console.log('Found scene: ' + entryID);
             return true;
         }
     },
 
     handleNode: {
         value: function(entryID, description, userInfo) {
+            console.log('Found node: ' + entryID);
             return true;
         }
     }
