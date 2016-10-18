@@ -42,8 +42,8 @@
             },
             "minItems" : 4,
             "maxItems" : 4,
-            "default" : [1, 1, 0, 0],
-            "gltf_detailedDescription" : "Integer values passed to `blendFuncSeparate()`. [srcRGB, srcAlpha, dstRGB, dstAlpha]. All valid values correspond to WebGL enums.",
+            "default" : [1, 0, 1, 0],
+            "gltf_detailedDescription" : "Integer values passed to `blendFuncSeparate()`. [srcRGB, dstRGB, srcAlpha, dstAlpha]. All valid values correspond to WebGL enums.",
             "gltf_webgl" : "`blendFuncSeparate()`"
         },
         "colorMask" : {
