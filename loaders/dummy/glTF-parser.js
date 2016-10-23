@@ -69,7 +69,7 @@ var global = window;
     var categoriesDepsOrder = ["extensions", "buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "animations", "scenes"];
     // detect absolute path following the same protocol than window.location
     // case-insensitive check, CONSIDER skipping leading whitespace
-    var isAbsolutePathRegExp = new RegExp("^" + window.location.protocol, "i");
+    var isAbsolutePathRegex = new RegExp("^" + window.location.protocol, "i");
     // Case-insensitive check, CONSIDER skipping leading whitespace
     var isDataUriRegex = /^data:/i; 
 
