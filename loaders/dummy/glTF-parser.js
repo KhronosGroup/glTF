@@ -67,6 +67,11 @@ var global = window;
     "use strict";
 
     var categoriesDepsOrder = ["extensions", "buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "animations", "scenes"];
+    // detect absolute path following the same protocol than window.location
+    // case-insensitive check, CONSIDER skipping leading whitespace
+    var isAbsolutePathRegex = new RegExp("^" + window.location.protocol, "i");
+    // Case-insensitive check, CONSIDER skipping leading whitespace
+    var isDataUriRegex = /^data:/i; 
 
     var glTFParser = Object.create(Object.prototype, {
 
@@ -83,26 +88,13 @@ var global = window;
 
         baseURL: { value: null, writable: true },
 
-        //detect absolute path following the same protocol than window.location
-        _isAbsolutePath: {
-            value: function(path) {
-                var isAbsolutePathRegExp = new RegExp("^"+window.location.protocol, "i");
-
-                return path.match(isAbsolutePathRegExp) ? true : false;
-            }
-        },
-
         resolvePathIfNeeded: {
-            value: function(path) {
-                if (this._isAbsolutePath(path)) {
+            value: function (path) {
+                // Detect paths that are either data URIs or rooted to the same protocol as window. They are already absolute.
+                if (isAbsolutePathRegex.test(path) || isDataUriRegex.test(path)) {
                     return path;
                 }
-
-                var isDataUriRegex = /^data:/;
-                if (isDataUriRegex.test(path)) {
-                    return path;
-                }
-                
+                // If the path isn't "simply absolute" then prepend the baseURL.
                 return this.baseURL + path;
             }
         },
