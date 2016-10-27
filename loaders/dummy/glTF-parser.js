@@ -71,7 +71,7 @@ var global = window;
     // case-insensitive check, CONSIDER skipping leading whitespace
     var isAbsolutePathRegex = new RegExp("^" + window.location.protocol, "i");
     // Case-insensitive check, CONSIDER skipping leading whitespace
-    var isDataUriRegex = /^data:/i; 
+    var isDataUriRegex = /^data:/i;
 
     var glTFParser = Object.create(Object.prototype, {
 
@@ -228,7 +228,7 @@ var global = window;
                     var keys = categoryState.keys;
                     if (!keys) {
                         categoryState.keys = keys = Object.keys(this.rootDescription[category]);
-                        if (keys.length == 0) {
+                        if (keys.length === 0) {
                             this._stepToNextDescription();
                             continue;
                         }
