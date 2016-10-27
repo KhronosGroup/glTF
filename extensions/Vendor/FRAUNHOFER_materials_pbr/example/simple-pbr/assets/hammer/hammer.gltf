@@ -65,6 +65,42 @@
         0.9948869943618774,
         0.993490993976593
       ]
+    },
+    "accessor_tangent_generated": {
+      "bufferView": "bufferView_0",
+      "byteOffset": 22848,
+      "byteStride": 0,
+      "componentType": 5126,
+      "count": 714,
+      "type": "VEC3",
+      "min": [
+        -0.9999995827674866,
+        -0.9968300461769104,
+        -1
+      ],
+      "max": [
+        0.9999533295631409,
+        1,
+        1
+      ]
+    },
+    "accessor_binormal_generated": {
+      "bufferView": "bufferView_0",
+      "byteOffset": 31416,
+      "byteStride": 0,
+      "componentType": 5126,
+      "count": 714,
+      "type": "VEC3",
+      "min": [
+        -0.9999999403953552,
+        -0.9990677237510681,
+        -1
+      ],
+      "max": [
+        1,
+        0.9993603825569153,
+        1
+      ]
     }
   },
   "asset": {
@@ -79,21 +115,21 @@
   "buffers": {
     "buffer_0": {
       "type": "arraybuffer",
-      "byteLength": 29580,
+      "byteLength": 46716,
       "uri": "buffer_0.bin"
     }
   },
   "bufferViews": {
     "bufferView_0": {
       "buffer": "buffer_0",
-      "byteLength": 22848,
+      "byteLength": 39984,
       "byteOffset": 0,
       "target": 34962
     },
     "bufferView_1": {
       "buffer": "buffer_0",
       "byteLength": 6732,
-      "byteOffset": 22848,
+      "byteOffset": 39984,
       "target": 34963
     }
   },
@@ -140,7 +176,9 @@
           "attributes": {
             "POSITION": "accessor_position",
             "NORMAL": "accessor_normal",
-            "TEXCOORD_0": "accessor_uv"
+            "TEXCOORD_0": "accessor_uv",
+            "TANGENT": "accessor_tangent_generated",
+            "BINORMAL": "accessor_binormal_generated"
           },
           "indices": "accessor_index_0",
           "material": "material_hammermat",
@@ -150,7 +188,7 @@
     }
   },
   "nodes": {
-    "rootNode": {
+    "rootNode_0": {
       "children": [],
       "meshes": [
         "mesh_hammer"
@@ -187,7 +225,7 @@
   "scenes": {
     "scene_hammer": {
       "nodes": [
-        "rootNode"
+        "rootNode_0"
       ]
     }
   },

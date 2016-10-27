@@ -678,6 +678,18 @@ var replaceTHREEShaderAttributes = function( shaderText, technique ) {
 				shaderText = shaderText.replace( regEx, 'normal' );
 				break;
 
+
+			case "TANGENT":
+
+				shaderText = shaderText.replace( regEx, 'tangent' );
+				break;
+
+
+			case "BINORMAL":
+
+				shaderText = shaderText.replace( regEx, 'binormal' );
+				break;
+
 			case 'TEXCOORD_0':
 			case 'TEXCOORD0':
 			case 'TEXCOORD':
@@ -1276,6 +1288,14 @@ GLTFParser.prototype.loadMeshes = function() {
 
 							case 'NORMAL':
 								geometry.addAttribute( 'normal', bufferAttribute );
+								break;
+
+							case 'TANGENT':
+								geometry.addAttribute( 'tangent', bufferAttribute );
+								break;
+
+							case 'BINORMAL':
+								geometry.addAttribute( 'binormal', bufferAttribute );
 								break;
 
 							case 'TEXCOORD_0':
