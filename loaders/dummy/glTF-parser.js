@@ -54,12 +54,14 @@ var global = window;
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         factory(module.exports);
-    } else if (typeof define === 'function' && define.amd) {
+    }
+    else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], function () {
             return factory(root);
         });
-    } else {
+    }
+    else {
         // Browser globals
         factory(root);
     }
@@ -283,7 +285,8 @@ var global = window;
                         }
                     };
                     jsonfile.send(null);
-               } else {
+                }
+                else {
                     if (callback) {
                         callback(this._json);
                     }
