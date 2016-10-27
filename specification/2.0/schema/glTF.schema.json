@@ -212,9 +212,9 @@
             "type" : "array",
             "description" : "Names of WebGL extensions required to render this asset.",
             "items" : {
-                "type" : "string"
+                "type" : "string",
+                "enum" : ["OES_element_index_uint"]
             },
-            "enum" : ["OES_element_index_uint"],
             "uniqueItems" : true,
             "default" : [],
             "gltf_detailedDescription" : "Names of WebGL extensions required to render this asset.  WebGL extensions must be enabled by calling `getExtension()` for each extension.",
