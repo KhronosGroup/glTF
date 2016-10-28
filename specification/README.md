@@ -382,34 +382,43 @@ All accessors are stored in the asset's `accessors` dictionary property.
 
 The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
 
-```javascript
-"accessors": {
+```json
+{
+  "accessors": {
     "accessor_21": {
-        "bufferView": "bufferView_29",
-        "byteOffset": 0,
-        "byteStride": 0,
-        "componentType": 5123,
-        "count": 12636,
-        "type": "SCALAR"
+      "bufferView": "bufferView_29",
+      "byteOffset": 0,
+      "byteStride": 0,
+      "componentType": 5123,
+      "count": 12636,
+      "type": "SCALAR",
+      "min": [
+        0
+      ],
+      "max": [
+        37894
+      ]
     },
     "accessor_23": {
-        "bufferView": "bufferView_30",
-        "byteOffset": 0,
-        "byteStride": 12,
-        "componentType": 5126,
-        "count": 2399,
-        "max": [
-            0.961799,
-            1.6397,
-            0.539252
-        ],
-        "min": [
-            -0.692985,
-            0.0992937,
-            -0.613282
-        ],
-        "type": "VEC3"
-    },
+      "bufferView": "bufferView_30",
+      "byteOffset": 0,
+      "byteStride": 12,
+      "componentType": 5126,
+      "count": 2399,
+      "max": [
+        0.961799,
+        1.6397,
+        0.539252
+      ],
+      "min": [
+        -0.692985,
+        0.0992937,
+        -0.613282
+      ],
+      "type": "VEC3"
+    }
+  }
+}
 ```
 
 #### Accessor Attribute Size
@@ -434,23 +443,53 @@ The following tables can be used to compute the size of an accessor's attribute 
 | `"MAT3"` | 9 |
 | `"MAT4"` | 16 |
 
-The size of an accessor's attribute type, in bytes, is
-`(size in bytes of the 'componentType') * (number of components defined by 'type')`.
+The size of an accessor's attribute type, in bytes, is `(size in bytes of the 'componentType') * (number of components defined by 'type')`.
+If `accessor.byteStride` equals to `0`, total accessor's bytelength is `accessor.count * (size in bytes of the 'componentType') * (number of components defined by 'type')`.
+Otherwise, if `accessor.byteStride` is greater than `0`, total accessor's bytelength is `accessor.count * accessor.byteStride`.
 
 For example:
 
-```javascript
-"accessor_1": {
+```json
+{
+  "accessor_pos": {
     "bufferView": "bufferView_1",
-    "byteOffset": 7032,
-    "byteStride": 12,
-    "componentType": 5126, // FLOAT
-    "count": 586,
-    "type": "VEC3"
+    "byteOffset": 0,
+    "byteStride": 24,
+    "componentType": 5126,
+    "count": 9,
+    "type": "VEC3",
+    "min": [0.0, 0.0, 0.0],
+    "max": [1.0, 1.0, 1.0]
+  },
+  "accessor_nor": {
+      "bufferView": "bufferView_1",
+      "byteOffset": 12,
+      "byteStride": 24,
+      "componentType": 5126,
+      "count": 9,
+      "type": "VEC3",
+      "min": [0.0, 0.0, 0.0],
+      "max": [1.0, 1.0, 1.0]
+    }
 }
 ```
 
-In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
+In the `accessor_pos`, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`). The `byteStride` isn't zero, so total `accessor_pos` bytelength is `216` bytes (`24` * `9`). Same applies to the `accessor_nor` bytelength, so stored data layout should look like this:
+
+```
+  |00|01|02|03|04|05|06|07|08|09|0A|0B|0C|0D|0E|0F|
+  |-----------------------------------------------|
+00|px|px|px|px|py|py|py|py|pz|pz|pz|pz|nx|nx|nx|nx|
+01|ny|ny|ny|ny|nz|nz|nz|nz|px|px|px|px|py|py|py|py|
+
+...
+
+C0|px|px|px|px|py|py|py|py|pz|pz|pz|pz|nx|nx|nx|nx|
+D0|ny|ny|ny|ny|nz|nz|nz|nz|00|00|00|00|00|00|00|00|
+E0|00|00|00|00|  |  |  |  |  |  |  |  |  |  |  |  |
+
+```
+
 
 #### BufferView and Accessor Byte Alignment
 
@@ -460,23 +499,29 @@ The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) an
 
 Consider the following example:
 
-```javascript
-"bufferView_1": {
-    "buffer": "buffer_1",
-    "byteLength": 17136,
-    "byteOffset": 620,
-    "target": 34963
-},
-"accessor_1": {
-    "bufferView": "bufferView_1",
-    "byteOffset": 4608,
-    "byteStride": 0,
-    "componentType": 5123, // UNSIGNED_SHORT
-    "count": 5232,
-    "type": "SCALAR"
+```json
+{
+  "bufferViews": {
+    "bufferView_1": {
+      "buffer": "buffer_1",
+      "byteLength": 17136,
+      "byteOffset": 620,
+      "target": 34963
+    }
+  },
+  "accessors": {
+    "accessor_1": {
+      "bufferView": "bufferView_1",
+      "byteOffset": 4608,
+      "byteStride": 0,
+      "componentType": 5123,
+      "count": 5232,
+      "type": "SCALAR"
+    }
+  }
 }
 ```
-The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
+The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228` (`620 + 4608`), which is divisible by two.
 
 
 <a name="geometry-and-meshes"></a>
