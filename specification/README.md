@@ -249,6 +249,10 @@ The node `node-box` has two children, `node_1` and `node-camera_1`. Each of thos
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
+TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
+
+When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
+
 In the example below, `node-box` defines non-default rotation and translation.
 
 ```javascript
@@ -258,15 +262,15 @@ In the example below, `node-box` defines non-default rotation and translation.
             "node-camera_1"
         ],
         "name": "Box",
+        "scale": [
+            1,
+            1,
+            1
+        ],
         "rotation": [
             0,
             0,
             0,
-            1
-        ],
-        "scale": [
-            1,
-            1,
             1
         ],
         "translation": [
@@ -599,16 +603,16 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ],
             "jointName": "Bone1",
             "name": "root",
+            "scale": [
+                1,
+                1,
+                1
+            ],
             "rotation": [
                 0,
                 0,
                 0.7071067811865475,
                 0.7071067811865476
-            ],
-            "scale": [
-                1,
-                1,
-                1
             ],
             "translation": [
                 4.61599,
@@ -620,15 +624,15 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             "children": [],
             "jointName": "Bone2",
             "name": "head",
+            "scale": [
+                1,
+                1,
+                1
+            ],
             "rotation": [
                 0,
                 0,
                 0,
-                1
-            ],
-            "scale": [
-                1,
-                1,
                 1
             ],
             "translation": [
@@ -1046,20 +1050,20 @@ The following example defines an animating camera node.
             ],
             "parameters": {
                 "TIME": "animAccessor_0",
-                "rotation": "animAccessor_3",
                 "scale": "animAccessor_1",
+                "rotation": "animAccessor_3",
                 "translation": "animAccessor_2"
             },
             "samplers": {
-                "animation_0_rotation_sampler": {
-                    "input": "TIME",
-                    "interpolation": "LINEAR",
-                    "output": "rotation"
-                },
                 "animation_0_scale_sampler": {
                     "input": "TIME",
                     "interpolation": "LINEAR",
                     "output": "scale"
+                },
+                "animation_0_rotation_sampler": {
+                    "input": "TIME",
+                    "interpolation": "LINEAR",
+                    "output": "rotation"
                 },
                 "animation_0_translation_sampler": {
                     "input": "TIME",
@@ -2435,7 +2439,7 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 
 In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material)/[`technique`](#reference-technique) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
 
-A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix. If none are provided, the transform is the identity.
+A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity.  When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present.
 
 **Properties**
 
