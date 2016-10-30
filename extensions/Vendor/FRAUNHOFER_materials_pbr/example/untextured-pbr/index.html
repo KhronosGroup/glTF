@@ -284,6 +284,8 @@
                 vec3 outgoingLight = reflectedLight.diffuse + reflectedLight.specular;
 
                 gl_FragColor = vec4(outgoingLight, diffuseColor.a);
+
+                gl_FragColor = LinearTosRGB(gl_FragColor);
             }
         </script>
 
@@ -388,6 +390,8 @@
 
                 renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
                 renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.gammaFactor = 2.0;
+                
                 container.appendChild(renderer.domElement);
 
                 stats = new Stats();
