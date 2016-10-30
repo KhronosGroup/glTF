@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>glTF PBR Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                color: #222;
+                font-family: sans-serif;
+                font-size:16pt;      
+                text-align:center;
+                background: linear-gradient(#AAA, #666);
+                margin: 0px;
+                overflow: hidden;
+            }
+
+            #info {
+                font-weight: bold;
+                position: absolute;
+                width: 200px;
+                padding: 8px;
+                top: 8px;
+                left: calc(50% - 104px);
+                color: #444;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.4);
+            }
+
+            #directionLabelHor, #directionLabelVer
+            {
+                position: absolute;
+                height: 24px;
+                padding: 6px;
+                width: 300px;
+                bottom: 0px;
+                left: calc(50% - 154px);
+                color: #444;
+                background: rgba(255,255,255,0.8);  
+            }
+
+            #directionLabelVer
+            {          
+                left: 36px;
+                top: calc(50% - 154px);      
+                transform: rotate(90deg);
+                transform-origin: left top 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="container"></div>
+        <div id="info">glTF PBR Example</div>
+
+        <div id="directionLabelHor">Roughness &rarr;</div>
+        <div id="directionLabelVer">Metalness &rarr;</div>
+
+        <!-- Three.JS Core -->
+        <script src="js/three.min.js"></script>
+
+        <!-- Additional Utils -->
+        <script src="js/Detector.js"></script>
+        <script src="js/stats.min.js"></script>
+
+
+        <script id="fragmentShader" type="x-shader/x-fragment">
+            precision highp float;
+
+            // Three.js built-in uniforms
+            //uniform mat4 viewMatrix;
+            //uniform vec3 cameraPosition;
+            //uniform float toneMappingExposure;
+            //uniform float toneMappingWhitePoint;
+
+            uniform vec3  diffuse;
+            uniform float roughness;
+            uniform float metalness;
+            uniform float opacity;
+
+            varying vec3 vViewPosition;
+            varying vec3 vNormal;
+
+
+            /////////////////////////////////////////////////////////
+            //               CONSTANT DEFINITIONS                  //
+            /////////////////////////////////////////////////////////
+
+            #define PI 3.14159265359
+            #define RECIPROCAL_PI 0.31830988618
+            #define EPSILON 1e-6
+
+            #define DEFAULT_SPECULAR_COEFFICIENT 0.04
+
+            #define saturate(a) clamp( a, 0.0, 1.0 )
+
+
+            /////////////////////////////////////////////////////////
+            //                UTILITY DEFINITIONS                  //
+            /////////////////////////////////////////////////////////
+
+            float pow2(const in float x) { return x*x; }
+
+
+            /////////////////////////////////////////////////////////
+            //                    STRUCTURES                       //
+            /////////////////////////////////////////////////////////
+
+            struct IncidentLight
+            {
+                vec3 color;
+                vec3 direction;
+            };
+
+            struct ReflectedLight
+            {
+                vec3 diffuse;
+                vec3 specular;
+            };
+
+            struct GeometricContext
+            {
+                vec3 position;
+                vec3 normal;
+                vec3 viewDir;
+            };
+
+            struct PhysicalMaterial
+            {
+                vec3    diffuseColor;
+                float   specularRoughness;
+                vec3    specularColor;
+            };
+
+
+            /////////////////////////////////////////////////////////
+            //              DIFFUSE BRDF EVALUATION                //
+            /////////////////////////////////////////////////////////
+            
+            vec3 BRDF_Diffuse_Lambert(const in vec3 diffuseColor)
+            {
+                return RECIPROCAL_PI * diffuseColor;
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //             SPECULAR BRDF EVALUATION                //
+            /////////////////////////////////////////////////////////
+
+            vec3 F_Schlick(const in vec3 specularColor, const in float dotLH)
+            {
+                float fresnel = exp2( ( -5.55473 * dotLH - 6.98316 ) * dotLH );
+                return ( 1.0 - specularColor ) * fresnel + specularColor;
+            }
+
+
+            float G_GGX_Smith(const in float alpha, const in float dotNL, const in float dotNV)
+            {
+                float a2 = pow2( alpha );
+                float gl = dotNL + sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNL ) );
+                float gv = dotNV + sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNV ) );
+                return 1.0 / ( gl * gv );
+            }
+
+
+            float G_GGX_SmithCorrelated(const in float alpha, const in float dotNL, const in float dotNV)
+            {
+                float a2 = pow2( alpha );
+                float gv = dotNL * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNV ) );
+                float gl = dotNV * sqrt( a2 + ( 1.0 - a2 ) * pow2( dotNL ) );
+                return 0.5 / max( gv + gl, EPSILON );
+            }
+
+
+            float D_GGX(const in float alpha, const in float dotNH)
+            {
+                float a2 = pow2( alpha );
+                float denom = pow2( dotNH ) * ( a2 - 1.0 ) + 1.0;
+                return RECIPROCAL_PI * a2 / pow2( denom );
+            }
+
+
+            vec3 BRDF_Specular_GGX(const in IncidentLight incidentLight,
+                                   const in GeometricContext geometry,
+                                   const in vec3 specularColor,
+                                   const in float roughness             )
+            {
+                float alpha = pow2( roughness );
+
+                vec3 halfDir = normalize( incidentLight.direction + geometry.viewDir );
+
+                float dotNL = saturate( dot( geometry.normal, incidentLight.direction ) );
+                float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );
+                float dotNH = saturate( dot( geometry.normal, halfDir ) );
+                float dotLH = saturate( dot( incidentLight.direction, halfDir ) );
+                
+                vec3  F = F_Schlick( specularColor, dotLH );
+                float G = G_GGX_SmithCorrelated( alpha, dotNL, dotNV );
+                float D = D_GGX( alpha, dotNH );
+                
+                return F * (G * D);
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //          MAIN LIGHTING COMPUTATION FUNCTION         //
+            /////////////////////////////////////////////////////////
+
+            void computeLighting(const in IncidentLight directLight,
+                                 const in GeometricContext geometry,
+                                 const in PhysicalMaterial material,
+                                 inout ReflectedLight reflectedLight)
+            {
+                float dotNL     = saturate(dot(geometry.normal, directLight.direction));
+                vec3 irradiance = dotNL * directLight.color;
+
+                irradiance *= PI;
+                
+                reflectedLight.specular += irradiance * BRDF_Specular_GGX(directLight,
+                                                                          geometry,
+                                                                          material.specularColor,
+                                                                          material.specularRoughness);
+
+                reflectedLight.diffuse  += irradiance * BRDF_Diffuse_Lambert(material.diffuseColor);
+            }
+
+
+            /////////////////////////////////////////////////////////
+            //                  MAIN PROGRAM                       //
+            /////////////////////////////////////////////////////////
+
+            void main()
+            {
+                // light definitions (simple directional lights)
+
+                IncidentLight directLight0;
+                directLight0.direction = vec3(0.0, 0.0, 1.0);
+                //directLight0.color     = vec3(0.7, 0.7, 0.7);
+                directLight0.color     = 0.7 * vec3(1.0, 1.0, 1.0);
+
+                IncidentLight directLight1;
+                directLight1.direction = vec3(-0.71, 0.71, 0.0);
+                //directLight1.color     = vec3(0.5, 0.5, 0.5);
+                directLight1.color     = 0.7 * vec3(0.8, 0.6, 1.0);
+
+                IncidentLight directLight2;
+                directLight2.direction = vec3(0.71, 0.71, 0.0);
+                //directLight2.color     = vec3(0.5, 0.5, 0.5);
+                directLight2.color     = 0.7 * vec3(1.0, 0.8, 0.6);
+                
+
+                // material definition
+
+                vec4 diffuseColor = vec4(diffuse, 1.0);
+
+                float roughnessFactor = roughness;
+                float metalnessFactor = metalness;
+
+                PhysicalMaterial material;                
+                material.diffuseColor      = diffuseColor.rgb * ( 1.0 - metalnessFactor );
+                material.specularRoughness = clamp( roughnessFactor, 0.04, 1.0 );
+                material.specularColor     = mix( vec3( DEFAULT_SPECULAR_COEFFICIENT ), diffuseColor.rgb, metalnessFactor );
+                
+
+                // local geometry definition
+
+                GeometricContext geometry;
+                geometry.position = vViewPosition;
+                geometry.normal   = normalize(vNormal);
+                geometry.viewDir  = normalize(-vViewPosition);
+                
+
+                // lighting computation
+
+                ReflectedLight reflectedLight = ReflectedLight(
+                    vec3( 0.0, 0.0, 0.0 ), //diffuse
+                    vec3( 0.0, 0.0, 0.0 )  //specular
+                );
+
+                computeLighting(directLight0, geometry, material, reflectedLight);
+                computeLighting(directLight1, geometry, material, reflectedLight);
+                computeLighting(directLight2, geometry, material, reflectedLight);
+            
+                vec3 outgoingLight = reflectedLight.diffuse + reflectedLight.specular;
+
+                gl_FragColor = vec4(outgoingLight, diffuseColor.a);
+            }
+        </script>
+
+
+        <script id="vertexShader" type="x-shader/x-vertex">
+            precision highp float;
+            
+            // Three.js built-in uniforms
+            //attribute vec3 position;
+            //attribute vec3 normal;
+            //attribute vec2 uv;
+            
+            varying vec3 vViewPosition;
+            varying vec3 vNormal;
+
+            mat3 transpose(mat3 m) {
+              return mat3(m[0][0], m[1][0], m[2][0],
+                          m[0][1], m[1][1], m[2][1],
+                          m[0][2], m[1][2], m[2][2]);
+            }
+
+            void main(void)
+            {
+              vec4 pos = modelViewMatrix * vec4(position, 1.0);
+              vNormal  = normalMatrix    * normal;
+
+              vViewPosition = pos.xyz;
+
+              gl_Position = projectionMatrix * pos;
+            }
+        </script>
+
+
+        <script>
+
+            if (!Detector.webgl)
+            {
+                Detector.addGetWebGLMessage();
+            }
+
+            var container, stats;
+
+            var camera, scene, renderer, shaderUniforms;
+
+            var clock = new THREE.Clock();
+
+            init();
+            animate();
+
+            //
+
+            function init()
+            {
+
+                container = document.getElementById( 'container' );
+
+                camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
+                camera.position.z = 30;
+
+                scene = new THREE.Scene();
+
+                var sphereRadius   = 1.0;
+                var sphereSegments = 64;
+                var sphereGeometry = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
+
+                var numSpheresX = 7;
+                var numSpheresY = 7;
+                
+                var x, y, sphere, pbrMaterial;
+                var coordStep = 2.5;
+
+                for (y = 0; y < numSpheresY; ++y)
+                    for (x = 0; x < numSpheresX; ++x)
+                    {
+                        pbrMaterial = makePBRMaterial(x / (numSpheresX-1), //roughness
+                                                      y / (numSpheresY-1)  //metalness
+                                                     );
+
+                        sphere = new THREE.Mesh(sphereGeometry, pbrMaterial);                        
+
+                        sphere.position.x = (x - 0.5 * (numSpheresX-1)) * coordStep;
+                        sphere.position.y = (y - 0.5 * (numSpheresY-1)) * coordStep;                        
+
+                        scene.add(sphere);                        
+                    }
+
+                //(for comparison only)
+                /*
+                var lights = [];                
+                lights[0] = new THREE.DirectionalLight(0xffffff, 0.7);
+                lights[1] = new THREE.DirectionalLight(0xffffff, 0.5);
+                lights[2] = new THREE.DirectionalLight(0xffffff, 0.5);
+
+                lights[0].position.set( 0,    0,    1.0);
+                lights[1].position.set(-0.71, 0.71, 0.0);                
+                lights[2].position.set( 0.71, 0.71, 0.0);
+
+                scene.add(lights[0]);
+                scene.add(lights[1]);
+                scene.add(lights[2]);
+                */
+
+                renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                container.appendChild(renderer.domElement);
+
+                stats = new Stats();
+                container.appendChild(stats.dom);
+
+                onWindowResize();
+
+                window.addEventListener( 'resize', onWindowResize, false );
+            }
+
+            //
+
+            function onWindowResize( event )
+            {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            //
+
+            function animate()
+            {
+                requestAnimationFrame( animate );
+
+                render();
+                stats.update();
+            }
+
+            //
+
+            function render()
+            {
+                renderer.render( scene, camera );
+            }
+
+            //
+
+            function makePBRMaterial(roughnessVal, metalnessVal)
+            {
+                var customUniforms = 
+                {
+                    
+                    diffuse   : { value : new THREE.Vector4(1.0, 1.0, 1.0) },
+                    roughness : { value : roughnessVal },
+                    metalness : { value : metalnessVal }
+                };
+
+                var pbrMaterial = new THREE.ShaderMaterial(
+                {
+                    uniforms       : customUniforms,
+                    vertexShader   : document.getElementById('vertexShader'   ).textContent,
+                    fragmentShader : document.getElementById('fragmentShader').textContent
+                });
+
+                //(for comparison only)
+                /*var threePBRMaterial = new THREE.MeshStandardMaterial({
+                                    color: 0xFFFFFF,
+                                    metalness : metalnessVal,
+                                    roughness : roughnessVal
+                });
+
+                return threePBRMaterial;*/
+
+                return pbrMaterial;
+            }
+
+        </script>
+
+    </body>
+</html>
