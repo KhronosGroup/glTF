@@ -358,8 +358,8 @@
                 for (y = 0; y < numSpheresY; ++y)
                     for (x = 0; x < numSpheresX; ++x)
                     {
-                        pbrMaterial = makePBRMaterial(x / (numSpheresX-1), //roughness
-                                                      y / (numSpheresY-1)  //metalness
+                        pbrMaterial = makePBRMaterial(      x / (numSpheresX-1), //roughness
+                                                      1.0 - y / (numSpheresY-1)  //metalness
                                                      );
 
                         sphere = new THREE.Mesh(sphereGeometry, pbrMaterial);                        
