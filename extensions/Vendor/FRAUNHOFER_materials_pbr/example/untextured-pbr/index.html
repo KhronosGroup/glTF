@@ -71,12 +71,14 @@
             //uniform mat4 viewMatrix;
             //uniform vec3 cameraPosition;
             //uniform float toneMappingExposure;
-            //uniform float toneMappingWhitePoint;
+            //uniform float toneMappingWhitePoint;            
 
             uniform vec3  diffuse;
             uniform float roughness;
             uniform float metalness;
             uniform float opacity;
+
+            uniform sampler2D envMap;
 
             varying vec3 vViewPosition;
             varying vec3 vNormal;
@@ -88,6 +90,7 @@
 
             #define PI 3.14159265359
             #define RECIPROCAL_PI 0.31830988618
+            #define RECIPROCAL_PI2 0.15915494
             #define EPSILON 1e-6
 
             #define DEFAULT_SPECULAR_COEFFICIENT 0.04
@@ -100,6 +103,11 @@
             /////////////////////////////////////////////////////////
 
             float pow2(const in float x) { return x*x; }
+
+            vec3 inverseTransformDirection(in vec3 dir, in mat4 matrix)
+            {
+                return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+            }
 
 
             /////////////////////////////////////////////////////////
@@ -131,6 +139,58 @@
                 float   specularRoughness;
                 vec3    specularColor;
             };
+
+
+            /////////////////////////////////////////////////////////
+            //                IRRADIANCE EVALUATION                //
+            /////////////////////////////////////////////////////////
+
+            vec3 sampleEnvMapEquirect(const in vec3 reflect, const in float mipLevel)
+            {
+                vec2 sampleUV;
+                sampleUV.y = saturate(reflect.y * 0.5 + 0.5);
+                sampleUV.x = atan(reflect.z, reflect.x) * RECIPROCAL_PI2 + 0.5;
+    
+                //with textureLOD extension:
+                //vec4 envMapColor = texture2DLodEXT(envMap, sampleUV, specularMIPLevel);
+
+                //without textureLOD extension:
+                vec4 texColor = texture2D(envMap, sampleUV, mipLevel);
+
+                // assumed to be linear
+                return texColor.rgb;
+            }
+            
+
+            float GGXRoughnessToBlinnExponent(const in float ggxRoughness)
+            {
+                return (2.0 / pow2(ggxRoughness + 0.0001) - 2.0);
+            }
+
+
+            float getSpecularMIPLevel(const in float blinnShininessExponent, const in int maxMIPLevel)
+            {
+                float maxMIPLevelScalar = float( maxMIPLevel );
+                float desiredMIPLevel = maxMIPLevelScalar - 0.79248 - 0.5 * log2( pow2( blinnShininessExponent ) + 1.0 );
+                return clamp( desiredMIPLevel, 0.0, maxMIPLevelScalar );
+            }
+
+
+            vec3 getLightProbeIndirectRadiance(const in GeometricContext geometry, const in float blinnShininessExponent, const in int maxMIPLevel)
+            {
+                vec3 reflectVec = reflect(geometry.viewDir, geometry.normal);
+                reflectVec = inverseTransformDirection(reflectVec, viewMatrix);
+
+                float mipLevel = getSpecularMIPLevel( blinnShininessExponent, maxMIPLevel );
+
+                vec3 envMapColor = sampleEnvMapEquirect(reflectVec, float(mipLevel));
+
+                //for sRGB input, use this line:
+                //return sRGBToLinear(vec4(envMapColor, 1.0)).rgb;
+
+                //linear input
+                return envMapColor;
+            }
 
 
             /////////////////////////////////////////////////////////
@@ -183,7 +243,7 @@
             vec3 BRDF_Specular_GGX(const in IncidentLight incidentLight,
                                    const in GeometricContext geometry,
                                    const in vec3 specularColor,
-                                   const in float roughness             )
+                                   const in float roughness)
             {
                 float alpha = pow2( roughness );
 
@@ -202,6 +262,24 @@
             }
 
 
+            vec3 BRDF_Specular_GGX_Environment(const in GeometricContext geometry,
+                                               const in vec3 specularColor,
+                                               const in float roughness)
+            {
+                float dotNV = saturate(dot(geometry.normal, geometry.viewDir));
+
+                const vec4 c0 = vec4( -1, -0.0275, -0.572,  0.022);
+                const vec4 c1 = vec4(  1,  0.0425,   1.04, -0.04);
+
+                vec4 r = roughness * c0 + c1;
+
+                float a004 = min(r.x * r.x, exp2(-9.28 * dotNV)) * r.x + r.y;
+                vec2 AB    = vec2(-1.04, 1.04) * a004 + r.zw;
+
+                return specularColor * AB.x + AB.y;
+            }
+
+
             /////////////////////////////////////////////////////////
             //          MAIN LIGHTING COMPUTATION FUNCTION         //
             /////////////////////////////////////////////////////////
@@ -215,13 +293,20 @@
                 vec3 irradiance = dotNL * directLight.color;
 
                 irradiance *= PI;
-                
+
+                reflectedLight.diffuse  += irradiance * BRDF_Diffuse_Lambert(material.diffuseColor);
+
                 reflectedLight.specular += irradiance * BRDF_Specular_GGX(directLight,
                                                                           geometry,
                                                                           material.specularColor,
                                                                           material.specularRoughness);
 
-                reflectedLight.diffuse  += irradiance * BRDF_Diffuse_Lambert(material.diffuseColor);
+                //TODO: WIP, not consistent with the rest but just for visualizing the effect
+                /*
+                float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
+                vec3 radiance = getLightProbeIndirectRadiance(geometry, blinnExpFromRoughness, 8);
+                reflectedLight.specular += radiance * BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);
+                */
             }
 
 
@@ -343,16 +428,26 @@
                 container = document.getElementById( 'container' );
 
                 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
-                camera.position.z = 30;
+                camera.position.z = 20;
 
                 scene = new THREE.Scene();
+
+                var texLoader  = new THREE.TextureLoader();
+                var envTexture = texLoader.load('images/environment_equirect.jpg',
+                                                function(texture)
+                                                {
+                                                    texture.wrapS = THREE.RepeatWrapping;
+                                                    texture.wrapT = THREE.RepeatWrapping;
+                                                    texture.flipY = false;
+                                                });
+
 
                 var sphereRadius   = 1.0;
                 var sphereSegments = 64;
                 var sphereGeometry = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
 
-                var numSpheresX = 7;
-                var numSpheresY = 7;
+                var numSpheresX = 5;
+                var numSpheresY = 5;
                 
                 var x, y, sphere, pbrMaterial;
                 var coordStep = 2.5;
@@ -361,8 +456,8 @@
                     for (x = 0; x < numSpheresX; ++x)
                     {
                         pbrMaterial = makePBRMaterial(      x / (numSpheresX-1), //roughness
-                                                      1.0 - y / (numSpheresY-1)  //metalness
-                                                     );
+                                                      1.0 - y / (numSpheresY-1), //metalness
+                                                      envTexture);
 
                         sphere = new THREE.Mesh(sphereGeometry, pbrMaterial);                        
 
@@ -386,7 +481,7 @@
                 scene.add(lights[0]);
                 scene.add(lights[1]);
                 scene.add(lights[2]);
-                */
+                */                
 
                 renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
                 renderer.setPixelRatio(window.devicePixelRatio);
@@ -431,14 +526,15 @@
 
             //
 
-            function makePBRMaterial(roughnessVal, metalnessVal)
-            {
+            function makePBRMaterial(roughnessVal, metalnessVal, envTexture)
+            {         
                 var customUniforms = 
                 {
                     
                     diffuse   : { value : new THREE.Vector4(1.0, 1.0, 1.0) },
                     roughness : { value : roughnessVal },
-                    metalness : { value : metalnessVal }
+                    metalness : { value : metalnessVal },
+                    envMap    : { value : envTexture   }
                 };
 
                 var pbrMaterial = new THREE.ShaderMaterial(
@@ -449,13 +545,15 @@
                 });
 
                 //(for comparison only)
-                /*var threePBRMaterial = new THREE.MeshStandardMaterial({
+                /*
+                var threePBRMaterial = new THREE.MeshStandardMaterial({
                                     color: 0xFFFFFF,
                                     metalness : metalnessVal,
                                     roughness : roughnessVal
                 });
 
-                return threePBRMaterial;*/
+                return threePBRMaterial;
+                */
 
                 return pbrMaterial;
             }
