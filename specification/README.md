@@ -3428,11 +3428,11 @@ If `material.technique` is not supplied, and no extension is present that define
             "emission": {
                 "type": 35666,
                 "value": [
-		    0.5,
-		    0.5,
-		    0.5,
-		    1
-		]
+                    0.5,
+                    0.5,
+                    0.5,
+                    1
+                ]
             },
             "position": {
                 "semantic": "POSITION",
