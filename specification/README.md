@@ -3389,14 +3389,6 @@ If `material.technique` is not supplied, and no extension is present that define
 ```javascript
 "materials": {
     "Effect1": {
-        "values": {
-            "emission": [
-                0.8,
-                0.8,
-                0.8,
-                1
-            ]
-        },
         "technique": "technique0"
     }
 },
@@ -3434,7 +3426,13 @@ If `material.technique` is not supplied, and no extension is present that define
                 "type": 35676
             },
             "emission": {
-                "type": 35666
+                "type": 35666,
+                "value": [
+		    0.5,
+		    0.5,
+		    0.5,
+		    1
+		]
             },
             "position": {
                 "semantic": "POSITION",
