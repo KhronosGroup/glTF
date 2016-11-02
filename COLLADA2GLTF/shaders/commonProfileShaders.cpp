@@ -219,8 +219,10 @@ namespace GLTF
                 if (textures->getKeysCount() == 0) {
                     return false;
                 }
-                shared_ptr<JSONObject> texture = textures->getObject(diffuse->getString("value"));
-                std::string sourceUID = texture->getString(kSource);
+                shared_ptr<JSONArray> diffuseArray = diffuse->getArray("value");
+				shared_ptr<JSONString> diffuseString = static_pointer_cast<JSONString>(diffuseArray->values()[0]);
+				shared_ptr<JSONObject> texture = textures->getObject(diffuseString->getString());
+				std::string sourceUID = texture->getString(kSource);
                 shared_ptr<JSONObject> images = asset->root()->createObjectIfNeeded(kImages);
                 
                 if (images->contains(sourceUID)) {

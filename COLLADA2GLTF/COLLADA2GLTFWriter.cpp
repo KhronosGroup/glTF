@@ -1038,9 +1038,10 @@ namespace GLTF
             }
             textureObject->setUnsignedInt32(kTarget, profile->getGLenumForString("TEXTURE_2D"));
             textures->setValue(textureUID, textureObject);
-        }
-
-        slotObject->setString("value", textureUID);
+        }        
+        shared_ptr<JSONArray> slotArray(new JSONArray());
+        slotArray->appendValue(shared_ptr<JSONString>(new JSONString(textureUID)));
+        slotObject->setValue("value", slotArray);
         values->setValue(slotName, slotObject);
         khrMaterialsCommonValues->setValue(slotName, slotObject);
     }
@@ -1185,11 +1186,13 @@ namespace GLTF
             }
 
             if (!isOpaque(effectCommon) || CONFIG_BOOL(asset, "alwaysExportTransparency")) {
-                shared_ptr <JSONObject> transparency(new JSONObject());
-                transparency->setDouble("value", this->getTransparency(effectCommon));
-                transparency->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                values->setValue("transparency", transparency);
-                khrMaterialsCommonValues->setValue("transparency", transparency);
+                shared_ptr <JSONObject> transparencyObject(new JSONObject());
+				shared_ptr <JSONArray> transparencyArray(new JSONArray());
+				transparencyObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
+				transparencyArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(this->getTransparency(effectCommon))));
+				transparencyObject->setValue("value", transparencyArray);
+                values->setValue("transparency", transparencyObject);
+                khrMaterialsCommonValues->setValue("transparency", transparencyObject);
             }
 
             //should check if has specular first and the lighting model (if not lambert)
@@ -1198,9 +1201,11 @@ namespace GLTF
                 if (shininess < 1) {
                     shininess *= 128.0;
                 }
-                shared_ptr <JSONObject> shininessObject(new JSONObject());
+                shared_ptr<JSONObject> shininessObject(new JSONObject());
+                shared_ptr<JSONArray> shininessArray(new JSONArray());
                 shininessObject->setUnsignedInt32(kType, profile->getGLenumForString("FLOAT"));
-                shininessObject->setDouble("value", shininess);
+                shininessArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(shininess)));
+                shininessObject->setValue("value", shininessArray);
                 values->setValue("shininess", shininessObject);
                 khrMaterialsCommonValues->setValue("shininess", shininessObject);
             }
@@ -1411,44 +1416,57 @@ namespace GLTF
         Color color = light->getColor();
 
         float constantAttenuation = (float)light->getConstantAttenuation().getValue();
+        shared_ptr<JSONArray> constantAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        constantAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(constantAttenuation)));
         float linearAttenuation = (float)light->getLinearAttenuation().getValue();
+        shared_ptr<JSONArray> linearAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        linearAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(linearAttenuation)));
         float quadraticAttenuation = (float)light->getQuadraticAttenuation().getValue();
+        shared_ptr<JSONArray> quadraticAttenuationArray = shared_ptr<JSONArray>(new JSONArray());
+        quadraticAttenuationArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(quadraticAttenuation)));
 
         shared_ptr <JSONValue> lightColor = serializeVec3(color.getRed(), color.getGreen(), color.getBlue());
-
-        switch (lightType) {
-        case COLLADAFW::Light::AMBIENT_LIGHT:
-            glTFLight->setString(kType, "ambient");
-            break;
-        case COLLADAFW::Light::DIRECTIONAL_LIGHT:
-            glTFLight->setString(kType, "directional");
-            break;
+        
+		switch (lightType) {
+		case COLLADAFW::Light::AMBIENT_LIGHT: {
+			glTFLight->setString(kType, "ambient");
+			break;
+		}
+		case COLLADAFW::Light::DIRECTIONAL_LIGHT: {
+			glTFLight->setString(kType, "directional");
+			break;
+		}
         case COLLADAFW::Light::POINT_LIGHT: {
             glTFLight->setString(kType, "point");
 
-            description->setValue("constantAttenuation", shared_ptr <JSONNumber>(new JSONNumber(constantAttenuation)));
-            description->setValue("linearAttenuation", shared_ptr <JSONNumber>(new JSONNumber(linearAttenuation)));
-            description->setValue("quadraticAttenuation", shared_ptr <JSONNumber>(new JSONNumber(quadraticAttenuation)));
+            description->setValue("constantAttenuation", constantAttenuationArray);             
+            description->setValue("linearAttenuation", linearAttenuationArray);
+            description->setValue("quadraticAttenuation", quadraticAttenuationArray);
+			break;
         }
-                                            break;
         case COLLADAFW::Light::SPOT_LIGHT: {
             glTFLight->setString(kType, "spot");
 
-            float fallOffAngle = (float)(light->getFallOffAngle().getValue() * radianPerDegree);
+            float fallOffAngle =  (float)(light->getFallOffAngle().getValue() * radianPerDegree);
+            shared_ptr<JSONArray> fallOffAngleArray = shared_ptr<JSONArray>(new JSONArray());
+            fallOffAngleArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffAngle)));
+
             float fallOffExponent = (float)light->getFallOffExponent().getValue();
-
-            description->setValue("constantAttenuation", shared_ptr <JSONNumber>(new JSONNumber(constantAttenuation)));
-            description->setValue("linearAttenuation", shared_ptr <JSONNumber>(new JSONNumber(linearAttenuation)));
-            description->setValue("quadraticAttenuation", shared_ptr <JSONNumber>(new JSONNumber(quadraticAttenuation)));
-
-            description->setValue("fallOffAngle", shared_ptr <JSONNumber>(new JSONNumber(fallOffAngle)));
-            description->setValue("fallOffExponent", shared_ptr <JSONNumber>(new JSONNumber(fallOffExponent)));
+            shared_ptr<JSONArray> fallOffExponentArray = shared_ptr<JSONArray>(new JSONArray());
+            fallOffExponentArray->appendValue(shared_ptr<JSONNumber>(new JSONNumber(fallOffExponent)));
+                
+            description->setValue("constantAttenuation", constantAttenuationArray);
+            description->setValue("linearAttenuation", linearAttenuationArray);
+            description->setValue("quadraticAttenuation", quadraticAttenuationArray);
+                
+            description->setValue("fallOffAngle", fallOffAngleArray);
+            description->setValue("fallOffExponent", fallOffExponentArray);
+			break;
         }
-                                           break;
-        default:
+        default: {
             return false;
-        }
-
+        }}
+        
         description->setValue("color", lightColor);
         glTFLight->setValue(glTFLight->getString(kType), description);
 
