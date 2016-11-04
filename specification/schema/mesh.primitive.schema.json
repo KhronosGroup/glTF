@@ -5,6 +5,8 @@
     "description" : "Geometry to be rendered with the given material.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "attributes" : {
             "type" : "object",
             "description" : "A dictionary object of strings, where each string is the ID of the accessor containing an attribute.",

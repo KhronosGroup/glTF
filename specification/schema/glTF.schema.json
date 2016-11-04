@@ -5,6 +5,8 @@
     "description" : "The root object for a glTF asset.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "extensionsUsed" : {
             "type" : "array",
             "description" : "Names of extensions used somewhere in this asset.",

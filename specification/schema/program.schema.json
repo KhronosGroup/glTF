@@ -5,6 +5,9 @@
     "description" : "A shader program, including its vertex and fragment shader, and names of vertex shader attributes.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "attributes" : {
             "type" : "array",
             "description" : "Names of GLSL vertex shader attributes.",

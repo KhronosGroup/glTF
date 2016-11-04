@@ -5,6 +5,8 @@
     "description" : "A perspective camera containing properties to create a perspective projection matrix.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "aspectRatio" : {
             "type" : "number",
             "description" : "The floating-point aspect ratio of the field of view.",

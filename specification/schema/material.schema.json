@@ -5,6 +5,9 @@
     "description" : "The material appearance of a primitive.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "technique" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The ID of the technique.",

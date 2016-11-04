@@ -5,6 +5,9 @@
     "description" : "A texture and its sampler.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "format": {
             "type" : "integer",
             "description" : "The texture's format.",

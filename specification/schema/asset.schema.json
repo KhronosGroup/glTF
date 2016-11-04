@@ -5,6 +5,8 @@
     "description" : "Metadata about the glTF asset.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "copyright" : {
             "type" : "string",
             "description" : "A copyright message suitable for display to credit the content creator."

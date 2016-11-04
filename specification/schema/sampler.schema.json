@@ -5,6 +5,9 @@
     "description" : "Texture sampler properties for filtering and wrapping modes.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "magFilter": {
             "type" : "integer",
             "description" : "Magnification filter.",
