@@ -5,6 +5,8 @@
     "description" : "An orthographic camera containing properties to create an orthographic projection matrix.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "xmag" : {
             "type" : "number",
             "description" : "The floating-point horizontal magnification of the view.",

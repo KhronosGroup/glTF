@@ -5,6 +5,8 @@
     "description" : "The ID of the node and TRS property that an animation channel targets.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "id" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The ID of the node to target.",

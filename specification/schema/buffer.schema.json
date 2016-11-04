@@ -5,6 +5,9 @@
     "description" : "A buffer points to binary geometry, animation, or skins.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "uri" : {
             "type" : "string",
             "description" : "The uri of the buffer.",

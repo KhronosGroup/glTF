@@ -5,6 +5,9 @@
     "description" : "The root nodes of a scene.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "nodes" : {
             "type" : "array",
             "description" : "The IDs of each root node.",

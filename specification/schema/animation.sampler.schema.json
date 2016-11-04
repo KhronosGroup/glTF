@@ -5,6 +5,8 @@
     "description" : "Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "input" : {
             "extends" : { "$ref" : "glTFid.schema.json" },
             "description" : "The ID of a parameter in this animation to use as keyframe input, e.g., time.",

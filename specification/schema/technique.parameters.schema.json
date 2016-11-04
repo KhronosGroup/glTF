@@ -5,6 +5,8 @@
     "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
     "extends" : { "$ref" : "glTFProperty.schema.json" },
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "count" : {
             "type" : "integer",
             "description" : "When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.",

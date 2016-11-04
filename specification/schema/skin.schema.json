@@ -5,6 +5,9 @@
     "description" : "Joints and matrices defining a skin.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "bindShapeMatrix" : {
             "type" : "array",
             "description" : "Floating-point 4x4 transformation matrix stored in column-major order.",

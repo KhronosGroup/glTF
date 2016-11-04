@@ -5,6 +5,9 @@
     "description" : "A template for material appearances.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties": {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "parameters" : {
             "type" : "object",
             "description" : "A dictionary object of technique.parameters objects.",

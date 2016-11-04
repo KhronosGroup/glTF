@@ -5,6 +5,9 @@
     "description" : "A vertex or fragment shader.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "uri" : {
             "type" : "string",
             "description" : "The uri of the GLSL source.",

@@ -5,6 +5,9 @@
     "description" : "A camera's projection.  A node can reference a camera ID to apply a transform to place the camera in the scene.",
     "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "orthographic" : {
             "extends" : { "$ref" : "camera.orthographic.schema.json" },
             "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
