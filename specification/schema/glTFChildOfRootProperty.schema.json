@@ -1,8 +1,8 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "Child of a glTF root property",
     "type" : "object",
-    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
         "name" : {
             "type" : "string",

@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "orthographic",
     "type" : "object",
     "description" : "An orthographic camera containing properties to create an orthographic projection matrix.",
-    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
         "extensions" : {},
         "extras" : {},

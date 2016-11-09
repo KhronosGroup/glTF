@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "texture",
     "type" : "object",
     "description" : "A texture and its sampler.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "name" : {},
         "extensions" : {},
@@ -27,12 +27,12 @@
             "gltf_webgl" : "`texImage2D()` internalFormat parameter"
         },
         "sampler" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the sampler used by this texture.",
             "required" : true
         },
         "source" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the image used by this texture.",
             "required" : true
         },

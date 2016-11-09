@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "shader",
     "type" : "object",
     "description" : "A vertex or fragment shader.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "name" : {},
         "extensions" : {},

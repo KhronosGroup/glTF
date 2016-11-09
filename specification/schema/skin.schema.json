@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "skin",
     "type" : "object",
     "description" : "Joints and matrices defining a skin.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "name" : {},
         "extensions" : {},
@@ -19,7 +19,7 @@
             "default" : [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
         },
         "inverseBindMatrices" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.",
             "required" : true        
         },
