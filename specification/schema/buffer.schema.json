@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "buffer",
     "type" : "object",
     "description" : "A buffer points to binary geometry, animation, or skins.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "name" : {},
         "extensions" : {},

@@ -1,15 +1,15 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "bufferView",
     "type" : "object",
     "description" : "A view into a buffer generally representing a subset of the buffer.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "name" : {},
         "extensions" : {},
         "extras" : {},
         "buffer" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the buffer.",
             "required" : true
         },

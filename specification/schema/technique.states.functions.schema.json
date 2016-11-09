@@ -1,9 +1,9 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "functions",
     "type" : "object",
     "description" : "Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.",
-    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
         "extensions" : {},
         "extras" : {},
