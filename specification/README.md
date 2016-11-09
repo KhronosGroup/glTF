@@ -240,7 +240,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
     },
 ```
 
-The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have their own children, creating a hierarchy of nodes.
+The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
 >For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
 
