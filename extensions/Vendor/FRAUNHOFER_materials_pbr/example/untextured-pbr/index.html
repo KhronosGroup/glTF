@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
     <head>
         <title>glTF PBR Example</title>
@@ -63,20 +63,60 @@
         <script src="js/Detector.js"></script>
         <script src="js/stats.min.js"></script>
 
-
-        <script id="fragmentShader" type="x-shader/x-fragment">
+        <script id="fragmentShaderSpecularGlossiness" type="x-shader/x-fragment">
             precision highp float;
 
+            uniform vec3  diffuseFactor;
+            uniform vec3  specularFactor;
+            uniform float glossinessFactor;
+
+            vec3 getDiffuseColor()
+            {
+                return diffuseFactor;
+            }
+
+            float getSpecularRoughness()
+            {
+                return clamp( 1.0 - glossinessFactor, 0.04, 1.0 );
+            }
+
+            vec3 getSpecularColor()
+            {
+                return specularFactor;
+            }
+        </script>
+
+        <script id="fragmentShaderMetallicRoughness" type="x-shader/x-fragment">
+            precision highp float;
+
+            uniform vec3  baseColorFactor;
+            uniform float metallicFactor;
+            uniform float roughnessFactor;
+
+            #define DEFAULT_SPECULAR_COEFFICIENT 0.04
+
+            vec3 getDiffuseColor()
+            {
+                return baseColorFactor * ( 1.0 - metallicFactor );
+            }
+
+            float getSpecularRoughness()
+            {
+                return clamp( roughnessFactor, 0.04, 1.0 );
+            }
+
+            vec3 getSpecularColor()
+            {
+                return mix( vec3( DEFAULT_SPECULAR_COEFFICIENT ), baseColorFactor, metallicFactor );
+            }
+        </script>
+
+        <script id="fragmentShader" type="x-shader/x-fragment">
             // Three.js built-in uniforms
             //uniform mat4 viewMatrix;
             //uniform vec3 cameraPosition;
             //uniform float toneMappingExposure;
             //uniform float toneMappingWhitePoint;            
-
-            uniform vec3  diffuse;
-            uniform float roughness;
-            uniform float metalness;
-            uniform float opacity;
 
             uniform sampler2D envMap;
 
@@ -92,8 +132,6 @@
             #define RECIPROCAL_PI 0.31830988618
             #define RECIPROCAL_PI2 0.15915494
             #define EPSILON 1e-6
-
-            #define DEFAULT_SPECULAR_COEFFICIENT 0.04
 
             #define saturate(a) clamp( a, 0.0, 1.0 )
 
@@ -336,16 +374,11 @@
 
                 // material definition
 
-                vec4 diffuseColor = vec4(diffuse, 1.0);
+                PhysicalMaterial material;
+                material.diffuseColor      = getDiffuseColor();
+                material.specularRoughness = getSpecularRoughness();
+                material.specularColor     = getSpecularColor();
 
-                float roughnessFactor = roughness;
-                float metalnessFactor = metalness;
-
-                PhysicalMaterial material;                
-                material.diffuseColor      = diffuseColor.rgb * ( 1.0 - metalnessFactor );
-                material.specularRoughness = clamp( roughnessFactor, 0.04, 1.0 );
-                material.specularColor     = mix( vec3( DEFAULT_SPECULAR_COEFFICIENT ), diffuseColor.rgb, metalnessFactor );
-                
 
                 // local geometry definition
 
@@ -368,7 +401,7 @@
             
                 vec3 outgoingLight = reflectedLight.diffuse + reflectedLight.specular;
 
-                gl_FragColor = vec4(outgoingLight, diffuseColor.a);
+                gl_FragColor = vec4(outgoingLight, 1.0);
 
                 gl_FragColor = LinearTosRGB(gl_FragColor);
             }
@@ -452,17 +485,35 @@
                 var x, y, sphere, pbrMaterial;
                 var coordStep = 2.5;
 
+                const diffuse = new THREE.Vector3(1.0, 1.0, 1.0);
+                const metallicWorkflow = true;
+
                 for (y = 0; y < numSpheresY; ++y)
                     for (x = 0; x < numSpheresX; ++x)
                     {
-                        pbrMaterial = makePBRMaterial(      x / (numSpheresX-1), //roughness
-                                                      1.0 - y / (numSpheresY-1), //metalness
-                                                      envTexture);
+                        var roughness = x / (numSpheresX - 1);
+                        var metalness = 1 - y / (numSpheresY - 1);
 
-                        sphere = new THREE.Mesh(sphereGeometry, pbrMaterial);                        
+                        var pbrMaterial;
+                        if (metallicWorkflow)
+                        {
+                            var baseColorFactor = diffuse;
+                            var metallicFactor = metalness;
+                            var roughnessFactor = roughness;
+                            pbrMaterial = makePBRMaterialMetallicRoughness(baseColorFactor, metallicFactor, roughnessFactor, envTexture);
+                        }
+                        else
+                        {
+                            var diffuseFactor = new THREE.Vector3(diffuse.x, diffuse.y, diffuse.z).multiplyScalar(1.0 - metalness);
+                            var specularFactor = new THREE.Vector3(diffuse.x, diffuse.y, diffuse.z).multiplyScalar(THREE.Math.lerp(0.5, 1.0, metalness));
+                            var glossinessFactor = 1.0 - roughness;
+                            pbrMaterial = makePBRMaterialSpecularGlossiness(diffuseFactor, specularFactor, glossinessFactor, envTexture);
+                        }
+
+                        sphere = new THREE.Mesh(sphereGeometry, pbrMaterial);
 
                         sphere.position.x = (x - 0.5 * (numSpheresX-1)) * coordStep;
-                        sphere.position.y = (y - 0.5 * (numSpheresY-1)) * coordStep;                        
+                        sphere.position.y = (y - 0.5 * (numSpheresY-1)) * coordStep;
 
                         scene.add(sphere);                        
                     }
@@ -526,22 +577,45 @@
 
             //
 
-            function makePBRMaterial(roughnessVal, metalnessVal, envTexture)
-            {         
-                var customUniforms = 
+            function makePBRMaterialSpecularGlossiness(diffuseFactor, specularFactor, glossinessFactor, envTexture)
+            {
+                var customUniforms =
                 {
-                    
-                    diffuse   : { value : new THREE.Vector4(1.0, 1.0, 1.0) },
-                    roughness : { value : roughnessVal },
-                    metalness : { value : metalnessVal },
-                    envMap    : { value : envTexture   }
+                    diffuseFactor: { value: diffuseFactor },
+                    specularFactor: { value: specularFactor },
+                    glossinessFactor: { value: glossinessFactor },
+                    envMap: { value: envTexture }
                 };
 
                 var pbrMaterial = new THREE.ShaderMaterial(
                 {
-                    uniforms       : customUniforms,
-                    vertexShader   : document.getElementById('vertexShader'   ).textContent,
-                    fragmentShader : document.getElementById('fragmentShader').textContent
+                    uniforms: customUniforms,
+                    vertexShader: document.getElementById('vertexShader').textContent,
+                    fragmentShader:
+                        document.getElementById('fragmentShaderSpecularGlossiness').textContent +
+                        document.getElementById('fragmentShader').textContent
+                });
+
+                return pbrMaterial;
+            }
+
+            function makePBRMaterialMetallicRoughness(baseColorFactor, metallicFactor, roughnessFactor, envTexture)
+            {
+                var customUniforms =
+                {
+                    baseColorFactor: { value: baseColorFactor },
+                    metallicFactor: { value: metallicFactor },
+                    roughnessFactor: { value: roughnessFactor },
+                    envMap: { value: envTexture }
+                };
+
+                var pbrMaterial = new THREE.ShaderMaterial(
+                {
+                    uniforms: customUniforms,
+                    vertexShader: document.getElementById('vertexShader').textContent,
+                    fragmentShader:
+                        document.getElementById('fragmentShaderMetallicRoughness').textContent +
+                        document.getElementById('fragmentShader').textContent
                 });
 
                 //(for comparison only)
