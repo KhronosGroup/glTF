@@ -58,8 +58,8 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
    * The [COLLADA to glTF](http://cesiumjs.org/convertmodel.html) converter also supports drag-and-drop viewing of glTF assets
    * [3D Models](https://cesiumjs.org/tutorials/3D-Models-Tutorial/) tutorial
 * Initial [glTF loader](https://github.com/pex-gl/pex-gltf) in [PEX](http://vorg.github.io/pex/) (geometry and materials)
-* Initial [glTF loader](https://github.com/xeolabs/xeoengine/tree/master/src/importing/gltf) in [xeoEngine](http://xeoengine.org/) (geometry and materials)
-   * [Importing glTF](https://github.com/xeolabs/xeoengine/wiki/Importing-glTF) tutorial
+* Initial [glTF loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) in [xeogl](http://xeogl.org/) (geometry and materials)
+   * [Importing glTF](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) tutorial
 * [aframe-gltf](https://github.com/aframevr/aframe) - loader for A-Frame, a framework for creating virtual reality web experiences
 * [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
 * [glTF plug-in](https://github.com/xml3d/xml3d-gltf-plugin) for [xml3d.js](http://xml3d.org)  (geometry and materials)
