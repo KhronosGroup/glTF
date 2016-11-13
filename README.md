@@ -84,6 +84,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [C# glTF loader](https://github.com/KhronosGroup/glTF/tree/master/loaders/CSharp) - C# reference loader for glTF
 
+#### Go
+
+* [gltf](https://github.com/sturfeeinc/glTF) - A go library for marshaling and unmarshaling glTF
+
 #### Haxe
 
 * [haxe-gltf](https://github.com/FuzzyWuzzie/haxe-gltf) - A Haxe library for reading glTF
