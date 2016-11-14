@@ -27,9 +27,9 @@
         },
         "version" : {
             "type" : "string",
-            "description" : "The glTF version.",
-            "required" : true
+            "description" : "The glTF version."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["version"]
 }

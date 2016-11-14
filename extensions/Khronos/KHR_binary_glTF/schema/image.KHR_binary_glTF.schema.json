@@ -6,27 +6,24 @@
         "bufferView" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the buffer-view that references the image. Use this instead of the image's uri property.",
-            "minLength" : 1,
-            "required" : true
+            "minLength" : 1
         },
         "mimeType" : {
             "type" : "string",
             "description" : "The image's MIME type.",
-            "minLength" : 1,
-            "required" : true
+            "minLength" : 1
         },
         "width" : {
             "type" : "integer",
             "description" : "The width of the image in pixels.",
-            "minimum" : 0,
-            "required" : true
+            "minimum" : 0
         },
         "height" : {
             "type" : "integer",
             "description" : "The height of the image in pixels.",
-            "minimum" : 0,
-            "required" : true
+            "minimum" : 0
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["bufferView", "mimeType", "width", "height"]
 }

@@ -20,9 +20,9 @@
             "type" : "string",
             "description" : "Specifies if the camera uses a perspective or orthographic projection.",
             "enum" : ["perspective", "orthographic"],
-            "required" : true,
             "gltf_detailedDescription" : "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["type"]
 }

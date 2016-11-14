@@ -28,13 +28,11 @@
         },
         "sampler" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the sampler used by this texture.",
-            "required" : true
+            "description" : "The ID of the sampler used by this texture."
         },
         "source" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the image used by this texture.",
-            "required" : true
+            "description" : "The ID of the image used by this texture."
         },
         "target": {
             "type" : "integer",
@@ -56,5 +54,6 @@
         }
     },
     "additionalProperties" : false,
-    "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+    "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`",
+    "required": ["sampler", "source"]
 }

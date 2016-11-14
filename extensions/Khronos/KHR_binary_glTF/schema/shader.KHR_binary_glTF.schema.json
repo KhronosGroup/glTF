@@ -6,9 +6,9 @@
         "bufferView" : {
             "type" : "string",
             "description" : "The id (JSON property name) of the buffer-view that references the shader source. Use this instead of the shader's uri property.",
-            "minLength" : 1,
-            "required" : true
+            "minLength" : 1
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["bufferView"]
 }

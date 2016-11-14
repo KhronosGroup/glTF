@@ -9,15 +9,14 @@
         "extras" : {},
         "id" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the node to target.",
-            "required" : true
+            "description" : "The ID of the node to target."
         },
         "path" : {
             "type" : "string",
             "description" : "The name of the node's TRS property to modify.",
-            "enum" : ["translation", "rotation", "scale"],
-            "required" : true
+            "enum" : ["translation", "rotation", "scale"]
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["id", "path"]
 }

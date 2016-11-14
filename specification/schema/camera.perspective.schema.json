@@ -16,13 +16,11 @@
         "yfov" : {
             "type" : "number",
             "description" : "The floating-point vertical field of view in radians.",
-            "required" : true,
             "minimum" : 0.0
         },
         "zfar" : {
             "type" : "number",
             "description" : "The floating-point distance to the far clipping plane.",
-            "required" : true,
             "minimum" : 0.0,
             "exclusiveMinimum" : true,
             "gltf_detailedDescription" : "The floating-point distance to the far clipping plane.  zfar must be greater than znear."
@@ -30,11 +28,11 @@
         "znear" : {
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
-            "required" : true,
             "minimum" : 0.0,
             "exclusiveMinimum" : true,
             "gltf_detailedDescription" : "The floating-point distance to the near clipping plane.  zfar must be greater than znear."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["yfov", "zfar", "znear"]
 }

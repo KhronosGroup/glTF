@@ -23,7 +23,6 @@
             "description" : "The datatype.",
             "enum" : [5120, 5121, 5122, 5123, 5124, 5125, 5126, 35664, 35665, 35666, 35667, 35668, 35669, 35670, 35671, 35672, 35673, 35674, 35675, 35676, 35678],
             "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "INT", "UNSIGNED_INT", "FLOAT", "FLOAT_VEC2", "FLOAT_VEC3", "FLOAT_VEC4", "INT_VEC2", "INT_VEC3", "INT_VEC4", "BOOL", "BOOL_VEC2", "BOOL_VEC3", "BOOL_VEC4", "FLOAT_MAT2", "FLOAT_MAT3", "FLOAT_MAT4", "SAMPLER_2D"],
-            "required" : true,
             "gltf_detailedDescription" : "The datatype.  All valid values correspond to WebGL enums."
         },
         "semantic" : {
@@ -37,5 +36,6 @@
             "gltf_detailedDescription" : "The value of the parameter.  A material value with the same name, when specified, overrides this value."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["type"]
 }

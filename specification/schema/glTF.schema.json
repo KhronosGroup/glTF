@@ -204,7 +204,7 @@
         }
     },
     "dependencies" : {
-        "scene" : "scenes"
+        "scene" : ["scenes"]
     },
     "additionalProperties" : false
 }

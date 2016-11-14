@@ -24,8 +24,7 @@
         },
         "material" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the material to apply to this primitive when rendering.",
-            "required" : true
+            "description" : "The ID of the material to apply to this primitive when rendering."
         },
         "mode" : {
             "type" : "integer",
@@ -37,5 +36,6 @@
         }
     },
     "additionalProperties" : false,
-    "gltf_webgl" : "`drawElements()` and `drawArrays()`"
+    "gltf_webgl" : "`drawElements()` and `drawArrays()`",
+    "required": ["material"]
 }

@@ -10,14 +10,12 @@
         "extras" : {},
         "buffer" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the buffer.",
-            "required" : true
+            "description" : "The ID of the buffer."
         },
         "byteOffset" : {
             "type" : "integer",
             "description" : "The offset into the buffer in bytes.",
-            "minimum" : 0,
-            "required" : true
+            "minimum" : 0
         },
         "byteLength" : {
             "type" : "integer",
@@ -34,5 +32,6 @@
             "gltf_webgl" : "`bindBuffer()`"
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["buffer", "byteOffset"]
 }

@@ -31,8 +31,7 @@
         },
         "program" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the program.",
-            "required" : true
+            "description" : "The ID of the program."
         },
         "uniforms" : {
             "type" : "object",
@@ -50,5 +49,6 @@
             "default" : {}
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["program"]
 }

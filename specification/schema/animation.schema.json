@@ -38,8 +38,8 @@
         }
     },
     "dependencies" : {
-        "channels" : "samplers",
-        "samplers" : "parameters"
+        "channels" : ["samplers"],
+        "samplers" : ["parameters"]
     },
     "additionalProperties" : false
 }

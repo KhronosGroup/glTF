@@ -20,8 +20,7 @@
         },
         "inverseBindMatrices" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.",
-            "required" : true        
+            "description" : "The ID of the accessor containing the floating-point 4x4 inverse-bind matrices."    
         },
         "jointNames" : {
             "type" : "array",
@@ -30,9 +29,9 @@
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "required" : true,
             "gltf_detailedDescription" : "Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is the same as the `count` property of the `inverseBindMatrices` accessor, and the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["inverseBindMatrices", "jointNames"]
 }

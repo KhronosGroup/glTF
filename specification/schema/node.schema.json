@@ -91,10 +91,8 @@
         }
     },
     "dependencies" : {
-        "skeletons" : "skin",
-        "skeletons" : "meshes",
-        "skin" : "skeletons",
-        "skin" : "meshes"
+        "skeletons" : ["skin", "meshes"],
+        "skin" : ["skeletons", "meshes"]
     },
     "additionalProperties" : false
 }

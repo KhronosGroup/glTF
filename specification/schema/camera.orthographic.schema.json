@@ -9,26 +9,23 @@
         "extras" : {},
         "xmag" : {
             "type" : "number",
-            "description" : "The floating-point horizontal magnification of the view.",
-            "required" : true
+            "description" : "The floating-point horizontal magnification of the view."
         },
         "ymag" : {
             "type" : "number",
-            "description" : "The floating-point vertical magnification of the view.",
-            "required" : true
+            "description" : "The floating-point vertical magnification of the view."
         },
         "zfar" : {
             "type" : "number",
             "description" : "The floating-point distance to the far clipping plane.",
-            "required" : true,
             "minimum" : 0.0
         },
         "znear" : {
             "type" : "number",
             "description" : "The floating-point distance to the near clipping plane.",
-            "required" : true,
             "minimum" : 0.0
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["xmag", "ymag", "zfar", "znear"]
 }

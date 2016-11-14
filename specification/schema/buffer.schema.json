@@ -12,7 +12,6 @@
             "type" : "string",
             "description" : "The uri of the buffer.",
             "format" : "uri",
-            "required" : true,
             "gltf_detailedDescription" : "The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.",
             "gltf_uriType" : "application"
         },
@@ -29,5 +28,6 @@
             "default" : "arraybuffer"
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["uri"]
 }

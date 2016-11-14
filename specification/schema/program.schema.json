@@ -21,15 +21,14 @@
         },
         "fragmentShader" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the fragment shader.",
-            "required" : true
+            "description" : "The ID of the fragment shader."
         },
         "vertexShader" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the vertex shader.",
-            "required" : true
+            "description" : "The ID of the vertex shader."
         }
     },
     "additionalProperties" : false,
+    "required": ["fragmentShader", "vertexShader"],
     "gltf_webgl" : "`attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`"
 }
