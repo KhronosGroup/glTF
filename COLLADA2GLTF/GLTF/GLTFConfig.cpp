@@ -63,6 +63,8 @@ namespace GLTF
 		optionsRoot->setBool("embedResources", false);
         optionsRoot->setBool("noCombineAnimations", false);
         optionsRoot->setBool("useKhrMaterialsCommon", false);
+
+        optionsRoot->setUnsignedInt32("maximumIndicesCount", 65535);
         
         //create the path "extensions.Open3DGC.quantization" and set default for Open3DGC
         shared_ptr<JSONObject> extensions(new JSONObject());

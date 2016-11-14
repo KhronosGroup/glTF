@@ -895,7 +895,7 @@ namespace GLTF
             const std::string &meshUID = meshesUIDs[i];
             shared_ptr<GLTFMesh> mesh = static_pointer_cast<GLTFMesh>(meshes->getObject(meshUID));
             if (mesh) {
-                shared_ptr<GLTFMesh> targetMesh = createMeshWithMaximumIndicesCountFromMeshIfNeeded(mesh.get(), 65535, this->profile());
+                shared_ptr<GLTFMesh> targetMesh = createMeshWithMaximumIndicesCountFromMeshIfNeeded(mesh.get(), converterConfig()->config()->getUnsignedInt32("maximumIndicesCount"), this->profile());
                 if (targetMesh != nullptr) {
                     meshes->setValue(targetMesh->getID(), targetMesh);
                     this->setValueForUniqueId(this->getUniqueId(targetMesh->getID()), targetMesh);
