@@ -66,7 +66,7 @@ namespace o3dgc
                                     unsigned long current = m_start++;
                                     if (m_start == m_allocated) 
                                     {
-                                        m_end = 0;
+                                        m_start = 0;
                                     }
                                     return m_buffer[current];
                                 };
