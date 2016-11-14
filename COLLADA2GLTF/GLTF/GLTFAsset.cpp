@@ -619,6 +619,31 @@ namespace GLTF
         return materialBindingKey;
     }
 
+
+	void GLTFAsset::_applyDefaultMaterial(shared_ptr<GLTFMesh>& mesh, shared_ptr <GLTF::GLTFPrimitive>& primitive, shared_ptr<JSONObject>& materials, int j)
+	{
+		shared_ptr <GLTFEffect> effect = nullptr;
+
+		//https://github.com/KhronosGroup/glTF/issues/194
+		//We'll deal with two cases cases of default materials
+		//With or without NORMALS
+		shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
+
+		static shared_ptr<GLTFEffect> defaultEffectNoNormal = createDefaultEffect(this, attributeSemantics, false);
+		static shared_ptr<GLTFEffect> defaultEffectWithNormal = createDefaultEffect(this, attributeSemantics, true);
+
+		bool hasNormal = attributeSemantics->contains(GLTFUtils::getStringForSemantic(GLTF::NORMAL));
+
+		effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
+
+		primitive->setMaterialID(effect->getID());
+
+		if (materials->contains(effect->getID()) == false) {
+			materials->setValue(effect->getID(), effect);
+		}
+	}
+
+
     void GLTFAsset::_applyMaterialBindings(shared_ptr<GLTFMesh> mesh,
                                            shared_ptr <MaterialBindingsPrimitiveMap> materialBindingsPrimitiveMap,
                                            shared_ptr <JSONArray> meshesArray,
@@ -650,7 +675,8 @@ namespace GLTF
             shared_ptr<JSONObject> materials = this->root()->createObjectIfNeeded(kMaterials);
             shared_ptr <GLTF::GLTFPrimitive> primitive = static_pointer_cast<GLTFPrimitive>(primitives[j]);
             
-            if (materialBindingsPrimitiveMap->count(primitive->getMaterialObjectID()) > 0) {
+            if (materialBindingsPrimitiveMap->count(primitive->getMaterialObjectID()) > 0) 
+			{
                 COLLADAFW::MaterialBinding *materialBinding =  (*materialBindingsPrimitiveMap)[primitive->getMaterialObjectID()].get();
                 shared_ptr<JSONObject> texcoordBindings(new JSONObject());
                 std::string referencedMaterialID = materialBinding->getReferencedMaterial().toAscii();
@@ -663,107 +689,97 @@ namespace GLTF
                 
                 std::string materialName = this->_materialUIDToName[referencedMaterialID];
                 
-                if (this->containsValueForUniqueId(effectID)) {
-                    effect = static_pointer_cast<GLTFEffect>(this->getValueForUniqueId(effectID));
-                }
-                
-                // retrieve the semantic to be associated
-                size_t coordBindingsCount = textureCoordBindings.getCount();
-                if (coordBindingsCount > 0) {
-                    //some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
-                    size_t minimumIndex = textureCoordBindings[0].getSetIndex();
-                    for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                        if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
-                            minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
-                    }
+				if (this->containsValueForUniqueId(effectID))
+				{
+					effect = static_pointer_cast<GLTFEffect>(this->getValueForUniqueId(effectID));
+				                
+					// retrieve the semantic to be associated
+					size_t coordBindingsCount = textureCoordBindings.getCount();
+					if (coordBindingsCount > 0) {
+						//some models come with a setIndex > 0, we do not handle this, we need to find what's the minimum index and substract it to ensure start at set=0
+						size_t minimumIndex = textureCoordBindings[0].getSetIndex();
+						for (size_t coordIdx = 1 ; coordIdx < coordBindingsCount ; coordIdx++) {
+							if (textureCoordBindings[coordIdx].getSetIndex() < minimumIndex)
+								minimumIndex = textureCoordBindings[coordIdx].getSetIndex();
+						}
                     
-                    size_t maxCoordsAttributesCount = mesh->getMeshAttributesCountForSemantic(GLTF::TEXCOORD) - 1;
-                    for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
-                        std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
-                        SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
+						size_t maxCoordsAttributesCount = mesh->getMeshAttributesCountForSemantic(GLTF::TEXCOORD) - 1;
+						for (size_t coordIdx = 0 ; coordIdx < coordBindingsCount ; coordIdx++) {
+							std::string texcoord = textureCoordBindings[coordIdx].getSemantic();
+							SemanticArrayPtr semanticArrayPtr = effect->getSemanticsForTexcoordName(texcoord);
                         
-                        //work-around for https://github.com/KhronosGroup/glTF/issues/253
-                        size_t setIndex = textureCoordBindings[coordIdx].getSetIndex() - minimumIndex;
-                        if (setIndex > maxCoordsAttributesCount)
-                            setIndex = maxCoordsAttributesCount;
+							//work-around for https://github.com/KhronosGroup/glTF/issues/253
+							size_t setIndex = textureCoordBindings[coordIdx].getSetIndex() - minimumIndex;
+							if (setIndex > maxCoordsAttributesCount)
+								setIndex = maxCoordsAttributesCount;
                         
-                        std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(setIndex);
+							std::string shaderSemantic = "TEXCOORD_"+ GLTFUtils::toString(setIndex);
                         
-                        if (semanticArrayPtr) {
-                            for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
-                                std::string slot = (*semanticArrayPtr)[semanticIndex];
-                                texcoordBindings->setString(slot, shaderSemantic);
-                                if (effectExtras != nullptr) {
-                                    if ((slot == "diffuse") && effectExtras->getBool("ambient_diffuse_lock")) {
-                                        texcoordBindings->setString("ambient", shaderSemantic);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                unsigned int jointsCount;
-                shared_ptr<JSONObject> techniqueExtras(new JSONObject());
-                if (meshExtras != nullptr) {
-                    if (meshExtras->contains(kDoubleSided)) {
-                        techniqueExtras->setBool(kDoubleSided, meshExtras->getBool(kDoubleSided));
-                    }
-                    if (meshExtras->contains("jointsCount")) {
-                        jointsCount = meshExtras->getUnsignedInt32("jointsCount");
-                        techniqueExtras->setUnsignedInt32("jointsCount", jointsCount);
-                    }
-                }
+							if (semanticArrayPtr) {
+								for (size_t semanticIndex = 0 ; semanticIndex < semanticArrayPtr->size() ; semanticIndex++){
+									std::string slot = (*semanticArrayPtr)[semanticIndex];
+									texcoordBindings->setString(slot, shaderSemantic);
+									if (effectExtras != nullptr) {
+										if ((slot == "diffuse") && effectExtras->getBool("ambient_diffuse_lock")) {
+											texcoordBindings->setString("ambient", shaderSemantic);
+										}
+									}
+								}
+							}
+						}
+					}
+					unsigned int jointsCount;
+					shared_ptr<JSONObject> techniqueExtras(new JSONObject());
+					if (meshExtras != nullptr) {
+						if (meshExtras->contains(kDoubleSided)) {
+							techniqueExtras->setBool(kDoubleSided, meshExtras->getBool(kDoubleSided));
+						}
+						if (meshExtras->contains("jointsCount")) {
+							jointsCount = meshExtras->getUnsignedInt32("jointsCount");
+							techniqueExtras->setUnsignedInt32("jointsCount", jointsCount);
+						}
+					}
                 
-                if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
-                    techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
-                }
+					if ((effectExtras != nullptr) && effectExtras->contains(kDoubleSided)) {
+						techniqueExtras->setBool(kDoubleSided, effectExtras->getBool(kDoubleSided));
+					}
                 
-                //generate shaders if needed
-                shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
+					//generate shaders if needed
+					shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
+					shared_ptr<JSONObject> techniqueGenerator(new JSONObject());
                 
-                techniqueGenerator->setString("lightingModel", effect->getLightingModel());
-                techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
-                techniqueGenerator->setValue(kValues, effect->getValues());
-                techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
-                techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
+					techniqueGenerator->setString("lightingModel", effect->getLightingModel());
+					techniqueGenerator->setValue("attributeSemantics", attributeSemantics);
+					techniqueGenerator->setValue(kValues, effect->getValues());
+					techniqueGenerator->setValue("techniqueExtras", techniqueExtras);
+					techniqueGenerator->setValue("texcoordBindings", texcoordBindings);
                 
-                if (effect->getTechniqueGenerator() != nullptr) {
-                    //here we have the same material that shared by different meshes.
-                    //some of these meshes have different number of bones
-                    //so, we'll have to clone the effect
-                    std::string techniqueKey = getTechniqueKey(techniqueGenerator, this);
-                    if (getTechniqueKey(effect->getTechniqueGenerator(), this) != techniqueKey) {
-                        shared_ptr<GLTFEffect> effectCopy = std::make_shared<GLTFEffect>(*effect);
-                        effectCopy->setID(effect->getID() + "-variant-" + GLTFUtils::toString(materials->getKeysCount()));
-                        effect = effectCopy;
-                        if (materials->contains(effect->getID()) == false) {
-                            materials->setValue(effect->getID(), effect);
-                        }
-                    }
-                }
-                effect->setTechniqueGenerator(techniqueGenerator);
-                effect->setName(materialName);
-                primitive->setMaterialID(effect->getID());
-            } else {
-                //https://github.com/KhronosGroup/glTF/issues/194
-                //We'll deal with two cases cases of default materials
-                //With or without NORMALS
-                shared_ptr <JSONObject> attributeSemantics = serializeAttributeSemanticsForPrimitiveAtIndex(mesh.get(), (unsigned int)j);
-                
-                static shared_ptr<GLTFEffect> defaultEffectNoNormal = createDefaultEffect(this, attributeSemantics, false);
-                static shared_ptr<GLTFEffect> defaultEffectWithNormal = createDefaultEffect(this, attributeSemantics, true);
-                
-                bool hasNormal = attributeSemantics->contains(GLTFUtils::getStringForSemantic(GLTF::NORMAL));
-                
-                effect = hasNormal ? defaultEffectWithNormal : defaultEffectNoNormal;
-                
-                primitive->setMaterialID(effect->getID());
-                
-                if (materials->contains(effect->getID()) == false) {
-                    materials->setValue(effect->getID(), effect);
-                }
+					if (effect->getTechniqueGenerator() != nullptr) {
+						//here we have the same material that shared by different meshes.
+						//some of these meshes have different number of bones
+						//so, we'll have to clone the effect
+						std::string techniqueKey = getTechniqueKey(techniqueGenerator, this);
+						if (getTechniqueKey(effect->getTechniqueGenerator(), this) != techniqueKey) {
+							shared_ptr<GLTFEffect> effectCopy = std::make_shared<GLTFEffect>(*effect);
+							effectCopy->setID(effect->getID() + "-variant-" + GLTFUtils::toString(materials->getKeysCount()));
+							effect = effectCopy;
+							if (materials->contains(effect->getID()) == false) {
+								materials->setValue(effect->getID(), effect);
+							}
+						}
+					}
+					effect->setTechniqueGenerator(techniqueGenerator);
+					effect->setName(materialName);
+					primitive->setMaterialID(effect->getID());
+				}
+				// Fix crash when effect is not a "profile_common" ("profile_CG" for example)
+				// Do apply Default Material.
+				else
+					_applyDefaultMaterial(mesh, primitive, materials, j);
             }
+			else
+				_applyDefaultMaterial(mesh, primitive, materials, j);
+
         }
         meshesArray->appendValue(std::make_shared<JSONString>(meshOriginalID));
     }
