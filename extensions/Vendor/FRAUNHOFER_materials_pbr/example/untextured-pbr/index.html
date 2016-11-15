@@ -617,7 +617,7 @@
                             customUniforms['diffuseFactor'] = { value: new THREE.Vector4(diffuse.x, diffuse.y, diffuse.z, albedo.w) };
 
                             var f0 = 0.16 * reflectivity * reflectivity;
-                            customUniforms['specularFactor'] = { value: new THREE.Vector3(albedo.x, albedo.y, albedo.z).multiplyScalar(THREE.Math.lerp(f0, 1.0, metalness)) };
+                            customUniforms['specularFactor'] = { value: new THREE.Vector3(f0, f0, f0).lerp(new THREE.Vector3(albedo.x, albedo.y, albedo.z), metalness) };
 
                             customUniforms['glossinessFactor'] = { value: 1.0 - roughness };
                         }
@@ -628,25 +628,11 @@
             //
 
             function makePBRMaterial() {
-                var customUniforms;
                 var fragmentShaderId;
                 if (controls.workflow == 'metallic-roughness') {
-                    customUniforms = {
-                        baseColorFactor: { value: new THREE.Vector4(1, 1, 1, 1) },
-                        metallicFactor: { value: 0 },
-                        roughnessFactor: { value: 0 },
-                        reflectivityFactor: { value: 0 },
-                    };
-
                     fragmentShaderId = 'fragmentShaderMetallicRoughness';
                 }
                 else {
-                    customUniforms = {
-                        diffuseFactor: { value: new THREE.Vector4(1, 1, 1, 1) },
-                        specularFactor: { value: new THREE.Vector3(0, 0, 0) },
-                        glossinessFactor: { value: 0 },
-                    };
-
                     fragmentShaderId = 'fragmentShaderSpecularGlossiness';
                 }
 
