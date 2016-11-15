@@ -24,9 +24,9 @@
         "type" : {
             "type" : "string",
             "description" : "Specifies the light type.",
-            "enum" : ["ambient", "directional", "point", "spot"],
-            "required" : true
+            "enum" : ["ambient", "directional", "point", "spot"]
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["type"]
 }
