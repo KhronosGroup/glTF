@@ -1,10 +1,13 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "texture",
     "type" : "object",
     "description" : "A texture and its sampler.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "format": {
             "type" : "integer",
             "description" : "The texture's format.",
@@ -24,14 +27,12 @@
             "gltf_webgl" : "`texImage2D()` internalFormat parameter"
         },
         "sampler" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of the sampler used by this texture.",
-            "required" : true
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of the sampler used by this texture."
         },
         "source" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of the image used by this texture.",
-            "required" : true
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of the image used by this texture."
         },
         "target": {
             "type" : "integer",
@@ -53,5 +54,6 @@
         }
     },
     "additionalProperties" : false,
-    "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+    "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`",
+    "required": ["sampler", "source"]
 }

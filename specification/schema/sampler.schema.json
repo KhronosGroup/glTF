@@ -1,10 +1,13 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "sampler",
     "type" : "object",
     "description" : "Texture sampler properties for filtering and wrapping modes.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "magFilter": {
             "type" : "integer",
             "description" : "Magnification filter.",

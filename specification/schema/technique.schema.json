@@ -1,10 +1,13 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "technique",
     "type" : "object",
     "description" : "A template for material appearances.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "parameters" : {
             "type" : "object",
             "description" : "A dictionary object of technique.parameters objects.",
@@ -27,9 +30,8 @@
             "default" : {}
         },
         "program" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of the program.",
-            "required" : true
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of the program."
         },
         "uniforms" : {
             "type" : "object",
@@ -42,10 +44,11 @@
             "default" : {}
         },
         "states" : {
-            "extends" : { "$ref" : "technique.states.schema.json" },
+            "allOf" : [ { "$ref" : "technique.states.schema.json" } ],
             "description" : "Fixed-function rendering states.",
             "default" : {}
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["program"]
 }

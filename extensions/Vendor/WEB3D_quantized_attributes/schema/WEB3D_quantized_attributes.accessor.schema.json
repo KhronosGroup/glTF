@@ -1,5 +1,5 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "WEB3D_quantized_attributes accessor extension",
     "type" : "object",
     "properties" : {
@@ -10,8 +10,7 @@
                 "type": "number"
             },
             "minItems" : 4,
-            "maxItems" : 25,
-            "required" : true
+            "maxItems" : 25
         },
         "decodedMax" : {
             "type" : "array",
@@ -20,8 +19,7 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 4,
-            "required" : true
+            "maxItems" : 4
         },
         "decodedMin" : {
             "type" : "array",
@@ -30,9 +28,9 @@
                 "type" : "number"
             },
             "minItems" : 1,
-            "maxItems" : 4,
-            "required" : true
+            "maxItems" : 4
         }    
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["decodeMatrix", "decodedMax", "decodedMin"]
 }

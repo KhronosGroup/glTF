@@ -1,10 +1,12 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "asset",
     "type" : "object",
     "description" : "Metadata about the glTF asset.",
-    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "copyright" : {
             "type" : "string",
             "description" : "A copyright message suitable for display to credit the content creator."
@@ -25,9 +27,9 @@
         },
         "version" : {
             "type" : "string",
-            "description" : "The glTF version.",
-            "required" : true
+            "description" : "The glTF version."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["version"]
 }

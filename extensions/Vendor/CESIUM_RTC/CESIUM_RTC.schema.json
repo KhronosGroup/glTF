@@ -1,5 +1,5 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "CESIUM_RTC",
     "type" : "object",
     "description" : "glTF CESIUM_RTC extension.",
@@ -11,9 +11,9 @@
                 "type" : "number"
             },
             "minItems" : 3,
-            "maxItems" : 3,
-            "required" : true
+            "maxItems" : 3
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["center"]
 }

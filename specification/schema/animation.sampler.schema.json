@@ -1,14 +1,15 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "animation sampler",
     "type" : "object",
     "description" : "Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).",
-    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
+        "extensions" : {},
+        "extras" : {},
         "input" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of a parameter in this animation to use as keyframe input, e.g., time.",
-            "required" : true,
             "gltf_detailedDescription" : "The ID of a parameter in this animation to use as keyframe input.  This parameter must have type `FLOAT`.  The values represent time in seconds with `time[0] >= 0.0`, and monotonically increasing values, i.e., `time[n + 1] >= time[n]`."
         },
         "interpolation" : {
@@ -19,10 +20,10 @@
             "gltf_detailedDescription" : "Interpolation algorithm.  When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions."
         },
         "output" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of a parameter in this animation to use as keyframe output.",
-            "required" : true
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of a parameter in this animation to use as keyframe output."
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required": ["input", "output"]
 }
