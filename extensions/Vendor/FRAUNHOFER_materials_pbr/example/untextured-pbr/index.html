@@ -119,7 +119,8 @@
             //uniform float toneMappingExposure;
             //uniform float toneMappingWhitePoint;            
 
-            uniform sampler2D envMap;
+            uniform samplerCube irrMap;
+            uniform samplerCube envMap;
 
             varying vec3 vViewPosition;
             varying vec3 vNormal;
@@ -184,17 +185,10 @@
             //                IRRADIANCE EVALUATION                //
             /////////////////////////////////////////////////////////
 
-            vec3 sampleEnvMapEquirect(const in vec3 reflect, const in float mipLevel)
-            {
-                vec2 sampleUV;
-                sampleUV.y = saturate(reflect.y * 0.5 + 0.5);
-                sampleUV.x = atan(reflect.z, reflect.x) * RECIPROCAL_PI2 + 0.5;
-    
-                //with textureLOD extension:
-                //vec4 envMapColor = texture2DLodEXT(envMap, sampleUV, specularMIPLevel);
-
-                //without textureLOD extension:
-                vec4 texColor = texture2D(envMap, sampleUV, mipLevel);
+            vec3 sampleEnvMap(const in vec3 reflect, const in float mipLevel)
+            {             
+                //TODO: use mipLevel
+                vec4 texColor = textureCube(envMap, reflect);
 
                 // assumed to be linear
                 return texColor.rgb;
@@ -217,12 +211,12 @@
 
             vec3 getLightProbeIndirectRadiance(const in GeometricContext geometry, const in float blinnShininessExponent, const in int maxMIPLevel)
             {
-                vec3 reflectVec = reflect(geometry.viewDir, geometry.normal);
+                vec3 reflectVec = reflect(-geometry.viewDir, geometry.normal);
                 reflectVec = inverseTransformDirection(reflectVec, viewMatrix);
 
                 float mipLevel = getSpecularMIPLevel( blinnShininessExponent, maxMIPLevel );
 
-                vec3 envMapColor = sampleEnvMapEquirect(reflectVec, float(mipLevel));
+                vec3 envMapColor = sampleEnvMap(reflectVec, float(mipLevel));                
 
                 //for sRGB input, use this line:
                 //return sRGBToLinear(vec4(envMapColor, 1.0)).rgb;
@@ -340,12 +334,10 @@
                                                                           material.specularColor,
                                                                           material.specularRoughness);
 
-                //TODO: WIP, not consistent with the rest but just for visualizing the effect
-                /*
-                float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
-                vec3 radiance = getLightProbeIndirectRadiance(geometry, blinnExpFromRoughness, 8);
-                reflectedLight.specular += radiance * BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);
-                */
+                //TODO: WIP, not consistent with the rest but just for visualizing the effect                
+                //float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
+                //vec3 radiance = getLightProbeIndirectRadiance(geometry, blinnExpFromRoughness, 8);
+                //reflectedLight.specular += radiance * BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);                
             }
 
 
@@ -441,12 +433,13 @@
 
 
         <script>
-            var Controls = function () {
-                this.workflow = 'metallic-roughness';
-                this.albedo = "#ffffff";
-                this.opacity = 1.0;
+            var Controls = function ()
+            {
+                this.workflow     = 'metallic-roughness';
+                this.albedo       = "#ffffff";
+                this.opacity      = 1.0;
                 this.reflectivity = 0.5;
-            }
+            };
 
             var controls = new Controls();
 
@@ -460,6 +453,8 @@
             var camera, scene, renderer, shaderUniforms;
 
             var clock = new THREE.Clock();
+
+            var cubeTexIrr, cubeTexEnv;
 
             init();
             animate();
@@ -492,14 +487,32 @@
                                                 });
                 */
 
+                var ctIrr = 'images/Uffizi_Gallery_Irradiance_';
+                var ctEnv = 'images/Uffizi_Gallery_Radiance_';
+
+                var cubeTexURLsIrr = [
+                    ctIrr + "PX.png", ctIrr + "NX.png",
+                    ctIrr + "PY.png", ctIrr + "NY.png",
+                    ctIrr + "PZ.png", ctIrr + "NZ.png"
+                ];
+
+                var cubeTexURLsEnv = [
+                    ctEnv + "PX.png", ctEnv + "NX.png",
+                    ctEnv + "PY.png", ctEnv + "NY.png",
+                    ctEnv + "PZ.png", ctEnv + "NZ.png"
+                ];
+
+                cubeTexIrr = new THREE.CubeTextureLoader().load(cubeTexURLsIrr);
+                cubeTexEnv = new THREE.CubeTextureLoader().load(cubeTexURLsEnv);
+
 
                 const sphereRadius   = 1.0;
                 const sphereSegments = 64;
-                var sphereGeometry = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
+                var sphereGeometry   = new THREE.SphereGeometry(sphereRadius, sphereSegments, sphereSegments);
 
                 const numSpheresX = 5;
                 const numSpheresY = 5;
-                const coordStep = 2.5;
+                const coordStep   = 2.5;
 
                 for (var y = 0; y < numSpheresY; ++y)
                 {
@@ -575,10 +588,13 @@
 
             //
 
-            function onWorkflowChange(value) {
-                for (var y = 0; y < scene.children.length; y++) {
+            function onWorkflowChange(value)
+            {
+                for (var y = 0; y < scene.children.length; y++)
+                {
                     var row = scene.children[y];
-                    for (var x = 0; x < row.children.length; x++) {
+                    for (var x = 0; x < row.children.length; x++)
+                    {
                         var sphere = row.children[x];
                         sphere.material = makePBRMaterial();
                     }
@@ -589,7 +605,8 @@
 
             //
 
-            function updatePBRMaterial() {
+            function updatePBRMaterial()
+            {
                 const albedo = new THREE.Vector4(
                     parseInt(controls.albedo.substring(1, 3), 16) / 255.0,
                     parseInt(controls.albedo.substring(3, 5), 16) / 255.0,
@@ -598,21 +615,31 @@
 
                 const reflectivity = controls.reflectivity;
 
-                for (var y = 0; y < scene.children.length; y++) {
+                for (var y = 0; y < scene.children.length; y++)
+                {
                     var row = scene.children[y];
-                    for (var x = 0; x < row.children.length; x++) {
-                        var sphere = row.children[x];
+                    for (var x = 0; x < row.children.length; x++)
+                    {
+                        var sphere    = row.children[x];
                         var roughness = x / (row.children.length - 1);
                         var metalness = 1 - y / (scene.children.length - 1);
 
                         var customUniforms = sphere.material.uniforms;
-                        if (controls.workflow == 'metallic-roughness') {
-                            customUniforms['baseColorFactor'] = { value: albedo };
-                            customUniforms['metallicFactor'] = { value: metalness };
-                            customUniforms['roughnessFactor'] = { value: roughness };
+
+                        customUniforms['irrMap'] = { value: cubeTexIrr };
+                        customUniforms['envMap'] = { value: cubeTexEnv };
+
+                        // metallic-roughness workflow
+                        if (controls.workflow == 'metallic-roughness')
+                        {
+                            customUniforms['baseColorFactor']    = { value: albedo };
+                            customUniforms['metallicFactor']     = { value: metalness };
+                            customUniforms['roughnessFactor']    = { value: roughness };
                             customUniforms['reflectivityFactor'] = { value: reflectivity };
                         }
-                        else {
+                        // specular-glossiness workflow
+                        else
+                        {
                             var diffuse = new THREE.Vector3(albedo.x, albedo.y, albedo.z).multiplyScalar(1.0 - metalness);
                             customUniforms['diffuseFactor'] = { value: new THREE.Vector4(diffuse.x, diffuse.y, diffuse.z, albedo.w) };
 
@@ -627,12 +654,15 @@
 
             //
 
-            function makePBRMaterial() {
+            function makePBRMaterial()
+            {
                 var fragmentShaderId;
-                if (controls.workflow == 'metallic-roughness') {
+                if (controls.workflow == 'metallic-roughness')
+                {
                     fragmentShaderId = 'fragmentShaderMetallicRoughness';
                 }
-                else {
+                else
+                {
                     fragmentShaderId = 'fragmentShaderSpecularGlossiness';
                 }
 
