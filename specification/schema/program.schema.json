@@ -13,8 +13,8 @@
             "description" : "Names of GLSL vertex shader attributes.",
             "items" : {
                 "type" : "string",
-                "minLength" : "1",
-                "maxLength" : "256"
+                "minLength" : 1,
+                "maxLength" : 256
             },
             "default" : [],
             "gltf_webgl" : "`bindAttribLocation()`"
