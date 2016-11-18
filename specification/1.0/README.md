@@ -3386,7 +3386,8 @@ Application-specific data.
 * Marco Hutter,
 * Alexey Knyazev,
 * Sean Lilley,
-* Corentin Wallez
+* Corentin Wallez,
+* Yu Chen Hou
 
 
 <a name="appendix-a"></a>
