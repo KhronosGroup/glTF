@@ -2,23 +2,23 @@
 <img src="specification/figures/gltf.png" />
 </p>
 
-The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+glTF™ (GL Transmission Format) is a royalty-free specification for the efficient transmission and loading of 3D scenes and models by applications. glTF minimizes both the size of 3D assets, and the runtime processing needed to unpack and use those assets. glTF defines an extensible, common publishing format for 3D content tools and services that streamlines authoring workflows and enables interoperable use of content across the industry.
 
 ## Specification
 
-* [glTF Specification, 1.0](specification/README.md)
+* [glTF Specification, 1.0](specification/1.0/README.md)
 * [glTF Extension Registry](extensions/README.md)
 
 Please provide feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues).
 
 ## Sample Models
 
-[Sample models](sampleModels/README.md) for learning glTF, and testing runtime engines and content pipeline tools.
+[Sample models](https://github.com/KhronosGroup/glTF-Sample-Models) for learning glTF, and testing runtime engines and content pipeline tools.
 
 ## Overview
 
 <p align="center">
-<a href="https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/figures/gltfOverview-0.2.0.png"><img src="specification/figures/gltfOverview-0.2.0-small.png" /></a>
+<a href="specification/1.0/figures/gltfOverview-0.2.0.png"><img src="specification/1.0/figures/gltfOverview-0.2.0-small.png" /></a>
 </p>
 Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/javagl/gltfOverview)).
 
@@ -26,7 +26,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 ### Converters
 
-* [COLLADA2GLTF](https://github.com/KhronosGroup/glTF/wiki/converter) - Command-line tool to convert COLLADA to glTF
+* [COLLADA2GLTF](https://github.com/KhronosGroup/COLLADA2GLTF/) - Command-line tool to convert COLLADA to glTF
 * [COLLADA|OBJ to glTF](http://cesiumjs.org/convertmodel.html) - online drag and drop converter for COLLADA and OBJ
 * [Assimp](http://www.assimp.org/) - General-purpose conversion pipeline with a glTF importer/exporter pipeline. See the [list of supported import formats](https://github.com/assimp/assimp#supported-file-formats).
 * [obj2gltf](https://github.com/AnalyticalGraphicsInc/OBJ2GLTF) - Command-line tool to convert OBJ to glTF
