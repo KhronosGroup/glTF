@@ -89,6 +89,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [gltf](https://github.com/sturfeeinc/glTF) - A go library for marshaling and unmarshaling glTF
 
+#### Rust
+
+* [gltf](https://github.com/Alteous/gltf) - Rust library for loading glTF
+
 #### Haxe
 
 * [haxe-gltf](https://github.com/FuzzyWuzzie/haxe-gltf) - A Haxe library for reading glTF
