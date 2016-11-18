@@ -185,16 +185,6 @@
             //                IRRADIANCE EVALUATION                //
             /////////////////////////////////////////////////////////
 
-            vec3 sampleEnvMap(const in vec3 reflect, const in float mipLevel)
-            {             
-                //TODO: use mipLevel
-                vec4 texColor = textureCube(envMap, reflect);
-
-                // assumed to be linear
-                return texColor.rgb;
-            }
-            
-
             float GGXRoughnessToBlinnExponent(const in float ggxRoughness)
             {
                 return (2.0 / pow2(ggxRoughness + 0.0001) - 2.0);
@@ -209,14 +199,18 @@
             }
 
 
-            vec3 getLightProbeIndirectRadiance(const in GeometricContext geometry, const in float blinnShininessExponent, const in int maxMIPLevel)
+            vec3 getLightProbeIndirectRadiance(const in vec3 reflectVec, const in float blinnShininessExponent, const in int maxMIPLevel)
             {
-                vec3 reflectVec = reflect(-geometry.viewDir, geometry.normal);
-                reflectVec = inverseTransformDirection(reflectVec, viewMatrix);
+                //TODO: a random factor - fix this
+                float mipLevel = 0.5 * getSpecularMIPLevel(blinnShininessExponent, maxMIPLevel);
+                
+                // with Texture LOD extension
+                //vec3 texColor = textureCubeLodEXT(envMap, reflectVec).rgb;
 
-                float mipLevel = getSpecularMIPLevel( blinnShininessExponent, maxMIPLevel );
+                // without Texture LOD extension
+                vec3 envMapColor = textureCube(envMap, reflectVec, mipLevel).rgb;
 
-                vec3 envMapColor = sampleEnvMap(reflectVec, float(mipLevel));                
+                // assumed to be linear
 
                 //for sRGB input, use this line:
                 //return sRGBToLinear(vec4(envMapColor, 1.0)).rgb;
@@ -317,27 +311,32 @@
             //          MAIN LIGHTING COMPUTATION FUNCTION         //
             /////////////////////////////////////////////////////////
 
-            void computeLighting(const in IncidentLight directLight,
-                                 const in GeometricContext geometry,
+            void computeLighting(const in GeometricContext geometry,
                                  const in PhysicalMaterial material,
                                  inout ReflectedLight reflectedLight)
             {
-                float dotNL     = saturate(dot(geometry.normal, directLight.direction));
-                vec3 irradiance = dotNL * directLight.color;
+                // diffuse: sample irradiance over the hemisphere from cube map
 
+                vec3 irradiance = textureCube(irrMap, geometry.normal).rgb;
                 irradiance *= PI;
 
-                reflectedLight.diffuse  += irradiance * BRDF_Diffuse_Lambert(material.diffuseColor);
+                vec3 diffuseBRDFContrib = BRDF_Diffuse_Lambert(material.diffuseColor);
 
-                reflectedLight.specular += irradiance * BRDF_Specular_GGX(directLight,
-                                                                          geometry,
-                                                                          material.specularColor,
-                                                                          material.specularRoughness);
+                reflectedLight.diffuse  = irradiance * diffuseBRDFContrib;
 
-                //TODO: WIP, not consistent with the rest but just for visualizing the effect                
-                //float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
-                //vec3 radiance = getLightProbeIndirectRadiance(geometry, blinnExpFromRoughness, 8);
-                //reflectedLight.specular += radiance * BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);                
+
+                // specular: sample radiance using from the environment map
+
+                vec3 reflectVec = reflect(-geometry.viewDir, geometry.normal);
+                reflectVec      = inverseTransformDirection(reflectVec, viewMatrix);
+
+                float blinnExpFromRoughness = GGXRoughnessToBlinnExponent(material.specularRoughness);
+                vec3 radiance               = getLightProbeIndirectRadiance(reflectVec, blinnExpFromRoughness, 8);
+
+                //TODO: not physically based, but just randomly using mip levels right now
+                vec3 specularBRDFContrib    = BRDF_Specular_GGX_Environment(geometry, material.specularColor, material.specularRoughness);
+
+                reflectedLight.specular     = radiance * specularBRDFContrib;
             }
 
 
@@ -347,23 +346,10 @@
 
             void main()
             {
-                // light definitions (simple directional lights)
+                // lighting information is given through our irradiance / radiance maps                
+                // - "uniform samplerCube irrMap" = irradiance cube map for diffuse lighting
+                // - "uniform samplerCube envMap" = radiance cube map for specular reflections
 
-                IncidentLight directLight0;
-                directLight0.direction = vec3(0.0, 0.0, 1.0);
-                //directLight0.color     = vec3(0.7, 0.7, 0.7);
-                directLight0.color     = 0.7 * vec3(1.0, 1.0, 1.0);
-
-                IncidentLight directLight1;
-                directLight1.direction = vec3(-0.71, 0.71, 0.0);
-                //directLight1.color     = vec3(0.5, 0.5, 0.5);
-                directLight1.color     = 0.7 * vec3(0.8, 0.6, 1.0);
-
-                IncidentLight directLight2;
-                directLight2.direction = vec3(0.71, 0.71, 0.0);
-                //directLight2.color     = vec3(0.5, 0.5, 0.5);
-                directLight2.color     = 0.7 * vec3(1.0, 0.8, 0.6);
-                
 
                 // material definition
 
@@ -390,9 +376,7 @@
                     vec3( 0.0, 0.0, 0.0 )  //specular
                 );
 
-                computeLighting(directLight0, geometry, material, reflectedLight);
-                computeLighting(directLight1, geometry, material, reflectedLight);
-                computeLighting(directLight2, geometry, material, reflectedLight);
+                computeLighting(geometry, material, reflectedLight);
             
                 vec3 outgoingLight = reflectedLight.diffuse + reflectedLight.specular;
 
@@ -504,6 +488,10 @@
 
                 cubeTexIrr = new THREE.CubeTextureLoader().load(cubeTexURLsIrr);
                 cubeTexEnv = new THREE.CubeTextureLoader().load(cubeTexURLsEnv);
+
+                cubeTexEnv.generateMipmaps = true;
+                cubeTexEnv.magFilter = THREE.LinearFilter;
+                cubeTexEnv.minFilter = THREE.LinearMipMapLinearFilter;
 
 
                 const sphereRadius   = 1.0;
