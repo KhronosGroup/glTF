@@ -3381,11 +3381,11 @@ Application-specific data.
 * Ed Mackey, Analytical Graphics, Inc.
 * Matthew McMullan,
 * Darryl Gough, 
-* Alex Wood,
+* Alex Wood, Analytical Graphics, Inc.
 * Rob Taglang, Cesium
 * Marco Hutter,
 * Alexey Knyazev,
-* Sean Lilley,
+* Sean Lilley, Cesium
 * Corentin Wallez,
 * Yu Chen Hou
 
