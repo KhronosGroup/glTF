@@ -22,7 +22,7 @@
             "gltf_webgl" : "`getContext()` with premultipliedAlpha"
         },
         "profile" : {
-            "extends" : { "$ref" : "asset.profile.schema.json" },
+            "allOf" : [ { "$ref" : "asset.profile.schema.json" } ],
             "default" : {}
         },
         "version" : {
