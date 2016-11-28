@@ -1,12 +1,12 @@
 <p align="center">
-<img src="figures/gltf.png" />
+<img src="../figures/gltf.png" />
 </p>
 
-*Version 1.0.1*
+*Version 1.1*
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: June 2, 2016
+Last Updated: November 28, 2016
 
 Editors
 
@@ -102,7 +102,7 @@ The following are outside the scope of the initial design of glTF:
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
-Version 1.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
+Version 1.1 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
@@ -246,7 +246,7 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
->For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
+>For Version 1.1 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.1.
 
 The node hierarchy is considered as a skeleton hierarchy if any of its nodes contains a `jointName` property. No node from the skeleton hierarchy can contain `camera`, `skeletons`, `skin`, or `meshes` properties.
 
@@ -1063,10 +1063,10 @@ where
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-> **Note:** glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+> **Note:** glTF 1.1 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
 
-> **Note:** glTF 1.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
+> **Note:** glTF 1.1 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
 All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
@@ -1180,7 +1180,7 @@ The following examples show expected animations usage.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
-> Note: glTF 1.0 animation samplers support only discrete and linear interpolation.
+> Note: glTF 1.1 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
 
