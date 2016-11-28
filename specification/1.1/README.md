@@ -19,6 +19,7 @@ Contributors
 * Remi Arnaud, Starbreeze Studios
 * Uli Klumpp, Individual Contributor
 * Neil Trevett, NVIDIA
+* Alexey Knyazev, Individual Contributor
 
 Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 
@@ -137,19 +138,21 @@ The top-level dictionary objects in a glTF asset.  See the <a href="#properties"
 
 _IDs_ are internal string identifiers used to reference parts of a glTF asset, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's ID.  For example:
 
-```javascript
-"buffers": {
-    "a-buffer-id": {
-        "byteLength": 1024,
-        "type": "arraybuffer",
-        "uri": "path-to.bin"
-    }
-},
-"bufferViews": {
-    "a-bufferView-id": {
-        "buffer": "a-buffer-id",
-        "byteLength": 512,
-        "byteOffset": 0
+```json
+{
+    "buffers": {
+        "a-buffer-id": {
+            "byteLength": 1024,
+            "type": "arraybuffer",
+            "uri": "path-to.bin"
+        }
+    },
+    "bufferViews": {
+        "a-bufferView-id": {
+            "buffer": "a-buffer-id",
+            "byteLength": 512,
+            "byteOffset": 0
+        }
     }
 }
 ```
@@ -160,36 +163,30 @@ IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`,
 
 For example, the following is **not** allowed:
 
-```javascript
-"buffers": {
-    "an-id": {
-        // ...
-    }
-},
-"bufferViews": {
-    "an-id": { // Not allowed since this ID is already used
-        // ...
+```json
+{
+    "buffers": {
+        "forbiddenSameId": {}
+    },
+    "bufferViews": {
+        "forbiddenSameId": {}
     }
 }
 ```
 
 IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are each in their own namespace.  IDs are unique within the object as enforced by JSON.  For example, the following **is** allowed:
 
-```javascript
-"animations": {
-    "animation-0": {
-        // ...
-        "samplers": {
-            "animation-sampler-id": {
-                // ...
+```json
+{
+    "animations": {
+        "animation-0": {
+            "samplers": {
+                "allowedSameAnimationSamplerId": {}
             }
-        }
-    },
-    "animation-1": {
-        // ...
-        "samplers": {
-            "animation-sampler-id": { // Does not collide with the sampler ID in the other animation
-                // ...
+        },
+        "animation-1": {
+            "samplers": {
+                "allowedSameAnimationSamplerId": {}
             }
         }
     }
@@ -209,15 +206,17 @@ The glTF asset contains one or more *scenes*, the set of visual objects to rende
 
 The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
 
-```javascript
-"scene": "defaultScene",
-"scenes": {
-    "defaultScene": {
-        "nodes": [
-            "node_1"
-        ]
-    }
-},
+```json
+{
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "node_1"
+            ]
+        }
+     }
+}
 ```
 
 ### Nodes and Hierarchy
@@ -234,14 +233,18 @@ Nodes are organized in a parent-child hierarchy known informally as the *node hi
 
 The node hierarchy is defined using a node's `children` property, as in the following example:
 
-```javascript
-    "node-box": {
-        "children": [
-            "node_1",
-            "node-camera_1"
-        ],
-        "name": "Box"
-    },
+```json
+{
+    "nodes": { 
+        "node-box": {
+            "children": [
+                "node_1",
+                "node-camera_1"
+            ],
+            "name": "Box"
+        }
+    }
+}
 ```
 
 The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
@@ -254,65 +257,77 @@ The node hierarchy is considered as a skeleton hierarchy if any of its nodes con
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
+TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
+
+When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
+
 In the example below, `node-box` defines non-default rotation and translation.
 
-```javascript
-    "node-box": {
-        "children": [
-            "node_1",
-            "node-camera_1"
-        ],
-        "name": "Box",
-        "rotation": [
-            0,
-            0,
-            0,
-            1
-        ],
-        "scale": [
-            1,
-            1,
-            1
-        ],
-        "translation": [
-            -17.7082,
-            -11.4156,
-            2.0922
-        ]
-    },
+```json
+{
+    "nodes": {
+        "node-box": {
+            "children": [
+                "node_1",
+                "node-camera_1"
+            ],
+            "name": "Box",
+            "rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ],
+            "translation": [
+                -17.7082,
+                -11.4156,
+                2.0922
+            ]
+        }
+    }
+}
 ```
 
 The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
 
-```javascript
-    "node-camera_1": {
-        "camera": "camera_1",
-        "children": [],
-        "matrix": [
-            -0.99975,
-            -0.00679829,
-            0.0213218,
-            0,
-            0.00167596,
-            0.927325,
-            0.374254,
-            0,
-            -0.0223165,
-            0.374196,
-            -0.927081,
-            0,
-            -0.0115543,
-            0.194711,
-            -0.478297,
-            1
-        ],
-        "name": "Camera01"
-    },
+```json
+{
+    "nodes": {
+        "node-camera_1": {
+            "camera": "camera_1",
+            "children": [],
+            "matrix": [
+                -0.99975,
+                -0.00679829,
+                0.0213218,
+                0,
+                0.00167596,
+                0.927325,
+                0.374254,
+                0,
+                -0.0223165,
+                0.374196,
+                -0.927081,
+                0,
+                -0.0115543,
+                0.194711,
+                -0.478297,
+                1
+            ],
+            "name": "Camera01"
+        }
+    }
+}
 ```
 
 ### Coordinate System and Units
 
-glTF uses a right-handed coordinate system, as is used by OpenGL.  glTF defines the y axis as up.
+glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z.  glTF defines the y axis as up.
 
 The units for all linear distances are meters.
 
@@ -337,14 +352,16 @@ All buffers are stored in the asset's `buffers` dictionary property.
 
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored; its value can be used as the `responseType` when retrieving data over [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest). The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
 
-```javascript
-    "buffers": {
-        "duck": {
-            "byteLength": 102040,
-            "type": "arraybuffer",
-            "uri": "duck.bin"
-        }
-    },
+```json
+{
+   "buffers": {
+       "duck": {
+           "byteLength": 102040,
+           "type": "arraybuffer",
+           "uri": "duck.bin"
+       }
+   }
+}
 ```
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
@@ -352,7 +369,8 @@ A *bufferView* represents a subset of data in a buffer, defined by an integer of
 The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
 
-```javascript
+```json
+{
     "bufferViews": {
         "bufferView_29": {
             "buffer": "duck",
@@ -366,7 +384,8 @@ The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bu
             "byteOffset": 25272,
             "target": 34962
         }
-    },
+    }
+}
 ```
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
@@ -382,34 +401,43 @@ All accessors are stored in the asset's `accessors` dictionary property.
 
 The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
 
-```javascript
-"accessors": {
-    "accessor_21": {
-        "bufferView": "bufferView_29",
-        "byteOffset": 0,
-        "byteStride": 0,
-        "componentType": 5123,
-        "count": 12636,
-        "type": "SCALAR"
-    },
-    "accessor_23": {
-        "bufferView": "bufferView_30",
-        "byteOffset": 0,
-        "byteStride": 12,
-        "componentType": 5126,
-        "count": 2399,
-        "max": [
-            0.961799,
-            1.6397,
-            0.539252
-        ],
-        "min": [
-            -0.692985,
-            0.0992937,
-            -0.613282
-        ],
-        "type": "VEC3"
-    },
+```json
+{
+    "accessors": {
+        "accessor_21": {
+            "bufferView": "bufferView_29",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 12636,
+            "max": [
+                4212
+            ],
+            "min": [
+                0
+            ],
+            "type": "SCALAR"
+        },
+        "accessor_23": {
+            "bufferView": "bufferView_30",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 2399,
+            "max": [
+                0.961799,
+                1.6397,
+                0.539252
+            ],
+            "min": [
+                -0.692985,
+                0.0992937,
+                -0.613282
+            ],
+            "type": "VEC3"
+        }
+    }
+}
 ```
 
 #### Accessor Attribute Size
@@ -439,14 +467,18 @@ The size of an accessor's attribute type, in bytes, is
 
 For example:
 
-```javascript
-"accessor_1": {
-    "bufferView": "bufferView_1",
-    "byteOffset": 7032,
-    "byteStride": 12,
-    "componentType": 5126, // FLOAT
-    "count": 586,
-    "type": "VEC3"
+```json
+{
+    "accessors": {
+        "accessor_1": {
+            "bufferView": "bufferView_1",
+            "byteOffset": 7032,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 586,
+            "type": "VEC3"
+        }
+    }
 }
 ```
 
@@ -460,20 +492,26 @@ The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) an
 
 Consider the following example:
 
-```javascript
-"bufferView_1": {
-    "buffer": "buffer_1",
-    "byteLength": 17136,
-    "byteOffset": 620,
-    "target": 34963
-},
-"accessor_1": {
-    "bufferView": "bufferView_1",
-    "byteOffset": 4608,
-    "byteStride": 0,
-    "componentType": 5123, // UNSIGNED_SHORT
-    "count": 5232,
-    "type": "SCALAR"
+```json
+{
+    "bufferViews": {
+        "bufferView_1": {
+            "buffer": "buffer_1",
+            "byteLength": 17136,
+            "byteOffset": 620,
+            "target": 34963
+        }
+    },
+    "accessors": {
+        "accessor_1": {
+            "bufferView": "bufferView_1",
+            "byteOffset": 4608,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 5232,
+            "type": "SCALAR"
+        }
+    }
 }
 ```
 The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
@@ -493,22 +531,28 @@ In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to 
 
 The following example defines a mesh containing one triangle set primitive:
 
-```javascript
-    "primitives": [
-        {
-            "attributes": {
-                "NORMAL": "accessor_25",
-                "POSITION": "accessor_23",
-                "TEXCOORD_0": "accessor_27"
-            },
-            "indices": "accessor_21",
-            "material": "blinn3-fx",
-            "mode": 4
+```json
+{
+    "meshes": {
+        "mesh_0": {
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_25",
+                        "POSITION": "accessor_23",
+                        "TEXCOORD_0": "accessor_27"
+                    },
+                    "indices": "accessor_21",
+                    "material": "blinn3-fx",
+                    "mode": 4
+                }
+            ]
         }
-    ]
+    }
+}
 ```
 
-Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
+Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID of an accessor that contains the data.
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  `TEXCOORD` and `COLOR` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_1`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
@@ -521,7 +565,8 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
 
 
-```javascript
+```json
+{    
     "skins": {
         "skin_1": {
             "bindShapeMatrix": [
@@ -545,33 +590,39 @@ All skins are stored in the `skins` dictionary property of the asset, by name. E
             "inverseBindMatrices": "bind-matrices_1",
             "jointNames": [
                 "Bone1",
-                "Bone2",
+                "Bone2"
             ]
         }
-    },
+    }
+}
 ```
 
 #### Skin Instances
 
 A skin is instanced within a node using a combination of the node's `meshes`, `skeletons`, and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
 
-```javascript
-    "node_1": {
-        "children": [],
-        "meshes": [
-            "skinned-mesh_1"
-        ],
-        "skeletons": [
-            "skeleton-root_1"
-        ],
-        "skin": "skin_1"
+```json
+{
+    "nodes": {
+        "node_1": {
+            "meshes": [
+                "skinned-mesh_1"
+            ],
+            "skeletons": [
+                "skeleton-root_1"
+            ],
+            "skin": "skin_1"
+        }
+    }
+}
 ```
 
 #### Skinned Mesh Attributes
 
 The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
 
-```javascript
+```json
+{
     "meshes": {
         "skinned-mesh_1": {
             "name": "skinned-mesh_1",
@@ -590,7 +641,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
                 }
             ]
         }
-    },
+    }
+}
 ```
 
 > **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
@@ -600,7 +652,8 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint using the `jointName` property. Any joints listed in the skin's `jointNames` property must correspond to a node that has the same `jointName` property. The following example defines a joint hierarchy of two joints with `root-node` at the root, identified as a joint using the joint name `Bone1`.
 
-```javascript
+```json
+{
     "nodes": {
         "root-node": {
             "children": [
@@ -645,7 +698,9 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
                 0,
                 0
             ]
-        },
+        }
+    }
+}
 ```
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
@@ -658,35 +713,41 @@ A material is defined as an instance of a shading technique along with parameter
 
 Materials are stored in the assets `materials` dictionary property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess, and specular color.
 
-```javascript
-"materials": {
-    "blinn-1": {
-        "technique": "technique1",
-        "values": {
-            "ambient": [
-                0,
-                0,
-                0,
-                1
-            ],
-            "diffuse": ["texture_file2"],
-            "emission": [
-                0,
-                0,
-                0,
-                1
-            ],
-            "shininess": [38.4],
-            "specular": [
-                0,
-                0,
-                0,
-                1
-            ]
+```json
+{
+    "materials": {
+        "blinn-1": {
+            "technique": "technique1",
+            "values": {
+                "ambient": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "diffuse": [
+                    "texture_file2"
+                ],
+                "emission": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "shininess": [
+                    38.4
+                ],
+                "specular": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
+            },
+            "name": "blinn1"
         }
-        "name": "blinn1"
     }
-},
+}
 ```
 
 The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
@@ -701,59 +762,88 @@ A technique describes the shading used for a material. The asset's techniques ar
 
 The following example shows a technique and the properties it defines. This section describes each property in detail.
 
-```javascript
-"techniques": {
-    "technique1": {
-    	 // parameter definitions
-        "parameters": {
-            "ambient": {
-                "type": 35666
+```json
+{
+    "techniques": {
+        "technique1": {
+            "parameters": {
+                "normal": {
+                    "type": 35665
+                },
+                "position": {
+                    "type": 35665
+                },
+                "texcoord0": {
+                    "type": 35664
+                },
+                "ambient": {
+                    "type": 35666
+                },
+                "diffuse": {
+                    "type": 35678
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "light0Color": {
+                    "type": 35665,
+                    "value": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                "shininess": {
+                    "type": 5126
+                },
+                "specular": {
+                    "type": 35678
+                },
+                "light0Transform": {
+                    "semantic": "MODELVIEW",
+                    "node": "directionalLight1",
+                    "type": 35676
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35676
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                }
             },
-            "diffuse": {
-                "type": 35678
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_texcoord0": "texcoord0"
             },
-            "light0Color": {
-                "type": 35665,
-                "value": [
-                    1,
-                    1,
-                    1
+            "program": "program_0",
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_emission": "emission",
+                "u_shininess": "shininess",
+                "u_specular": "specular",
+                "u_light0Color": "light0Color",
+                "u_light0Transform": "light0Transform",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix"
+            },
+            "states": {
+                "enable": [
+                    2884,
+                    2929
                 ]
-            },
-            "light0Transform": {
-                "semantic": "MODELVIEW",
-                "node": "directionalLight1",
-                "type": 35676
             }
-            // more parameters
-        },
-    	// program, attributes and uniforms definitions
-	    "attributes": {
-	        "a_normal": "normal",
-	        "a_position": "position",
-	        "a_texcoord0": "texcoord0"
-	    },
-	    "program": "program_0",
-	    "uniforms": {
-	        "u_ambient": "ambient",
-	        "u_diffuse": "diffuse",
-	        "u_emission": "emission",
-	        "u_light0Color": "light0Color",
-	        "u_light0Transform": "light0Transform",
-	        "u_modelViewMatrix": "modelViewMatrix",
-	        "u_normalMatrix": "normalMatrix",
-	        "u_projectionMatrix": "projectionMatrix",
-	        "u_shininess": "shininess",
-	        "u_specular": "specular"
-	    },
-		// render states
-		"states": {
-		    "enable": [
-		        2884,
-		        2929
-		    ]
-		}
-
+        }
+    }
+}
 ```
 
 #### Parameters
@@ -771,10 +861,18 @@ In the above example, the parameter `light0Transform` defines the `MODELVIEW` se
 
 If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
 
-```javascript
-"projectionMatrix": {
-    "semantic": "PROJECTION",
-    "type": 35676
+```json
+{
+    "techniques": {
+        "technique1": {
+            "parameters": {
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -807,25 +905,32 @@ The `program` property of a technique creates an instance of a shader program. T
 Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
 
 
-```javascript
-    "attributes": {
-        "a_normal": "normal",
-        "a_position": "position",
-        "a_texcoord0": "texcoord0"
-    },
-    "program": "program_0",
-    "uniforms": {
-        "u_ambient": "ambient",
-        "u_diffuse": "diffuse",
-        "u_emission": "emission",
-        "u_light0Color": "light0Color",
-        "u_light0Transform": "light0Transform",
-        "u_modelViewMatrix": "modelViewMatrix",
-        "u_normalMatrix": "normalMatrix",
-        "u_projectionMatrix": "projectionMatrix",
-        "u_shininess": "shininess",
-        "u_specular": "specular"
-    },
+```json
+{
+    "techniques": {
+        "technique1": {
+            "parameters": {},
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position",
+                "a_texcoord0": "texcoord0"
+            },
+            "program": "program_0",
+            "uniforms": {
+                "u_ambient": "ambient",
+                "u_diffuse": "diffuse",
+                "u_emission": "emission",
+                "u_light0Color": "light0Color",
+                "u_light0Transform": "light0Transform",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_shininess": "shininess",
+                "u_specular": "specular"
+            }
+        }
+    }
+}
 ```
 
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
@@ -839,53 +944,60 @@ Render states define the fixed-function GL state when a primitive is rendered. T
 * `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
 * `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
 
-Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), and `32926` (`SAMPLE_ALPHA_TO_COVERAGE`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `pass`, all of these Boolean GL states are disabled.
+Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), and `32926` (`SAMPLE_ALPHA_TO_COVERAGE`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `states`, all of these Boolean GL states are disabled.
 
 Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, and `"polygonOffset"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
 
 The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
 
-```javascript
-"states": {
-    "enable": [
-        3042,  // BLEND
-        2884,  // CULL_FACE
-        2929,  // DEPTH_TEST
-        32823, // POLYGON_OFFSET_FILL
-        32926 // SAMPLE_ALPHA_TO_COVERAGE
-    ], // empty by default
-    "functions": {
-      "blendColor": [0.0, 0.0, 0.0, 0.0], // (red, green, blue, alpha)
-      "blendEquationSeparate": [
-          32774, // FUNC_ADD (rgb)
-          32774  // FUNC_ADD (alpha)
-      ],
-      "blendFuncSeparate": [
-          1,     // ONE (srcRGB)
-          0,     // ZERO (dstRGB)
-          1,     // ONE (srcAlpha)
-          0      // ZERO (dstAlpha)
-      ],
-      "colorMask": [true, true, true, true], // (red, green, blue, alpha)
-      "cullFace": [1029], // BACK
-      "depthFunc": [513], // LESS
-      "depthMask": [true],
-      "depthRange": [0.0, 1.0], // (zNear, zFar)
-      "frontFace": [2305], // CCW
-      "lineWidth": [1.0],
-      "polygonOffset": [0.0, 0.0] // (factor, units)
+```json
+{
+    "techniques": {
+        "technique1": {
+            "states": {
+                "enable": [
+                    3042,
+                    2884,
+                    2929,
+                    32823,
+                    32926
+                ],
+                "functions": {
+                    "blendColor": [0.0, 0.0, 0.0, 0.0],
+                    "blendEquationSeparate": [
+                        32774,
+                        32774
+                    ],
+                    "blendFuncSeparate": [1, 0, 1, 0],
+                    "colorMask": [true, true, true, true],
+                    "cullFace": [1029],
+                    "depthFunc": [513],
+                    "depthMask": [true],
+                    "depthRange": [0.0, 1.0],
+                    "frontFace": [2305],
+                    "lineWidth": [1.0],
+                    "polygonOffset": [0.0, 0.0]
+                }
+            }
+        }
     }
 }
 ```
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
-```javascript
-	"states": {
-	    "enable": [
-	        2884,
-	        2929
-	    ]
+```json
+{
+    "techniques": {
+        "technique1": {
+			"states": {
+	    		"enable": [
+	        		2884,
+	        		2929
+	    		]
+			}
+		}
 	}
+}
 ```
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
@@ -897,7 +1009,8 @@ GLSL shader programs are stored in the asset's `programs` property. This propert
 
 Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively.
 
-```javascript
+```json
+{
     "programs": {
         "program_0": {
             "attributes": [
@@ -908,54 +1021,63 @@ Each shader program includes an `attributes` property, which specifies the verte
             "fragmentShader": "duck0FS",
             "vertexShader": "duck0VS"
         }
-    },
+    }
+}
 ```
 
 #### Shaders
 
 Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
 
-```javascript
-"shaders": {
-    "duck0FS": {
-        "type": 35632,
-        "uri": "duck0FS.glsl"
-    },
-    "duck0VS": {
-        "type": 35633,
-        "uri": "duck0VS.glsl"
-    }
-},
+```json
+{
+	"shaders": {
+    	"duck0FS": {
+        	"type": 35632,
+        	"uri": "duck0FS.glsl"
+    	},
+    	"duck0VS": {
+        	"type": 35633,
+        	"uri": "duck0VS.glsl"
+    	}
+	}
+}
 ```    
 
 #### Textures
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
 
-```javascript
-"materials": {
-    "material-1": {
-        "technique": "technique1",
-        "values": {
-            "diffuse": ["texture_file2"],
-        }
-        "name": "material_1"
-    }
-},
+```json
+{
+	"materials": {
+    	"material-1": {
+        	"technique": "technique1",
+        	"values": {
+            	"diffuse": [
+            		"texture_file2"
+            	]
+       		},
+        	"name": "material_1"
+    	}
+	}
+}
 ```
 
 
 All textures are stored in the asset's `textures` dictionary property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
-```javascript
-"textures": {
-    "texture_file2": {
-        "format": 6408,
-        "internalFormat": 6408,
-        "sampler": "sampler_0",
-        "source": "file2",
-        "target": 3553,
-        "type": 5121
+```json
+{
+    "textures": {
+        "texture_file2": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_0",
+            "source": "image2",
+            "target": 3553,
+            "type": 5121
+        }
     }
 }
 ```
@@ -964,12 +1086,14 @@ All textures are stored in the asset's `textures` dictionary property. A texture
 
 Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
 
-```javascript
-"images": {
-    "file2": {
-        "uri": "duckCM.png"
+```json
+{
+    "images": {
+        "file2": {
+            "uri": "duckCM.png"
+        }
     }
-},
+}
 ```
 > **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
@@ -978,15 +1102,17 @@ Images referred to by textures are stored in the `images` dictionary property of
 Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
 
-```javascript
-"samplers": {
-    "sampler_0": {
-        "magFilter": 9729,
-        "minFilter": 9987,
-        "wrapS": 10497,
-        "wrapT": 10497
+```json
+{
+    "samplers": {
+        "sampler_0": {
+            "magFilter": 9729,
+            "minFilter": 9987,
+            "wrapS": 10497,
+            "wrapT": 10497
+        }
     }
-},
+}
 ```
 
 > **Mipmapping Implementation Note**: When a sampler's minification filter (`minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap()` function.
@@ -1003,31 +1129,31 @@ A camera defines the projection matrix that transforms from view to clip coordin
 
 Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
-Depending on the presense of `zfar` property, perspective cameras could use finite or infinite projection.
+Depending on the presence of `zfar` property, perspective cameras could use finite or infinite projection.
 
 The following example defines two perspective cameras with supplied values for Y field of view, aspect ratio, and clipping information.
 
 ```json
 {
-  "cameras": {
-    "camera_finite": {
-      "type": "perspective",
-      "perspective": {
-        "aspectRatio": 1.5,
-        "yfov": 0.660593,
-        "zfar": 100,
-        "znear": 0.01
-      }      
-    },
-    "camera_infinite": {
-      "type": "perspective",
-      "perspective": {
-        "aspectRatio": 1.5,
-        "yfov": 0.660593,
-        "znear": 0.01
-      }
+    "cameras": {
+        "camera_finite": {
+            "type": "perspective",
+            "perspective": {
+                "aspectRatio": 1.5,
+                "yfov": 0.660593,
+                "zfar": 100,
+                "znear": 0.01
+            }      
+        },
+        "camera_infinite": {
+            "type": "perspective",
+            "perspective": {
+                "aspectRatio": 1.5,
+                "yfov": 0.660593,
+                "znear": 0.01
+            }
+        }
     }
-  }
 }
 ```
 <a name="projection-matrices"></a>
@@ -1074,105 +1200,105 @@ The following examples show expected animations usage.
 
 ```json
 {
-  "animations": {
-    "one_node_all_props_animation": {
-      "channels": [
-        {
-          "sampler": "rotation_sampler",
-          "target": {
-            "id": "node-cam01-box",
-            "path": "rotation"
-          }
+    "animations": {
+        "one_node_all_props_animation": {
+            "channels": [
+                {
+                    "sampler": "rotation_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "scale_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "scale"
+                    }
+                },
+                {
+                    "sampler": "translation_sampler",
+                    "target": {
+                        "id": "node-cam01-box",
+                        "path": "translation"
+                    }
+                }
+            ],
+            "samplers": {
+                "rotation_sampler": {
+                    "input": "time_accessor",
+                    "interpolation": "LINEAR",
+                    "output": "rotation_accessor"
+                },
+                "scale_sampler": {
+                    "input": "time_accessor",
+                    "interpolation": "LINEAR",
+                    "output": "scale_accessor"
+                },
+                "translation_sampler": {
+                    "input": "time_accessor",
+                    "interpolation": "LINEAR",
+                    "output": "translation_accessor"
+                }
+            }
         },
-        {
-          "sampler": "scale_sampler",
-          "target": {
-            "id": "node-cam01-box",
-            "path": "scale"
-          }
+        "two_nodes_different_samplers": {
+            "channels": [
+                {
+                    "sampler": "a_sampler",
+                    "target": {
+                        "id": "node_A",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "b_sampler",
+                    "target": {
+                        "id": "node_B",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "samplers": {
+                "a_sampler": {
+                    "input": "time_accessor_a",
+                    "interpolation": "LINEAR",
+                    "output": "rotation_accessor_for_node_A"
+                },
+                "b_sampler": {
+                    "input": "time_accessor_b",
+                    "interpolation": "LINEAR",
+                    "output": "rotation_accessor_for_node_B"
+                }
+            }
         },
-        {
-          "sampler": "translation_sampler",
-          "target": {
-            "id": "node-cam01-box",
-            "path": "translation"
-          }
+        "two_nodes_same_sampler": {
+            "channels": [
+                {
+                    "sampler": "a_sampler",
+                    "target": {
+                        "id": "node_A",
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": "a_sampler",
+                    "target": {
+                        "id": "node_B",
+                        "path": "rotation"
+                    }
+                }
+            ],
+            "samplers": {
+                "a_sampler": {
+                    "input": "time_accessor_a",
+                    "interpolation": "LINEAR",
+                    "output": "rotation_accessor_for_node_A"
+                }
+            }
         }
-      ],
-      "samplers": {
-        "rotation_sampler": {
-          "input": "time_accessor",
-          "interpolation": "LINEAR",
-          "output": "rotation_accessor"
-        },
-        "scale_sampler": {
-          "input": "time_accessor",
-          "interpolation": "LINEAR",
-          "output": "scale_accessor"
-        },
-        "translation_sampler": {
-          "input": "time_accessor",
-          "interpolation": "LINEAR",
-          "output": "translation_accessor"
-        }
-      }
-    },
-    "two_nodes_different_samplers": {
-      "channels": [
-        {
-          "sampler": "a_sampler",
-          "target": {
-            "id": "node_A",
-            "path": "rotation"
-          }
-        },
-        {
-          "sampler": "b_sampler",
-          "target": {
-            "id": "node_B",
-            "path": "rotation"
-          }
-        }
-      ],
-      "samplers": {
-        "a_sampler": {
-          "input": "time_accessor_a",
-          "interpolation": "LINEAR",
-          "output": "rotation_accessor_for_node_A"
-        },
-        "b_sampler": {
-          "input": "time_accessor_b",
-          "interpolation": "LINEAR",
-          "output": "rotation_accessor_for_node_B"
-        }
-      }
-    },
-    "two_nodes_same_sampler": {
-      "channels": [
-        {
-          "sampler": "a_sampler",
-          "target": {
-            "id": "node_A",
-            "path": "rotation"
-          }
-        },
-        {
-          "sampler": "a_sampler",
-          "target": {
-            "id": "node_B",
-            "path": "rotation"
-          }
-        }
-      ],
-      "samplers": {
-        "a_sampler": {
-          "input": "time_accessor_a",
-          "interpolation": "LINEAR",
-          "output": "rotation_accessor_for_node_A"
-        }
-      }
     }
-  }
 }
 ```
 
@@ -1182,7 +1308,7 @@ Each of the animation's *samplers* defines the input/output pair: a set of float
 
 > Note: glTF 1.1 animation samplers support only discrete and linear interpolation.
 
-glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
+glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy. (See the section on Skins above.)
 
 
 <a name="metadata"></a>
@@ -1198,18 +1324,20 @@ Asset metadata is described in the `asset` property. The asset metadata contains
 
 Only the `version` property is required. For example,
 
-```javascript
-"asset": {
-    "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
-    "premultipliedAlpha": true,
-    "profile" : {
-        "api" : "WebGL",
-        "version" : "1.0",
-        "extras" : {
-            "Application specific" : "The extra object can contain any properties."
-        }  
-    },
-    "version": 0.8
+```json
+{
+    "asset": {
+        "version": "1.1",
+        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+        "premultipliedAlpha": true,
+        "profile" : {
+            "api" : "WebGL",
+            "version" : "1.0",
+            "extras" : {
+                "Application specific" : "The extra object can contain any properties."
+            }  
+        }        
+    }
 }
 ```
 
@@ -1220,15 +1348,15 @@ glTF defines an extension mechanism that allows the base format to be extended w
 
 ```json
 {
-  "shaders": {
-    "a_shader": {
-      "extensions": {
-        "KHR_binary_glTF": {
-          "bufferView": "a_shader_bufferView"
+    "shaders": {
+        "a_shader": {
+            "extensions": {
+                "KHR_binary_glTF": {
+                    "bufferView": "a_shader_bufferView"
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
@@ -1236,9 +1364,10 @@ All extensions used in a glTF asset are listed in the top-level `extensionsUsed`
 
 ```json
 {
-  "extensionsUsed": [
-    "KHR_binary_glTF", "VENDOR_physics"
-  ]
+    "extensionsUsed": [
+        "KHR_binary_glTF",
+        "VENDOR_physics"
+    ]
 }
 ```
 
@@ -1246,9 +1375,9 @@ All glTF extensions required to load and/or render an asset must be listed in th
 
 ```json
 {
-  "extensionsRequired": [
-    "KHR_binary_glTF"
-  ]
+    "extensionsRequired": [
+        "KHR_binary_glTF"
+    ]
 }
 ```
 
@@ -1259,9 +1388,9 @@ If loading an asset requires enabling GL extensions to provide functionality bey
 
 ```json
 {
-  "glExtensionsUsed": [
-    "OES_element_index_uint"
-  ]
+    "glExtensionsUsed": [
+        "OES_element_index_uint"
+    ]
 }
 ```
 
@@ -3535,87 +3664,95 @@ Application-specific data.
 * Tom Fili, Cesium
 * Scott Hunter, Analytical Graphics, Inc.
 * Brandon Jones, Google
-* Alexey Knyazev,
 * Ed Mackey, Analytical Graphics, Inc.
-
+* Matthew McMullan,
+* Darryl Gough, 
+* Alex Wood,
+* Rob Taglang, Cesium
+* Marco Hutter,
+* Sean Lilley,
+* Corentin Wallez,
+* Yu Chen Hou
 
 <a name="appendix-a"></a>
 # Appendix A: Default Material
 
 If `material.technique` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  The following glTF is an example of the default material.
 
-```javascript
-"materials": {
-    "Effect1": {
-        "values": {
-            "emission": [
-                0.8,
-                0.8,
-                0.8,
-                1
-            ]
-        },
-        "technique": "technique0"
-    }
-},
-"programs": {
-    "program0": {
-        "attributes": [
-            "a_position"
-        ],
-        "fragmentShader": "fragmentShader0",
-        "vertexShader": "vertexShader0"
-    }
-},
-"shaders": {
-    "vertexShader0": {
-        "type": 35633,
-        "uri": "data:text/plain;base64,..." // see below
+```json
+{
+    "materials": {
+        "defaultMaterial": {
+            "values": {
+                "emission": [
+                    0.5,
+                    0.5,
+                    0.5,
+                    1
+                ]
+            },
+            "technique": "defaultTechnique"
+        }
     },
-    "fragmentShader0": {
-        "type": 35632,
-        "uri": "data:text/plain;base64,..." // see blow
-    }
-},
-"techniques": {
-    "technique0": {
-        "attributes": {
-            "a_position": "position"
+    "programs": {
+        "defaultProgram": {
+            "attributes": [
+                "a_position"
+            ],
+            "fragmentShader": "fragmentShader0",
+            "vertexShader": "vertexShader0"
+        }
+    },
+    "shaders": {
+        "vertexShader0": {
+            "type": 35633,
+            "uri": "data:text/plain;base64,..."
         },
-        "parameters": {
-            "modelViewMatrix": {
-                "semantic": "MODELVIEW",
-                "type": 35676
+        "fragmentShader0": {
+            "type": 35632,
+            "uri": "data:text/plain;base64,..."
+        }
+    },
+    "techniques": {
+        "defaultTechnique": {
+            "attributes": {
+                "a_position": "position"
             },
-            "projectionMatrix": {
-                "semantic": "PROJECTION",
-                "type": 35676
+            "parameters": {
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                },
+                "emission": {
+                    "type": 35666
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                }
             },
-            "emission": {
-                "type": 35666
+            "program": "defaultProgram",
+            "states": {
+                "enable": [
+                    2884,
+                    2929
+                ]
             },
-            "position": {
-                "semantic": "POSITION",
-                "type": 35665
+            "uniforms": {
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_projectionMatrix": "projectionMatrix",
+                "u_emission": "emission"
             }
-        },
-        "program": "program0",
-        "states": {
-            "enable": [
-                2884,
-                2929
-            ]
-        },
-        "uniforms": {
-            "u_modelViewMatrix": "modelViewMatrix",
-            "u_projectionMatrix": "projectionMatrix",
-            "u_emission": "emission"
         }
     }
 }
 ```
 
-Vertex Shader:
+Vertex Shader (encoded in `shaders.vertexShader0.uri`):
 ```glsl
 precision highp float;
 
@@ -3626,11 +3763,11 @@ attribute vec3 a_position;
 
 void main(void)
 {
-    gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position,1.0);
+    gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position, 1.0);
 }
 ```
 
-Fragment Shader:
+Fragment Shader (encoded in `shaders.fragmentShader0.uri`):
 ```glsl
 precision highp float;
 
