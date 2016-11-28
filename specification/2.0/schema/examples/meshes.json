@@ -1,0 +1,35 @@
+{
+    "meshes" : {
+        "mesh_id": {
+            "name": "user-defined name of mesh",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_id0",
+                        "POSITION": "accessor_id1",
+                        "TEXCOORD_0": "accessor_id2"
+                    },
+                    "indices": "accessor_id3",
+                    "material": "material_id",
+                    "mode": 4,
+		            "extensions" : {
+		               "extension_name" : {
+		                  "extension specific" : "value"
+		               }
+		            },
+                    "extras" : {
+                        "Application specific" : "The extra object can contain any properties."
+                    }     
+                }
+            ],
+            "extensions" : {
+               "extension_name" : {
+                  "extension specific" : "value"
+               }
+            },
+            "extras" : {
+                "Application specific" : "The extra object can contain any properties."
+            }     
+        }
+    }
+}
