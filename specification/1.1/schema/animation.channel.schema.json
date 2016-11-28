@@ -1,0 +1,21 @@
+{
+    "$schema" : "http://json-schema.org/draft-03/schema",
+    "title" : "channel",
+    "type" : "object",
+    "description" : "Targets an animation's sampler at a node's property.",
+    "extends" : { "$ref" : "glTFProperty.schema.json" },
+    "properties" : {
+        "sampler" : {
+            "extends" : { "$ref" : "glTFid.schema.json" },
+            "description" : "The ID of a sampler in this animation used to compute the value for the target.",
+            "required" : true,
+            "gltf_detailedDescription" : "The ID of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
+        },
+        "target" : {
+            "extends" : { "$ref" : "animation.channel.target.schema.json" },
+            "description" : "The ID of the node and TRS property to target.",
+            "required" : true
+        }
+    },
+    "additionalProperties" : false
+}

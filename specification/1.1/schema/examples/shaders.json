@@ -1,0 +1,27 @@
+{
+    "shaders" : {
+        "vs_id" : {
+            "name": "user-defined vertex shader name",
+            "uri" : "vertexshader.glsl",
+            "type": 35633,
+            "extensions" : {
+               "extension_name" : {
+                  "extension specific" : "value"
+               }
+            },
+            "extras" : {
+                "Application specific" : "The extra object can contain any properties."
+            }
+        },
+        "fs_id" : {
+            "name": "user-defined fragment shader name",
+            "uri" : "fragmentshader.glsl",
+            "type": 35632
+        },
+        "fs_data_uri_id" : {
+            "name": "user-defined fragment shader with a data uri name",
+            "uri" : "data:,void%20main()%7Bgl_FragColor%3Dvec4(1.0)%3B",
+            "type": 35632
+        }
+    }
+}
