@@ -1466,7 +1466,7 @@ The ID of the [`bufferView`](#reference-bufferView).
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### accessor.byteOffset :white_check_mark:
 
@@ -1474,7 +1474,7 @@ The offset relative to the start of the [`bufferView`](#reference-bufferView) in
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 * **Related WebGL functions**: `vertexAttribPointer()` offset parameter
 
 ### accessor.byteStride
@@ -1483,8 +1483,8 @@ The stride, in bytes, between attributes referenced by this accessor.  When this
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
-* **Minimum**:` >= 0`
-* **Maximum**:` <= 255`
+* **Minimum**: ` >= 0`
+* **Maximum**: ` <= 255`
 * **Related WebGL functions**: `vertexAttribPointer()` stride parameter
 
 ### accessor.componentType :white_check_mark:
@@ -1512,7 +1512,7 @@ The number of attributes referenced by this accessor, not to be confused with th
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Minimum**:` >= 1`
+* **Minimum**: ` >= 1`
 
 ### accessor.type :white_check_mark:
 
@@ -1651,7 +1651,7 @@ The ID of a sampler in this animation used to compute the value for the target, 
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### channel.target :white_check_mark:
 
@@ -1701,7 +1701,7 @@ The ID of the node to target.
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### target.path :white_check_mark:
 
@@ -1753,7 +1753,7 @@ The ID of an accessor containing keyframe input values, e.g., time. That accesso
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### sampler.interpolation
 
@@ -1769,7 +1769,7 @@ The ID of an accessor, containing keyframe output values. Output and input acces
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### sampler.extensions
 
@@ -1947,7 +1947,7 @@ The length of the buffer in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 
 ### buffer.type
 
@@ -2009,7 +2009,7 @@ The ID of the [`buffer`](#reference-buffer).
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### bufferView.byteOffset :white_check_mark:
 
@@ -2017,7 +2017,7 @@ The offset into the [`buffer`](#reference-buffer) in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 
 ### bufferView.byteLength :white_check_mark:
 
@@ -2025,7 +2025,7 @@ The length of the bufferView in bytes.
 
 * **Type**: `integer`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 
 ### bufferView.target
 
@@ -2167,7 +2167,7 @@ The floating-point distance to the far clipping plane.
 
 * **Type**: `number`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 
 ### orthographic.znear :white_check_mark:
 
@@ -2175,7 +2175,7 @@ The floating-point distance to the near clipping plane.
 
 * **Type**: `number`
 * **Required**: Yes
-* **Minimum**:` >= 0`
+* **Minimum**: ` >= 0`
 
 ### orthographic.extensions
 
@@ -2220,7 +2220,7 @@ The floating-point aspect ratio of the field of view. When this is undefined, th
 
 * **Type**: `number`
 * **Required**: No
-* **Minimum**:` > 0`
+* **Minimum**: ` > 0`
 
 ### perspective.yfov :white_check_mark:
 
@@ -2228,7 +2228,7 @@ The floating-point vertical field of view in radians.
 
 * **Type**: `number`
 * **Required**: Yes
-* **Minimum**:` > 0`
+* **Minimum**: ` > 0`
 
 ### perspective.zfar
 
@@ -2236,7 +2236,7 @@ The floating-point distance to the far clipping plane. When defined, `zfar` must
 
 * **Type**: `number`
 * **Required**: No
-* **Minimum**:` > 0`
+* **Minimum**: ` > 0`
 
 ### perspective.znear :white_check_mark:
 
@@ -2244,7 +2244,7 @@ The floating-point distance to the near clipping plane.
 
 * **Type**: `number`
 * **Required**: Yes
-* **Minimum**:` > 0`
+* **Minimum**: ` > 0`
 
 ### perspective.extensions
 
@@ -2401,7 +2401,7 @@ The ID of the default scene.
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### glTF.scenes
 
@@ -2564,7 +2564,7 @@ The ID of the technique.  If this is not supplied, and no extension is present t
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### material.values
 
@@ -2686,7 +2686,7 @@ When defined, the [`accessor`](#accessor) must contain indices: the bufferView r
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### primitive.material
 
@@ -2694,7 +2694,7 @@ The ID of the material to apply to this primitive when rendering.
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### primitive.mode
 
@@ -2728,7 +2728,7 @@ A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or
 
 In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material)/[`technique`](#reference-technique) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
 
-A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix. If none are provided, the transform is the identity.
+A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
 
 **Properties**
 
@@ -2759,7 +2759,7 @@ The ID of the camera referenced by this node.
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### node.children
 
@@ -2785,7 +2785,7 @@ The ID of the skin referenced by this node.
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### node.jointName
 
@@ -2793,7 +2793,7 @@ Name used when this node is a joint in a skin.
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### node.matrix
 
@@ -2895,7 +2895,7 @@ The ID of the fragment [`shader`](#reference-shader).
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### program.vertexShader :white_check_mark:
 
@@ -2903,7 +2903,7 @@ The ID of the vertex [`shader`](#reference-shader).
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### program.name
 
@@ -3161,13 +3161,13 @@ The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 * **Type**: `string`
 * **Required**: No, The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### skin.jointNames :white_check_mark:
 
 Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is
 * the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and 
-* the same as the total quantity of all skeleton nodes from node hierarchies referenced by the skinned mesh instance node's `skeletons` array.
+* the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array.
 
 * **Type**: `string[]`
    * Each element in the array must be unique.
@@ -3243,7 +3243,7 @@ The ID of the program.
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### technique.uniforms
 
@@ -3315,7 +3315,7 @@ When a parameter is an attribute, `count` can not be defined since GLSL does not
 
 * **Type**: `integer`
 * **Required**: No
-* **Minimum**:` >= 1`
+* **Minimum**: ` >= 1`
 
 ### parameter.node
 
@@ -3323,7 +3323,7 @@ The id of the [`node`](#reference-node) whose transform is used as the parameter
 
 * **Type**: `string`
 * **Required**: No
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### parameter.type :white_check_mark:
 
@@ -3606,7 +3606,7 @@ The ID of the [`sampler`](#reference-sampler) used by this texture.
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### texture.source :white_check_mark:
 
@@ -3614,7 +3614,7 @@ The ID of the [`image`](#reference-image) used by this texture.
 
 * **Type**: `string`
 * **Required**: Yes
-* **Minimum Length**`: >= 1`
+* **Minimum Length**: ` >= 1`
 
 ### texture.target
 
