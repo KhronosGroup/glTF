@@ -3,6 +3,7 @@ glTF registry contains base specifications; specifications of Khronos- and vendo
 
 ## glTF Specification, JSON-Schemas
 [glTF 1.0](1.0)
+
 [glTF 1.1](1.1)
 
 ## glTF Extensions
