@@ -5,9 +5,6 @@
     "description" : "A typed view into a bufferView.  A bufferView contains raw binary data.  An accessor provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "bufferView" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the bufferView."
@@ -74,7 +71,10 @@
             "minItems" : 1,
             "maxItems" : 16,
             "gltf_detailedDescription" : "Minimum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\nWhen `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer."
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["bufferView", "byteOffset", "componentType", "count", "type", "max", "min"]

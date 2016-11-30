@@ -5,9 +5,6 @@
     "description" : "A texture and its sampler.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "format": {
             "type" : "integer",
             "description" : "The texture's format.",
@@ -51,7 +48,10 @@
             "default" : 5121,
             "gltf_detailedDescription" : "Texel datatype.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `33635` (UNSIGNED_SHORT_5_6_5), `32819` (UNSIGNED_SHORT_4_4_4_4), and `32820` (UNSIGNED_SHORT_5_5_5_1).",
             "gltf_webgl" : "`texImage2D()` type parameter"
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "gltf_webgl" : "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`",

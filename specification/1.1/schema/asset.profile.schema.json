@@ -5,8 +5,6 @@
     "description" : "Specifies the target rendering API and version, e.g., WebGL 1.0.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "api" : {
             "type" : "string",
             "description" : "Specifies the target rendering API.",
@@ -18,7 +16,9 @@
             "default" : "1.0",
             "pattern" : "^\\d+\\.\\d+$",
             "gltf_detailedDescription" : "The API version. Must be of the form `major_number.minor_number`, where the numbers have one or more digits."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false
 }

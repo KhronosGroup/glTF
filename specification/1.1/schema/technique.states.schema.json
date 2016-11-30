@@ -5,8 +5,6 @@
     "description" : "Fixed-function rendering states.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "enable" : {
             "type" : "array",
             "description" : "WebGL states to enable.",
@@ -22,7 +20,9 @@
         },
         "functions" : {
             "$ref" : "technique.states.functions.schema.json"
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false
 }

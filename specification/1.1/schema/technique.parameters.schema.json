@@ -5,8 +5,6 @@
     "description" : "An attribute or uniform input to a technique, and an optional semantic and value.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "count" : {
             "type" : "integer",
             "description" : "When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.",
@@ -34,7 +32,9 @@
             "type" : { "$ref" : "arrayValues.schema.json" },
             "description" : "The value of the parameter.",
             "gltf_detailedDescription" : "The value of the parameter. The length is determined by the values of the `type` and `count` (if present) properties.  A material value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in `technique.attributes`."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required" : ["type"]

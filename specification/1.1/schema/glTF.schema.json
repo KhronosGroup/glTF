@@ -5,8 +5,6 @@
     "description" : "The root object for a glTF asset.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "extensionsUsed" : {
             "type" : "array",
             "description" : "Names of glTF extensions used somewhere in this asset.",
@@ -216,7 +214,9 @@
             "default" : [],
             "gltf_detailedDescription" : "Names of WebGL extensions required to render this asset.  WebGL extensions must be enabled by calling `getExtension()` for each extension.",
             "gltf_webgl" : "`getSupportedExtensions()` and `getExtension()`"
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "dependencies" : {
         "scene" : ["scenes"]

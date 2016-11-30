@@ -5,9 +5,6 @@
     "description" : "A view into a buffer generally representing a subset of the buffer.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "buffer" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the buffer."
@@ -29,7 +26,10 @@
             "gltf_enumNames" : ["ARRAY_BUFFER", "ELEMENT_ARRAY_BUFFER"],
             "gltf_detailedDescription" : "The target that the WebGL buffer should be bound to.  All valid values correspond to WebGL enums.  When this is not provided, the bufferView contains animation or skin data.",
             "gltf_webgl" : "`bindBuffer()`"
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["buffer", "byteOffset", "byteLength"]

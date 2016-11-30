@@ -5,8 +5,6 @@
     "description" : "A perspective camera containing properties to create a perspective projection matrix.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "aspectRatio" : {
             "type" : "number",
             "description" : "The floating-point aspect ratio of the field of view.",
@@ -33,7 +31,9 @@
             "minimum" : 0.0,
             "exclusiveMinimum" : true,
             "gltf_detailedDescription" : "The floating-point distance to the near clipping plane."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["yfov", "znear"]

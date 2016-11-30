@@ -5,8 +5,6 @@
     "description" : "Targets an animation's sampler at a node's property.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "sampler" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of a sampler in this animation used to compute the value for the target.",
@@ -15,7 +13,9 @@
         "target" : {
             "allOf" : [ { "$ref" : "animation.channel.target.schema.json" } ],
             "description" : "The ID of the node and TRS property to target."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["sampler", "target"]
