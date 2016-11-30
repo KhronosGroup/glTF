@@ -32,13 +32,13 @@
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],
             "name": "user-defined name of camera node"
         },
-        "skin_node_id": {
+        "skinned_node_id": {
             "children": [],
             "meshes": [
-                "skin_mesh_id"
+                "skinned_mesh_id"
             ],
             "skeletons": [
-                "joint id in skin"
+                "joint_node_id"
             ],
             "skin": "skin_id",
             "matrix": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ],

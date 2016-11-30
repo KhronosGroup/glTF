@@ -10,7 +10,7 @@
                     1
                 ],
                 "diffuse": "texture_image_0",
-                "shininess": 38.4
+                "shininess": [38.4]
             },
             "name": "user-defined material name",
             "extensions" : {
