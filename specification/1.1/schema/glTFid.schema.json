@@ -1,5 +1,5 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "glTF id",
     "type" : "string",
     "minLength" : 1

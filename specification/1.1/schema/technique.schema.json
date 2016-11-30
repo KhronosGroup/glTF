@@ -1,10 +1,13 @@
 {
-    "$schema" : "http://json-schema.org/draft-03/schema",
+    "$schema" : "http://json-schema.org/draft-04/schema",
     "title" : "technique",
     "type" : "object",
     "description" : "A template for material appearances.",
-    "extends" : { "$ref" : "glTFChildOfRootProperty.schema.json" },
+    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
+        "name" : {},
+        "extensions" : {},
+        "extras" : {},
         "parameters" : {
             "type" : "object",
             "description" : "A dictionary object of technique.parameters objects.",
@@ -25,12 +28,11 @@
                 "$ref" : "technique.attribute.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.",
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object."
         },
         "program" : {
-            "extends" : { "$ref" : "glTFid.schema.json" },
-            "description" : "The ID of the program.",
-            "required" : true
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The ID of the program."
         },
         "uniforms" : {
             "type" : "object",
@@ -41,13 +43,14 @@
                 "$ref" : "technique.uniform.schema.json"
             },
             "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.",
+            "gltf_detailedDescription" : "A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object."
         },
         "states" : {
-            "extends" : { "$ref" : "technique.states.schema.json" },
+            "allOf" : [ { "$ref" : "technique.states.schema.json" } ],
             "description" : "Fixed-function rendering states.",
             "default" : {}
         }
     },
-    "additionalProperties" : false
+    "additionalProperties" : false,
+    "required" : ["program"]
 }
