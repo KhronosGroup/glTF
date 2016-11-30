@@ -5,8 +5,6 @@
     "description" : "The ID of the node and TRS property that an animation channel targets.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "id" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the node to target."
@@ -15,7 +13,9 @@
             "type" : "string",
             "description" : "The name of the node's TRS property to modify.",
             "enum" : ["translation", "rotation", "scale"]
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["id", "path"]

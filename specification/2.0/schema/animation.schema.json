@@ -5,9 +5,6 @@
     "description" : "A keyframe animation.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name": {},
-        "extensions" : {},
-        "extras" : {},
         "channels" : {
             "type" : "array",
             "description" : "An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets.",
@@ -25,7 +22,10 @@
                 "$ref" : "animation.sampler.schema.json"
             },
             "default" : {}
-        }
+        },
+        "name": {},
+        "extensions" : {},
+        "extras" : {}
     },
     "dependencies" : {
         "channels" : ["samplers"]

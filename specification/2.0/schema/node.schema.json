@@ -5,9 +5,6 @@
     "description" : "A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.  In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced `material`/`technique` from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "camera" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of the camera referenced by this node."
@@ -88,7 +85,10 @@
             "minItems" : 3,
             "maxItems" : 3,
             "default" : [ 0.0, 0.0, 0.0 ]
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "dependencies" : {
         "skeletons" : ["skin", "meshes"],

@@ -5,9 +5,6 @@
     "description" : "A vertex or fragment shader.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "uri" : {
             "type" : "string",
             "description" : "The uri of the GLSL source.",
@@ -21,7 +18,10 @@
             "enum" : [35632, 35633],
             "gltf_enumNames" : ["FRAGMENT_SHADER", "VERTEX_SHADER"],
             "gltf_detailedDescription" : "The shader stage.  All valid values correspond to WebGL enums."
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required" : ["uri", "type"],

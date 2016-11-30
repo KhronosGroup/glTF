@@ -5,9 +5,6 @@
     "description" : "A template for material appearances.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "name" : {},
-        "extensions" : {},
-        "extras" : {},
         "parameters" : {
             "type" : "object",
             "description" : "A dictionary object of technique.parameters objects.",
@@ -49,7 +46,10 @@
             "allOf" : [ { "$ref" : "technique.states.schema.json" } ],
             "description" : "Fixed-function rendering states.",
             "default" : {}
-        }
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required" : ["program"]

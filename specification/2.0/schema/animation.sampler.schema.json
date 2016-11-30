@@ -5,8 +5,6 @@
     "description" : "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "input" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of an accessor containing keyframe input values, e.g., time.",
@@ -23,7 +21,9 @@
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The ID of an accessor, containing keyframe output values.",
             "gltf_detailedDescription" : "The ID of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "required": ["input", "output"]

@@ -5,8 +5,6 @@
     "description" : "Geometry to be rendered with the given material.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "extensions" : {},
-        "extras" : {},
         "attributes" : {
             "type" : "object",
             "description" : "A dictionary object of strings, where each string is the ID of the accessor containing an attribute.",
@@ -32,7 +30,9 @@
             "gltf_enumNames" : ["POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN"],
             "default" : 4,
             "gltf_detailedDescription" : "The type of primitives to render. All valid values correspond to WebGL enums."
-        }
+        },
+        "extensions" : {},
+        "extras" : {}
     },
     "additionalProperties" : false,
     "gltf_webgl" : "`drawElements()` and `drawArrays()`",
