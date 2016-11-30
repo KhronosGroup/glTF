@@ -5,12 +5,12 @@
         "premultipliedAlpha" : true,
         "profile" : {
             "api" : "WebGL",
-            "version" : "1.0.3",
+            "version" : "1.0",
             "extras" : {
                 "Application specific" : "The extra object can contain any properties."
             }  
         },
-        "version" : "1.0",
+        "version" : "1.1",
         "extensions" : {
            "extension_name" : {
               "extension specific" : "value"
