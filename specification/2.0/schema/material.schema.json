@@ -25,5 +25,8 @@
             "gltf_detailedDescription" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value."
         }
     },
+    "dependencies" : {
+        "values": [ "technique" ]
+    },
     "additionalProperties" : false
 }
