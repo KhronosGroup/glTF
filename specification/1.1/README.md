@@ -1179,10 +1179,10 @@ where
 #### Orthographic projection
 <p><img src="figures/ortho.png" /></p>
 where
-- `r` equals `camera.orhographic.xmag`;
-- `t` equals `camera.orhographic.ymag`;
-- `f` equals `camera.orhographic.zfar`;
-- `n` equals `camera.orhographic.znear`.
+- `r` equals `camera.orthographic.xmag`;
+- `t` equals `camera.orthographic.ymag`;
+- `f` equals `camera.orthographic.zfar`;
+- `n` equals `camera.orthographic.znear`.
 
 <a name="animations"></a>
 ## Animations
