@@ -4,7 +4,6 @@
             "uri" : "vertices.bin",
             "byteLength": 1024,
             "name": "user-defined buffer name",
-            "type" : "arraybuffer",
             "extensions" : {
                "extension_name" : {
                   "extension specific" : "value"

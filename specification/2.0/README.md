@@ -143,7 +143,6 @@ _IDs_ are internal string identifiers used to reference parts of a glTF asset, e
     "buffers": {
         "a-buffer-id": {
             "byteLength": 1024,
-            "type": "arraybuffer",
             "uri": "path-to.bin"
         }
     },
@@ -350,14 +349,13 @@ Buffer data is little endian.
 
 All buffers are stored in the asset's `buffers` dictionary property.
 
-The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored; its value can be used as the `responseType` when retrieving data over [XHR](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest). The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
+The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
 
 ```json
 {
    "buffers": {
        "duck": {
            "byteLength": 102040,
-           "type": "arraybuffer",
            "uri": "duck.bin"
        }
    }
@@ -1923,7 +1921,6 @@ A buffer points to binary geometry, animation, or skins.
 |---|----|-----------|--------|
 |**uri**|`string`|The uri of the buffer.| :white_check_mark: Yes|
 |**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
-|**type**|`string`|XMLHttpRequest `responseType`.|No, default: `"arraybuffer"`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1948,14 +1945,6 @@ The length of the buffer in bytes.
 * **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
-
-### buffer.type
-
-XMLHttpRequest `responseType`.
-
-* **Type**: `string`
-* **Required**: No, default: `"arraybuffer"`
-* **Allowed values**: `"arraybuffer"`
 
 ### buffer.name
 

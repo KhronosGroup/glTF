@@ -18,12 +18,6 @@
             "minimum" : 0,
             "default" : 0
         },
-        "type" : {
-            "type" : "string",
-            "description" : "XMLHttpRequest `responseType`.",
-            "enum" : ["arraybuffer"],
-            "default" : "arraybuffer"
-        },
         "name" : {},
         "extensions" : {},
         "extras" : {}
