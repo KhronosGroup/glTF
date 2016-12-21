@@ -67,6 +67,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 [Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
 
+#### WebGL Applications
+
+* [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
+
 #### JavaScript / Node.js
 
 * [gltf-walker](https://github.com/ksons/gltf-walker) - convenience library for processing glTF
