@@ -70,6 +70,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 #### WebGL Applications
 
 * [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
+* [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
 
 #### JavaScript / Node.js
 
