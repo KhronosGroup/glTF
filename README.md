@@ -72,6 +72,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
 * [Archilogic](https://spaces.archilogic.com/blog/gltf-import-export)
+* [glTF plugin](https://wordpress.org/plugins/gltf-media-type/) for WordPress
 
 #### JavaScript / Node.js
 
