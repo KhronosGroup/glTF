@@ -62,7 +62,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 * Initial [glTF loader](https://github.com/xeolabs/xeogl/tree/master/src/importing/gltf) in [xeogl](http://xeogl.org/) (geometry and materials)
    * [Importing glTF](https://github.com/xeolabs/xeogl/wiki/Importing-glTF) tutorial
 * [glTF loader](https://github.com/xirvr/aframe-gltf) in [A-Frame](https://aframe.io/)
-* [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html))
+* [glTF loader](https://github.com/emadurandal/GLBoost/blob/master/src/js/middle_level/loader/GLTFLoader.js) in [GLBoost](https://github.com/emadurandal/GLBoost) ([examples](https://gitcdn.xyz/repo/emadurandal/GLBoost/master/examples/index.html)) (Both glTF 1.0 & 1.1 supported)
 * [glTF plug-in](https://github.com/xml3d/xml3d-gltf-plugin) for [xml3d.js](http://xml3d.org)  (geometry and materials)
 * [glTF reader/writer](https://github.com/cedricpinson/osgjs/blob/master/sources/osgPlugins/ReaderWriterGLTF.js) in [OSG.JS](http://osgjs.org/)
 
