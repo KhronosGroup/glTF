@@ -80,19 +80,41 @@ static void ksMatrix4x4f_TransformBounds(
 {
     assert( ksMatrix4x4f_IsAffine( matrix, 1e-4f ) );
 
-    const ksVector3f center = { ( mins->x + maxs->x ) * 0.5f, ( mins->y + maxs->y ) * 0.5f, ( mins->z + maxs->z ) * 0.5f };
-    const ksVector3f extents = { maxs->x - center.x, maxs->y - center.y, maxs->z - center.z };
+    const ksVector3f center =
+    {
+        ( mins->x + maxs->x ) * 0.5f,
+        ( mins->y + maxs->y ) * 0.5f,
+        ( mins->z + maxs->z ) * 0.5f
+    };
+    const ksVector3f extents =
+    {
+        maxs->x - center.x,
+        maxs->y - center.y,
+        maxs->z - center.z
+    };
     const ksVector3f newCenter =
     {
-        matrix->m[0][0] * center.x + matrix->m[1][0] * center.y + matrix->m[2][0] * center.z + matrix->m[3][0],
-        matrix->m[0][1] * center.x + matrix->m[1][1] * center.y + matrix->m[2][1] * center.z + matrix->m[3][1],
-        matrix->m[0][2] * center.x + matrix->m[1][2] * center.y + matrix->m[2][2] * center.z + matrix->m[3][2]
+        matrix->m[0][0] * center.x +
+			matrix->m[1][0] * center.y +
+				matrix->m[2][0] * center.z + matrix->m[3][0],
+        matrix->m[0][1] * center.x +
+			matrix->m[1][1] * center.y +
+				matrix->m[2][1] * center.z + matrix->m[3][1],
+        matrix->m[0][2] * center.x +
+			matrix->m[1][2] * center.y +
+				matrix->m[2][2] * center.z + matrix->m[3][2]
     };
     const ksVector3f newExtents =
     {
-        fabsf( extents.x * matrix->m[0][0] ) + fabsf( extents.y * matrix->m[1][0] ) + fabsf( extents.z * matrix->m[2][0] ),
-        fabsf( extents.x * matrix->m[0][1] ) + fabsf( extents.y * matrix->m[1][1] ) + fabsf( extents.z * matrix->m[2][1] ),
-        fabsf( extents.x * matrix->m[0][2] ) + fabsf( extents.y * matrix->m[1][2] ) + fabsf( extents.z * matrix->m[2][2] )
+        fabsf( extents.x * matrix->m[0][0] ) +
+            fabsf( extents.y * matrix->m[1][0] ) +
+                fabsf( extents.z * matrix->m[2][0] ),
+        fabsf( extents.x * matrix->m[0][1] ) +
+            fabsf( extents.y * matrix->m[1][1] ) +
+                fabsf( extents.z * matrix->m[2][1] ),
+        fabsf( extents.x * matrix->m[0][2] ) +
+            fabsf( extents.y * matrix->m[1][2] ) +
+                fabsf( extents.z * matrix->m[2][2] )
     };
 
     resultMins.x = newCenter.x - newExtents.x;
