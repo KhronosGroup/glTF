@@ -15,7 +15,8 @@ Written against the glTF draft 1.0 spec.
 ## Overview
 
 This extension defines an additional material property that points to a technique with shaders specifically
-written for the OpenGL multi-view extension GL_OVR_multiview2.
+written for the OpenGL multi-view extension GL_OVR_multiview2. The GL_OVR_multiview extension is not considered
+because it is more limited and all drivers that support GL_OVR_multiview also support GL_OVR_multiview2.
 
 The 1.0 glTF spec defines a plethora of semantic uniforms.
 Some of these semantic uniforms provide no benefit on modern scalar GPUs and are only time consuming to update as uniforms.
@@ -193,5 +194,5 @@ https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_
 <a name="conformance"></a>
 ## Conformance
 
-If this extension is supported, and an application wants to use one of the multi-view extensions,
-then the application should use the special multi-view technique.
+If this extension is supported, and an application wants to use the GL_OVR_multiview2 OpenGL extension,
+then the application should use the special multi-view technique specified by this glTF extension.
