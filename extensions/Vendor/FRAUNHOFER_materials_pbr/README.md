@@ -60,11 +60,11 @@ The following table lists the allowed types and ranges for the specular-glossine
 | `diffuseTexture`  | string       | valid texture id  |           | Texture with RGB or RGBA components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
 | `specularGlossinessTexture` | string       | valid texture id  | | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
 
-The factors (diffuseFactor, specularFactor, glossinessFactor) scale the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
 Texture content must be converted to linear space before it is being used for any lighting computations.
-If a texture is not given, all respective texture components are assumed to have a value of 1.0.
+If a texture is not given, all respective texture components are assumed to have a value of 1.0 in linear space.
+The factors (diffuseFactor, specularFactor, glossinessFactor) scale, in linear space, the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
 
-For example, assume a value of `(0.9, 0.5, 0.3)` is read from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.2, 1.0, 0.7, 1.0)`.
+For example, assume a value of `(0.9, 0.5, 0.3)` in linear space is obtained from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.2, 1.0, 0.7, 1.0)`.
 Then, the result would be `(0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0) = (0.18, 0.5, 0.21, 1.0)`;
 
 
@@ -114,9 +114,9 @@ The following table lists the allowed types and ranges for the metal-roughness m
 | `baseColorTexture`          | string       | valid texture id  |           |Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
 | `metallicRoughnessTexture`  | string       | valid texture id  |           |Texture with two (or more) components, containing the metallic-ness of the material (first component) and its roughness (second component). |
 
-The factors (baseColorFactor, metallicFactor, roughnessFactor) scale the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
 Texture content must be converted to linear space before it is being used for any lighting computations.
-If a texture is not given, all respective texture components are assumed to have a value of 1.
+If a texture is not given, all respective texture components are assumed to have a value of 1.0 in linear space.
+The factors (baseColorFactor, metallicFactor, roughnessFactor) scale, in linear space, the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
 This is similar to the handling of factors and texture within the specular-glossiness model.
 
 
