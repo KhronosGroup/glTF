@@ -15,11 +15,11 @@ Written against the glTF draft 1.0 spec.
 ## Overview
 
 This extension defines an additional material property that points to a technique with shaders specifically
-written for the OpenGL multi-view extensions GL_OVR_multiview and GL_OVR_multiview2.
+written for the OpenGL multi-view extension GL_OVR_multiview2.
 
 The 1.0 glTF spec defines a plethora of semantic uniforms.
 Some of these semantic uniforms provide no benefit on modern scalar GPUs and are only time consuming to update as uniforms.
-Other semantic uniforms make it hard and/or computationally time consuming to support the OpenGL GL_OVR_multiview and GL_OVR_multiview2 extensions.
+Other semantic uniforms make it hard and/or computationally time consuming to support the OpenGL GL_OVR_multiview2 extension.
 
 This extension defines how to construct valid multi-view shaders with various restrictions on the semantic uniforms that are used.
 
@@ -45,7 +45,7 @@ For example, the following defines a material with a technique that can be used 
 
 ## Multi-View Vertex Shader Requirements
 
-The GL_OVR_multiview and GL_OVR_multiview2 extensions require OpenGL 3.0 or OpenGL ES 3.0.
+The GL_OVR_multiview2 extension requires OpenGL 3.0 or OpenGL ES 3.0 and associated shader versions.
 The `#version` keyword is used to specify the shader version.
 To specify a version 3.0 OpenGL shader, the following is added to the top of the shader.
 
