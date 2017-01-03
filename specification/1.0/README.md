@@ -429,16 +429,26 @@ All angles are in radians.
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
 
+缓存是存储数据的一个二进制块。缓存包含一个几何对象，动画和皮肤的组合。
+
 
 
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
+除了可能的解压缩，二进制块不需要额外的解析，因此可以高效的创建GL缓存和纹理。一个数据可以有多个缓存文件，使得应用在更广泛的应用场景中具有更好的灵活性。
+
 Buffer data is little endian.
+
+缓存数据是低字节排序。
 
 All buffers are stored in the asset's `buffers` dictionary property.
 
+所有的缓存都保存在数据的`buffers`字典属性中。
+
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `type` property specifies how the data is stored, either as a binary array buffer or text. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
+
+下面的范例定义了一个缓存。`byteLength`属性标识该缓存文件的大小。`type`属性标识该数据的存储方式，是一个二进制数组还是一个文件。`uri`属性是一个指向缓存数据的URI。缓存数据可以以base64编码的数据形式保存在glTF文件中，也可以通过数据URI引用获得。
 
 ```javascript
     "buffers": {
@@ -452,7 +462,11 @@ The following example defines a buffer. The `byteLength` property specifies the 
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
 
+一个*缓存视图*标识缓存中数据的一个子集，`byteOffset`属性是一个整数值，表示在该缓存中的偏移量，`byteLength`表示该视图具体的数据块的长度。缓存视图也定义了一个`target`属性，用来表示目标数据类型，可以是顶点数据，顶点索引数据或者描述动画或皮肤对象的目标数据。在应用中可以以只读的方式在内存中创建并填充。
+
 The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
+
+下面的例子定义了两个缓存视图：一个ELEMENT_ARRAY_BUFFER视图`bufferView_29`，是一个三角形集合的索引，还有一个ARRAY_BUFFER视图`bufferView_30`,是一个三角形集合的顶点数据。
 
 
 ```javascript
@@ -473,6 +487,8 @@ The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bu
 ```
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
+
+缓存和缓存视图并不包含类型信息。他们只是简单定义从文件中取出的原始数据。glTF文件中的对象（网格，皮肤，动画）都不会直接访问缓存或缓存视图，而是通过*访问器*
 
 
 ### Accessors
