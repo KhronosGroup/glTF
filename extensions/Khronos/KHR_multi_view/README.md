@@ -61,10 +61,10 @@ To specify a version 3.0 or later OpenGL ES shader the following is added to the
 
 Note that compared to GLSL 1.00 glTF shaders, these newer vertex shaders replace the following keywords:
 
-pre 3.0    | 3.0 or later
------------|---------------------
-attribute  | in
-varying    | out
+pre 3.0     | 3.0 or later
+------------|---------------------
+`attribute` | `in`
+`varying`   | `out`
 
 The following is added close to the top of the vertex shader, typically right after specifying the shader version and/or the default precisions.
 
@@ -75,7 +75,7 @@ extension GL_OVR_multiview2 : require
 layout( num_views = NUM_VIEWS ) in;
 ```
 
-The 'VIEW', 'VIEWINVERSE', 'PROJECTION' and 'PROJECTIONINVERSE' semantic uniforms for both eyes are placed in a uniform buffer:
+The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` semantic uniforms for both eyes are placed in a uniform buffer:
 
 ```C
 uniform viewProjectionUniformBuffer
@@ -95,7 +95,7 @@ uniform mat4 MODEL;
 uniform mat4 MODELINVERSE;
 ```
 
-The following semantic uniforms are not allowed inside the shader code and are replaced as follows:
+The following semantic uniforms are not allowed inside the vertex shader code and are replaced as follows:
 
 Semantic uniform             | Replacement
 -----------------------------|-------------------------------------
@@ -106,8 +106,8 @@ Semantic uniform             | Replacement
 `MODELVIEWPROJECTION`        | `PROJECTION[VIEW_ID] * VIEW[VIEW_ID] * MODEL`
 `MODELVIEWPROJECTIONINVERSE` | `PROJECTIONINVERSE[VIEW_ID] * VIEWINVERSE[VIEW_ID] * MODELINVERSE`
 
-Note that on modern scalar GPUs using 'transpose( mat3( MODELINVERSE ) )' is no more expensive in
-a shader than using an explicit 'MODELINVERSETRANSPOSE' uniform. Instead, using an explicit uniform
+Note that on modern scalar GPUs using `transpose( mat3( MODELINVERSE ) )` is no more expensive in
+a shader than using an explicit `MODELINVERSETRANSPOSE` uniform. Instead, using an explicit uniform
 only introduces overhead to pass the uniform value to the shader.
 
 ## Multi-View Fragment Shader Requirements
@@ -127,12 +127,12 @@ To specify a version 3.0 or later OpenGL ES shader the following is added to the
 
 Note that compared to GLSL 1.00 glTF shaders, these newer fragment shaders replace the following keyword:
 
-pre 3.0          | 3.0 or later
------------------|---------------------
-varying          | in
+pre 3.0     | 3.0 or later
+------------|---------------------
+`varying`   | `in`
 
-The 'gl_fragColor' keyword is also no longer available in version 3.0 or later shaders.
-Instead an explicit 'out' parameter must be added and the color for the first render target can then be assigned to 'fragColor'..
+The `gl_fragColor` keyword is also no longer available in version 3.0 or later fragment shaders.
+Instead an explicit `out` parameter must be added and the color for the first render target can then be assigned to this explicit `out` parameter.
 
 ```C
 out vec4 fragColor;
@@ -145,15 +145,15 @@ void main( void )
 
 None of these semantic uniforms are allowed in a multi-view fragment shader:
 
-- VIEW
-- VIEWINVERSE
-- PROJECTION
-- PROJECTIONINVERSE
-- MODELVIEW
-- MODELVIEWINVERSE
-- MODELVIEWINVERSETRANSPOSE
-- MODELVIEWPROJECTION
-- MODELVIEWPROJECTIONINVERSE
+- `VIEW`
+- `VIEWINVERSE`
+- `PROJECTION`
+- `PROJECTIONINVERSE`
+- `MODELVIEW`
+- `MODELVIEWINVERSE`
+- `MODELVIEWINVERSETRANSPOSE`
+- `MODELVIEWPROJECTION`
+- `MODELVIEWPROJECTIONINVERSE`
 
 ## Known Implementations
 
