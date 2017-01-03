@@ -20,7 +20,7 @@ This extension defines additional skin properties that allow efficient culling o
 
 The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension.
 
-## Extending Skins
+## Skin Extension
 
 The data used for skin culling is defined by adding an `extensions` property to a glTF skin, and defining its `KHR_skin_culling` property.
 
@@ -95,14 +95,14 @@ static void ksMatrix4x4f_TransformBounds(
     const ksVector3f newCenter =
     {
         matrix->m[0][0] * center.x +
-			matrix->m[1][0] * center.y +
-				matrix->m[2][0] * center.z + matrix->m[3][0],
+            matrix->m[1][0] * center.y +
+                matrix->m[2][0] * center.z + matrix->m[3][0],
         matrix->m[0][1] * center.x +
-			matrix->m[1][1] * center.y +
-				matrix->m[2][1] * center.z + matrix->m[3][1],
+            matrix->m[1][1] * center.y +
+                matrix->m[2][1] * center.z + matrix->m[3][1],
         matrix->m[0][2] * center.x +
-			matrix->m[1][2] * center.y +
-				matrix->m[2][2] * center.z + matrix->m[3][2]
+            matrix->m[1][2] * center.y +
+                matrix->m[2][2] * center.z + matrix->m[3][2]
     };
     const ksVector3f newExtents =
     {
