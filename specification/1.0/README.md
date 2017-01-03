@@ -207,7 +207,7 @@ IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`,
 
 For example, the following is **not** allowed:
 
-比如，如下情况是**不**允许的：
+比如，下面情况是**不**允许的：
 
 ```javascript
 "buffers": {
@@ -216,13 +216,16 @@ For example, the following is **not** allowed:
     }
 },
 "bufferViews": {
-    "an-id": { // Not allowed since this ID is already used
+    "an-id": { // 已经使用该ID
         // ...
     }
 }
 ```
 
 IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are each in their own namespace.  IDs are unique within the object as enforced by JSON.  For example, the following **is** allowed:
+
+在glTF字典中，非顶层对象的索引ID（比如`animation.samplers`）在各自的命名空间。JSON规范只要求对象内部的ID保证唯一。比如，下面的情况**是**允许的： 
+
 
 ```javascript
 "animations": {
@@ -237,7 +240,7 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
     "animation-1": {
         // ...
         "samplers": {
-            "animation-sampler-id": { // Does not collide with the sampler ID in the other animation
+            "animation-sampler-id": { // 在另一个动画对象中，相同id的samplers并不冲突
                 // ...
             }
         }
@@ -247,16 +250,27 @@ IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are e
 
 Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
+在应用程序中，当索引ID用于内部glTF引用时，_names_则侧重于显示。 为此，一个应用程序可访问的glTF对象往往都会有一个`name`字符串属性。当编辑数据时，这些属性值并不保证唯一。
+
 For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
+
+对于属性命名，glTF采用[camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`. Camel命名是JSON和WebGL中常用的命名方式。
 
 It is recommended that container formats reference a glTF object by ID by concatenating the asset's path, `#`, and the ID, e.g., `asset.gltf#material_id`.
 
+通常，对glTF对象中ID的命名，我们推荐采用`#`来连接其路径和ID，比如：`asset.gltf#material_id`。
+
 <a name="scenes"></a>
 ## Scenes
+## 场景
 
 The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary object `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time.
 
+glTF数据包含一个或多个*场景*，包含用于渲染的可见对象集合。场景定义在字典对象`scenes`中。一个额外属性`scene`(注意是单数)，用来标识加载时显示scenes字典中哪一个场景。
+
 The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
+
+如下的例子，定义了glTF数据中一个场景`defaultScene`，其中包含一个节点`node_1`。
 
 ```javascript
 "scene": "defaultScene",
@@ -270,18 +284,31 @@ The following example defines a glTF asset with a single scene, `defaultScene`, 
 ```
 
 ### Nodes and Hierarchy
+### 节点和层级关系
 
 The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render.
 
+glTF数据定义了一个或多个*节点*，组成了场景中的渲染对象
+
 Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
+
+每个节点包含一个或多个网格，一个皮肤实例，一个关节名或一个相机，他们分别对应在`meshes`, `skeletons`, `skin`, `jointName`和 `camera`属性中。
 
 Nodes have an optional `name` property.
 
+节点有一个可选的`name`属性。
+
 Nodes also have transform properties, as described in the next section.
+
+节点都有一个变换属性，会在下节描述。
 
 Nodes are organized in a parent-child hierarchy known informally as the *node hierarchy*.
 
+节点间通过父子关系组织，术语称为节点层级。
+
 The node hierarchy is defined using a node's `children` property, as in the following example:
+
+如下，定义了节点层级的子节点属性：
 
 ```javascript
     "node-box": {
@@ -295,18 +322,31 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
+`node-box`节点有两个孩子`node_1`和`node-camera_1`。每个子节点也可以有自己的孩子，从而建立节点树层级。
+
 >For Version 1.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.0.
+
+>在第一版中，glTF的节点层级不是一个直接的非循环图（DAG）或*场景图*，而是一个严格的树。换句话说，一个节点只是直接或间接是另一个节点（而不是多个）的后代。这个限制可以简化应用，方便一致性。在以后的版本中可能会取消该限制。
 
 
 ### Transforms
+### 变换
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
+任何节点都可以顶一个一个本地空间的变换，可以是一个矩阵`matrix`属性，或者是`translation`, `rotation`和 `scale`中的任意属性 (简称为*TRS属性*)。在本地坐标系统中，`translation`和`scale`是`FLOAT_VEC3`值。
+
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
+
+TRS属性可以转化为矩阵，或者通过`T * R * S`乘法顺序组合成变换矩阵；先是缩放，接着是旋转，最后是平移。
 
 When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
 
+如果一个节点是用于动画（参考[`animation.channel.target`](#reference-animation.channel.target)），则只能使用TRS属性来展现，`matrix`无效。
+
 In the example below, `node-box` defines non-default rotation and translation.
+
+如下例子中，`node-box`定义了一个无默认的旋转和平移。
 
 ```javascript
     "node-box": {
@@ -336,6 +376,8 @@ In the example below, `node-box` defines non-default rotation and translation.
 
 The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
 
+下面这个例子，通过`matrix`属性，而不是单个的TRS属性值，来定义一个相机节点的变换：
+
 ```javascript
     "node-camera_1": {
         "camera": "camera_1",
@@ -363,20 +405,31 @@ The next example defines the transformation for a camera node using the `matrix`
 ```
 
 ### Coordinate System and Units
+### 坐标系和单位
 
 glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z. glTF defines the y axis as up.
 
+glTF使用右手坐标系，x和y的叉乘产生了z。glTF定义y轴向上。
+
 The units for all linear distances are meters.
+
+所有线性距离的单位都是米。
 
 All angles are in radians.
 
+所有角度都以弧度表示。
+
 <a name="accessing-binary-data"></a>
 ## Accessing Binary Data
+## 访问二进制数据
 
 
 ### Buffers and Buffer Views
+### 缓存和缓存视图
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
+
+
 
 Binary blobs allow efficient creation of GL buffers and
 textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
