@@ -14,11 +14,11 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-This extension defines an additional technique property that points to a program specifically
-for the OpenGL multi-view extensions GL_OVR_multiview and GL_OVR_multiview2.
+This extension defines an additional technique property that points to a program with shaders specifically
+written for the OpenGL multi-view extensions GL_OVR_multiview and GL_OVR_multiview2.
 
 The 1.0 glTF spec defines a plethora of semantic uniforms.
-Some of these semantic uniform provide no benefit on modern scalar GPUs and are only costly to update as uniforms.
+Some of these semantic uniforms provide no benefit on modern scalar GPUs and are only costly to update as uniforms.
 Other semantic uniforms make it hard or expensive to support the OpenGL GL_OVR_multiview and GL_OVR_multiview2 extensions.
 
 This extension defines how to construct valid multi-view shaders with various restrictions on the semantic uniforms that are used.
@@ -59,7 +59,7 @@ To specify a version 3.0 or later OpenGL ES shader the following is added to the
 #version 300 es
 ```
 
-Note that compared to GLSL 1.00 glTF shaders, these newer shaders replace the following keywords:
+Note that compared to GLSL 1.00 glTF shaders, these newer vertex shaders replace the following keywords:
 
 pre 3.0    | 3.0 or later
 -----------|---------------------
@@ -97,14 +97,14 @@ uniform mat4 MODELINVERSE;
 
 The following semantic uniforms are not allowed inside the shader code and are replaced as follows:
 
-Semantic uniform            | Replacement
-----------------------------|-------------------------------------
-MODELINVERSETRANSPOSE       | transpose( mat3( MODELINVERSE ) )
-MODELVIEW					| VIEW[VIEW_ID] * MODEL
-MODELVIEWINVERSE			| VIEWINVERSE[VIEW_ID] * MODELINVERSE
-MODELVIEWINVERSETRANSPOSE	| transpose( mat3( VIEWINVERSE[VIEW_ID] ) ) * transpose( mat3( MODELINVERSE ) )
-MODELVIEWPROJECTION			| PROJECTION[VIEW_ID] * VIEW[VIEW_ID] * MODEL
-MODELVIEWPROJECTIONINVERSE	| PROJECTIONINVERSE[VIEW_ID] * VIEWINVERSE[VIEW_ID] * MODELINVERSE
+Semantic uniform             | Replacement
+-----------------------------|-------------------------------------
+`MODELINVERSETRANSPOSE`      | `transpose( mat3( MODELINVERSE ) )`
+`MODELVIEW`                  | `VIEW[VIEW_ID] * MODEL`
+`MODELVIEWINVERSE`           | `VIEWINVERSE[VIEW_ID] * MODELINVERSE`
+`MODELVIEWINVERSETRANSPOSE`  | `transpose( mat3( VIEWINVERSE[VIEW_ID] ) ) * transpose( mat3( MODELINVERSE ) )`
+`MODELVIEWPROJECTION`        | `PROJECTION[VIEW_ID] * VIEW[VIEW_ID] * MODEL`
+`MODELVIEWPROJECTIONINVERSE` | `PROJECTIONINVERSE[VIEW_ID] * VIEWINVERSE[VIEW_ID] * MODELINVERSE`
 
 Note that on modern scalar GPUs using 'transpose( mat3( MODELINVERSE ) )' is no more expensive in
 a shader than using an explicit 'MODELINVERSETRANSPOSE' uniform. Instead, using an explicit uniform
@@ -125,7 +125,7 @@ To specify a version 3.0 or later OpenGL ES shader the following is added to the
 #version 300 es
 ```
 
-Note that compared to GLSL 1.00 glTF shaders, these newer shaders replace the following keyword:
+Note that compared to GLSL 1.00 glTF shaders, these newer fragment shaders replace the following keyword:
 
 pre 3.0          | 3.0 or later
 -----------------|---------------------
