@@ -147,6 +147,7 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 ## URIs
 
 glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be decoded with JavaScript's `atob`.
+
 glTF使用URI来指定缓存，着色器和图片资源。这些URI可能指向一个外部文件或以数据URI的形式内嵌在json中。内嵌资源使用[RFC-4648](https://tools.ietf.org/html/rfc4648)标准的Base64编码，所以在JavaScript中可以很方便的通过`atob`解码。
 
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
