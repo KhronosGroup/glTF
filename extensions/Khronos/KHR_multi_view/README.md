@@ -24,8 +24,6 @@ Other semantic uniforms make it hard and/or computationally time consuming to su
 
 This extension defines how to construct valid multi-view shaders with various restrictions on the semantic uniforms that are used.
 
-The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension.
-
 ## Material Extension
 
 A special technique used for multi-view is defined by adding an `extensions` property to a glTF material, and defining its `KHR_multi_view` property.
@@ -191,7 +189,6 @@ None of the following semantic uniforms are allowed in a multi-view fragment sha
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
-<a name="conformance"></a>
 ## Conformance
 
 If this extension is supported, and an application wants to use the GL_OVR_multiview2 OpenGL extension,
