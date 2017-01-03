@@ -174,7 +174,7 @@ void main( void )
 }
 ```
 
-None of these semantic uniforms are allowed in a multi-view fragment shader:
+None of the following semantic uniforms are allowed in a multi-view fragment shader:
 
 - `VIEW`
 - `VIEWINVERSE`
