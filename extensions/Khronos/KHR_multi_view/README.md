@@ -131,7 +131,7 @@ However, this would result in 5 * NUM_VIEWS different matrices that would have t
 The overhead of updating all these uniforms is far greater than multiplying in the vertex shader.
 
 The view-projection and view-projection-inverse matrices are not pre-multiplied and provided in the uniform buffer because
-multiplying the matrices separetely in the vertex shader results in noticeably better precision.
+multiplying the matrices separately in the vertex shader results in noticeably better precision.
 
 ```
 	"Tightening the Precision of Perspective Rendering"
