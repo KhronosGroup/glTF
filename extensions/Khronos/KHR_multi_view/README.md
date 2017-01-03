@@ -46,7 +46,7 @@ For example, the following defines a technique with a program that can be used f
 ## Multi-View Vertex Shader Requirements
 
 The GL_OVR_multiview and GL_OVR_multiview2 extensions require OpenGL 3.0 or OpenGL ES 3.0.
-The #version keyword is used to specify the shader version.
+The `#version` keyword is used to specify the shader version.
 To specify a version 3.0 or later OpenGL shader the following is added to the top of the shader.
 
 ```C
@@ -75,7 +75,7 @@ extension GL_OVR_multiview2 : require
 layout( num_views = NUM_VIEWS ) in;
 ```
 
-The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` semantic uniforms for both eyes are placed in a uniform buffer:
+The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` semantic uniforms for all views are placed in a uniform buffer:
 
 ```C
 uniform viewProjectionUniformBuffer
@@ -87,7 +87,9 @@ uniform viewProjectionUniformBuffer
 };
 ```
 
-The following semantic uniforms are left as regular uniforms.
+A new semantic uniform `VIEWPROJECTIONBUFFER` is introduced to identify this uniform buffer.
+
+The following semantic uniforms are left unchanged as regular uniforms.
 
 ```C
 uniform mat4 LOCAL;
@@ -112,7 +114,7 @@ only introduces overhead to pass the uniform value to the shader.
 
 ## Multi-View Fragment Shader Requirements
 
-The #version keyword is used to specify the shader version.
+The `#version` keyword is used to specify the shader version.
 To specify a version 3.0 or later OpenGL shader, the following is added to the top of the shader.
 
 ```C
