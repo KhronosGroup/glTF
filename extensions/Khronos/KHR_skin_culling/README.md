@@ -63,7 +63,7 @@ static bool ksMatrix4x4f_IsAffine(
                 const ksMatrix4x4f * matrix,
                 const float epsilon )
 {
-    return	fabsf( matrix->m[0][3] ) <= epsilon &&
+    return  fabsf( matrix->m[0][3] ) <= epsilon &&
             fabsf( matrix->m[1][3] ) <= epsilon &&
             fabsf( matrix->m[2][3] ) <= epsilon &&
             fabsf( matrix->m[3][3] - 1.0f ) <= epsilon;
