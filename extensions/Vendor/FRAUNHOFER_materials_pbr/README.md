@@ -61,6 +61,7 @@ The following table lists the allowed types and ranges for the specular-glossine
 | `specularGlossinessTexture` | string       | valid texture id  | | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
 
 The factors (diffuseFactor, specularFactor, glossinessFactor) scale the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
+Texture content must be converted to linear space before it is being used for any lighting computations.
 If a texture is not given, all respective texture components are assumed to have a value of 1.0.
 
 For example, assume a value of `(0.9, 0.5, 0.3)` is read from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.2, 1.0, 0.7, 1.0)`.
@@ -114,7 +115,9 @@ The following table lists the allowed types and ranges for the metal-roughness m
 | `metallicRoughnessTexture`  | string       | valid texture id  |           |Texture with two (or more) components, containing the metallic-ness of the material (first component) and its roughness (second component). |
 
 The factors (baseColorFactor, metallicFactor, roughnessFactor) scale the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
-If a texture is not given, all respective texture components are assumed to have a value of 1. This is similar to the handling of factors and texture within the specular-glossiness model.
+Texture content must be converted to linear space before it is being used for any lighting computations.
+If a texture is not given, all respective texture components are assumed to have a value of 1.
+This is similar to the handling of factors and texture within the specular-glossiness model.
 
 
 <strong>Usage Example:</strong>
