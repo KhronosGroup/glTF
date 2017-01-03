@@ -2,10 +2,18 @@
 
 ## Contributors
 
+* Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
 * Timo Sturm, Fraunhofer IGD, [@\_tsturm\_](https://twitter.com/\_tsturm\_)
 * Miguel Sousa, Fraunhofer IGD, [@mfportela](https://twitter.com/mfportela)
 * Maik Th&ouml;ner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
-* Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
+
+* Eric Haines, Autodesk, [@pointinpolygon](https://twitter.com/pointinpolygon)
+
+* Cedric Pinson, Sketchfab
+
+* Saurabh Bhatia, Microsoft
+* Gary Hsu, Microsoft
+
 
 ## Status
 
@@ -53,10 +61,10 @@ The following table lists the allowed types and ranges for the specular-glossine
 | `specularGlossinessTexture` | string       | valid texture id  | | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
 
 The factors (diffuseFactor, specularFactor, glossinessFactor) scale the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
-If a texture is not given, all respective texture components are assumed to have a value of 1.
+If a texture is not given, all respective texture components are assumed to have a value of 1.0.
 
-For example, assume a value of `(1.0, 0.5, 0.5)` is read from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.1, 1.0, 0.1, 1.0)`.
-Then, the result would be `(1.0 * 0.1, 0.5 * 1.0, 0.5 * 0.1, 1.0 * 1.0) = (0.1, 0.5, 0.05, 1.0)`;
+For example, assume a value of `(0.9, 0.5, 0.3)` is read from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.2, 1.0, 0.7, 1.0)`.
+Then, the result would be `(0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0) = (0.18, 0.5, 0.21, 1.0)`;
 
 
 <strong>Usage Example:</strong>
