@@ -56,24 +56,41 @@ The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs
 
 Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GL-based applications.
 
+传统三维模型格式的设计是为了离线情况下的数据存储，首要支持桌面系统下的制作工作流。通常在素材管线中，工业标准的3D交互格式允许不同建模工具之间的数据共享。尽管如此，这些类型格式都没有考虑运行时下载速度和快速加载的优化。文件通过会越来越大，运行程序需要相当程度的处理才能将该数据加载并处理为基于GL应用（的可用形式）。
+
 Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
+
+追求高性能的应用程序很少直接加载建模数据格式；相反，他们会在离线情况下提前将模型数据处理成自定义的素材管线的一部分，将数据转化为某种私有格式，从而优化运行时应用。这些私有的运行时格式各不兼容，在素材管线的构建中也有很多重复工作，导致了市场的碎片化。将3D数据导出到（满足）一种应用程序的格式，就不能在另一个应用中重用，除非返回到原始的模型数据，使用特定的工具，执行另一个导出到私有格式的步骤。
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
+随着移动和Web三维计算的出现,涌现出一些全新的应用，他们需要快速，动态的加载标准的三维数据。如今，通过使用WebGL或OpenGL ES技术，数字市场解决方案，电商产品可视化以及在线模型分享网站都是3D应用的一部分。如果能有一个标准的，可协作的三维模型格式，既可以满足高效传输的需求，也能在不同素材管线之间和不同的应用和用户之间分享和重用三维数据，那这些在线应用都可以从中受益。
+
 glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
+
+通过提供中立于厂商的，基于运行时的格式，同时降低加载和渲染的资源消耗，glTF解决了这些问题。该格式包括一个易于解析，用于描述场景信息的json格式，还有一个或多个二进制文件，用来表示几何对象，动画等丰富的数据信息。二进制数据的存储形式都符合GL规范，不需要额外的解析和操作，可以直接加载到GL显卡缓存中。通过该策略，glTF可以真实的保留场景树的全部内容，包括节点，网格(Mesh)，相机，材质和动画，并保证传输高效和加载速度。
 
 <a name="glTFbasics"></a>
 
 ## glTF Basics
+## glTF基础
 
 glTF assets are JSON files plus supporting external data. Specifically, a glTF asset is represented by:
 
+glTF数据是一些json文件和一些额外的外部数据。具体而言，一个glTF数据主要有：
+
 * A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, shaders, animations, and other constructs
+* json格式的文件形式(`.gltf`)包括一个完整的场景描述：节点关系，材质，相机以及描述信息（包括网格，着色器，动画和其他结构）
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
+* 二进制文件(`.bin`) 包括几何对象，动画数据和其他缓存数据
 * Image files (`.jpg`, `.png`, etc.) for textures
+* 用于纹理的栅格文件(`.jpg`, `.png`等等)
 * GLSL text files (`.glsl`) for GLSL shader source code
+* 用于着色器的脚本文件 (`.glsl`)
 
 Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
+
+三维数据也可以以其他格式定义，比如栅格图片和着色器脚本，可以以外部文件的形式存储，通过URI引用，或者直接以[data URIs](https://developer.mozilla.org/en/data_URIs)的形式内嵌到JSON中。
 
 <p align="center">
 <img src="figures/files.png" width="50%" />
@@ -82,16 +99,24 @@ Assets defined in other formats, such as images and GLSL shader source code, may
 <a name="designgoals"></a>
 
 ## Design Goals
+## 设计目标
 
 glTF has been designed to meet the following goals:
+glTF的设计目标如下：
 
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
+* *文件紧凑。尽管Web开发者喜欢尽可能采用文本格式，但文本类型太大，不适合3D数据的传输。glTF的json文件本身是文本类型，但它是紧凑并易于解析。而几何数据，动画这类较大数据则以二进制文件存储，相比文本类型，占的空间小很多。
 * *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
+* *快速加载。不论是json还是二进制文件，glTF的数据结构尽可能和GL接口保持一致，这样可以减少加载时间。比如，网格的二进制数据可以通过简单的数据拷贝，不需要解析和进一步的处理，直接加载到WebGL的数据类型。
 * *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
+* *运行时独立。glTF并不假定终端应用或3D引擎。除了渲染和动画外，glTF并不指定任何运行时行为。
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
+* *3D场景的完整描述。在很多应用中，只是从一个建模数据包中带出单一对象，这并不充分。通常需要在应用中加载整个场景，包括节点，变换矩阵，变换的层级关系，网格，材质，相机和动画。glTF试图保存所有信息，方便下流应用的使用。
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
+* *扩展性。通过最初这些基本规格的出台，glTF支持很多特性集合，也很会有很多发展和改进的机会。glTF定义了一套机制，允许增加一些多用途扩展或特定厂商的扩展能力
 
 The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+glTF的设计是从实用的角度出发。从格式的命名就可以看出它是GL接口的镜像，尽可能保持相同，但如果只是如此，就不会有相机，动画以及其他特性，通常在建模工具和运行时系统中都需要这些特性，而且那些语义信息也会在数据转换中丢失。
 
 The following are outside the scope of the initial design of glTF:
 
