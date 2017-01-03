@@ -116,30 +116,41 @@ glTF的设计目标如下：
 * *扩展性。通过最初这些基本规格的出台，glTF支持很多特性集合，也很会有很多发展和改进的机会。glTF定义了一套机制，允许增加一些多用途扩展或特定厂商的扩展能力
 
 The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
-glTF的设计是从实用的角度出发。从格式的命名就可以看出它是GL接口的镜像，尽可能保持相同，但如果只是如此，就不会有相机，动画以及其他特性，通常在建模工具和运行时系统中都需要这些特性，而且那些语义信息也会在数据转换中丢失。
+glTF的设计是从实用的角度出发。从格式的命名就可以看出它是GL接口的镜像，尽可能保持相同，但如果只是如此，就不会有相机，动画以及其他特性，通常在建模工具和运行时系统中都需要这些特性，而且那些语义信息也会在数据转换中丢失。通过支持这些常见结构，glTF的内容不仅仅是加载和渲染，在更多应用中也立刻具备可用性，在素材管线中也尽可能减少重复拷贝。
 
 The following are outside the scope of the initial design of glTF:
+如下内容已经超出glTF最初设计的范畴：
 
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
+* *glTF并不是一个二进制流格式。内建的二进制数据是流式的，缓存的设计也允许递增的获取数据。但其他数据结构并不是流式的，在流数据的应用中，相比在渲染前需要下载整个数据的情况，glTF并不无一致性的要求。
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
-
+* *glTF并没有考虑可读性，当然是以json形式来表述，所以对开发人员是友好的。
 Version 1.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
+1.0版本的glTF并没有考虑对几何数据和其他大块数据的压缩。尽管如此，设计团队认为压缩在传输标准中是一个非常重要的部分，所以在定义压缩的扩展方面一直有所努力。
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+> 3D格式工作组一直在发展伙伴关系，一起制定几何数据压缩的编解码器选项。 glTF定义了节点关联，材质，动画和几何对象，也涉及外部压缩说明
 
 <a name="mimetypes"></a>
 ## File Extensions and MIME Types
+## 文件扩展和MIME类型
 
 * `*.gltf` files use `model/gltf+json`
+* `*.gltf` 文件使用 `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
+* `*.bin` 文件使用 `application/octet-stream`
 * `*.glsl` files use `text/plain`
+* `*.glsl` 文件使用 `text/plain`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: .jpg, .png, .bmp, and .gif.
+* 具体到某个图片格式，纹理文件使用官方的`image/*`类型。考虑到对现代浏览器的兼容性，支持如下的格式：.jpg, .png, .bmp, and .gif。
 
 ## URIs
 
 glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be decoded with JavaScript's `atob`.
+glTF使用URI来指定缓存，着色器和图片资源。这些URI可能指向一个外部文件或以数据URI的形式内嵌在json中。内嵌资源使用[RFC-4648](https://tools.ietf.org/html/rfc4648)标准的Base64编码，所以在JavaScript中可以很方便的通过`atob`解码。
 
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
+
 
 <a name="concepts"></a>
 # Concepts
