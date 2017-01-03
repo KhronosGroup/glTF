@@ -129,6 +129,7 @@ Version 1.0 of glTF does not define compression for geometry and other rich data
 1.0版本的glTF并没有考虑对几何数据和其他大块数据的压缩。尽管如此，设计团队认为压缩在传输标准中是一个非常重要的部分，所以在定义压缩的扩展方面一直有所努力。
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
+
 > 3D格式工作组一直在发展伙伴关系，一起制定几何数据压缩的编解码器选项。 glTF定义了节点关联，材质，动画和几何对象，也涉及外部压缩说明
 
 <a name="mimetypes"></a>
