@@ -14,7 +14,7 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-This extension defines an additional technique property that points to a program with shaders specifically
+This extension defines an additional material property that points to a technique with shaders specifically
 written for the OpenGL multi-view extensions GL_OVR_multiview and GL_OVR_multiview2.
 
 The 1.0 glTF spec defines a plethora of semantic uniforms.
@@ -25,18 +25,18 @@ This extension defines how to construct valid multi-view shaders with various re
 
 The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension.
 
-## Technique Extension
+## Material Extension
 
-The special program used for multi-view is defined by adding an `extensions` property to a glTF technique, and defining its `KHR_multi_view` property.
+The special technique used for multi-view is defined by adding an `extensions` property to a glTF material, and defining its `KHR_multi_view` property.
 
-For example, the following defines a technique with a program that can be used for multi-view:
+For example, the following defines a material with a technique that can be used for multi-view:
 
 ```javascript
-"techniques": {
-    "technique1": {
+"materials": {
+    "material1": {
         "extensions": {
             "KHR_multi_view" : {
-                "program" : "program1"
+                "technique" : "technique1"
             }
         }
     }
@@ -47,13 +47,13 @@ For example, the following defines a technique with a program that can be used f
 
 The GL_OVR_multiview and GL_OVR_multiview2 extensions require OpenGL 3.0 or OpenGL ES 3.0.
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.0 or later OpenGL shader the following is added to the top of the shader.
+To specify a version 3.0 or later OpenGL shader, the following is added to the top of the shader.
 
 ```C
 #version 300
 ```
 
-To specify a version 3.0 or later OpenGL ES shader the following is added to the top of the shader.
+To specify a version 3.0 or later OpenGL ES shader, the following is added to the top of the shader.
 
 ```C
 #version 300 es
@@ -121,7 +121,7 @@ To specify a version 3.0 or later OpenGL shader, the following is added to the t
 #version 300
 ```
 
-To specify a version 3.0 or later OpenGL ES shader the following is added to the top of the shader.
+To specify a version 3.0 or later OpenGL ES shader, the following is added to the top of the shader.
 
 ```C
 #version 300 es
