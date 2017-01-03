@@ -99,7 +99,7 @@ uniform viewProjectionUniformBuffer     // VIEWPROJECTIONBUFFER
 
 A new semantic uniform `VIEWPROJECTIONBUFFER` is introduced to identify this uniform buffer.
 
-The 'LOCAL', 'MODEL' and 'MODELINVERSE' semantic uniforms are left unchanged as regular uniforms.
+The `LOCAL`, `MODEL` and `MODELINVERSE` semantic uniforms are left unchanged as regular uniforms.
 
 ```C
 uniform mat4 u_local;         // LOCAL
