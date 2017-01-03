@@ -105,17 +105,18 @@ glTF has been designed to meet the following goals:
 glTF的设计目标如下：
 
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
-* *文件紧凑。尽管Web开发者喜欢尽可能采用文本格式，但文本类型太大，不适合3D数据的传输。glTF的json文件本身是文本类型，但它是紧凑并易于解析。而几何数据，动画这类较大数据则以二进制文件存储，相比文本类型，占的空间小很多。
+* * 文件紧凑。尽管Web开发者喜欢尽可能采用文本格式，但文本类型太大，不适合3D数据的传输。glTF的json文件本身是文本类型，但它是紧凑并易于解析。而几何数据，动画这类较大数据则以二进制文件存储，相比文本类型，占的空间小很多。
 * *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
-* *快速加载。不论是json还是二进制文件，glTF的数据结构尽可能和GL接口保持一致，这样可以减少加载时间。比如，网格的二进制数据可以通过简单的数据拷贝，不需要解析和进一步的处理，直接加载到WebGL的数据类型。
+*  * 快速加载。不论是json还是二进制文件，glTF的数据结构尽可能和GL接口保持一致，这样可以减少加载时间。比如，网格的二进制数据可以通过简单的数据拷贝，不需要解析和进一步的处理，直接加载到WebGL的数据类型。
 * *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
-* *运行时独立。glTF并不假定终端应用或3D引擎。除了渲染和动画外，glTF并不指定任何运行时行为。
+* * 运行时独立。glTF并不假定终端应用或3D引擎。除了渲染和动画外，glTF并不指定任何运行时行为。
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
-* *3D场景的完整描述。在很多应用中，只是从一个建模数据包中带出单一对象，这并不充分。通常需要在应用中加载整个场景，包括节点，变换矩阵，变换的层级关系，网格，材质，相机和动画。glTF试图保存所有信息，方便下流应用的使用。
+* * 3D场景的完整描述。在很多应用中，只是从一个建模数据包中带出单一对象，这并不充分。通常需要在应用中加载整个场景，包括节点，变换矩阵，变换的层级关系，网格，材质，相机和动画。glTF试图保存所有信息，方便下流应用的使用。
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
-* *扩展性。通过最初这些基本规格的出台，glTF支持很多特性集合，也很会有很多发展和改进的机会。glTF定义了一套机制，允许增加一些多用途扩展或特定厂商的扩展能力
+* * 扩展性。通过最初这些基本规格的出台，glTF支持很多特性集合，也很会有很多发展和改进的机会。glTF定义了一套机制，允许增加一些多用途扩展或特定厂商的扩展能力
 
 The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+
 glTF的设计是从实用的角度出发。从格式的命名就可以看出它是GL接口的镜像，尽可能保持相同，但如果只是如此，就不会有相机，动画以及其他特性，通常在建模工具和运行时系统中都需要这些特性，而且那些语义信息也会在数据转换中丢失。通过支持这些常见结构，glTF的内容不仅仅是加载和渲染，在更多应用中也立刻具备可用性，在素材管线中也尽可能减少重复拷贝。
 
 The following are outside the scope of the initial design of glTF:
