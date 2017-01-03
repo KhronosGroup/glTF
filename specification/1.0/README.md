@@ -178,7 +178,7 @@ glTF文件的第一层节点。 详见<a href="#properties">属性参考</a>.
 
 _IDs_ are internal string identifiers used to reference parts of a glTF asset, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's ID.  For example:
 
-_IDs_
+_IDs_是内部字符串标识，用来指定glTF数据的某些部分。比如，一个`bufferView`指向一个具体的缓存`buffer` 对应的ID：
 
 ```javascript
 "buffers": {
@@ -199,9 +199,15 @@ _IDs_
 
 In this example, `"a-buffer-id"` and `"a-bufferView-id"` are IDs.  The bufferView refers to the buffer using the buffer's ID: `"buffer": "a-buffer-id"`.
 
+在这个例子中，`"a-buffer-id"`和`"a-bufferView-id"`都是索引ID。bufferView则指向一个ID为`"buffer": "a-buffer-id"`的缓存。
+
 IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique.
 
+在glTF第一层字典对象中（`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`），索引ID都在同一个命名空间，并且都是唯一的。
+
 For example, the following is **not** allowed:
+
+比如，如下情况是**不**允许的：
 
 ```javascript
 "buffers": {
