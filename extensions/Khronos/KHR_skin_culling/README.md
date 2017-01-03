@@ -18,8 +18,6 @@ The 1.0 glTF spec does not define a means to efficiently cull skinned meshes.
 
 This extension defines additional skin properties that allow efficient culling of skinned meshes.
 
-The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension.
-
 ## Skin Extension
 
 The data used for skin culling is defined by adding an `extensions` property to a glTF skin, and defining its `KHR_skin_culling` property.
@@ -162,7 +160,6 @@ of all vertices, from all meshes, that are influenced by the joint of the skin.
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
-<a name="conformance"></a>
 ## Conformance
 
 If this extension is supported, it is up to the application to use the extension or not. 
