@@ -14,11 +14,11 @@ Written against the glTF draft 1.0 spec.
 
 ## Overview
 
-This extension allows a shader to specify GLSL shaders for different graphics APIs: OpenGL, OpenGL ES and Vulkan.
+This extension allows a glTF shader to specify GLSL shaders for different graphics APIs: OpenGL, OpenGL ES and Vulkan.
 
 ## Shader Extension
 
-Shaders specifically for OpenGL and OpenGL ES are defined by adding an `extensions` property to a glTF shader, and defining its `KHR_glsl_shader_versions` property.
+Graphics API specific shaders are defined by adding an `extensions` property to a glTF shader, and defining its `KHR_glsl_shader_versions` property.
 
 For example, the following defines a shader with URIs to GLSL source for OpenGL, OpenGL ES and Vulkan:
 
