@@ -14,7 +14,7 @@ Written against the glTF draft 1.0 spec plus KHR_glsl_shader_versions.
 
 ## Overview
 
-This extension defines an new semantic uniform to enable joint uniform buffers.
+This extension defines an new uniform semantic to enable joint uniform buffers.
 
 The glTF 1.0 spec only allows joint arrays.
 Not only does this significantly limit the number of joints per skin,
@@ -31,7 +31,7 @@ Usage of the extension must be listed in the `extensionsUsed` array.
 ]
 ```
 
-This extension introduces a new semantic uniform named `JOINTBUFFER`.
+This extension introduces a new uniform semantic `JOINTBUFFER`.
 
 ## Joint Buffer Vertex Shader Requirements
 
