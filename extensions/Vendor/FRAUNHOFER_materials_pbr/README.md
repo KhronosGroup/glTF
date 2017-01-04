@@ -1,4 +1,4 @@
-# FRAUNHOFER_materials_pbr
+# EXT_materials_pbr
 
 ## Contributors
 
@@ -74,7 +74,7 @@ Then, the result would be `(0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0) = (0.18,
 "materials": {    
     "rough_gold2": {
         "extensions": {
-            "FRAUNHOFER_materials_pbr" : {
+            "EXT_materials_pbr" : {
                 "materialModel" : "PBR_specular_glossiness",
                 "values": {
                     "diffuseFactor": [ 0.5, 0.5, 0.5, 1 ],
@@ -126,7 +126,7 @@ This is similar to the handling of factors and texture within the specular-gloss
 "materials": {
     "rough_gold": {
         "extensions": {
-            "FRAUNHOFER_materials_pbr" : {
+            "EXT_materials_pbr" : {
                 "materialModel" : "PBR_metal_roughness",
                 "values": {
                     "baseColorFactor": [ 0.5, 0.5, 0.5, 1 ],
