@@ -6,14 +6,22 @@
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
+GL传输格式(简称glTF)是一种针对GL(WebGL，OpenGL ES以及OpenGL)接口的运行时资产(asset)。在3D内容的传输和加载中，glTF通过提供一种高效，易扩展，可协作的格式，填补了3D建模工具和现代GL应用之间的空白。
+
 Last Updated: November 3, 2016
 
 Editors
 
+编辑
+
 * Patrick Cozzi, Cesium
 * Tony Parisi, WEVR
+* 帕特里克·科齐(Patrick Cozzi), Cesium
+* 托尼·帕里西(Tony Parisi), WEVR
 
 Contributors
+
+
 
 * Fabrice Robinet, Individual Contributor (Previous Editor and Incubator)
 * Remi Arnaud, Starbreeze Studios
@@ -43,16 +51,40 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
 * [Appendix B: Full Khronos Trademark Statement](#appendix-b)
+* [简介](#introduction)
+  * [动机](#motivation)
+  * [glTF基础](#glTFbasics)
+  * [设计目标](#designgoals)
+  * [文件扩展和MIME类型](#mimetypes)
+* [概念](#concepts)
+  * [ID和名字](#ids-and-names)
+  * [场景](#scenes)
+  * [访问二进制数据](#accessing-binary-data)
+  * [几何对象(Geometry)和网格(Mesh)](#geometry-and-meshes)
+  * [材质和着色器](#materials-and-shading)
+  * [相机](#cameras)
+  * [动画](#animations)
+  * [元数据](#metadata)
+  * [扩展的具体说明](#specifying-extensions)
+* [属性参考](#properties)
+* [感谢](#acknowledgements)
+* [附录 A: 默认材质](#appendix-a)
+* [附录 B: Full Khronos Trademark Statement](#appendix-b)
 
 <a name="introduction"></a>
 # Introduction
+# 简介
 
 *This section is non-normative.*
+*本章节内容与其他章节无关*
 
 The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
+GL传输格式(简称glTF)是一种针对GL(WebGL，OpenGL ES以及OpenGL)接口的运行时资产(asset)。在3D内容的传输和加载中，glTF通过提供一种高效，易扩展，可协作的格式，填补了3D建模工具和现代GL应用之间的空白。s
+
 <a name="motivation"></a>
 ## Motivation
+## 动机
 
 Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GL-based applications.
 
