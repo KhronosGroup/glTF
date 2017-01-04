@@ -9,10 +9,12 @@
 
 * Eric Haines, Autodesk, [@pointinpolygon](https://twitter.com/pointinpolygon)
 
-* Cedric Pinson, Sketchfab
+* Cedric Pinson, Sketchfab, [@trigrou](https://twitter.com/trigrou)
 
 * Saurabh Bhatia, Microsoft
 * Gary Hsu, Microsoft
+
+* Patrick Cozzi, Cesium, [@pjcozzi](https://twitter.com/pjcozzi)
 
 
 ## Status
