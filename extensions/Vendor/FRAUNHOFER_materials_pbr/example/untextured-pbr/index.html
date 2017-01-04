@@ -622,7 +622,7 @@
                         // metallic-roughness workflow
                         if (controls.workflow == 'metallic-roughness')
                         {
-                            customUniforms['baseColorFactor']    = { value: new THREE.Vector4(albedo.r, albedo.g, albedo.r, opacity) };
+                            customUniforms['baseColorFactor']    = { value: new THREE.Vector4(albedo.r, albedo.g, albedo.b, opacity) };
                             customUniforms['metallicFactor']     = { value: metalness };
                             customUniforms['roughnessFactor']    = { value: roughness };
                             customUniforms['reflectivityFactor'] = { value: reflectivity };
@@ -636,8 +636,8 @@
                             var oneMinusSpecularStrength = 1 - Math.max(specular.r, specular.g, specular.b);
                             var diffuse = (oneMinusSpecularStrength < 1e-6) ? new THREE.Color(0, 0, 0) : albedo.clone().multiplyScalar((1 - dielectricSpecular) * (1 - metalness) / oneMinusSpecularStrength);
 
-                            customUniforms['diffuseFactor'] = { value: new THREE.Vector4(diffuse.r, diffuse.g, diffuse.b, opacity) };
-                            customUniforms['specularFactor'] = { value: specular };
+                            customUniforms['diffuseFactor'] =    { value: new THREE.Vector4(diffuse.r, diffuse.g, diffuse.b, opacity) };
+                            customUniforms['specularFactor'] =   { value: specular };
                             customUniforms['glossinessFactor'] = { value: 1 - roughness };
                         }
                     }
