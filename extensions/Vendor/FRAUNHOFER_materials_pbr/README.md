@@ -52,16 +52,16 @@ The specular-glossiness material model is defined by the following properties:
 
 The following table lists the allowed types and ranges for the specular-glossiness model:
 
-| Property | Type | Range | Default Value | Description |
-|:------------:|:----:|:-----:|:-:|:-----:|:-----------:|
-| `diffuseFactor`   | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | The RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). The fourth component (A) is the `opacity` of the material. |
-| `specularFactor`  | `FLOAT_VEC3` | [0, 1] for all components | [1,1,1]   | The specular RGB color of the material. |
-| `glossinessFactor`| `FLOAT`      | [0, 1]                    | 1         | The glossiness of the material surface (0 is glossiness, 1 is full glossiness). |
-| `diffuseTexture`  | string       | valid texture id  |           | Texture with RGB or RGBA components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
-| `specularGlossinessTexture` | string       | valid texture id  | | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
+| Property | Type | Range | Default Value | Space | Description |
+|:--------:|:----:|:-----:|:-------------:|:-----:|:-----------:|
+| `diffuseFactor`             | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | linear | The RGB components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). The fourth component (A) is the `opacity` of the material. |
+| `specularFactor`            | `FLOAT_VEC3` | [0, 1] for all components | [1,1,1]   | linear | The specular RGB color of the material. |
+| `glossinessFactor`          | `FLOAT`      | [0, 1]                    | 1         | linear | The glossiness of the material surface (0 is glossiness, 1 is full glossiness). |
+| `diffuseTexture`            | string       | valid texture id          |           | sRGB   | Texture with RGB or RGBA components of the reflected diffuse color of the material. For raw metals the diffuse color is black (0.0). If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
+| `specularGlossinessTexture` | string       | valid texture id          |           | sRGB   | RGBA texture, containing the specular color of the material (RGB components) and its glossiness (A component).|
 
 Texture content must be converted to linear space before it is being used for any lighting computations.
-If a texture is not given, all respective texture components are assumed to have a value of 1.0 in linear space.
+If a texture is not given, all respective texture components are assumed to have a value of 1.0.
 The factors (diffuseFactor, specularFactor, glossinessFactor) scale, in linear space, the components given in the respective textures (diffuseTexture, specularGlossinessTexture).
 
 For example, assume a value of `(0.9, 0.5, 0.3)` in linear space is obtained from an RGB `diffuseTexture`, and assume that `diffuseFactor` would be given as `(0.2, 1.0, 0.7, 1.0)`.
@@ -106,16 +106,16 @@ The `roughness` property is related with the `glossiness` parameter in the specu
 
 The following table lists the allowed types and ranges for the metal-roughness model:
 
-| Property | Type | Range | Default Value | Description |
-|:------------:|:----:|:-----:|:-:|:-----:|:-----------:|
-| `baseColorFactor`           | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material. |
-| `metallicFactor`            | `FLOAT`      | [0, 1]                    | 1         | The metallic-ness the material (1 for metals, 0 for non-metals). |
-| `roughnessFactor`           | `FLOAT`      | [0, 1]                    | 1         |The roughness of the material surface. |
-| `baseColorTexture`          | string       | valid texture id  |           |Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
-| `metallicRoughnessTexture`  | string       | valid texture id  |           |Texture with two (or more) components, containing the metallic-ness of the material (first component) and its roughness (second component). |
+| Property | Type | Range | Default Value | Space | Description |
+|:--------:|:----:|:-----:|:-------------:|:-----:|:-----------:|
+| `baseColorFactor`           | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | linear | The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material. |
+| `metallicFactor`            | `FLOAT`      | [0, 1]                    | 1         | linear | The metallic-ness the material (1 for metals, 0 for non-metals). |
+| `roughnessFactor`           | `FLOAT`      | [0, 1]                    | 1         | linear | The roughness of the material surface. |
+| `baseColorTexture`          | string       | valid texture id          |           | sRGB   | Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
+| `metallicRoughnessTexture`  | string       | valid texture id          |           | linear | Texture with two (or more) components, containing the metallic-ness of the material (first component) and its roughness (second component). |
 
 Texture content must be converted to linear space before it is being used for any lighting computations.
-If a texture is not given, all respective texture components are assumed to have a value of 1.0 in linear space.
+If a texture is not given, all respective texture components are assumed to have a value of 1.0.
 The factors (baseColorFactor, metallicFactor, roughnessFactor) scale, in linear space, the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
 This is similar to the handling of factors and texture within the specular-glossiness model.
 
