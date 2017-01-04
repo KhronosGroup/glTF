@@ -532,7 +532,7 @@ All large data for meshes, skins, and animations is stored in buffers and retrie
 
 An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
 
-每个*访问器*定义了
+每个*访问器*定义了从缓存视图获取类型数组形式数据的方法。访问器声明了变量类型（比如float）和数据类型（比如vec3），
 
 All accessors are stored in the asset's `accessors` dictionary property.
 
