@@ -18,7 +18,7 @@ This extension defines an new semantic uniform to enable joint uniform buffers.
 
 The glTF 1.0 spec only allows joint arrays.
 Not only does this significantly limit the number of joints per skin,
-on modern GPUs updating a joint array is also not as efficient as updating a uniform buffer.
+updating a joint array is also not as efficient as updating a uniform buffer on modern GPUs.
 
 ## Extension
 
@@ -49,7 +49,7 @@ To specify a version 3.0 OpenGL ES shader, the following is added to the top of 
 #version 300 es
 ```
 
-The KHR_glsl_shader_versions extension is used to specify these different shader versions for OpenGL and OpenGL ES.
+The `KHR_glsl_shader_versions` extension is used to specify these different shader versions for OpenGL and OpenGL ES.
 
 Note that compared to GLSL 1.00 glTF shaders, these newer vertex shaders replace the following keywords:
 
