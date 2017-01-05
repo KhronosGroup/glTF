@@ -39,13 +39,13 @@ This extension introduces a new uniform semantic `VIEWPROJECTIONBUFFER`.
 
 Uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 and associated shader versions.
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.1 OpenGL shader, the following is added to the top of the shader.
+To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
 
 ```C
 #version 310
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added to the top of the shader.
+To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
 #version 300 es
@@ -60,7 +60,7 @@ pre 3.0     | 3.0 or later
 `attribute` | `in`
 `varying`   | `out`
 
-The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` semantic uniforms are placed in a uniform buffer:
+The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` uniform semantics are placed in a uniform buffer:
 
 ```C
 uniform viewProjectionUniformBuffer     // VIEWPROJECTIONBUFFER
@@ -82,7 +82,7 @@ uniform mat4 u_model;         // MODEL
 uniform mat4 u_modelInverse;  // MODELINVERSE
 ```
 
-The following semantic uniforms are not allowed inside the vertex shader code and are replaced as follows:
+The following uniform semantics are not allowed inside the vertex shader code and are replaced as follows:
 
 Semantic uniform             | Replacement
 -----------------------------|-------------------------------------
@@ -124,13 +124,13 @@ multiplying the matrices separately in the vertex shader results in noticeably b
 ## Fragment Shader Requirements
 
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.1 OpenGL shader, the following is added to the top of the shader.
+To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
 
 ```C
 #version 310
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added to the top of the shader.
+To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
 #version 300 es
@@ -145,7 +145,8 @@ pre 3.0     | 3.0 or later
 `varying`   | `in`
 
 The `gl_fragColor` keyword is also no longer available in version 3.0 or later fragment shaders.
-Instead an explicit `out` parameter must be added and the color for the first render target can then be assigned to this explicit `out` parameter.
+Instead an explicit `out` parameter must be added.
+The color for the first render target can then be assigned to this explicit `out` parameter.
 
 ```C
 out vec4 fragColor;
