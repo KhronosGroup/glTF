@@ -18,11 +18,13 @@ This extension defines an additional material property that points to a techniqu
 written for the OpenGL multi-view extension GL_OVR_multiview2. The GL_OVR_multiview extension is not considered
 because it is more limited and all drivers that support GL_OVR_multiview also support GL_OVR_multiview2.
 
-The 1.0 glTF spec defines a plethora of semantic uniforms.
-Some of these semantic uniforms provide no benefit on modern scalar GPUs and are only time consuming to update as uniforms.
-Other semantic uniforms make it hard and/or computationally time consuming to support the OpenGL GL_OVR_multiview2 extension.
+The 1.0 glTF spec defines a plethora of uniform semantics.
+Some of these uniform semantics provide no benefit on modern scalar GPUs and are only time consuming to update as uniforms.
+Other uniform semantics make it hard and/or computationally time consuming to support the OpenGL GL_OVR_multiview2 extension.
 
-This extension defines how to construct valid multi-view shaders with various restrictions on the semantic uniforms that are used.
+Similar to the KHR_glsl_multi_view extension, this extension deprecates a number of uniform semantics and defines a
+new uniform semantic to enable a uniform buffer with the view and projection matrices and their inverses for all views.
+This extension also defines how to construct valid multi-view shaders.
 
 ## Material Extension
 
@@ -53,15 +55,16 @@ Usage of the extension must be listed in the `extensionsUsed` array.
 
 ## Multi-View Vertex Shader Requirements
 
-The GL_OVR_multiview2 extension requires OpenGL 3.0 or OpenGL ES 3.0 and associated shader versions.
-The `#version` keyword is used to specify the shader version.
-To specify a version 3.0 OpenGL shader, the following is added to the top of the shader.
+The GL_OVR_multiview2 extension requires OpenGL 3.0 or OpenGL ES 3.0 and
+uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0.
+The `#version` keyword is used to specify the shader version associated with the required OpenGL or OpenGL ES versions.
+To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
 
 ```C
-#version 300
+#version 310
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added to the top of the shader.
+To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
 #version 300 es
@@ -88,7 +91,7 @@ layout( num_views = NUM_VIEWS ) in;
 The `VIEW`, `VIEWINVERSE`, `PROJECTION` and `PROJECTIONINVERSE` semantic uniforms for all views are placed in a uniform buffer:
 
 ```C
-uniform viewProjectionUniformBuffer     // VIEWPROJECTIONBUFFER
+uniform viewProjectionUniformBuffer     // VIEWPROJECTIONMULTIVIEWBUFFER
 {
 	mat4 u_view[NUM_VIEWS];
 	mat4 u_viewInverse[NUM_VIEWS];
@@ -97,9 +100,9 @@ uniform viewProjectionUniformBuffer     // VIEWPROJECTIONBUFFER
 };
 ```
 
-A new semantic uniform `VIEWPROJECTIONBUFFER` is introduced to identify this uniform buffer.
+A new uniform semantic `VIEWPROJECTIONMULTIVIEWBUFFER` is introduced to identify this uniform buffer.
 
-The `LOCAL`, `MODEL` and `MODELINVERSE` semantic uniforms are left unchanged as regular uniforms.
+The `LOCAL`, `MODEL` and `MODELINVERSE` uniform semantics are left unchanged as regular uniforms.
 
 ```C
 uniform mat4 u_local;         // LOCAL
@@ -107,7 +110,7 @@ uniform mat4 u_model;         // MODEL
 uniform mat4 u_modelInverse;  // MODELINVERSE
 ```
 
-The following semantic uniforms are not allowed inside the vertex shader code and are replaced as follows:
+The following uniforms semantic are not allowed inside the vertex shader code and are replaced as follows:
 
 Semantic uniform             | Replacement
 -----------------------------|-------------------------------------
@@ -153,13 +156,13 @@ multiplying the matrices separately in the vertex shader results in noticeably b
 ## Multi-View Fragment Shader Requirements
 
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.0 OpenGL shader, the following is added to the top of the shader.
+To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
 
 ```C
-#version 300
+#version 310
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added to the top of the shader.
+To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
 #version 300 es
@@ -174,7 +177,8 @@ pre 3.0     | 3.0 or later
 `varying`   | `in`
 
 The `gl_fragColor` keyword is also no longer available in version 3.0 or later fragment shaders.
-Instead an explicit `out` parameter must be added and the color for the first render target can then be assigned to this explicit `out` parameter.
+Instead an explicit `out` parameter must be added.
+The color for the first render target can then be assigned to this explicit `out` parameter.
 
 ```C
 out vec4 fragColor;
@@ -187,6 +191,10 @@ void main( void )
 
 None of the following semantic uniforms are allowed in a multi-view fragment shader:
 
+- `LOCAL`
+- `MODEL`
+- `MODELINVERSE`
+- `MODELINVERSETRANSPOSE`
 - `VIEW`
 - `VIEWINVERSE`
 - `PROJECTION`
