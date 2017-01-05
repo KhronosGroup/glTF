@@ -37,13 +37,13 @@ This extension introduces a new uniform semantic `JOINTBUFFER`.
 
 Uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 and associated shader versions.
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.1 OpenGL shader, the following is added to the top of the shader.
+To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
 
 ```C
 #version 310
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added to the top of the shader.
+To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
 #version 300 es
