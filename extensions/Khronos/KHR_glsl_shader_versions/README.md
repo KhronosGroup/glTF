@@ -26,11 +26,23 @@ For example, the following defines a shader with URIs to GLSL source for OpenGL,
 "shaders": {
     "shader1": {
         "extensions": {
-            "KHR_glsl_shader_versions" : {
-                "uriGlslOpenGL" : "uri1"
-                "uriGlslOpenGLES" : "uri2"
-                "uriGlslVulkan" : "uri3"
-            }
+            "KHR_glsl_shader_versions" : [
+                {
+                    "api" : "opengl",
+                    "version" : "140",
+                    "uri" : "opengl_glsl140.vert"
+                },
+                {
+                    "api" : "opengles",
+                    "version" : "130 es",
+                    "uri" : "opengles_glsl130es.vert"
+                },
+                {
+                    "api" : "vulkan",
+                    "version" : "450",
+                    "uri" : "vulkan_glsl450.vert"
+                }
+            ]
         }
     }
 }
