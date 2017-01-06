@@ -35,25 +35,25 @@ This extension introduces a new uniform semantic `JOINTBUFFER`.
 
 ## Joint Buffer Vertex Shader Requirements
 
-Uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 and associated shader versions.
+Uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 (GLSL 1.4 and GLSL 1.3 respectively).
 The `#version` keyword is used to specify the shader version.
-To specify a version 3.1 OpenGL shader, the following is added at the top of the shader.
+To specify a version GLSL 1.4 OpenGL shader, the following is added at the top of the shader.
 
 ```C
-#version 310
+#version 140
 ```
 
-To specify a version 3.0 OpenGL ES shader, the following is added at the top of the shader.
+To specify a version GLSL 1.3 OpenGL ES shader, the following is added at the top of the shader.
 
 ```C
-#version 300 es
+#version 130 es
 ```
 
 The `KHR_glsl_shader_versions` extension is used to specify these different shader versions for OpenGL and OpenGL ES.
 
-Note that compared to GLSL 1.00 glTF shaders, these newer vertex shaders replace the following keywords:
+Note that compared to GLSL 1.0 glTF shaders, these newer vertex shaders replace the following keywords:
 
-pre 3.0     | 3.0 or later
+GLSL 1.0    | GLSL 1.3 or later
 ------------|---------------------
 `attribute` | `in`
 `varying`   | `out`
