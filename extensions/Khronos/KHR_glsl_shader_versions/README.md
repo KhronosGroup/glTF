@@ -35,11 +35,18 @@ For example, the following defines a shader with URIs to GLSL source for OpenGL,
                 {
                     "api" : "opengles",
                     "version" : "130 es",
+                    "extensions" : [
+                        "GL_OVR_multiview2"
+                    ],
                     "uri" : "opengles_glsl130es.vert"
                 },
                 {
                     "api" : "vulkan",
-                    "version" : "450",
+                    "version" : "440 core",
+                    "extensions" : [
+                        "GL_EXT_shader_io_blocks",
+                        "GL_ARB_enhanced_layouts"
+                    ],
                     "uri" : "vulkan_glsl450.vert"
                 }
             ]
