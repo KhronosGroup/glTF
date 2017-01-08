@@ -53,9 +53,9 @@ To specify a version GLSL 1.3 OpenGL ES shader, the following is added at the to
 
 The `KHR_glsl_shader_versions` extension is used to specify these different shader versions for OpenGL and OpenGL ES.
 
-Note that compared to GLSL 1.0 glTF shaders, these newer vertex shaders replace the following keywords:
+Note that compared to GLSL 1.0 ES glTF shaders, these newer vertex shaders replace the following keywords:
 
-GLSL 1.0    | GLSL 1.3 or later
+GLSL 1.0 ES | GLSL 1.3 or later
 ------------|---------------------
 `attribute` | `in`
 `varying`   | `out`
@@ -138,33 +138,17 @@ To specify a version GLSL 1.3 OpenGL ES shader, the following is added at the to
 
 The `KHR_glsl_shader_versions` extension is used to specify these different shader versions for OpenGL and OpenGL ES.
 
-Note that compared to GLSL 1.0 glTF shaders, these newer fragment shaders replace the following keywords and functions:
+Note that compared to GLSL 1.0 ES glTF shaders, these newer fragment shaders replace the following keywords and functions:
 
-GLSL 1.0            | GLSL 1.3 or later
+GLSL 1.0 ES         | GLSL 1.3 or later
 --------------------|---------------------
 `varying`           | `in`
-`texture1D`         | `texture`
 `texture2D`		    | `texture`
-`texture3D`		    | `texture`
-`textureCube`	    | `texture`
-`shadow1D`		    | `texture`
-`shadow2D`		    | `texture`
-`texture1DProj`     | `textureProj`
 `texture2DProj`	    | `textureProj`
-`texture3DProj`	    | `textureProj`
-`shadow1DProj`	    | `textureProj`
-`shadow2DProj`	    | `textureProj`
-`texture1DLod`      | `textureLod`
 `texture2DLod`	    | `textureLod`
-`texture3DLod`	    | `textureLod`
-`textureCubeLod`    | `textureLod`
-`shadow1DLod`	    | `textureLod`
-`shadow2DLod`	    | `textureLod`
-`texture1DProjLod`  | `textureProjLod`
 `texture2DProjLod`	| `textureProjLod`
-`texture3DProjLod`	| `textureProjLod`
-`shadow1DProjLod`	| `textureProjLod`
-`shadow2DProjLod`	| `textureProjLod`
+`textureCube`	    | `texture`
+`textureCubeLod`    | `textureLod`
 
 The `gl_fragColor` built-in variable is also no longer available in GLSL 1.3 or later fragment shaders.
 Instead an explicit `out` parameter must be added.
@@ -195,12 +179,17 @@ None of the following semantic uniforms are allowed in the fragment shader:
 - `MODELVIEWPROJECTION`
 - `MODELVIEWPROJECTIONINVERSE`
 
+## Conformance
+
+If this extension is supported, then the application must update a uniform buffer with
+the view and projection matrices.
+
 ## Known Implementations
 
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
 https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
-## Conformance
+## References
 
-If this extension is supported, then the application must update a uniform buffer with
-the view and projection matrices.
+GLSL 1.0 ES used by glTF
+https://www.khronos.org/files/opengles_shading_language.pdf
