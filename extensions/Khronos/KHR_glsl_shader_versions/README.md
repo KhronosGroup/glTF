@@ -36,17 +36,33 @@ For example, the following defines a shader with URIs to GLSL source for OpenGL,
                     "api" : "opengles",
                     "version" : "130 es",
                     "extensions" : [
-                        "GL_OVR_multiview2"
+						{
+							"name" : "GL_OVR_multiview2",
+							"behavior" : "require"
+						}
                     ],
+					"gltfExtension" : [
+						"KHR_glsl_multi_view"
+					]
                     "uri" : "opengles_glsl130es.vert"
                 },
                 {
                     "api" : "vulkan",
                     "version" : "440 core",
                     "extensions" : [
-                        "GL_EXT_shader_io_blocks",
-                        "GL_ARB_enhanced_layouts"
+						{
+							"name" : "GL_EXT_shader_io_blocks",
+							"behavior" : "enable"
+						},
+						{
+							"name" : "GL_ARB_enhanced_layouts",
+							"behavior" : "enable"
+						}
                     ],
+					"gltfExtension" : [
+						"KHR_glsl_view_projection_buffer",
+						"KHR_glsl_layout_vulkan"
+					]
                     "uri" : "vulkan_glsl450.vert"
                 }
             ]
@@ -63,12 +79,20 @@ Usage of the extension must be listed in the `extensionsUsed` array.
 ]
 ```
 
-## Known Implementations
-
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
-
 ## Conformance
 
-If this extension is supported, then the application must use the shader specified
-for the graphics API used by the application.
+If this extension is supported, then the application searches through the available
+shaders to find the most up to date shader version for the graphics API used by the
+application.
+
+## Known Implementations
+
+- Khronos Asynchronous Time Warp Sample for OpenGL<br/>
+  https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
+- Khronos Asynchronous Time Warp Sample for Vulkan<br/>
+  https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
+
+## References
+
+- GLSL 1.0 ES used by glTF<br/>
+  https://www.khronos.org/files/opengles_shading_language.pdf
