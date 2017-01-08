@@ -113,13 +113,8 @@ the above code uses three matrix-vector multiplications (48 multiplications, 36 
 time but on modern scalar GPUs this is not a bottleneck especially considering the typical ratio between vertices and fragments.
 
 The view-projection and view-projection-inverse matrices are not pre-multiplied and provided in the uniform buffer because
-multiplying the matrices separately in the vertex shader results in noticeably better precision.
-
-```
-	"Tightening the Precision of Perspective Rendering"
-	Paul Upchurch, Mathieu Desbrun
-	Journal of Graphics Tools, Volume 16, Issue 1, 2012
-```
+multiplying the matrices separately in the vertex shader results in noticeably better precision as described by
+Paul Upchurch, Mathieu Desbrun in "Tightening the Precision of Perspective Rendering".
 
 ## Fragment Shader Requirements
 
@@ -195,3 +190,7 @@ the view and projection matrices.
 
 - GLSL 1.0 ES used by glTF<br/>
   https://www.khronos.org/files/opengles_shading_language.pdf
+- Tightening the Precision of Perspective Rendering<br/>
+  Paul Upchurch, Mathieu Desbrun<br/>
+  Journal of Graphics Tools, Volume 16, Issue 1, 2012<br/>
+  http://www.geometry.caltech.edu/pubs/UD12.pdf
