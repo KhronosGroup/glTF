@@ -365,7 +365,7 @@ Directional lights are light sources that emit from infinitely far away in a spe
 Point lights emit light in all directions over a given distance. Point lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in **Table 5**. Point lights do not have a direction.
 
 #### Spot
-Spot lights emit light in a direction over a given distance. Spot lights support the `color`, `constantAttenuation`, `linearAttenuation` and `quadraticAttenuation` common light properties described in **Table 5**. Spot lights also define the following properties:
+Spot lights emit light in a direction over a given distance. Spot lights support the `color`, `constantAttenuation`, `linearAttenuation`, `quadraticAttenuation`, `falloffAngle` and `falloffExponent`  common light properties described in **Table 5**. Spot lights also define the following properties:
 
 > **Implementation Note**: Attenuation factors are used to calculate the total attenuation of this light given a distance. The equation used is:
 ```
