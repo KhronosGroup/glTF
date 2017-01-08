@@ -51,9 +51,9 @@ To specify a version GLSL 1.3 OpenGL ES shader, the following is added at the to
 
 The `KHR_glsl_shader_versions` extension is used to specify these different shader versions for OpenGL and OpenGL ES.
 
-Note that compared to GLSL 1.0 glTF shaders, these newer vertex shaders replace the following keywords:
+Note that compared to GLSL 1.0 ES glTF shaders, these newer vertex shaders replace the following keywords:
 
-GLSL 1.0    | GLSL 1.3 or later
+GLSL 1.0 ES | GLSL 1.3 or later
 ------------|---------------------
 `attribute` | `in`
 `varying`   | `out`
@@ -79,12 +79,19 @@ void main( void )
 }
 ```
 
-## Known Implementations
-
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
-
 ## Conformance
 
 If this extension is supported, then the application must update a uniform buffer to
 specify joint matrices for a vertex shader.
+
+## Known Implementations
+
+- Khronos Asynchronous Time Warp Sample for OpenGL<br/>
+  https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
+- Khronos Asynchronous Time Warp Sample for Vulkan<br/>
+  https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
+
+## References
+
+- GLSL 1.0 ES used by glTF<br/>
+  https://www.khronos.org/files/opengles_shading_language.pdf
