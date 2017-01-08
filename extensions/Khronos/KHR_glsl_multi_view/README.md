@@ -145,13 +145,8 @@ However, this would result in 5 * NUM_VIEWS different matrices that would have t
 The overhead of updating all these uniforms is far greater than multiplying in the vertex shader.
 
 The view-projection and view-projection-inverse matrices are not pre-multiplied and provided in the uniform buffer because
-multiplying the matrices separately in the vertex shader results in noticeably better precision.
-
-```
-	"Tightening the Precision of Perspective Rendering"
-	Paul Upchurch, Mathieu Desbrun
-	Journal of Graphics Tools, Volume 16, Issue 1, 2012
-```
+multiplying the matrices separately in the vertex shader results in noticeably better precision as described by
+Paul Upchurch, Mathieu Desbrun in "Tightening the Precision of Perspective Rendering".
 
 ## Multi-View Fragment Shader Requirements
 
@@ -227,3 +222,7 @@ then the application should use the special multi-view technique specified by th
 
 - GLSL 1.0 ES used by glTF<br/>
   https://www.khronos.org/files/opengles_shading_language.pdf
+- Tightening the Precision of Perspective Rendering<br/>
+  Paul Upchurch, Mathieu Desbrun<br/>
+  Journal of Graphics Tools, Volume 16, Issue 1, 2012<br/>
+  http://www.geometry.caltech.edu/pubs/UD12.pdf
