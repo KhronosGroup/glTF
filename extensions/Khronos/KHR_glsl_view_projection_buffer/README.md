@@ -186,10 +186,12 @@ the view and projection matrices.
 
 ## Known Implementations
 
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
-https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
+Khronos Asynchronous Time Warp Sample for OpenGL
+- https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_opengl.c
+Khronos Asynchronous Time Warp Sample for Vulkan
+- https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
 ## References
 
 GLSL 1.0 ES used by glTF
-https://www.khronos.org/files/opengles_shading_language.pdf
+- https://www.khronos.org/files/opengles_shading_language.pdf
