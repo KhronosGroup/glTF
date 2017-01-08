@@ -14,11 +14,11 @@ Written against the glTF 1.0 spec.
 
 ## Overview
 
-This extension defines a set of common materials and lights for use with glTF. 
+This extension defines a set of common materials and lights for use with glTF.
 
 glTF does not define a lighting model, instead relegating shading of visuals to GLSL shader code defined within techniques in the glTF file. For many use cases, it is desirable to shade visuals with commonly understood and implemented shading techniques, such as Blinn and Lambert.
 
-Many 3D tools and WebGL runtimes support built-in implementations of common material and light types. Using this extension, tools can export a much more compact representation of materials and lights. In addition, a runtimes with built-in lighting can apply its built-in light values to visuals shaded with common materials found in the glTF file. 
+Many 3D tools and WebGL runtimes support built-in implementations of common material and light types. Using this extension, tools can export a much more compact representation of materials and lights. In addition, a runtimes with built-in lighting can apply its built-in light values to visuals shaded with common materials found in the glTF file.
 
 This extension defines four light types: `directional`, `point`, `spot`, and `ambient`; and the material types `BLINN`, `PHONG`, `LAMBERT`, and `CONSTANT`, for Blinn, Phong, Lambert, and Unlit ("constant" color) materials, respectively.
 
@@ -215,7 +215,7 @@ where
 
 > **Implementation Note**: Writers should be aware about the range of the specular exponent (`shininess`), which is _not_ a normalized range. Concretely speaking, given the above equation, a `shininess` value of 1 corresponds to a very low shininess. For orientation: using the traditional OpenGL fixed function pipeline, the specular exponent was expected to be within `[0, 128]`. However, using glTF, larger `shininess` values are clearly possible.
 
-Blinn shading uses all of the common material properties defined in **Table 2**. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights. 
+Blinn shading uses all of the common material properties defined in **Table 2**. The following example defines a Blinn shaded material with a diffuse texture, moderate shininess and red specular highlights.
 
 ```json
 {
@@ -282,10 +282,10 @@ Lights define light sources in the scene.
 
 Lights are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations.
 
-A conforming implementation of this extension must be able to load light data defined in the asset, but it is not obligated to render the asset using those lights. 
+A conforming implementation of this extension must be able to load light data defined in the asset, but it is not obligated to render the asset using those lights.
 
 ### Defining Lights
-Lights are defined within a dictionary property in the file, by adding an `extensions` property to the top-level glTF object and defining its `KHR_materials_common` property with a `lights` dictionary object inside it. 
+Lights are defined within a dictionary property in the file, by adding an `extensions` property to the top-level glTF object and defining its `KHR_materials_common` property with a `lights` dictionary object inside it.
 
 Each light defines a `type` property that designates the type of light (`ambient`, `directional`, `point`, or `spot`); a property of that same name defines the details, such as color, attenuation and other light type-specific values. The following example defines a white-colored directional light.
 
@@ -374,17 +374,21 @@ A = constantAttenuation + (Distance * linearAttenuation) + ((Distance ^ 2) * qua
 
 <a name="schema"></a>
 ## JSON Schema
-   * [`light`](schema/light.schema.json)
-   * [`light/ambient`](schema/light.ambient.schema.json)
-   * [`light/directional`](schema/light.directional.schema.json)
-   * [`light/point`](schema/light.point.schema.json)
-   * [`light/spot`](schema/light.spot.schema.json)
+   * [`glTF`](schema/glTF.KHR_materials_common.schema.json)
+   * [`node`](schema/node.KHR_materials_common.schema.json)
+   * [`light`](schema/light.KHR_materials_common.schema.json)
+   * [`light/ambient`](schema/light.ambient.KHR_materials_common.schema.json)
+   * [`light/directional`](schema/light.directional.KHR_materials_common.schema.json)
+   * [`light/point`](schema/light.point.KHR_materials_common.schema.json)
+   * [`light/spot`](schema/light.spot.KHR_materials_common.schema.json)
+   * [`material`](schema/material.KHR_materials_common.schema.json)
+   * [`material/values`](schema/material.values.KHR_materials_common.schema.json)
 
 <a name="conformance"></a>
 ## Conformance
 
-If this extension is supported, it will be used to apply shading to any visuals defined with common material types. 
+If this extension is supported, it will be used to apply shading to any visuals defined with common material types.
 
-If a material contains this extension as well as a technique instance, the runtime can use its own shader implementation in favor of the supplied technique. 
+If a material contains this extension as well as a technique instance, the runtime can use its own shader implementation in favor of the supplied technique.
 
-If the extension is not supported, and no technique is supplied in the material, then default shading will be applied per the rules defined in the base specification. 
+If the extension is not supported, and no technique is supplied in the material, then default shading will be applied per the rules defined in the base specification.
