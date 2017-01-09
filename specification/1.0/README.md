@@ -532,11 +532,15 @@ All large data for meshes, skins, and animations is stored in buffers and retrie
 
 An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
 
-每个*访问器*定义了从缓存视图获取类型数组形式数据的方法。访问器声明了变量类型（比如float）和数据类型（比如vec3），
+每个*访问器*定义了从缓存视图获取类型数组形式数据的方法。访问器声明了变量类型（比如float）和数据类型（比如vec3），当数据合并时，可以用来定义整个数组元素的数据类型。在缓存视图中，通过`byteOffset`偏移量和`count`长度两个属性，访问其也声明了起始位置和数据长度。`count`长度是指缓存视图中属性的长度，*不是*字节长度。
 
 All accessors are stored in the asset's `accessors` dictionary property.
 
+所有访问器都保存在`accessors`字典属性中。
+
 The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
+
+下面的片段展示了两个访问器，一个是scalar标量访问器，用来读取图元的顶点索引，一个是VEC3（xyz三个float类型的）向量访问器，用来读取图元的位置数据。
 
 ```javascript
 "accessors": {
@@ -570,7 +574,11 @@ The following fragment shows two accessors, a scalar accessor for retrieving a p
 
 #### Accessor Attribute Size
 
+### 访问器属性大小
+
 The following tables can be used to compute the size of an accessor's attribute type.
+
+下表可以用来计算一个访问器的属性大小。
 
 | `componentType` | Size in bytes |
 |:-:|:-:|
@@ -593,7 +601,11 @@ The following tables can be used to compute the size of an accessor's attribute 
 The size of an accessor's attribute type, in bytes, is
 `(size in bytes of the 'componentType') * (number of components defined by 'type')`.
 
+一个访问器属性的字节大小是`('componentType'的字节长度) * ('type'定义的成员变量的个数)`。
+
 For example:
+
+比如：
 
 ```javascript
 "accessor_1": {
@@ -608,13 +620,23 @@ For example:
 
 In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
 
+在这个访问器中，`componentType`是`5126` (FLOAT)，所以每一个成员变量占四个字节。`type`是`"VEC3"`类型，所以有三个成员变量。该属性类型的大小就是12个字节(`4 * 3`)。
+
 #### BufferView and Accessor Byte Alignment
+
+###缓存试图和访问器字节对齐
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's attribute type.
 
+一个访问器`accessor`在缓存视图`bufferView`中的偏移量（比如`accessor.byteOffset`属性）和一个访问器`accessor`在缓存`buffer`的偏移量（也就是`accessor.byteOffset + bufferView.byteOffset`）必须是该访问器属性类型字节大小的整数倍。
+
 > **Implementation Note:** This allows a runtime to efficiently create a single arraybuffer from a glTF `buffer` or an arraybuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an arraybuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
+> **备注：** 当我们从一个glTF缓存或缓存视图对应的arraybuffer中创建一个单一的arraybuffer时，这种要求可以允许运行时下的高效，可以通过访问器将一个类型化的array view(比如Float32Array)引用到一个arraybuffer中，因为该array view的偏移量是其对应类型的整数倍（比如，4是Float32Array的整数倍）而不需要拷贝。
+
 Consider the following example:
+
+考虑下面这个例子：
 
 ```javascript
 "bufferView_1": {
@@ -634,18 +656,30 @@ Consider the following example:
 ```
 The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
 
+该访问器属性类型占两个字节（`componentType`为无符号short，`type`是scalar标量类型）。访问器的偏移量`byteOffset`也能够被2整除。同样`buffer_1`对应的访问器偏移量是`5228 ` (`620 + 4608`)，也能被2整除。
+
 
 <a name="geometry-and-meshes"></a>
 
 ## Geometry and Meshes
 
+## 几何对象和网格
+
 Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
+
+任何一个节点都可以包含一个或多个网格，定义在该节点的`meshes`属性中。任何一个节点可能包含一个皮肤网格实例，定义在`meshes`, `skeletons` 和`skin`属性组合中。一个节点可以要么包含多个网格，要么包含一个单独的皮肤网格实例，但不能两者都包含。
 
 ### Meshes
 
+### 网格
+
 In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that corresponds to the GL primitive type (e.g., triangle set).
 
+在glTF中，网格定义为图元数组*primitives*。图元对应的是GL渲染引擎所需要调用的数据。图元声明了一个或多个`attributes`属性，对应渲染中所需要的顶点属性。有索引信息的图元也会定义`indices`顶点索引属性。属性和索引都以访问器的形式定义。每一个图元也会声明一个材质和图元类型，对应GL的图元类型（比如三角形集合）。
+
 The following example defines a mesh containing one triangle set primitive:
+
+如下范例定义了一个网格，包括一个三角形集合的图元：
 
 ```javascript
     "primitives": [
@@ -664,9 +698,15 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID  of an accessor that contains the data.
 
+每一个属性都以一个`attributes`属性对象的形式定义。属性名对应一个枚举值，用来标识对应的顶点属性，比如`POSITION`。在该网格对应的GLSL着色器代码中，该值会对应其中的一个属性变量。而着色器代码则对应在材质technique的`parameters`字典属性中(查看下面的材质和着色器部分)。属性值是包含该数据的访问器ID。
+
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  Attribute semantic property names can be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, etc.
 
+语法上有效的属性名称包括`POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`。属性名可以是如下形式：`[semantic]_[set_index]`，比如`TEXCOORD_0`, `TEXCOORD_1`。
+
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
+
+> **备注：**每一个图元对应一个WebGL渲染调用（当然也包括批次渲染调用）。当定义一个图元的顶点索引时，通过引用一个访问器来使用索引数据，同时使用GL的`drawElements`方法。如果没有定义`indices`属性，则调用GL的`drawArrays`方法，同时使用
 
 
 
