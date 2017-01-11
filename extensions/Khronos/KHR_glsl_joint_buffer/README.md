@@ -10,19 +10,25 @@ Draft (not ratified yet)
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec plus KHR_glsl_shader_versions.
+Written against the [glTF 1.0 specification](#references) plus [KHR_glsl_shader_versions](#references).
 
 ## Overview
 
 This extension defines an new uniform semantic to enable joint uniform buffers.
 
-The glTF 1.0 spec only allows joint arrays.
+The [glTF 1.0 specification](#references) only allows arrays with joint matrices which are stored as regular uniform vectors.
+The [GLSL 1.0 ES specification](#references) requires a minimimum of 128 uniform vectors,
+but there is no guarantee a GPU will support more than 128 uniform vectors.
+Even if no other uniforms are used at all, a limit of 128 uniform vectors would limit the
+number of 4x4 joint matrices to just 32.
 Not only does this significantly limit the number of joints per skin,
 updating a joint array is also not as efficient as updating a uniform buffer on modern GPUs.
+So even when using a GPU that supports many more uniform vectors, it is more efficient to
+updated a single uniform buffer per skin, in particular if the same skin is used for multiple meshes.
 
 ## Extension
 
-Usage of the extension must be listed in the `extensionsUsed` array.
+Usage of the extension must be listed in the glTF `extensionsUsed` array.
 
 ```javascript
 "extensionsUsed" : [
@@ -33,7 +39,7 @@ Usage of the extension must be listed in the `extensionsUsed` array.
 
 This extension introduces a new uniform semantic `JOINTBUFFER`.
 
-## Joint Buffer Vertex Shader Requirements
+## Vertex Shader Requirements
 
 Uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 (GLSL 1.4 and GLSL 1.3 respectively).
 The `#version` keyword is used to specify the shader version.
@@ -91,7 +97,12 @@ specify joint matrices for a vertex shader.
 - Khronos Asynchronous Time Warp Sample for Vulkan<br/>
   https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
+<a name="references"></a>
 ## References
 
-- GLSL 1.0 ES used by glTF<br/>
+- The glTF 1.0 specification<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/specification/1.0
+- The glTF 1.0 extension registsry<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/extensions
+- GLSL 1.0 ES used by glTF 1.0<br/>
   https://www.khronos.org/files/opengles_shading_language.pdf
