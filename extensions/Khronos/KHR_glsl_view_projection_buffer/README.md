@@ -10,7 +10,7 @@ Draft (not ratified yet)
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec plus KHR_glsl_shader_versions.
+Written against the [glTF 1.0 specification](#references) plus [KHR_glsl_shader_versions](#references).
 
 ## Overview
 
@@ -93,11 +93,11 @@ Semantic uniform             | Replacement
 `MODELVIEWPROJECTION`        | `u_projection * u_view * u_model`
 `MODELVIEWPROJECTIONINVERSE` | `u_projectionInverse * u_viewInverse * u_modelInverse`
 
-Note that on modern scalar GPUs using `transpose( mat3( u_modelInverse ) )` is no more computationally expensive in
-a shader than using an explicit `MODELINVERSETRANSPOSE` uniform. Instead, using an explicit uniform
-only introduces overhead to pass the uniform value to the shader.
+Note that on modern scalar GPUs, using `transpose( mat3( u_modelInverse ) )` is no more computationally expensive in
+a shader than using an explicit `MODELINVERSETRANSPOSE` uniform. Using an explicit uniform only introduces overhead
+to pass the uniform value to the shader.
 
-The extra multiplications are typically not full matrix multiplications but instead matrix-vector multiplications.
+The extra multiplications are typically not full matrix-matrix multiplications but instead matrix-vector multiplications.
 
 ```C
 in vec3 a_position;
@@ -114,7 +114,7 @@ time but on modern scalar GPUs this is not a bottleneck especially considering t
 
 The view-projection and view-projection-inverse matrices are not pre-multiplied and provided in the uniform buffer because
 multiplying the matrices separately in the vertex shader results in noticeably better precision as described by
-Paul Upchurch, Mathieu Desbrun in "Tightening the Precision of Perspective Rendering".
+Paul Upchurch, Mathieu Desbrun in [Tightening the Precision of Perspective Rendering](#references).
 
 ## Fragment Shader Requirements
 
@@ -186,8 +186,13 @@ the view and projection matrices.
 - Khronos Asynchronous Time Warp Sample for Vulkan<br/>
   https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
+<a name="references"></a>
 ## References
 
+- The glTF 1.0 specification<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/specification/1.0
+- The glTF 1.0 extension registsry<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/extensions
 - GLSL 1.0 ES used by glTF<br/>
   https://www.khronos.org/files/opengles_shading_language.pdf
 - Tightening the Precision of Perspective Rendering<br/>
