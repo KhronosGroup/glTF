@@ -10,7 +10,7 @@ Draft (not ratified yet)
 
 ## Dependencies
 
-Written against the glTF draft 1.0 spec plus KHR_glsl_shader_versions.
+Written against the [glTF 1.0 specification](#references) plus [KHR_glsl_shader_versions](#references).
 
 ## Overview
 
@@ -18,9 +18,9 @@ This extension defines an additional material property that points to a techniqu
 written for the OpenGL multi-view extension GL_OVR_multiview2. The GL_OVR_multiview extension is not considered
 because it is more limited and all drivers that support GL_OVR_multiview also support GL_OVR_multiview2.
 
-The 1.0 glTF spec defines a plethora of uniform semantics.
+The [1.0 glTF specification](#references) defines a plethora of uniform semantics.
 Some of these uniform semantics provide no benefit on modern scalar GPUs and are only time consuming to update as uniforms.
-Other uniform semantics make it hard and/or computationally time consuming to support the OpenGL GL_OVR_multiview2 extension.
+Other uniform semantics make it hard and/or very inefficient to support the OpenGL GL_OVR_multiview2 extension.
 
 Similar to the KHR_glsl_multi_view extension, this extension deprecates a number of uniform semantics and defines a
 new uniform semantic to enable a uniform buffer with the view and projection matrices and their inverses for all views.
@@ -53,7 +53,9 @@ Usage of the extension must be listed in the `extensionsUsed` array.
 ]
 ```
 
-## Multi-View Vertex Shader Requirements
+This extension introduces a new uniform semantic `VIEWPROJECTIONMULTIVIEWBUFFER`.
+
+## Vertex Shader Requirements
 
 The GL_OVR_multiview2 extension requires OpenGL 3.0 or OpenGL ES 3.0 and
 uniform buffers were introduced in OpenGL version 3.1 and OpenGL ES version 3.0 (GLSL 1.4 and GLSL 1.3 respectively).
@@ -122,10 +124,10 @@ Semantic uniform             | Replacement
 `MODELVIEWPROJECTIONINVERSE` | `u_projectionInverse[VIEW_ID] * u_viewInverse[VIEW_ID] * u_modelInverse`
 
 Note that on modern scalar GPUs using `transpose( mat3( u_modelInverse ) )` is no more computationally expensive in
-a shader than using an explicit `MODELINVERSETRANSPOSE` uniform. Instead, using an explicit uniform
-only introduces overhead to pass the uniform value to the shader.
+a shader than using an explicit `MODELINVERSETRANSPOSE` uniform. Using an explicit uniform only introduces
+overhead to pass the uniform value to the shader.
 
-The extra multiplications are typically not full matrix multiplications but instead matrix-vector multiplications.
+The extra multiplications are typically not full matrix-matrix multiplications but instead matrix-vector multiplications.
 
 ```C
 in vec3 a_position;
@@ -146,9 +148,9 @@ The overhead of updating all these uniforms is far greater than multiplying in t
 
 The view-projection and view-projection-inverse matrices are not pre-multiplied and provided in the uniform buffer because
 multiplying the matrices separately in the vertex shader results in noticeably better precision as described by
-Paul Upchurch, Mathieu Desbrun in "Tightening the Precision of Perspective Rendering".
+Paul Upchurch, Mathieu Desbrun in [Tightening the Precision of Perspective Rendering](#references).
 
-## Multi-View Fragment Shader Requirements
+## Fragment Shader Requirements
 
 The `#version` keyword is used to specify the shader version.
 To specify a version GLSL 1.4 OpenGL shader, the following is added at the top of the shader.
@@ -218,8 +220,13 @@ then the application should use the special multi-view technique specified by th
 - Khronos Asynchronous Time Warp Sample for Vulkan<br/>
   https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/atw/atw_vulkan.c
 
+<a name="references"></a>
 ## References
 
+- The glTF 1.0 specification<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/specification/1.0
+- The glTF 1.0 extension registsry<br/>
+  https://github.com/KhronosGroup/glTF/tree/master/extensions
 - GLSL 1.0 ES used by glTF<br/>
   https://www.khronos.org/files/opengles_shading_language.pdf
 - Tightening the Precision of Perspective Rendering<br/>
