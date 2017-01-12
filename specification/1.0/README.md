@@ -324,7 +324,7 @@ glTF数据定义了一个或多个*节点*，组成了场景中的渲染对象
 
 Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
 
-每个节点包含一个或多个网格，一个皮肤实例，一个关节名或一个相机，他们分别对应在`meshes`, `skeletons`, `skin`, `jointName`和 `camera`属性中。
+每个节点包含一个或多个网格，一个蒙皮实例，一个关节名或一个相机，他们分别对应在`meshes`, `skeletons`, `skin`, `jointName`和 `camera`属性中。
 
 Nodes have an optional `name` property.
 
@@ -461,7 +461,7 @@ All angles are in radians.
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
 
-缓存是存储数据的一个二进制块。缓存包含一个几何对象，动画和皮肤的组合。
+缓存是存储数据的一个二进制块。缓存包含一个几何对象，动画和蒙皮的组合。
 
 
 
@@ -494,7 +494,7 @@ The following example defines a buffer. The `byteLength` property specifies the 
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
 
-一个*缓存视图*标识缓存中数据的一个子集，`byteOffset`属性是一个整数值，表示在该缓存中的偏移量，`byteLength`表示该视图具体的数据块的长度。缓存视图也定义了一个`target`属性，用来表示目标数据类型，可以是顶点数据，顶点索引数据或者描述动画或皮肤对象的目标数据。在应用中可以以只读的方式在内存中创建并填充。
+一个*缓存视图*标识缓存中数据的一个子集，`byteOffset`属性是一个整数值，表示在该缓存中的偏移量，`byteLength`表示该视图具体的数据块的长度。缓存视图也定义了一个`target`属性，用来表示目标数据类型，可以是顶点数据，顶点索引数据或者描述动画或蒙皮对象的目标数据。在应用中可以以只读的方式在内存中创建并填充。
 
 The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
@@ -520,7 +520,7 @@ The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bu
 
 buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
 
-缓存和缓存视图并不包含类型信息。他们只是简单定义从文件中取出的原始数据。glTF文件中的对象（网格，皮肤，动画）都不会直接访问缓存或缓存视图，而是通过*访问器*
+缓存和缓存视图并不包含类型信息。他们只是简单定义从文件中取出的原始数据。glTF文件中的对象（网格，蒙皮，动画）都不会直接访问缓存或缓存视图，而是通过*访问器*
 
 
 ### Accessors
@@ -528,7 +528,7 @@ buffers and bufferViews do not contain type information. They simply define the 
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-网格，皮肤和动画这类的大块数据都存储在缓存中，并通过访问器读取。
+网格，蒙皮和动画这类的大块数据都存储在缓存中，并通过访问器读取。
 
 An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
 
@@ -667,7 +667,7 @@ The size of the accessor attribute type is two bytes (the `componentType` is uns
 
 Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
 
-任何一个节点都可以包含一个或多个网格，定义在该节点的`meshes`属性中。任何一个节点可能包含一个皮肤网格实例，定义在`meshes`, `skeletons` 和`skin`属性组合中。一个节点可以要么包含多个网格，要么包含一个单独的皮肤网格实例，但不能两者都包含。
+任何一个节点都可以包含一个或多个网格，定义在该节点的`meshes`属性中。任何一个节点可能包含一个骨骼蒙皮实例，定义在`meshes`, `skeletons` 和`skin`属性组合中。一个节点可以要么包含多个网格，要么包含一个单独的骨骼蒙皮实例，但不能两者都包含。
 
 ### Meshes
 
@@ -706,13 +706,17 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-> **备注：**每一个图元对应一个WebGL渲染调用（当然也包括批次渲染调用）。当定义一个图元的顶点索引时，通过引用一个访问器来使用索引数据，同时使用GL的`drawElements`方法。如果没有定义`indices`属性，则调用GL的`drawArrays`方法，同时使用
+> **备注：**每一个图元对应一个WebGL渲染调用（当然也包括批次渲染调用）。如果该图元有顶点索引，通过引用一个访问器来使用索引数据，同时使用GL的`drawElements`方法。如果没有定义`indices`属性，则调用GL的`drawArrays`方法，同时任何引用`attributes`属性的访问器所用的属性数目都相同（对一个给定图元，它们是均等的）。
 
 
 
 ### Skins
 
+### 蒙皮
+
 All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+
+所有的蒙皮都是通过名称，保存在三维数据中的`skins`字典数据中。每一个蒙皮都定义了`bindShapeMatrix`属性，描述如何通过关节来摆放该蒙皮几何对象的姿势；`inverseBindMatrices`属性用来说明在同一个空间中，每一个关节的坐标位置；`jointNames`是一个数组属属性，列举了用于演示蒙皮动画的所有关节。关节的顺序则保存在`skin.jointNames`数组中，它必须匹配`inverseBindMatrices`数据的顺序。通过节点的`jointName`属性，每一个关节的名字都必须对应节点层级中其中一个节点的关节。
 
 
 ```javascript
@@ -747,7 +751,11 @@ All skins are stored in the `skins` dictionary property of the asset, by name. E
 
 #### Skin Instances
 
+### 蒙皮实例
+
 A skin is instanced within a node using a combination of the node's `meshes`, `skeletons`, and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
+
+如果一个节点包含`meshes`, `skeletons`和 `skin`属性，该蒙皮是一个实例化属性。该蒙皮实例对应的网格定义在meshes`属性。`skeletons`属性包含一个或多个骨骼，每一个都是一个节点层级的根节点。`skin`属性则包含该蒙皮对应实例的ID。如下定义了一个蒙皮实例，以及它所用到的一个网格和骨骼。
 
 ```javascript
     "node_1": {
@@ -763,7 +771,11 @@ A skin is instanced within a node using a combination of the node's `meshes`, `s
 
 #### Skinned Mesh Attributes
 
+###骨骼蒙皮属性
+
 The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+
+一个蒙皮会有一个网格顶点，里面定义了该蒙皮的顶点属性，在顶点着色器中用于蒙皮计算。`JOINT`属性中的数据包含了对应`jointNames`数组的关节索引，这会影响顶点数据值。`WEIGHT`属性数据则定义了该关节影响顶点属性值的权重大小。如下是一个骨骼蒙皮，定义了一个三角形网格图元的`JOINT`和`WEIGHT`顶点数据。
 
 ```javascript
     "meshes": {
@@ -789,10 +801,14 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 > **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
 
+> **备注：**影响一个顶点数据的关节数目通常都限制在4个以内，所以关节索引和权重可以存储在__vec4__元素中。
 
-#### Joint Hierarchy
+
+#### 关节层次
 
 The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint using the `jointName` property. Any joints listed in the skin's `jointNames` property must correspond to a node that has the same `jointName` property. The following example defines a joint hierarchy of two joints with `root-node` at the root, identified as a joint using the joint name `Bone1`.
+
+简单说，在动画中用到的关节层级就是glTF中的节点层次，每一个节点通过定义`jointName`属性来标识。蒙皮的`jointNames`属性列出的所有关节必须和具有相同`jointName`属性的节点一一对应。如下的例子，定义了一个关节层次，该层次中包含`root-node`根关节和`Bone1`关节。
 
 ```javascript
     "nodes": {
@@ -844,13 +860,19 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
+关于蒙皮顶点更详细的介绍，可以参考[glTF Overview](figures/gltfOverview-0.2.0.png)。
+
 
 <a name="materials-and-shading"></a>
-## Materials and Shading
+## 材质和着色器
 
 A material is defined as an instance of a shading technique along with parameterized values, e.g., light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
 
+我们以阴影技术实例的形式来定义一个材质，该实例中有一些参数化的值，比如灯光颜色，镜面反射，反射度等。着色器技术使用JSON属性来描述GLSL顶点和片段着色器中的语义和数据类型。
+
 Materials are stored in the assets `materials` dictionary property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess, and specular color.
+
+材质存储在数据中`materials`字典属性下，包含一个或多个材质定义。如下是一个Blinn光照模型定义的着色器，包括环境光，漫反射纹理，发射光颜色，反射度和镜面反射颜色。
 
 ```javascript
 "materials": {
@@ -885,13 +907,21 @@ Materials are stored in the assets `materials` dictionary property, which contai
 
 The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
 
+`technique`属性是可选的；如果没有提供，则不会定义材质的扩展属性，这时该对象会以默认材质的形式来渲染，发射光颜色为50%灰。可以查看[附录 A](#appendix-a)。
+
 **non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
+
+**非正式内容**：实际上，多数数据都有一个`technique`或材质属性的扩展定义。简单说，当使用一个扩展材质时，默认的材质允许一个数据不用定义一个明确的technique。
 
 ### Techniques
 
 A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
 
+一个technique描述了一个材质所使用的着色器。三维数据的techniques保存在`techniques`字典属性中。
+
 The following example shows a technique and the properties it defines. This section describes each property in detail.
+
+下面的例子显示了一个technique以及它所定义的属性。
 
 ```javascript
 "techniques": {
@@ -948,11 +978,15 @@ The following example shows a technique and the properties it defines. This sect
 
 ```
 
-#### Parameters
+#### 参数
 
 Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc.), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique.
 
+每一个technique可能会有几个参数；每一个参数都有一个类型（GL类型，比如浮点型，向量，纹理等），一个默认值和可能的语义描述（说明在运行时，如果讲这些数据传递到着色器）。当一个材质例举了一个technique，每一个值都通过`values`属性对应的名字映射到technique定义的参数中。
+
 The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white.
+
+上面的例子用到了几个参数。`ambient`属性是一个`FLOAT_VEC4`类型，`diffuse`是`SAMPLER_2D`，`light0color`是`FLOAT_VEC3`，默认颜色是白色。
 
 
 #### Semantics
