@@ -393,7 +393,7 @@ buffers and bufferViews do not contain type information. They simply define the 
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a bufferView. The accessor specifies a component type (e.g. `FLOAT`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the bufferView using the properties `byteOffset` and `count`. count specifies the number of attributes within the bufferView, *not* the number of bytes.
+An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of attributes within the `bufferView`, *not* the number of bytes.
 
 All accessors are stored in the asset's `accessors` dictionary property.
 
@@ -484,9 +484,15 @@ In this accessor, the `componentType` is `5126` (FLOAT), so each component is fo
 
 #### BufferView and Accessor Byte Alignment
 
-The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's attribute type.
+The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-> **Implementation Note:** This allows a runtime to efficiently create a single arraybuffer from a glTF `buffer` or an arraybuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an arraybuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
+When `accessor.byteStride` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `accessor.byteStride` is defined, it must be a multiple of the size of the accessor's component type. Only vertex attribute accessors can use non-tight packing.
+
+Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ATTRIBUTE_TYPE` must be less than or equal to `bufferView.length`.
+
+For performance and compatibility reasons, vertex attribute data should be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `accessor.byteStride` should be multiples of 4). While some implementations could handle misaligned data, not following this recommendation may lead to extra data processing, performance degradation, and/or inability to initialize attributes pipeline.
+
+> **Implementation Note:** For JavaScript, this allows a runtime to efficiently create a single ArrayBuffer from a glTF `buffer` or an ArrayBuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an ArrayBuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
 Consider the following example:
 
@@ -512,7 +518,13 @@ Consider the following example:
     }
 }
 ```
-The size of the accessor attribute type is two bytes (the `componentType` is unsigned short and the `type` is scalar).  The accessor's `byteOffset` is also divisible by two.  Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
+Accessing binary data defined by example above could be done like this:
+
+```js
+var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
+```
+
+The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
 
 
 <a name="geometry-and-meshes"></a>
@@ -1468,7 +1480,7 @@ The ID of the [`bufferView`](#reference-bufferView).
 
 ### accessor.byteOffset :white_check_mark:
 
-The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the data type.
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the component datatype.
 
 * **Type**: `integer`
 * **Required**: Yes
@@ -1477,7 +1489,7 @@ The offset relative to the start of the [`bufferView`](#reference-bufferView) in
 
 ### accessor.byteStride
 
-The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.
+The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.  This must be a multiple of the size of the component datatype.
 
 * **Type**: `integer`
 * **Required**: No, default: `0`
