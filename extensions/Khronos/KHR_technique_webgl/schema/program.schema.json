@@ -18,11 +18,11 @@
         },
         "fragmentShader" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the fragment shader."
+            "description" : "The index of the fragment shader."
         },
         "vertexShader" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the vertex shader."
+            "description" : "The index of the vertex shader."
         },
         "name" : {},
         "extensions" : {},

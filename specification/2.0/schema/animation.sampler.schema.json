@@ -7,8 +7,8 @@
     "properties" : {
         "input" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of an accessor containing keyframe input values, e.g., time.",
-            "gltf_detailedDescription" : "The ID of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
+            "description" : "The index of an accessor containing keyframe input values, e.g., time.",
+            "gltf_detailedDescription" : "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
         },
         "interpolation" : {
             "type" : "string",
@@ -19,8 +19,8 @@
         },
         "output" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription" : "The ID of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
+            "description" : "The index of an accessor, containing keyframe output values.",
+            "gltf_detailedDescription" : "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
         },
         "extensions" : {},
         "extras" : {}

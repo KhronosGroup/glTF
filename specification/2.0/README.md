@@ -2,11 +2,11 @@
 <img src="../figures/gltf.png" />
 </p>
 
-*Version 1.1*
+*Version 2.0*
 
-The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: November 30, 2016
+Last Updated: February 1, 2017
 
 Editors
 
@@ -21,7 +21,7 @@ Contributors
 * Neil Trevett, NVIDIA
 * Alexey Knyazev, Individual Contributor
 
-Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
+Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.
 
 # Contents
 
@@ -30,6 +30,7 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [glTF Basics](#glTFbasics)
   * [Design Goals](#designgoals)
   * [File Extensions and MIME Types](#mimetypes)
+  * [JSON Encoding](#json-encoding)
 * [Concepts](#concepts)
   * [IDs and Names](#ids-and-names)
   * [Scenes](#scenes)
@@ -52,18 +53,18 @@ Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 
 *This section is non-normative.*
 
-The GL Transmission Format (glTF) is a runtime asset delivery format for GL APIs: WebGL, OpenGL ES, and OpenGL.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
 <a name="motivation"></a>
 ## Motivation
 
-Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GL-based applications.
+Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
 
 Applications seeking high performance rarely load modeling formats directly; instead, they process models offline as part of a custom content pipeline, converting the assets into a proprietary format optimized for their runtime application.  This has led to a fragmented market of incompatible proprietary runtime formats and duplicated efforts in the content creation pipeline. 3D assets exported for one application cannot be reused in another application without going back to the original modeling, tool-specific source and performing another proprietary export step.
 
 With the advent of mobile- and web-based 3D computing, new classes of applications have emerged that require fast, dynamic loading of standardized 3D assets. Digital marketing solutions, e-commerce product visualizations, and online model-sharing sites are just a few of the connected 3D applications being built today using WebGL or OpenGL ES. Beyond the need for efficient delivery, many of these online applications can benefit from a standard, interoperable format to enable sharing and reuse of assets between users, between applications, and within heterogeneous, distributed content pipelines.
 
-glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be loaded directly into GL buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
+glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be loaded directly into GPU buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
 
 <a name="glTFbasics"></a>
 
@@ -76,9 +77,9 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 * Image files (`.jpg`, `.png`, etc.) for textures
 * GLSL text files (`.glsl`) for GLSL shader source code
 
-Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en/data_URIs).
+Assets defined in other formats, such as images and GLSL shader source code, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
 
-Valid glTF asset must specify its version and contain at least one [mesh primitive](#meshes).
+Valid glTF asset must specify its version.
 
 <p align="center">
 <img src="figures/files.png" width="50%" />
@@ -103,7 +104,7 @@ The following are outside the scope of the initial design of glTF:
 * *glTF is not a streaming format.* The binary data in glTF is inherently streamable, and the buffer design allows for fetching data incrementally. But there are no other streaming constructs in the format, and no conformance requirements for an implementation to stream data versus downloading it in its entirety before rendering.
 * *glTF is not intended to be human-readable,* though by virtue of being represented in JSON, it is developer-friendly.
 
-Version 1.1 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
+Version 2.0 of glTF does not define compression for geometry and other rich data. However, the design team believes that compression is a very important part of a transmission standard, and there is already work underway to define compression extensions.
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
@@ -112,12 +113,21 @@ Version 1.1 of glTF does not define compression for geometry and other rich data
 
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
-* `*.glsl` files use `text/plain`
 * Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: .jpg, .png, .bmp, and .gif.
+
+<a name="json-encoding"></a>
+## JSON encoding
+
+To simplify client-side implementation, glTF has following restrictions on JSON format and encoding.
+
+1. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
+2. JSON must use UTF-8 encoding without BOM.
+
+> **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
 
 ## URIs
 
-glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be decoded with JavaScript's `atob`.
+glTF uses URIs to reference buffers, shaders, and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, textures, or shaders, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
@@ -128,101 +138,71 @@ This allows the application to decide the best approach for delivery: if differe
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
-The top-level dictionary objects in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
+The top-level arrays in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
 </p>
 
 <a name="file-structure"></a>
 
 <a name="ids-and-names"></a>
-## IDs and Names
+## Indices and Names
 
-_IDs_ are internal string identifiers used to reference parts of a glTF asset, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's ID.  For example:
+Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array.  For example:
 
 ```json
 {
-    "buffers": {
-        "a-buffer-id": {
+    "buffers": [
+        {
             "byteLength": 1024,
             "uri": "path-to.bin"
         }
-    },
-    "bufferViews": {
-        "a-bufferView-id": {
-            "buffer": "a-buffer-id",
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
             "byteLength": 512,
             "byteOffset": 0
         }
-    }
+    ]
 }
 ```
 
-In this example, `"a-buffer-id"` and `"a-bufferView-id"` are IDs.  The bufferView refers to the buffer using the buffer's ID: `"buffer": "a-buffer-id"`.
+In this example, `buffers` and `bufferViews` have only one element each.  The bufferView refers to the buffer using the buffer's ID: `"buffer": 0`.
 
-IDs for top-level glTF dictionary objects (`accessors`, `animations`, `buffers`, `bufferViews`, `cameras`, `images`, `materials`, `meshes`, `nodes`, `programs`, `samplers`, `scenes`, `shaders`, `skins`, `techniques`, and `textures`) are in the same namespace and are unique.
-
-For example, the following is **not** allowed:
-
-```json
-{
-    "buffers": {
-        "forbiddenSameId": {}
-    },
-    "bufferViews": {
-        "forbiddenSameId": {}
-    }
-}
-```
-
-IDs for non top-level glTF dictionary objects (e.g., `animation.samplers`) are each in their own namespace.  IDs are unique within the object as enforced by JSON.  For example, the following **is** allowed:
-
-```json
-{
-    "animations": {
-        "animation-0": {
-            "samplers": {
-                "allowedSameAnimationSamplerId": {}
-            }
-        },
-        "animation-1": {
-            "samplers": {
-                "allowedSameAnimationSamplerId": {}
-            }
-        }
-    }
-}
-```
-
-Whereas IDs are used for internal glTF references, _names_ are used for application-specific uses such as display.  glTF objects that are commonly accessed from an application have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
+Whereas indices are used for internal glTF references, _names_ are used for application-specific uses such as display.  Any top-level glTF object can have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
 For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
-
-It is recommended that container formats reference a glTF object by ID by concatenating the asset's path, `#`, and the ID, e.g., `asset.gltf#material_id`.
 
 <a name="scenes"></a>
 ## Scenes
 
-The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a dictionary object `scenes`. An additional property, `scene` (note singular), identifies which of the scenes in the dictionary is to be displayed at load time.
+The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
-The following example defines a glTF asset with a single scene, `defaultScene`, that contains a single node, `node_1`.
+The following example defines a glTF asset with a single scene, that contains a single node.
 
 ```json
 {
-    "scene": "defaultScene",
-    "scenes": {
-        "defaultScene": {
+    "nodes": [
+        {
+            "name": "singleNode"
+        }
+    ],
+    "scenes": [
+        {
+            "name": "singleScene",
             "nodes": [
-                "node_1"
+                0
             ]
         }
-     }
+    ],
+    "scene": 0
 }
 ```
 
 ### Nodes and Hierarchy
 
-The glTF asset defines one or more *nodes*, that is, the objects comprising the scene to render.
+The glTF asset can define *nodes*, that is, the objects comprising the scene to render.
 
-Each node can contain one or more meshes, a skin instance, a joint name, or a camera, defined in the `meshes`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
+Each node can contain one mesh, a skin instance, a joint name, or a camera, defined in the `mesh`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
 
 Nodes have an optional `name` property.
 
@@ -234,23 +214,29 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 
 ```json
 {
-    "nodes": { 
-        "node-box": {
+    "nodes": [
+        {
+            "name": "node-camera"
+        },
+        {
+            "name": "node_1"
+        },
+        {
             "children": [
-                "node_1",
-                "node-camera_1"
+                0,
+                1
             ],
             "name": "Box"
         }
-    }
+    ]
 }
 ```
 
-The node `node-box` has two children, `node_1` and `node-camera_1`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+The node named `Box` has two children, `node_1` and `node-camera`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
->For Version 1.1 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted after Version 1.1.
+>For Version 2.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted later.
 
-The node hierarchy is considered as a skeleton hierarchy if any of its nodes contains a `jointName` property. No node from the skeleton hierarchy can contain `camera`, `skeletons`, `skin`, or `meshes` properties.
+The node hierarchy is considered as a skeleton hierarchy if any of its nodes contains a property. No node from the skeleton hierarchy can contain `camera`, `skeletons`, `skin`, or `meshes` properties.
 
 ### Transforms
 
@@ -260,15 +246,15 @@ TRS properties are converted to matrices and postmultiplied in the `T * R * S` o
 
 When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
 
-In the example below, `node-box` defines non-default rotation and translation.
+In the example below, node named `Box` defines non-default rotation and translation.
 
 ```json
 {
-    "nodes": {
-        "node-box": {
+    "nodes": [
+        {
             "children": [
-                "node_1",
-                "node-camera_1"
+                0,
+                1
             ],
             "name": "Box",
             "rotation": [
@@ -288,7 +274,7 @@ In the example below, `node-box` defines non-default rotation and translation.
                 2.0922
             ]
         }
-    }
+    ]
 }
 ```
 
@@ -296,10 +282,9 @@ The next example defines the transformation for a camera node using the `matrix`
 
 ```json
 {
-    "nodes": {
-        "node-camera_1": {
-            "camera": "camera_1",
-            "children": [],
+    "nodes": [
+        {
+            "camera": 1,
             "matrix": [
                 -0.99975,
                 -0.00679829,
@@ -318,9 +303,9 @@ The next example defines the transformation for a camera node using the `matrix`
                 -0.478297,
                 1
             ],
-            "name": "Camera01"
+            "name": "node-camera"
         }
-    }
+    ]
 }
 ```
 
@@ -342,51 +327,50 @@ Positive rotation is counterclockwise.
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
 
-Binary blobs allow efficient creation of GL buffers and
-textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
+Binary blobs allow efficient creation of GL buffers and textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
 Buffer data is little endian.
 
-All buffers are stored in the asset's `buffers` dictionary property.
+All buffers are stored in the asset's `buffers` array.
 
 The following example defines a buffer. The `byteLength` property specifies the size of the buffer file. The `uri` property is the URI to the buffer data. Buffer data may also be stored within the glTF file as base64-encoded data and reference via data URI.
 
 ```json
 {
-   "buffers": {
-       "duck": {
+   "buffers": [
+       {
            "byteLength": 102040,
            "uri": "duck.bin"
        }
-   }
+   ]
 }
 ```
 
 A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
 
-The following example defines two buffer views: an ELEMENT_ARRAY_BUFFER view `bufferView_29`, which holds the indices for an indexed triangle set, and `bufferView_30`, an ARRAY_BUFFER that holds the vertex data for the triangle set.
+The following example defines two buffer views: the first is an ELEMENT_ARRAY_BUFFER, which holds the indices for an indexed triangle set, and the second is an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
 
 ```json
 {
-    "bufferViews": {
-        "bufferView_29": {
-            "buffer": "duck",
+    "bufferViews": [
+        {
+            "buffer": 0,
             "byteLength": 25272,
             "byteOffset": 0,
             "target": 34963
         },
-        "bufferView_30": {
-            "buffer": "duck",
+        {
+            "buffer": 0,
             "byteLength": 76768,
             "byteOffset": 25272,
             "target": 34962
         }
-    }
+    ]
 }
 ```
 
-buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) never access buffers or bufferViews directly, but rather via *accessors*.
+buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations)  access buffers or bufferViews via *accessors*.
 
 
 ### Accessors
@@ -395,15 +379,15 @@ All large data for meshes, skins, and animations is stored in buffers and retrie
 
 An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of attributes within the `bufferView`, *not* the number of bytes.
 
-All accessors are stored in the asset's `accessors` dictionary property.
+All accessors are stored in the asset's `accessors` array.
 
-The following fragment shows two accessors, a scalar accessor for retrieving a primitive's indices and a 3-float-component vector accessor for retrieving the primitive's position data.
+The following fragment shows two accessors, the first is a scalar accessor for retrieving a primitive's indices, and the second is a 3-float-component vector accessor for retrieving the primitive's position data.
 
 ```json
 {
-    "accessors": {
-        "accessor_21": {
-            "bufferView": "bufferView_29",
+    "accessors": [
+        {
+            "bufferView": 0,
             "byteOffset": 0,
             "byteStride": 0,
             "componentType": 5123,
@@ -416,8 +400,8 @@ The following fragment shows two accessors, a scalar accessor for retrieving a p
             ],
             "type": "SCALAR"
         },
-        "accessor_23": {
-            "bufferView": "bufferView_30",
+        {
+            "bufferView": 1,
             "byteOffset": 0,
             "byteStride": 12,
             "componentType": 5126,
@@ -434,7 +418,7 @@ The following fragment shows two accessors, a scalar accessor for retrieving a p
             ],
             "type": "VEC3"
         }
-    }
+    ]
 }
 ```
 
@@ -467,16 +451,16 @@ For example:
 
 ```json
 {
-    "accessors": {
-        "accessor_1": {
-            "bufferView": "bufferView_1",
+    "accessors": [
+        {
+            "bufferView": 1,
             "byteOffset": 7032,
             "byteStride": 12,
             "componentType": 5126,
             "count": 586,
             "type": "VEC3"
         }
-    }
+    ]
 }
 ```
 
@@ -490,7 +474,7 @@ When `accessor.byteStride` equals `0` (or not defined), it means that accessor e
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ATTRIBUTE_TYPE` must be less than or equal to `bufferView.length`.
 
-For performance and compatibility reasons, vertex attribute data should be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `accessor.byteStride` should be multiples of 4). While some implementations could handle misaligned data, not following this recommendation may lead to extra data processing, performance degradation, and/or inability to initialize attributes pipeline.
+For performance and compatibility reasons, vertex attribute data should be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `accessor.byteStride` should be multiples of 4). 
 
 > **Implementation Note:** For JavaScript, this allows a runtime to efficiently create a single ArrayBuffer from a glTF `buffer` or an ArrayBuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an ArrayBuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
@@ -498,24 +482,24 @@ Consider the following example:
 
 ```json
 {
-    "bufferViews": {
-        "bufferView_1": {
-            "buffer": "buffer_1",
+    "bufferViews": [
+        {
+            "buffer": 0,
             "byteLength": 17136,
             "byteOffset": 620,
             "target": 34963
         }
-    },
-    "accessors": {
-        "accessor_1": {
-            "bufferView": "bufferView_1",
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
             "byteOffset": 4608,
             "byteStride": 0,
             "componentType": 5123,
             "count": 5232,
             "type": "SCALAR"
         }
-    }
+    ]
 }
 ```
 Accessing binary data defined by example above could be done like this:
@@ -531,11 +515,13 @@ The size of the accessor component type is two bytes (the `componentType` is uns
 
 ## Geometry and Meshes
 
-Any node can contain one or more meshes, defined in its `meshes` property. Any node can contain one skinned mesh instance, defined using a combination of the properties `meshes`, `skeletons`, and `skin`. A node can either contain meshes or a single skinned mesh instance, but not both.
+Any node can contain one mesh, defined in its `mesh` property. Mesh can be skinned using a combination of the properties `skeletons` and `skin`.
 
 ### Meshes
 
 In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that corresponds to the GL primitive type (e.g., triangle set).
+
+> **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
 > **Implementation note:** If `material` is undefined, engines can opt to render such primitive with [default material](#appendix-a).
 
@@ -543,42 +529,41 @@ The following example defines a mesh containing one triangle set primitive:
 
 ```json
 {
-    "meshes": {
-        "mesh_0": {
+    "meshes": [
+        {
             "primitives": [
                 {
                     "attributes": {
-                        "NORMAL": "accessor_25",
-                        "POSITION": "accessor_23",
-                        "TEXCOORD_0": "accessor_27"
+                        "NORMAL": 25,
+                        "POSITION": 23,
+                        "TEXCOORD_0": 27
                     },
-                    "indices": "accessor_21",
-                    "material": "blinn3-fx",
+                    "indices": 21,
+                    "material": 3,
                     "mode": 4
                 }
             ]
         }
-    }
+    ]
 }
 ```
 
-Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. This value will be mapped to a specific named attribute within the GLSL shader for the mesh, as defined in the material technique's `parameters` dictionary property (see Materials and Shading, below). The value of the property is the ID of an accessor that contains the data.
+Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
 Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  `TEXCOORD` and `COLOR` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_1`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
 
-
 ### Skins
 
-All skins are stored in the `skins` dictionary property of the asset, by name. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` array of the asset. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
 
 
 ```json
 {    
-    "skins": {
-        "skin_1": {
+    "skins": [
+        {
             "bindShapeMatrix": [
                 0,
                 -0.804999,
@@ -597,33 +582,31 @@ All skins are stored in the `skins` dictionary property of the asset, by name. E
                 597.2,
                 1
             ],
-            "inverseBindMatrices": "bind-matrices_1",
+            "inverseBindMatrices": 11,
             "jointNames": [
                 "Bone1",
                 "Bone2"
             ]
         }
-    }
+    ]
 }
 ```
 
 #### Skin Instances
 
-A skin is instanced within a node using a combination of the node's `meshes`, `skeletons`, and `skin` properties. The meshes for a skin instance are defined in the `meshes` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the ID of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
+A skin is instanced within a node using a combination of the node's `mesh`, `skeletons`, and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the index of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
 
 ```json
 {
-    "nodes": {
-        "node_1": {
-            "meshes": [
-                "skinned-mesh_1"
-            ],
+    "nodes": [
+        {
+            "mesh": 11,
             "skeletons": [
-                "skeleton-root_1"
+                21
             ],
-            "skin": "skin_1"
+            "skin": 0
         }
-    }
+    ]
 }
 ```
 
@@ -633,25 +616,25 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 
 ```json
 {
-    "meshes": {
-        "skinned-mesh_1": {
+    "meshes": [
+        {
             "name": "skinned-mesh_1",
             "primitives": [
                 {
                     "attributes": {
-                        "JOINT": "accessor_179",
-                        "NORMAL": "accessor_165",
-                        "POSITION": "accessor_163",
-                        "TEXCOORD_0": "accessor_167",
-                        "WEIGHT": "accessor_176"
+                        "JOINT": 179,
+                        "NORMAL": 165,
+                        "POSITION": 163,
+                        "TEXCOORD_0": 167,
+                        "WEIGHT": 176
                     },
-                    "indices": "accessor_161",
-                    "material": "material_1",
+                    "indices": 161,
+                    "material": 1,
                     "mode": 4
                 }
             ]
         }
-    }
+    ]
 }
 ```
 
@@ -664,13 +647,13 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 
 ```json
 {
-    "nodes": {
-        "root-node": {
+    "nodes": [
+        {
             "children": [
-                "child-node"
+                1
             ],
             "jointName": "Bone1",
-            "name": "root",
+            "name": "root-node",
             "rotation": [
                 0,
                 0,
@@ -688,8 +671,7 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
                 -5.08e-08
             ]
         },
-        "child-node": {
-            "children": [],
+        {
             "jointName": "Bone2",
             "name": "head",
             "rotation": [
@@ -709,419 +691,65 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
                 0
             ]
         }
-    }
+    ]
 }
 ```
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
-
-<a name="materials-and-shading"></a>
-## Materials and Shading
-
-A material is defined as an instance of a shading technique along with parameterized values, e.g., light colors, specularity, or shininess. Shading techniques use JSON properties to describe data types and semantics for GLSL vertex and fragment shader programs.
-
-Materials are stored in the assets `materials` dictionary property, which contains one or more material definitions. The following example shows a Blinn shader with ambient color, diffuse texture, emissive color, shininess, and specular color.
-
-```json
-{
-    "materials": {
-        "blinn-1": {
-            "technique": "technique1",
-            "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "diffuse": [
-                    "texture_file2"
-                ],
-                "emission": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "shininess": [
-                    38.4
-                ],
-                "specular": [
-                    0,
-                    0,
-                    0,
-                    1
-                ]
-            },
-            "name": "blinn1"
-        }
-    }
-}
-```
-
-The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
-
-If `technique` property is undefined, `values` property must be undefined too.
-
-**non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
-
-### Techniques
-
-A technique describes the shading used for a material. The asset's techniques are stored in the `techniques` dictionary property.
-
-The following example shows a technique and the properties it defines. This section describes each property in detail.
-
-```json
-{
-    "techniques": {
-        "technique1": {
-            "parameters": {
-                "normal": {
-                    "type": 35665
-                },
-                "position": {
-                    "type": 35665
-                },
-                "texcoord0": {
-                    "type": 35664
-                },
-                "ambient": {
-                    "type": 35666
-                },
-                "diffuse": {
-                    "type": 35678
-                },
-                "emission": {
-                    "type": 35666
-                },
-                "light0Color": {
-                    "type": 35665,
-                    "value": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                "shininess": {
-                    "type": 5126
-                },
-                "specular": {
-                    "type": 35678
-                },
-                "light0Transform": {
-                    "semantic": "MODELVIEW",
-                    "node": "directionalLight1",
-                    "type": 35676
-                },
-                "modelViewMatrix": {
-                    "semantic": "MODELVIEW",
-                    "type": 35676
-                },
-                "normalMatrix": {
-                    "semantic": "MODELVIEWINVERSETRANSPOSE",
-                    "type": 35676
-                },
-                "projectionMatrix": {
-                    "semantic": "PROJECTION",
-                    "type": 35676
-                }
-            },
-            "attributes": {
-                "a_normal": "normal",
-                "a_position": "position",
-                "a_texcoord0": "texcoord0"
-            },
-            "program": "program_0",
-            "uniforms": {
-                "u_ambient": "ambient",
-                "u_diffuse": "diffuse",
-                "u_emission": "emission",
-                "u_shininess": "shininess",
-                "u_specular": "specular",
-                "u_light0Color": "light0Color",
-                "u_light0Transform": "light0Transform",
-                "u_modelViewMatrix": "modelViewMatrix",
-                "u_normalMatrix": "normalMatrix",
-                "u_projectionMatrix": "projectionMatrix"
-            },
-            "states": {
-                "enable": [
-                    2884,
-                    2929
-                ]
-            }
-        }
-    }
-}
-```
-
-#### Parameters
-
-Each technique has zero or more parameters; each parameter is defined by a type (GL types such as a floating point number, vector, texture, etc.), a default value, and potentially a semantic describing how the runtime is to interpret the data to pass to the shader. When a material instances a technique, the name of each supplied value in its `values` property corresponds to one of the parameters defined in the technique.
-
-The above example illustrates several parameters. The property `ambient` is defined as a `FLOAT_VEC4` type; `diffuse` is defined as a `SAMPLER_2D`; and `light0color` is defined as a `FLOAT_VEC3` with a default color value of white.
-
-
-#### Semantics
-
-Technique parameters may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
-
-In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `directionalight1`, which refers to a node that contains a light source.
-
-If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
-
-```json
-{
-    "techniques": {
-        "technique1": {
-            "parameters": {
-                "projectionMatrix": {
-                    "semantic": "PROJECTION",
-                    "type": 35676
-                }
-            }
-        }
-    }
-}
-```
-
-Table 1. Uniform Semantics
-
-| Semantic                     | Type         | Description |
-|:----------------------------:|:------------:|-------------|
-| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parent's.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
-| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its ancestors. |
-| `VIEW`                       | `FLOAT_MAT4` | Transforms from world to view coordinates using the active camera node. |
-| `PROJECTION`                 | `FLOAT_MAT4` | Transforms from view to clip coordinates using the active camera node. |
-| `MODELVIEW`                  | `FLOAT_MAT4` | Combined `MODEL` and `VIEW`. |
-| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | Combined `MODEL`, `VIEW`, and `PROJECTION`. |
-| `MODELINVERSE`               | `FLOAT_MAT4` | Inverse of `MODEL`. |
-| `VIEWINVERSE`                | `FLOAT_MAT4` | Inverse of `VIEW`. |
-| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | Inverse of `PROJECTION`. |
-| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | Inverse of `MODELVIEW`. |
-| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | Inverse of `MODELVIEWPROJECTION`. |
-| `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
-| `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
-| `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
-| `JOINTMATRIX`                | `FLOAT_MAT4[]` | Array parameter; its length (`parameter.count`) must be greater than or equal to the length of `jointNames` array of a skin being used. Each element transforms mesh coordinates for a particular joint for skinning and animation. |
-
-For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_SIMULATION_TIME`.
-
-#### Program Instances
-
-The `program` property of a technique creates an instance of a shader program. The value of the property is the ID of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
-
-Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
-
-
-```json
-{
-    "techniques": {
-        "technique1": {
-            "parameters": {},
-            "attributes": {
-                "a_normal": "normal",
-                "a_position": "position",
-                "a_texcoord0": "texcoord0"
-            },
-            "program": "program_0",
-            "uniforms": {
-                "u_ambient": "ambient",
-                "u_diffuse": "diffuse",
-                "u_emission": "emission",
-                "u_light0Color": "light0Color",
-                "u_light0Transform": "light0Transform",
-                "u_modelViewMatrix": "modelViewMatrix",
-                "u_normalMatrix": "normalMatrix",
-                "u_projectionMatrix": "projectionMatrix",
-                "u_shininess": "shininess",
-                "u_specular": "specular"
-            }
-        }
-    }
-}
-```
-
-The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
-
-The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
-
-#### Render States
-
-Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
-
-* `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
-* `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
-
-Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), and `32926` (`SAMPLE_ALPHA_TO_COVERAGE`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `states`, all of these Boolean GL states are disabled.
-
-Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, and `"polygonOffset"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
-
-The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
-
-```json
-{
-    "techniques": {
-        "technique1": {
-            "states": {
-                "enable": [
-                    3042,
-                    2884,
-                    2929,
-                    32823,
-                    32926
-                ],
-                "functions": {
-                    "blendColor": [0.0, 0.0, 0.0, 0.0],
-                    "blendEquationSeparate": [
-                        32774,
-                        32774
-                    ],
-                    "blendFuncSeparate": [1, 0, 1, 0],
-                    "colorMask": [true, true, true, true],
-                    "cullFace": [1029],
-                    "depthFunc": [513],
-                    "depthMask": [true],
-                    "depthRange": [0.0, 1.0],
-                    "frontFace": [2305],
-                    "lineWidth": [1.0],
-                    "polygonOffset": [0.0, 0.0]
-                }
-            }
-        }
-    }
-}
-```
-
-The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
-```json
-{
-    "techniques": {
-        "technique1": {
-			"states": {
-	    		"enable": [
-	        		2884,
-	        		2929
-	    		]
-			}
-		}
-	}
-}
-```
-
-> **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
-
-
-#### Programs
-
-GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
-
-Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively.
-
-```json
-{
-    "programs": {
-        "program_0": {
-            "attributes": [
-                "a_normal",
-                "a_position",
-                "a_texcoord0"
-            ],
-            "fragmentShader": "duck0FS",
-            "vertexShader": "duck0VS"
-        }
-    }
-}
-```
-
-#### Shaders
-
-Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
-
-```json
-{
-	"shaders": {
-    	"duck0FS": {
-        	"type": 35632,
-        	"uri": "duck0FS.glsl"
-    	},
-    	"duck0VS": {
-        	"type": 35633,
-        	"uri": "duck0VS.glsl"
-    	}
-	}
-}
-```    
-
 #### Textures
 
-Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
+All textures are stored in the asset's `textures` array. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
 ```json
 {
-	"materials": {
-    	"material-1": {
-        	"technique": "technique1",
-        	"values": {
-            	"diffuse": [
-            		"texture_file2"
-            	]
-       		},
-        	"name": "material_1"
-    	}
-	}
-}
-```
-
-
-All textures are stored in the asset's `textures` dictionary property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
-
-```json
-{
-    "textures": {
-        "texture_file2": {
+    "textures": [
+        {
             "format": 6408,
             "internalFormat": 6408,
-            "sampler": "sampler_0",
-            "source": "image2",
+            "sampler": 0,
+            "source": 2,
             "target": 3553,
             "type": 5121
         }
-    }
+    ]
 }
 ```
 
 #### Images
 
-Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
+Images referred to by textures are stored in the `images` array of the asset. Each image contains a URI to an external file (or a reference to a bufferView) in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
 
 ```json
 {
-    "images": {
-        "file2": {
+    "images": [
+        {
             "uri": "duckCM.png"
+        },
+        {
+            "bufferView": 14,
+            "mimeType": "image/jpeg" 
         }
-    }
+    ]
 }
 ```
 > **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
 #### Samplers
 
-Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
+Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
 
 ```json
 {
-    "samplers": {
-        "sampler_0": {
+    "samplers": [
+        {
             "magFilter": 9729,
             "minFilter": 9987,
             "wrapS": 10497,
             "wrapT": 10497
         }
-    }
+    ]
 }
 ```
 
@@ -1132,12 +760,27 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 > * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
 > * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
+
+<a name="materials-and-shading"></a>
+## Materials and Shading
+
+A material is defined as an instance of a shading technique along with parameterized values, e.g., light colors, specularity, or shininess.
+
+Materials are stored in the assets `materials` array, which contains one or more material definitions.
+
+The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
+
+If `technique` property is undefined, `values` property must be undefined too.
+
+**non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
+
+
 <a name="cameras"></a>
 ## Cameras
 
 A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics such as PROJECTION.
 
-Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
 Depending on the presence of `zfar` property, perspective cameras could use finite or infinite projection.
 
@@ -1145,8 +788,9 @@ The following example defines two perspective cameras with supplied values for Y
 
 ```json
 {
-    "cameras": {
-        "camera_finite": {
+    "cameras": [
+        {
+            "name": "Finite perspective camera",
             "type": "perspective",
             "perspective": {
                 "aspectRatio": 1.5,
@@ -1155,7 +799,8 @@ The following example defines two perspective cameras with supplied values for Y
                 "znear": 0.01
             }      
         },
-        "camera_infinite": {
+        {
+            "name": "Infinite perspective camera",
             "type": "perspective",
             "perspective": {
                 "aspectRatio": 1.5,
@@ -1163,7 +808,7 @@ The following example defines two perspective cameras with supplied values for Y
                 "znear": 0.01
             }
         }
-    }
+    ]
 }
 ```
 <a name="projection-matrices"></a>
@@ -1199,124 +844,127 @@ where
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
-> **Note:** glTF 1.1 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+> **Note:** glTF 2.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
 
-> **Note:** glTF 1.1 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
+> **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 
-All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
+All animations are stored in the `animations` array of the asset. An animation is defined as a set of channels (the `channels` property) and a set of samplers that specify accessors with key frame data and interpolation method (the `samplers` property).
 
 The following examples show expected animations usage.
 
 ```json
 {
-    "animations": {
-        "one_node_all_props_animation": {
+    "animations": [
+        {
+            "name": "Animate all properties of one node with different samplers",
             "channels": [
                 {
-                    "sampler": "rotation_sampler",
+                    "sampler": 0,
                     "target": {
-                        "id": "node-cam01-box",
+                        "id": 1,
                         "path": "rotation"
                     }
                 },
                 {
-                    "sampler": "scale_sampler",
+                    "sampler": 1,
                     "target": {
-                        "id": "node-cam01-box",
+                        "id": 1,
                         "path": "scale"
                     }
                 },
                 {
-                    "sampler": "translation_sampler",
+                    "sampler": 2,
                     "target": {
-                        "id": "node-cam01-box",
+                        "id": 1,
                         "path": "translation"
                     }
                 }
             ],
-            "samplers": {
-                "rotation_sampler": {
-                    "input": "time_accessor",
+            "samplers": [
+                {
+                    "input": 4,
                     "interpolation": "LINEAR",
-                    "output": "rotation_accessor"
+                    "output": 5
                 },
-                "scale_sampler": {
-                    "input": "time_accessor",
+                {
+                    "input": 4,
                     "interpolation": "LINEAR",
-                    "output": "scale_accessor"
+                    "output": 6
                 },
-                "translation_sampler": {
-                    "input": "time_accessor",
+                {
+                    "input": 4,
                     "interpolation": "LINEAR",
-                    "output": "translation_accessor"
+                    "output": 7
                 }
-            }
+            ]
         },
-        "two_nodes_different_samplers": {
+        {
+            "name": "Animate two nodes with different samplers",
             "channels": [
                 {
-                    "sampler": "a_sampler",
+                    "sampler": 0,
                     "target": {
-                        "id": "node_A",
+                        "id": 0,
                         "path": "rotation"
                     }
                 },
                 {
-                    "sampler": "b_sampler",
+                    "sampler": 1,
                     "target": {
-                        "id": "node_B",
+                        "id": 1,
                         "path": "rotation"
                     }
                 }
             ],
-            "samplers": {
-                "a_sampler": {
-                    "input": "time_accessor_a",
+            "samplers": [
+                {
+                    "input": 0,
                     "interpolation": "LINEAR",
-                    "output": "rotation_accessor_for_node_A"
+                    "output": 1
                 },
-                "b_sampler": {
-                    "input": "time_accessor_b",
+                {
+                    "input": 2,
                     "interpolation": "LINEAR",
-                    "output": "rotation_accessor_for_node_B"
+                    "output": 3
                 }
-            }
+            ]
         },
-        "two_nodes_same_sampler": {
+        {
+            "name": "Animate two nodes with the same sampler",
             "channels": [
                 {
-                    "sampler": "a_sampler",
+                    "sampler": 0,
                     "target": {
-                        "id": "node_A",
+                        "id": 0,
                         "path": "rotation"
                     }
                 },
                 {
-                    "sampler": "a_sampler",
+                    "sampler": 0,
                     "target": {
-                        "id": "node_B",
+                        "id": 1,
                         "path": "rotation"
                     }
                 }
             ],
-            "samplers": {
-                "a_sampler": {
-                    "input": "time_accessor_a",
+            "samplers": [
+                {
+                    "input": 0,
                     "interpolation": "LINEAR",
-                    "output": "rotation_accessor_for_node_A"
+                    "output": 1
                 }
-            }
+            ]
         }
-    }
+    ]
 }
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
-> Note: glTF 1.1 animation samplers support only discrete and linear interpolation.
+> Note: glTF 2.0 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy. (See the section on Skins above.)
 
@@ -1358,35 +1006,35 @@ glTF defines an extension mechanism that allows the base format to be extended w
 
 ```json
 {
-    "shaders": {
-        "a_shader": {
+    "material": [
+        {
             "extensions": {
-                "KHR_binary_glTF": {
-                    "bufferView": "a_shader_bufferView"
+                "KHR_materials_common": {
+                    "technique": "LAMBERT"
                 }
             }
         }
-    }
+    ]
 }
 ```
 
-All extensions used in a glTF asset are listed in the top-level `extensionsUsed` dictionary object, e.g.,
+All extensions used in a glTF asset are listed in the top-level `extensionsUsed` array object, e.g.,
 
 ```json
 {
     "extensionsUsed": [
-        "KHR_binary_glTF",
+        "KHR_materials_common",
         "VENDOR_physics"
     ]
 }
 ```
 
-All glTF extensions required to load and/or render an asset must be listed in the top-level `extensionsRequired` dictionary object, e.g.,
+All glTF extensions required to load and/or render an asset must be listed in the top-level `extensionsRequired` array, e.g.,
 
 ```json
 {
     "extensionsRequired": [
-        "KHR_binary_glTF"
+        "WEB3D_quantized_attributes"
     ]
 }
 ```
@@ -1394,7 +1042,7 @@ All glTF extensions required to load and/or render an asset must be listed in th
 <a name="specifying-gl-extensions"></a>
 ### Specifying GL extensions
 
-If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` dictionary object, e.g.,
+If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` array, e.g.,
 
 ```json
 {
@@ -1427,15 +1075,9 @@ For more information on glTF extensions, consult the [extensions registry specif
 * [`mesh`](#reference-mesh)
    * [`primitive`](#reference-mesh.primitive)
 * [`node`](#reference-node)
-* [`program`](#reference-program)
 * [`sampler`](#reference-sampler)
 * [`scene`](#reference-scene)
-* [`shader`](#reference-shader)
 * [`skin`](#reference-skin)
-* [`technique`](#reference-technique)
-   * [`parameters`](#reference-technique.parameters)
-   * [`states`](#reference-technique.states)
-      * [`functions`](#reference-technique.states.functions)
 * [`texture`](#reference-texture)
 
 This property reference applies to the WebGL 1.0 profile. See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).

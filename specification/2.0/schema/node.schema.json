@@ -7,11 +7,11 @@
     "properties" : {
         "camera" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the camera referenced by this node."
+            "description" : "The index of the camera referenced by this node."
         },
         "children" : {
             "type" : "array",
-            "description" : "The IDs of this node's children.",
+            "description" : "The indices of this node's children.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
@@ -20,16 +20,16 @@
         },
         "skeletons" : {
             "type" : "array",
-            "description" : "The ID of skeleton nodes.",
+            "description" : "The indices of skeleton nodes.",
             "items" : {
                 "$ref" : "glTFid.schema.json"
             },
             "uniqueItems" : true,
-            "gltf_detailedDescription" : "The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`."
+            "gltf_detailedDescription" : "The indices of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`."
         },
         "skin" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the skin referenced by this node."
+            "description" : "The index of the skin referenced by this node."
         },
         "jointName" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
@@ -47,14 +47,9 @@
             "gltf_detailedDescription" : "A floating-point 4x4 transformation matrix stored in column-major order.",
             "gltf_webgl" : "`uniformMatrix4fv()` with the transpose parameter equal to false"
         },
-        "meshes" : {
-            "type" : "array",
-            "description" : "The IDs of the meshes in this node.",
-            "items" : {
-                "$ref" : "glTFid.schema.json"
-            },
-            "uniqueItems" : true,
-            "gltf_detailedDescription" : "The IDs of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix."
+        "mesh" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the mesh in this node."
         },
         "rotation" : {
             "type" : "array",

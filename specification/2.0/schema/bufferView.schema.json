@@ -7,7 +7,7 @@
     "properties" : {
         "buffer" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the buffer."
+            "description" : "The index of the buffer."
         },
         "byteOffset" : {
             "type" : "integer",

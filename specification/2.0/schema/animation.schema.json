@@ -14,14 +14,12 @@
             "minItems" : 1
         },
         "samplers" : {
-            "type" : "object",
-            "description" : "A dictionary object of samplers that combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
-            "properties" : {
-            },
-            "additionalProperties" : {
+            "type" : "array",
+            "description" : "An array of samplers that combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
+            "items" : {
                 "$ref" : "animation.sampler.schema.json"
             },
-            "default" : {}
+            "minItems" : 1
         },
         "name": {},
         "extensions" : {},

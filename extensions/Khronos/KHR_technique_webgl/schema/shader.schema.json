@@ -19,12 +19,17 @@
             "gltf_enumNames" : ["FRAGMENT_SHADER", "VERTEX_SHADER"],
             "gltf_detailedDescription" : "The shader stage.  All valid values correspond to WebGL enums."
         },
+        "bufferView" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the bufferView that contains the shader source. Use this instead of the shader's uri property.",
+            "minLength" : 1
+        },
         "name" : {},
         "extensions" : {},
         "extras" : {}
     },
     "additionalProperties" : false,
-    "required" : ["uri", "type"],
+    "required" : ["type"],
     "gltf_webgl" : "`createShader()`, `deleteShader()`, `shaderSource()`, `compileShader()`, `getShaderParameter()`, and `getShaderInfoLog()`"
 }
 
