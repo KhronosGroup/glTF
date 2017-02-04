@@ -5,28 +5,79 @@
     "description" : "The material appearance of a primitive.",
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "technique" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the technique.",
-            "gltf_detailedDescription" : "The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color."
+        "baseColorFactor" : {
+            "type" :"array",
+            "description" : "The material's base color factor.",
+            "default" : [1,1,1,1],
+            "gltf_detailedDescription" : "The RGBA components of the base color (RGB) of the material. The fourth component (A) is the opacity of the material."
         },
-        "values" : {
-            "type" : "object",
-            "description" : "A dictionary object of parameter values.",
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "material.values.schema.json"
-            },
-            "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value."
+         "baseColorTexture" : {
+            "extends" : "number",
+            "description" : "The index of the base color texture."
+        },
+        "baseColorTexCoord" : {
+            "extends" : "number",
+            "description" : "The set index of the base color texture's TEXCOORD attribute to be used for texture coordinate mapping."
+        },
+        "metallicFactor" : {
+            "type" : "number",
+            "description" : "The metallic-ness the material (1 for metals, 0 for non-metals).",
+            "default" : 1
+        },
+        "roughnessFactor" : {
+            "type" : "number",
+            "description" : "The perceptual roughness of the material surface (1 for rough, 0 for smooth)..",
+            "default" : 1,
+            "minimum" : 0,
+            "maximum" : 1
+        },
+        "metallicRoughnessTexture" : {
+            "extends" : "number",
+            "description" : "The index of the metallic-roughness texture."
+        },
+        "metallicRoughnessTexCoord" : {
+            "extends" : "number",
+            "description" : "The set index of the metallic-roughness texture's TEXCOORD attribute to be used for texture coordinate mapping."
+        },
+        "normalTexture" : {
+            "extends" : "number",
+            "description" : "The index the texture containing the normal map."
+        },
+        "normalTexCoord" : {
+            "extends" : "number",
+            "description" : "The set index of normalTexture's TEXCOORD attribute to be used for texture coordinate mapping"
+        },
+        "normalScale" : {
+            "extends" : "number",
+            "description" : "The scalar multiplier applied to each normal vector of the texture."
+        },
+        "occlusionTexture" : {
+            "extends" : "number",
+            "description" : "The index the texture containing the occlusion map."
+        },
+        "occlusionTexCoord" : {
+            "extends" : "number",
+            "description" : "The set index of occlusionTexture's TEXCOORD attribute to be used for texture coordinate mapping"
+        },
+        "occlusionStrength" : {
+            "extends" : "number",
+            "description" : "A scalar multiplier controlling the amount of occlusion applied. A value of 0 means no occlusion; 1.0 means full occlusion."
+        },
+        "emmissionTexture" : {
+            "extends" : "number",
+            "description" : "The index the texture containing the emission map."
+        },
+        "emmissionTexCoord" : {
+            "extends" : "number",
+            "description" : "The set index of emmissionTexture's TEXCOORD attribute to be used for texture coordinate mapping"
+        },
+        "emmissionStrength" : {
+            "extends" : "number",
+            "description" : "The RGB components of the emissive color of the material. If an emission texture is specified, this value is multiplied with the texel values."
         },
         "name" : {},
         "extensions" : {},
         "extras" : {}
-    },
-    "dependencies" : {
-        "values": [ "technique" ]
     },
     "additionalProperties" : false
 }

@@ -1,26 +1,13 @@
 {
-    "materials" : {
-        "material_id": {
-            "technique": "technique_id",
-            "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "diffuse": "texture_image_0",
-                "shininess": [38.4]
-            },
-            "name": "user-defined material name",
-            "extensions" : {
-               "extension_name" : {
-                  "extension specific" : "value"
-               }
-            },
-            "extras" : {
-                "Application specific" : "The extra object can contain any properties."
-            }     
+    "materials" : 
+        [
+        {
+        "name": "Material0",
+        "baseColorFactor": [ 0.5, 0.5, 0.5, 1 ],
+        "mettalicRoughnessTexture": 1,
+        "normalTexture": 1,
+        "normalTexCoord": 1,
+	    "emissionFactor": [0.2,0.1,0.0]
         }
-    }
+    ]
 }
