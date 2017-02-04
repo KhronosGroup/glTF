@@ -2161,22 +2161,21 @@ The `base` color has two different interpretations depending on the value of `me
 For `metallic = 1`, `base` is the specific measured reflectance value (F0).
 For `metallic = 0`, `base` represents the reflected diffuse color of the material.
 
-In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used.
-The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. 
+In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used. The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. 
 
 The following table lists the allowed types and ranges for the metal-roughness model:
 | Property | Type | Range | Default Value | Space | Description | 
 |:--------:|:----:|:-----:|:-------------:|:-----:|:-----------:|
-|**name**|`string`| | | | The user-defined name of this object.|
+|**name**|`string`| | | |The user-defined name of this object.|
 |**extensions**|`object`| | ||Dictionary object with extension-specific objects.|
-|**extras**|`any`| | ||Application-specific data.|
-| **baseColorFactor**           | `FLOAT_VEC4` | [0, 1] for all components | [1,1,1,1] | linear | The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material. |
-| **baseColorTexture**          | `integer`       |           |           | sRGB   | The index of the [`texture`](#reference-texture). Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
-| **baseColorTexCoord**          | `integer`       |           |           | sRGB   |  The set index of baseColorTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
-| **metallicFactor**            | `FLOAT`      | [0, 1]                    | 1         | linear | The metallic-ness the material (1 for metals, 0 for non-metals). |
-| **roughnessFactor**           | `FLOAT`      | [0, 1]                    | 1         | linear | The perceptual roughness of the material surface (1 for rough, 0 for smooth). |
-| **metallicRoughnessTexture**  | `integer`       |           |           |  | The index of the [`texture`](#reference-texture). Texture with two components, containing the metallic-ness of the material (first component) and its roughness (second component) |
-| **metallicRoughnessTexCoord**  | `integer`       |           |     0      |  | The set index of metallicRoughnessTexture's TEXCOORD attribute to be used for texture coordinate mapping.  |
+|**extras**|`any`| | | |Application-specific data.|
+|**baseColorFactor** |`FLOAT_VEC4` |[0, 1] for all components |[1,1,1,1]|linear| The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material.|
+|**baseColorTexture** |`integer`| | |sRGB|The index of the [`texture`](#reference-texture). Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
+|**baseColorTexCoord** |`integer`|  |  |sRGB|The set index of baseColorTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
+|**metallicFactor** |`FLOAT` |[0, 1]|1|linear|The metallic-ness the material (1 for metals, 0 for non-metals). |
+|**roughnessFactor**  |`FLOAT` |[0, 1]|1|linear|The perceptual roughness of the material surface (1 for rough, 0 for smooth). |
+|**metallicRoughnessTexture**  |`integer`||||The index of the [`texture`](#reference-texture). Texture with two components, containing the metallic-ness of the material (first component) and its roughness (second component)|
+|**metallicRoughnessTexCoord**|`integer`||0||The set index of metallicRoughnessTexture's TEXCOORD attribute to be used for texture coordinate mapping.|
 
 Texture content must be converted to linear space before it is being used for any lighting computations. If a texture is not given, all respective texture components are assumed to have a value of 1.0. The factors (baseColorFactor, metallicFactor, roughnessFactor) scale, in linear space, the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
 
