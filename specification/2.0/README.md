@@ -2163,7 +2163,8 @@ For `metallic = 0`, `base` represents the reflected diffuse color of the materia
 
 In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used. The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. 
 
-The following table lists the allowed types and ranges for the metal-roughness model:
+The following table lists the allowed types and ranges for the metal-roughness model
+
 | Property | Type | Range | Default Value | Space | Description | 
 |:--------:|:----:|:-----:|:-------------:|:-----:|:-----------:|
 |**name**|`string`| | | |The user-defined name of this object.|
@@ -2194,6 +2195,7 @@ In addition to the metal-roughness model the following additional maps are provi
 | **emissionFactor** | `FLOAT_VEC3` | [0, 1] for all components | [0, 0, 0] | The RGB components of the emissive color of the material. If an emission texture is specified, this value is multiplied with the texel values. |
 
 > **Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  Resource-bound implementations should drop maps from the bottom to the top. 
+
     | Map | What happens if it's not there |
     |:---:|:------------------------------:|
     | Normal | Geometry will appear less detailed than authored|
