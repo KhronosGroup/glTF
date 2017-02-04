@@ -989,13 +989,19 @@ The above example illustrates several parameters. The property `ambient` is defi
 上面的例子用到了几个参数。`ambient`属性是一个`FLOAT_VEC4`类型，`diffuse`是`SAMPLER_2D`，`light0color`是`FLOAT_VEC3`，默认颜色是白色。
 
 
-#### Semantics
+#### 语义
 
 Technique parameters may also optionally define a *semantic*, an enumerated value describing how the runtime is to interpret the data to be passed to the shader.
 
+technique参数可选，以*semantic*形式定义的枚举值，用于描述在运行时中，如何解析参入到shader的数值。
+
 In the above example, the parameter `light0Transform` defines the `MODELVIEW` semantic, which corresponds to the world space position of the node referenced in the property `node`, in this case the node `directionalight1`, which refers to a node that contains a light source.
 
+上面例子中，`light0Transform`参数定义了`MODELVIEW`，对应该节点在世界坐标系下的位置，在该范例中，节点属性`directionalLight1`表明该节点包含一光源。
+
 If no `node` property is supplied for a semantic, the semantic is implied in a context-specific manner: either to the node which is being rendered, or in the case of camera-specific semantics, to the current camera. In the following fragment, which defines a parameter named `projectionMatrix` that is derived from the implementation's projection matrix, the semantic would be applied to the camera.
+
+如果没有提供节点属性则是内容相关的：要么对应一个要被渲染的节点，或者跟当前相机相关的语义。在下面的片段中定义了`projectionMatrix`参数，表明是相机中的投影矩阵。
 
 ```javascript
 "projectionMatrix": {
@@ -1008,27 +1014,31 @@ Table 1. Uniform Semantics
 
 | Semantic                     | Type         | Description |
 |:----------------------------:|:------------:|-------------|
-| `LOCAL`                      | `FLOAT_MAT4` | Transforms from the node's coordinate system to its parent's.  This is the node's matrix property (or derived matrix from translation, rotation, and scale properties). |
-| `MODEL`                      | `FLOAT_MAT4` | Transforms from model to world coordinates using the transform's node and all of its ancestors. |
-| `VIEW`                       | `FLOAT_MAT4` | Transforms from world to view coordinates using the active camera node. |
-| `PROJECTION`                 | `FLOAT_MAT4` | Transforms from view to clip coordinates using the active camera node. |
-| `MODELVIEW`                  | `FLOAT_MAT4` | Combined `MODEL` and `VIEW`. |
-| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | Combined `MODEL`, `VIEW`, and `PROJECTION`. |
-| `MODELINVERSE`               | `FLOAT_MAT4` | Inverse of `MODEL`. |
-| `VIEWINVERSE`                | `FLOAT_MAT4` | Inverse of `VIEW`. |
-| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | Inverse of `PROJECTION`. |
-| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | Inverse of `MODELVIEW`. |
-| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | Inverse of `MODELVIEWPROJECTION`. |
+| `LOCAL`                      | `FLOAT_MAT4` | 从父节点到该节点的变换矩阵。  这是该节点的矩阵属性（旋转，平移，缩放）。 |
+| `MODEL`                      | `FLOAT_MAT4` | 模型矩阵：通过该节点以及所有父节点的变换矩阵，实现模型到世界坐标系的变换。 |
+| `VIEW`                       | `FLOAT_MAT4` | 视图矩阵 |
+| `PROJECTION`                 | `FLOAT_MAT4` | 投影矩阵 |
+| `MODELVIEW`                  | `FLOAT_MAT4` | 模型视图矩阵 |
+| `MODELVIEWPROJECTION`        | `FLOAT_MAT4` | 模型视图投影矩阵 |
+| `MODELINVERSE`               | `FLOAT_MAT4` | 模型逆矩阵 |
+| `VIEWINVERSE`                | `FLOAT_MAT4` | 视图逆矩阵 |
+| `PROJECTIONINVERSE`          | `FLOAT_MAT4` | 投影逆矩阵 |
+| `MODELVIEWINVERSE`           | `FLOAT_MAT4` | 模型视图逆矩阵 |
+| `MODELVIEWPROJECTIONINVERSE` | `FLOAT_MAT4` | 模型视图投影逆矩阵 |
 | `MODELINVERSETRANSPOSE`      | `FLOAT_MAT3` | The inverse-transpose of `MODEL` without the translation.  This translates normals in model coordinates to world coordinates. |
 | `MODELVIEWINVERSETRANSPOSE`  | `FLOAT_MAT3` | The inverse-transpose of `MODELVIEW` without the translation.  This translates normals in model coordinates to eye coordinates. |
-| `VIEWPORT`                   | `FLOAT_VEC4` | The viewport's x, y, width, and height properties stored in the `x`, `y`, `z`, and `w` components, respectively.  For example, this is used to scale window coordinates to [0, 1]: `vec2 v = gl_FragCoord.xy / viewport.zw;` |
+| `VIEWPORT`                   | `FLOAT_VEC4` | viewport,x,y,width,height |
 | `JOINTMATRIX`                | `FLOAT_MAT4` | Transforms mesh coordinates for a particular joint for skinning and animation. |
 
-#### Program Instances
+#### Program实例
 
 The `program` property of a technique creates an instance of a shader program. The value of the property is the ID of a program defined in the asset's `programs` dictionary object (see next section). A shader program may be instanced multiple times within the glTF asset.
 
+一个technique的`program`属性创建了一个着色器代码的实例。属性值是该代码的ID，定义在`programs`字典对象中。在glTF中一个着色器代码可能会多次实例化。
+
 Attributes and uniforms passed to the program instance's shader code are defined in the `attributes` and `uniforms` properties of the technique, respectively. The following example shows the definitions for a technique's program instance, attributes and techniques:
+
+传递到Shader的Attributes和uniforms分别定义在technique的`attributes` 和 `uniforms`属性中。下面这个例子说明了如何定义一个technique的program实例，attributes和techniques。
 
 
 ```javascript
@@ -1054,20 +1064,32 @@ Attributes and uniforms passed to the program instance's shader code are defined
 
 The `attributes` property specifies the vertex attributes of the data that will be passed to the shader. Each attribute's name is a string that corresponds to the attribute name in the GLSL source code. Each attribute's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the attribute is defined.
 
+`attributes`属性就是传递到着色器数据中的顶点属性。每一个属性名都是一个字符串，对应GLSL中的属性名。每一个attribute值也是一个字符串，对应该technique中的`parameters`属性，定义了该属性对应的类型和语义。
+
 The `uniforms` property specifies the uniform variables that will be passed to the shader. Each uniform's name is a string that corresponds to the uniform name in the GLSL source code. Each uniform's value is a string that references a parameter defined in the technique's `parameters` property, where the type and semantic of the uniform is defined.
 
-#### Render States
+`uniforms`属性是攒底到着色器中的uniform变量。每一个uniform名是一个字符串，对应GLSL代码中的uniform名。每一个uniform值是一个字符串，对应technique中的`parameters`属性，定义了该属性对应的类型和语义。
+
+#### 渲染状态（Render states）
 
 Render states define the fixed-function GL state when a primitive is rendered. The technique's `states` property contains two properties:
 
-* `enable`: an array of integers corresponding to Boolean GL states that should be enabled using GL's `enable` function.
-* `functions`: a dictionary object containing properties corresponding to the names of GL state functions to call.  Each property is an array, where the elements correspond to the arguments of the GL function.
+当渲染图元时，Render states定义了一些GL状态的固定函数。一个technique的`states`包括两个属性：
+
+* `enable`：整数数组，对应GL状态的布尔值，是否开启该函数。
+* `functions`：一个字典对象，对应要调用的GL状态函数的名称。每一个属性都是一个数组，其中的元素对应该GL方法的参数。
 
 Valid values for elements in the `enable` array are `3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`).  If any of these values are not in the array, the GL state should be disabled (which is the GL default state).  If the `enable` array is not defined in the `states`, all of these Boolean GL states are disabled.
 
+`enable`数组中有效的元素值是`3042` (`BLEND`), `2884` (`CULL_FACE`), `2929` (`DEPTH_TEST`), `32823` (`POLYGON_OFFSET_FILL`), `32926` (`SAMPLE_ALPHA_TO_COVERAGE`), and `3089` (`SCISSOR_TEST`)。上述元素如果有缺省的，则对应的GL状态无效（采用GL的默认状态）。如果`enable`数组没有定义，则所有GL的布尔状态都不可用。
+
 Each property in `functions` indicates a GL function to call and the arguments to provide.  Valid property names are `"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`.  If a property is not defined, the GL state for that function should be set to the default value(s) shown in the example below.
 
+`functions`中的每一个属性都指向一个GL方法，并提供了对应的参数。有效的属性名是`"blendColor"`, `"blendEquationSeparate"`, `"blendFuncSeparate"`, `"colorMask"`, `"cullFace"`, `"depthFunc"`, `"depthMask"`, `"depthRange"`, `"frontFace"`, `"lineWidth"`, `"polygonOffset"`, and `"scissor"`。如果一个属性没有定义，如下所示，则采用默认值。
+
 The following example `states` object indicates to enable all Boolean states (see the `enable` array) and use the default values for all the GL state functions (which could be omitted).
+
+下面这个例子，`states`对象声明所有布尔状态都可用（详见`enable`数组），并且对所有GL状态方法采用默认值（这部分可以省略）。
 
 ```javascript
 "states": {
@@ -1105,6 +1127,9 @@ The following example `states` object indicates to enable all Boolean states (se
 ```
 
 The following example shows a typical `"states"` object for closed opaque geometry.  Culling and the depth test are enabled, and all other GL states are set to the default value (disabled).
+
+下面这个例子是闭合不透明几何体对应的一个典型`"states"`对象。剔除和深度检测可用，其他GL状态则采用默认值（不可用）。
+
 ```javascript
 	"states": {
 	    "enable": [
@@ -1116,6 +1141,7 @@ The following example shows a typical `"states"` object for closed opaque geomet
 
 > **Implementation Note**: It is recommended that a runtime use the minimal number of GL state function calls.  This generally means ordering draw calls by technique, and then making GL state function calls only for the states that vary between techniques.
 
+> **应用注意**:建议在运行时中尽可能少的调用GL状态方法，也就是让technique来控制渲染顺序，只有techniques之间状态变化的时候菜调用这些GL状态方法。
 
 #### Programs
 
