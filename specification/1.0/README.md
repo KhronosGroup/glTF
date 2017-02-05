@@ -1143,11 +1143,15 @@ The following example shows a typical `"states"` object for closed opaque geomet
 
 > **应用注意**:建议在运行时中尽可能少的调用GL状态方法，也就是让technique来控制渲染顺序，只有techniques之间状态变化的时候菜调用这些GL状态方法。
 
-#### Programs
+#### 着色器代码
 
 GLSL shader programs are stored in the asset's `programs` property. This property contains one or more objects, one for each program.
 
+GLSL着色器代码保存在`programs`属性中。该属性包含一个或多个对象，每个对象对应一份着色器代码。
+
 Each shader program includes an `attributes` property, which specifies the vertex attributes that will be passed to the shader, and the properties `fragmentShader` and `vertexShader`, which reference the files for the fragment and vertex shader GLSL source code, respectively.
+
+每个着色器代码包括一个`attributes`属性，具体到传入到着色器中的顶点属性，还有`fragmentShader` 和 `vertexShader`属性，分别对应片元着色器和顶点着色器。
 
 ```javascript
     "programs": {
@@ -1163,9 +1167,11 @@ Each shader program includes an `attributes` property, which specifies the verte
     },
 ```
 
-#### Shaders
+#### 着色器
 
 Shader source files are stored in the asset's `shaders` dictionary property, which contains one or more shader source files. Each shader specifies a `type` (vertex or fragment, defined as GL enum types) and a `uri` to the file. Shader URIs may be URIs to external files or data URIs, allowing the shader content to be embedded as base64-encoded data in the asset.
+
+着色器代码存在在`shaders`字典属性中，包含一个或多个着色器文件。每一个着色器对应一个`type` (以GL中定义的枚举值为准，顶点或片元)，还有一个`uri`映射到对应的文件。着色器的URIs可以指定一个外部文件，也可以是一个数据URIs，允许内嵌一个base64编码的数据。
 
 ```javascript
 "shaders": {
@@ -1180,9 +1186,11 @@ Shader source files are stored in the asset's `shaders` dictionary property, whi
 },
 ```    
 
-#### Textures
+#### 纹理
 
 Textures can be used as uniform inputs to shaders. The following material definition specifies a diffuse texture using the `diffuse` parameter.
+
+纹理可以作为一个uniform传入到着色器中。如下所定义的材质，`diffuse`参数对应一张纹理。
 
 ```javascript
 "materials": {
@@ -1199,6 +1207,8 @@ Textures can be used as uniform inputs to shaders. The following material defini
 
 All textures are stored in the asset's `textures` dictionary property. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
+所有的纹理都保存在`textures`字典属性中。通过`source`属性，以一张图片文件的形式保存纹理；`format`和`internalFormat`对应GL中纹理类型；`target`类型对应采样；一个sampler标识符(`sampler`)，还有一个`type`属性定义了数据的内部格式。详情参考GL对`texImage2D()`定义。
+
 ```javascript
 "textures": {
     "texture_file2": {
@@ -1212,9 +1222,11 @@ All textures are stored in the asset's `textures` dictionary property. A texture
 }
 ```
 
-#### Images
+#### 影像
 
 Images referred to by textures are stored in the `images` dictionary property of the asset. Each image contains a URI to an external file in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
+
+纹理对应的影像都保存在`images`字典属性中。每一张影像包含一个URI，指向一个指定格式的外部文件。影像数据也可以以Base64编码的形式，通过URI引用内嵌在glTF文件。如下例所示：
 
 ```javascript
 "images": {
@@ -1225,10 +1237,14 @@ Images referred to by textures are stored in the `images` dictionary property of
 ```
 > **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
+> **使用注意**: WebGL API中， `TexImageSource`（比如 HTML中的影像对象）的第一个像素对应WebGL纹理的左上角。非WebGL的运行时对应的Y轴可能相反。
+
 #### Samplers
 
 Samplers are stored in the `samplers` dictionary property of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
+
+Samplers保存在`samplers`字典属性中。每一个sampler包括filter和wrapping选项，和GL类型相互对应，下面的例子是一个线性的magFilter，线性的mipmap和重复的wrapS和wrapT。
 
 ```javascript
 "samplers": {
@@ -1243,17 +1259,23 @@ Samplers are stored in the `samplers` dictionary property of the asset. Each sam
 
 > **Mipmapping Implementation Note**: When a sampler's minification filter (`minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap()` function.
 
+> **Mipmapping使用注意**: 当`minFilter`采用mipmapping(`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`)时，纹理也需要是mipmaps的，可以调用GL的`generateMipmap()`方法。
 
 > **Non-Power-Of-Two Texture Implementation Note**: glTF does not guarantee that a texture's dimensions are a power-of-two.  At runtime, if a texture's width or height is not a power-of-two, the texture needs to be resized so its dimensions are powers-of-two if the `sampler` the texture references
-> * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
-> * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
+> **纹理非二的整数次幂使用注意**: glTF不保证纹理的维度是二的整数次幂.  运行状态下，如果一个纹理的高宽不是二的整数次幂时，在如下条件综合那个，需要重新调整纹理的大小，使其是整数次幂：
+> * wrapping类型( `wrapS` 或 `wrapT`) 是`REPEAT` 或 `MIRRORED_REPEAT`, 或者
+> * minification filter (`minFilter`) 使用了mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, 或 `LINEAR_MIPMAP_LINEAR`).
 
 <a name="cameras"></a>
-## Cameras
+## 相机
 
 A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics such as PROJECTION.
 
+相机定义了从窗口到裁剪坐标的投影矩阵。投影矩阵可以是透视的，也可以是正交投影。相机保存在节点中，相互可以转换。他们在世界坐标系中的位置可以用于着色器中的计算，投影矩阵则以PROJECTION的语义在着色器中使用。
+
 Cameras are stored in the asset's `cameras` dictionary property. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
+
+相机存在在`cameras`字典属性中。每一个相机 定义了一个`type`属性，声明投影类型（正交或透视），`perspective` 或 `orthographic`属性定义具体的参数。
 
 The following example defines a perspective camera with supplied values for Y field of view, aspect ratio, and near and far clipping planes.
 
@@ -1272,15 +1294,23 @@ The following example defines a perspective camera with supplied values for Y fi
 ```
 
 <a name="animations"></a>
-## Animations
+## 动画
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
 
+通过节点转换对应的关键帧，glTF支持关节和蒙皮动画。关键帧保存在缓存中，并通过动画中所用到的访问器引用。
+
 > Note: glTF 1.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
+
+> 注意: glTF 1.0只支持节点变换的动画。后续版本可能会支持关节属性的动画，比如材质颜色或纹理变换矩阵等。
 
 All animations are stored in the `animations` dictionary property of the asset. An animation is defined as a set of channels (the `channels` property), a set of parameterized inputs (`parameters`) representing the key frame data, and samplers that interpolate between the key frames (the `samplers` property). All parameters must have the same number of elements.
 
+所有的动画都保存在`animations`字典属性中。如下，定义了一个动画：一个channels集合（`channels`属性），一个参数化的输入（`parameters`），用于描述关键帧，以及关键帧之间的插值（`samplers`属性）。所有参数的元素数必须一致。
+
 The following example defines an animating camera node.
+
+如下定义了一个相机节点的动画。
 
 ```javascript
         "animation_0": {
@@ -1335,27 +1365,44 @@ The following example defines an animating camera node.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the ID of one of the samplers present in the containing animation's `samplers` property. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale."`
 
+在节点树上，*Channels*连接节点在关键帧的输出值 。一个channel的`sampler`属性包含当前samplers的ID，保存在动画的`samplers`属性。`target`属性标识具体使用该`id`属性的节点和节点中具体哪个属性（`path`属性）来进行动画效果。有效的path为`"translation"`, `"rotation"`, 和 `"scale."`
+
 The animation's *parameters* define the inputs to the animation: a set of floating point scalar values representing time (the `"TIME"` input); and sets of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. Each of these inputs is stored in a buffer and accessed via an accessor.
+
+动画的*parameters*定义了输入值：浮点数集合表示事件（`"TIME"`输入）；浮点型向量几何，描述平移，缩放，或旋转。值都保存在缓存中并通过访问器来使用。
 
 Interpolation between keys is defined using *samplers*, which take an input value, such as time, and generate an output value based on the inputs defined in the `parameters` property, using the interpolation formula specified in the `interpolation` property.
 
+关键帧之间以*samplers*定义，包括一个输入时间，基于输入，通过定义在`parameters`属性值得到一个输出值，具体的插值方式则通过`interpolation`属性指定。
+
 > Note: glTF 1.0 animation samplers support only linear interpolation.
+
+> 注意:  glTF 1.0版本的动画插值仅支持线性插值。
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarachy. (See the section on Skins above.)
 
+glTF动画可以用于驱动关节和蒙皮动画。蒙皮动画则是通过皮肤关节的动态效果实现而成。
+
 
 <a name="metadata"></a>
-## Metadata
+## 元数据
 
 Asset metadata is described in the `asset` property. The asset metadata contains the following properties:
 
-* a `copyright` property denoting authorship
-* a `generator` property describing the tool, if any, that generated the asset
-* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
-* a profile designation
-* a `version` property denoting the specification version
+元数据描述在`asset`属性中。元数据包含如下属性：
 
-Only the `version` property is required. For example,
+* a `copyright` property denoting authorship
+* 一个`copyright`属性，用于使用授权
+* a `generator` property describing the tool, if any, that generated the asset
+* `generator`描述信息，描述生成该数据的工具。
+* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
+* 如果着色器中有alphha通道，则声明 `premultipliedAlpha`属性（WebGL中的有alpha通道的`getContext()`）。
+* a profile designation
+* 配置文件
+* a `version` property denoting the specification version
+* `version`属性，描述具体的版本信息
+
+只有`version`属性是必须的. 如下,
 
 ```javascript
 "asset": {
@@ -1373,9 +1420,11 @@ Only the `version` property is required. For example,
 ```
 
 <a name="specifying-extensions"></a>
-## Specifying Extensions
+## 具体扩展
 
 glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example:
+
+glTF定义了一套扩展机制，可以基于基本规范来扩展一些新的特性。任何glTF对象都可以有一个可选的`extensions`属性，如下所示：
 
 ```javascript
 "a_shader": {
@@ -1389,6 +1438,8 @@ glTF defines an extension mechanism that allows the base format to be extended w
 
 All extensions used in a model are listed in the top-level `extensionsUsed` dictionary object, e.g.,
 
+模型中使用的所有扩展都要在`extensionsUsed`字典对象中声明，如下，
+
 ```javascript
 "extensionsUsed": [
    "KHR_binary_glTF"
@@ -1396,6 +1447,9 @@ All extensions used in a model are listed in the top-level `extensionsUsed` dict
 ```
 
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
+
+
+关于扩展的更多信息，可以查看[extensions registry specification](../extensions/README.md)。
 
 <a name="properties"></a>
 # Properties Reference
