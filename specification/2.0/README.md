@@ -1141,6 +1141,7 @@ A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contain
 |**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
 |**max**|`number[1-16]`|Maximum value of each component in this attribute.| :white_check_mark: Yes|
 |**min**|`number[1-16]`|Minimum value of each component in this attribute.| :white_check_mark: Yes|
+|**sparse**|[`accessor.sparse`](#reference-accessor.sparse)|Sparse storage of attributes that deviate from their initialization value.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1234,6 +1235,13 @@ When `componentType` is `5126` (FLOAT) each array value must be stored as double
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
+### accessor.sparse
+
+Optional sparse storage of attributes that deviate from their initialization value.
+
+* **Type**: [`accessor.sparse`](#reference-accessor.sparse)
+* **Required**: No, default: `{}`
+
 ### accessor.name
 
 The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
@@ -1256,6 +1264,188 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse"></a>
+## accessor.sparse
+
+Sparse storage of attributes that deviate from their initialization value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**count**|`integer`|Number of entries stored in the sparse array.| :white_check_mark: Yes|
+|**indices**|[`accessor.sparse.indices`](#reference-accessor.sparse.indices)|Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.| :white_check_mark: Yes|
+|**values**|[`accessor.sparse.values`](#reference-accessor.sparse.values)|Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [accessor.sparse.schema.json](schema/accessor.sparse.schema.json)
+
+### sparse.count :white_check_mark:
+
+Number of entries stored in the sparse array.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` > 0`
+
+### sparse.indices :white_check_mark:
+
+Index array of size `sparse.count` that points to those accessor attributes that deviate from their initialization value.
+
+* **Type**: [`accessor.sparse.indices`](#reference-accessor.sparse.indices)
+* **Required**: Yes
+
+### sparse.values :white_check_mark:
+
+Array of size `sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
+
+* **Type**: [`accessor.sparse.values`](#reference-accessor.sparse.values)
+* **Required**: Yes
+
+### sparse.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### sparse.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse.indices"></a>
+## accessor.sparse.indices
+
+Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
+|**byteStride**|`integer`|The stride, in bytes, between indices referenced by this accessor.|No, default: `0`|
+|**componentType**|`integer`|The datatype of the indices referenced by this accessor.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+### indices.bufferView :white_check_mark:
+
+The ID of the [`bufferView`](#reference-bufferView).
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**: ` >= 1`
+
+### indices.byteOffset :white_check_mark:
+
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+* **Related WebGL functions**: `vertexAttribPointer()` offset parameter
+
+### indices.byteStride
+
+The stride, in bytes, between indices referenced by this accessor.  When this is zero, the indices are tightly packed.  This must be a multiple of the size of the indices data type.
+
+* **Type**: `integer`
+* **Required**: No, default: `0`
+* **Minimum**: ` >= 0`
+* **Maximum**: ` <= 255`
+
+### indices.componentType :white_check_mark:
+
+The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT).
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `5121`, `5123`, `5125`.
+
+### indices.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### indices.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse.values"></a>
+## accessor.sparse.values
+
+Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
+|**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+### values.bufferView :white_check_mark:
+
+The ID of the [`bufferView`](#reference-bufferView).
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**: ` >= 1`
+
+### values.byteOffset :white_check_mark:
+
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the accessor component datatype.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+### values.byteStride
+
+The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.  This must be a multiple of the size of the accessor component datatype.
+
+* **Type**: `integer`
+* **Required**: No, default: `0`
+* **Minimum**: ` >= 0`
+* **Maximum**: ` <= 255`
+
+### values.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### values.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 <!-- ======================================================================= -->
 <a name="reference-animation"></a>
