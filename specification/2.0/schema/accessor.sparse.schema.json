@@ -1,0 +1,27 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "sparse",
+    "type" : "object",
+    "description" : "Sparse storage of attributes that deviate from their initialization value.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "count" : {
+            "type" : "integer",
+            "description" : "Number of entries stored in the sparse array.",
+            "minimum" : 1,
+            "gltf_detailedDescription" : "The number of attributes encoded in this sparse accessor."
+        },
+        "indices" : {
+            "allOf" : [ { "$ref" : "accessor.sparse.indices.schema.json" } ],
+            "description" : "Index array of size `count` that points to those accessor attributes that deviate from their initialization value."
+        },
+        "values" : {
+            "allOf" : [ { "$ref" : "accessor.sparse.values.schema.json" } ],
+            "description" : "Array of size `count`, storing the displaced accessor attributes pointed by `indices`."
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required": ["count", "indices", "values"]
+}
