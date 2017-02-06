@@ -1,0 +1,30 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "values",
+    "type" : "object",
+    "description" : "Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by `accessor.sparse.indices`.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "bufferView" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the bufferView."
+        },
+        "byteOffset" : {
+            "type" : "integer",
+            "description" : "The offset relative to the start of the bufferView in bytes.",
+            "minimum" : 0,
+        },
+        "byteStride" : {
+            "type" : "integer",
+            "description" : "The stride, in bytes, between attributes referenced by this accessor.",
+            "minimum" : 0,
+            "maximum" : 255,
+            "default" : 0,
+        },
+        "name" : {},
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required": ["bufferView", "byteOffset"]
+}
