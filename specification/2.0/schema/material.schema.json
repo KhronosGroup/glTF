@@ -58,11 +58,7 @@
             },
             "minItems": 3,
             "maxItems": 3,
-            "default": [
-                0.0,
-                0.0,
-                0.0
-            ],
+            "default": [ 0.0, 0.0, 0.0 ],
             "description": "The RGB components of the emissive color of the material.",
             "gltf_detailedDescription": "The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values."
         }

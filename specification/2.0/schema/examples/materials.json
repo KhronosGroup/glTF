@@ -1,13 +1,26 @@
 {
-    "materials" : 
-        [
+    "materials": [
         {
-        "name": "Material0",
-        "baseColorFactor": [ 0.5, 0.5, 0.5, 1 ],
-        "mettalicRoughnessTexture": 1,
-        "normalTexture": 1,
-        "normalTexCoord": 1,
-	    "emissionFactor": [0.2,0.1,0.0]
+            "name": "Material0",
+            "pbrMetallicRoughness": {
+                "baseColorfactor": [ 0.5, 0.5, 0.5, 1.0 ],
+                "baseColorTexture": {
+                    "index": 1,
+                    "texCoord": 1
+                },
+                "metallicFactor": 1,
+                "roughnessFactor": 1,
+                "metallicRoughnessTexture": {
+                    "index": 2,
+                    "texCoord": 1
+                }
+            },
+            "normalTexture": {
+                "scale": 2,
+                "index": 3,
+                "texCoord": 1
+            },
+            "emissiveFactor": [ 0.2, 0.1, 0.0 ]
         }
     ]
 }
