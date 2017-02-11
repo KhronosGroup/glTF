@@ -502,7 +502,7 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
   }
 }
 ```
-Differently from a regular accessors, a sparse accessor `bufferView` and `byteOffset` properties aren't required. When these properties are omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
+A sparse accessor differs from a regular one in that `bufferView` and `byteOffset` properties aren't required. When these properties are omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
 
 #### BufferView and Accessor Byte Alignment
 
