@@ -763,10 +763,101 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 <a name="materials"></a>
 ## Materials
 
-TODO: Update with new Metal Roughness Description
+glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
-glTF 2.0 defines a material model that is commonly used in Physically Based Renderring, namely the metal-roughness model. 
+### Metallic-Roughness material 
+All parameters related to the metallic-roughness material model are defined under the property 'pbrMetallicRoughness'. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
 
+```
+{
+    "materials": [
+        {
+            "name": "gold",
+            "pbrMetallicRoughness": {
+                "baseColorfactor": [ 1.000, 0.766, 0.336, 1.0 ],
+                "metallicFactor": 1.0,
+                "roughnessFactor": 0.0,
+            },
+        }
+    ]
+}
+```
+
+The metallic-roughness material model is defined by the following properties:
+* `baseColor`  - The base color of the material
+* `metallic` - The metalness of the material
+* `roughness` - The roughness of the material
+
+Todo: Update figure illustrating this
+
+The base color has two different interpretations depending on the value of metalness. When the material is a true metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a of 4% (0.04) is often used. 
+
+The value for each property ('baseColor', 'metallic', 'roughness') can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. 
+
+The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the material properties. 
+
+`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
+<br>
+`const black = rgb(0, 0, 0)`
+
+*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
+<br>
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor, metallic)`
+<br>
+*&alpha;* = `max(roughness ^ 2, epsilon)`
+
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](#appendix-a) for more details on the BRDF calculations. 
+
+Todo: Add Transparency. Needed to explain what to do with Alpha channel.
+
+
+### Additional maps
+ The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models like those defined in the KHR_materials_pbrSpecularGlossiness extension or the KHR_materials_common extension.
+
+ Materials define the following additional maps:
+- **normal** : A tangent space normal map. 
+- **occlusion** : The occlusion map indicating areas of indirect lighting.
+- **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
+ 
+ The following examples shows a material that is defined using 'pbrMetallicRoughness' parameters as well as additional texture maps:
+
+ ```
+{
+    "materials": [
+        {
+            "name": "Material0",
+            "pbrMetallicRoughness": {
+                "baseColorfactor": [ 0.5, 0.5, 0.5, 1.0 ],
+                "baseColorTexture": {
+                    "index": 1,
+                    "texCoord": 1
+                },
+                "metallicFactor": 1,
+                "roughnessFactor": 1,
+                "metallicRoughnessTexture": {
+                    "index": 2,
+                    "texCoord": 1
+                }
+            },
+            "normalTexture": {
+                "scale": 2,
+                "index": 3,
+                "texCoord": 1
+            },
+            "emissiveFactor": [ 0.2, 0.1, 0.0 ]
+        }
+    ]
+}
+
+```
+
+> **Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
+   
+   >| Map | Rendering impact when map is not supported|
+   |:---:|:------------------------------:|
+   | Normal | Geometry will appear less detailed than authored|
+   | Occlusion | Model will appear brighter in areas that should be darker|
+   | Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
 
 <a name="cameras"></a>
 ## Cameras
@@ -2150,65 +2241,61 @@ Application-specific data.
 <a name="reference-material"></a>
 ## material
 
-glTF 2.0 uses the metal-roughness material model from Physically Based Renderring. The metal-roughness material model is defined by the following properties:
-* Base Color: The base color of the material
-* Metallic-ness: A value between 0 and 1, indicating if the material is metallic (1) or not (0)
-* Roughness: Roughness of the material surface
+The material appearance of a primitive.
 
-Todo: Need a good figure illustrating this
+**Properties**
 
-The `base` color has two different interpretations depending on the value of `metallic`, which is defined as `0` for dielectrics and `1` for metals.
-For `metallic = 1`, `base` is the specific measured reflectance value (F0).
-For `metallic = 0`, `base` represents the reflected diffuse color of the material.
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**pbrMetallicRoughness**|[`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.|No|
+| **normalTexture** | [`material.normalTextureInfo`](#reference-material.normalTextureInfo) | The normal map texture. |No|
+| **occlusionTexture** | [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) | The occlusion map texture. |No|
+| **emissiveTexture** | [`textureInfo`](#reference-textureInfo) | The emission map texture. |No|
+| **emissiveFactor** | `number[3]` | The emissive color of the material. |No, default:`[0.0,0.0,0.0]`|
+|**name**|`string`|The user-defined name of this object.|No|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
 
-In this model it is not possible to specify a reflectance value for non-metals, where a reflectance value of 4% (0.04) is often used. The `roughness` property is related with the `glossiness` parameter in the specular-glossiness model and is defined as `roughness = 1 - glossiness`. 
+Additional properties are not allowed.
 
-The following table lists the allowed types and ranges for the metal-roughness model
-
-| Property | Type | Range | Default Value | Space | Description | 
-|:--------:|:----:|:-----:|:-------------:|:-----:|:-----------:|
-|**name**|`string`| | | |The user-defined name of this object.|
-|**extensions**|`object`| | ||Dictionary object with extension-specific objects.|
-|**extras**|`any`| | | |Application-specific data.|
-|**baseColorFactor** |`FLOAT_VEC4` |[0, 1] for all components |[1,1,1,1]|linear| The RGBA components of the base color (RGB) of the material. The fourth component (A) is the `opacity` of the material.|
-|**baseColorTexture** |`integer`| | |sRGB|The index of the [`texture`](#reference-texture). Texture with the RGBA components of the base color (RGB) of the material. If the fourth component (A) is present, it represents the `opacity` of the material. Otherwise, an `opacity` of 1 is assumed. |
-|**baseColorTexCoord** |`integer`|  |  |sRGB|The set index of baseColorTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
-|**metallicFactor** |`FLOAT` |[0, 1]|1|linear|The metallic-ness the material (1 for metals, 0 for non-metals). |
-|**roughnessFactor**  |`FLOAT` |[0, 1]|1|linear|The perceptual roughness of the material surface (1 for rough, 0 for smooth). |
-|**metallicRoughnessTexture**  |`integer`||||The index of the [`texture`](#reference-texture). Texture with two components, containing the metallic-ness of the material (first component) and its roughness (second component)|
-|**metallicRoughnessTexCoord**|`integer`||0||The set index of metallicRoughnessTexture's TEXCOORD attribute to be used for texture coordinate mapping.|
-
-Texture content must be converted to linear space before it is being used for any lighting computations. If a texture is not given, all respective texture components are assumed to have a value of 1.0. The factors (baseColorFactor, metallicFactor, roughnessFactor) scale, in linear space, the components given in the respective textures (baseColorTexture, metallicRoughnessTexture).
-
-In addition to the metal-roughness model the following additional maps are provided that can also be used with other material models like those defined in the KHR_materials_PBRSpecularGloss extension or the KHR_materials_common etxtension.
-
-| Property | Type | Range | Default Value | Description |
-|:--------:|:----:|:-----:|:-------------:|:-----------:|
-| **normalTexture** | `integer` |  | | The index of the [`texture`](#reference-texture) containing the normal map (RGB) of the material. Each texel represents the XYZ components of a normal vector in tangent space. |
-| **normalTexCoord** | `integer` |  | 0 | The set index of normalTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
-| **normalScale** | `FLOAT` | valid float value | 1 | The scalar multiplier applied to each normal vector of the texture. |
-| **occlusionTexture** | `integer` |  | | The index of the [`texture`](#reference-texture) containing the occlusion map of the material. The occlusion map is a greyscale texture, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. |
-| **occlusionTexCoord** | `integer` |  | 0 | The set index of occlusionTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
-| **occlusionStrength** | `FLOAT` | [0, 1] | 1 | A scalar multiplier controlling the amount of occlusion applied. A value of 0 means no occlusion; 1.0 means full occlusion. |
-| **emissionTexture** | `integer` |  | | The index of the [`texture`](#reference-texture) containing the emissive map (RGB) of the material. |
-| **emissionTexCoord** | `integer` |  | 0 | The set index of emissionTexture's TEXCOORD attribute to be used for texture coordinate mapping. |
-| **emissionFactor** | `FLOAT_VEC3` | [0, 1] for all components | [0, 0, 0] | The RGB components of the emissive color of the material. If an emission texture is specified, this value is multiplied with the texel values. |
-
-> **Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  Resource-bound implementations should drop maps from the bottom to the top. 
-
-    | Map | What happens if it's not there |
-    |:---:|:------------------------------:|
-    | Normal | Geometry will appear less detailed than authored|
-    | Occlusion | Model will appear brighter in areas that should be darker|
-    | Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
-
-
-Todo: Add Transparency. Needed to explain what to do with Alpha channel.
-
-Todo: JSON Needs review
-* **JSON schema**: [material.schema.json](schema/material.schema.json)
+* **JSON schema**: [materials.schema.json](schema/material.schema.json)
 * **Example**: [materials.json](schema/examples/materials.json)
 
+### material.pbrMetallicRoughness
+
+A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
+
+* **Type**: [`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)
+* **Required**: No
+   
+### material.normalTexture
+
+A tangent space normal map. Each texel represents the XYZ components of a normal vector in tangent space. <TODO: Add more explaination on how XYZ is calculated>.
+
+* **Type**: [`material.normalTextureInfo`](#reference-material.normalTextureInfo)
+* **Required**: No
+
+### material.occlusionTexture
+
+The occlusion map is a greyscale texture, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. <Todo: sRGB ? Color Space>.
+
+* **Type**: [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) 
+* **Required**: No
+
+### material.emissiveTexture
+
+The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+### material.emissiveFactor
+
+The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values.
+
+* **Type**: `number[3]` 
+* **Required**: No, default:`[0.0,0.0,0.0]`
+* **Range**: [0, 1] for all components
 
 ### material.name
 
@@ -2233,6 +2320,161 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+<!-- ======================================================================= -->
+<a name="reference-material.pbrMetallicRoughness"></a>
+## material.pbrMetallicRoughness
+A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**baseColorFactor** | `number[4]` | The material's base color factor.|No, default:`[1,1,1,1]`|
+|**baseColorTexture** | [`textureInfo`](#reference-textureInfo) | The base color texture.|No|
+|**metallicFactor** | `number` | The metalness of the material.|No, default:`1.0`|
+|**roughnessFactor** | `number` | The roughness of the material.|No, default:`1.0`|
+|**metallicRoughnessTexture** | [`textureInfo`](#reference-textureInfo) | The metallic-roughness texture.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.pbrMetallicRoughness.schema.json](schema/material.pbrMetallicRoughness.schema.json)
+
+### pbrMetallicRoughness.baseColorFactor
+
+The RGBA components of the base color of the material. The fourth component (A) is the opacity of the material. These values are linear.
+
+* **Type**: `number[4]`
+* **Required**: No, default:`[1,1,1,1]`
+* **Range**: [0, 1] for all components
+
+### pbrMetallicRoughness.baseColorTexture
+
+The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+### pbrMetallicRoughness.metallicFactor
+
+The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+### pbrMetallicRoughness.roughnessFactor
+
+The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+### pbrMetallicRoughness.metallicRoughnessTexture
+
+The metallic-roughness texture has two components. The first component (R) contains the metallic-ness of the material. The second component (G) contains the roughness of the material. These values are linear. If the third component (B) and/or the fourth component (A) are present, they are ignored.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-material.normalTextureInfo"></a>
+## material.normalTextureInfo
+The normal map texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+|**scale** | `number` | The scalar multiplier applied to each normal vector of the normal texture.|No, default:`1.0`|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.normalTextureInfo.schema.json](schema/material.normalTextureInfo.schema.json)
+
+### normalTextureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### normalTextureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
+
+### normalTextureInfo.scale
+
+The scalar multiplier applied to each normal vector of the texture. This value is ignored if normalTexture is not specified. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+
+<!-- ======================================================================= -->
+<a name="reference-material.occlusionTextureInfo"></a>
+## material.occlusionTextureInfo
+The occlusion map texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+|**strength** | `number` | A scalar multiplier controlling the amount of occlusion applied.|No, default:`1.0`|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.occlusionTextureInfo.schema.json](schema/material.occlusionTextureInfo.schema.json)
+
+### occlusionTextureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### occlusionTextureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
+
+### occlusionTextureInfo.strength
+
+A scalar multiplier controlling the amount of occlusion applied. A value of 0.0 means no occlusion. A value of 1.0 means full occlusion. This value is ignored if the corresponding texture is not specified. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+<!-- ======================================================================= -->
+<a name="reference-textureInfo"></a>
+## textureInfo 
+Reference to a texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [textureInfo.schema.json](schema/textureInfo.schema.json)
+
+### textureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### textureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
 
 <!-- ======================================================================= -->
 <a name="reference-mesh"></a>
@@ -2817,17 +3059,6 @@ Application-specific data.
 * Sean Lilley,
 * Corentin Wallez,
 * Yu Chen Hou
-* Max Limper, Fraunhofer IGD, [@mlimper_cg](https://twitter.com/mlimper_cg)
-* Timo Sturm, Fraunhofer IGD, [@\_tsturm\_](https://twitter.com/\_tsturm\_)
-* Miguel Sousa, Fraunhofer IGD, [@mfportela](https://twitter.com/mfportela)
-* Maik Th&ouml;ner, Fraunhofer IGD, [@mthoener](https://twitter.com/mthoener)
-* Eric Haines, Autodesk, [@pointinpolygon](https://twitter.com/pointinpolygon)
-* Cedric Pinson, Sketchfab, [@trigrou](https://twitter.com/trigrou)
-* Saurabh Bhatia, Microsoft [@iamsbtron](https://twitter.com/iamsbtron)
-* Gary Hsu, Microsoft [@bghgary](https://twitter.com/bghgary)
-* Sebastien Vandenberghe, Microsoft
-
-
 
 
 <a name="appendix-a"></a>

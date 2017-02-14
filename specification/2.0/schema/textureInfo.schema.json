@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
-    "title": "texture",
+    "title": "textureInfo",
     "type": "object",
+    "description": "Reference to a texture.",
     "properties": {
         "index": {
             "type": "integer",
