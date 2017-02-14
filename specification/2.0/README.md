@@ -776,8 +776,8 @@ All parameters related to the metallic-roughness material model are defined unde
             "pbrMetallicRoughness": {
                 "baseColorfactor": [ 1.000, 0.766, 0.336, 1.0 ],
                 "metallicFactor": 1.0,
-                "roughnessFactor": 0.0,
-            },
+                "roughnessFactor": 0.0
+            }
         }
     ]
 }
@@ -790,11 +790,12 @@ The metallic-roughness material model is defined by the following properties:
 
 Todo: Update figure illustrating this
 
-The base color has two different interpretations depending on the value of metalness. When the material is a true metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a of 4% (0.04) is often used. 
+The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
-The value for each property ('baseColor', 'metallic', 'roughness') can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. 
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
+Then, the result would be `[0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]`.
 
-The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the material properties. 
+The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. 
 
 `const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
 <br>
@@ -810,7 +811,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 
 Todo: Add Transparency. Needed to explain what to do with Alpha channel.
 
-
+<a name="additionalmaps"></a>
 ### Additional maps
  The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models like those defined in the KHR_materials_pbrSpecularGlossiness extension or the KHR_materials_common extension.
 
@@ -827,7 +828,7 @@ Todo: Add Transparency. Needed to explain what to do with Alpha channel.
         {
             "name": "Material0",
             "pbrMetallicRoughness": {
-                "baseColorfactor": [ 0.5, 0.5, 0.5, 1.0 ],
+                "baseColorFactor": [ 0.5, 0.5, 0.5, 1.0 ],
                 "baseColorTexture": {
                     "index": 1,
                     "texCoord": 1
@@ -2327,7 +2328,7 @@ A set of parameter values that are used to define the metallic-roughness materia
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**baseColorFactor** | `number[4]` | The material's base color factor.|No, default:`[1,1,1,1]`|
+|**baseColorFactor** | `number[4]` | The base color factor of the material.|No, default:`[1,1,1,1]`|
 |**baseColorTexture** | [`textureInfo`](#reference-textureInfo) | The base color texture.|No|
 |**metallicFactor** | `number` | The metalness of the material.|No, default:`1.0`|
 |**roughnessFactor** | `number` | The roughness of the material.|No, default:`1.0`|
