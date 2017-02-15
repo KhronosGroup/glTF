@@ -13,6 +13,10 @@
             "type" : "string",
             "description" : "Tool that generated this glTF model.  Useful for debugging."
         },
+        "license" : {
+            "type" : "string",
+            "description" : "A license message suitable for display to name any license(s) governing use of the content.  The message may contain URLs."
+        },
         "premultipliedAlpha" : {
             "type" : "boolean",
             "description" : "Specifies if the shaders were generated with premultiplied alpha.",
