@@ -803,7 +803,7 @@ The following equations show how to calculate bidirectional reflectance distribu
 
 *c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
 <br>
-*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor, metallic)`
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
 <br>
 *&alpha;* = `max(roughness ^ 2, epsilon)`
 
