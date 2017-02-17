@@ -819,8 +819,8 @@ Todo: Add Transparency. Needed to explain what to do with Alpha channel.
 - **normal** : A tangent space normal map. 
 - **occlusion** : The occlusion map indicating areas of indirect lighting.
 - **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
- 
- The following examples shows a material that is defined using 'pbrMetallicRoughness' parameters as well as additional texture maps:
+
+The following examples shows a material that is defined using 'pbrMetallicRoughness' parameters as well as additional texture maps:
 
  ```
 {
