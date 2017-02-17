@@ -849,10 +849,9 @@ Todo: Add Transparency. Needed to explain what to do with Alpha channel.
         }
     ]
 }
-
 ```
 
-> **Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
+>**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
 >
 >| Map | Rendering impact when map is not supported|
 >|---|------------------------------|
