@@ -853,12 +853,12 @@ Todo: Add Transparency. Needed to explain what to do with Alpha channel.
 ```
 
 > **Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
-   
-| Map | Rendering impact when map is not supported|
-|---|------------------------------|
-| Normal | Geometry will appear less detailed than authored|
-| Occlusion | Model will appear brighter in areas that should be darker|
-| Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
+>
+>| Map | Rendering impact when map is not supported|
+>|---|------------------------------|
+>| Normal | Geometry will appear less detailed than authored|
+>| Occlusion | Model will appear brighter in areas that should be darker|
+>| Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
 
 <a name="cameras"></a>
 ## Cameras
