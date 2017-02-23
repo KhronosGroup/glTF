@@ -48,6 +48,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 * [Blender](https://github.com/Kupoman/blendergltf) - work in progress
 
+### Optimizers
+
+* [glTF Pipeline](https://github.com/AnalyticalGraphicsInc/gltf-pipeline) - Node.js command-line tool and module for optimizing glTF assets
+
 ### Loaders and Viewers
 
 #### WebGL Engines
