@@ -74,6 +74,10 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 [Compare WebGL-based glTF loaders](https://github.com/cx20/gltf-test) from various engines
 
+#### WebGL Samples
+
+* [WebGL-PBR](https://github.com/moneimne/WebGL-PBR) - barebones reference implementation for PBR in glTF 2.0 (in progress)
+
 #### WebGL Applications
 
 * [Sketchfab](https://blog.sketchfab.com/sketchfab-now-supports-gltf/)
