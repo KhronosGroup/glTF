@@ -482,7 +482,6 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
 {
   "bufferView": 0,
   "byteOffset": 0,
-  "byteStride": 0,
   "componentType": 5123,
   "count": 12636,
   "type": "VEC3",
@@ -491,13 +490,11 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
     "indices": {
       "bufferView": 0,
       "byteOffset": 75876,
-      "byteStride": 0,
       "type": 5123,
     },
     "values": {
       "bufferView": 0,
-      "byteOffset": 75816,
-      "byteStride": 0,
+      "byteOffset": 75816
     }
   }
 }
@@ -1333,7 +1330,6 @@ Index array of size `accessor.sparse.count` that points to those accessor attrib
 |---|----|-----------|--------|
 |**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
-|**byteStride**|`integer`|The stride, in bytes, between indices referenced by this accessor.|No, default: `0`|
 |**componentType**|`integer`|The datatype of the indices referenced by this accessor.| :white_check_mark: Yes|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1356,15 +1352,6 @@ The offset relative to the start of the [`bufferView`](#reference-bufferView) in
 * **Required**: Yes
 * **Minimum**: ` >= 0`
 * **Related WebGL functions**: `vertexAttribPointer()` offset parameter
-
-### indices.byteStride
-
-The stride, in bytes, between indices referenced by this accessor.  When this is zero, the indices are tightly packed.  This must be a multiple of the size of the indices data type.
-
-* **Type**: `integer`
-* **Required**: No, default: `0`
-* **Minimum**: ` >= 0`
-* **Maximum**: ` <= 255`
 
 ### indices.componentType :white_check_mark:
 
@@ -1401,7 +1388,6 @@ Array of size `accessor.sparse.count` storing the displaced accessor attributes 
 |---|----|-----------|--------|
 |**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
 |**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
-|**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
@@ -1422,15 +1408,6 @@ The offset relative to the start of the [`bufferView`](#reference-bufferView) in
 * **Type**: `integer`
 * **Required**: Yes
 * **Minimum**: ` >= 0`
-
-### values.byteStride
-
-The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.  This must be a multiple of the size of the accessor component datatype.
-
-* **Type**: `integer`
-* **Required**: No, default: `0`
-* **Minimum**: ` >= 0`
-* **Maximum**: ` <= 255`
 
 ### values.extensions
 
