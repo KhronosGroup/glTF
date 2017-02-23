@@ -14,14 +14,6 @@
             "description" : "The offset relative to the start of the bufferView in bytes.",
             "minimum" : 0,
         },
-        "byteStride" : {
-            "type" : "integer",
-            "description" : "The stride, in bytes, between indices referenced by this accessor.",
-            "minimum" : 0,
-            "maximum" : 255,
-            "default" : 0,
-            "gltf_detailedDescription" : "The stride, in bytes, between indices referenced by this accessor.  When this is zero, the indices are tightly packed.  This must be a multiple of the size of the indices datatype.",
-        },
         "componentType" : {
             "type" : "integer",
             "description" : "The indices data type.",

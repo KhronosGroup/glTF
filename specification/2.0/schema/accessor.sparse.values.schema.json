@@ -14,13 +14,6 @@
             "description" : "The offset relative to the start of the bufferView in bytes.",
             "minimum" : 0,
         },
-        "byteStride" : {
-            "type" : "integer",
-            "description" : "The stride, in bytes, between attributes referenced by this accessor.",
-            "minimum" : 0,
-            "maximum" : 255,
-            "default" : 0,
-        },
         "name" : {},
         "extensions" : {},
         "extras" : {}
