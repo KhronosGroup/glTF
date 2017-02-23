@@ -488,13 +488,13 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
   "sparse": {
     "count": 10,
     "indices": {
-      "bufferView": 0,
-      "byteOffset": 75876,
-      "type": 5123,
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5123,
     },
     "values": {
-      "bufferView": 0,
-      "byteOffset": 75816
+      "bufferView": 2,
+      "byteOffset": 0
     }
   }
 }
