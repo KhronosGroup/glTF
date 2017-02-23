@@ -473,7 +473,7 @@ This is often the case when encoding morph targets (it is, in general, more effi
 glTF 2.0 extends the accessor structure to enable efficient transfer of sparse arrays.
 Similarly to a standard accessor, a sparse accessor initializes an array of typed attributes from data stored in a `bufferView` . On top of that, a sparse accessor includes a `sparse` dictionary describing the attributes that deviate from their initialization value. The `sparse` dictionary contains the following mandatory properties:
 - `count`: number of displaced attributes.
-- `indices`: integer array of size `count` and specific `componentType` that stores the indices of those attributes that deviate from the initialization value.
+- `indices`: strictly increasing array of integers of size `count` and specific `componentType` that stores the indices of those attributes that deviate from the initialization value.
 - `values`: array of displaced attributes corresponding to the indices in the `indices` array.
 
 The following fragment shows an example of `sparse` accessor with 10 attributes deviating from the initialization array.
