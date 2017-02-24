@@ -17,15 +17,6 @@
             "gltf_detailedDescription" : "The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the component datatype.",
             "gltf_webgl" : "`vertexAttribPointer()` offset parameter"
         },
-        "byteStride" : {
-            "type" : "integer",
-            "description" : "The stride, in bytes, between attributes referenced by this accessor.",
-            "minimum" : 0,
-            "maximum" : 255,
-            "default" : 0,
-            "gltf_detailedDescription" : "The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.  This must be a multiple of the size of the component datatype.",
-            "gltf_webgl" : "`vertexAttribPointer()` stride parameter"
-        },
         "componentType" : {
             "type" : "integer",
             "description" : "The datatype of components in the attribute.",

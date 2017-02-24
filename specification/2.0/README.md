@@ -345,7 +345,8 @@ The following example defines a buffer. The `byteLength` property specifies the 
 }
 ```
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
+A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view.
+When buffer view has a `target` property, its data could be directly fed into appropriate GPU buffer: either ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER.
 
 The following example defines two buffer views: the first is an ELEMENT_ARRAY_BUFFER, which holds the indices for an indexed triangle set, and the second is an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
@@ -363,13 +364,16 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
             "buffer": 0,
             "byteLength": 76768,
             "byteOffset": 25272,
+            "byteStride": 32,
             "target": 34962
         }
     ]
 }
 ```
 
-buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations)  access buffers or bufferViews via *accessors*.
+Buffer view could have `byteStride` property. It means byte-distance between consequential elements and it is mandatory when `target` equals to ARRAY_BUFFER. When `target` is ELEMENT_ARRAY_BUFFER, `byteStride` must be 0.
+
+Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
 
 ### Accessors
@@ -388,7 +392,6 @@ The following fragment shows two accessors, the first is a scalar accessor for r
         {
             "bufferView": 0,
             "byteOffset": 0,
-            "byteStride": 0,
             "componentType": 5123,
             "count": 12636,
             "max": [
@@ -402,7 +405,6 @@ The following fragment shows two accessors, the first is a scalar accessor for r
         {
             "bufferView": 1,
             "byteOffset": 0,
-            "byteStride": 12,
             "componentType": 5126,
             "count": 2399,
             "max": [
@@ -454,7 +456,6 @@ For example:
         {
             "bufferView": 1,
             "byteOffset": 7032,
-            "byteStride": 12,
             "componentType": 5126,
             "count": 586,
             "type": "VEC3"
@@ -480,37 +481,41 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
 
 ```json
 {
-  "bufferView": 0,
-  "byteOffset": 0,
-  "componentType": 5123,
-  "count": 12636,
-  "type": "VEC3",
-  "sparse": {
-    "count": 10,
-    "indices": {
-      "bufferView": 1,
-      "byteOffset": 0,
-      "componentType": 5123,
-    },
-    "values": {
-      "bufferView": 2,
-      "byteOffset": 0
-    }
-  }
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 12636,
+            "type": "VEC3",
+            "sparse": {
+                "count": 10,
+                "indices": {
+                    "bufferView": 1,
+                    "byteOffset": 0,
+                    "componentType": 5123
+                },
+                "values": {
+                    "bufferView": 2,
+                    "byteOffset": 0
+                }
+            }
+        }
+    ]
 }
 ```
-A sparse accessor differs from a regular one in that `bufferView` and `byteOffset` properties aren't required. When these properties are omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
+A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
 A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
 
 #### BufferView and Accessor Byte Alignment
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-When `accessor.byteStride` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `accessor.byteStride` is defined, it must be a multiple of the size of the accessor's component type. Only vertex attribute accessors can use non-tight packing.
+When `byteStride` of referenced `bufferView` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `bufferView.byteStride` is defined, it must be a multiple of the size of the accessor's component type.
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ATTRIBUTE_TYPE` must be less than or equal to `bufferView.length`.
 
-For performance and compatibility reasons, vertex attribute data should be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `accessor.byteStride` should be multiples of 4). 
+For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
 
 > **Implementation Note:** For JavaScript, this allows a runtime to efficiently create a single ArrayBuffer from a glTF `buffer` or an ArrayBuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an ArrayBuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
@@ -530,7 +535,6 @@ Consider the following example:
         {
             "bufferView": 0,
             "byteOffset": 4608,
-            "byteStride": 0,
             "componentType": 5123,
             "count": 5232,
             "type": "SCALAR"
@@ -544,7 +548,7 @@ Accessing binary data defined by example above could be done like this:
 var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
 ```
 
-The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
+The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
 
 
 <a name="geometry-and-meshes"></a>
