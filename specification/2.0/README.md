@@ -118,10 +118,11 @@ Version 2.0 of glTF does not define compression for geometry and other rich data
 
 To simplify client-side implementation, glTF has following restrictions on JSON format and encoding.
 
-1. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
-2. JSON must use UTF-8 encoding without BOM.
+1. JSON must use UTF-8 encoding without BOM.
+2. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
 
-> **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+   > **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+3. Names (keys) within JSON objects must be unique, i.e., duplicate keys aren't allowed.
 
 ## URIs
 
