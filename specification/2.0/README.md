@@ -901,21 +901,21 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 1,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "scale"
                     }
                 },
                 {
                     "sampler": 2,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "translation"
                     }
                 }
@@ -944,14 +944,14 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 0,
+                        "node": 0,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 1,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 }
@@ -975,14 +975,14 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 0,
+                        "node": 0,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 }
@@ -999,7 +999,7 @@ The following examples show expected animations usage.
 }
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
