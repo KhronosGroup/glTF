@@ -604,33 +604,29 @@ The `weights` array is optional, it stores the default targets weights, in the a
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
 ```json
 {
-    "meshes": [
+    "primitives": [
         {
-            "primitives": [
+            "attributes": {
+                "NORMAL": 25,
+                "POSITION": 23,
+                "TEXCOORD_0": 27
+            },
+            "indices": 21,
+            "material": 3,
+            "mode": 4,
+            "targets": [
                 {
-                    "attributes": {
-                        "NORMAL": 25,
-                        "POSITION": 23,
-                        "TEXCOORD_0": 27
-                    },
-                    "indices": 21,
-                    "material": 3,
-                    "mode": 4,
-                    "targets": [
-                        {
-                            "NORMAL": 35,
-                            "POSITION": 33,
-                        },
-                        {
-                            "NORMAL": 45,
-                            "POSITION": 43,
-                        },
-                    ]
-                }
-            ],
-            "weights": [0, 0.5]
+                    "NORMAL": 35,
+                    "POSITION": 33,
+                },
+                {
+                    "NORMAL": 45,
+                    "POSITION": 43,
+                },
+            ]
         }
-    ]
+    ],
+    "weights": [0, 0.5]
 }
 ```
 
