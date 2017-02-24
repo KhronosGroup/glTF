@@ -594,6 +594,45 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
+#### Morph Targets
+
+Morph Targets are defined by extending the Mesh concept.
+A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes (this operation corresponds to COLLADA's `RELATIVE` blending method).
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to a Morph Target displacement, currently only two attributes ('POSITION' and 'NORMAL') are supported. All primitives are required to list the same number of `targets` in the same order.
+The `weights` array is optional, it stores the default targets weights, in the absence of animations the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
+
+The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
+```json
+{
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 25,
+                        "POSITION": 23,
+                        "TEXCOORD_0": 27
+                    },
+                    "indices": 21,
+                    "material": 3,
+                    "mode": 4,
+                    "targets": [
+                        {
+                            "NORMAL": 35,
+                            "POSITION": 33,
+                        },
+                        {
+                            "NORMAL": 45,
+                            "POSITION": 43,
+                        },
+                    ]
+                }
+            ],
+            "weights": [0, 0.5]
+        }
+    ]
+}
+```
 
 ### Skins
 
