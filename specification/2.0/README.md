@@ -42,7 +42,6 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
-    * [Specifying GL Extensions](#specifying-gl-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
@@ -1075,19 +1074,6 @@ All glTF extensions required to load and/or render an asset must be listed in th
 {
     "extensionsRequired": [
         "WEB3D_quantized_attributes"
-    ]
-}
-```
-
-<a name="specifying-gl-extensions"></a>
-### Specifying GL extensions
-
-If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` array, e.g.,
-
-```json
-{
-    "glExtensionsUsed": [
-        "OES_element_index_uint"
     ]
 }
 ```
