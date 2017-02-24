@@ -390,10 +390,10 @@ Table 3. Spot Light Properties
 *To-do: Patrick need schema for each of the material types... can you help?*
 
    * <a href="schema/light.schema.json">`light`</a>
-   * <a href="schema/lightAmbient.schema.json">`light/ambient`</a>
-   * <a href="schema/lightDirectional.schema.json">`light/directional`</a>
-   * <a href="schema/lightPoint.schema.json">`light/point`</a>
-   * <a href="schema/lightSpot.schema.json">`light/spot`</a>
+   * <a href="schema/light.ambient.schema.json">`light/ambient`</a>
+   * <a href="schema/light.directional.schema.json">`light/directional`</a>
+   * <a href="schema/light.point.schema.json">`light/point`</a>
+   * <a href="schema/light.spot.schema.json">`light/spot`</a>
 
 
 <a name="conformance"></a>
