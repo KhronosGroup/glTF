@@ -776,6 +776,28 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
 
+#### Morph Targets Instances
+
+A Morph Target is instanced within a node using:
+- The Morph Target referenced in the `mesh` property.
+- The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
+The example below instatiates a Morph Target together with a Skin.
+
+```json
+{
+    "nodes": [
+        {
+            "mesh": 11,
+            "skeletons": [
+                21
+            ],
+            "skin": 0,
+            "weights": [0 0.5]
+        }
+    ]
+}
+```
+
 #### Textures
 
 All textures are stored in the asset's `textures` array. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
