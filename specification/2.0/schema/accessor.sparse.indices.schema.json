@@ -7,23 +7,24 @@
     "properties" : {
         "bufferView" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of the bufferView."
+            "description" : "The index of the bufferView with sparse indices. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
         },
         "byteOffset" : {
             "type" : "integer",
-            "description" : "The offset relative to the start of the bufferView in bytes.",
+            "description" : "The offset relative to the start of the bufferView in bytes. Must be aligned.",
             "minimum" : 0,
+            "default" : 0
         },
         "componentType" : {
             "type" : "integer",
             "description" : "The indices data type.",
             "enum" : [5121, 5123, 5125],
             "gltf_enumNames" : ["UNSIGNED_BYTE", "UNSIGNED_SHORT", "UNSIGNED_INT"],
-            "gltf_detailedDescription" : "The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT).",
+            "gltf_detailedDescription" : "The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT)."
         },
         "extensions" : {},
         "extras" : {}
     },
     "additionalProperties" : false,
-    "required": ["bufferView", "byteOffset", "componentType"]
+    "required": ["bufferView", "componentType"]
 }
