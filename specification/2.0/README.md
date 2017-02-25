@@ -601,36 +601,20 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by a `bindShapeMatrix` property, which describes how to pose the skin's geometry for use with the joints; the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `jointNames` array property that lists the joints used to animate the skin. The order of joints is defined in the `skin.jointNames` array and it must match the order of `inverseBindMatrices` data. Each joint name must correspond to the joint of a node in the hierarchy, as designated by the node's `jointName` property.
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
 
+> **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
 ```json
 {    
     "skins": [
         {
-            "bindShapeMatrix": [
-                0,
-                -0.804999,
-                0.172274,
-                0,
-                0,
-                0.172274,
-                0.804999,
-                0,
-                -0.823226,
-                0,
-                0,
-                0,
-                -127.093,
-                -393.418,
-                597.2,
-                1
-            ],
             "inverseBindMatrices": 11,
-            "jointNames": [
-                "Bone1",
-                "Bone2"
-            ]
+            "joints": [
+                1,
+                2
+            ],
+            "skeleton": 1
         }
     ]
 }
@@ -638,16 +622,13 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
 
 #### Skin Instances
 
-A skin is instanced within a node using a combination of the node's `mesh`, `skeletons`, and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skeletons` property contains one or more skeletons, each of which is the root of a node hierarchy. The `skin` property contains the index of the skin to instance. The example below defines a skin instance that uses a single mesh and skeleton.
+A skin is instanced within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
 
 ```json
 {
     "nodes": [
         {
             "mesh": 11,
-            "skeletons": [
-                21
-            ],
             "skin": 0
         }
     ]
@@ -656,7 +637,7 @@ A skin is instanced within a node using a combination of the node's `mesh`, `ske
 
 #### Skinned Mesh Attributes
 
-The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `jointNames` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
+The mesh for a skin is defined with vertex attributes that are used in skinning calculations in the vertex shader. The `JOINT` attribute data contains the indices of the joints from corresponding `joints` array that should affect the vertex. The `WEIGHT` attribute data defines the weights indicating how strongly the joint should influence the vertex. The following mesh skin defines `JOINT` and `WEIGHT` vertex attributes for a triangle mesh primitive:
 
 ```json
 {
@@ -682,32 +663,37 @@ The mesh for a skin is defined with vertex attributes that are used in skinning 
 }
 ```
 
-> **Implementation note:** The number of joints that influence one vertex is usually limited to 4, so that the joint indices and weights can be stored in __vec4__ elements.
+The number of joints that influence one vertex is limited to 4, so referenced accessors must have `VEC4` type and following component formats:
 
+* **`JOINT`**: `UNSIGNED_BYTE` or `UNSIGNED_SHORT`
+* **`WEIGHT`**: `FLOAT`, or normalized `UNSIGNED_BYTE`, or normalized `UNSIGNED_SHORT`
 
 #### Joint Hierarchy
 
-The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint using the `jointName` property. Any joints listed in the skin's `jointNames` property must correspond to a node that has the same `jointName` property. The following example defines a joint hierarchy of two joints with `root-node` at the root, identified as a joint using the joint name `Bone1`.
+The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
 
 ```json
 {
+    "skins": [
+        {
+            "inverseBindMatrices": 29,
+            "joints": [1, 2] 
+        }
+    ],
     "nodes": [
         {
-            "children": [
-                1
-            ],
-            "jointName": "Bone1",
-            "name": "root-node",
+            "name":"Skinned mesh node",
+            "mesh": 0,
+            "skin": 0
+        },
+        {
+            "name":"Skeleton root joint",
+            "children": [2],
             "rotation": [
                 0,
                 0,
                 0.7071067811865475,
                 0.7071067811865476
-            ],
-            "scale": [
-                1,
-                1,
-                1
             ],
             "translation": [
                 4.61599,
@@ -716,19 +702,7 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
             ]
         },
         {
-            "jointName": "Bone2",
-            "name": "head",
-            "rotation": [
-                0,
-                0,
-                0,
-                1
-            ],
-            "scale": [
-                1,
-                1,
-                1
-            ],
+            "name":"Head",
             "translation": [
                 8.76635,
                 0,
