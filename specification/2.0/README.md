@@ -597,7 +597,9 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 #### Morph Targets
 
 Morph Targets are defined by extending the Mesh concept.
-A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes (this operation corresponds to COLLADA's `RELATIVE` blending method).
+A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+For instance, the Morph Target vertices `POSITION` for the primitive at index *i* are computed in this way:
+`primitives`[i].`attributes`.`POSITION` + `weights`[0] * `primitives`[i].`targets`[0].`POSITION` + `weights`[1] * `primitives`[i].`targets`[1].`POSITION` + ...
 Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only two attributes ('POSITION' and 'NORMAL') are supported. All primitives are required to list the same number of `targets` in the same order.
 The `weights` array is optional, it stores the default targets weights, in the absence of animations the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
 
