@@ -1020,7 +1020,6 @@ Asset metadata is described in the `asset` property. The asset metadata contains
 
 * a `copyright` property denoting authorship
 * a `generator` property describing the tool, if any, that generated the asset
-* a `premultipliedAlpha` property specifying if the shaders were generated with premultiplied alpha (see WebGL `getContext()` with premultipliedAlpha)
 * a profile designation
 * a `version` property denoting the specification version
 
@@ -1029,16 +1028,8 @@ Only the `version` property is required. For example,
 ```json
 {
     "asset": {
-        "version": "1.1",
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
-        "premultipliedAlpha": true,
-        "profile" : {
-            "api" : "WebGL",
-            "version" : "1.0",
-            "extras" : {
-                "Application specific" : "The extra object can contain any properties."
-            }  
-        }        
+        "version": "2.0",
+        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7"
     }
 }
 ```
