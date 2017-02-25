@@ -176,7 +176,9 @@ For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCas
 <a name="scenes"></a>
 ## Scenes
 
-The glTF asset contains one or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
+The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
+
+When `scene` is undefined, scene of index 0 should be displayed. When `scenes` array is undefined, nothing is rendered. 
 
 The following example defines a glTF asset with a single scene, that contains a single node.
 
