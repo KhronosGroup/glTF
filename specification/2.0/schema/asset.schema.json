@@ -13,19 +13,10 @@
             "type" : "string",
             "description" : "Tool that generated this glTF model.  Useful for debugging."
         },
-        "premultipliedAlpha" : {
-            "type" : "boolean",
-            "description" : "Specifies if the shaders were generated with premultiplied alpha.",
-            "default" : false,
-            "gltf_webgl" : "`getContext()` with premultipliedAlpha"
-        },
-        "profile" : {
-            "allOf" : [ { "$ref" : "asset.profile.schema.json" } ],
-            "default" : {}
-        },
         "version" : {
             "type" : "string",
-            "description" : "The glTF version."
+            "description" : "The glTF version.",
+            "enum" : ["2.0"]
         },
         "extensions" : {},
         "extras" : {}
