@@ -5,7 +5,7 @@
     "description" : "The index of the node and TRS property that an animation channel targets.",
     "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
     "properties" : {
-        "id" : {
+        "node" : {
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the node to target."
         },
@@ -18,5 +18,5 @@
         "extras" : {}
     },
     "additionalProperties" : false,
-    "required": ["id", "path"]
+    "required": ["node", "path"]
 }

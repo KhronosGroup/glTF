@@ -42,7 +42,6 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Animations](#animations)
   * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
-    * [Specifying GL Extensions](#specifying-gl-extensions)
 * [Properties Reference](#properties)
 * [Acknowledgements](#acknowledgements)
 * [Appendix A: Default Material](#appendix-a)
@@ -119,14 +118,17 @@ Version 2.0 of glTF does not define compression for geometry and other rich data
 
 To simplify client-side implementation, glTF has following restrictions on JSON format and encoding.
 
-1. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
-2. JSON must use UTF-8 encoding without BOM.
+1. JSON must use UTF-8 encoding without BOM.
+2. All strings defined in this spec (properties names, enums) use only ASCII charset and must be written as plain text, e.g., `"buffer"` instead of `"\u0062\u0075\u0066\u0066\u0065\u0072"`.
 
-> **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+   > **Implementation Note:** This allows generic glTF loader to not have full Unicode support. Application-specific strings (e.g., value of `"name"` property) could use any charset.
+3. Names (keys) within JSON objects must be unique, i.e., duplicate keys aren't allowed.
 
 ## URIs
 
-glTF uses URIs to reference buffers and image resources. These URIs may point to external files or be data URIs that embed resources in the JSON. Embedded resources are base64 encoded using [RFC-4648](https://tools.ietf.org/html/rfc4648) so they can easily be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
+glTF uses URIs to reference buffers and image resources. These URIs may point to external resources or be data URIs that embed resources in the JSON. Embedded resources use "data" URI scheme ([RFC-2397](https://tools.ietf.org/html/rfc2397)) so they can easily be [decoded with JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
+
+Clients are required to support only embedded resources and relative external references (in a sense of [RFC3986](https://tools.ietf.org/html/rfc3986#section-4.2)). Clients are free to support other schemes (such as `http://`) depending on expected usage.
 
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
@@ -345,7 +347,8 @@ The following example defines a buffer. The `byteLength` property specifies the 
 }
 ```
 
-A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view. The bufferView also defines a `target` property to indicate the target data type, either ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, or an object describing animation or skinning target data. This enables the implementation to readily create and populate the buffers in memory.
+A *bufferView* represents a subset of data in a buffer, defined by an integer offset into the buffer specified in the `byteOffset` property, a `byteLength` property to specify length of the buffer view.
+When buffer view has a `target` property, its data could be directly fed into appropriate GPU buffer: either ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER.
 
 The following example defines two buffer views: the first is an ELEMENT_ARRAY_BUFFER, which holds the indices for an indexed triangle set, and the second is an ARRAY_BUFFER that holds the vertex data for the triangle set.
 
@@ -363,13 +366,16 @@ The following example defines two buffer views: the first is an ELEMENT_ARRAY_BU
             "buffer": 0,
             "byteLength": 76768,
             "byteOffset": 25272,
+            "byteStride": 32,
             "target": 34962
         }
     ]
 }
 ```
 
-buffers and bufferViews do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations)  access buffers or bufferViews via *accessors*.
+Buffer view could have `byteStride` property. It means byte-distance between consequential elements and it is mandatory when `target` equals to ARRAY_BUFFER. When `target` is ELEMENT_ARRAY_BUFFER, `byteStride` must be 0.
+
+Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
 
 ### Accessors
@@ -388,7 +394,6 @@ The following fragment shows two accessors, the first is a scalar accessor for r
         {
             "bufferView": 0,
             "byteOffset": 0,
-            "byteStride": 0,
             "componentType": 5123,
             "count": 12636,
             "max": [
@@ -402,7 +407,6 @@ The following fragment shows two accessors, the first is a scalar accessor for r
         {
             "bufferView": 1,
             "byteOffset": 0,
-            "byteStride": 12,
             "componentType": 5126,
             "count": 2399,
             "max": [
@@ -454,7 +458,6 @@ For example:
         {
             "bufferView": 1,
             "byteOffset": 7032,
-            "byteStride": 12,
             "componentType": 5126,
             "count": 586,
             "type": "VEC3"
@@ -465,15 +468,56 @@ For example:
 
 In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
 
+#### Sparse accessors
+
+Sparse encoding of arrays is often more memory-efficient than dense encoding when describing incremental changes with respect to a reference array.
+This is often the case when encoding morph targets (it is, in general, more efficient to describe a few displaced vertices in a morph target than transmitting all morph target vertices).
+
+glTF 2.0 extends the accessor structure to enable efficient transfer of sparse arrays.
+Similarly to a standard accessor, a sparse accessor initializes an array of typed attributes from data stored in a `bufferView` . On top of that, a sparse accessor includes a `sparse` dictionary describing the attributes that deviate from their initialization value. The `sparse` dictionary contains the following mandatory properties:
+- `count`: number of displaced attributes.
+- `indices`: strictly increasing array of integers of size `count` and specific `componentType` that stores the indices of those attributes that deviate from the initialization value.
+- `values`: array of displaced attributes corresponding to the indices in the `indices` array.
+
+The following fragment shows an example of `sparse` accessor with 10 attributes deviating from the initialization array.
+
+```json
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 12636,
+            "type": "VEC3",
+            "sparse": {
+                "count": 10,
+                "indices": {
+                    "bufferView": 1,
+                    "byteOffset": 0,
+                    "componentType": 5123
+                },
+                "values": {
+                    "bufferView": 2,
+                    "byteOffset": 0
+                }
+            }
+        }
+    ]
+}
+```
+A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
+A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
+
 #### BufferView and Accessor Byte Alignment
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-When `accessor.byteStride` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `accessor.byteStride` is defined, it must be a multiple of the size of the accessor's component type. Only vertex attribute accessors can use non-tight packing.
+When `byteStride` of referenced `bufferView` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `bufferView.byteStride` is defined, it must be a multiple of the size of the accessor's component type.
 
 Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ATTRIBUTE_TYPE` must be less than or equal to `bufferView.length`.
 
-For performance and compatibility reasons, vertex attribute data should be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `accessor.byteStride` should be multiples of 4). 
+For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
 
 > **Implementation Note:** For JavaScript, this allows a runtime to efficiently create a single ArrayBuffer from a glTF `buffer` or an ArrayBuffer per `bufferView`, and then use an `accessor` to turn a typed array view (e.g., `Float32Array`) into an ArrayBuffer without copying it because the byte offset of the typed array view is a multiple of the size of the type (e.g., `4` for `Float32Array`).
 
@@ -493,7 +537,6 @@ Consider the following example:
         {
             "bufferView": 0,
             "byteOffset": 4608,
-            "byteStride": 0,
             "componentType": 5123,
             "count": 5232,
             "type": "SCALAR"
@@ -507,7 +550,7 @@ Accessing binary data defined by example above could be done like this:
 var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferView.byteOffset, accessor.count);
 ```
 
-The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into `buffer_1` is `5228 ` (`620 + 4608`), which is divisible by two.
+The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
 
 
 <a name="geometry-and-meshes"></a>
@@ -946,21 +989,21 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 1,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "scale"
                     }
                 },
                 {
                     "sampler": 2,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "translation"
                     }
                 }
@@ -989,14 +1032,14 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 0,
+                        "node": 0,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 1,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 }
@@ -1020,14 +1063,14 @@ The following examples show expected animations usage.
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 0,
+                        "node": 0,
                         "path": "rotation"
                     }
                 },
                 {
                     "sampler": 0,
                     "target": {
-                        "id": 1,
+                        "node": 1,
                         "path": "rotation"
                     }
                 }
@@ -1044,7 +1087,7 @@ The following examples show expected animations usage.
 }
 ```
 
-*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `id` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
+*Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
 Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
 
@@ -1123,19 +1166,6 @@ All glTF extensions required to load and/or render an asset must be listed in th
 }
 ```
 
-<a name="specifying-gl-extensions"></a>
-### Specifying GL extensions
-
-If loading an asset requires enabling GL extensions to provide functionality beyond used profile (e.g., WebGL 1.0), such extensions must be listed in the top-level `glExtensionsUsed` array, e.g.,
-
-```json
-{
-    "glExtensionsUsed": [
-        "OES_element_index_uint"
-    ]
-}
-```
-
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
 
 <a name="properties"></a>
@@ -1187,6 +1217,7 @@ A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contain
 |**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
 |**max**|`number[1-16]`|Maximum value of each component in this attribute.| :white_check_mark: Yes|
 |**min**|`number[1-16]`|Minimum value of each component in this attribute.| :white_check_mark: Yes|
+|**sparse**|[`accessor.sparse`](#reference-accessor.sparse)|Sparse storage of attributes that deviate from their initialization value.|No, default: `{}`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
@@ -1280,6 +1311,13 @@ When `componentType` is `5126` (FLOAT) each array value must be stored as double
 * **Type**: `number[1-16]`
 * **Required**: Yes
 
+### accessor.sparse
+
+Optional sparse storage of attributes that deviate from their initialization value.
+
+* **Type**: [`accessor.sparse`](#reference-accessor.sparse)
+* **Required**: No, default: `{}`
+
 ### accessor.name
 
 The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
@@ -1302,6 +1340,168 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse"></a>
+## accessor.sparse
+
+Sparse storage of attributes that deviate from their initialization value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**count**|`integer`|Number of entries stored in the sparse array.| :white_check_mark: Yes|
+|**indices**|[`accessor.sparse.indices`](#reference-accessor.sparse.indices)|Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.| :white_check_mark: Yes|
+|**values**|[`accessor.sparse.values`](#reference-accessor.sparse.values)|Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [accessor.sparse.schema.json](schema/accessor.sparse.schema.json)
+
+### sparse.count :white_check_mark:
+
+Number of entries stored in the sparse array.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` > 0`
+
+### sparse.indices :white_check_mark:
+
+Index array of size `sparse.count` that points to those accessor attributes that deviate from their initialization value.
+
+* **Type**: [`accessor.sparse.indices`](#reference-accessor.sparse.indices)
+* **Required**: Yes
+
+### sparse.values :white_check_mark:
+
+Array of size `sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
+
+* **Type**: [`accessor.sparse.values`](#reference-accessor.sparse.values)
+* **Required**: Yes
+
+### sparse.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### sparse.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse.indices"></a>
+## accessor.sparse.indices
+
+Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
+|**componentType**|`integer`|The datatype of the indices referenced by this accessor.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+### indices.bufferView :white_check_mark:
+
+The ID of the [`bufferView`](#reference-bufferView).
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**: ` >= 1`
+
+### indices.byteOffset :white_check_mark:
+
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+* **Related WebGL functions**: `vertexAttribPointer()` offset parameter
+
+### indices.componentType :white_check_mark:
+
+The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT).
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Allowed values**: `5121`, `5123`, `5125`.
+
+### indices.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### indices.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-accessor.sparse.values"></a>
+## accessor.sparse.values
+
+Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
+
+**Properties**
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
+|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
+|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
+|**extras**|`any`|Application-specific data.|No|
+
+Additional properties are not allowed.
+
+### values.bufferView :white_check_mark:
+
+The ID of the [`bufferView`](#reference-bufferView).
+
+* **Type**: `string`
+* **Required**: Yes
+* **Minimum Length**: ` >= 1`
+
+### values.byteOffset :white_check_mark:
+
+The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the accessor component datatype.
+
+* **Type**: `integer`
+* **Required**: Yes
+* **Minimum**: ` >= 0`
+
+### values.extensions
+
+Dictionary object with extension-specific objects.
+
+* **Type**: `object`
+* **Required**: No
+* **Type of each property**: `object`
+
+### values.extras
+
+Application-specific data.
+
+* **Type**: `any`
+* **Required**: No
 
 <!-- ======================================================================= -->
 <a name="reference-animation"></a>
