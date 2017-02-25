@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "normalTextureInfo",
     "type": "object",
-    "allOf": [{"$ref": "textureInfo.schema.json"}],
+    "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
     "properties": {
         "index": {},
         "texCoord": {},

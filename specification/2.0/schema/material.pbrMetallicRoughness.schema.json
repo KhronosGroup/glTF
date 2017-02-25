@@ -3,43 +3,46 @@
     "title": "pbrMetallicRoughness",
     "type": "object",
     "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.",
-    "baseColorFactor": {
-        "type": "array",
-        "items": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 1.0
+    "properties": {
+        "baseColorFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "description": "The material's base color factor.",
+            "default": [ 1.0, 1.0, 1.0, 1.0 ],
+            "minItems": 4,
+            "maxItems": 4,
+            "gltf_detailedDescription": "The RGBA components of the base color of the material. The fourth component (A) is the opacity of the material. These values are linear."
         },
-        "description": "The material's base color factor.",
-        "default": [ 1.0, 1.0, 1.0, 1.0 ],
-        "minItems": 4,
-        "maxItems": 4,
-        "gltf_detailedDescription": "The RGBA components of the base color of the material. The fourth component (A) is the opacity of the material. These values are linear."
+        "baseColorTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The base color texture.",
+            "gltf_detailedDescription": "The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed."
+        },
+        "metallicFactor": {
+            "type": "number",
+            "description": "The metalness of the material.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear."
+        },
+        "roughnessFactor": {
+            "type": "number",
+            "description": "The roughness of the material.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "gltf_detailedDescription": "The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear."
+        },
+        "metallicRoughnessTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The metallic-roughness texture.",
+            "gltf_detailedDescription": "The metallic-roughness texture has two components. The first component (R) contains the metallic-ness of the material. The second component (G) contains the roughness of the material. These values are linear. If the third component (B) and/or the fourth component (A) are present, they are ignored."
+        }
     },
-    "baseColorTexture": {
-        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-        "description": "The base color texture.",
-        "gltf_detailedDescription": "The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed."
-    },
-    "metallicFactor": {
-        "type": "number",
-        "description": "The metalness of the material.",
-        "default": 1.0,
-        "minimum": 0.0,
-        "maximum": 1.0,
-        "gltf_detailedDescription": "The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear."
-    },
-    "roughnessFactor": {
-        "type": "number",
-        "description": "The roughness of the material.",
-        "default": 1.0,
-        "minimum": 0.0,
-        "maximum": 1.0,
-        "gltf_detailedDescription": "The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear."
-    },
-    "metallicRoughnessTexture": {
-        "allOf": [ { "$ref": "textureInfo.schema.json" } ],
-        "description": "The metallic-roughness texture.",
-        "gltf_detailedDescription": "The metallic-roughness texture has two components. The first component (R) contains the metallic-ness of the material. The second component (G) contains the roughness of the material. These values are linear. If the third component (B) and/or the fourth component (A) are present, they are ignored."
-    }
+    "additionalProperties": false
 }
