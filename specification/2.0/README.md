@@ -859,7 +859,7 @@ Todo: Add Transparency. Needed to explain what to do with Alpha channel.
  The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models like those defined in the KHR_materials_pbrSpecularGlossiness extension or the KHR_materials_common extension.
 
  Materials define the following additional maps:
-- **normal** : A tangent space normal map. 
+- **normal** : A tangent space normal map.
 - **occlusion** : The occlusion map indicating areas of indirect lighting.
 - **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
 
@@ -2470,14 +2470,14 @@ A set of parameter values that are used to define the metallic-roughness materia
    
 ### material.normalTexture
 
-A tangent space normal map. Each texel represents the XYZ components of a normal vector in tangent space. <TODO: Add more explaination on how XYZ is calculated>.
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [0 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer.
 
 * **Type**: [`material.normalTextureInfo`](#reference-material.normalTextureInfo)
 * **Required**: No
 
 ### material.occlusionTexture
 
-The occlusion map is a greyscale texture, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. <Todo: sRGB ? Color Space>.
+The occlusion map is a greyscale texture in sRGB color space, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. If an alpha channel is present, it is ignored.
 
 * **Type**: [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) 
 * **Required**: No
