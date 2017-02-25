@@ -12,7 +12,7 @@
                 "type" : "string"
             },
             "uniqueItems" : true,
-            "default" : []
+            "minItems" : 1
         },
         "extensionsRequired" : {
             "type" : "array",
@@ -21,7 +21,7 @@
                 "type" : "string"
             },
             "uniqueItems" : true,
-            "default" : []
+            "minItems" : 1
         },
         "accessors" : {
             "type" : "array",
@@ -29,7 +29,7 @@
             "items" : {
                 "$ref" : "accessor.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of accessors.  An accessor is a typed view into a bufferView."
         },
         "animations" : {
@@ -38,7 +38,7 @@
             "items" : {
                 "$ref" : "animation.schema.json"
             },
-            "default" : []
+            "minItems" : 1
         },
         "asset" : {
             "allOf" : [ { "$ref" : "asset.schema.json" } ],
@@ -50,7 +50,7 @@
             "items" : {
                 "$ref" : "buffer.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of buffers.  A buffer points to binary geometry, animation, or skins."
         },
         "bufferViews" : {
@@ -59,7 +59,7 @@
             "items" : {
                 "$ref" : "bufferView.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of bufferViews.  A bufferView is a view into a buffer generally representing a subset of the buffer."
         },
         "cameras" : {
@@ -68,7 +68,7 @@
             "items" : {
                 "$ref" : "camera.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of cameras.  A camera defines a projection matrix."
         },
         "images" : {
@@ -77,7 +77,7 @@
             "items" : {
                 "$ref" : "image.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of images.  An image defines data used to create a texture."
         },
         "materials" : {
@@ -86,7 +86,7 @@
             "items" : {
                 "$ref" : "material.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of materials.  A material defines the appearance of a primitive."
         },
         "meshes" : {
@@ -95,7 +95,7 @@
             "items" : {
                 "$ref" : "mesh.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of meshes.  A mesh is a set of primitives to be rendered."
         },
         "nodes" : {
@@ -104,7 +104,7 @@
             "items" : {
                 "$ref" : "node.schema.json"
             },
-            "default" : []
+            "minItems" : 1
         },
         "samplers" : {
             "type" : "array",
@@ -112,7 +112,7 @@
             "items" : {
                 "$ref" : "sampler.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of samplers.  A sampler contains properties for texture filtering and wrapping modes."
         },
         "scene" : {
@@ -125,7 +125,7 @@
             "items" : {
                 "$ref" : "scene.schema.json"
             },
-            "default" : []
+            "minItems" : 1
         },
         "skins" : {
             "type" : "array",
@@ -133,7 +133,7 @@
             "items" : {
                 "$ref" : "skin.schema.json"
             },
-            "default" : [],
+            "minItems" : 1,
             "gltf_detailedDescription" : "An array of skins.  A skin is defined by joints and matrices."
         },
         "textures" : {
@@ -142,7 +142,7 @@
             "items" : {
                 "$ref" : "texture.schema.json"
             },
-            "default" : []
+            "minItems" : 1
         },
         "extensions" : {},
         "extras" : {}
