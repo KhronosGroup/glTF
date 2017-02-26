@@ -99,7 +99,7 @@ This chunk holds the structured glTF content description, as it would be provide
 
 > **Implementation Note:** In a JavaScript implementation, the `TextDecoder` API can be used to extract the glTF content from the ArrayBuffer, and then the JSON can be parsed with `JSON.parse` as usual.
 
-By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
+This chunk must be the very first chunk of Binary glTF asset. By reading this chunk first, an implementation is able to progressively retrieve resources from subsequent chunks. This way, it is also possible to read only a selected subset of resources from a Binary glTF asset (for instance, the coarsest LOD of a mesh).
 
 This chunk must be padded with trailing `Space` chars (`0x20`) to satisfy alignment requirements.  
 
