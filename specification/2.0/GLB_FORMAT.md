@@ -1,4 +1,4 @@
-# Appendix \#: GLB File Format Specification
+# Appendix A: GLB File Format Specification
 
 *Version 2.0*
 
