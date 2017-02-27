@@ -623,12 +623,12 @@ The following example extends the Mesh defined in the previous example to a morp
             "targets": [
                 {
                     "NORMAL": 35,
-                    "POSITION": 33,
+                    "POSITION": 33
                 },
                 {
                     "NORMAL": 45,
-                    "POSITION": 43,
-                },
+                    "POSITION": 43
+                }
             ]
         }
     ],
@@ -764,11 +764,8 @@ The example below instatiates a Morph Target together with a Skin.
     "nodes": [
         {
             "mesh": 11,
-            "skeletons": [
-                21
-            ],
             "skin": 0,
-            "weights": [0 0.5]
+            "weights": [0, 0.5]
         }
     ]
 }
