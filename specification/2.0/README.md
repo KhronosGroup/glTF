@@ -963,7 +963,7 @@ All implementations should use the same calculations for the BRDF inputs. Implem
 
 The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
 
- ```
+```json
 {
     "materials": [
         {
@@ -1035,7 +1035,7 @@ The following example defines two perspective cameras with supplied values for Y
     ]
 }
 ```
-<a name="projection-matrices"></a>
+
 ### Projection Matrices
 
 Runtimes are expected to use the following projection matrices.
