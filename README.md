@@ -107,7 +107,7 @@ Diagram by [Marco Hutter](http://marco-hutter.de/) ([repo](https://github.com/ja
 
 #### C# #
 
-* [C# glTF loader](https://github.com/KhronosGroup/glTF/tree/master/loaders/CSharp) - C# reference loader for glTF
+* [C# glTF loader](https://github.com/KhronosGroup/glTF-CSharp-Loader) - C# reference loader for glTF
 * [Aspose.3D for .NET](http://www.aspose.com/products/3d/net) - Import, export, and convert glTF
 
 #### Go
