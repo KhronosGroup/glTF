@@ -907,6 +907,7 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
 ### Metallic-Roughness Material 
+
 All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
 
 ```json
@@ -949,17 +950,18 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
 <br>
-*&alpha;* = `max(roughness ^ 2, epsilon)`
+*&alpha;* = `roughness ^ 2`
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix C](#appendix-c-brdf-implementation) for more details on the BRDF calculations.
 
-### Additional maps
- The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
+### Additional Maps
 
- Materials define the following additional maps:
+The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
+
+Materials define the following additional maps:
 - **normal** : A tangent space normal map.
 - **occlusion** : The occlusion map indicating areas of indirect lighting.
-- **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
+- **emissive** : The emissive map controls the color and intensity of the light being emitted by the material.
 
 The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
 
@@ -992,13 +994,13 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 }
 ```
 
->**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
+>**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  Resource-bound implementations should drop maps from the bottom to the top.
 >
->| Map | Rendering impact when map is not supported|
->|---|------------------------------|
->| Normal | Geometry will appear less detailed than authored|
->| Occlusion | Model will appear brighter in areas that should be darker|
->| Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
+>| Map       | Rendering impact when map is not supported |
+>|-----------|--------------------------------------------|
+>| Normal    | Geometry will appear less detailed than authored. |
+>| Occlusion | Model will appear brighter in areas that should be darker. |
+>| Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on. |
 
 ## Cameras
 
