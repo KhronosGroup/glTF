@@ -807,7 +807,6 @@ The metallic-roughness material model is defined by the following properties:
 * `metallic` - The metalness of the material
 * `roughness` - The roughness of the material
 
-Todo: Update figure illustrating this
 
 The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
@@ -828,7 +827,6 @@ The following equations show how to calculate bidirectional reflectance distribu
 
 All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](#appendix-a) for more details on the BRDF calculations. 
 
-Todo: Add Transparency. Needed to explain what to do with Alpha channel.
 
 <a name="additionalmaps"></a>
 ### Additional maps
@@ -3233,7 +3231,6 @@ Application-specific data.
 
 If `material` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  
 
-TODO: Update this to show Metal Roughness shader sample here.
 
 
 <a name="appendix-b"></a>
