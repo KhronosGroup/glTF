@@ -66,7 +66,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Animations](#animations)
   * [Specifying Extensions](#specifying-extensions)
 * [Properties Reference](#properties-reference)
-* [Acknowledgements](#acknowledgements)
+* [Acknowledgments](#acknowledgments)
 * [Appendix A: GLB File Format Specification](#appendix-a-glb-file-format-specification)
 * [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
 * [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
