@@ -6,7 +6,7 @@
 
 The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-Last Updated: February 1, 2017
+Last Updated: February 27, 2017
 
 Editors
 
@@ -27,35 +27,58 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
 
 * [Introduction](#introduction)
   * [Motivation](#motivation)
-  * [glTF Basics](#glTFbasics)
-  * [Design Goals](#designgoals)
-  * [File Extensions and MIME Types](#mimetypes)
+  * [glTF Basics](#gltf-basics)
+  * [Design Goals](#design-goals)
+  * [File Extensions and MIME Types](#file-extensions-and-mime-types)
   * [JSON Encoding](#json-encoding)
+  * [URIs](#uris)
 * [Concepts](#concepts)
-  * [IDs and Names](#ids-and-names)
+  * [Asset](#asset)
+  * [Indices and Names](#indices-and-names)
+  * [Coordinate System and Units](#coordinate-system-and-units)
   * [Scenes](#scenes)
-  * [Accessing Binary Data](#accessing-binary-data)
-  * [Geometry and Meshes](#geometry-and-meshes)
+    * [Nodes and Hierarchy](#nodes-and-hierarchy)
+    * [Transformations](#transformations)
+  * [Binary Data Storage](#binary-data-storage)
+    * [Buffers and Buffer Views](#buffers-and-buffer-views)
+      * [GLB-stored Buffer](#glb-stored-buffer)
+    * [Accessors](#accessors)
+        * [Accessor Attribute Size](#accessor-attribute-size)
+        * [Sparse Accessors](#sparse-accessors)
+    * [Data Alignment](#data-alignment)   
+  * [Geometry](#geometry)
+    * [Meshes](#meshes)
+      * [Tangent-space definition](#tangent-space-definition)
+      * [Morph Targets](#morph-targets)
+    * [Skins](#skins)
+      * [Skinned Mesh Attributes](#skinned-mesh-attributes)
+      * [Joint Hierarchy](#joint-hierarchy)
+    * [Instantiation](#instantiation)
+  * [Texture Data](#texture-data)
+    * [Textures](#textures)
+    * [Images](#images)
+    * [Samplers](#samplers)
   * [Materials](#materials)
+    * [Metallic-Roughness Material](#metallic-roughness-material)
+    * [Additional Maps](#additional-maps)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
-  * [Metadata](#metadata)
   * [Specifying Extensions](#specifying-extensions)
-* [Properties Reference](#properties)
+* [Properties Reference](#properties-reference)
 * [Acknowledgements](#acknowledgements)
-* [Appendix A: Default Material](#appendix-a)
-* [Appendix B: Full Khronos Trademark Statement](#appendix-b)
+* [Appendix A: GLB File Format Specification](#appendix-a-glb-file-format-specification)
+* [Appendix B: Tangent Space Recalculation](#appendix-b-tangent-space-recalculation)
+* [Appendix C: BRDF Implementation](#appendix-c-brdf-implementation)
+* [Appendix D: Full Khronos Trademark Statement](#appendix-d-full-khronos-trademark-statement)
 
-<a name="introduction"></a>
 # Introduction
 
-*This section is non-normative.*
+The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern graphics applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
 
-The GL Transmission Format (glTF) is an API-neutral runtime asset delivery format.  glTF bridges the gap between 3D content creation tools and modern GL applications by providing an efficient, extensible, interoperable format for the transmission and loading of 3D content.
-
-<a name="motivation"></a>
 ## Motivation
+
+*This section is non-normative.*
 
 Traditional 3D modeling formats have been designed to store data for offline use, primarily to support authoring workflows on desktop systems. Industry-standard 3D interchange formats allow for sharing assets between different modeling tools, and within the content pipeline in general. However, neither of these types of formats is optimized for download speed or fast loading at runtime. Files tend to grow very large, and applications need to do a significant amount of processing to load such assets into GPU-accelerated applications.
 
@@ -65,9 +88,9 @@ With the advent of mobile- and web-based 3D computing, new classes of applicatio
 
 glTF solves these problems by providing a vendor- and runtime-neutral format that can be loaded and rendered with minimal processing. The format combines an easily parseable JSON scene description with one or more binary files representing geometry, animations, and other rich data. Binary data is stored in such a way that it can be loaded directly into GPU buffers without additional parsing or other manipulation. Using this approach, glTF is able to faithfully preserve full hierarchical scenes with nodes, meshes, cameras, materials, and animations, while enabling efficient delivery and fast loading.
 
-<a name="glTFbasics"></a>
-
 ## glTF Basics
+
+*This section is non-normative.*
 
 glTF assets are JSON files plus supporting external data. Specifically, a glTF asset is represented by:
 
@@ -75,7 +98,7 @@ glTF assets are JSON files plus supporting external data. Specifically, a glTF a
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
 * Image files (`.jpg`, `.png`, etc.) for textures
 
-Assets defined in other formats, such as images, may be stored in external files referenced via URI or embedded directly into the JSON using  [data URIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
+Assets defined in other formats, such as images, may be stored in external files referenced via URI, stored side-by-side in GLB container, or embedded directly into the JSON using [data URIs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs).
 
 Valid glTF asset must specify its version.
 
@@ -83,19 +106,19 @@ Valid glTF asset must specify its version.
 <img src="figures/files.png" width="50%" />
 </p>
 
-<a name="designgoals"></a>
-
 ## Design Goals
+
+*This section is non-normative.*
 
 glTF has been designed to meet the following goals:
 
 * *Compact file sizes.* While web developers like to work with clear text as much as possible, clear text encoding is simply not practical for transmitting 3D data due to sheer size. The glTF JSON file itself is clear text, but it is compact and rapid to parse. All large data such as geometry and animations are stored in binary files that are much smaller than equivalent text representations.
-* *Fast loading.* glTF data structures have been designed to mirror the GL API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes can be loaded directly into WebGL typed arrays with a simple data copy; no parsing or further processing is required.
+* *Fast loading.* glTF data structures have been designed to mirror the GPU API data as closely as possible, both in the JSON and binary files, to reduce load times. For example, binary data for meshes could be viewed as JavaScript Typed Arrays and be loaded directly into GPU buffers with a simple data copy; no parsing or further processing is required.
 * *Runtime-independence.* glTF makes no assumptions about the target application or 3D engine. glTF specifies no runtime behaviors other than rendering and animation.
 * *Complete 3D scene representation.* Exporting single objects from a modeling package is not sufficient for many applications. Often, authors want to load entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations into their applications. glTF strives to preserve all of this information for use in the downstream application.
 * *Extensibility.* While the initial base specification supports a rich feature set, there will be many opportunities for growth and improvement. glTF defines a mechanism that allows the addition of both general-purpose and vendor-specific extensions.
 
-The design of glTF takes a pragmatic approach. The format is meant to mirror the GL APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
+The design of glTF takes a pragmatic approach. The format is meant to mirror the GPU APIs as closely as possible, but if it did only that, there would be no cameras, animations, or other features typically found in both modeling tools and runtime systems, and much semantic information would be lost in the translation. By supporting these common constructs, glTF content can not only load and render, but it can be immediately usable in a wider range of applications and require less duplication of effort in the content pipeline.
 
 The following are outside the scope of the initial design of glTF:
 
@@ -106,14 +129,12 @@ Version 2.0 of glTF does not define compression for geometry and other rich data
 
 > The 3D Formats Working Group is developing partnerships to define the codec options for geometry compression.  glTF defines the node hierarchy, materials, animations, and geometry, and will reference the external compression specs.
 
-<a name="mimetypes"></a>
 ## File Extensions and MIME Types
 
 * `*.gltf` files use `model/gltf+json`
 * `*.bin` files use `application/octet-stream`
-* Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: .jpg, .png, .bmp, and .gif.
+* Texture files use the official `image/*` type based on the specific image format. For compatibility with modern web browsers, the following image formats are supported: `image/jpeg`, `image/png`.
 
-<a name="json-encoding"></a>
 ## JSON encoding
 
 To simplify client-side implementation, glTF has following restrictions on JSON format and encoding.
@@ -132,19 +153,27 @@ Clients are required to support only embedded resources and relative external re
 
 This allows the application to decide the best approach for delivery: if different assets share many of the same geometries, animations, or textures, separate files may be preferred to reduce the total amount of data requested. With separate files, applications can progressively load data and do not need to load data for parts of a model that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading.
 
-<a name="concepts"></a>
 # Concepts
-
-*This section is non-normative.*
 
 <p align="center">
 <img src="figures/dictionary-objects.png" /><br/>
 The top-level arrays in a glTF asset.  See the <a href="#properties">Properties Reference</a>.
 </p>
 
-<a name="file-structure"></a>
+## Asset
 
-<a name="ids-and-names"></a>
+Each glTF asset must have an `asset` property. In fact, it's the only required top-level property for JSON to be a valid glTF. The `asset` object must contain glTF version and optionally other metadata such as `generator` or ``copyright`. For example,
+
+```json
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7",
+        "copyright": "2017 (c) Khronos Group"
+    }
+}
+```
+
 ## Indices and Names
 
 Entities of a glTF asset are referenced by their indices in corresponding arrays, e.g., a `bufferView` refers to a `buffer` by specifying the buffer's index in `buffers` array.  For example:
@@ -167,18 +196,28 @@ Entities of a glTF asset are referenced by their indices in corresponding arrays
 }
 ```
 
-In this example, `buffers` and `bufferViews` have only one element each.  The bufferView refers to the buffer using the buffer's ID: `"buffer": 0`.
+In this example, `buffers` and `bufferViews` have only one element each. The bufferView refers to the buffer using the buffer's index: `"buffer": 0`.
 
-Whereas indices are used for internal glTF references, _names_ are used for application-specific uses such as display.  Any top-level glTF object can have a `name` string property for this purpose.  These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
+Whereas indices are used for internal glTF references, _names_ are used for application-specific uses such as display. Any top-level glTF object can have a `name` string property for this purpose. These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
-For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`.  Camel case is a common naming convention in JSON and WebGL.
+For property names, glTF uses [camel case](http://en.wikipedia.org/wiki/CamelCase) `likeThis`. Camel case is a common naming convention in JSON and WebGL.
 
-<a name="scenes"></a>
+## Coordinate System and Units
+
+glTF uses a right-handed coordinate system, that is, the cross product of X and Y yields Z. glTF defines the y axis as up.
+
+The units for all linear distances are meters.
+
+All angles are in radians.
+
+Positive rotation is counterclockwise.
+
+
 ## Scenes
 
 The glTF asset contains zero or more *scenes*, the set of visual objects to render. Scenes are defined in a `scenes` array. An additional property, `scene` (note singular), identifies which of the scenes in the array is to be displayed at load time.
 
-When `scene` is undefined, scene of index 0 should be displayed. When `scenes` array is undefined, nothing is rendered. 
+When `scene` is undefined, scene of index 0 should be displayed. When `scenes` array is undefined, nothing is rendered at load time. 
 
 The following example defines a glTF asset with a single scene, that contains a single node.
 
@@ -205,8 +244,6 @@ The following example defines a glTF asset with a single scene, that contains a 
 
 The glTF asset can define *nodes*, that is, the objects comprising the scene to render.
 
-Each node can contain one mesh, a skin instance, a joint name, or a camera, defined in the `mesh`, `skeletons`, `skin`, `jointName`, and `camera` properties, respectively.
-
 Nodes have an optional `name` property.
 
 Nodes also have transform properties, as described in the next section.
@@ -219,35 +256,36 @@ The node hierarchy is defined using a node's `children` property, as in the foll
 {
     "nodes": [
         {
-            "name": "node-camera"
+            "name": "Car",
+            "children": [1, 2, 3, 4]
         },
         {
-            "name": "node_1"
+            "name": "wheel_1"
         },
         {
-            "children": [
-                0,
-                1
-            ],
-            "name": "Box"
-        }
+            "name": "wheel_2"
+        },
+        {
+            "name": "wheel_3"
+        },
+        {
+            "name": "wheel_4"
+        }        
     ]
 }
 ```
 
-The node named `Box` has two children, `node_1` and `node-camera`. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+The node named `Car` has four children. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
 
 >For Version 2.0 conformance, the glTF node hierarchy is not a directed acyclic graph (DAG) or *scene graph*, but a strict tree. That is, no node may be a direct or indirect descendant of more than one node. This restriction is meant to simplify implementation and facilitate conformance. The restriction may be lifted later.
 
-The node hierarchy is considered as a skeleton hierarchy if any of its nodes contains a property. No node from the skeleton hierarchy can contain `camera`, `skeletons`, `skin`, or `meshes` properties.
-
-### Transforms
+### Transformations
 
 Any node can define a local space transformation either by supplying a `matrix` property, or any of `translation`, `rotation`, and `scale`  properties (also known as *TRS properties*). `translation` and `scale` are `FLOAT_VEC3` values in the local coordinate system. `rotation` is a `FLOAT_VEC4` unit quaternion value, `(x, y, z, w)`, in the local coordinate system.
 
 TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation.
 
-When a node is targeted for animation (referenced by an [`animation.channel.target`](#reference-animation.channel.target)), only TRS properties may be present; `matrix` will not be present. 
+When a node is targeted for animation (referenced by an `animation.channel.target`), only TRS properties may be present; `matrix` will not be present. 
 
 In the example below, node named `Box` defines non-default rotation and translation.
 
@@ -255,10 +293,6 @@ In the example below, node named `Box` defines non-default rotation and translat
 {
     "nodes": [
         {
-            "children": [
-                0,
-                1
-            ],
             "name": "Box",
             "rotation": [
                 0,
@@ -281,12 +315,13 @@ In the example below, node named `Box` defines non-default rotation and translat
 }
 ```
 
-The next example defines the transformation for a camera node using the `matrix` property rather than using the individual TRS values:
+The next example defines the transformation for a node with attached camera using the `matrix` property rather than using the individual TRS values:
 
 ```json
 {
     "nodes": [
         {
+            "name": "node-camera",
             "camera": 1,
             "matrix": [
                 -0.99975,
@@ -305,32 +340,19 @@ The next example defines the transformation for a camera node using the `matrix`
                 0.194711,
                 -0.478297,
                 1
-            ],
-            "name": "node-camera"
+            ]
         }
     ]
 }
 ```
 
-### Coordinate System and Units
-
-glTF uses a right-handed coordinate system, that is, the cross product of x and y yields z.  glTF defines the y axis as up.
-
-The units for all linear distances are meters.
-
-All angles are in radians.
-
-Positive rotation is counterclockwise.
-
-<a name="accessing-binary-data"></a>
-## Accessing Binary Data
-
+## Binary Data Storage
 
 ### Buffers and Buffer Views
 
 A *buffer* is data stored as a binary blob. The buffer can contain a combination of geometry, animation, and skins.
 
-Binary blobs allow efficient creation of GL buffers and textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
+Binary blobs allow efficient creation of GPU buffers and textures since they require no additional parsing, except perhaps decompression. An asset can have any number of buffer files for flexibility for a wide array of applications.
 
 Buffer data is little endian.
 
@@ -353,7 +375,6 @@ A *bufferView* represents a subset of data in a buffer, defined by an integer of
 When buffer view has a `target` property, its data could be directly fed into appropriate GPU buffer: either ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER.
 
 The following example defines two buffer views: the first is an ELEMENT_ARRAY_BUFFER, which holds the indices for an indexed triangle set, and the second is an ARRAY_BUFFER that holds the vertex data for the triangle set.
-
 
 ```json
 {
@@ -379,6 +400,25 @@ Buffer view could have `byteStride` property. It means byte-distance between con
 
 Buffers and buffer views do not contain type information. They simply define the raw data for retrieval from the file. Objects within the glTF file (meshes, skins, animations) access buffers or buffer views via *accessors*.
 
+#### GLB-stored Buffer
+
+glTF asset could use GLB file container to pack all resources into one file. glTF Buffer referring to GLB-stored `BIN` chunk, must have `buffer.uri` property undefined, and it must be the first element of `buffers` array. In the following example, the first buffer objects refers to GLB-stored data, while the second points to external resource:
+
+```json
+{
+    "buffers": [
+        {
+            "byteLength": 35884
+        },
+        {
+            "byteLength": 504,
+            "uri": "external.bin"
+        }
+  ]
+}
+```
+
+See [Appendix A](#appendix-a-glb-file-format-specification) for details on GLB File Format.
 
 ### Accessors
 
@@ -511,7 +551,7 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
 A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
 A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
 
-#### BufferView and Accessor Byte Alignment
+#### Data Alignment
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
@@ -555,19 +595,17 @@ var typedView = new Uint16Array(buffer, accessor.byteOffset + accessor.bufferVie
 The size of the accessor component type is two bytes (the `componentType` is unsigned short). The accessor's `byteOffset` is also divisible by two. Likewise, the accessor's offset into buffer `0` is `5228 ` (`620 + 4608`), which is divisible by two.
 
 
-<a name="geometry-and-meshes"></a>
+## Geometry
 
-## Geometry and Meshes
-
-Any node can contain one mesh, defined in its `mesh` property. Mesh can be skinned using a combination of the properties `skeletons` and `skin`.
+Any node can contain one mesh, defined in its `mesh` property. Mesh can be skinned using a information provided in referenced `skin` object. Mesh can have morph targets.
 
 ### Meshes
 
-In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GL draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as accessors. Each primitive also specifies a material and a primitive type that corresponds to the GL primitive type (e.g., triangle set).
+In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to the data required for GPU draw calls. Primitives specify one or more `attributes`, corresponding to the vertex attributes used in the draw calls. Indexed primitives also define an `indices` property. Attributes and indices are defined as references to accessors containing corresponding data. Each primitive also specifies a material and a primitive type that corresponds to the GPU primitive type (e.g., triangle set).
 
 > **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
-> **Implementation note:** If `material` is undefined, engines can opt to render such primitive with [default material](#appendix-a).
+If `material` is not supplied, and no extension is present that defines material properties, then the object should be rendered using a 50% gray emissive color.  
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -598,14 +636,23 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
+#### Tangent-space definition
+
+**TODO**
+
 #### Morph Targets
 
 Morph Targets are defined by extending the Mesh concept.
 A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
 For instance, the Morph Target vertices `POSITION` for the primitive at index *i* are computed in this way:
-`primitives`[i].`attributes`.`POSITION` + `weights`[0] * `primitives`[i].`targets`[0].`POSITION` + `weights`[1] * `primitives`[i].`targets`[1].`POSITION` + ...
+```
+primitives[i].attributes.POSITION + 
+  weights[0] * primitives[i].targets[0].POSITION +
+  weights[1] * primitives[i].targets[1].POSITION +
+  weights[2] * primitives[i].targets[2].POSITION + ...
+```
 Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only two attributes ('POSITION' and 'NORMAL') are supported. All primitives are required to list the same number of `targets` in the same order.
-The `weights` array is optional, it stores the default targets weights, in the absence of animations the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
+The `weights` array is optional, it stores the default targets weights, in the absence of `node.weights` the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
 
 The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
 ```json
@@ -636,9 +683,11 @@ The following example extends the Mesh defined in the previous example to a morp
 }
 ```
 
+After applying morph targets to vertex positions and normals, tangent space must be recalculated. See [Appendix B](#appendix-b-tangent-space-recalculation) for details.
+
 ### Skins
 
-All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property, used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
+All skins are stored in the `skins` array of the asset. Each skin is defined by the `inverseBindMatrices` property (which points to an accessor with IBM data), used to bring coordinates being skinned into the same space as each joint; and a `joints` array property that lists the nodes indices used as joints to animate the skin. The order of joints is defined in the `skin.joints` array and it must match the order of `inverseBindMatrices` data. The `skeleton` property points to node that is the root of a joints hierarchy. 
 
 > **Implementation Note:** Matrix, defining how to pose the skin's geometry for use with the joints ("Bind Shape Matrix") should be premultiplied to mesh data or to Inverse Bind Matrices. 
 
@@ -652,21 +701,6 @@ All skins are stored in the `skins` array of the asset. Each skin is defined by 
                 2
             ],
             "skeleton": 1
-        }
-    ]
-}
-```
-
-#### Skin Instances
-
-A skin is instanced within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
-
-```json
-{
-    "nodes": [
-        {
-            "mesh": 11,
-            "skin": 0
         }
     ]
 }
@@ -707,7 +741,52 @@ The number of joints that influence one vertex is limited to 4, so referenced ac
 
 #### Joint Hierarchy
 
-The joint hierarchy used in animation is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
+The joint hierarchy used for controlling skinned mesh pose is simply the glTF node hierarchy, with each node designated as a joint. The following example defines a joint hierarchy of two joints.
+
+**TODO: object-space VS world-space joints**
+
+For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
+
+### Instantiation
+
+A mesh is instantiated by `node.mesh` property. The same mesh could be used by many nodes, which could have different transformations. For example:
+
+```json
+{
+    "nodes": [
+        {
+            "mesh": 11
+        },
+        {
+            "mesh": 11,
+            "translation": [
+                -20,
+                -1,
+                0
+            ]            
+        }
+    ]
+}
+
+```
+
+A Morph Target is instanced within a node using:
+- The Morph Target referenced in the `mesh` property.
+- The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
+The example below instatiates a Morph Target with non-default weights.
+
+```json
+{
+    "nodes": [
+        {
+            "mesh": 11,
+            "weights": [0, 0.5]
+        }
+    ]
+}
+```
+
+A skin is instanced within a node using a combination of the node's `mesh` and `skin` properties. The mesh for a skin instance is defined in the `mesh` property. The `skin` property contains the index of the skin to instance.
 
 ```json
 {
@@ -750,28 +829,13 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 }
 ```
 
-For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
+## Texture Data
 
-#### Morph Targets Instances
+**TODO: describe separation of concerns: textures / images / samplers**
 
-A Morph Target is instanced within a node using:
-- The Morph Target referenced in the `mesh` property.
-- The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
-The example below instatiates a Morph Target together with a Skin.
+### Textures
 
-```json
-{
-    "nodes": [
-        {
-            "mesh": 11,
-            "skin": 0,
-            "weights": [0, 0.5]
-        }
-    ]
-}
-```
-
-#### Textures
+**TODO: update to latest revisions**
 
 All textures are stored in the asset's `textures` array. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
 
@@ -790,7 +854,9 @@ All textures are stored in the asset's `textures` array. A texture is defined by
 }
 ```
 
-#### Images
+### Images
+
+**TODO: update to latest revisions**
 
 Images referred to by textures are stored in the `images` array of the asset. Each image contains a URI to an external file (or a reference to a bufferView) in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
 
@@ -809,7 +875,9 @@ Images referred to by textures are stored in the `images` array of the asset. Ea
 ```
 > **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
 
-#### Samplers
+### Samplers
+
+**TODO: update to latest revisions**
 
 Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
 
@@ -834,22 +902,20 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 > * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
 > * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
-
-<a name="materials"></a>
 ## Materials
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
-### Metallic-Roughness material 
-All parameters related to the metallic-roughness material model are defined under the property 'pbrMetallicRoughness'. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
+### Metallic-Roughness Material 
+All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
 
-```
+```json
 {
     "materials": [
         {
             "name": "gold",
             "pbrMetallicRoughness": {
-                "baseColorfactor": [ 1.000, 0.766, 0.336, 1.0 ],
+                "baseColorFactor": [ 1.000, 0.766, 0.336, 1.0 ],
                 "metallicFactor": 1.0,
                 "roughnessFactor": 0.0
             }
@@ -859,15 +925,19 @@ All parameters related to the metallic-roughness material model are defined unde
 ```
 
 The metallic-roughness material model is defined by the following properties:
-* `baseColor`  - The base color of the material
+* `baseColor` - The base color of the material
 * `metallic` - The metalness of the material
 * `roughness` - The roughness of the material
 
-
 The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
 
-The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
-Then, the result would be `[0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]`.
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. 
+
+For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
+Then, the result would be 
+```
+[0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]
+```
 
 The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. 
 
@@ -881,19 +951,17 @@ The following equations show how to calculate bidirectional reflectance distribu
 <br>
 *&alpha;* = `max(roughness ^ 2, epsilon)`
 
-All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](#appendix-a) for more details on the BRDF calculations. 
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [Appendix C](#appendix-c-brdf-implementation) for more details on the BRDF calculations.
 
-
-<a name="additionalmaps"></a>
 ### Additional maps
- The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models like those defined in the KHR_materials_pbrSpecularGlossiness extension or the KHR_materials_common extension.
+ The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models which could be provided via glTF extensions.
 
  Materials define the following additional maps:
 - **normal** : A tangent space normal map.
 - **occlusion** : The occlusion map indicating areas of indirect lighting.
 - **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
 
-The following examples shows a material that is defined using 'pbrMetallicRoughness' parameters as well as additional texture maps:
+The following examples shows a material that is defined using `pbrMetallicRoughness` parameters as well as additional texture maps:
 
  ```
 {
@@ -932,10 +1000,9 @@ The following examples shows a material that is defined using 'pbrMetallicRoughn
 >| Occlusion | Model will appear brighter in areas that should be darker|
 >| Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
 
-<a name="cameras"></a>
 ## Cameras
 
-A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space positions can be used in shader calculations, and their projection matrices can be used in shader semantics such as PROJECTION.
+A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space transformation matrix is used for calculating view-space transformation.
 
 Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details.
 
@@ -996,7 +1063,6 @@ where
 - `f` equals `camera.orthographic.zfar`;
 - `n` equals `camera.orthographic.znear`.
 
-<a name="animations"></a>
 ## Animations
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
@@ -1123,31 +1189,10 @@ Each of the animation's *samplers* defines the input/output pair: a set of float
 
 > Note: glTF 2.0 animation samplers support only discrete and linear interpolation.
 
-glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy. (See the section on Skins above.)
+glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
 
+**TODO: animating morph weights** 
 
-<a name="metadata"></a>
-## Metadata
-
-Asset metadata is described in the `asset` property. The asset metadata contains the following properties:
-
-* a `copyright` property denoting authorship
-* a `generator` property describing the tool, if any, that generated the asset
-* a profile designation
-* a `version` property denoting the specification version
-
-Only the `version` property is required. For example,
-
-```json
-{
-    "asset": {
-        "version": "2.0",
-        "generator": "collada2gltf@f356b99aef8868f74877c7ca545f2cd206b9d3b7"
-    }
-}
-```
-
-<a name="specifying-extensions"></a>
 ## Specifying Extensions
 
 glTF defines an extension mechanism that allows the base format to be extended with new capabilities. Any glTF object can have an optional `extensions` property, as in the following example:
@@ -1166,7 +1211,7 @@ glTF defines an extension mechanism that allows the base format to be extended w
 }
 ```
 
-All extensions used in a glTF asset are listed in the top-level `extensionsUsed` array object, e.g.,
+All extensions used in a glTF asset must be listed in the top-level `extensionsUsed` array object, e.g.,
 
 ```json
 {
@@ -1189,2082 +1234,10 @@ All glTF extensions required to load and/or render an asset must be listed in th
 
 For more information on glTF extensions, consult the [extensions registry specification](../extensions/README.md).
 
-<a name="properties"></a>
 # Properties Reference
 
-* [`accessor`](#reference-accessor)
-* [`animation`](#reference-animation)
-   * [`channel`](#reference-animation.channel)
-      * [`target`](#reference-animation.channel.target)
-   * [`sampler`](#reference-animation.sampler)
-* [`asset`](#reference-asset)
-   * [`profile`](#reference-asset.profile)
-* [`buffer`](#reference-buffer)
-* [`bufferView`](#reference-bufferView)
-* [`camera`](#reference-camera)
-   * [`orthographic`](#reference-camera.orthographic)
-   * [`perspective`](#reference-camera.perspective)
-* [`glTF`](#reference-glTF) (root object for an asset)
-* [`image`](#reference-image)
-* [`material`](#reference-material)
-* [`mesh`](#reference-mesh)
-   * [`primitive`](#reference-mesh.primitive)
-* [`node`](#reference-node)
-* [`sampler`](#reference-sampler)
-* [`scene`](#reference-scene)
-* [`skin`](#reference-skin)
-* [`texture`](#reference-texture)
+**TODO: Refer to JSON schemas for now**
 
-This property reference applies to the WebGL 1.0 profile. See `version` and `api` properties on ['asset.profile'](#reference-asset.profile).
-
-> In the future, other profiles, such as OpenGL, are expected.
-
-<!-- ======================================================================= -->
-<a name="reference-accessor"></a>
-## accessor
-
-A typed view into a [`bufferView`](#reference-bufferView).  A bufferView contains raw binary data.  An accessor provides a typed view into a bufferView or a subset of a bufferView similar to how WebGL's `vertexAttribPointer()` defines an attribute in a buffer.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
-|**byteStride**|`integer`|The stride, in bytes, between attributes referenced by this accessor.|No, default: `0`|
-|**componentType**|`integer`|The datatype of components in the attribute.| :white_check_mark: Yes|
-|**normalized**|`boolean`|Specifies whether integer data values should be normalized.| No, default: `false`|
-|**count**|`integer`|The number of attributes referenced by this accessor.| :white_check_mark: Yes|
-|**type**|`string`|Specifies if the attribute is a scalar, vector, or matrix.| :white_check_mark: Yes|
-|**max**|`number[1-16]`|Maximum value of each component in this attribute.| :white_check_mark: Yes|
-|**min**|`number[1-16]`|Minimum value of each component in this attribute.| :white_check_mark: Yes|
-|**sparse**|[`accessor.sparse`](#reference-accessor.sparse)|Sparse storage of attributes that deviate from their initialization value.|No, default: `{}`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [accessor.schema.json](schema/accessor.schema.json)
-* **Example**: [accessors.json](schema/examples/accessors.json)
-
-### accessor.bufferView :white_check_mark:
-
-The ID of the [`bufferView`](#reference-bufferView).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### accessor.byteOffset :white_check_mark:
-
-The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the component datatype.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-* **Related WebGL functions**: `vertexAttribPointer()` offset parameter
-
-### accessor.byteStride
-
-The stride, in bytes, between attributes referenced by this accessor.  When this is zero, the attributes are tightly packed.  This must be a multiple of the size of the component datatype.
-
-* **Type**: `integer`
-* **Required**: No, default: `0`
-* **Minimum**: ` >= 0`
-* **Maximum**: ` <= 255`
-* **Related WebGL functions**: `vertexAttribPointer()` stride parameter
-
-### accessor.componentType :white_check_mark:
-
-The datatype of components in the attribute.  Valid values correspond to WebGL enums: `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT) and `5126` (FLOAT).  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.
-
-`5125` (UNSIGNED_INT) is only allowed when the accessor contains indices and the OES_element_index_uint extension is used, i.e., the accessor is only referenced by [`primitive.indices`](#reference-primitive.indices) and [`glExtensionsUsed`](#reference-glExtensionsUsed) contains `"OES_element_index_uint"`.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5125`, `5126`
-* **Related WebGL functions**: `vertexAttribPointer()` type parameter
-
-### accessor.normalized
-
-Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed. Must be `false` when accessor is used for animation data.
-
-* **Type**: `boolean`
-* **Required**: No, default: `false`
-* **Related WebGL functions**: `vertexAttribPointer()` normalized parameter
-
-### accessor.count :white_check_mark:
-
-The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 1`
-
-### accessor.type :white_check_mark:
-
-Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Allowed values**: `"SCALAR"`, `"VEC2"`, `"VEC3"`, `"VEC4"`, `"MAT2"`, `"MAT3"`, `"MAT4"`
-
-### accessor.max :white_check_mark:
-
-Maximum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
-
-When `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.
-
-`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer.    
-
-* **Type**: `number[1-16]`
-* **Required**: Yes
-
-### accessor.min :white_check_mark:
-
-Minimum value of each component in this attribute.  Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be `1`, `2`, `3`, `4`, `9`, or `16`.
-
-When `componentType` is `5126` (FLOAT) each array value must be stored as double-precision JSON number with numerical value which is equal to buffer-stored single-precision value to avoid extra runtime conversions.
-
-`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer.
-
-* **Type**: `number[1-16]`
-* **Required**: Yes
-
-### accessor.sparse
-
-Optional sparse storage of attributes that deviate from their initialization value.
-
-* **Type**: [`accessor.sparse`](#reference-accessor.sparse)
-* **Required**: No, default: `{}`
-
-### accessor.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### accessor.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### accessor.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-accessor.sparse"></a>
-## accessor.sparse
-
-Sparse storage of attributes that deviate from their initialization value.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**count**|`integer`|Number of entries stored in the sparse array.| :white_check_mark: Yes|
-|**indices**|[`accessor.sparse.indices`](#reference-accessor.sparse.indices)|Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.| :white_check_mark: Yes|
-|**values**|[`accessor.sparse.values`](#reference-accessor.sparse.values)|Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [accessor.sparse.schema.json](schema/accessor.sparse.schema.json)
-
-### sparse.count :white_check_mark:
-
-Number of entries stored in the sparse array.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` > 0`
-
-### sparse.indices :white_check_mark:
-
-Index array of size `sparse.count` that points to those accessor attributes that deviate from their initialization value.
-
-* **Type**: [`accessor.sparse.indices`](#reference-accessor.sparse.indices)
-* **Required**: Yes
-
-### sparse.values :white_check_mark:
-
-Array of size `sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
-
-* **Type**: [`accessor.sparse.values`](#reference-accessor.sparse.values)
-* **Required**: Yes
-
-### sparse.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### sparse.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-accessor.sparse.indices"></a>
-## accessor.sparse.indices
-
-Index array of size `accessor.sparse.count` that points to those accessor attributes that deviate from their initialization value.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
-|**componentType**|`integer`|The datatype of the indices referenced by this accessor.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-### indices.bufferView :white_check_mark:
-
-The ID of the [`bufferView`](#reference-bufferView).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### indices.byteOffset :white_check_mark:
-
-The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-* **Related WebGL functions**: `vertexAttribPointer()` offset parameter
-
-### indices.componentType :white_check_mark:
-
-The indices data type.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT), `5125` (UNSIGNED_INT).
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Allowed values**: `5121`, `5123`, `5125`.
-
-### indices.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### indices.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-accessor.sparse.values"></a>
-## accessor.sparse.values
-
-Array of size `accessor.sparse.count` storing the displaced accessor attributes pointed by [`accessor.sparse.indices`](#reference-accessor.sparse.indices).
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**bufferView**|`string`|The ID of the [`bufferView`](#reference-bufferView).| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-### values.bufferView :white_check_mark:
-
-The ID of the [`bufferView`](#reference-bufferView).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### values.byteOffset :white_check_mark:
-
-The offset relative to the start of the [`bufferView`](#reference-bufferView) in bytes.  This must be a multiple of the size of the accessor component datatype.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### values.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### values.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-animation"></a>
-## animation
-
-A keyframe animation.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**channels**|[`animation.channel[]`](#reference-animation.channel)|An array of channels, each of which targets an animation's sampler at a node's property.|No, default: `[]`|
-|**samplers**|`object`|A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).|No, default: `{}`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [animation.schema.json](schema/animation.schema.json)
-* **Example**: [animations.json](schema/examples/animations.json)
-
-### animation.channels
-
-An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets.
-
-* **Type**: [`animation.channel[]`](#reference-animation.channel)
-* **Required**: No, default: `[]`
-
-### animation.samplers
-
-A dictionary object of [`animation.sampler`](#reference-animation.sampler) objects that combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: [`animation.sampler`](#reference-animation.sampler)
-
-### animation.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., an animation and a buffer could have the same name, or two animations could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### animation.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### animation.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-animation.channel"></a>
-## animation.channel
-
-Targets an animation's sampler at a node's property.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**sampler**|`string`|The ID of a sampler in this animation used to compute the value for the target.| :white_check_mark: Yes|
-|**target**|[`animation.channel.target`](#reference-animation.channel.target)|The ID of the node and TRS property to target.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [animation.channel.schema.json](schema/animation.channel.schema.json)
-
-### channel.sampler :white_check_mark:
-
-The ID of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### channel.target :white_check_mark:
-
-The ID of the node and TRS property to target.
-
-* **Type**: [`animation.channel.target`](#reference-animation.channel.target)
-* **Required**: Yes
-
-### channel.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### channel.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-animation.channel.target"></a>
-## animation.channel.target
-
-The ID of the node and TRS property that an animation channel targets.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**id**|`string`|The ID of the node to target.| :white_check_mark: Yes|
-|**path**|`string`|The name of the node's TRS property to modify.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [animation.channel.target.schema.json](schema/animation.channel.target.schema.json)
-
-### target.id :white_check_mark:
-
-The ID of the node to target.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### target.path :white_check_mark:
-
-The name of the node's TRS property to modify.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Allowed values**: `"translation"`, `"rotation"`, `"scale"`
-
-### target.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### target.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-animation.sampler"></a>
-## animation.sampler
-
-Combines input and output parameters with an interpolation algorithm to define a keyframe graph (but not its target).
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**input**|`string`|The ID of an accessor containing keyframe input values, e.g., time.| :white_check_mark: Yes|
-|**interpolation**|`string`|Interpolation algorithm.|No, default: `"LINEAR"`|
-|**output**|`string`|The ID of an accessor, containing keyframe output values.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [animation.sampler.schema.json](schema/animation.sampler.schema.json)
-
-### sampler.input :white_check_mark:
-
-The ID of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### sampler.interpolation
-
-Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `"LINEAR"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `"STEP"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe.
-
-* **Type**: `string`
-* **Required**: No, default: `"LINEAR"`
-* **Allowed values**: `"LINEAR"`, `"STEP"`
-
-### sampler.output :white_check_mark:
-
-The ID of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### sampler.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### sampler.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-asset"></a>
-## asset
-
-Metadata about the glTF asset.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**copyright**|`string`|A copyright message suitable for display to credit the content creator.|No|
-|**generator**|`string`|Tool that generated this glTF model.  Useful for debugging.|No|
-|**premultipliedAlpha**|`boolean`|Specifies if the shaders were generated with premultiplied alpha.|No, default: `false`|
-|**profile**|[`asset.profile`](#reference-asset.profile)|Specifies the target rendering API and version, e.g., WebGL 1.0.|No, default: `{}`|
-|**version**|`string`|The glTF version.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [asset.schema.json](schema/asset.schema.json)
-* **Example**: [asset.json](schema/examples/asset.json)
-
-### asset.copyright
-
-A copyright message suitable for display to credit the content creator.
-
-* **Type**: `string`
-* **Required**: No
-
-### asset.generator
-
-Tool that generated this glTF model.  Useful for debugging.
-
-* **Type**: `string`
-* **Required**: No
-
-### asset.premultipliedAlpha
-
-Specifies if the shaders were generated with premultiplied alpha.
-
-* **Type**: `boolean`
-* **Required**: No, default: `false`
-* **Related WebGL functions**: `getContext()` with premultipliedAlpha
-
-### asset.profile
-
-Specifies the target rendering API and version, e.g., WebGL 1.0.
-
-* **Type**: [`asset.profile`](#reference-asset.profile)
-* **Required**: No, default: `{}`
-
-### asset.version :white_check_mark:
-
-The glTF version.
-
-* **Type**: `string`
-* **Required**: Yes
-
-### asset.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### asset.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-asset.profile"></a>
-## asset.profile
-
-Specifies the target rendering API and version, e.g., WebGL 1.0.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**api**|`string`|Specifies the target rendering API.|No, default: `"WebGL"`|
-|**version**|`string`|The API version.|No, default: `"1.0"`|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [asset.profile.schema.json](schema/asset.profile.schema.json)
-
-### profile.api
-
-Specifies the target rendering API.
-
-* **Type**: `string`
-* **Required**: No, default: `"WebGL"`
-
-### profile.version
-
-The API version. Must be of the form `major_number.minor_number`, where the numbers have one or more digits.
-
-* **Type**: `string`
-* **Required**: No, default: `"1.0"`
-
-### profile.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### profile.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-buffer"></a>
-## buffer
-
-A buffer points to binary geometry, animation, or skins.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**uri**|`string`|The uri of the buffer.| :white_check_mark: Yes|
-|**byteLength**|`integer`|The length of the buffer in bytes.| :white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [buffer.schema.json](schema/buffer.schema.json)
-* **Example**: [buffers.json](schema/examples/buffers.json)
-
-### buffer.uri :white_check_mark:
-
-The uri of the buffer.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Format**: uri
-
-### buffer.byteLength :white_check_mark:
-
-The length of the buffer in bytes.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### buffer.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a buffer and a bufferView could have the same name, or two buffers could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### buffer.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### buffer.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-bufferView"></a>
-## bufferView
-
-A view into a [`buffer`](#reference-buffer) generally representing a subset of the buffer.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**buffer**|`string`|The ID of the [`buffer`](#reference-buffer).| :white_check_mark: Yes|
-|**byteOffset**|`integer`|The offset into the [`buffer`](#reference-buffer) in bytes.| :white_check_mark: Yes|
-|**byteLength**|`integer`|The length of the bufferView in bytes.| :white_check_mark: Yes|
-|**target**|`integer`|The target that the WebGL buffer should be bound to.|No|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [bufferView.schema.json](schema/bufferView.schema.json)
-* **Example**: [bufferViews.json](schema/examples/bufferViews.json)
-
-### bufferView.buffer :white_check_mark:
-
-The ID of the [`buffer`](#reference-buffer).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### bufferView.byteOffset :white_check_mark:
-
-The offset into the [`buffer`](#reference-buffer) in bytes.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### bufferView.byteLength :white_check_mark:
-
-The length of the bufferView in bytes.
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### bufferView.target
-
-The target that the WebGL buffer should be bound to.  Valid values correspond to WebGL enums: `34962` (ARRAY_BUFFER) and `34963` (ELEMENT_ARRAY_BUFFER).  When this is not provided, the bufferView contains animation or skin data.
-
-* **Type**: `integer`
-* **Required**: No
-* **Allowed values**: `34962`, `34963`
-* **Related WebGL functions**: `bindBuffer()`
-
-### bufferView.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a bufferView and a buffer could have the same name, or two bufferViews could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### bufferView.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### bufferView.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-camera"></a>
-## camera
-
-A camera's projection.  A node can reference a camera ID to apply a transform to place the camera in the scene.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**orthographic**|[`camera.orthographic`](#reference-camera.orthographic)|An orthographic camera containing properties to create an orthographic projection matrix.|No|
-|**perspective**|[`camera.perspective`](#reference-camera.perspective)|A perspective camera containing properties to create a perspective projection matrix.|No|
-|**type**|`string`|Specifies if the camera uses a perspective or orthographic projection.| :white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [camera.schema.json](schema/camera.schema.json)
-* **Example**: [cameras.json](schema/examples/cameras.json)
-
-### camera.orthographic
-
-An orthographic camera containing properties to create an orthographic projection matrix.
-
-* **Type**: [`camera.orthographic`](#reference-camera.orthographic)
-* **Required**: No
-
-### camera.perspective
-
-A perspective camera containing properties to create a perspective projection matrix.
-
-* **Type**: [`camera.perspective`](#reference-camera.perspective)
-* **Required**: No
-
-### camera.type :white_check_mark:
-
-Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Allowed values**: `"perspective"`, `"orthographic"`
-
-### camera.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a camera and a buffer could have the same name, or two cameras could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### camera.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### camera.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-camera.orthographic"></a>
-## camera.orthographic
-
-An orthographic camera containing properties to create an orthographic projection matrix.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**xmag**|`number`|The floating-point horizontal magnification of the view.| :white_check_mark: Yes|
-|**ymag**|`number`|The floating-point vertical magnification of the view.| :white_check_mark: Yes|
-|**zfar**|`number`|The floating-point distance to the far clipping plane.| :white_check_mark: Yes|
-|**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [camera.orthographic.schema.json](schema/camera.orthographic.schema.json)
-
-### orthographic.xmag :white_check_mark:
-
-The floating-point horizontal magnification of the view.
-
-* **Type**: `number`
-* **Required**: Yes
-
-### orthographic.ymag :white_check_mark:
-
-The floating-point vertical magnification of the view.
-
-* **Type**: `number`
-* **Required**: Yes
-
-### orthographic.zfar :white_check_mark:
-
-The floating-point distance to the far clipping plane.
-
-* **Type**: `number`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### orthographic.znear :white_check_mark:
-
-The floating-point distance to the near clipping plane.
-
-* **Type**: `number`
-* **Required**: Yes
-* **Minimum**: ` >= 0`
-
-### orthographic.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### orthographic.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-camera.perspective"></a>
-## camera.perspective
-
-A perspective camera containing properties to create a perspective projection matrix.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**aspectRatio**|`number`|The floating-point aspect ratio of the field of view.|No|
-|**yfov**|`number`|The floating-point vertical field of view in radians.| :white_check_mark: Yes|
-|**zfar**|`number`|The floating-point distance to the far clipping plane.|No|
-|**znear**|`number`|The floating-point distance to the near clipping plane.| :white_check_mark: Yes|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [camera.perspective.schema.json](schema/camera.perspective.schema.json)
-
-### perspective.aspectRatio
-
-The floating-point aspect ratio of the field of view. When this is undefined, the aspect ratio of the canvas is used.
-
-* **Type**: `number`
-* **Required**: No
-* **Minimum**: ` > 0`
-
-### perspective.yfov :white_check_mark:
-
-The floating-point vertical field of view in radians.
-
-* **Type**: `number`
-* **Required**: Yes
-* **Minimum**: ` > 0`
-
-### perspective.zfar
-
-The floating-point distance to the far clipping plane. When defined, `zfar` must be greater than `znear`. If `zfar` is undefined, runtime must use infinite projection matrix.
-
-* **Type**: `number`
-* **Required**: No
-* **Minimum**: ` > 0`
-
-### perspective.znear :white_check_mark:
-
-The floating-point distance to the near clipping plane.
-
-* **Type**: `number`
-* **Required**: Yes
-* **Minimum**: ` > 0`
-
-### perspective.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### perspective.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-glTF"></a>
-## glTF
-
-The root object for a glTF asset.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**accessors**|`object`|A dictionary object of [`accessor`](#reference-accessor) objects.| :white_check_mark: Yes|
-|**animations**|`object`|A dictionary object of keyframe [`animation`](#reference-animation) objects.|No, default: `{}`|
-|**asset**|[`asset`](#reference-asset)|Metadata about the glTF asset.| :white_check_mark: Yes|
-|**buffers**|`object`|A dictionary object of [`buffer`](#reference-buffer) objects.| :white_check_mark: Yes|
-|**bufferViews**|`object`|A dictionary object of [`bufferView`](#reference-bufferView) objects.| :white_check_mark: Yes|
-|**cameras**|`object`|A dictionary object of [`camera`](#reference-camera) objects.|No, default: `{}`|
-|**images**|`object`|A dictionary object of [`image`](#reference-image) objects.|No, default: `{}`|
-|**materials**|`object`|A dictionary object of [`material`](#reference-material) objects.|No, default: `{}`|
-|**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh) objects.| :white_check_mark: Yes|
-|**nodes**|`object`|A dictionary object of [`node`](#reference-node) objects.|No, default: `{}`|
-|**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler) objects.|No, default: `{}`|
-|**scene**|`string`|The ID of the default scene.|No|
-|**scenes**|`object`|A dictionary object of [`scene`](#reference-scene) objects.|No, default: `{}`|
-|**skins**|`object`|A dictionary object of [`skin`](#reference-skin) objects.|No, default: `{}`|
-|**textures**|`object`|A dictionary object of [`texture`](#reference-texture) objects.|No, default: `{}`|
-|**extensionsUsed**|`string[]`|Names of glTF extensions used somewhere in this asset.|No, default: `[]`|
-|**extensionsRequired**|`string[]`|Names of glTF extensions required to properly load this asset.|No, default: `[]`|
-|**glExtensionsUsed**|`string[]`|Names of WebGL extensions required to render this asset.|No, default: `[]`|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [glTF.schema.json](schema/glTF.schema.json)
-
-### glTF.accessors :white_check_mark:
-
-A dictionary object of [`accessor`](#reference-accessor) objects.  The name of each accessor is an ID in the global glTF namespace that is used to reference the accessor.  An accessor is a typed view into a bufferView.
-
-* **Type**: `object`
-* **Required**: Yes
-* **Type of each property**: `object`
-
-### glTF.animations
-
-A dictionary object of keyframe [`animation`](#reference-animation) objects.  The name of each animation is an ID in the global glTF namespace that is used to reference the animation.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.asset :white_check_mark:
-
-Metadata about the glTF asset.
-
-* **Type**: [`asset`](#reference-asset)
-* **Required**: Yes
-
-### glTF.buffers :white_check_mark:
-
-A dictionary object of [`buffer`](#reference-buffer) objects.  The name of each buffer is an ID in the global glTF namespace that is used to reference the buffer.  A buffer points to binary geometry, animation, or skins.
-
-* **Type**: `object`
-* **Required**: Yes
-* **Type of each property**: `object`
-
-### glTF.bufferViews :white_check_mark:
-
-A dictionary object of [`bufferView`](#reference-bufferView) objects.  The name of each bufferView is an ID in the global glTF namespace that is used to reference the bufferView.  A bufferView is a view into a buffer generally representing a subset of the buffer.
-
-* **Type**: `object`
-* **Required**: Yes
-* **Type of each property**: `object`
-
-### glTF.cameras
-
-A dictionary object of [`camera`](#reference-camera) objects.  The name of each camera is an ID in the global glTF namespace that is used to reference the camera.  A camera defines a projection matrix.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.images
-
-A dictionary object of [`image`](#reference-image) objects.  The name of each image is an ID in the global glTF namespace that is used to reference the image.  An image defines data used to create a texture.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.materials
-
-A dictionary object of [`material`](#reference-material) objects.  The name of each material is an ID in the global glTF namespace that is used to reference the material.  A material defines the appearance of a primitive.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.meshes :white_check_mark:
-
-A dictionary object of [`mesh`](#reference-mesh) objects.  The name of each mesh is an ID in the global glTF namespace that is used to reference the mesh.  A mesh is a set of primitives to be rendered.
-
-* **Type**: `object`
-* **Required**: Yes
-* **Type of each property**: `object`
-
-### glTF.nodes
-
-A dictionary object of [`node`](#reference-node) objects in the node hierarchy.  The name of each node is an ID in the global glTF namespace that is used to reference the node.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.samplers
-
-A dictionary object of [`sampler`](#reference-sampler) objects.  The name of each sampler is an ID in the global glTF namespace that is used to reference the sampler.  A sampler contains properties for texture filtering and wrapping modes.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.scene
-
-The ID of the default scene.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### glTF.scenes
-
-A dictionary object of [`scene`](#reference-scene) objects.  The name of each scene is an ID in the global glTF namespace that is used to reference the scene.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.skins
-
-A dictionary object of [`skin`](#reference-skin) objects.  The name of each skin is an ID in the global glTF namespace that is used to reference the skin.  A skin is defined by joints and matrices.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.textures
-
-A dictionary object of [`texture`](#reference-texture) objects.  The name of each texture is an ID in the global glTF namespace that is used to reference the texture.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.extensionsUsed
-
-Names of extensions used somewhere in this asset.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-* **Required**: No, default: `[]`
-
-### glTF.extensionsRequired
-
-Names of glTF extensions required to properly load this asset.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-* **Required**: No, default: `[]`
-
-### glTF.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### glTF.glExtensionsUsed
-
-Names of WebGL extensions required to render this asset.  WebGL extensions must be enabled by calling `getExtension()` for each extension.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-* **Required**: No, default: `[]`
-* **Allowed values**: `"OES_element_index_uint"`
-* **Related WebGL functions**: `getSupportedExtensions()` and `getExtension()`
-
-
-### glTF.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-image"></a>
-## image
-
-Image data used to create a texture.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**uri**|`string`|The uri of the image.| :white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [image.schema.json](schema/image.schema.json)
-* **Example**: [images.json](schema/examples/images.json)
-
-### image.uri :white_check_mark:
-
-The uri of the image.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.  The image format must be jpg, png, bmp, or gif.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Format**: uri
-
-### image.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., an image and a buffer could have the same name, or two images could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### image.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### image.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-material"></a>
-## material
-
-The material appearance of a primitive.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**pbrMetallicRoughness**|[`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.|No|
-| **normalTexture** | [`material.normalTextureInfo`](#reference-material.normalTextureInfo) | The normal map texture. |No|
-| **occlusionTexture** | [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) | The occlusion map texture. |No|
-| **emissiveTexture** | [`textureInfo`](#reference-textureInfo) | The emission map texture. |No|
-| **emissiveFactor** | `number[3]` | The emissive color of the material. |No, default:`[0.0,0.0,0.0]`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [materials.schema.json](schema/material.schema.json)
-* **Example**: [materials.json](schema/examples/materials.json)
-
-### material.pbrMetallicRoughness
-
-A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
-
-* **Type**: [`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)
-* **Required**: No
-   
-### material.normalTexture
-
-A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer.
-
-* **Type**: [`material.normalTextureInfo`](#reference-material.normalTextureInfo)
-* **Required**: No
-
-### material.occlusionTexture
-
-The occlusion map is a greyscale texture in sRGB color space, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. If an alpha channel is present, it is ignored.
-
-* **Type**: [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) 
-* **Required**: No
-
-### material.emissiveTexture
-
-The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
-
-* **Type**: [`textureInfo`](#reference-textureInfo) 
-* **Required**: No
-
-### material.emissiveFactor
-
-The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values.
-
-* **Type**: `number[3]` 
-* **Required**: No, default:`[0.0,0.0,0.0]`
-* **Range**: [0, 1] for all components
-
-### material.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a material and a buffer could have the same name, or two materials could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-
-### material.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### material.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-material.pbrMetallicRoughness"></a>
-## material.pbrMetallicRoughness
-A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**baseColorFactor** | `number[4]` | The base color factor of the material.|No, default:`[1,1,1,1]`|
-|**baseColorTexture** | [`textureInfo`](#reference-textureInfo) | The base color texture.|No|
-|**metallicFactor** | `number` | The metalness of the material.|No, default:`1.0`|
-|**roughnessFactor** | `number` | The roughness of the material.|No, default:`1.0`|
-|**metallicRoughnessTexture** | [`textureInfo`](#reference-textureInfo) | The metallic-roughness texture.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [material.pbrMetallicRoughness.schema.json](schema/material.pbrMetallicRoughness.schema.json)
-
-### pbrMetallicRoughness.baseColorFactor
-
-The RGBA components of the base color of the material. The fourth component (A) is the opacity of the material. These values are linear.
-
-* **Type**: `number[4]`
-* **Required**: No, default:`[1,1,1,1]`
-* **Range**: [0, 1] for all components
-
-### pbrMetallicRoughness.baseColorTexture
-
-The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed.
-
-* **Type**: [`textureInfo`](#reference-textureInfo) 
-* **Required**: No
-
-### pbrMetallicRoughness.metallicFactor
-
-The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear.
-
-* **Type**: `number`
-* **Required**: No, default:`1.0`
-* **Range**: [0,1]
-
-### pbrMetallicRoughness.roughnessFactor
-
-The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear.
-
-* **Type**: `number`
-* **Required**: No, default:`1.0`
-* **Range**: [0,1]
-
-### pbrMetallicRoughness.metallicRoughnessTexture
-
-The metallic-roughness texture has two components. The first component (R) contains the metallic-ness of the material. The second component (G) contains the roughness of the material. These values are linear. If the third component (B) and/or the fourth component (A) are present, they are ignored.
-
-* **Type**: [`textureInfo`](#reference-textureInfo) 
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-material.normalTextureInfo"></a>
-## material.normalTextureInfo
-The normal map texture.
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
-|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
-|**scale** | `number` | The scalar multiplier applied to each normal vector of the normal texture.|No, default:`1.0`|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [material.normalTextureInfo.schema.json](schema/material.normalTextureInfo.schema.json)
-
-### normalTextureInfo.index
-
-The index of the texture.
-
-* **Type**: `integer`
-* **Required**: Yes
-
-### normalTextureInfo.texCoord
-
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
-
-* **Type**: `integer`
-* **Required**: No
-
-### normalTextureInfo.scale
-
-The scalar multiplier applied to each normal vector of the texture. This value is ignored if normalTexture is not specified. This value is linear.
-
-* **Type**: `number`
-* **Required**: No, default:`1.0`
-
-<!-- ======================================================================= -->
-<a name="reference-material.occlusionTextureInfo"></a>
-## material.occlusionTextureInfo
-The occlusion map texture.
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
-|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
-|**strength** | `number` | A scalar multiplier controlling the amount of occlusion applied.|No, default:`1.0`|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [material.occlusionTextureInfo.schema.json](schema/material.occlusionTextureInfo.schema.json)
-
-### occlusionTextureInfo.index
-
-The index of the texture.
-
-* **Type**: `integer`
-* **Required**: Yes
-
-### occlusionTextureInfo.texCoord
-
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
-
-* **Type**: `integer`
-* **Required**: No
-
-### occlusionTextureInfo.strength
-
-A scalar multiplier controlling the amount of occlusion applied. A value of 0.0 means no occlusion. A value of 1.0 means full occlusion. This value is ignored if the corresponding texture is not specified. This value is linear.
-
-* **Type**: `number`
-* **Required**: No, default:`1.0`
-* **Range**: [0,1]
-
-<!-- ======================================================================= -->
-<a name="reference-textureInfo"></a>
-## textureInfo 
-Reference to a texture.
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
-|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [textureInfo.schema.json](schema/textureInfo.schema.json)
-
-### textureInfo.index
-
-The index of the texture.
-
-* **Type**: `integer`
-* **Required**: Yes
-
-### textureInfo.texCoord
-
-This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
-
-* **Type**: `integer`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-mesh"></a>
-## mesh
-
-A set of primitives to be rendered.  A node can contain one or more meshes.  A node's transform places the mesh in the scene.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**primitives**|[`mesh.primitive[]`](#reference-mesh.primitive)|An array of primitives, each defining geometry to be rendered with a material.|:white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [mesh.schema.json](schema/mesh.schema.json)
-* **Example**: [meshes.json](schema/examples/meshes.json)
-
-### mesh.primitives :white_check_mark:
-
-An array of primitives, each defining geometry to be rendered with a material.
-
-* **Type**: [`mesh.primitive[]`](#reference-mesh.primitive)
-* **Required**: Yes
-
-### mesh.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a mesh and a buffer could have the same name, or two meshes could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### mesh.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### mesh.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-mesh.primitive"></a>
-## mesh.primitive
-
-Geometry to be rendered with the given material.
-
-**Related WebGL functions**: `drawElements()` and `drawArrays()`
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**attributes**|`object`|A dictionary object of strings, where each string is the ID of the [`accessor`](#reference-accessor) containing an attribute.| :white_check_mark: Yes|
-|**indices**|`string`|The ID of the accessor that contains the indices.|No|
-|**material**|`string`|The ID of the material to apply to this primitive when rendering.|No|
-|**mode**|`integer`|The type of primitives to render.|No, default: `4`|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [mesh.primitive.schema.json](schema/mesh.primitive.schema.json)
-
-### primitive.attributes :white_check_mark:
-
-A dictionary object of strings, where each string is the ID of the accessor containing an attribute.
-
-* **Type**: `object`
-* **Required**: Yes
-* **Type of each property**: `string`
-
-### primitive.indices
-
-The ID of the accessor that contains the indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.
-
-When defined, the [`accessor`](#accessor) must contain indices: the bufferView referenced by the accessor must have a [`target`](#bufferviewtarget) equal to `34963` (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., `0` or the byte size of `componentType` in bytes; `componentType` must be `5121` (UNSIGNED_BYTE), `5123` (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter is only allowed when `OES_element_index_uint` extension is used; `type` must be `"SCALAR"`.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### primitive.material
-
-The ID of the material to apply to this primitive when rendering.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### primitive.mode
-
-The type of primitives to render.  Allowed values are 0 (`POINTS`), 1 (`LINES`), 2 (`LINE_LOOP`), 3 (`LINE_STRIP`), 4 (`TRIANGLES`), 5 (`TRIANGLE_STRIP`), and 6 (`TRIANGLE_FAN`).
-
-* **Type**: `integer`
-* **Required**: No, default: `4`
-* **Allowed values**: `0`, `1`, `2`, `3`, `4`, `5`, `6`
-
-### primitive.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### primitive.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-node"></a>
-## node
-
-A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.
-
-In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
-
-A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**camera**|`string`|The ID of the [`camera`](#reference-camera) referenced by this node.|No|
-|**children**|`string[]`|The IDs of this node's children.|No, default: `[]`|
-|**skeletons**|`string[]`|The ID of skeleton nodes.|No|
-|**skin**|`string`|The ID of the [`skin`](#reference-skin) referenced by this node.|No|
-|**jointName**|`string`|Name used when this node is a joint in a skin.|No|
-|**matrix**|`number[16]`|A floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
-|**meshes**|`string[]`|The IDs of the [`mesh`](#reference-mesh) objects in this node.|No|
-|**rotation**|`number[4]`|The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.|No, default: `[0,0,0,1]`|
-|**scale**|`number[3]`|The node's non-uniform scale.|No, default: `[1,1,1]`|
-|**translation**|`number[3]`|The node's translation.|No, default: `[0,0,0]`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [node.schema.json](schema/node.schema.json)
-* **Example**: [nodes.json](schema/examples/nodes.json)
-
-### node.camera
-
-The ID of the camera referenced by this node.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### node.children
-
-The IDs of this node's children.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-   * Each element in the array must have length greater than or equal to `1`.
-* **Required**: No, default: `[]`
-
-### node.skeletons
-
-The ID of skeleton nodes.  Each node defines a subtree, which has a `jointName` of the corresponding element in the referenced `skin.jointNames`.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-   * Each element in the array must have length greater than or equal to `1`.
-* **Required**: No
-
-### node.skin
-
-The ID of the skin referenced by this node.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### node.jointName
-
-Name used when this node is a joint in a skin.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### node.matrix
-
-A floating-point 4x4 transformation matrix stored in column-major order.
-
-* **Type**: `number[16]`
-* **Required**: No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`
-* **Related WebGL functions**: `uniformMatrix4fv()` with the transpose parameter equal to false
-
-### node.meshes
-
-The IDs of the meshes in this node.  Multiple meshes are allowed so each can share the same transform matrix.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-   * Each element in the array must have length greater than or equal to `1`.
-* **Required**: No
-
-### node.rotation
-
-The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.
-
-* **Type**: `number[4]`
-* **Required**: No, default: `[0,0,0,1]`
-
-### node.scale
-
-The node's non-uniform scale.
-
-* **Type**: `number[3]`
-* **Required**: No, default: `[1,1,1]`
-
-### node.translation
-
-The node's translation.
-
-* **Type**: `number[3]`
-* **Required**: No, default: `[0,0,0]`
-
-### node.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a node and a buffer could have the same name, or two nodes could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### node.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### node.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-sampler"></a>
-## sampler
-
-Texture sampler properties for filtering and wrapping modes.
-
-**Related WebGL functions**: `texParameterf()`
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**magFilter**|`integer`|Magnification filter.|No, default: `9729`|
-|**minFilter**|`integer`|Minification filter.|No, default: `9986`|
-|**wrapS**|`integer`|s wrapping mode.|No, default: `10497`|
-|**wrapT**|`integer`|t wrapping mode.|No, default: `10497`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [sampler.schema.json](schema/sampler.schema.json)
-* **Example**: [samplers.json](schema/examples/samplers.json)
-
-### sampler.magFilter
-
-Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).
-
-* **Type**: `integer`
-* **Required**: No, default: `9729`
-* **Allowed values**: `9728`, `9729`
-* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_MAG_FILTER
-
-### sampler.minFilter
-
-Minification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST), `9729` (LINEAR), `9984` (NEAREST_MIPMAP_NEAREST), `9985` (LINEAR_MIPMAP_NEAREST), `9986` (NEAREST_MIPMAP_LINEAR), and `9987` (LINEAR_MIPMAP_LINEAR).
-
-* **Type**: `integer`
-* **Required**: No, default: `9986`
-* **Allowed values**: `9728`, `9729`, `9984`, `9985`, `9986`, `9987`
-* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_MIN_FILTER
-
-### sampler.wrapS
-
-s wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).
-
-* **Type**: `integer`
-* **Required**: No, default: `10497`
-* **Allowed values**: `33071`, `33648`, `10497`
-* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_WRAP_S
-
-### sampler.wrapT
-
-t wrapping mode.  Valid values correspond to WebGL enums: `33071` (CLAMP_TO_EDGE), `33648` (MIRRORED_REPEAT), and `10497` (REPEAT).
-
-* **Type**: `integer`
-* **Required**: No, default: `10497`
-* **Allowed values**: `33071`, `33648`, `10497`
-* **Related WebGL functions**: `texParameterf()` with pname equal to TEXTURE_WRAP_T
-
-### sampler.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a sampler and a buffer could have the same name, or two samplers could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### sampler.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### sampler.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-scene"></a>
-## scene
-
-The root nodes of a scene.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**nodes**|`string[]`|The IDs of each root [`node`](#reference-node).|No, default: `[]`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [scene.schema.json](schema/scene.schema.json)
-* **Example**: [scenes.json](schema/examples/scenes.json)
-
-### scene.nodes
-
-The IDs of each root [`node`](#reference-node).
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-   * Each element in the array must have length greater than or equal to `1`.
-* **Required**: No, default: `[]`
-
-### scene.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a scene and a buffer could have the same name, or two scenes could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### scene.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### scene.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-<!-- ======================================================================= -->
-<a name="reference-skin"></a>
-## skin
-
-Joints and matrices defining a skin.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**bindShapeMatrix**|`number[16]`|Floating-point 4x4 transformation matrix stored in column-major order.|No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`|
-|**inverseBindMatrices**|`string`|The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.| :white_check_mark: Yes|
-|**jointNames**|`string[]`|Joint names of the joints (nodes with a `jointName` property) in this skin.|No|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [skin.schema.json](schema/skin.schema.json)
-* **Example**: [skins.json](schema/examples/skins.json)
-
-### skin.bindShapeMatrix
-
-Floating-point 4x4 transformation matrix stored in column-major order.
-
-* **Type**: `number[16]`
-* **Required**: No, default: `[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]`
-
-### skin.inverseBindMatrices
-
-The ID of the accessor containing the floating-point 4x4 inverse-bind matrices.
-
-* **Type**: `string`
-* **Required**: No, The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied.
-* **Minimum Length**: ` >= 1`
-
-### skin.jointNames :white_check_mark:
-
-Joint names of the joints (nodes with a `jointName` property) in this skin.  The array length is
-* the same as the `count` property of the `inverseBindMatrices` accessor (when defined), and 
-* the same as the total quantity of all skeleton nodes from node-trees referenced by the skinned mesh instance node's `skeletons` array.
-
-* **Type**: `string[]`
-   * Each element in the array must be unique.
-   * Each element in the array must have length greater than or equal to `1`.
-* **Required**: Yes
-
-### skin.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a skin and a buffer could have the same name, or two skins could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### skin.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### skin.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-texture"></a>
-## texture
-
-A texture and its [`sampler`](#reference-sampler).
-
-**Related WebGL functions**: `createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**format**|`integer`|The texture's format.|No, default: `6408`|
-|**internalFormat**|`integer`|The texture's internal format.|No, default: `6408`|
-|**sampler**|`string`|The ID of the [`sampler`](#reference-sampler) used by this texture.| :white_check_mark: Yes|
-|**source**|`string`|The ID of the [`image`](#reference-image) used by this texture.| :white_check_mark: Yes|
-|**target**|`integer`|The target that the WebGL texture should be bound to.|No, default: `3553`|
-|**type**|`integer`|Texel datatype.|No, default: `5121`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [texture.schema.json](schema/texture.schema.json)
-* **Example**: [textures.json](schema/examples/textures.json)
-
-### texture.format
-
-The texture's format.  Valid values correspond to WebGL enums: `6406` (ALPHA), `6407` (RGB), `6408` (RGBA), `6409` (LUMINANCE), and `6410` (LUMINANCE_ALPHA).
-
-* **Type**: `integer`
-* **Required**: No, default: `6408`
-* **Allowed values**: `6406`, `6407`, `6408`, `6409`, `6410`
-* **Related WebGL functions**: `texImage2D()` format parameter
-
-### texture.internalFormat
-
-The texture's internal format.  Valid values correspond to WebGL enums: `6406` (ALPHA), `6407` (RGB), `6408` (RGBA), `6409` (LUMINANCE), and `6410` (LUMINANCE_ALPHA).  Defaults to same value as format.
-
-* **Type**: `integer`
-* **Required**: No, default: `6408`
-* **Allowed values**: `6406`, `6407`, `6408`, `6409`, `6410`
-* **Related WebGL functions**: `texImage2D()` internalFormat parameter
-
-### texture.sampler :white_check_mark:
-
-The ID of the [`sampler`](#reference-sampler) used by this texture.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### texture.source :white_check_mark:
-
-The ID of the [`image`](#reference-image) used by this texture.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### texture.target
-
-The target that the WebGL texture should be bound to.  Valid values correspond to WebGL enums: `3553` (TEXTURE_2D).
-
-* **Type**: `integer`
-* **Required**: No, default: `3553`
-* **Allowed values**: `3553`
-* **Related WebGL functions**: `bindTexture()`
-
-### texture.type
-
-Texel datatype.  Valid values correspond to WebGL enums: `5121` (UNSIGNED_BYTE), `33635` (UNSIGNED_SHORT_5_6_5), `32819` (UNSIGNED_SHORT_4_4_4_4), and `32820` (UNSIGNED_SHORT_5_5_5_1).
-
-* **Type**: `integer`
-* **Required**: No, default: `5121`
-* **Allowed values**: `5121`, `33635`, `32819`, `32820`
-* **Related WebGL functions**: `texImage2D()` type parameter
-
-### texture.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a texture and a buffer could have the same name, or two textures could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### texture.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### texture.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<a name="acknowledgements"></a>
 # Acknowledgments
 
 * Sarah Chow, Cesium
@@ -3281,15 +1254,18 @@ Application-specific data.
 * Corentin Wallez,
 * Yu Chen Hou
 
+# Appendix A: GLB File Format Specification
 
-<a name="appendix-a"></a>
-# Appendix A: Default Material
+See [GLB_FORMAT.md](GLB_FORMAT.md).
 
-If `material` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  
+# Appendix B: Tangent Space Recalculation
 
+**TODO**
 
+# Appendix C: BRDF Implementation
 
-<a name="appendix-b"></a>
-# Appendix B: Full Khronos Trademark Statement
+**TODO**
 
-Copyright (C) 2013-2016 The Khronos Group Inc. All Rights Reserved. This specification is protected by copyright laws and contains material proprietary to the Khronos Group, Inc. It or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast, or otherwise exploited in any manner without the express prior written permission of Khronos Group. You may use this specification for implementing the functionality therein, without altering or removing any trademark, copyright or other notice from the specification, but the receipt or possession of this specification does not convey any rights to reproduce, disclose, or distribute its contents, or to manufacture, use, or sell anything that it may describe, in whole or in part. Khronos Group grants express permission to any current Promoter, Contributor or Adopter member of Khronos to copy and redistribute UNMODIFIED versions of this specification in any fashion, provided that NO CHARGE is made for the specification and the latest available update of the specification for any version of the API is used whenever possible. Such distributed specification may be reformatted AS LONG AS the contents of the specification are not changed in any way. The specification may be incorporated into a product that is sold as long as such product includes significant independent work developed by the seller. A link to the current version of this specification on the Khronos Group website should be included whenever possible with specification distributions. Khronos Group makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation, any implied warranties of merchantability or fitness for a particular purpose or non-infringement of any intellectual property. Khronos Group makes no, and expressly disclaims any, warranties, express or implied, regarding the correctness, accuracy, completeness, timeliness, and reliability of the specification. Under no circumstances will the Khronos Group, or any of its Promoters, Contributors or Members or their respective partners, officers, directors, employees, agents, or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials. Khronos, Vulkan, SYCL, SPIR, WebGL, EGL, COLLADA, StreamInput, OpenVX, OpenKCam, glTF, OpenKODE, OpenVG, OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL and OpenMAX DL are trademarks and WebCL is a certification mark of The Khronos Group Inc. OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics International used under license by Khronos. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
+# Appendix D: Full Khronos Trademark Statement
+
+Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. This specification is protected by copyright laws and contains material proprietary to the Khronos Group, Inc. It or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast, or otherwise exploited in any manner without the express prior written permission of Khronos Group. You may use this specification for implementing the functionality therein, without altering or removing any trademark, copyright or other notice from the specification, but the receipt or possession of this specification does not convey any rights to reproduce, disclose, or distribute its contents, or to manufacture, use, or sell anything that it may describe, in whole or in part. Khronos Group grants express permission to any current Promoter, Contributor or Adopter member of Khronos to copy and redistribute UNMODIFIED versions of this specification in any fashion, provided that NO CHARGE is made for the specification and the latest available update of the specification for any version of the API is used whenever possible. Such distributed specification may be reformatted AS LONG AS the contents of the specification are not changed in any way. The specification may be incorporated into a product that is sold as long as such product includes significant independent work developed by the seller. A link to the current version of this specification on the Khronos Group website should be included whenever possible with specification distributions. Khronos Group makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this specification, including, without limitation, any implied warranties of merchantability or fitness for a particular purpose or non-infringement of any intellectual property. Khronos Group makes no, and expressly disclaims any, warranties, express or implied, regarding the correctness, accuracy, completeness, timeliness, and reliability of the specification. Under no circumstances will the Khronos Group, or any of its Promoters, Contributors or Members or their respective partners, officers, directors, employees, agents, or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials. Khronos, Vulkan, SYCL, SPIR, WebGL, EGL, COLLADA, StreamInput, OpenVX, OpenKCam, glTF, OpenKODE, OpenVG, OpenWF, OpenSL ES, OpenMAX, OpenMAX AL, OpenMAX IL and OpenMAX DL are trademarks and WebCL is a certification mark of The Khronos Group Inc. OpenCL is a trademark of Apple Inc. and OpenGL and OpenML are registered trademarks and the OpenGL ES and OpenGL SC logos are trademarks of Silicon Graphics International used under license by Khronos. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
