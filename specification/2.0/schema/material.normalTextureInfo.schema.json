@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "normalTextureInfo",
+    "type": "object",
+    "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
+    "properties": {
+        "index": {},
+        "texCoord": {},
+        "scale": {
+            "type": "number",
+            "description": "The scalar multiplier applied to each normal vector of the normal texture.",
+            "default": 1.0,
+            "gltf_detailedDescription": "The scalar multiplier applied to each normal vector of the texture. This value is ignored if normalTexture is not specified. This value is linear."
+        }
+    },
+    "additionalProperties": false
+}

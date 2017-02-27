@@ -36,7 +36,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Scenes](#scenes)
   * [Accessing Binary Data](#accessing-binary-data)
   * [Geometry and Meshes](#geometry-and-meshes)
-  * [Materials and Shading](#materials-and-shading)
+  * [Materials](#materials)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -71,7 +71,7 @@ glTF solves these problems by providing a vendor- and runtime-neutral format tha
 
 glTF assets are JSON files plus supporting external data. Specifically, a glTF asset is represented by:
 
-* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, shaders, animations, and other constructs
+* A JSON-formatted file (`.gltf`) containing a full scene description: node hierarchy, materials, cameras, as well as descriptor information for meshes, animations, and other constructs
 * Binary files (`.bin`) containing geometry and animation data, and other buffer-based data
 * Image files (`.jpg`, `.png`, etc.) for textures
 
@@ -779,19 +779,102 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 > * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
 
-<a name="materials-and-shading"></a>
-## Materials and Shading
+<a name="materials"></a>
+## Materials
 
-A material is defined as an instance of a shading technique along with parameterized values, e.g., light colors, specularity, or shininess.
+glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
-Materials are stored in the assets `materials` array, which contains one or more material definitions.
+### Metallic-Roughness material 
+All parameters related to the metallic-roughness material model are defined under the property 'pbrMetallicRoughness'. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
 
-The `technique` property is optional; if it is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
+```
+{
+    "materials": [
+        {
+            "name": "gold",
+            "pbrMetallicRoughness": {
+                "baseColorfactor": [ 1.000, 0.766, 0.336, 1.0 ],
+                "metallicFactor": 1.0,
+                "roughnessFactor": 0.0
+            }
+        }
+    ]
+}
+```
 
-If `technique` property is undefined, `values` property must be undefined too.
+The metallic-roughness material model is defined by the following properties:
+* `baseColor`  - The base color of the material
+* `metallic` - The metalness of the material
+* `roughness` - The roughness of the material
 
-**non-normative**: In practice, most assets will have a `technique` property or an extension that defines material properties.  The default material simply allows an asset to not have to define an explicit technique when an extension is used.
 
+The base color has two different interpretations depending on the value of metalness. When the material is a metal, the base color is the specific measured reflectance value at normal incidence (F0). For a non-metal the base color represents the reflected diffuse color of the material. In this model it is not possible to specify a F0 value for non-metals, and a linear value of 4% (0.04) is used. 
+
+The value for each property (`baseColor`, `metallic`, `roughness`) can be defined using factors or textures. The `metallic` and `roughness` properties are packed together in a single texture called `metallicRoughnessTexture`. If a texture is not given, all respective texture components within this material model are assumed to have a value of `1.0`. If both factors and textures are present the factor value acts as a linear multiplier for the corresponding texture values. Texture content must be converted to linear space before it is used for any lighting computations. For example, assume a value of `[0.9, 0.5, 0.3, 1.0]` in linear space is obtained from an RGBA `baseColorTexture`, and assume that `baseColorFactor` is given as `[0.2, 1.0, 0.7, 1.0]`.
+Then, the result would be `[0.9 * 0.2, 0.5 * 1.0, 0.3 * 0.7, 1.0 * 1.0] = [0.18, 0.5, 0.21, 1.0]`.
+
+The following equations show how to calculate bidirectional reflectance distribution function (BRDF) inputs (*c<sub>diff</sub>*, *F<sub>0</sub>*, *&alpha;*) from the metallic-roughness material properties. 
+
+`const dielectricSpecular = rgb(0.04, 0.04, 0.04)`
+<br>
+`const black = rgb(0, 0, 0)`
+
+*c<sub>diff</sub>* = `lerp(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic)`
+<br>
+*F<sub>0</sub>* = `lerp(dieletricSpecular, baseColor.rgb, metallic)`
+<br>
+*&alpha;* = `max(roughness ^ 2, epsilon)`
+
+All implementations should use the same calculations for the BRDF inputs. Implementations of the BRDF itself can vary based on device performance and resource constraints. See [appendix](#appendix-a) for more details on the BRDF calculations. 
+
+
+<a name="additionalmaps"></a>
+### Additional maps
+ The material definition also provides for additional maps that can also be used with the metallic-roughness material model as well as other material models like those defined in the KHR_materials_pbrSpecularGlossiness extension or the KHR_materials_common extension.
+
+ Materials define the following additional maps:
+- **normal** : A tangent space normal map.
+- **occlusion** : The occlusion map indicating areas of indirect lighting.
+- **emission** : The emissive map controls the color and intensity of the light being emitted by the material. 
+
+The following examples shows a material that is defined using 'pbrMetallicRoughness' parameters as well as additional texture maps:
+
+ ```
+{
+    "materials": [
+        {
+            "name": "Material0",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [ 0.5, 0.5, 0.5, 1.0 ],
+                "baseColorTexture": {
+                    "index": 1,
+                    "texCoord": 1
+                },
+                "metallicFactor": 1,
+                "roughnessFactor": 1,
+                "metallicRoughnessTexture": {
+                    "index": 2,
+                    "texCoord": 1
+                }
+            },
+            "normalTexture": {
+                "scale": 2,
+                "index": 3,
+                "texCoord": 1
+            },
+            "emissiveFactor": [ 0.2, 0.1, 0.0 ]
+        }
+    ]
+}
+```
+
+>**Implementation Note:** If an implementation is resource-bound and cannot support all the maps defined it should support these additional maps in the following priority order.  resource-bound implementations should drop maps from the bottom to the top. 
+>
+>| Map | Rendering impact when map is not supported|
+>|---|------------------------------|
+>| Normal | Geometry will appear less detailed than authored|
+>| Occlusion | Model will appear brighter in areas that should be darker|
+>| Emission | Model with lights will not be lit (e.g. the headlights of a car model will be off instead of on)|
 
 <a name="cameras"></a>
 ## Cameras
@@ -2091,13 +2174,10 @@ The root object for a glTF asset.
 |**materials**|`object`|A dictionary object of [`material`](#reference-material) objects.|No, default: `{}`|
 |**meshes**|`object`|A dictionary object of [`mesh`](#reference-mesh) objects.| :white_check_mark: Yes|
 |**nodes**|`object`|A dictionary object of [`node`](#reference-node) objects.|No, default: `{}`|
-|**programs**|`object`|A dictionary object of [`program`](#reference-program) objects.|No, default: `{}`|
 |**samplers**|`object`|A dictionary object of [`sampler`](#reference-sampler) objects.|No, default: `{}`|
 |**scene**|`string`|The ID of the default scene.|No|
 |**scenes**|`object`|A dictionary object of [`scene`](#reference-scene) objects.|No, default: `{}`|
-|**shaders**|`object`|A dictionary object of [`shader`](#reference-shader) objects.|No, default: `{}`|
 |**skins**|`object`|A dictionary object of [`skin`](#reference-skin) objects.|No, default: `{}`|
-|**techniques**|`object`|A dictionary object of [`technique`](#reference-technique) objects.|No, default: `{}`|
 |**textures**|`object`|A dictionary object of [`texture`](#reference-texture) objects.|No, default: `{}`|
 |**extensionsUsed**|`string[]`|Names of glTF extensions used somewhere in this asset.|No, default: `[]`|
 |**extensionsRequired**|`string[]`|Names of glTF extensions required to properly load this asset.|No, default: `[]`|
@@ -2188,14 +2268,6 @@ A dictionary object of [`node`](#reference-node) objects in the node hierarchy. 
 * **Required**: No, default: `{}`
 * **Type of each property**: `object`
 
-### glTF.programs
-
-A dictionary object of shader [`program`](#reference-program) objects.  The name of each program is an ID in the global glTF namespace that is used to reference the program.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
 ### glTF.samplers
 
 A dictionary object of [`sampler`](#reference-sampler) objects.  The name of each sampler is an ID in the global glTF namespace that is used to reference the sampler.  A sampler contains properties for texture filtering and wrapping modes.
@@ -2220,25 +2292,9 @@ A dictionary object of [`scene`](#reference-scene) objects.  The name of each sc
 * **Required**: No, default: `{}`
 * **Type of each property**: `object`
 
-### glTF.shaders
-
-A dictionary object of [`shader`](#reference-shader) objects.  The name of each shader is an ID in the global glTF namespace that is used to reference the shader.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
 ### glTF.skins
 
 A dictionary object of [`skin`](#reference-skin) objects.  The name of each skin is an ID in the global glTF namespace that is used to reference the skin.  A skin is defined by joints and matrices.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### glTF.techniques
-
-A dictionary object of [`technique`](#reference-technique) objects.  The name of each technique is an ID in the global glTF namespace that is used to reference the technique.  A technique is a template for a material appearance.
 
 * **Type**: `object`
 * **Required**: No, default: `{}`
@@ -2356,32 +2412,55 @@ The material appearance of a primitive.
 
 |   |Type|Description|Required|
 |---|----|-----------|--------|
-|**technique**|`string`|The ID of the [`technique`](#reference-technique).|No|
-|**values**|`object`|A dictionary object of parameter values.|No, default: `{}`|
+|**pbrMetallicRoughness**|[`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)|A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.|No|
+| **normalTexture** | [`material.normalTextureInfo`](#reference-material.normalTextureInfo) | The normal map texture. |No|
+| **occlusionTexture** | [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) | The occlusion map texture. |No|
+| **emissiveTexture** | [`textureInfo`](#reference-textureInfo) | The emission map texture. |No|
+| **emissiveFactor** | `number[3]` | The emissive color of the material. |No, default:`[0.0,0.0,0.0]`|
 |**name**|`string`|The user-defined name of this object.|No|
 |**extensions**|`object`|Dictionary object with extension-specific objects.|No|
 |**extras**|`any`|Application-specific data.|No|
 
 Additional properties are not allowed.
 
-* **JSON schema**: [material.schema.json](schema/material.schema.json)
+* **JSON schema**: [materials.schema.json](schema/material.schema.json)
 * **Example**: [materials.json](schema/examples/materials.json)
 
-### material.technique
+### material.pbrMetallicRoughness
 
-The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color.  See [Appendix A](#appendix-a).
+A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
 
-* **Type**: `string`
+* **Type**: [`material.pbrMetallicRoughness`](#reference-material.pbrMetallicRoughness)
 * **Required**: No
-* **Minimum Length**: ` >= 1`
+   
+### material.normalTexture
 
-### material.values
+A tangent space normal map. The texture contains RGB components in linear space. Each texel represents the XYZ components of a normal vector in tangent space. Red [0 to 255] maps to X [-1 to 1]. Green [0 to 255] maps to Y [-1 to 1]. Blue [128 to 255] maps to Z [1/255 to 1]. The normal vectors use OpenGL conventions where +X is right and +Y is up. +Z points toward the viewer.
 
-A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value.  This may not contain attribute parameters, i.e., parameters listed in [technique.attributes](#reference-technique.attributes).
+* **Type**: [`material.normalTextureInfo`](#reference-material.normalTextureInfo)
+* **Required**: No
 
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `number[]`, `boolean[]`, or `string[]`
+### material.occlusionTexture
+
+The occlusion map is a greyscale texture in sRGB color space, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. If an alpha channel is present, it is ignored.
+
+* **Type**: [`material.occlusionTextureInfo`](#reference-material.occlusionTextureInfo) 
+* **Required**: No
+
+### material.emissiveTexture
+
+The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+### material.emissiveFactor
+
+The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values.
+
+* **Type**: `number[3]` 
+* **Required**: No, default:`[0.0,0.0,0.0]`
+* **Range**: [0, 1] for all components
 
 ### material.name
 
@@ -2389,6 +2468,7 @@ The user-defined name of this object.  This is not necessarily unique, e.g., a m
 
 * **Type**: `string`
 * **Required**: No
+
 
 ### material.extensions
 
@@ -2405,6 +2485,161 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
+<!-- ======================================================================= -->
+<a name="reference-material.pbrMetallicRoughness"></a>
+## material.pbrMetallicRoughness
+A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**baseColorFactor** | `number[4]` | The base color factor of the material.|No, default:`[1,1,1,1]`|
+|**baseColorTexture** | [`textureInfo`](#reference-textureInfo) | The base color texture.|No|
+|**metallicFactor** | `number` | The metalness of the material.|No, default:`1.0`|
+|**roughnessFactor** | `number` | The roughness of the material.|No, default:`1.0`|
+|**metallicRoughnessTexture** | [`textureInfo`](#reference-textureInfo) | The metallic-roughness texture.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.pbrMetallicRoughness.schema.json](schema/material.pbrMetallicRoughness.schema.json)
+
+### pbrMetallicRoughness.baseColorFactor
+
+The RGBA components of the base color of the material. The fourth component (A) is the opacity of the material. These values are linear.
+
+* **Type**: `number[4]`
+* **Required**: No, default:`[1,1,1,1]`
+* **Range**: [0, 1] for all components
+
+### pbrMetallicRoughness.baseColorTexture
+
+The base color texture. This texture contains RGB(A) components in sRGB color space. The first three components (RGB) specify the base color of the material. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+### pbrMetallicRoughness.metallicFactor
+
+The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+### pbrMetallicRoughness.roughnessFactor
+
+The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+### pbrMetallicRoughness.metallicRoughnessTexture
+
+The metallic-roughness texture has two components. The first component (R) contains the metallic-ness of the material. The second component (G) contains the roughness of the material. These values are linear. If the third component (B) and/or the fourth component (A) are present, they are ignored.
+
+* **Type**: [`textureInfo`](#reference-textureInfo) 
+* **Required**: No
+
+<!-- ======================================================================= -->
+<a name="reference-material.normalTextureInfo"></a>
+## material.normalTextureInfo
+The normal map texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+|**scale** | `number` | The scalar multiplier applied to each normal vector of the normal texture.|No, default:`1.0`|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.normalTextureInfo.schema.json](schema/material.normalTextureInfo.schema.json)
+
+### normalTextureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### normalTextureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
+
+### normalTextureInfo.scale
+
+The scalar multiplier applied to each normal vector of the texture. This value is ignored if normalTexture is not specified. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+
+<!-- ======================================================================= -->
+<a name="reference-material.occlusionTextureInfo"></a>
+## material.occlusionTextureInfo
+The occlusion map texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+|**strength** | `number` | A scalar multiplier controlling the amount of occlusion applied.|No, default:`1.0`|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [material.occlusionTextureInfo.schema.json](schema/material.occlusionTextureInfo.schema.json)
+
+### occlusionTextureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### occlusionTextureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
+
+### occlusionTextureInfo.strength
+
+A scalar multiplier controlling the amount of occlusion applied. A value of 0.0 means no occlusion. A value of 1.0 means full occlusion. This value is ignored if the corresponding texture is not specified. This value is linear.
+
+* **Type**: `number`
+* **Required**: No, default:`1.0`
+* **Range**: [0,1]
+
+<!-- ======================================================================= -->
+<a name="reference-textureInfo"></a>
+## textureInfo 
+Reference to a texture.
+
+|   |Type|Description|Required|
+|---|----|-----------|--------|
+|**index** | `integer` | The index of the texture.|:white_check_mark: Yes|
+|**texCoord** | `integer` | The set index of texture's TEXCOORD attribute used for texture coordinate mapping.|No|
+
+Additional properties are not allowed.
+
+* **JSON schema**: [textureInfo.schema.json](schema/textureInfo.schema.json)
+
+### textureInfo.index
+
+The index of the texture.
+
+* **Type**: `integer`
+* **Required**: Yes
+
+### textureInfo.texCoord
+
+This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0).
+
+* **Type**: `integer`
+* **Required**: No
 
 <!-- ======================================================================= -->
 <a name="reference-mesh"></a>
@@ -2535,7 +2770,7 @@ Application-specific data.
 
 A node in the node hierarchy.  A node can have either the `camera`, `meshes`, or `skeletons`/`skin`/`meshes` properties defined.
 
-In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material)/[`technique`](#reference-technique) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
+In the later case, all `primitives` in the referenced `meshes` contain `JOINT` and `WEIGHT` attributes and the referenced [`material`](#reference-material) from each `primitive` has parameters with `JOINT` and `WEIGHT` semantics.
 
 A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present.
 
@@ -2658,78 +2893,6 @@ Dictionary object with extension-specific objects.
 * **Type of each property**: `object`
 
 ### node.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-program"></a>
-## program
-
-A shader program, including its vertex and fragment shader, and names of vertex shader attributes.
-
-**Related WebGL functions**: `attachShader()`, `bindAttribLocation()`, `createProgram()`, `deleteProgram()`, `getProgramParameter()`, `getProgramInfoLog()`, `linkProgram()`, `useProgram()`, and `validateProgram()`
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**attributes**|`string[]`|Names of GLSL vertex shader attributes.|No, default: `[]`|
-|**fragmentShader**|`string`|The ID of the fragment [`shader`](#reference-shader).| :white_check_mark: Yes|
-|**vertexShader**|`string`|The ID of the vertex [`shader`](#reference-shader).| :white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [program.schema.json](schema/program.schema.json)
-* **Example**: [programs.json](schema/examples/programs.json)
-
-### program.attributes
-
-Names of GLSL vertex shader attributes.
-
-* **Type**: `string[]`
-   * Each element in the array must have length between `1` and `256`.
-* **Required**: No, default: `[]`
-* **Related WebGL functions**: `bindAttribLocation()`
-
-### program.fragmentShader :white_check_mark:
-
-The ID of the fragment [`shader`](#reference-shader).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### program.vertexShader :white_check_mark:
-
-The ID of the vertex [`shader`](#reference-shader).
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### program.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a program and a buffer could have the same name, or two programs could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### program.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### program.extras
 
 Application-specific data.
 
@@ -2872,69 +3035,6 @@ Application-specific data.
 * **Type**: `any`
 * **Required**: No
 
-
-<!-- ======================================================================= -->
-<a name="reference-shader"></a>
-## shader
-
-A vertex or fragment shader.
-
-**Related WebGL functions**: `createShader()`, `deleteShader()`, `shaderSource()`, `compileShader()`, `getShaderParameter()`, and `getShaderInfoLog()`
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**uri**|`string`|The uri of the GLSL source.| :white_check_mark: Yes|
-|**type**|`integer`|The shader stage.| :white_check_mark: Yes|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [shader.schema.json](schema/shader.schema.json)
-* **Example**: [shaders.json](schema/examples/shaders.json)
-
-### shader.uri :white_check_mark:
-
-The uri of the GLSL source.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Format**: uri
-
-### shader.type :white_check_mark:
-
-The shader stage.  Allowed values are `35632` (FRAGMENT_SHADER) and `35633` (VERTEX_SHADER).
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Allowed values**: `35632`, `35633`
-
-### shader.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a shader and a buffer could have the same name, or two shaders could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### shader.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### shader.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
 <!-- ======================================================================= -->
 <a name="reference-skin"></a>
 ## skin
@@ -2999,364 +3099,6 @@ Dictionary object with extension-specific objects.
 * **Type of each property**: `object`
 
 ### skin.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique"></a>
-## technique
-
-A template for material appearances.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**parameters**|`object`|A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.|No, default: `{}`|
-|**attributes**|`object`|A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.|No, default: `{}`|
-|**program**|`string`|The ID of the program.| :white_check_mark: Yes|
-|**uniforms**|`object`|A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.|No, default: `{}`|
-|**states**|[`technique.states`](#reference-technique.states)|Fixed-function rendering states.|No, default: `{}`|
-|**name**|`string`|The user-defined name of this object.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-* **JSON schema**: [technique.schema.json](schema/technique.schema.json)
-* **Example**: [techniques.json](schema/examples/techniques.json)
-
-### technique.parameters
-
-A dictionary object of [`technique.parameters`](#reference-technique.parameters) objects.  Each parameter defines an attribute or uniform input, and an optional semantic and value.  Each parameter must be referenced by the attributes or uniforms dictionary properties.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `object`
-
-### technique.attributes
-
-A dictionary object of strings that maps GLSL attribute names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `string`
-
-### technique.program :white_check_mark:
-
-The ID of the program.
-
-* **Type**: `string`
-* **Required**: Yes
-* **Minimum Length**: ` >= 1`
-
-### technique.uniforms
-
-A dictionary object of strings that maps GLSL uniform names to technique parameter IDs.  Each string must also be in the parameters dictionary object.
-
-* **Type**: `object`
-* **Required**: No, default: `{}`
-* **Type of each property**: `string`
-
-### technique.states
-
-Fixed-function rendering states.
-
-* **Type**: [`technique.states`](#reference-technique.states)
-* **Required**: No, default: `{}`
-
-### technique.name
-
-The user-defined name of this object.  This is not necessarily unique, e.g., a technique and a buffer could have the same name, or two techniques could even have the same name.
-
-* **Type**: `string`
-* **Required**: No
-
-### technique.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### technique.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.parameters"></a>
-## technique.parameters
-
-An attribute or uniform input to a [`technique`](#reference-technique), and an optional semantic and value.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**count**|`integer`|When defined, the parameter is an array of count elements of the specified type.  Otherwise, the parameter is not an array.|No|
-|**node**|`string`|The id of the [`node`](#reference-node) whose transform is used as the parameter's value.|No|
-|**type**|`integer`|The datatype.| :white_check_mark: Yes|
-|**semantic**|`string`|Identifies a parameter with a well-known meaning.|Depends (see below)|
-|**value**|`number[]`, `boolean[]`, or `string[]`|The value of the parameter.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [technique.parameters.schema.json](schema/technique.parameters.schema.json)
-
-### parameter.count
-
-When defined, the parameter is an array of `count` elements of the specified type.  Otherwise, the parameter is not an array.  When defined, `value`'s length equals to `count`, times the number of components in the `type`, e.g., `3` for `FLOAT_VEC3`.
-
-An array parameter of scalar values is not the same as a vector parameter of the same size; for example, when `count` is `2` and `type` is `5126` (FLOAT), the parameter is an array of two floating-point values, not a `FLOAT_VEC2`.
-
-When a parameter is an attribute, `count` can not be defined since GLSL does not support arrays of attributes.  When a parameter is a uniform and a glTF-defined semantic is used, the semantic must be `JOINTMATRIX`; application-specific parameters can be arrays and, therefore, define `count`.
-
-* **Type**: `integer`
-* **Required**: No
-* **Minimum**: ` >= 1`
-
-### parameter.node
-
-The id of the [`node`](#reference-node) whose transform is used as the parameter's value.  When this is defined, `type` must be `35676` (FLOAT_MAT4), therefore, when the semantic is `"MODELINVERSETRANSPOSE"`, `"MODELVIEWINVERSETRANSPOSE"`, or `"VIEWPORT"`, the `node` property can't be defined.
-
-* **Type**: `string`
-* **Required**: No
-* **Minimum Length**: ` >= 1`
-
-### parameter.type :white_check_mark:
-
-The datatype. All valid values correspond to WebGL enums and depend on whether parameter is attribute or uniform. Allowed values are `5120` (BYTE), `5121` (UNSIGNED_BYTE), `5122` (SHORT), `5123` (UNSIGNED_SHORT), `5124` (INT), `5125` (UNSIGNED_INT), `5126` (FLOAT), `35664` (FLOAT_VEC2), `35665` (FLOAT_VEC3), `35666` (FLOAT_VEC4), `35667` (INT_VEC2), `35668` (INT_VEC3), `35669` (INT_VEC4), `35670` (BOOL), `35671` (BOOL_VEC2), `35672` (BOOL_VEC3), `35673` (BOOL_VEC4), `35674` (FLOAT_MAT2), `35675` (FLOAT_MAT3), `35676` (FLOAT_MAT4), and `35678` (SAMPLER_2D).
-
-* **Type**: `integer`
-* **Required**: Yes
-* **Allowed values**: `5120`, `5121`, `5122`, `5123`, `5124`, `5125`, `5126`, `35664`, `35665`, `35666`, `35667`, `35668`, `35669`, `35670`, `35671`, `35672`, `35673`, `35674`, `35675`, `35676`, `35678`
-
-### parameter.semantic
-
-Identifies a parameter with a well-known meaning.  Uniform semantics include `"LOCAL"` (FLOAT_MAT4), `"MODEL"` (FLOAT_MAT4), `"VIEW"` (FLOAT_MAT4), `"PROJECTION"` (FLOAT_MAT4), `"MODELVIEW"` (FLOAT_MAT4), `"MODELVIEWPROJECTION"` (FLOAT_MAT4), `"MODELINVERSE"` (FLOAT_MAT4), `"VIEWINVERSE"` (FLOAT_MAT4), `"PROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELVIEWINVERSE"` (FLOAT_MAT4), `"MODELVIEWPROJECTIONINVERSE"` (FLOAT_MAT4), `"MODELINVERSETRANSPOSE"` (FLOAT_MAT3), `"MODELVIEWINVERSETRANSPOSE"` (FLOAT_MAT3), `"VIEWPORT"` (FLOAT_VEC4), `"JOINTMATRIX"` (FLOAT_MAT4[]).  Attribute semantics include `"POSITION"`, `"NORMAL"`, `"TEXCOORD"`, `"COLOR"`, `"JOINT"`, and `"WEIGHT"`.  `"TEXCOORD"` and `"COLOR"` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `"TEXCOORD_0"`, `"TEXCOORD_1"`, `"COLOR_1"` etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
-
-* **Type**: `string`
-* **Required**: No, except this property is required when the parameter is an attribute, i.e., when the parameter is referenced from [`technique.attributes`](#reference-technique.attributes).
-
-### parameter.value
-
-The value of the parameter. The length is determined by the values of the `type` and `count` (if present) properties.  A [`material`](#reference-material) value with the same name, when specified, overrides this value.  This must be `undefined` when the parameter is an attribute, i.e., it is in [technique.attributes](#reference-technique.attributes).
-
-* **Type of each property**: `number[]`, `boolean[]`, or `string[]`
-* **Required**: No
-
-### parameter.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### parameter.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.states"></a>
-## states
-
-Fixed-function rendering states.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**enable**|`integer[]`|WebGL states to enable.|No, default: `[]`|
-|**functions**|[`technique.states.functions`](#reference-technique.states.functions)|Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.|No|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [technique.states.schema.json](schema/technique.states.schema.json)
-
-### states.enable
-
-WebGL states to enable.  States not in the array are disabled.  Valid values for each element correspond to WebGL enums: `3042` (BLEND), `2884` (CULL_FACE), `2929` (DEPTH_TEST), `32823` (POLYGON_OFFSET_FILL), and `32926` (SAMPLE_ALPHA_TO_COVERAGE).
-
-* **Type**: `integer[]`
-   * Each element in the array must be unique.
-   * Each element in the array must be one of the following values: `3042`, `2884`, `2929`, `32823`, `32926`, `3089`.
-* **Required**: No, default: `[]`
-* **Related WebGL functions**: `enable()` and `disable()`
-
-### states.functions
-
-Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
-
-* **Type**: [`technique.states.functions`](#reference-technique.states.functions)
-* **Required**: No
-
-### states.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### states.extras
-
-Application-specific data.
-
-* **Type**: `any`
-* **Required**: No
-
-
-<!-- ======================================================================= -->
-<a name="reference-technique.states.functions"></a>
-## functions
-
-Arguments for fixed-function rendering state functions other than `enable()`/`disable()`.
-
-**Properties**
-
-|   |Type|Description|Required|
-|---|----|-----------|--------|
-|**blendColor**|`number[4]`|Floating-point values passed to `blendColor()`. [red, green, blue, alpha]|No, default: `[0,0,0,0]`|
-|**blendEquationSeparate**|`integer[2]`|Integer values passed to `blendEquationSeparate()`.|No, default: `[32774,32774]`|
-|**blendFuncSeparate**|`integer[4]`|Integer values passed to `blendFuncSeparate()`.|No, default: `[1,0,1,0]`|
-|**colorMask**|`boolean[4]`|Boolean values passed to `colorMask()`. [red, green, blue, alpha].|No, default: `[true,true,true,true]`|
-|**cullFace**|`integer[1]`|Integer value passed to `cullFace()`.|No, default: `[1029]`|
-|**depthFunc**|`integer[1]`|Integer values passed to `depthFunc()`.|No, default: `[513]`|
-|**depthMask**|`boolean[1]`|Boolean value passed to `depthMask()`.|No, default: `[true]`|
-|**depthRange**|`number[2]`|Floating-point values passed to `depthRange()`. [zNear, zFar]|No, default: `[0,1]`|
-|**frontFace**|`integer[1]`|Integer value passed to `frontFace()`.|No, default: `[2305]`|
-|**lineWidth**|`number[1]`|Floating-point value passed to `lineWidth()`.|No, default: `[1]`|
-|**polygonOffset**|`number[2]`|Floating-point value passed to `polygonOffset()`.  [factor, units]|No, default: `[0,0]`|
-|**extensions**|`object`|Dictionary object with extension-specific objects.|No|
-|**extras**|`any`|Application-specific data.|No|
-
-Additional properties are not allowed.
-
-**JSON schema**: [technique.states.functions.schema.json](schema/technique.states.functions.schema.json)
-
-### functions.blendColor
-
-Floating-point values passed to `blendColor()`. [red, green, blue, alpha]
-
-* **Type**: `number[4]`
-   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
-* **Required**: No, default: `[0,0,0,0]`
-* **Related WebGL functions**: `blendColor()`
-
-### functions.blendEquationSeparate
-
-Integer values passed to `blendEquationSeparate()`. [rgb, alpha]. Valid values correspond to WebGL enums: `32774` (FUNC_ADD), `32778` (FUNC_SUBTRACT), and `32779` (FUNC_REVERSE_SUBTRACT).
-
-* **Type**: `integer[2]`
-   * Each element in the array must be one of the following values: `32774`, `32778`, `32779`.
-* **Required**: No, default: `[32774,32774]`
-* **Related WebGL functions**: `blendEquationSeparate()`
-
-### functions.blendFuncSeparate
-
-Integer values passed to `blendFuncSeparate()`. [srcRGB, dstRGB, srcAlpha, dstAlpha]. Valid values correspond to WebGL enums: `0` (ZERO), `1` (ONE), `768` (SRC_COLOR), `769` (ONE_MINUS_SRC_COLOR), `774` (DST_COLOR), `775` (ONE_MINUS_DST_COLOR), `770` (SRC_ALPHA), `771` (ONE_MINUS_SRC_ALPHA), `772` (DST_ALPHA), `773` (ONE_MINUS_DST_ALPHA), `32769` (CONSTANT_COLOR), `32770` (ONE_MINUS_CONSTANT_COLOR), `32771` (CONSTANT_ALPHA), `32772` (ONE_MINUS_CONSTANT_ALPHA), and `776` (SRC_ALPHA_SATURATE).
-
-* **Type**: `integer[4]`
-   * Each element in the array must be one of the following values: `0`, `1`, `768`, `769`, `774`, `775`, `770`, `771`, `772`, `773`, `32769`, `32770`, `32771`, `32772`, `776`.
-* **Required**: No, default: `[1,0,1,0]`
-* **Related WebGL functions**: `blendFuncSeparate()`
-
-### functions.colorMask
-
-Boolean values passed to `colorMask()`. [red, green, blue, alpha].
-
-* **Type**: `boolean[4]`
-* **Required**: No, default: `[true,true,true,true]`
-* **Related WebGL functions**: `colorMask()`
-
-### functions.cullFace
-
-Integer value passed to `cullFace()`. Valid values correspond to WebGL enums: `1028` (FRONT), `1029` (BACK), and `1032` (FRONT_AND_BACK).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `1028`, `1029`, `1032`.
-* **Required**: No, default: `[1029]`
-* **Related WebGL functions**: `cullFace()`
-
-### functions.depthFunc
-
-Integer values passed to `depthFunc()`. Valid values correspond to WebGL enums: `512` (NEVER), `513` (LESS), `515` (LEQUAL), `514` (EQUAL), `516` (GREATER), `517` (NOTEQUAL), `518` (GEQUAL), and `519` (ALWAYS).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `512`, `513`, `515`, `514`, `516`, `517`, `518`, `519`.
-* **Required**: No, default: `[513]`
-* **Related WebGL functions**: `depthFunc()`
-
-### functions.depthMask
-
-Boolean value passed to `depthMask()`.
-
-* **Type**: `boolean[1]`
-* **Required**: No, default: `[true]`
-* **Related WebGL functions**: `depthMask()`
-
-### functions.depthRange
-
-Floating-point values passed to `depthRange()`. zNear must be less than or equal to zFar. [zNear, zFar]
-
-* **Type**: `number[2]`
-   * Each element in the array must be greater than or equal to `0` and less than or equal to `1`.
-* **Required**: No, default: `[0,1]`
-* **Related WebGL functions**: `depthRange()`
-
-### functions.frontFace
-
-Integer value passed to `frontFace()`.  Valid values correspond to WebGL enums: `2304` (CW) and `2305` (CCW).
-
-* **Type**: `integer[1]`
-   * Each element in the array must be one of the following values: `2304`, `2305`.
-* **Required**: No, default: `[2305]`
-* **Related WebGL functions**: `frontFace()`
-
-### functions.lineWidth
-
-Floating-point value passed to `lineWidth()`.
-
-* **Type**: `number[1]`
-   * Each element in the array must be greater than `0`.
-* **Required**: No, default: `[1]`
-* **Related WebGL functions**: `lineWidth()`
-
-### functions.polygonOffset
-
-Floating-point value passed to `polygonOffset()`.  [factor, units]
-
-* **Type**: `number[2]`
-* **Required**: No, default: `[0,0]`
-* **Related WebGL functions**: `polygonOffset()`
-
-### functions.extensions
-
-Dictionary object with extension-specific objects.
-
-* **Type**: `object`
-* **Required**: No
-* **Type of each property**: `object`
-
-### functions.extras
 
 Application-specific data.
 
@@ -3483,110 +3225,13 @@ Application-specific data.
 * Corentin Wallez,
 * Yu Chen Hou
 
+
 <a name="appendix-a"></a>
 # Appendix A: Default Material
 
-If `material.technique` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  The following glTF is an example of the default material.
+If `material` is not supplied, and no extension is present that defines material properties, then the object will be rendered using a default material with 50% gray emissive color.  
 
-```json
-{
-    "materials": {
-        "defaultMaterial": {
-            "values": {
-                "emission": [
-                    0.5,
-                    0.5,
-                    0.5,
-                    1
-                ]
-            },
-            "technique": "defaultTechnique"
-        }
-    },
-    "programs": {
-        "defaultProgram": {
-            "attributes": [
-                "a_position"
-            ],
-            "fragmentShader": "fragmentShader0",
-            "vertexShader": "vertexShader0"
-        }
-    },
-    "shaders": {
-        "vertexShader0": {
-            "type": 35633,
-            "uri": "data:text/plain;base64,..."
-        },
-        "fragmentShader0": {
-            "type": 35632,
-            "uri": "data:text/plain;base64,..."
-        }
-    },
-    "techniques": {
-        "defaultTechnique": {
-            "attributes": {
-                "a_position": "position"
-            },
-            "parameters": {
-                "modelViewMatrix": {
-                    "semantic": "MODELVIEW",
-                    "type": 35676
-                },
-                "projectionMatrix": {
-                    "semantic": "PROJECTION",
-                    "type": 35676
-                },
-                "emission": {
-                    "type": 35666
-                },
-                "position": {
-                    "semantic": "POSITION",
-                    "type": 35665
-                }
-            },
-            "program": "defaultProgram",
-            "states": {
-                "enable": [
-                    2884,
-                    2929
-                ]
-            },
-            "uniforms": {
-                "u_modelViewMatrix": "modelViewMatrix",
-                "u_projectionMatrix": "projectionMatrix",
-                "u_emission": "emission"
-            }
-        }
-    }
-}
-```
 
-Vertex Shader (encoded in `shaders.vertexShader0.uri`):
-```glsl
-precision highp float;
-
-uniform mat4 u_modelViewMatrix;
-uniform mat4 u_projectionMatrix;
-
-attribute vec3 a_position;
-
-void main(void)
-{
-    gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position, 1.0);
-}
-```
-
-Fragment Shader (encoded in `shaders.fragmentShader0.uri`):
-```glsl
-precision highp float;
-
-uniform vec4 u_emission;
-
-void main(void)
-{
-    gl_FragColor = u_emission;
-}
-```
 
 <a name="appendix-b"></a>
 # Appendix B: Full Khronos Trademark Statement
