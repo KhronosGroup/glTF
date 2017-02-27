@@ -1,32 +1,45 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "material",
-    "type" : "object",
-    "description" : "The material appearance of a primitive.",
-    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "material",
+    "type": "object",
+    "description": "The material appearance of a primitive.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "technique" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The ID of the technique.",
-            "gltf_detailedDescription" : "The ID of the technique.  If this is not supplied, and no extension is present that defines material properties, then the primitive should be rendered using a default material with 50% gray emissive color."
+        "name": {},
+        "extensions": {},
+        "extras": {},
+        "pbrMetallicRoughness": {
+            "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
+            "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology."
         },
-        "values" : {
-            "type" : "object",
-            "description" : "A dictionary object of parameter values.",
-            "properties" : {
-            },
-            "additionalProperties" : {
-                "$ref" : "material.values.schema.json"
-            },
-            "default" : {},
-            "gltf_detailedDescription" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value."
+        "normalTexture": {
+            "allOf": [ { "$ref": "material.normalTextureInfo.schema.json" } ],
+            "description": "The normal map texture.",
+            "gltf_detailedDescription": "A tangent space normal map. Each texel represents the XYZ components of a normal vector in tangent space. <TODO: Add more explaination on how XYZ is calculated>."
         },
-        "name" : {},
-        "extensions" : {},
-        "extras" : {}
+        "occlusionTexture": {
+            "allOf": [ { "$ref": "material.occlusionTextureInfo.schema.json" } ],
+            "description": "The occlusion map texture.",
+            "gltf_detailedDescription": "The occlusion map is a greyscale texture, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. <Todo: sRGB ? Color Space>."
+        },
+        "emissiveTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "The emissive map texture.",
+            "gltf_detailedDescription": "The emissive map controls the color and intensity of the light being emitted by the material. This texture contains RGB components in sRGB color space. If a fourth component (A) is present, it is ignored."
+        },
+        "emissiveFactor": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [ 0.0, 0.0, 0.0 ],
+            "description": "The emissive color of the material.",
+            "gltf_detailedDescription": "The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values."
+        }
     },
-    "dependencies" : {
-        "values": [ "technique" ]
-    },
-    "additionalProperties" : false
+    "additionalProperties": false
 }
