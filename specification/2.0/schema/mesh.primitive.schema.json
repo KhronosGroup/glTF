@@ -31,6 +31,14 @@
             "default" : 4,
             "gltf_detailedDescription" : "The type of primitives to render. All valid values correspond to WebGL enums."
         },
+        "targets" : {
+            "type" : "array",
+            "description" : "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only \"POSITION\" and \"NORMAL\" supported) to their deviations in the Morph Target.",
+            "items" : {
+                "$ref" : "mesh.primitive.target.schema.json"
+            },
+            "minItems" : 0
+        },
         "extensions" : {},
         "extras" : {}
     },

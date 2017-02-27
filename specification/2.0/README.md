@@ -598,6 +598,43 @@ Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
+#### Morph Targets
+
+Morph Targets are defined by extending the Mesh concept.
+A Morph Target is a morphable Mesh where primitives' attributes are obtained by adding the original attributes to a weighted sum of targets attributes.
+For instance, the Morph Target vertices `POSITION` for the primitive at index *i* are computed in this way:
+`primitives`[i].`attributes`.`POSITION` + `weights`[0] * `primitives`[i].`targets`[0].`POSITION` + `weights`[1] * `primitives`[i].`targets`[1].`POSITION` + ...
+Morph Targets are implemented via the `targets` property defined in the Mesh `primitives`. Each target in the `targets` array is a dictionary mapping a primitive attribute to an accessor containing Morph Target displacement data, currently only two attributes ('POSITION' and 'NORMAL') are supported. All primitives are required to list the same number of `targets` in the same order.
+The `weights` array is optional, it stores the default targets weights, in the absence of animations the primitives attributes are resolved using these weights. When this property is missing the default targets weights are assumed to be zero.
+
+The following example extends the Mesh defined in the previous example to a morphable one by adding two Morph Targets:
+```json
+{
+    "primitives": [
+        {
+            "attributes": {
+                "NORMAL": 25,
+                "POSITION": 23,
+                "TEXCOORD_0": 27
+            },
+            "indices": 21,
+            "material": 3,
+            "mode": 4,
+            "targets": [
+                {
+                    "NORMAL": 35,
+                    "POSITION": 33,
+                },
+                {
+                    "NORMAL": 45,
+                    "POSITION": 43,
+                },
+            ]
+        }
+    ],
+    "weights": [0, 0.5]
+}
+```
 
 ### Skins
 
@@ -714,6 +751,28 @@ The joint hierarchy used in animation is simply the glTF node hierarchy, with ea
 ```
 
 For more details of vertex skinning, refer to [glTF Overview](figures/gltfOverview-0.2.0.png).
+
+#### Morph Targets Instances
+
+A Morph Target is instanced within a node using:
+- The Morph Target referenced in the `mesh` property.
+- The Morph Target `weights` overriding the `weights` of the Morph Target referenced in the `mesh` property.
+The example below instatiates a Morph Target together with a Skin.
+
+```json
+{
+    "nodes": [
+        {
+            "mesh": 11,
+            "skeletons": [
+                21
+            ],
+            "skin": 0,
+            "weights": [0 0.5]
+        }
+    ]
+}
+```
 
 #### Textures
 
@@ -944,9 +1003,9 @@ where
 ## Animations
 
 glTF supports articulated and skinned animation via key frame animations of nodes' transforms. Key frame data is stored in buffers and referenced in animations using accessors.
+glTF 2.0 also supports animation of instantiated Morph Targets in a similar fashion.
 
-> **Note:** glTF 2.0 only supports animating node transforms. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
-
+> **Note:** glTF 2.0 only supports animating node transforms and Morph Targets weights. A future version of the specification may support animating arbitrary properties, such as material colors and texture transform matrices.
 
 > **Note:** glTF 2.0 defines only animation storage, so this specification doesn't define any particular runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc...
 

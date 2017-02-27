@@ -15,7 +15,15 @@
         },
         "name" : {},
         "extensions" : {},
-        "extras" : {}
+        "extras" : {},
+        "weights" : {
+            "type" : "array",
+            "description" : "Array of weights to be applied to the Morph Targets.",
+            "items" : {
+                "type" : "number"
+            },
+            "minItems" : 0
+        }
     },
     "additionalProperties" : false,
     "required" : ["primitives"]

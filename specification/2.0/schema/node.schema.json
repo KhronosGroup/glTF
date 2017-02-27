@@ -68,11 +68,21 @@
             "maxItems" : 3,
             "default" : [ 0.0, 0.0, 0.0 ]
         },
+        "weights" : {
+            "type" : "array",
+            "description" : "The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh.",
+            "minItems" : 1,
+            "items" : {
+                "type" : "number",
+                "minimum" : 0
+            }
+        },
         "name" : {},
         "extensions" : {},
         "extras" : {}
     },
     "dependencies" : {
+        "weights" : ["mesh"],
         "skin" : ["mesh"]
     },
     "additionalProperties" : false
