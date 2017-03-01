@@ -43,7 +43,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
     * [Buffers and Buffer Views](#buffers-and-buffer-views)
       * [GLB-stored Buffer](#glb-stored-buffer)
     * [Accessors](#accessors)
-        * [Accessor Attribute Size](#accessor-attribute-size)
+        * [Accessor Element Size](#accessor-element-size)
         * [Sparse Accessors](#sparse-accessors)
     * [Data Alignment](#data-alignment)   
   * [Geometry](#geometry)
@@ -424,7 +424,7 @@ See [Appendix A](#appendix-a-glb-file-format-specification) for details on GLB F
 
 All large data for meshes, skins, and animations is stored in buffers and retrieved via accessors.
 
-An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of attributes within the `bufferView`, *not* the number of bytes.
+An *accessor* defines a method for retrieving data as typed arrays from within a `bufferView`. The accessor specifies a component type (e.g. `5126 (GL_FLOAT)`) and a data type (e.g. `VEC3`), which when combined define the complete data type for each array element. The accessor also specifies the location and size of the data within the `bufferView` using the properties `byteOffset` and `count`. The latter specifies the number of elements within the `bufferView`, *not* the number of bytes. Elements could be, e.g., vertex indices, vertex attributes, animation keyframes, etc.
 
 All accessors are stored in the asset's `accessors` array.
 
@@ -467,9 +467,9 @@ The following fragment shows two accessors, the first is a scalar accessor for r
 }
 ```
 
-#### Accessor Attribute Size
+#### Accessor Element Size
 
-The following tables can be used to compute the size of an accessor's attribute type.
+The following tables can be used to compute the size of element accessible by accessor.
 
 | `componentType` | Size in bytes |
 |:-:|:-:|
@@ -477,6 +477,7 @@ The following tables can be used to compute the size of an accessor's attribute 
 | `5121`(UNSIGNED_BYTE) | 1 |
 | `5122` (SHORT) | 2 |
 | `5123` (UNSIGNED_SHORT) | 2 |
+| `5125` (UNSIGNED_INT) | 4 |
 | `5126` (FLOAT) | 4 |
 
 | `type` | Number of components |
@@ -489,7 +490,7 @@ The following tables can be used to compute the size of an accessor's attribute 
 | `"MAT3"` | 9 |
 | `"MAT4"` | 16 |
 
-The size of an accessor's attribute type, in bytes, is
+Element size, in bytes, is
 `(size in bytes of the 'componentType') * (number of components defined by 'type')`.
 
 For example:
@@ -508,20 +509,20 @@ For example:
 }
 ```
 
-In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of the attribute type is 12 bytes (`4 * 3`).
+In this accessor, the `componentType` is `5126` (FLOAT), so each component is four bytes.  The `type` is `"VEC3"`, so there are three components.  The size of each element is 12 bytes (`4 * 3`).
 
-#### Sparse accessors
+#### Sparse Accessors
 
 Sparse encoding of arrays is often more memory-efficient than dense encoding when describing incremental changes with respect to a reference array.
 This is often the case when encoding morph targets (it is, in general, more efficient to describe a few displaced vertices in a morph target than transmitting all morph target vertices).
 
 glTF 2.0 extends the accessor structure to enable efficient transfer of sparse arrays.
-Similarly to a standard accessor, a sparse accessor initializes an array of typed attributes from data stored in a `bufferView` . On top of that, a sparse accessor includes a `sparse` dictionary describing the attributes that deviate from their initialization value. The `sparse` dictionary contains the following mandatory properties:
-- `count`: number of displaced attributes.
-- `indices`: strictly increasing array of integers of size `count` and specific `componentType` that stores the indices of those attributes that deviate from the initialization value.
-- `values`: array of displaced attributes corresponding to the indices in the `indices` array.
+Similarly to a standard accessor, a sparse accessor initializes an array of typed elements from data stored in a `bufferView` . On top of that, a sparse accessor includes a `sparse` dictionary describing the elements that deviate from their initialization value. The `sparse` dictionary contains the following mandatory properties:
+- `count`: number of displaced elements.
+- `indices`: strictly increasing array of integers of size `count` and specific `componentType` that stores the indices of those elements that deviate from the initialization value.
+- `values`: array of displaced elements corresponding to the indices in the `indices` array.
 
-The following fragment shows an example of `sparse` accessor with 10 attributes deviating from the initialization array.
+The following fragment shows an example of `sparse` accessor with 10 elements deviating from the initialization array.
 
 ```json
 {
@@ -548,16 +549,16 @@ The following fragment shows an example of `sparse` accessor with 10 attributes 
     ]
 }
 ```
-A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor attribute type) * (accessor count)` bytes.
+A sparse accessor differs from a regular one in that `bufferView` property isn't required. When it's omitted, the sparse accessor is initialized as an array of zeros of size `(size of the accessor element) * (accessor.count)` bytes.
 A sparse accessor `min` and `max` properties correspond, respectively, to the minimum and maximum component values once the sparse substitution is applied.
 
 #### Data Alignment
 
 The offset of an `accessor` into a `bufferView` (i.e., `accessor.byteOffset`) and the offset of an `accessor` into a `buffer` (i.e., `accessor.byteOffset + bufferView.byteOffset`) must be a multiple of the size of the accessor's component type.
 
-When `byteStride` of referenced `bufferView` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the attribute type. When `bufferView.byteStride` is defined, it must be a multiple of the size of the accessor's component type.
+When `byteStride` of referenced `bufferView` equals `0` (or not defined), it means that accessor elements are tightly packed, i.e., actual stride equals size of the element. When `bufferView.byteStride` is defined, it must be a multiple of the size of the accessor's component type.
 
-Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ATTRIBUTE_TYPE` must be less than or equal to `bufferView.length`.
+Each `accessor` must fit its `bufferView`, i.e., `accessor.byteOffset + STRIDE * (accessor.count - 1) + SIZE_OF_ELEMENT` must be less than or equal to `bufferView.length`.
 
 For performance and compatibility reasons, vertex attributes must be aligned to 4-byte boundaries inside `bufferView` (i.e., `accessor.byteOffset` and `bufferView.byteStride` must be multiples of 4). 
 
