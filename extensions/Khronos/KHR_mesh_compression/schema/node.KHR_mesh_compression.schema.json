@@ -1,0 +1,68 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_mesh_compression extension",
+    "type" : "object",
+    "properties" : {
+        "buffer" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "The index of the buffer."
+        },
+        "byteOffset" : {
+            "type" : "integer",
+            "description" : "The offset into the buffer in bytes.",
+            "minimum" : 0
+        },
+        "byteLength" : {
+            "type" : "integer",
+            "description" : "The length of the compressed data in bytes.",
+            "minimum" : 0
+        },
+        "indicesCount" : {
+            "type" : "integer",
+            "description" : "The number of indices of this primitive.",
+            "minimum" : 0
+        },
+        "vertexCount" : {
+            "type" : "integer",
+            "description" : "The number of vertex of this primitive.",
+            "minimum" : 0
+        },
+        "attributesOrder" : {
+            "type" : "array",
+            "description" : "The order of attributes in decompressed butter.",
+            "items" : {
+                "type" : "string",
+            },
+            "minItems" : 1,
+            "maxItems" : 8,
+            "gltf_detailedDescription" : "The decompressed mesh needs to be write to the memory for uploading to GPU, including indices and attributes data. `attributesOrder` is used to define the order of the attributes."
+        },
+        "attributesComponentType" : {
+            "type" : "array",
+            "description" : "The component type of each attributes that are encoded in the compressed mesh.",
+            "items" : {
+                "type" : "integer", 
+                "description" : "The datatype of components in the attribute.",
+                "enum" : [5120, 5121, 5122, 5123, 5125, 5126],
+                "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "UNSIGNED_INT", "FLOAT"],
+            },
+            "minItems" : 1,
+            "maxItems" : 8,
+            "gltf_detailedDescription" : "This is a duplicated property of each attribute that is compressed in the primitive. Used for defining how to write decompressed mesh to buffer correctly."
+        }
+        "attributesType" : {
+            "type" : "array",
+            "description" : "The component type of each attributes that are encoded in the compressed mesh.",
+            "items" : {
+              "type" : "string",
+              "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
+              "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
+            },
+            "minItems" : 1,
+            "maxItems" : 8,
+            "gltf_detailedDescription" : "This is a duplicated property of each attribute that is compressed in the primitive. Used for defining how to write decompressed mesh to buffer correctly."
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["buffer", "byteOffset", "byteLength", "attributesOrder", "attributesComponentTypes", "attributesType"]
+}

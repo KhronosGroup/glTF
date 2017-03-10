@@ -22,7 +22,7 @@ This extension defines an schema to use mesh compression libraries, e.g. Google 
 
 The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
-## Primitive Extension
+## glTF Schema Updates
 
 A mesh compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_mesh_compression` property.
 
