@@ -32,7 +32,7 @@ The following picture shows the structure of the schema update.
 ![](figures/structure.png)
 
 In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that `accessor` in extended `primitive` no
-longer point to a `bufferView`. This is possible because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
+longer point to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
 
 Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. The compression library that is used should be also listed in the top-level layer `extension`. It is now designed to support only using one compression libraries in a glTF file.
 
@@ -97,12 +97,12 @@ The extension then could be used like:
 
 ```
 We will explain each of the property in the following sections.
-### buffer
+#### buffer
 The `byteOffset` and `byteLenght` define where is the compressed data in the
 `buffer`. The data should be passed to a mesh decoder and decompressed to a
 mesh.
 
-### attributesOrder
+#### attributesOrder
 The decompressed mesh needs to be write to the memory for uploading to GPU,
 including indices and attributes data. `attributesOrder` is used to define the
 order of the attributes. For example, if we have the following
@@ -122,11 +122,11 @@ Then we need to write the attributes to vertex buffer like
     |    POSITION    |    NORMAL    |    TEXCOORD_0    |  
      --------------------------------------------------
 
-### indicesCount, vertexCount
+#### indicesCount, vertexCount
 `indicesCount` and `vertexCount` are references for verifying the decompression of
 mesh.
 
-### attributesComponentType, attributesType
+#### attributesComponentType, attributesType
 `attributesComponentType` and `attributesType` are duplicated properties in
 `accessor` of `attributes`. The purpose of having these in the extension is to
 define how to write the decompressed mesh to buffer for uploading to GPU without

@@ -49,7 +49,7 @@
             "minItems" : 1,
             "maxItems" : 8,
             "gltf_detailedDescription" : "This is a duplicated property of each attribute that is compressed in the primitive. Used for defining how to write decompressed mesh to buffer correctly."
-        }
+        },
         "attributesType" : {
             "type" : "array",
             "description" : "The component type of each attributes that are encoded in the compressed mesh.",
