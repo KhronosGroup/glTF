@@ -15,12 +15,12 @@
             "default": [ 1.0, 1.0, 1.0, 1.0 ],
             "minItems": 4,
             "maxItems": 4,
-            "gltf_detailedDescription": "The RGBA components of the reflected diffuse color of the material. Metals have a diffuse value of `[0.0, 0.0, 0.0]`. The fourth component (A) is the opacity of the material. The values are linear."
+            "gltf_detailedDescription": "The RGBA components of the reflected diffuse color of the material. Metals have a diffuse value of `[0.0, 0.0, 0.0]`. The fourth component (A) is the alpha coverage of the material. The `alphaMode` property specifies how alpha is interpreted. The values are linear."
         },
         "diffuseTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
             "description": "The diffuse texture.",
-            "gltf_detailedDescription": "The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the opacity of the material. Otherwise, an opacity of 1.0 is assumed."
+            "gltf_detailedDescription": "The diffuse texture. This texture contains RGB(A) components of the reflected diffuse color of the material in sRGB color space. If the fourth component (A) is present, it represents the alpha coverage of the material. Otherwise, an alpha of 1.0 is assumed. The `alphaMode` property specifies how alpha is interpreted. The stored texels must not be premultiplied."
         },
         "specularFactor": {
             "type": "array",
