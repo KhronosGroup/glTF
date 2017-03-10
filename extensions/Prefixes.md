@@ -2,6 +2,7 @@
 
 The following extension prefixes are reserved:
 
+* `BLENDER` - Blender
 * `CESIUM` - Cesium
 * `EXT` - Multi-vendor
 * `KHR` - Ratified or intended-to-be-ratified Khronos
