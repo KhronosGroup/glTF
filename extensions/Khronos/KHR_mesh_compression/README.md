@@ -24,9 +24,9 @@ The [conformance](#conformance) section specifies what an implementation must to
 
 ## Primitive Extension
 
-A compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_mesh_compression` property.
+A mesh compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_mesh_compression` property.
 
-Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. 
+Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. The compression library that is used should be also listed in the top-level layer `extension`. It is now designed to support only using one compression libraries in a glTF file.
 
 ```javascript
 "extensionsUsed" : [
@@ -37,9 +37,15 @@ Usage of the extension must be listed in the `extensionUsed` and `extensionsRequ
     "KHR_mesh_compression"
 ]
 
+"extensions" : [
+    "KHR_mesh_compression" : {
+        "library" : "DRACO"
+    }
+]
+
 ```
 
-The extension then could used like:
+The extension then could be used like:
 
 ```javascript
 
@@ -53,20 +59,28 @@ The extension then could used like:
             },
             "indices" : 10,
             "mode" : 4
-            "targets" : [
-                {
-                    "NORMAL" : 14,
-                    "POSITION" : 15,
-                },
-                {
-                    "NORMAL" : 16,
-                    "POSITION" : 17,
-                }
-            ],
             "extensions" : {
                 "KHR_mesh_compression" : {
-                    "bufferView" : 
-
+                    "buffer" : 10,
+                    "byteOffset" : 1024,
+                    "byteLength" : 10000,
+                    "indicesCount" : 1000,
+                    "vertexCount" : 500,
+                    "attributesOrder" : [
+                        "POSITION",
+                        "NORMAL",
+                        "TEXCOORD_0"
+                    ],
+                    "attributesComponentTypes" : [
+                        "VEC3",
+                        "VEC3",
+                        "VEC2"
+                    ],
+                    "attributesType" : [
+                        5126,
+                        5126,
+                        5126
+                    ]
                 }
             }
         },
@@ -74,9 +88,46 @@ The extension then could used like:
 }
 
 ```
-To note that the extension currently don't support morph targets.
-In glTF 2.0, `bufferView` is not required in `accessor`. But if it is not present or the id is 0, it will be used with `sparse` field to act as an sparse accessor. 
-The correspondent accessors will be modified:
+We will explain each of the property in the following sections.
+### buffer
+The `byteOffset` and `byteLenght` define where is the compressed data in the
+`buffer`. The data should be passed to a mesh decoder and decompressed to a
+mesh.
+
+### attributesOrder
+The decompressed mesh needs to be write to the memory for uploading to GPU,
+including indices and attributes data. `attributesOrder` is used to define the
+order of the attributes. For example, if we have the following
+`attributesOrder`
+
+```javascript
+"attributesOrder" : [
+    "POSITION",
+    "NORMAL",
+    "TEXCOORD_0"
+]
+```
+
+Then we need to write the data to buffer like
+
+TODO: add picture
+
+### indicesCount, vertexCount
+`indicesCount` and `vertexCount` are reference for verifying the decompression of
+mesh.
+
+### attributesComponentType, attributesType
+`attributesComponentType` and `attributesType` are duplicated properties in
+`accessor` of `attributes`. The purpose of having these in the extension is to
+define how to write the decompressed mesh to buffer for uploading to GPU without
+refering to the sibling `attributes` node.
+
+The extension currently don't support morph targets, e.g. `targets` is used in
+`primitive`. 
+
+
+The correspondent accessors will look like the following, to note that it
+doesn't have `bufferView` or `sparse`:
 
 ```javascript
 {
@@ -85,65 +136,74 @@ The correspondent accessors will be modified:
         // Skip first 10 accessors that's not used in the example.
         // ...
 
-        // This is the accessor referred by id 10
+        // Accessor 10
         {
-            "bufferView" : 
             "componentType" :
             "count" :
             "type" :
             "max" :
             "min" :
         },
+        // Accessor 11
         {
+            "componentType" :
+            "count" :
+            "type" :
+            "max" :
+            "min" :
         },
-
-```
-
-## glTF Schema Updates
-
-As mentioned above, Binary glTF introduces a `buffer` with id equal to `"binary_glTF"`.
-This buffer is an implicit reference to the binary `body` of the Binary glTF asset. 
-Its `type` property is `"arraybuffer"`, and a runtime can ignore the `uri` property since the buffer refers to the Binary glTF `body` section, not an external resource.
-When a runtime encounters this buffer, it should use the Binary glTF `body` as the buffer.
-`bufferViews` that reference this `buffer` work as usual.
-
-To support embedded shaders and images, `shader` and `image` glTF properties have new `KHR_binary_glTF` extension properties that should be used instead of the `uri` property.
-See Listings 2 and 3.
-
-**Listing 2**: A `shader` referencing a `bufferView` to access an embedded shader source.
-```javascript
-// ...
-"a_shader" : {
-    "extensions" : {
-        "KHR_binary_glTF" : {
-            "bufferView" : // ...
-        }
-    }
+        // Accessor 12
+        {
+            "componentType" :
+            "count" :
+            "type" :
+            "max" :
+            "min" :
+        },
+        // Accessor 13
+        {
+            "componentType" :
+            "count" :
+            "type" :
+            "max" :
+            "min" :
+        },
+    ],
 }
+
 ```
 
 ### JSON Schema
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [image](schema/image.KHR_binary_glTF.schema.json) `KHR_binary_glTF` extensions object
-* [shader](schema/shader.KHR_binary_glTF.schema.json) `KHR_binary_glTF` extensions object
-
-## Format of Decompressed Mesh
+* [top-level-extension](schema/node.KHR_mesh_compression.schema.json) Specify used compression library.
+* [extension property](schema/KHR_mesh_compression.schema.json) `KHR_mesh_compression` extensions object.
 
 ## Conformance
 
+The following picture shows the structure of the schema update. 
+
+TODO: add picture
+
+We can see that the major change is that `accessor` in extended `primitive` no
+longer point to a `bufferView`. This is possible because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will just ignore the `bufferView` property.
+
+
 To process this extension, there are some changes need to be made in loading
 glTF.
-* First, need to decompressed the data frome a `buffer` pointed by the `bufferView` of extension
-  and store the data as a new buffer
-* Then, when handling `accessor` of attributes, insteading of getting data from its
-  own `bufferView --> buffer`, we get the data from the `bufferView (in
-  extension) --> 
+* When encounter a `primitive` with the extension the first time, must process the extension first. Get the data from the pointed `buffer` in the extension and decompress the data to a mesh of a specific format, e.g. Draco mesh.
+* Write the indices and vertex data of the mesh to separate buffers. This allows for uploading data with different target including ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER. When writing attributes to a buffer, the order should follow property `attributesOrder` as discribed above.
+* Then, process `attributes` and `indices` properties of the `primitive`. When handling `accessor`, insteading of getting data from the regular `bufferView --> buffer`, get the data from the buffers created in previous step.
 
 It is pretty straigtforward for top-down loading of glTF file, e.g. only
 decompress the mesh data when a `primitive` is met the first time. However, for
-bottom-up loading, e.g. loading `accessor` before `primitive`, we need to
-clarify some details.
+bottom-up loading, e.g. loading `accessor` before `primitive`, it is not
+supported. This is based on the assumption that it will rarely happen that
+loading an `accessor` without knowing its parent `primitive`. But we are
+definitely open to change this if there actually is some use cases that require
+loading `accessor` independently. 
+
+## Alternative Approach
 
 
