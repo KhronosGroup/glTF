@@ -26,6 +26,14 @@ The [conformance](#conformance) section specifies what an implementation must to
 
 A mesh compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_mesh_compression` property.
 
+The following picture shows the structure of the schema update. 
+
+**Figure 1**: Structure of mesh compression extension.
+![](figures/structure.png)
+
+In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that `accessor` in extended `primitive` no
+longer point to a `bufferView`. This is possible because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
+
 Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. The compression library that is used should be also listed in the top-level layer `extension`. It is now designed to support only using one compression libraries in a glTF file.
 
 ```javascript
@@ -108,12 +116,14 @@ order of the attributes. For example, if we have the following
 ]
 ```
 
-Then we need to write the data to buffer like
+Then we need to write the attributes to vertex buffer like
 
-TODO: add picture
+     --------------------------------------------------
+    |    POSITION    |    NORMAL    |    TEXCOORD_0    |  
+     --------------------------------------------------
 
 ### indicesCount, vertexCount
-`indicesCount` and `vertexCount` are reference for verifying the decompression of
+`indicesCount` and `vertexCount` are references for verifying the decompression of
 mesh.
 
 ### attributesComponentType, attributesType
@@ -125,70 +135,14 @@ refering to the sibling `attributes` node.
 The extension currently don't support morph targets, e.g. `targets` is used in
 `primitive`. 
 
-
-The correspondent accessors will look like the following, to note that it
-doesn't have `bufferView` or `sparse`:
-
-```javascript
-{
-    "accessors" : [
-        // ...
-        // Skip first 10 accessors that's not used in the example.
-        // ...
-
-        // Accessor 10
-        {
-            "componentType" :
-            "count" :
-            "type" :
-            "max" :
-            "min" :
-        },
-        // Accessor 11
-        {
-            "componentType" :
-            "count" :
-            "type" :
-            "max" :
-            "min" :
-        },
-        // Accessor 12
-        {
-            "componentType" :
-            "count" :
-            "type" :
-            "max" :
-            "min" :
-        },
-        // Accessor 13
-        {
-            "componentType" :
-            "count" :
-            "type" :
-            "max" :
-            "min" :
-        },
-    ],
-}
-
-```
-
 ### JSON Schema
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [top-level-extension](schema/node.KHR_mesh_compression.schema.json) Specify used compression library.
-* [extension property](schema/KHR_mesh_compression.schema.json) `KHR_mesh_compression` extensions object.
+* [top-level-extension](schema/gltf.KHR_mesh_compression.schema.json) Specify used compression library.
+* [extension property](schema/node.KHR_mesh_compression.schema.json) `KHR_mesh_compression` extensions object.
 
 ## Conformance
-
-The following picture shows the structure of the schema update. 
-
-TODO: add picture
-
-We can see that the major change is that `accessor` in extended `primitive` no
-longer point to a `bufferView`. This is possible because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will just ignore the `bufferView` property.
-
 
 To process this extension, there are some changes need to be made in loading
 glTF.
@@ -206,4 +160,6 @@ loading `accessor` independently.
 
 ## Alternative Approach
 
-
+We also thougth out other designs for adding mesh compression as an extension, but we don't think they are as good as the proposed one. We will describe one here in case someone 
+The idea is to add extension to `bufferView` instead of `primitive`. The extension will basically declare that the data pointed by the `bufferView` is compressed mesh data. So the process is to decompress the data when the `bufferView` is loaded the first time. And then when `accesor` requires the data, loader needs to look at the decompressed mesh data of `bufferView` instead of regular `bufferView` --> `buffer` approach. The properties of the extension are pretty much the same as the proposed one.
+The advantage of this alternative approch is that it has less change on the layers of standard glTF spec. It will only change the `bufferView`. The disadvantage is that it is not good for high level understanding and looks hacky. The proposed approach is mush easier to understand and the structure is clear since the compression is applied on the mesh/primitive objects. But we are definitely open to discussions about the choice we made.
