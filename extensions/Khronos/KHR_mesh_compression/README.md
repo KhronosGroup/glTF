@@ -137,7 +137,6 @@ The extension currently don't support morph targets, e.g. `targets` is used in
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [top-level-extension](schema/gltf.KHR_draco_geometry_compression.schema.json) Specify used compression library.
 * [extension property](schema/node.KHR_draco_geometry_compression.schema.json) `KHR_draco_geometry_compression` extensions object.
 
 ## Conformance
