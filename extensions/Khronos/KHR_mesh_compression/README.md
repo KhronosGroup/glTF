@@ -34,7 +34,7 @@ The following picture shows the structure of the schema update.
 In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that `accessor` in extended `primitive` no
 longer point to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
 
-Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. The compression library that is used should be also listed in the top-level layer `extension`. It is now designed to support only using one compression libraries in a glTF file.
+Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. 
 
 ```javascript
 "extensionsUsed" : [
@@ -43,12 +43,6 @@ Usage of the extension must be listed in the `extensionUsed` and `extensionsRequ
 
 "extensionsRequired" : [
     "KHR_draco_geometry_compression"
-]
-
-"extensions" : [
-    "KHR_draco_geometry_compression" : {
-        "library" : "DRACO"
-    }
 ]
 
 ```
