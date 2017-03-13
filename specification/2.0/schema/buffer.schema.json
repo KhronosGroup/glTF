@@ -23,5 +23,5 @@
         "extras" : {}
     },
     "additionalProperties" : false,
-    "required": ["uri", "byteLength"]
+    "required": ["byteLength"]
 }
