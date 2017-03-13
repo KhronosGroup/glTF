@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_mesh_compression glTF extension",
+    "title" : "KHR_draco_geometry_compression glTF extension",
     "type" : "object",
     "properties" : {
         "library" : {

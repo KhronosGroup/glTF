@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_mesh_compression extension",
+    "title" : "KHR_draco_geometry_compression extension",
     "type" : "object",
     "properties" : {
         "buffer" : {

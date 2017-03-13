@@ -1,4 +1,4 @@
-# KHR_mesh_compression
+# KHR_draco_geometry_compression
 
 ## Contributors
 
@@ -24,7 +24,7 @@ The [conformance](#conformance) section specifies what an implementation must to
 
 ## glTF Schema Updates
 
-A mesh compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_mesh_compression` property.
+A mesh compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_draco_geometry_compression` property.
 
 The following picture shows the structure of the schema update. 
 
@@ -38,15 +38,15 @@ Usage of the extension must be listed in the `extensionUsed` and `extensionsRequ
 
 ```javascript
 "extensionsUsed" : [
-    "KHR_mesh_compression"
+    "KHR_draco_geometry_compression"
 ]
 
 "extensionsRequired" : [
-    "KHR_mesh_compression"
+    "KHR_draco_geometry_compression"
 ]
 
 "extensions" : [
-    "KHR_mesh_compression" : {
+    "KHR_draco_geometry_compression" : {
         "library" : "DRACO"
     }
 ]
@@ -68,7 +68,7 @@ The extension then could be used like:
             "indices" : 10,
             "mode" : 4
             "extensions" : {
-                "KHR_mesh_compression" : {
+                "KHR_draco_geometry_compression" : {
                     "buffer" : 10,
                     "byteOffset" : 1024,
                     "byteLength" : 10000,
@@ -139,8 +139,8 @@ The extension currently don't support morph targets, e.g. `targets` is used in
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [top-level-extension](schema/gltf.KHR_mesh_compression.schema.json) Specify used compression library.
-* [extension property](schema/node.KHR_mesh_compression.schema.json) `KHR_mesh_compression` extensions object.
+* [top-level-extension](schema/gltf.KHR_draco_geometry_compression.schema.json) Specify used compression library.
+* [extension property](schema/node.KHR_draco_geometry_compression.schema.json) `KHR_draco_geometry_compression` extensions object.
 
 ## Conformance
 
