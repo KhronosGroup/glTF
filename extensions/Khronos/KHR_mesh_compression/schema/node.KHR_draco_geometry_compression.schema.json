@@ -27,6 +27,11 @@
             "description" : "The number of vertex of this primitive.",
             "minimum" : 0
         },
+        "geometryType" : {
+            "type" : "string",
+            "description" : "The type of the geometry, mesh or point cloud.",
+            "enum" : ["mesh", "pointcloud"],
+        },
         "attributesOrder" : {
             "type" : "array",
             "description" : "The order of attributes in decompressed butter.",

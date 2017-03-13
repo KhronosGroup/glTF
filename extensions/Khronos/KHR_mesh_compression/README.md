@@ -68,6 +68,7 @@ The extension then could be used like:
                     "byteLength" : 10000,
                     "indicesCount" : 1000,
                     "vertexCount" : 500,
+                    "geometryType" : "mesh",
                     "attributesOrder" : [
                         "POSITION",
                         "NORMAL",
@@ -119,6 +120,9 @@ Then we need to write the attributes to vertex buffer like
 #### indicesCount, vertexCount
 `indicesCount` and `vertexCount` are references for verifying the decompression of
 mesh.
+
+### geometryType
+`geometryType` specifies if the `primitive` is a mesh or a point cloud.
 
 #### attributesComponentType, attributesType
 `attributesComponentType` and `attributesType` are duplicated properties in
