@@ -83,7 +83,8 @@ except `primitives`:
                             "componentType" : 5126,
                             "type" : "VEC2",
                         },
-                    ]
+                    ],
+                    "version" : "0.9.1"
                 }
             }
         },
@@ -128,6 +129,9 @@ refering to the sibling `attributes` node.
 The extension currently doesn't support morph targets, e.g. `targets` is used in
 `primitive`. 
 
+#### version
+The version of Draco encoder used to compress the mesh. This is used for verifying compatibility of Draco encoder and decoder. With this property, the loader could easily determine if the current decoder supports decoding the data.
+
 #### Restrictions on geometry type
 When using this extension, the `mode` of `primitive` could only be one of
 `POINTS`, `TRIANGLES` and `TRIANGLE_STRIP` and the mesh data will be decoded accordingly. For example, if `mode` is `POINTS`, then the
@@ -142,6 +146,8 @@ For full details on the `KHR_draco_mesh_compression` extension properties, see t
 ## Conformance
 
 To process this extension, there are some changes need to be made in loading a glTF asset.
+* Check `version` property and verify the version of encoder used for the mesh
+  is compatible with the current decoder.
 * When encountering a `primitive` with the extension the first time, you must process the extension first. Get the data from the pointed `bufferView` in the extension and decompress the data to a geometry of a specific format, e.g. Draco geometry.
 * Write the indices and vertex data of the mesh to separate buffers. This allows for uploading data with different target including ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER. When writing attributes to a buffer, the order should follow property `attributes` as discribed above.
 * Then, process `attributes` and `indices` properties of the `primitive`. When handling `accessor`, insteading of getting data from the regular `bufferView --> buffer`, get the data from the buffers created in previous step.
