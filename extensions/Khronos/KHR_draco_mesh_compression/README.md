@@ -135,7 +135,7 @@ decompressed geometry will be a point cloud.
 
 ### JSON Schema
 
-For full details on the `KHR_binary_glTF` extension properties, see the schema:
+For full details on the `KHR_draco_mesh_compression` extension properties, see the schema:
 
 * [extension property](schema/node.KHR_draco_mesh_compression.schema.json) `KHR_draco_mesh_compression` extensions object.
 
