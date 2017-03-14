@@ -1,6 +1,6 @@
 {
     "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "KHR_draco_geometry_compression extension",
+    "title" : "KHR_draco_mesh_compression extension",
     "type" : "object",
     "properties" : {
         "bufferView" : {
@@ -21,7 +21,7 @@
             "type" : "array",
             "description" : "The information for correctly writing attributes of decompressed geometry to a buffer.",
             "items" : {
-                "allOf" : [ { "$ref" : "attribute.KHR_draco_geometry_compression.schema.json" } ],
+                "allOf" : [ { "$ref" : "attribute.KHR_draco_mesh_compression.schema.json" } ],
                 "description" : "Information of each attribute that is in the compressed geometry.",
             }
         },

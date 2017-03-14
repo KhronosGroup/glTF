@@ -1,4 +1,4 @@
-# KHR_draco_geometry_compression
+# KHR_draco_mesh_compression
 
 ## Contributors
 
@@ -24,7 +24,7 @@ The [conformance](#conformance) section specifies what an implementation must to
 
 ## glTF Schema Updates
 
-Draco geometry compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_draco_geometry_compression` property.
+Draco geometry compression library could be used for `primitive` by adding an `extension` property to a primitive, and defining its `KHR_draco_mesh_compression` property.
 
 The following picture shows the structure of the schema update. 
 
@@ -38,11 +38,11 @@ Usage of the extension must be listed in the `extensionUsed` and `extensionsRequ
 
 ```javascript
 "extensionsUsed" : [
-    "KHR_draco_geometry_compression"
+    "KHR_draco_mesh_compression"
 ]
 
 "extensionsRequired" : [
-    "KHR_draco_geometry_compression"
+    "KHR_draco_mesh_compression"
 ]
 
 ```
@@ -63,7 +63,7 @@ except `primitives`:
             "indices" : 10,
             "mode" : 4
             "extensions" : {
-                "KHR_draco_geometry_compression" : {
+                "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
                     "indicesCount" : 1000,
                     "vertexCount" : 500,
@@ -137,7 +137,7 @@ decompressed geometry will be a point cloud.
 
 For full details on the `KHR_binary_glTF` extension properties, see the schema:
 
-* [extension property](schema/node.KHR_draco_geometry_compression.schema.json) `KHR_draco_geometry_compression` extensions object.
+* [extension property](schema/node.KHR_draco_mesh_compression.schema.json) `KHR_draco_mesh_compression` extensions object.
 
 ## Conformance
 
