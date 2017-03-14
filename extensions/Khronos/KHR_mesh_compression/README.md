@@ -65,12 +65,8 @@ except `primitives`:
             "extensions" : {
                 "KHR_draco_geometry_compression" : {
                     "bufferView" : 5,
-                    "buffer" : 10,
-                    "byteOffset" : 1024,
-                    "byteLength" : 10000,
                     "indicesCount" : 1000,
                     "vertexCount" : 500,
-                    "geometryType" : "MESH",
                     "attributes" : [
                         {
                             "semantic" : "POSITION",
@@ -115,10 +111,6 @@ mesh.
 `indicesCount` and `vertexCount` are references for verifying the decompression of
 mesh.
 
-### geometryType
-`geometryType` specifies if the `primitive` is a mesh or a point cloud. If it is
-a point cloud then there will be no indice data.
-
 #### attributes
 The decompressed mesh needs to be write to the memory for uploading to GPU,
 including indices and attributes data. `attributes` is used to define the
@@ -135,6 +127,11 @@ refering to the sibling `attributes` node.
 
 The extension currently don't support morph targets, e.g. `targets` is used in
 `primitive`. 
+
+#### Restrictions on geometry type
+When using this extension, the `mode` of `primitive` could only be one of
+`POINTS`, `TRIANGLES` and `TRIANGLE_STRIP` and the mesh data will be decoded accordingly. For example, if `mode` is `POINTS`, then the
+decompressed geometry will be a point cloud.
 
 ### JSON Schema
 

@@ -17,11 +17,6 @@
             "description" : "The number of vertex of this primitive.",
             "minimum" : 0
         },
-        "geometryType" : {
-            "type" : "string",
-            "description" : "The type of the geometry, mesh or point cloud.",
-            "enum" : ["MESH", "POINTCLOUD"],
-        },
         "attributes" : {
             "type" : "array",
             "description" : "The information for correctly writing attributes of decompressed geometry to a buffer.",
@@ -32,5 +27,5 @@
         },
     },
     "additionalProperties" : false,
-    "required" : ["buffer", "byteOffset", "byteLength", "attributesOrder", "attributesComponentTypes", "attributesType"]
+    "required" : ["bufferView", "attributes"]
 }

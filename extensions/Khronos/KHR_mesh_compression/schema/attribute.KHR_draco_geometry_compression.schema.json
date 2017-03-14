@@ -5,14 +5,14 @@
     "properties" : {
         "semantic" : {
           "type" : "string",
-          "description" : "Mesh attribute semantic. e.g. POSITION, NORMAL and TEXCOORD.",
+          "description" : "Mesh attribute semantic. e.g. POSITION, NORMAL, TEXCOORD, COLOR, JOINT, WEIGHT and the form [sementic]_[set_index] for TEXCOORD and COLOR.",
         },
         "componentType" : {
             "type" : "integer",
             "description" : "The datatype of components in the attribute.",
             "enum" : [5120, 5121, 5122, 5123, 5125, 5126],
-            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "UNSIGNED_INT", "FLOAT"],
-            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`.",
+            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "FLOAT"],
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array` and `Float32Array`, respectively.",
             "gltf_webgl" : "`vertexAttribPointer()` type parameter"
         },
         "type" : {
