@@ -1,0 +1,27 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "attribute",
+    "type" : "object",
+    "properties" : {
+        "semantic" : {
+          "type" : "string",
+          "description" : "Mesh attribute semantic. e.g. POSITION, NORMAL and TEXCOORD.",
+        },
+        "componentType" : {
+            "type" : "integer",
+            "description" : "The datatype of components in the attribute.",
+            "enum" : [5120, 5121, 5122, 5123, 5125, 5126],
+            "gltf_enumNames" : ["BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "UNSIGNED_INT", "FLOAT"],
+            "gltf_detailedDescription" : "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`.",
+            "gltf_webgl" : "`vertexAttribPointer()` type parameter"
+        },
+        "type" : {
+            "type" : "string",
+            "description" : "Specifies if the attribute is a scalar, vector, or matrix.",
+            "enum" : ["SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4"],
+            "gltf_detailedDescription" : "Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix."
+        },
+    }
+    
+},
+

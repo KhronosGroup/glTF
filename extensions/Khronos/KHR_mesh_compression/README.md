@@ -47,7 +47,8 @@ Usage of the extension must be listed in the `extensionUsed` and `extensionsRequ
 
 ```
 
-The extension then could be used like:
+The extension then could be used like, not that all other nodes stay the same
+except `primitives`:
 
 ```javascript
 
@@ -63,26 +64,29 @@ The extension then could be used like:
             "mode" : 4
             "extensions" : {
                 "KHR_draco_geometry_compression" : {
+                    "bufferView" : 5,
                     "buffer" : 10,
                     "byteOffset" : 1024,
                     "byteLength" : 10000,
                     "indicesCount" : 1000,
                     "vertexCount" : 500,
-                    "geometryType" : "mesh",
-                    "attributesOrder" : [
-                        "POSITION",
-                        "NORMAL",
-                        "TEXCOORD_0"
-                    ],
-                    "attributesComponentTypes" : [
-                        "VEC3",
-                        "VEC3",
-                        "VEC2"
-                    ],
-                    "attributesType" : [
-                        5126,
-                        5126,
-                        5126
+                    "geometryType" : "MESH",
+                    "attributes" : [
+                        {
+                            "semantic" : "POSITION",
+                            "componentType" : 5126,
+                            "type" : "VEC3",
+                        },
+                        {
+                            "semantic" : "NORMAL",
+                            "componentType" : 5126,
+                            "type" : "VEC3",
+                        },
+                        {
+                            "semantic" : "TEXCOORD_0",
+                            "componentType" : 5126,
+                            "type" : "VEC2",
+                        },
                     ]
                 }
             }
@@ -90,32 +94,22 @@ The extension then could be used like:
     ]
 }
 
+"bufferViews" : [
+    // ...
+    // bufferView of Id 5
+    {
+        "buffer" : 10,
+        "byteOffset" : 1024,
+        "byteLength" : 10000
+    }
+    // ...
+}
+
 ```
 We will explain each of the property in the following sections.
-#### buffer
-The `byteOffset` and `byteLenght` define where is the compressed data in the
-`buffer`. The data should be passed to a mesh decoder and decompressed to a
+#### bufferView
+The `bufferView` property points to the buffer containing compressed data. The data should be passed to a mesh decoder and decompressed to a
 mesh.
-
-#### attributesOrder
-The decompressed mesh needs to be write to the memory for uploading to GPU,
-including indices and attributes data. `attributesOrder` is used to define the
-order of the attributes. For example, if we have the following
-`attributesOrder`
-
-```javascript
-"attributesOrder" : [
-    "POSITION",
-    "NORMAL",
-    "TEXCOORD_0"
-]
-```
-
-Then we need to write the attributes to vertex buffer like
-
-     --------------------------------------------------
-    |    POSITION    |    NORMAL    |    TEXCOORD_0    |  
-     --------------------------------------------------
 
 #### indicesCount, vertexCount
 `indicesCount` and `vertexCount` are references for verifying the decompression of
@@ -125,8 +119,16 @@ mesh.
 `geometryType` specifies if the `primitive` is a mesh or a point cloud. If it is
 a point cloud then there will be no indice data.
 
-#### attributesComponentType, attributesType
-`attributesComponentType` and `attributesType` are duplicated properties in
+#### attributes
+The decompressed mesh needs to be write to the memory for uploading to GPU,
+including indices and attributes data. `attributes` is used to define the
+order of the attributes. For example, if we have the above `attributes`, then we need to write the attributes to vertex buffer like
+
+     --------------------------------------------------
+    |    POSITION    |    NORMAL    |    TEXCOORD_0    |  
+     --------------------------------------------------
+
+`componentType` and `type` are duplicated properties in
 `accessor` of `attributes`. The purpose of having these in the extension is to
 define how to write the decompressed mesh to buffer for uploading to GPU without
 refering to the sibling `attributes` node.
