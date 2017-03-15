@@ -65,7 +65,7 @@ except `primitives`:
             "extensions" : {
                 "KHR_draco_mesh_compression" : {
                     "bufferView" : 5,
-                    "indicesCount" : 1000,
+                    "indexCount" : 1000,
                     "vertexCount" : 500,
                     "attributes" : [
                         {
@@ -108,8 +108,8 @@ We will explain each of the property in the following sections.
 The `bufferView` property points to the buffer containing compressed data. The data should be passed to a mesh decoder and decompressed to a
 mesh.
 
-#### indicesCount, vertexCount
-`indicesCount` and `vertexCount` are references for verifying the decompression of
+#### indexCount, vertexCount
+`indexCount` and `vertexCount` are references for verifying the decompression of
 mesh.
 
 #### attributes

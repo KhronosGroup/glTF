@@ -7,7 +7,7 @@
             "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
             "description" : "The index of the bufferView."
         },
-        "indicesCount" : {
+        "indexCount" : {
             "type" : "integer",
             "description" : "The number of indices of this primitive.",
             "minimum" : 0
