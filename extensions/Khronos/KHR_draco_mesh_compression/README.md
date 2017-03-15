@@ -18,9 +18,9 @@ Written against the glTF 2.0 spec.
 
 ## Overview
 
-This extension defines an schema to use Draco geometry compression libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data.
+This extension defines a schema to use Draco geometry compression libraries in glTF format. This allows glTF to support streaming compressed geometry data instead of the raw data.
 
-The [conformance](#conformance) section specifies what an implementation must to do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
+The [conformance](#conformance) section specifies what an implementation must do when encountering this extension, and how the extension interacts with the attributes defined in the base specification.
 
 ## glTF Schema Updates
 
@@ -32,7 +32,7 @@ The following picture shows the structure of the schema update.
 ![](figures/structure.png)
 
 In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that the `accessor` in an extended `primitive` no
-longer point to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
+longer points to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
 
 Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. 
 
@@ -113,7 +113,7 @@ mesh.
 mesh.
 
 #### attributes
-The decompressed mesh needs to be write to the memory for uploading to the GPU,
+The decompressed mesh needs to be writen to the memory for uploading to the GPU,
 including indices and attributes data. `attributes` is used to define the
 order of the attributes. For example, if we have the above `attributes`, then we need to write the attributes to a vertex buffer like
 
@@ -156,8 +156,8 @@ It is pretty straigtforward for top-down loading of a glTF asset, e.g. only
 decompress the geometry data when a `primitive` is met for the first time. However, for
 bottom-up loading, loading `accessor` before `primitive` will not get the data. It could only be handled when processing its parent `primitive`. This is based on the consideration that it will rarely happen that
 loading an `accessor` without knowing its parent `primitive`. And it should be
-easy enought to change the loader to ignore `accessor` without `bufferView` in glTF 2.0. But we are
-definitely open to change this if there actually is some use cases that require
+easy enough to change the loader to ignore `accessor` without `bufferView` in glTF 2.0. But we are
+definitely open to change this if there actually are some use cases that require
 loading `accessor` independently. 
 
 ## Resources
