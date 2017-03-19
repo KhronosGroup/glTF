@@ -32,7 +32,7 @@ The following picture shows the structure of the schema update.
 ![](figures/structure.png)
 
 In general, we will use the extension to point to the buffer that contains the compressed data. The major change is that the `accessor` in an extended `primitive` no
-longer points to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present or the id is 0, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
+longer points to a `bufferView`. Instead, the `attributes` of a primitive will use the decompressed data. This is valid because in glTF 2.0, `bufferView` is not required in `accessor`, although if it is not present, it will be used with `sparse` field to act as a sparse accessor. In this extension, we will ignore the `bufferView` property.
 
 Usage of the extension must be listed in the `extensionUsed` and `extensionsRequired`. 
 
