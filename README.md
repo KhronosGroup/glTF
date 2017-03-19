@@ -6,6 +6,8 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 ## Specification
 
+[![Join the chat at https://gitter.im/KhronosGroup/glTF](https://badges.gitter.im/KhronosGroup/glTF.svg)](https://gitter.im/KhronosGroup/glTF?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 * [glTF Specification, 1.0](specification/1.0/README.md)
 * [glTF Extension Registry](extensions/README.md)
 
