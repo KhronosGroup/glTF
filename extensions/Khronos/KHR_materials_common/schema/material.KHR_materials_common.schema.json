@@ -1,0 +1,34 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "KHR_materials_common material extension",
+    "type" : "object",
+    "description" : "KHR_materials_common material extension.",
+    "properties" : {
+        "doubleSided" : {
+            "type": "boolean",
+            "default": false,
+            "description" : "Declares whether backface culling should be disabled for this visual. Corresponds to disabling the CULL_FACE render state."
+        },
+        "jointCount" : {
+            "type": "integer",
+            "default": 0,
+            "description" : "Declares maximum number of joints used by meshes which use this material. This allows to pre-generate vertex shader skinning code before mesh loading."
+        },
+        "technique" : {
+            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
+            "description" : "Specifies the material type.",
+            "enum" : ["CONSTANT", "LAMBERT", "BLINN", "PHONG"]
+        },
+        "transparent" : {
+            "type": "boolean",
+            "default": false,
+            "description" : "Declares whether the visual should be rendered using alpha blending. Corresponds to enabling the BLEND render state, setting the depthMask property to false, and defining blend equations and blend functions as described in the implementation note."
+        },
+        "values" : {
+            "allOf": [ { "$ref": "material.values.KHR_materials_common.schema.json" } ],
+            "description" : "A dictionary object of parameter values."
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["technique"]
+}

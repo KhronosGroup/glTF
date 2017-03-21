@@ -6,19 +6,19 @@
     "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
     "properties" : {
         "ambient" : {
-            "allOf" : [ { "$ref" : "light.ambient.schema.json" } ],
+            "allOf" : [ { "$ref" : "light.ambient.KHR_materials_common.schema.json" } ],
             "description" : "Ambient light source."
         },
         "directional" : {
-            "allOf" : [ { "$ref" : "light.directional.schema.json" } ],
+            "allOf" : [ { "$ref" : "light.directional.KHR_materials_common.schema.json" } ],
             "description" : "Directional light source."
         },
         "point" : {
-            "allOf" : [ { "$ref" : "light.point.schema.json" } ],
+            "allOf" : [ { "$ref" : "light.point.KHR_materials_common.schema.json" } ],
             "description" : "Point light source."
         },
         "spot" : {
-            "allOf" : [ { "$ref" : "light.spot.schema.json" } ],
+            "allOf" : [ { "$ref" : "light.spot.KHR_materials_common.schema.json" } ],
             "description" : "Spot light source."
         },
         "type" : {

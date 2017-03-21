@@ -1,0 +1,86 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "material values for KHR_materials_common",
+    "type" : "object",
+    "properties" : {
+        "ambientFactor": {
+            "type" : "array",
+            "description" : "Per-component factors to apply to values of ambientTexture.",
+            "items" : {
+                "type": "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [0.0, 0.0, 0.0]
+        },
+        "ambientTexture": {
+            "type" : "string",
+            "description": "ID of RGB texture defining the amount of ambient light reflected from the surface of the object.",
+            "default": ""
+        },
+        "diffuseFactor": {
+            "type" : "array",
+            "description" : "Per-component factors to apply to values of diffuseTexture.",
+            "items" : {
+                "type": "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
+            },
+            "minItems" : 4,
+            "maxItems" : 4,
+            "default" : [0.0, 0.0, 0.0, 1.0]
+        },
+        "diffuseTexture": {
+            "type" : "string",
+            "description": "ID of RGBA texture defining the amount of light diffusely reflected from the surface of the object.",
+            "default": ""
+        },
+        "emissionFactor": {
+            "type" : "array",
+            "description" : "Per-component factors to apply to values of emissionTexture.",
+            "items" : {
+                "type": "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [0.0, 0.0, 0.0]
+        },
+        "emissionTexture": {
+            "type" : "string",
+            "description": "ID of RGB texture for defining the amount of light emitted by the surface of the object.",
+            "default": ""
+        },
+        "specularFactor": {
+            "type" : "array",
+            "description" : "Per-component factors to apply to values of specularTexture.",
+            "items" : {
+                "type": "number",
+                "minimum" : 0.0,
+                "maximum" : 1.0
+            },
+            "minItems" : 3,
+            "maxItems" : 3,
+            "default" : [0.0, 0.0, 0.0]
+        },
+        "specularTexture": {
+            "type" : "string",
+            "description": "ID of RGB texture defining the amount of light specularly reflected from the surface of the object.",
+            "default": ""
+        },
+        "shininess": {
+            "type" : "number",
+            "description": "Specularity or roughness of the specular reflection lobe of the object.",
+            "default": 0.0
+        },
+        "transparency": {
+            "type" : "number",
+            "description": "Amount of transparency as an opacity value between 0.0 and 1.0.",
+            "default": 1.0
+        }
+    },
+    "additionalProperties" : false
+}
