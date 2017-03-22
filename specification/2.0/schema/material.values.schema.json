@@ -1,6 +1,0 @@
-{
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "values",
-    "allOf" : [ { "$ref" : "arrayValues.schema.json" } ],
-    "description" : "A dictionary object of parameter values.  Parameters with the same name as the technique's parameter override the technique's parameter value.  This may not contain attribute parameters, i.e., parameters listed in technique.attributes."
-}

@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "textureInfo",
+    "type": "object",
+    "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
+    "properties": {
+        "index": {},
+        "texCoord": {}
+    },
+    "additionalProperties": false
+}

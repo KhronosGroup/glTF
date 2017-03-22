@@ -1,26 +1,26 @@
 {
-    "materials" : {
-        "material_id": {
-            "technique": "technique_id",
-            "values": {
-                "ambient": [
-                    0,
-                    0,
-                    0,
-                    1
-                ],
-                "diffuse": "texture_image_0",
-                "shininess": [38.4]
+    "materials": [
+        {
+            "name": "Material0",
+            "pbrMetallicRoughness": {
+                "baseColorfactor": [ 0.5, 0.5, 0.5, 1.0 ],
+                "baseColorTexture": {
+                    "index": 1,
+                    "texCoord": 1
+                },
+                "metallicFactor": 1,
+                "roughnessFactor": 1,
+                "metallicRoughnessTexture": {
+                    "index": 2,
+                    "texCoord": 1
+                }
             },
-            "name": "user-defined material name",
-            "extensions" : {
-               "extension_name" : {
-                  "extension specific" : "value"
-               }
+            "normalTexture": {
+                "scale": 2,
+                "index": 3,
+                "texCoord": 1
             },
-            "extras" : {
-                "Application specific" : "The extra object can contain any properties."
-            }     
+            "emissiveFactor": [ 0.2, 0.1, 0.0 ]
         }
-    }
+    ]
 }
