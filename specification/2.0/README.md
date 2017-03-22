@@ -1221,12 +1221,12 @@ The following examples show expected animations usage.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
-Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or scalar used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
+Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property
 
 > Note: glTF 2.0 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
-glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target.
+glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
 ## Specifying Extensions
 
