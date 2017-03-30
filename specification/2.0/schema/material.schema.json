@@ -52,13 +52,13 @@
             "minimum": 0.0,
             "default": 0.5,
             "description": "The alpha cutoff value of the material.",
-            "gltf_detailedDescription": "This value specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. This value is ignored for other modes."
+            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. This value is ignored for other modes."
         },
         "doubleSided": {
             "type": "boolean",
             "default": false,
-            "description": "Indicates whether a material is double sided.",
-            "gltf_detailedDescription": "Declares whether back-face culling should be disabled for this material."
+            "description": "Specifies whether the material is double sided.",
+            "gltf_detailedDescription": "Specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated."
         }
     },
      "dependencies" : {
