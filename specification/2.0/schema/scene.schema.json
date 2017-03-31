@@ -1,22 +1,22 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "scene",
-    "type" : "object",
-    "description" : "The root nodes of a scene.",
-    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
-    "properties" : {
-        "nodes" : {
-            "type" : "array",
-            "description" : "The indices of each root node.",
-            "items" : {
-                "$ref" : "glTFid.schema.json"
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "scene",
+    "type": "object",
+    "description": "The root nodes of a scene.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "nodes": {
+            "type": "array",
+            "description": "The indices of each root node.",
+            "items": {
+                "$ref": "glTFid.schema.json"
             },
-            "uniqueItems" : true,
-            "default" : []
+            "uniqueItems": true,
+            "default": [ ]
         },
-        "name" : {},
-        "extensions" : {},
-        "extras" : {}
+        "name": { },
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false
+    "additionalProperties": false
 }

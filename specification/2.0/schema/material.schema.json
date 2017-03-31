@@ -5,9 +5,9 @@
     "description": "The material appearance of a primitive.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "name": {},
-        "extensions": {},
-        "extras": {},
+        "name": { },
+        "extensions": { },
+        "extras": { },
         "pbrMetallicRoughness": {
             "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
             "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology."

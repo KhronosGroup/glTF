@@ -4,8 +4,8 @@
     "type": "object",
     "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
     "properties": {
-        "index": {},
-        "texCoord": {},
+        "index": { },
+        "texCoord": { },
         "scale": {
             "type": "number",
             "description": "The scalar multiplier applied to each normal vector of the normal texture.",
