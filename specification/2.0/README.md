@@ -1023,7 +1023,7 @@ The `alphaMode` property defines how the alpha value of the main factor and text
 
 ### Double Sided
 
-The `doubleSided` property specified whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
+The `doubleSided` property specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
 
 ## Cameras
 
