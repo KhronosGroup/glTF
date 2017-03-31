@@ -61,6 +61,8 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Materials](#materials)
     * [Metallic-Roughness Material](#metallic-roughness-material)
     * [Additional Maps](#additional-maps)
+    * [Alpha Coverage](#alpha-coverage)
+    * [Double Sided](#double-sided)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -1004,6 +1006,26 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 >| Normal    | Geometry will appear less detailed than authored. |
 >| Occlusion | Model will appear brighter in areas that should be darker. |
 >| Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on. |
+
+### Alpha Coverage
+
+The `alphaMode` property defines how the alpha value of the main factor and texture should be interpreted. The alpha value is defined in the `baseColor` for metallic-roughness material model. 
+
+`alphaMode` can be one of the following values:
+* `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
+* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. This mode is used to simulate geometry such as tree leaves or wire fences.
+* `BLEND` - The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator). This mode is used to simulate geometry such as guaze cloth or animal fur. 
+
+ When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
+
+>**Implementation Note for Real-Time Rasterizers:** Real-time rasterizers typically use depth buffers and mesh sorting to support alpha modes. The following describe the expected behavior for these types of renderers.
+>* `OPAQUE` - A depth value is written for every pixel and mesh sorting is not required for correct output.
+>* `MASK` - A depth value is not written for a pixel that is discarded after the alpha test. A depth value is written for all other pixels. Mesh sorting is not required for correct output.
+>* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations can discard pixels which have zero or close to zero alpha value to avoid sorting issues.
+
+### Double Sided
+
+The `doubleSided` property specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
 
 ## Cameras
 
