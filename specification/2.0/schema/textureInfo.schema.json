@@ -6,6 +6,5 @@
     "properties": {
         "index": { },
         "texCoord": { }
-    },
-    "additionalProperties": false
+    }
 }

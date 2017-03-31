@@ -26,6 +26,5 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "xmag", "ymag", "zfar", "znear" ]
 }

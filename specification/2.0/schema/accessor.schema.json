@@ -18,12 +18,38 @@
             "gltf_webgl": "`vertexAttribPointer()` offset parameter"
         },
         "componentType": {
-            "type": "integer",
             "description": "The datatype of components in the attribute.",
-            "enum": [ 5120, 5121, 5122, 5123, 5125, 5126 ],
-            "gltf_enumNames": [ "BYTE", "UNSIGNED_BYTE", "SHORT", "UNSIGNED_SHORT", "UNSIGNED_INT", "FLOAT" ],
             "gltf_detailedDescription": "The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`.",
-            "gltf_webgl": "`vertexAttribPointer()` type parameter"
+            "gltf_webgl": "`vertexAttribPointer()` type parameter",
+            "anyOf": [
+                {
+                    "enum": [ 5120 ],
+                    "description": "BYTE"
+                },
+                {
+                    "enum": [ 5121 ],
+                    "description": "UNSIGNED_BYTE"
+                },
+                {
+                    "enum": [ 5122 ],
+                    "description": "SHORT"
+                },
+                {
+                    "enum": [ 5123 ],
+                    "description": "UNSIGNED_SHORT"
+                },
+                {
+                    "enum": [ 5125 ],
+                    "description": "UNSIGNED_INT"
+                },
+                {
+                    "enum": [ 5126 ],
+                    "description": "FLOAT"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
         },
         "normalized": {
             "type": "boolean",
@@ -39,10 +65,33 @@
             "gltf_detailedDescription": "The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components."
         },
         "type": {
-            "type": "string",
             "description": "Specifies if the attribute is a scalar, vector, or matrix.",
-            "enum": [ "SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4" ],
-            "gltf_detailedDescription": "Specifies if the attribute is a scalar, vector, or matrix, and the number of elements in the vector or matrix."
+            "anyOf": [
+                {
+                    "enum": [ "SCALAR" ]
+                },
+                {
+                    "enum": [ "VEC2" ]
+                },
+                {
+                    "enum": [ "VEC3" ]
+                },
+                {
+                    "enum": [ "VEC4" ]
+                },
+                {
+                    "enum": [ "MAT2" ]
+                },
+                {
+                    "enum": [ "MAT3" ]
+                },
+                {
+                    "enum": [ "MAT4" ]
+                },
+                {
+                    "type": "string"
+                }
+            ]
         },
         "max": {
             "type": "array",
@@ -72,6 +121,5 @@
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "componentType", "count", "type", "max", "min" ]
 }

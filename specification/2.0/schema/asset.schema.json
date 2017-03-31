@@ -15,12 +15,10 @@
         },
         "version": {
             "type": "string",
-            "description": "The glTF version.",
-            "enum": [ "2.0" ]
+            "description": "The glTF version."
         },
         "extensions": { },
         "extras": { }
     },
-    "additionalProperties": false,
     "required": [ "version" ]
 }

@@ -150,6 +150,5 @@
     "dependencies": {
         "scene": [ "scenes" ]
     },
-    "additionalProperties": false,
     "required": [ "asset" ]
 }
