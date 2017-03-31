@@ -1,0 +1,48 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "source",
+    "type" : "object",
+    "description" : "Image source used to create a texture. Image source can be defined by an array of URI or `bufferView`s.",
+    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
+    "properties" : {
+        "internalFormat": {
+            "type" : "integer",
+            "description" : "The texture's internal format.",
+            "enum" : [6406, 6409, 6410, 32849, 32854, 32855, 32856, 35905, 35907, 36194],
+            "gltf_enumNames" : ["GL_ALPHA", "GL_LUMINANCE", "GL_LUMINANCE_ALPHA", "GL_RGB8", "GL_RGBA4", "GL_RGB5_A1", "GL_RGBA8", "GL_SRGB8", "GL_SRGB8_ALPHA8", "GL_RGB565"],
+            "default" : 32856,
+            "gltf_detailedDescription" : "The texture's internal format.  Valid values correspond to GL enums: `6406` (ALPHA), `6409` (LUMINANCE), `6410` (LUMINANCE_ALPHA), `32849` (RGB8), `32854` (RGBA4), `32855` (RGB5_A1), `32856` (RGBA8), `35905` (SRGB8), `35907` (SRGB8_ALPHA8), `36194` (RGB565)",
+            "gltf_webgl" : "`texImage2D()` internalFormat parameter"
+        },
+        "mimeType" : {
+            "type" : "string",
+            "description" : "The image's MIME type.",
+            "enum" : ["image/jpeg", "image/png"]
+        },
+        "uris" : {
+            "type" : "array",
+            "description" : "The array with uris of the images.",
+            "items" : {
+                "type" : "string",
+                "format" : "uriref"
+            },
+            "minItems" : 1,
+            "maxItems" : 1,
+            "gltf_detailedDescription" : "The array with uris of the images.  Relative paths are relative to the .gltf file.  Instead of referencing an external file, the uri can also be a data-uri.  The image format must match mimeType.",
+            "gltf_uriType" : "image"
+        },
+        "bufferViews" : {
+            "type" : "array",
+            "description" : "The array with indices of the bufferViews that contains the images. Use this instead of the `uris` property.",
+            "items" : {
+                "allOf" : [ { "$ref" : "glTFid.schema.json" } ]
+            },
+            "minItems" : 1,
+            "maxItems" : 1
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties" : false,
+    "required" : ["mimeType"]
+}

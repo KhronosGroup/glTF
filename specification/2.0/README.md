@@ -57,6 +57,7 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Texture Data](#texture-data)
     * [Textures](#textures)
     * [Images](#images)
+      * [Image Formats](#image-formats)
     * [Samplers](#samplers)
   * [Materials](#materials)
     * [Metallic-Roughness Material](#metallic-roughness-material)
@@ -836,56 +837,107 @@ A skin is instanced within a node using a combination of the node's `mesh` and `
 
 ## Texture Data
 
-**TODO: describe separation of concerns: textures / images / samplers**
+glTF separates texture access into three distinct types of objects: Textures, Images, and Samplers.
 
 ### Textures
 
-**TODO: update to latest revisions**
-
-All textures are stored in the asset's `textures` array. A texture is defined by an image file, denoted by the `source` property; `format` and `internalFormat` specifiers, corresponding to the GL texture format types; a `target` type for the sampler; a sampler identifier (`sampler`), and a `type` property defining the internal data format. Refer to the GL definition of `texImage2D()` for more details.
+All textures are stored in the asset's `textures` array. A texture is defined by an image resource, denoted by the `image` property; a `target` type for the sampler; and a sampler index (`sampler`).
+When `sampler` is omitted, a sampler with all-default properties should be used. 
 
 ```json
 {
     "textures": [
         {
-            "format": 6408,
-            "internalFormat": 6408,
-            "sampler": 0,
-            "source": 2,
             "target": 3553,
-            "type": 5121
+            "image": 2,
+            "sampler": 0
         }
     ]
 }
 ```
 
+> **Implementation Note** glTF 2.0 supports only 2D texture targets. Support for other targets is expected in future revisions.
+
 ### Images
 
-**TODO: update to latest revisions**
+Images referred by textures are stored in the `images` array of the asset.
+ 
+Each `image` defines an `image.sources` set of image sources. Type and format of image source are defined by `mimeType` and `internalFormat` specifiers.
 
-Images referred to by textures are stored in the `images` array of the asset. Each image contains a URI to an external file (or a reference to a bufferView) in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
+An image source can refer to image data either by array of URIs (external or base64-encoded), or by array of Buffer Views.
+
+> **Implementation Note** glTF 2.0 requires these arrays to contain no more than one element. This restriction could be lifted in future to support more texture targets.  
+ 
+First image pixel corresponds to the lower left corner of the image.
+
+> **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. To achieve correct rendering, WebGL runtimes must flip Y axis by enabling `UNPACK_FLIP_Y_WEBGL` flag. This behavior was changed from glTF 1.0.
+
+Any colorspace information (such as ICC profiles, intents, etc) from PNG or JPEG containers must be ignored.
+
+> **Implementation Note**: This increases portability of an asset, since not all image decoding libraries fully support custom color conversions. To achieve correct rendering, WebGL runtimes must disable such conversions by setting `UNPACK_COLORSPACE_CONVERSION_WEBGL` flag to `NONE`.
+
+In the following example asset provides two versions of the same image: in sRGB and in linear colorspaces; so clients with hardware sRGB filtering support (or with enough fragment shader processing power) benefit from reduced banding, whilst low-power clients still get correct texel values by using linear-space image data directly.
 
 ```json
 {
     "images": [
         {
-            "uri": "duckCM.png"
-        },
-        {
-            "bufferView": 14,
-            "mimeType": "image/jpeg" 
+            "sources": [
+                {
+                    "internalformat": 32856,
+                    "mimeType": "image/png",
+                    "uris": ["duck_diffuse_linear.png"]
+                },
+                {
+                    "internalformat": 35907,
+                    "mimeType": "image/png",
+                    "uris": ["duck_diffuse_srgb.png"]
+                }
+            ]
         }
     ]
 }
 ```
-> **Implementation Note**: With WebGL API, the first pixel transferred from the `TexImageSource` (i.e., HTML Image object) to the WebGL implementation corresponds to the upper left corner of the source. Non-WebGL runtimes may need to flip Y axis to achieve correct texture rendering.
+
+#### Image Formats
+
+glTF 2.0 allows a limited set of possible `internalformat` values based on OpenGL ES 3.0 enums.
+ 
+Each `internalformat` value defines exactly one matching pair of `type` and `format` parameters of OpenGL ES 2.0/3.0 texture specification. See table below for details:
+
+| `source.internalformat` | OpenGL ES 2.0 Format & Internal Format | OpenGL ES 3.0 Format | OpenGL ES 3.0 Internal Format | OpenGL ES 2.0/3.0 Type |
+|-------------------------|----------------------------------------|----------------------|-------------------------------|---------------------------|
+| ALPHA (`6406`) | ALPHA | ALPHA | ALPHA | UNSIGNED_BYTE |
+| LUMINANCE (`6409`) | LUMINANCE | LUMINANCE | LUMINANCE | UNSIGNED_BYTE |
+| LUMINANCE_ALPHA (`6410`) | LUMINANCE_ALPHA | LUMINANCE_ALPHA | LUMINANCE_ALPHA | UNSIGNED_BYTE |
+| RGB8 (`32849`) | RGB | RGB | RGB8 | UNSIGNED_BYTE |
+| RGBA4 (`32854`) | RGBA | RGBA | RGBA4 | UNSIGNED_SHORT_4_4_4_4 |
+| RGB5_A1 (`32855`) | RGBA | RGBA | RGB5_A1 | UNSIGNED_SHORT_5_5_5_1 |
+| RGBA8 (`32856`) | RGBA | RGBA | RGBA8 | UNSIGNED_BYTE |
+| SRGB8 (`35905`) | SRGB_EXT | RGB | SRGB8 | UNSIGNED_BYTE |
+| SRGB8_ALPHA8 (`35907`) | SRGB_ALPHA_EXT | RGBA | SRGB8_ALPHA8 | UNSIGNED_BYTE |
+| RGB565 (`36194`) | RGB | RGB | RGB565 | UNSIGNED_SHORT_5_6_5 |
+ 
+These formats are usually supported by non-OpenGL APIs as well. See the following table for matches with Vulkan, D3D11/12, and Metal:
+
+| `source.internalformat` | Vulkan | D3D11/12 | Metal |
+|-------------------------|------------------------------------|-------------------------------------------|-----------------------------------------|
+| ALPHA (`6406`) | _expand to VK_FORMAT_R8G8B8A8_UNORM_ | DXGI_FORMAT_A8_UNORM | MTLPixelFormatA8Unorm |
+| LUMINANCE (`6409`) | _expand to VK_FORMAT_R8G8B8_UNORM_ | _expand to DXGI_FORMAT_R8G8B8A8_UNORM_ | _expand to MTLPixelFormatRGBA8Unorm_ |
+| LUMINANCE_ALPHA (`6410`) | _expand to VK_FORMAT_R8G8B8A8_UNORM_ | _expand to DXGI_FORMAT_R8G8B8A8_UNORM_ | _expand to MTLPixelFormatRGBA8Unorm_ |
+| RGB8 (`32849`) | VK_FORMAT_R8G8B8_UNORM | _expand to DXGI_FORMAT_R8G8B8A8_UNORM_ | _expand to MTLPixelFormatRGBA8Unorm_ |
+| RGBA4 (`32854`) | VK_FORMAT_R4G4B4A4_UNORM_PACK16 | _repack to DXGI_FORMAT_B4G4R4A4_UNORM_ | MTLPixelFormatABGR4Unorm |
+| RGB5_A1 (`32855`) | VK_FORMAT_R5G5B5A1_UNORM_PACK16 | _repack to DXGI_FORMAT_B5G5R5A1_UNORM_ | MTLPixelFormatA1BGR5Unorm |
+| RGBA8 (`32856`) | VK_FORMAT_R8G8B8A8_UNORM | DXGI_FORMAT_R8G8B8A8_UNORM | MTLPixelFormatRGBA8Unorm |
+| SRGB8 (`35905`) | VK_FORMAT_R8G8B8_SRGB | _expand to DXGI_FORMAT_R8G8B8A8_UNORM_SRGB_ | _expand to MTLPixelFormatRGBA8Unorm_sRGB_ |
+| SRGB8_ALPHA8 (`35907`) | VK_FORMAT_R8G8B8A8_SRGB | DXGI_FORMAT_R8G8B8A8_UNORM_SRGB | MTLPixelFormatRGBA8Unorm_sRGB |
+| RGB565 (`36194`) | VK_FORMAT_R5G6B5_UNORM_PACK16 | DXGI_FORMAT_B5G6R5_UNORM | MTLPixelFormatB5G6R5Unorm |
+ 
+For formats without direct matches, engines could utilize channel swizzling instead of expanding.
 
 ### Samplers
 
-**TODO: update to latest revisions**
-
 Samplers are stored in the `samplers` array of the asset. Each sampler specifies filter and wrapping options corresponding to the GL types. The following example defines a sampler with linear mag filtering, linear mipmap min filtering, and repeat wrapping in S and T.
-
 
 ```json
 {
@@ -902,10 +954,9 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 
 > **Mipmapping Implementation Note**: When a sampler's minification filter (`minFilter`) uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`), any texture referencing the sampler needs to have mipmaps, e.g., by calling GL's `generateMipmap()` function.
 
-
 > **Non-Power-Of-Two Texture Implementation Note**: glTF does not guarantee that a texture's dimensions are a power-of-two.  At runtime, if a texture's width or height is not a power-of-two, the texture needs to be resized so its dimensions are powers-of-two if the `sampler` the texture references
-> * Has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
-> * Has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
+> * has a wrapping mode (either `wrapS` or `wrapT`) equal to `REPEAT` or `MIRRORED_REPEAT`, or
+> * has a minification filter (`minFilter`) that uses mipmapping (`NEAREST_MIPMAP_NEAREST`, `NEAREST_MIPMAP_LINEAR`, `LINEAR_MIPMAP_NEAREST`, or `LINEAR_MIPMAP_LINEAR`).
 
 ## Materials
 
