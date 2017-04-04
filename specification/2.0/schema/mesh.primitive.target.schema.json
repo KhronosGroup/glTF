@@ -1,6 +1,6 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "target",
-    "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-    "description" : "A dictionary object specifying attributes displacements in a Morph Target, where each key corresponds to one of the two supported attribute semantic (\"POSITION\" or \"NORMAL\") and each value is the index of the accessor containing the attribute displacements' data."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "target",
+    "allOf": [ { "$ref": "glTFid.schema.json" } ],
+    "description": "A dictionary object specifying attributes displacements in a Morph Target, where each key corresponds to one of the two supported attribute semantic (\"POSITION\" or \"NORMAL\") and each value is the index of the accessor containing the attribute displacements' data."
 }

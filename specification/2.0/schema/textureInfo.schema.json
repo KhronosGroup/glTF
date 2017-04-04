@@ -4,8 +4,8 @@
     "type": "object",
     "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
     "properties": {
-        "index": {},
-        "texCoord": {}
+        "index": { },
+        "texCoord": { }
     },
     "additionalProperties": false
 }

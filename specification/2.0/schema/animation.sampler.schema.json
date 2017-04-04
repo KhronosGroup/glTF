@@ -1,30 +1,30 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "animation sampler",
-    "type" : "object",
-    "description" : "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
-    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
-    "properties" : {
-        "input" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of an accessor containing keyframe input values, e.g., time.",
-            "gltf_detailedDescription" : "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "animation sampler",
+    "type": "object",
+    "description": "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target).",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "input": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor containing keyframe input values, e.g., time.",
+            "gltf_detailedDescription": "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
         },
-        "interpolation" : {
-            "type" : "string",
-            "description" : "Interpolation algorithm.",
-            "enum" : ["LINEAR", "STEP"],
-            "default" : "LINEAR",
-            "gltf_detailedDescription" : "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
+        "interpolation": {
+            "type": "string",
+            "description": "Interpolation algorithm.",
+            "enum": [ "LINEAR", "STEP" ],
+            "default": "LINEAR",
+            "gltf_detailedDescription": "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
         },
-        "output" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription" : "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
+        "output": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of an accessor, containing keyframe output values.",
+            "gltf_detailedDescription": "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
         },
-        "extensions" : {},
-        "extras" : {}
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false,
-    "required": ["input", "output"]
+    "additionalProperties": false,
+    "required": [ "input", "output" ]
 }
