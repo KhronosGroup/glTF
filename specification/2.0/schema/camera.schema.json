@@ -1,28 +1,28 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "camera",
-    "type" : "object",
-    "description" : "A camera's projection.  A node can reference a camera to apply a transform to place the camera in the scene.",
-    "allOf" : [ { "$ref" : "glTFChildOfRootProperty.schema.json" } ],
-    "properties" : {
-        "orthographic" : {
-            "allOf" : [ { "$ref" : "camera.orthographic.schema.json" } ],
-            "description" : "An orthographic camera containing properties to create an orthographic projection matrix."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "camera",
+    "type": "object",
+    "description": "A camera's projection.  A node can reference a camera to apply a transform to place the camera in the scene.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "orthographic": {
+            "allOf": [ { "$ref": "camera.orthographic.schema.json" } ],
+            "description": "An orthographic camera containing properties to create an orthographic projection matrix."
         },
-        "perspective" : {
-            "allOf" : [ { "$ref" : "camera.perspective.schema.json" } ],
-            "description" : "A perspective camera containing properties to create a perspective projection matrix."
+        "perspective": {
+            "allOf": [ { "$ref": "camera.perspective.schema.json" } ],
+            "description": "A perspective camera containing properties to create a perspective projection matrix."
         },
-        "type" : {
-            "type" : "string",
-            "description" : "Specifies if the camera uses a perspective or orthographic projection.",
-            "enum" : ["perspective", "orthographic"],
-            "gltf_detailedDescription" : "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined."
+        "type": {
+            "type": "string",
+            "description": "Specifies if the camera uses a perspective or orthographic projection.",
+            "enum": [ "perspective", "orthographic" ],
+            "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined."
         },
-        "name" : {},
-        "extensions" : {},
-        "extras" : {}
+        "name": { },
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false,
-    "required": ["type"]
+    "additionalProperties": false,
+    "required": [ "type" ]
 }

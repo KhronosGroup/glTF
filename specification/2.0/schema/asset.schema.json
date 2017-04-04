@@ -1,30 +1,30 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "asset",
-    "type" : "object",
-    "description" : "Metadata about the glTF asset.",
-    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
-    "properties" : {
-        "copyright" : {
-            "type" : "string",
-            "description" : "A copyright message suitable for display to credit the content creator."
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "asset",
+    "type": "object",
+    "description": "Metadata about the glTF asset.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "copyright": {
+            "type": "string",
+            "description": "A copyright message suitable for display to credit the content creator."
         },
-        "generator" : {
-            "type" : "string",
-            "description" : "Tool that generated this glTF model.  Useful for debugging."
+        "generator": {
+            "type": "string",
+            "description": "Tool that generated this glTF model.  Useful for debugging."
         },
-        "license" : {
-            "type" : "string",
-            "description" : "A license message suitable for display to name any license(s) governing use of the content.  If you're using a common license, add a SPDX license identifier for the license you're using."
+        "license": {
+            "type": "string",
+            "description": "A license message suitable for display to name any license(s) governing use of the content.  If you're using a common license, add a SPDX license identifier for the license you're using."
         },
-        "version" : {
-            "type" : "string",
-            "description" : "The glTF version.",
-            "enum" : ["2.0"]
+        "version": {
+            "type": "string",
+            "description": "The glTF version.",
+            "enum": [ "2.0" ]
         },
-        "extensions" : {},
-        "extras" : {}
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false,
-    "required": ["version"]
+    "additionalProperties": false,
+    "required": [ "version" ]
 }

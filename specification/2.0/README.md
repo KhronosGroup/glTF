@@ -61,6 +61,8 @@ Copyright (C) 2013-2017 The Khronos Group Inc. All Rights Reserved. glTF is a tr
   * [Materials](#materials)
     * [Metallic-Roughness Material](#metallic-roughness-material)
     * [Additional Maps](#additional-maps)
+    * [Alpha Coverage](#alpha-coverage)
+    * [Double Sided](#double-sided)
   * [Cameras](#cameras)
     * [Projection Matrices](#projection-matrices)
   * [Animations](#animations)
@@ -1005,6 +1007,26 @@ The following examples shows a material that is defined using `pbrMetallicRoughn
 >| Occlusion | Model will appear brighter in areas that should be darker. |
 >| Emissive  | Model with lights will not be lit. For example, the headlights of a car model will be off instead of on. |
 
+### Alpha Coverage
+
+The `alphaMode` property defines how the alpha value of the main factor and texture should be interpreted. The alpha value is defined in the `baseColor` for metallic-roughness material model. 
+
+`alphaMode` can be one of the following values:
+* `OPAQUE` - The rendered output is fully opaque and any alpha value is ignored.
+* `MASK` - The rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. This mode is used to simulate geometry such as tree leaves or wire fences.
+* `BLEND` - The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator). This mode is used to simulate geometry such as guaze cloth or animal fur. 
+
+ When `alphaMode` is set to `MASK` the `alphaCutoff` property specifies the cutoff threshold. If the alpha value is greater than or equal to the `alphaCutoff` value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. `alphaCutoff` value is ignored for other modes.
+
+>**Implementation Note for Real-Time Rasterizers:** Real-time rasterizers typically use depth buffers and mesh sorting to support alpha modes. The following describe the expected behavior for these types of renderers.
+>* `OPAQUE` - A depth value is written for every pixel and mesh sorting is not required for correct output.
+>* `MASK` - A depth value is not written for a pixel that is discarded after the alpha test. A depth value is written for all other pixels. Mesh sorting is not required for correct output.
+>* `BLEND` - Support for this mode varies. There is no perfect and fast solution that works for all cases. Implementations should try to achieve the correct blending output for as many situations as possible. Whether depth value is written or whether to sort is up to the implementation. For example, implementations can discard pixels which have zero or close to zero alpha value to avoid sorting issues.
+
+### Double Sided
+
+The `doubleSided` property specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated.
+
 ## Cameras
 
 A camera defines the projection matrix that transforms from view to clip coordinates. The projection can be perspective or orthographic. Cameras are contained in nodes and thus can be transformed. Their world-space transformation matrix is used for calculating view-space transformation.
@@ -1183,6 +1205,37 @@ The following examples show expected animations usage.
                     "output": 1
                 }
             ]
+        },
+        {
+            "name": "Animate a node rotation channel and the weights of a Morph Target it instantiates",
+            "channels": [
+                {
+                    "sampler": 0,
+                    "target": {
+                        "node": 1,
+                        "path": "rotation"
+                    }
+                },
+                {
+                    "sampler": 1,
+                    "target": {
+                        "node": 1,
+                        "path": "weights"
+                    }
+                }
+            ],
+            "samplers": [
+                {
+                    "input": 4,
+                    "interpolation": "LINEAR",
+                    "output": 5
+                },
+                {
+                    "input": 4,
+                    "interpolation": "LINEAR",
+                    "output": 6
+                }
+            ]
         }
     ]
 }
@@ -1190,13 +1243,12 @@ The following examples show expected animations usage.
 
 *Channels* connect the output values of the key frame animation to a specific node in the hierarchy. A channel's `sampler` property contains the index of one of the samplers present in the containing animation's `samplers` array. The `target` property is an object that identifies which node to animate using its `node` property, and which property of the node to animate using `path`. Valid path names are `"translation"`, `"rotation"`, and `"scale"`.
 
-Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation formula specified in the `interpolation` property
+Each of the animation's *samplers* defines the input/output pair: a set of floating point scalar values representing time in seconds; and a set of three-component floating-point vectors representing translation or scale, or four-component floating-point vectors representing rotation, or floating-point scalars used to animate Morph Targets. All values are stored in a buffer and accessed via accessors. Interpolation between keys is performed using the interpolation method specified in the `interpolation` property
 
 > Note: glTF 2.0 animation samplers support only discrete and linear interpolation.
 
 glTF animations can be used to drive articulated or skinned animations. Skinned animation is achieved by animating the joints in the skin's joint hierarchy.
-
-**TODO: animating morph weights** 
+glTF animations can be used to animate Morph Targets. A Morph Target animation frame is defined by a sequence of scalars of length equal to the number of targets in the animated Morph Target. Morph Target animation is by nature sparse, consider using [Sparse Accessors](#sparse-accessors) for storage of Morph Target animation.
 
 ## Specifying Extensions
 

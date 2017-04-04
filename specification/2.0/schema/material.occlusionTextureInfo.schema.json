@@ -4,8 +4,8 @@
     "type": "object",
     "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
     "properties": {
-        "index": {},
-        "texCoord": {},
+        "index": { },
+        "texCoord": { },
         "strength": {
             "type": "number",
             "description": "A scalar multiplier controlling the amount of occlusion applied.",

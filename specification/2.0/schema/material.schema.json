@@ -5,9 +5,9 @@
     "description": "The material appearance of a primitive.",
     "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
     "properties": {
-        "name": {},
-        "extensions": {},
-        "extras": {},
+        "name": { },
+        "extensions": { },
+        "extras": { },
         "pbrMetallicRoughness": {
             "allOf": [ { "$ref": "material.pbrMetallicRoughness.schema.json" } ],
             "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology."
@@ -39,7 +39,30 @@
             "default": [ 0.0, 0.0, 0.0 ],
             "description": "The emissive color of the material.",
             "gltf_detailedDescription": "The RGB components of the emissive color of the material. If an emissiveTexture is specified, this value is multiplied with the texel values."
+        },
+        "alphaMode": {
+            "type": "string",
+            "enum": [ "OPAQUE", "MASK", "BLEND" ],
+            "default": "OPAQUE",
+            "description": "The alpha rendering mode of the material.",
+            "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. If the alpha mode is not specified, it defaults to `OPAQUE` where the alpha value is ignored and the rendered output is fully opaque. In `MASK` mode, the rendered output is either fully opaque or fully transparent depending on the alpha value and the specified alpha cutoff value. In `BLEND` mode, the alpha value is used to composite the source and destination areas. The rendered output is combined with the background using the normal painting operation (i.e. the Porter and Duff over operator)."
+        },
+        "alphaCutoff": {
+            "type": "number",
+            "minimum": 0.0,
+            "default": 0.5,
+            "description": "The alpha cutoff value of the material.",
+            "gltf_detailedDescription": "Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. This value is ignored for other modes."
+        },
+        "doubleSided": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the material is double sided.",
+            "gltf_detailedDescription": "Specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated."
         }
+    },
+     "dependencies" : {
+        "alphaCutoff" : ["alphaMode"]
     },
     "additionalProperties": false
 }
