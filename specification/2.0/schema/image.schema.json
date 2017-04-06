@@ -14,8 +14,8 @@
         },
         "mimeType": {
             "type": "string",
-            "description": "The image's MIME type.",
-            "minLength": 1
+            "enum": [ "image/jpeg", "image/png" ],
+            "description": "The image's MIME type."
         },
         "bufferView": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
