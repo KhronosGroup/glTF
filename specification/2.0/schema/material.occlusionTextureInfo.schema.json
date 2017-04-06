@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "title": "occlusionTextureInfo",
     "type": "object",
-    "allOf": [ { "$ref": "textureInfoBase.schema.json" } ],
+    "allOf": [ { "$ref": "textureInfo.schema.json" } ],
     "properties": {
         "index": { },
         "texCoord": { },

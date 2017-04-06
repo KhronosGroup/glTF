@@ -15,7 +15,11 @@
         },
         "version": {
             "type": "string",
-            "description": "The glTF version."
+            "description": "The glTF version that this asset targets."
+        },
+        "minVersion": {
+            "type": "string",
+            "description": "The minimum glTF version that this asset targets."
         },
         "extensions": { },
         "extras": { }
