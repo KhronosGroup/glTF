@@ -16,10 +16,12 @@
             "gltf_detailedDescription": "Interpolation algorithm. When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions. When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe.",
             "anyOf": [
                 {
-                    "enum": [ "LINEAR" ]
+                    "enum": [ "LINEAR" ],
+                    "description": "When an animation targets a node's rotation, and the animation's interpolation is `\"LINEAR\"`, spherical linear interpolation (slerp) should be used to interpolate quaternions."
                 },
                 {
-                    "enum": [ "STEP" ]
+                    "enum": [ "STEP" ],
+                    "description": "When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
                 },
                 {
                     "type": "string"
