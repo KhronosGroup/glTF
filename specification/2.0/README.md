@@ -610,7 +610,7 @@ In glTF, meshes are defined as arrays of *primitives*. Primitives correspond to 
 
 > **Implementation note:** Splitting one mesh into *primitives* could be useful to limit number of indices per draw call.
 
-If `material` is not supplied, and no extension is present that defines material properties, then the object should be rendered using a 50% gray emissive color.  
+If `material` is not supplied, then the object should be rendered using a default PBR metallic-roughness material using an opaque 50% gray `baseColor` with 0 for `metallic` and 1 for `roughness`.
 
 The following example defines a mesh containing one triangle set primitive:
 
@@ -622,6 +622,7 @@ The following example defines a mesh containing one triangle set primitive:
                 {
                     "attributes": {
                         "NORMAL": 25,
+                        "TANGENT": 24,
                         "POSITION": 23,
                         "TEXCOORD_0": 27
                     },
@@ -637,13 +638,26 @@ The following example defines a mesh containing one triangle set primitive:
 
 Each attribute is defined as a property of the `attributes` object. The name of the property corresponds to an enumerated value identifying the vertex attribute, such as `POSITION`. The value of the property is the index of an accessor that contains the data.
 
-Valid attribute semantic property names include `POSITION`, `NORMAL`, `TEXCOORD`, `COLOR`, `JOINT`, and `WEIGHT`.  `TEXCOORD` and `COLOR` attribute semantic property names must be of the form `[semantic]_[set_index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_1`, etc.  For forward-compatibility, application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+Valid attribute semantic property names include `POSITION`, `NORMAL`, `TANGENT`, `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`, `JOINT`, and `WEIGHT`.  Application-specific semantics must start with an underscore, e.g., `_TEMPERATURE`.
+
+Valid accessor type and componentType for each attribute semantic property are defined below.
+
+|Name|Accessor Type(s)|Component Type(s)|
+|----|----------------|-----------------|
+|`POSITION`|`"VEC3"`|`5126` (FLOAT)|
+|`NORMAL`|`"VEC3"`|`5126` (FLOAT)|
+|`TANGENT`|`"VEC3"`|`5126` (FLOAT)|
+|`TEXCOORD_0`|`"VEC2"`|`5126` (FLOAT)|
+|`TEXCOORD_1`|`"VEC2"`|`5126` (FLOAT)|
+|`COLOR_0`|`"VEC3"` (RGB)<br>`"VEC4"` (RGBA)|`5126` (FLOAT)|
+|`JOINT`|`"VEC4"`|`5120` (UNSIGNED_BYTE)<br>`5123` (UNSIGNED_SHORT)|
+|`WEIGHT`|`"VEC4`|`5126` (FLOAT)<br>`5120` (UNSIGNED_BYTE) normalized<br>`5123` (UNSIGNED_SHORT) normalized|
 
 > **Implementation note:** Each primitive corresponds to one WebGL draw call (engines are, of course, free to batch draw calls). When a primitive's `indices` property is defined, it references the accessor to use for index data, and GL's `drawElements` function should be used. When the `indices` property is not defined, GL's `drawArrays` function should be used with a count equal to the count property of any of the accessors referenced by the `attributes` property (they are all equal for a given primitive).
 
-#### Tangent-space definition
+> **Implementation note:** When normals are not specified, implementations should calculate smoothed normals.
 
-**TODO**
+> **Implementation note:** When tangents are not specified, implementations should calculate tangents using default MikkTSpace algorithms.  For best results, the mesh triangles should also be processed using default MikkTSpace algorithms.
 
 #### Morph Targets
 
@@ -911,7 +925,7 @@ Samplers are stored in the `samplers` array of the asset. Each sampler specifies
 
 glTF defines materials using a common set of parameters that are based on widely used material representations from Physically-Based Rendering (PBR). Specifically, glTF uses the metallic-roughness material model. Using this declarative representation of materials enables a glTF file to be rendered consistently across platforms. 
 
-### Metallic-Roughness Material 
+### Metallic-Roughness Material
 
 All parameters related to the metallic-roughness material model are defined under the `pbrMetallicRoughness` property of `material` object. The following example shows how a material like gold can be defined using the metallic-roughness parameters: 
 
