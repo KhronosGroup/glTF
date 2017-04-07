@@ -28,5 +28,8 @@
     "additionalProperties": false,
     "dependencies": {
         "bufferView": [ "mimeType" ]
+    },
+    "not": {
+        "required": [ "bufferView", "uri" ]
     }
 }
