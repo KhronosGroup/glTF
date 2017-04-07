@@ -66,7 +66,7 @@ uint32 length
 
 * `length` is the total length of the Binary glTF, including Header and all Chunks, in bytes.
 
-> **Implementation Note:** GLB loaders should also check for the [asset version properties](readme.md#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations that load GLB format should also check for the [asset version properties](readme.md#asset) in the JSON chunk, as the version specified in the GLB header only refers to the GLB container version.
 
 ### Chunks
 

@@ -134,7 +134,7 @@ Version 2.0 of glTF does not define compression for geometry and other rich data
 
 ## Versioning
 
-Any updates made to glTF in a minor version will be backwards and forwards compatible. Backwards compatibility will ensure that any loader that supports loading a glTF 2.x file will also be able to load a glTF 2.0 file. Forwards compatibility will allow a loader that only supports glTF 2.0 to load glTF 2.x files while gracefully ignoring any new features it does not understand.
+Any updates made to glTF in a minor version will be backwards and forwards compatible. Backwards compatibility will ensure that any client implementation that supports loading a glTF 2.x file will also be able to load a glTF 2.0 file. Forwards compatibility will allow a client implementation that only supports glTF 2.0 to load glTF 2.x files while gracefully ignoring any new features it does not understand.
 
 A minor version update can introduce new features but will not change any previously existing behavior. Existing functionality could be deprecated in a minor version update, but it will not be removed. 
 
@@ -173,7 +173,7 @@ The top-level arrays in a glTF asset.  See the <a href="#properties">Properties 
 
 ## Asset
 
-Each glTF asset must have an `asset` property. In fact, it's the only required top-level property for JSON to be a valid glTF. The `asset` object must contain glTF version which specifies the target glTF version of the file. Additionally, an optional `minVersion` property can be used to specify the minimum glTF version support required to load the file. The `minVersion` property allows asset creators to require that the asset only be loaded if the loader supports the specified version. This is very similar to the `extensionsRequired` concept, where an asset should only be loaded if the loader supports the specified extension. Using `minVersion` will block the asset from being loaded on older loaders, so it should only be used sparingly. Additional metadata can be stored in optional properties such as `generator` or `copyright`.  For example,
+Each glTF asset must have an `asset` property. In fact, it's the only required top-level property for JSON to be a valid glTF. The `asset` object must contain glTF version which specifies the target glTF version of the file. Additionally, an optional `minVersion` property can be used to specify the minimum glTF version support required to load the file. The `minVersion` property allows asset creators to specify a minimum version that a client implementation must support in order to load the asset. This is very similar to the `extensionsRequired` concept, where an asset should only be loaded if the client supports the specified extension. Additional metadata can be stored in optional properties such as `generator` or `copyright`.  For example,
 
 ```json
 {
@@ -185,7 +185,7 @@ Each glTF asset must have an `asset` property. In fact, it's the only required t
 }
 ```
 
-> **Implementation Note:** Loaders should first check whether a `minVersion` property is specified and ensure both major and minor versions are supported. If no `minVersion` is specified, then loaders should check the `Version` property and ensure the major version is supported. [GLB](GLB_FORMAT.md) loaders should also check for these properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
+> **Implementation Note:** Client implementations should first check whether a `minVersion` property is specified and ensure both major and minor versions can be supported. If no `minVersion` is specified, then clients should check the `Version` property and ensure the major version is supported. Clients that load [GLB format](GLB_FORMAT.md) should also check for the `minVersion` and `Version` properties in the JSON chunk as the version specified in the GLB header only refers to the GLB container version.
 
 
 ## Indices and Names
