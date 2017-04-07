@@ -136,7 +136,7 @@ Version 2.0 of glTF does not define compression for geometry and other rich data
 
 Any updates made to glTF in a minor version will be backwards and forwards compatible. Backwards compatibility will ensure that any client implementation that supports loading a glTF 2.x file will also be able to load a glTF 2.0 file. Forwards compatibility will allow a client implementation that only supports glTF 2.0 to load glTF 2.x files while gracefully ignoring any new features it does not understand.
 
-A minor version update can introduce new features but will not change any previously existing behavior. Existing functionality could be deprecated in a minor version update, but it will not be removed. 
+A minor version update can introduce new features but will not change any previously existing behavior. Existing functionality can be deprecated in a minor version update, but it will not be removed. 
 
 Major version updates are not expected to be compatible with previous versions.
 
