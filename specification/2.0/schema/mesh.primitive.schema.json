@@ -1,48 +1,48 @@
 {
-    "$schema" : "http://json-schema.org/draft-04/schema",
-    "title" : "primitive",
-    "type" : "object",
-    "description" : "Geometry to be rendered with the given material.",
-    "allOf" : [ { "$ref" : "glTFProperty.schema.json" } ],
-    "properties" : {
-        "attributes" : {
-            "type" : "object",
-            "description" : "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data.",
-            "properties" : {
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "primitive",
+    "type": "object",
+    "description": "Geometry to be rendered with the given material.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "attributes": {
+            "type": "object",
+            "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data.",
+            "properties": {
             },
-            "additionalProperties" : {
-                "$ref" : "mesh.primitive.attribute.schema.json"
+            "additionalProperties": {
+                "$ref": "mesh.primitive.attribute.schema.json"
             }
         },
-        "indices" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of the accessor that contains the indices.",
-            "gltf_detailedDescription" : "The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the `bufferView` referenced by the accessor must have a `target` equal to 34963 (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., 0 or the byte size of `componentType` in bytes; `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter is only allowed when `OES_element_index_uint` extension is used; `type` must be `\"SCALAR\"`."
+        "indices": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the accessor that contains the indices.",
+            "gltf_detailedDescription": "The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the `bufferView` referenced by the accessor must have a `target` equal to 34963 (ELEMENT_ARRAY_BUFFER); a `byteStride` that is tightly packed, i.e., 0 or the byte size of `componentType` in bytes; `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter is only allowed when `OES_element_index_uint` extension is used; `type` must be `\"SCALAR\"`."
         },
-        "material" : {
-            "allOf" : [ { "$ref" : "glTFid.schema.json" } ],
-            "description" : "The index of the material to apply to this primitive when rendering."
+        "material": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "The index of the material to apply to this primitive when rendering."
         },
-        "mode" : {
-            "type" : "integer",
-            "description" : "The type of primitives to render.",
-            "enum" : [0, 1, 2, 3, 4, 5, 6],
-            "gltf_enumNames" : ["POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN"],
-            "default" : 4,
-            "gltf_detailedDescription" : "The type of primitives to render. All valid values correspond to WebGL enums."
+        "mode": {
+            "type": "integer",
+            "description": "The type of primitives to render.",
+            "enum": [ 0, 1, 2, 3, 4, 5, 6 ],
+            "gltf_enumNames": [ "POINTS", "LINES", "LINE_LOOP", "LINE_STRIP", "TRIANGLES", "TRIANGLE_STRIP", "TRIANGLE_FAN" ],
+            "default": 4,
+            "gltf_detailedDescription": "The type of primitives to render. All valid values correspond to WebGL enums."
         },
-        "targets" : {
-            "type" : "array",
-            "description" : "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` are supported) to their deviations in the Morph Target.",
-            "items" : {
-                "$ref" : "mesh.primitive.target.schema.json"
+        "targets": {
+            "type": "array",
+            "description": "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target.",
+            "items": {
+                "$ref": "mesh.primitive.target.schema.json"
             },
-            "minItems" : 0
+            "minItems": 0
         },
-        "extensions" : {},
-        "extras" : {}
+        "extensions": { },
+        "extras": { }
     },
-    "additionalProperties" : false,
-    "gltf_webgl" : "`drawElements()` and `drawArrays()`",
-    "required": ["attributes"]
+    "additionalProperties": false,
+    "gltf_webgl": "`drawElements()` and `drawArrays()`",
+    "required": [ "attributes" ]
 }

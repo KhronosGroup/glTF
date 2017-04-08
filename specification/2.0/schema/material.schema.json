@@ -20,7 +20,7 @@
         "occlusionTexture": {
             "allOf": [ { "$ref": "material.occlusionTextureInfo.schema.json" } ],
             "description": "The occlusion map texture.",
-            "gltf_detailedDescription": "The occlusion map is a greyscale texture, with white indicating areas that should receive full indirect lighting and black indicating no indirect lighting. <Todo: sRGB ? Color Space>."
+            "gltf_detailedDescription": "The occlusion map texture. The occlusion values are sampled from the R channel. Higher values indicate areas that should receive full indirect lighting and lower values indicate no indirect lighting. These values are linear. If other channels are present (GBA), they are ignored for occlusion calculations."
         },
         "emissiveTexture": {
             "allOf": [ { "$ref": "textureInfo.schema.json" } ],
