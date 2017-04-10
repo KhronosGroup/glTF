@@ -859,7 +859,12 @@ All textures are stored in the asset's `textures` array. A texture is defined by
 
 Images referred to by textures are stored in the `images` array of the asset. 
 
-Each image contains a URI to an external file (or a reference to a bufferView) in one of the supported images formats. Image data may also be stored within the glTF file as base64-encoded data and referenced via data URI. For example:
+Each image contains one of
+- a URI to an external file in one of the supported images formats, or
+- a URI with embedded base64-encoded data, or
+- a reference to a `bufferView`.
+
+The following example shows an image pointing to an external PNG image file and another image referencing a `bufferView` with JPEG data.
 
 ```json
 {
