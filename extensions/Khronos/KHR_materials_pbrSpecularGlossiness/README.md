@@ -130,9 +130,9 @@ The specular-glossiness texture is a RGBA texture, containing the specular color
 * **Required**: No
 
 
-#### Additional maps
+#### Additional Maps
 
-The [additional maps](/specification/2.0/README.md#additionalmaps) defined in glTF materials node can also be used with the PBR specular-glossiness material model parameters defined in this extension.
+The [additional maps](/specification/2.0/README.md#additional-maps) defined in glTF materials node can also be used with the PBR specular-glossiness material model parameters defined in this extension.
 
 ```
 {
