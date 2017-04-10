@@ -7,7 +7,6 @@
     "properties": {
         "magFilter": {
             "description": "Magnification filter.",
-            "default": 9729,
             "gltf_detailedDescription": "Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MAG_FILTER",
             "anyOf": [
@@ -26,7 +25,6 @@
         },
         "minFilter": {
             "description": "Minification filter.",
-            "default": 9986,
             "gltf_detailedDescription": "Minification filter.  All valid values correspond to WebGL enums.",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER",
             "anyOf": [
