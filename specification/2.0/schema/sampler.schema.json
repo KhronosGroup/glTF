@@ -10,7 +10,6 @@
             "description": "Magnification filter.",
             "enum": [ 9728, 9729 ],
             "gltf_enumNames": [ "NEAREST", "LINEAR" ],
-            "default": 9729,
             "gltf_detailedDescription": "Magnification filter.  Valid values correspond to WebGL enums: `9728` (NEAREST) and `9729` (LINEAR).",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MAG_FILTER"
         },
@@ -19,7 +18,6 @@
             "description": "Minification filter.",
             "enum": [ 9728, 9729, 9984, 9985, 9986, 9987 ],
             "gltf_enumNames": [ "NEAREST", "LINEAR", "NEAREST_MIPMAP_NEAREST", "LINEAR_MIPMAP_NEAREST", "NEAREST_MIPMAP_LINEAR", "LINEAR_MIPMAP_LINEAR" ],
-            "default": 9986,
             "gltf_detailedDescription": "Minification filter.  All valid values correspond to WebGL enums.",
             "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER"
         },
