@@ -24,6 +24,14 @@
                     "description": "When interpolation is `\"STEP\"`, animated value remains constant to the value of the first point of the timeframe, until the next timeframe."
                 },
                 {
+                    "enum": [ "CATMULLROMSPLINE" ],
+                    "description": "When interpolation is `\"CATMULLROMSPLINE\"`, the animation's interpolation is computed using a uniform Catmull-Rom spline."
+                },
+                {
+                    "enum": [ "CUBICSPLINE" ],
+                    "description": "When interpolation is `\"CUBICSPLINE\"`, the animation's interpolation is computed using a cubic spline with specified tangents. For each input value, the output stores three values: in-tangent, spline vertex, and out-tangent."
+                },
+                {
                     "type": "string"
                 }
             ]
@@ -31,7 +39,7 @@
         "output": {
             "allOf": [ { "$ref": "glTFid.schema.json" } ],
             "description": "The index of an accessor, containing keyframe output values.",
-            "gltf_detailedDescription": "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count`. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
+            "gltf_detailedDescription": "The index of an accessor, containing keyframe output values. Output and input accessors must have the same `count` except for `CUBICSPLINE` where output count is 3x the input count. When sampler is used with TRS target, output accessor's componentType must be `FLOAT`."
         },
         "extensions": { },
         "extras": { }
